@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ===== 后端: 安装依赖 + 跑测试 =====
+  backend-test:
+    name: Backend pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # 测试环境变量 (与 tests/conftest.py 一致, 隔离真实高德/LLM 凭据)
+      AMAP_API_KEY: test_amap_key
+      LLM_API_KEY: test_llm_key
+      LLM_BASE_URL: http://localhost:9999/v1
+      LLM_MODEL_ID: test-model
+      JWT_SECRET_KEY: test-secret-for-ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install backend deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run backend tests
+        run: |
+          pytest -v --tb=short
+
+  # ===== 前端: 类型检查 + 构建 =====
+  frontend-build:
+    name: Frontend build (vue-tsc + vite)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend deps
+        run: npm ci || npm install
+
+      - name: Type-check + build
+        run: npm run build
+
+  # ===== 迁移校验: 确认 Alembic 迁移可生成/可执行 =====
+  migration-check:
+    name: Alembic migration check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run migrations to head
+        run: |
+          python -m alembic upgrade head
+          python -c "import sqlite3; c=sqlite3.connect('data/trip_planner.db'); print('tables:', [r[0] for r in c.execute(\"SELECT name FROM sqlite_master WHERE type='table'\")])"
