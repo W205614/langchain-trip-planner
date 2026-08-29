@@ -285,7 +285,7 @@ conda activate langchain-trip-planner
 powershell -ExecutionPolicy Bypass -File .\start-local.ps1
 ```
 
-脚本会在当前终端前台启动后端（9000）与前端（5173），并在本次本地启动中同时允许 `localhost:5173` 与 `127.0.0.1:5173` 跨域访问；按 `Ctrl+C` 会停止它启动的两个服务，不会留下后台进程。若未激活正确的 Conda 环境，脚本会拒绝执行，避免误用系统 Python。
+脚本会在当前终端启动后端（9000），并把前端（5173）作为当前终端的前台服务；本次启动同时允许 `localhost:5173` 与 `127.0.0.1:5173` 跨域访问。按一次 `Ctrl+C` 会停止前端、清理后端进程树并回到 PowerShell 提示符。若未激活正确的 Conda 环境，脚本会拒绝执行，避免误用系统 Python。
 
 ### Docker 部署（可选）
 

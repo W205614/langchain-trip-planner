@@ -2,7 +2,7 @@
 本地前后端联调入口。请先激活 Conda 环境：
 conda activate langchain-trip-planner
 再运行：powershell -ExecutionPolicy Bypass -File .\start-local.ps1
-脚本保持前台运行：按 Ctrl+C 会停止它启动的两个子进程，不会遗留后台服务。
+前端保持在当前终端前台运行；按一次 Ctrl+C 会停止前端、清理后端进程树并返回 PowerShell 提示符。
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -10,13 +10,6 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $backendDir = Join-Path $root 'backend'
 $frontendDir = Join-Path $root 'frontend'
 $children = @()
-$script:stopRequested = $false
-$cancelHandler = [ConsoleCancelEventHandler]{
-    param($sender, $eventArgs)
-    # 由脚本统一清理进程树，避免 Ctrl+C 只被 Uvicorn reload 子进程接收。
-    $eventArgs.Cancel = $true
-    $script:stopRequested = $true
-}
 
 function Stop-LocalServices {
     foreach ($process in $children) {
@@ -42,29 +35,21 @@ try {
     # 后端 .env 可能只允许 localhost，而本脚本将 Vite 绑定在 127.0.0.1。
     # 仅覆盖本次本地子进程的 CORS 配置，避免浏览器把跨域预检失败显示为 Network Error。
     $env:CORS_ORIGINS = 'http://localhost:5173,http://127.0.0.1:5173'
-    [Console]::add_CancelKeyPress($cancelHandler)
-
     Write-Host "使用 Conda 环境：$env:CONDA_DEFAULT_ENV" -ForegroundColor Cyan
     Write-Host '启动后端：http://localhost:9000' -ForegroundColor Cyan
     $children += Start-Process -FilePath $condaPython -ArgumentList 'run.py' -WorkingDirectory $backendDir -PassThru -NoNewWindow
 
-    Write-Host '启动前端：http://localhost:5173' -ForegroundColor Cyan
-    $children += Start-Process -FilePath $npmCommand.Source -ArgumentList 'run','dev','--','--host','127.0.0.1' -WorkingDirectory $frontendDir -PassThru -NoNewWindow
-
-    Write-Host '服务正在前台运行。按 Ctrl+C 可同时停止前后端。' -ForegroundColor Green
-    while (-not $script:stopRequested) {
-        Start-Sleep -Milliseconds 500
-        foreach ($process in $children) {
-            if ($process.HasExited) {
-                throw "$($process.ProcessName) 已退出，正在停止其他服务。"
-            }
-        }
+    Write-Host '启动前端：http://127.0.0.1:5173' -ForegroundColor Cyan
+    Write-Host '前端服务保持在当前终端。按一次 Ctrl+C 将停止前端并清理后端，随后回到提示符。' -ForegroundColor Green
+    # 不把 npm 再作为后台进程：Ctrl+C 只会中断当前前台 Vite，再进入 finally 清理后端。
+    Push-Location $frontendDir
+    try {
+        & $npmCommand.Source run dev -- --host 127.0.0.1
+    }
+    finally {
+        Pop-Location
     }
 }
-catch {
-    if ($_.Exception.Message -notmatch '已退出') { Write-Error $_ }
-}
 finally {
-    [Console]::remove_CancelKeyPress($cancelHandler)
     Stop-LocalServices
 }
