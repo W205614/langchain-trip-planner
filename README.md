@@ -285,7 +285,7 @@ conda activate langchain-trip-planner
 powershell -ExecutionPolicy Bypass -File .\start-local.ps1
 ```
 
-脚本会在当前终端启动后端（9000），并把前端（5173）作为当前终端的前台服务；本次启动同时允许 `localhost:5173` 与 `127.0.0.1:5173` 跨域访问。按一次 `Ctrl+C` 会停止前端、清理后端进程树并回到 PowerShell 提示符。若未激活正确的 Conda 环境，脚本会拒绝执行，避免误用系统 Python。
+脚本会在当前终端启动后端（9000），并直接通过 Node 运行 Vite 前端（5173），不经过 Windows 的 `npm.cmd` 批处理；本次启动同时允许 `localhost:5173` 与 `127.0.0.1:5173` 跨域访问。按一次 `Ctrl+C` 会停止前端、清理后端进程树并回到 PowerShell 提示符。若未激活正确的 Conda 环境，脚本会拒绝执行，避免误用系统 Python。
 
 ### Docker 部署（可选）
 
