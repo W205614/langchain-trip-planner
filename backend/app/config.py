@@ -36,6 +36,10 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
 
+    # 本地默认 SQLite；生产可设置 DATABASE_URL 为 PostgreSQL 等 SQLAlchemy 连接串。
+    # 不配置时保留零依赖、可离线启动的本地体验。
+    database_url: str = Field(default="")
+
     # CORS配置 - 使用字符串,在代码中分割
     cors_origins: str = "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000"
 
@@ -142,6 +146,7 @@ def print_config():
     print(f"应用名称: {settings.app_name}")
     print(f"版本: {settings.app_version}")
     print(f"服务器: {settings.host}:{settings.port}")
+    print(f"数据库: {'外部 DATABASE_URL' if settings.database_url else '本地 SQLite'}")
     print(f"高德地图API Key: {'已配置' if settings.amap_api_key else '未配置'}")
 
     print(f"LLM API Key: {'已配置' if settings.llm_api_key else '未配置'}")

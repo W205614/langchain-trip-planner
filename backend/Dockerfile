@@ -18,7 +18,7 @@ RUN useradd -m appuser \
     && chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 8000
+EXPOSE 9000
 
 # 生产模式启动: 不开启 reload, 多进程由外部编排(如 uvicorn --workers 或 K8s 多副本)负责
-CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "9000"]

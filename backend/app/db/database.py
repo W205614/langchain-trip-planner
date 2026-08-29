@@ -5,20 +5,23 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
+from ..config import get_settings
+
 # backend/data 目录 (数据库 + 向量库统一放这里)
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # SQLite 数据库文件
 DB_PATH = DATA_DIR / "trip_planner.db"
+database_url = get_settings().database_url or f"sqlite:///{DB_PATH}"
 
 # check_same_thread=False: FastAPI 会把同步端点放到线程池执行,
 # 不同线程可能复用同一个会话, 需要关闭 SQLite 的同线程检查。
-engine = create_engine(
-    f"sqlite:///{DB_PATH}",
-    connect_args={"check_same_thread": False},
-    echo=False,
-)
+engine_options = {"echo": False, "pool_pre_ping": True}
+if database_url.startswith("sqlite"):
+    # SQLite 本地开发/单机 Docker 允许线程池内跨线程使用连接。
+    engine_options["connect_args"] = {"check_same_thread": False}
+engine = create_engine(database_url, **engine_options)
 
 # autocommit=False: 事务需显式 commit, 便于依赖注入统一管理
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)

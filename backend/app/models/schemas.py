@@ -1,6 +1,6 @@
 """数据模型定义"""
 
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from datetime import date
 
@@ -38,9 +38,16 @@ class TripRequest(BaseModel):
 
     @model_validator(mode="after")
     def _check_dates(self):
-        """防御性校验: 结束日期不能早于开始日期 (业务一致性)"""
-        if self.start_date and self.end_date and self.end_date < self.start_date:
+        """校验真实日期及天数，避免字符串比较或前端绕过造成脏计划。"""
+        try:
+            start = date.fromisoformat(self.start_date)
+            end = date.fromisoformat(self.end_date)
+        except ValueError as exc:
+            raise ValueError("日期必须是有效的 YYYY-MM-DD") from exc
+        if end < start:
             raise ValueError("结束日期不能早于开始日期")
+        if (end - start).days + 1 != self.travel_days:
+            raise ValueError("travel_days 必须与开始和结束日期（含首尾）一致")
         return self
 
 
@@ -168,6 +175,8 @@ class TripPlanResponse(BaseModel):
     success: bool = Field(..., description="是否成功")
     message: str = Field(default="", description="消息")
     data: Optional[TripPlan] = Field(default=None, description="旅行计划数据")
+    quality: Optional[dict[str, Any]] = Field(default=None, description="确定性质量校验结果")
+    cached: bool = Field(default=False, description="是否由幂等缓存返回")
 
 
 class POIInfo(BaseModel):

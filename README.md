@@ -22,7 +22,7 @@
 │    │   每天一个小 prompt → 单日 JSON (景点+三餐+描述)     │
 │    │   → 3 天并行生成, 总耗时 ≈ 40-50s                  │
 │    │                                                   │
-│    ├─ ③ 后处理: 真实天气回填 / 预算补齐 / 知识库详情回填   │
+│    ├─ ③ 后处理: 真实天气回填 / 预算补齐 / 行程质量校验       │
 │    │                                                   │
 │    └─ ④ 保存历史 (归属当前用户) + 写入 RAG 向量库         │
 │                                                       │
@@ -39,16 +39,18 @@
 
 - 🔐 **JWT 接口鉴权**: 用户注册/登录（bcrypt 密码哈希 + JWT），历史记录等私有接口需登录后访问
 - 🛡️ **AI 安全分层防御**: Prompt 注入防护（不可信输入声明）、LLM 输出白名单校验（防编造景点）、API 限流防滥用、请求追踪 ID、统一错误结构不泄露内部细节
+- ✅ **确定性行程质量控制**: 返回前对景点去重、每日游览时长（最多 480 分钟）、餐饮完整性、天数一致性做本地校验；同日景点按坐标最近邻排序，响应附带可审计质量评分与告警
+- ⚡ **真实流式进度与幂等生成**: `POST /api/trip/plan/stream` 按 LangGraph 实际阶段推送 SSE 进度，前端不再模拟进度；`Idempotency-Key` 防止重复点击/重试重复创建历史记录
 - 🧱 **企业级工程化**: GitHub Actions CI（后端 pytest + 前端构建 + 迁移校验）、Alembic 数据库迁移、自动化测试覆盖（后端 33 用例）
 - 🤖 **LangGraph 工作流编排**: 用 StateGraph 构建多节点旅行规划流水线（搜景点 → 查天气 → 搜酒店 → 生成行程 → 兜底），支持条件路由
-- 🧠 **RAG 知识库检索增强**: 内置 4 城市精选旅游知识库（深圳/北京/上海/广州，含门票/交通/避坑/美食/住宿），`text-embedding-3-large`（OpenAI 兼容接口/中转）向量化存入 ChromaDB，规划时自动检索并注入 LLM；**未预置城市自动用高德实时数据建知识（任意城市可查）**
+- 🧠 **RAG 知识库检索增强**: 内置 4 城市精选旅游知识库（深圳/北京/上海/广州，含门票/交通/避坑/美食/住宿），`text-embedding-3-large`（OpenAI 兼容接口/中转）向量化存入 ChromaDB，规划时自动检索并注入 LLM；**未预置城市自动用高德实时数据建知识（任意城市可查）**；历史向量严格按 `user_id` 过滤，删除记录时同步删除派生向量
 - 🏆 **知识库景点落地**: 知识库知名景点按名搜索补真实坐标进入行程候选；生成后每个景点自动回填门票/开放时间/交通/避坑详情
 - 📈 **集合维度自愈**: 启动时校验 Chroma 集合向量维度与嵌入模型一致，切换嵌入模型（如 1024→3072 维）自动清空重建，不再报 "expecting dimension of X, got Y"
 - 📜 **行程历史记录**: SQLite 持久化每次生成的行程，支持分页查询、按城市筛选、查看、编辑、删除；**编辑修改可写回数据库**
 - 🗺️ **高德地图直调**: httpx 直接调用高德 Web 服务 REST API，无外部 MCP 进程依赖
 - 📸 **国内图源**: 景点图片优先取高德 POI 实景图（国内 CDN，快且稳），带 QPS 节流与熔断保护
 - 🛡️ **优雅降级**: 数据节点失败返回空列表、LLM 失败走备用计划、RAG 未配置 Key 自动禁用，保证接口始终可用
-- 🧱 **可观测性**: 日志落盘与轮转、全局异常处理、Prometheus 监控、Docker 一键部署
+- 🧱 **可观测性**: 日志落盘与轮转、全局异常处理、Prometheus HTTP 指标，以及旅行规划质量评分/告警/幂等命中指标、Docker 一键部署
 - 🔌 **兼容任意模型**: 换 LLM 只需改 `.env` 三个参数（Key / Base URL / Model），无需改代码
 - 🎨 **现代化前端**: Vue3 + TypeScript + Vite + Ant Design Vue，深空霓虹渐变主题 + 玻璃拟态卡片
 
@@ -69,7 +71,7 @@
 - **LLM**: langchain-openai `ChatOpenAI`（兼容 OpenAI / DeepSeek 等任意 OpenAI 协议端点；支持中转/代理，逐日生成 + 并行 + 关闭重试保证稳定输出）
 - **RAG 向量库**: ChromaDB（`langchain-chroma`，持久化到 `backend/data/chroma`）
 - **Embedding**: `text-embedding-3-large`（3072 维，OpenAI 兼容接口/中转，复用 LLM 的 `base_url`/`api_key`，可独立覆盖）
-- **数据库**: SQLAlchemy 2.0 + SQLite（`trip_planner.db`，可无缝切换 PostgreSQL）
+- **数据库**: SQLAlchemy 2.0 + SQLite（本地默认 `trip_planner.db`）；生产可用 `DATABASE_URL` 切换 PostgreSQL
 - **API**: FastAPI + Pydantic v2
 - **第三方服务**: 高德 Web 服务 API（httpx 直调 REST）
 
@@ -232,6 +234,9 @@ LOG_LEVEL=INFO
 # 接口鉴权 (JWT) — 生产务必改为强随机值
 # 生成: python -c "import secrets; print(secrets.token_urlsafe(48))"
 JWT_SECRET_KEY=dev-secret-change-me
+
+# 数据库（可选）：不填时使用本地 SQLite；生产可设置 PostgreSQL 连接串
+# DATABASE_URL=postgresql+psycopg://user:password@host:5432/trip_planner
 ```
 
 4. 启动后端
@@ -270,6 +275,17 @@ npm run dev
 ```
 
 4. 浏览器访问 `http://localhost:5173`
+
+### 本地联调（Conda 环境，一条命令启动前后端）
+
+本项目的本地联调以 Conda 环境为准。先完成后端依赖安装和前端 `npm install`，然后在**项目根目录**执行：
+
+```powershell
+conda activate langchain-trip-planner
+powershell -ExecutionPolicy Bypass -File .\start-local.ps1
+```
+
+脚本会在当前终端前台启动后端（9000）与前端（5173）；按 `Ctrl+C` 会停止它启动的两个服务，不会留下后台进程。若未激活正确的 Conda 环境，脚本会拒绝执行，避免误用系统 Python。
 
 ### Docker 部署（可选）
 
@@ -438,6 +454,7 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 | `POST /api/auth/login` | 登录（返回 JWT） |
 | `GET /api/auth/me` | 当前登录用户信息（需 Bearer token） |
 | `POST /api/trip/plan` | 生成旅行计划（核心，成功后自动存历史 + RAG 入库） |
+| `POST /api/trip/plan/stream` | SSE 流式生成：返回真实阶段进度，最后发送 `complete` 事件（需登录） |
 | `GET /api/trip/health` | Agent 健康检查 |
 | `GET /api/history` | 历史记录列表（分页、按城市筛选）🔒 需登录 |
 | `GET /api/history/{id}` | 历史记录详情（含完整行程）🔒 需登录 |
@@ -453,6 +470,12 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 | `GET /docs` | Swagger 文档 |
 
 > 🔒 标记的接口需携带 `Authorization: Bearer <token>`（从 `/api/auth/login` 获取）。前端请求会自动附带 token（拦截器），详见 `frontend/src/services/api.ts`。
+
+### 质量、幂等与监控
+
+- `POST /api/trip/plan` 与流式接口的成功响应包含 `quality`：评分、告警、检查天数、景点数及同日估算直线距离。它是确定性校验信号，不等同于真实导航耗时。
+- 对可重试的普通请求，客户端可传入 `Idempotency-Key`；相同用户、相同请求内容在当前服务进程的 10 分钟内只生成和保存一次。多副本生产部署应将该进程内存实现替换为 Redis 等共享存储。
+- `/metrics` 额外提供 `trip_plan_total`、`trip_plan_quality_score`、`trip_plan_quality_warnings_total`。这些指标不带用户、城市或输入文本标签，避免敏感与高基数标签。
 
 ## ❓ 常见问题
 
@@ -520,8 +543,9 @@ LLM_MODEL_ID=新模型名
 ### 2. LLM 生成行程仍有数十秒等待 🟠
 
 - **现状**：已用「逐日并行生成」优化——每天一个小 prompt 单独生成，多天并行，实测北京/成都/广州 **~40-50s** 完成 3 天行程（不再有"一次生成大 JSON 截断/超时"问题）。
+- **已实现**：前端使用 SSE 展示 LangGraph 的真实节点进度，不再用定时器伪造进度；最终完整行程仍在 `complete` 事件返回。
 - **优化方向**：
-  - **流式输出**（SSE）：LangGraph 节点边生成边返回，前端逐步渲染，缩短首屏等待感
+  - 进一步支持逐日结果分段返回，缩短结果页首屏等待
   - **缓存**：相同城市+天数+偏好的结果缓存，命中秒出
   - **换更快的模型**：DeepSeek 官方对并发大请求是排队处理，换更高吞吐的中转或模型可进一步提速
 

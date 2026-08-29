@@ -4,7 +4,7 @@ import json
 import logging
 import re
 from datetime import datetime, timedelta
-from typing import TypedDict, List
+from typing import Callable, TypedDict, List
 from langgraph.graph import StateGraph, START, END
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -158,6 +158,8 @@ class GraphState(TypedDict, total=False):
     hotel_pois: List[POIInfo]          # 酒店搜索结果
     trip_plan: TripPlan                # 最终行程计划
     error: bool                        # 是否出错(用于条件路由)
+    user_id: int                       # RAG 历史检索的用户隔离键
+    progress_callback: Callable[[str, int, str], None]
 
 
 class MultiAgentTripPlanner:
@@ -177,6 +179,16 @@ class MultiAgentTripPlanner:
 
     # ============ LangGraph 节点 ============
 
+    @staticmethod
+    def _emit_progress(state: GraphState, stage: str, percent: int, message: str) -> None:
+        """将真实工作流阶段传给流式接口；回调失败不影响主业务。"""
+        callback = state.get("progress_callback")
+        if callback:
+            try:
+                callback(stage, percent, message)
+            except Exception:
+                logger.debug("进度回调失败", exc_info=True)
+
     def _search_attractions(self, state: GraphState) -> dict:
         """节点1: 搜索景点 (服务直调, 不走LLM)
 
@@ -185,6 +197,7 @@ class MultiAgentTripPlanner:
            让 LLM 能真正采用知识库推荐的景点, 而不只是"参考"
         """
         request = state["request"]
+        self._emit_progress(state, "search_attractions", 10, "正在搜索真实景点")
         logger.info("📍 步骤1: 搜索景点...")
         try:
             # 关键词: 优先用"城市+景点/必去景点", 避免用"美食"等偏好搜出餐馆
@@ -221,6 +234,7 @@ class MultiAgentTripPlanner:
     def _get_weather(self, state: GraphState) -> dict:
         """节点2: 查询天气 (服务直调, 不走LLM)"""
         request = state["request"]
+        self._emit_progress(state, "get_weather", 30, "正在查询天气")
         logger.info("🌤️  步骤2: 查询天气...")
         try:
             weather = self.amap_service.get_weather(request.city)
@@ -233,6 +247,7 @@ class MultiAgentTripPlanner:
     def _search_hotels(self, state: GraphState) -> dict:
         """节点3: 搜索酒店 (服务直调, 不走LLM)"""
         request = state["request"]
+        self._emit_progress(state, "search_hotels", 45, "正在搜索住宿")
         logger.info("🏨 步骤3: 搜索酒店...")
         try:
             hotels = self.amap_service.search_poi(request.accommodation, request.city)
@@ -251,6 +266,7 @@ class MultiAgentTripPlanner:
         某天失败则该天降级为兜底日(用真实高德景点), 不影响其他天。
         """
         request = state["request"]
+        self._emit_progress(state, "generate_trip_plan", 60, "正在生成每日行程")
         logger.info("📋 步骤4: LLM 生成行程计划 (逐日并行)...")
         try:
             from datetime import datetime, timedelta
@@ -307,6 +323,7 @@ class MultiAgentTripPlanner:
                 weather_info=state.get("weather_info") or [],
                 overall_suggestions=f"这是为您规划的{request.city}{request.travel_days}日游行程",
             )
+            self._emit_progress(state, "generate_trip_plan", 82, "每日行程已生成，正在校验")
             logger.info("   ✅ 行程计划生成成功")
             return {"trip_plan": trip_plan, "error": False}
         except Exception as e:
@@ -399,7 +416,7 @@ class MultiAgentTripPlanner:
                 if match:
                     attr.name = match  # 用白名单的规范名覆盖, 避免 LLM 改名
             kept.append(attr)
-        day_plan.attractions = kept or day_plan.attractions
+        day_plan.attractions = kept
 
     def _fallback_day(
         self, request: TripRequest, day_index: int, current_date: str, state: GraphState = None
@@ -539,7 +556,12 @@ class MultiAgentTripPlanner:
 
     # ============ 对外接口 ============
 
-    def plan_trip(self, request: TripRequest) -> TripPlan:
+    def plan_trip(
+        self,
+        request: TripRequest,
+        user_id: int | None = None,
+        progress_callback: Callable[[str, int, str], None] | None = None,
+    ) -> TripPlan:
         """使用 LangGraph 工作流生成旅行计划
 
         Args:
@@ -554,7 +576,11 @@ class MultiAgentTripPlanner:
         logger.info(f"偏好: {', '.join(request.preferences) if request.preferences else '无'}")
         logger.info(f"{'='*60}\n")
 
-        result = self.graph.invoke({"request": request})
+        result = self.graph.invoke({
+            "request": request,
+            "user_id": user_id or 0,
+            "progress_callback": progress_callback,
+        })
         trip_plan = result["trip_plan"]
 
         # 天气: 用高德真实天气覆盖LLM生成的天气。
@@ -566,6 +592,12 @@ class MultiAgentTripPlanner:
 
         # 兜底: 若LLM未返回预算, 前端预算页会异常, 这里自动补齐
         trip_plan = self._ensure_budget(trip_plan, request)
+
+        # 关键路线约束不用模型“猜”：去重、每日时长上限、最近邻排序均可本地复现。
+        from ..services.plan_quality import normalize_day
+        removed = sum(normalize_day(day) for day in trip_plan.days)
+        if removed:
+            logger.info("行程质量控制移除了 %s 个重复或超时景点", removed)
 
         # 知识库增强: 给每个景点追加知识库详情(门票/开放时间/交通/避坑),
         # 让知识库内容真正落到前端每个景点上。失败/未启用时静默跳过。
@@ -580,6 +612,9 @@ class MultiAgentTripPlanner:
                         attr.description = f"{attr.description}\n\n——知识库参考——\n{detail}"
         except Exception as e:
             logger.warning(f"⚠️  知识库详情增强失败(不影响主流程): {e}")
+
+        if progress_callback:
+            self._emit_progress(result, "quality_check", 92, "已完成确定性质量校验")
 
         logger.info(f"\n{'='*60}")
         logger.info(f"✅ 旅行计划生成完成! 天数: {len(trip_plan.days)}")
@@ -658,7 +693,9 @@ class MultiAgentTripPlanner:
         try:
             from ..services.rag_service import get_rag_service
 
-            rag_context = get_rag_service().build_rag_context(request)
+            rag_context = get_rag_service().build_rag_context(
+                request, user_id=(state or {}).get("user_id")
+            )
             if rag_context:
                 query += f"\n\n{rag_context}\n"
         except Exception as e:

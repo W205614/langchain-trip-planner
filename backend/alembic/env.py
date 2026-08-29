@@ -18,17 +18,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.db.database import DB_PATH  # noqa: E402  统一数据库路径
+from app.db.database import database_url  # noqa: E402  与应用运行时使用同一连接串
 from app.db import models as _models  # noqa: E402,F401  注册全部模型到 Base.metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-# 强制使用应用同款 SQLite 数据库, 覆盖 alembic.ini 的占位 URL。
-# 生产切换数据库时, 在 alembic.ini 的 sqlalchemy.url 覆盖即可 (此处仍以 ini 优先? 否——)
-# 说明: 这里以应用 DB_PATH 为准, 保证迁移与运行时用同一个库。
-config.set_main_option("sqlalchemy.url", f"sqlite:///{DB_PATH.as_posix()}")
+# DATABASE_URL 未配置时为本地 SQLite；配置后迁移与运行时使用同一个生产连接串。
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.
 if config.config_file_name is not None:

@@ -104,6 +104,34 @@ def test_plan_trip_success(client, monkeypatch):
     assert data["data"]["city"] == "北京"
     assert len(data["data"]["days"]) == 2
     assert data["data"]["budget"]["total"] == 400
+    assert data["quality"]["days_checked"] == 2
+
+
+def test_plan_trip_idempotency_reuses_the_first_result(client, monkeypatch):
+    fake_agent = Mock()
+    fake_agent.plan_trip.return_value = make_fake_trip_plan()
+    monkeypatch.setattr("app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent)
+
+    headers = {"Idempotency-Key": "test-trip-route-repeat-key"}
+    first = client.post("/api/trip/plan", json=VALID_REQUEST, headers=headers)
+    second = client.post("/api/trip/plan", json=VALID_REQUEST, headers=headers)
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert second.json()["cached"] is True
+    assert fake_agent.plan_trip.call_count == 1
+
+
+def test_plan_stream_returns_complete_event(client, monkeypatch):
+    fake_agent = Mock()
+    fake_agent.plan_trip.return_value = make_fake_trip_plan()
+    monkeypatch.setattr("app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent)
+
+    with client.stream("POST", "/api/trip/plan/stream", json=VALID_REQUEST) as response:
+        body = "\n".join(response.iter_lines())
+    assert response.status_code == 200
+    assert "event: complete" in body
+    assert '"success": true' in body
 
 
 def test_plan_trip_invalid_days(client):

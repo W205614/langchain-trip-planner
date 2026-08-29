@@ -244,7 +244,7 @@
 import { ref, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { generateTripPlan } from '@/services/api'
+import { generateTripPlanStream } from '@/services/api'
 import { isAuthenticated, getUsername, clearAuth } from '@/services/auth'
 import type { TripFormData } from '@/types'
 import type { Dayjs } from 'dayjs'
@@ -324,24 +324,6 @@ const handleSubmit = async () => {
   loadingProgress.value = 0
   loadingStatus.value = '正在初始化...'
 
-  // 模拟进度更新
-  const progressInterval = setInterval(() => {
-    if (loadingProgress.value < 90) {
-      loadingProgress.value += 10
-
-      // 更新状态文本
-      if (loadingProgress.value <= 30) {
-        loadingStatus.value = '🔍 正在搜索景点...'
-      } else if (loadingProgress.value <= 50) {
-        loadingStatus.value = '🌤️ 正在查询天气...'
-      } else if (loadingProgress.value <= 70) {
-        loadingStatus.value = '🏨 正在推荐酒店...'
-      } else {
-        loadingStatus.value = '📋 正在生成行程计划...'
-      }
-    }
-  }, 500)
-
   try {
     const requestData: TripFormData = {
       city: formData.city,
@@ -354,9 +336,11 @@ const handleSubmit = async () => {
       free_text_input: formData.free_text_input
     }
 
-    const response = await generateTripPlan(requestData)
+    const response = await generateTripPlanStream(requestData, (progress) => {
+      loadingProgress.value = progress.percent
+      loadingStatus.value = progress.message
+    })
 
-    clearInterval(progressInterval)
     loadingProgress.value = 100
     loadingStatus.value = '✅ 完成!'
 
@@ -375,7 +359,6 @@ const handleSubmit = async () => {
       message.error(response.message || '生成失败')
     }
   } catch (error: any) {
-    clearInterval(progressInterval)
     message.error(error.message || '生成旅行计划失败,请稍后重试')
   } finally {
     setTimeout(() => {

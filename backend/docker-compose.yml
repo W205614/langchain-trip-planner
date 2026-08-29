@@ -27,3 +27,4 @@ services:
       start_period: 15s
     # 异常退出自动重启
     restart: unless-stopped
+    # 生产可在 .env 设置 DATABASE_URL 为 PostgreSQL；不设置时仍使用本地 SQLite 数据卷。

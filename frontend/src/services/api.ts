@@ -76,6 +76,62 @@ export async function generateTripPlan(formData: TripFormData): Promise<TripPlan
   }
 }
 
+export interface TripPlanProgress {
+  stage: string
+  percent: number
+  message: string
+}
+
+/**
+ * 通过 POST + SSE 接收后端真实阶段进度。fetch 支持 Authorization Header，
+ * 因此不会把 JWT 放入 URL；浏览器不支持流时由调用方回退到普通接口。
+ */
+export async function generateTripPlanStream(
+  formData: TripFormData,
+  onProgress: (progress: TripPlanProgress) => void
+): Promise<TripPlanResponse> {
+  const token = getToken()
+  const idempotencyKey = crypto.randomUUID()
+  const response = await fetch(`${API_BASE_URL}/api/trip/plan/stream`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'Idempotency-Key': idempotencyKey
+    },
+    body: JSON.stringify(formData)
+  })
+  if (response.status === 401) {
+    clearAuth()
+    window.location.href = '/login'
+    throw new Error('登录已过期')
+  }
+  if (!response.ok || !response.body) {
+    throw new Error(`流式请求失败 (${response.status})`)
+  }
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  while (true) {
+    const { value, done } = await reader.read()
+    buffer += decoder.decode(value || new Uint8Array(), { stream: !done })
+    const blocks = buffer.split('\n\n')
+    buffer = blocks.pop() || ''
+    for (const block of blocks) {
+      const event = block.match(/^event: (.+)$/m)?.[1]
+      const data = block.match(/^data: (.+)$/m)?.[1]
+      if (!event || !data) continue
+      const payload = JSON.parse(data)
+      if (event === 'progress') onProgress(payload as TripPlanProgress)
+      if (event === 'complete') return payload as TripPlanResponse
+      if (event === 'error') throw new Error(payload.message || '生成旅行计划失败')
+    }
+    if (done) break
+  }
+  throw new Error('生成连接意外关闭')
+}
+
 /**
  * 健康检查
  */

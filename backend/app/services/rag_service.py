@@ -273,8 +273,10 @@ class RagService:
 
     # ============ 历史行程入库 ============
 
-    def add_history_plan(self, record_id: int, request: TripRequest, trip_plan: TripPlan) -> bool:
-        """把一份行程计划写入历史向量库 (增量)"""
+    def add_history_plan(
+        self, record_id: int, user_id: int, request: TripRequest, trip_plan: TripPlan
+    ) -> bool:
+        """把一份行程计划写入私有历史向量库（检索时必须按 user_id 过滤）。"""
         if not self.enabled:
             return False
         try:
@@ -283,11 +285,12 @@ class RagService:
                 [
                     Document(
                         page_content=text,
-                        metadata={"record_id": record_id, "city": request.city},
+                        metadata={"record_id": record_id, "user_id": user_id, "city": request.city},
                     )
-                ]
+                ],
+                ids=[f"history-{user_id}-{record_id}"],
             )
-            logger.info(f"🧠 历史行程已写入 RAG 向量库: record_id={record_id}")
+            logger.info(f"🧠 历史行程已写入 RAG 向量库: record_id={record_id}, user_id={user_id}")
             return True
         except Exception as e:
             logger.warning(f"⚠️  历史行程入库失败: {e}")
@@ -311,8 +314,21 @@ class RagService:
 
     # ============ 检索 ============
 
-    def retrieve(self, query: str, city: Optional[str] = None, k: int = 3) -> List[str]:
-        """检索知识库 + 历史行程, 返回匹配文本片段"""
+    def delete_history_plan(self, record_id: int, user_id: int) -> bool:
+        """删除历史记录时同步移除其私有向量，遵守数据删除语义。"""
+        if not self.enabled:
+            return False
+        try:
+            self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
+            return True
+        except Exception as exc:
+            logger.warning("历史向量删除失败: record_id=%s, error=%s", record_id, exc)
+            return False
+
+    def retrieve(
+        self, query: str, city: Optional[str] = None, k: int = 3, user_id: Optional[int] = None
+    ) -> List[str]:
+        """检索城市知识及当前用户的历史；缺少用户身份时绝不检索历史。"""
         if not self.enabled:
             return []
         results: List[str] = []
@@ -322,15 +338,24 @@ class RagService:
                 docs = self._knowledge_store.similarity_search(
                     query, k=k, filter={"city": city}
                 )
-                results.extend(f"[知识库-{doc.metadata.get('city')}] {doc.page_content}" for doc in docs)
-            # 2. 历史行程 (跨城市, 风格参考)
-            docs = self._history_store.similarity_search(query, k=2)
-            results.extend(f"[历史行程] {doc.page_content}" for doc in docs)
+                results.extend(
+                    f"[知识库-{doc.metadata.get('city')} / {doc.metadata.get('source', '未知来源')}] "
+                    f"{doc.page_content}"
+                    for doc in docs
+                )
+            # 2. 历史行程（仅限当前用户；旧版无 user_id 的向量不会被命中）
+            if user_id is not None:
+                docs = self._history_store.similarity_search(
+                    query, k=2, filter={"user_id": user_id}
+                )
+                results.extend(f"[我的历史行程] {doc.page_content}" for doc in docs)
         except Exception as e:
             logger.warning(f"⚠️  RAG 检索失败: {e}")
         return results
 
-    def build_rag_context(self, request: TripRequest, top_k: int = 3) -> str:
+    def build_rag_context(
+        self, request: TripRequest, top_k: int = 3, user_id: Optional[int] = None
+    ) -> str:
         """为规划请求构建 RAG 上下文文本 (注入 LLM prompt 用)"""
         if not self.enabled:
             return ""
@@ -341,7 +366,7 @@ class RagService:
             f"{','.join(request.preferences) if request.preferences else ''} "
             f"{request.free_text_input or ''}"
         )
-        chunks = self.retrieve(query, city=request.city, k=top_k)
+        chunks = self.retrieve(query, city=request.city, k=top_k, user_id=user_id)
         if not chunks:
             return ""
         header = "## 检索到的相关知识 (供你参考, 让行程更真实/贴合当地实际):"
