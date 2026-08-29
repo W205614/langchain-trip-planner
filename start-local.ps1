@@ -31,6 +31,9 @@ try {
     if (-not (Test-Path $condaPython)) { throw "未找到当前 Conda 环境的 Python：$condaPython" }
     # npm 在 Windows 常优先解析为 npm.ps1；Start-Process 不能直接运行该脚本，必须选 npm.cmd。
     $npmCommand = Get-Command 'npm.cmd' -ErrorAction Stop
+    # 后端 .env 可能只允许 localhost，而本脚本将 Vite 绑定在 127.0.0.1。
+    # 仅覆盖本次本地子进程的 CORS 配置，避免浏览器把跨域预检失败显示为 Network Error。
+    $env:CORS_ORIGINS = 'http://localhost:5173,http://127.0.0.1:5173'
 
     Write-Host "使用 Conda 环境：$env:CONDA_DEFAULT_ENV" -ForegroundColor Cyan
     Write-Host '启动后端：http://localhost:9000' -ForegroundColor Cyan
