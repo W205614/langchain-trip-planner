@@ -27,12 +27,17 @@ try {
     if (-not (Test-Path (Join-Path $backendDir 'run.py'))) { throw '未找到 backend/run.py' }
     if (-not (Test-Path (Join-Path $frontendDir 'package.json'))) { throw '未找到 frontend/package.json' }
 
+    $condaPython = Join-Path $env:CONDA_PREFIX 'python.exe'
+    if (-not (Test-Path $condaPython)) { throw "未找到当前 Conda 环境的 Python：$condaPython" }
+    # npm 在 Windows 常优先解析为 npm.ps1；Start-Process 不能直接运行该脚本，必须选 npm.cmd。
+    $npmCommand = Get-Command 'npm.cmd' -ErrorAction Stop
+
     Write-Host "使用 Conda 环境：$env:CONDA_DEFAULT_ENV" -ForegroundColor Cyan
     Write-Host '启动后端：http://localhost:9000' -ForegroundColor Cyan
-    $children += Start-Process -FilePath 'python' -ArgumentList 'run.py' -WorkingDirectory $backendDir -PassThru -NoNewWindow
+    $children += Start-Process -FilePath $condaPython -ArgumentList 'run.py' -WorkingDirectory $backendDir -PassThru -NoNewWindow
 
     Write-Host '启动前端：http://localhost:5173' -ForegroundColor Cyan
-    $children += Start-Process -FilePath 'npm' -ArgumentList 'run','dev','--','--host','127.0.0.1' -WorkingDirectory $frontendDir -PassThru -NoNewWindow
+    $children += Start-Process -FilePath $npmCommand.Source -ArgumentList 'run','dev','--','--host','127.0.0.1' -WorkingDirectory $frontendDir -PassThru -NoNewWindow
 
     Write-Host '服务正在前台运行。按 Ctrl+C 可同时停止前后端。' -ForegroundColor Green
     while ($true) {
