@@ -272,6 +272,13 @@
           </a-collapse>
         </a-card>
 
+        <a-alert
+          v-if="tripPlan.weather_notice"
+          class="weather-notice"
+          type="warning"
+          show-icon
+          :message="tripPlan.weather_notice"
+        />
         <a-card id="weather" v-if="tripPlan.weather_info && tripPlan.weather_info.length > 0" title="🌤️ 天气信息" class="weather-section" :bordered="false">
         <a-list
           :data-source="tripPlan.weather_info"
@@ -1326,6 +1333,10 @@ const drawRoutes = (AMap: any, attractions: any[]) => {
 
 /* 天气信息卡片 */
 .weather-section {
+  margin-top: 20px;
+}
+
+.weather-notice {
   margin-top: 20px;
 }
 

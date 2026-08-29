@@ -155,6 +155,7 @@ class GraphState(TypedDict, total=False):
     request: TripRequest               # 用户旅行请求
     attraction_pois: List[POIInfo]     # 景点搜索结果
     weather_info: List[WeatherInfo]    # 天气信息
+    weather_notice: str                # 天气预报覆盖范围说明
     hotel_pois: List[POIInfo]          # 酒店搜索结果
     trip_plan: TripPlan                # 最终行程计划
     error: bool                        # 是否出错(用于条件路由)
@@ -238,11 +239,26 @@ class MultiAgentTripPlanner:
         logger.info("🌤️  步骤2: 查询天气...")
         try:
             weather = self.amap_service.get_weather(request.city)
-            logger.info(f"   获取 {len(weather)} 天天气数据")
-            return {"weather_info": weather}
+            relevant_weather, weather_notice = self._filter_weather_for_trip(weather, request)
+            logger.info(f"   获取 {len(weather)} 天预报，其中 {len(relevant_weather)} 天与行程日期匹配")
+            return {"weather_info": relevant_weather, "weather_notice": weather_notice}
         except Exception as e:
             logger.warning(f"   ⚠️ 天气查询失败: {e}")
-            return {"weather_info": []}
+            return {"weather_info": [], "weather_notice": "暂时无法获取天气预报，请出行前再次确认。"}
+
+    @staticmethod
+    def _filter_weather_for_trip(weather: List[WeatherInfo], request: TripRequest) -> tuple[List[WeatherInfo], str]:
+        """只保留行程日期的真实预报，避免把不相干的四天预报展示为整段行程天气。"""
+        relevant = [item for item in weather if request.start_date <= item.date <= request.end_date]
+        trip_dates = {
+            (datetime.strptime(request.start_date, "%Y-%m-%d") + timedelta(days=index)).strftime("%Y-%m-%d")
+            for index in range(request.travel_days)
+        }
+        covered_dates = {item.date for item in relevant}
+        missing_days = len(trip_dates - covered_dates)
+        if missing_days:
+            return relevant, f"高德天气接口仅提供近期 4 天预报；本次行程仍有 {missing_days} 天暂无可靠预报。"
+        return relevant, ""
 
     def _search_hotels(self, state: GraphState) -> dict:
         """节点3: 搜索酒店 (服务直调, 不走LLM)"""
@@ -321,6 +337,7 @@ class MultiAgentTripPlanner:
                 end_date=request.end_date,
                 days=days,
                 weather_info=state.get("weather_info") or [],
+                weather_notice=state.get("weather_notice") or "",
                 overall_suggestions=f"这是为您规划的{request.city}{request.travel_days}日游行程",
             )
             self._emit_progress(state, "generate_trip_plan", 82, "每日行程已生成，正在校验")
@@ -589,6 +606,7 @@ class MultiAgentTripPlanner:
         real_weather = result.get("weather_info") or []
         if real_weather:
             trip_plan.weather_info = real_weather
+        trip_plan.weather_notice = result.get("weather_notice") or trip_plan.weather_notice
 
         # 兜底: 若LLM未返回预算, 前端预算页会异常, 这里自动补齐
         trip_plan = self._ensure_budget(trip_plan, request)

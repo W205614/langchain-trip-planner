@@ -166,6 +166,7 @@ class TripPlan(BaseModel):
     end_date: str = Field(..., description="结束日期")
     days: List[DayPlan] = Field(..., description="每日行程")
     weather_info: List[WeatherInfo] = Field(default=[], description="天气信息")
+    weather_notice: str = Field(default="", description="天气预报覆盖范围说明")
     overall_suggestions: str = Field(..., description="总体建议")
     budget: Optional[Budget] = Field(default=None, description="预算信息")
 

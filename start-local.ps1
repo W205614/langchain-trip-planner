@@ -10,12 +10,20 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $backendDir = Join-Path $root 'backend'
 $frontendDir = Join-Path $root 'frontend'
 $children = @()
+$script:stopRequested = $false
+$cancelHandler = [ConsoleCancelEventHandler]{
+    param($sender, $eventArgs)
+    # 由脚本统一清理进程树，避免 Ctrl+C 只被 Uvicorn reload 子进程接收。
+    $eventArgs.Cancel = $true
+    $script:stopRequested = $true
+}
 
 function Stop-LocalServices {
     foreach ($process in $children) {
         if ($null -ne $process -and -not $process.HasExited) {
             Write-Host "停止 $($process.ProcessName) (PID $($process.Id))..." -ForegroundColor Yellow
-            Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            # Uvicorn --reload 与 npm 都会派生子进程；按进程树终止才能一次 Ctrl+C 全部退出。
+            & taskkill.exe /PID $process.Id /T /F *> $null
         }
     }
 }
@@ -34,6 +42,7 @@ try {
     # 后端 .env 可能只允许 localhost，而本脚本将 Vite 绑定在 127.0.0.1。
     # 仅覆盖本次本地子进程的 CORS 配置，避免浏览器把跨域预检失败显示为 Network Error。
     $env:CORS_ORIGINS = 'http://localhost:5173,http://127.0.0.1:5173'
+    [Console]::add_CancelKeyPress($cancelHandler)
 
     Write-Host "使用 Conda 环境：$env:CONDA_DEFAULT_ENV" -ForegroundColor Cyan
     Write-Host '启动后端：http://localhost:9000' -ForegroundColor Cyan
@@ -43,7 +52,7 @@ try {
     $children += Start-Process -FilePath $npmCommand.Source -ArgumentList 'run','dev','--','--host','127.0.0.1' -WorkingDirectory $frontendDir -PassThru -NoNewWindow
 
     Write-Host '服务正在前台运行。按 Ctrl+C 可同时停止前后端。' -ForegroundColor Green
-    while ($true) {
+    while (-not $script:stopRequested) {
         Start-Sleep -Milliseconds 500
         foreach ($process in $children) {
             if ($process.HasExited) {
@@ -56,5 +65,6 @@ catch {
     if ($_.Exception.Message -notmatch '已退出') { Write-Error $_ }
 }
 finally {
+    [Console]::remove_CancelKeyPress($cancelHandler)
     Stop-LocalServices
 }

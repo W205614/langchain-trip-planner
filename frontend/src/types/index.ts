@@ -72,6 +72,7 @@ export interface TripPlan {
   end_date: string
   days: DayPlan[]
   weather_info: WeatherInfo[]
+  weather_notice?: string
   overall_suggestions: string
   budget?: Budget
 }
