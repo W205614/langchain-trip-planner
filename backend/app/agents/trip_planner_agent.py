@@ -557,11 +557,14 @@ class MultiAgentTripPlanner:
         graph.add_node("generate_trip_plan", self._generate_trip_plan)
         graph.add_node("fallback_plan", self._fallback_plan)
         
-        # 3. 铺设传送带 (普通边: 顺次执行)
+        # 3. 数据节点彼此无依赖，扇出并行后在生成节点汇合；降低高德 I/O 等待时间。
         graph.add_edge(START, "search_attractions")
-        graph.add_edge("search_attractions", "get_weather")
-        graph.add_edge("get_weather", "search_hotels")
-        graph.add_edge("search_hotels", "generate_trip_plan")
+        graph.add_edge(START, "get_weather")
+        graph.add_edge(START, "search_hotels")
+        graph.add_edge(
+            ["search_attractions", "get_weather", "search_hotels"],
+            "generate_trip_plan",
+        )
         # 4. 铺设智能分拣闸门 (条件边: 失败走兜底，成功则结束)
         graph.add_conditional_edges(
             "generate_trip_plan",

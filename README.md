@@ -94,10 +94,9 @@
 │  Agent 编排层           │  │  RAG / 历史服务层    │
 │  app/agents/            │  │  app/services/       │
 │  LangGraph StateGraph:  │  │  rag_service.py      │
-│  search_attractions →   │  │   (ChromaDB + 嵌入)  │
-│  get_weather →          │  │  history_service.py  │
-│  search_hotels →        │  │   (SQLite CRUD)      │
-│  generate_trip_plan     │  └──────────┬──────────┘
+│  景点 / 天气 / 酒店并行   │  │   (ChromaDB + 嵌入)  │
+│          ↓ 汇合          │  │  history_service.py  │
+│  generate_trip_plan     │  │   (SQLite CRUD)      │
 │  →(失败)→ fallback_plan │             │
 └──────────┬──────────────┘  ┌──────────▼─────────┐
            └────────────────►│  数据库层 app/db/   │
@@ -347,9 +346,10 @@ builder.add_node("generate_trip_plan", generate_trip_plan_node)
 builder.add_node("fallback_plan", fallback_plan_node)
 
 builder.add_edge(START, "search_attractions")
-builder.add_edge("search_attractions", "get_weather")
-builder.add_edge("get_weather", "search_hotels")
-builder.add_edge("search_hotels", "generate_trip_plan")
+builder.add_edge(START, "get_weather")
+builder.add_edge(START, "search_hotels")
+# 三个数据节点完成后再生成行程
+builder.add_edge(["search_attractions", "get_weather", "search_hotels"], "generate_trip_plan")
 # 条件路由: LLM 失败时走备用计划, 否则到 END
 builder.add_conditional_edges("generate_trip_plan", route_after_generation)
 builder.add_edge("fallback_plan", END)

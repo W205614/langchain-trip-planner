@@ -337,7 +337,8 @@ const handleSubmit = async () => {
     }
 
     const response = await generateTripPlanStream(requestData, (progress) => {
-      loadingProgress.value = progress.percent
+      // 数据节点已并行，事件到达顺序不固定；进度条不应因较早节点晚到而倒退。
+      loadingProgress.value = Math.max(loadingProgress.value, progress.percent)
       loadingStatus.value = progress.message
     })
 
