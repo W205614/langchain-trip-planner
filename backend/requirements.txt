@@ -29,6 +29,7 @@ langchain-text-splitters>=0.3.0
 
 # 历史记录数据库 (SQLAlchemy + SQLite, 可无缝切换 PostgreSQL)
 sqlalchemy>=2.0.0
+psycopg[binary]>=3.2.0
 
 # 测试
 pytest>=8.0.0

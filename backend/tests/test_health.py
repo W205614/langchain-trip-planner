@@ -19,6 +19,30 @@ def test_health(client):
     assert data["status"] == "healthy"
 
 
+def test_liveness_and_readiness(client):
+    liveness = client.get("/healthz")
+    readiness = client.get("/readyz")
+    assert liveness.status_code == 200
+    assert liveness.json()["status"] == "healthy"
+    assert readiness.status_code == 200
+    assert readiness.json()["status"] == "healthy"
+
+
+def test_readiness_returns_503_when_a_dependency_is_unavailable(client, monkeypatch):
+    from app.api import main
+
+    monkeypatch.setattr(
+        main,
+        "check_database_ready",
+        lambda: (_ for _ in ()).throw(RuntimeError("database unavailable")),
+    )
+
+    response = client.get("/readyz")
+
+    assert response.status_code == 503
+    assert response.json()["status"] == "unready"
+
+
 def test_trip_health(client):
     """旅行规划服务健康检查"""
     resp = client.get("/api/trip/health")

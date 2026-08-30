@@ -6,6 +6,7 @@
 # Secrets and local runtime state
 .env
 **/.env
+**/.env.docker
 !deploy/.env.example
 backend/data/chroma/
 backend/data/trip_planner.db*

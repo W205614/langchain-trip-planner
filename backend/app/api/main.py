@@ -5,6 +5,7 @@ import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import _rate_limit_exceeded_handler
@@ -14,7 +15,7 @@ from ..config import get_settings, validate_config, print_config
 from ..core.logging import setup_logging
 from ..core.exceptions import BizException, biz_exception_handler, global_exception_handler
 from ..core.rate_limit import limiter
-from ..db.database import init_db
+from ..db.database import check_database_ready, init_db
 from .routes import trip, poi, map as map_routes, history, rag, auth
 
 
@@ -159,14 +160,40 @@ async def root():
     }
 
 
-@app.get("/health")
-async def health():
-    """健康检查"""
+@app.get("/healthz")
+async def healthz():
+    """存活检查：仅表示进程可响应，不访问任何依赖。"""
     return {
         "status": "healthy",
         "service": settings.app_name,
         "version": settings.app_version,
     }
+
+
+@app.get("/readyz")
+async def readyz():
+    """就绪检查：数据库与本地 RAG 存储可用后才返回 healthy。"""
+    try:
+        check_database_ready()
+        from ..services.rag_service import get_rag_service
+
+        rag = get_rag_service()
+        if rag.enabled:
+            rag._knowledge_store._collection.count()
+            rag._history_store._collection.count()
+        return {"status": "healthy", "service": settings.app_name}
+    except Exception as exc:
+        logger.warning("就绪检查失败: %s", exc)
+        return JSONResponse(
+            status_code=503,
+            content={"status": "unready", "service": settings.app_name},
+        )
+
+
+@app.get("/health")
+async def health():
+    """兼容旧健康检查地址。"""
+    return await healthz()
 
 
 if __name__ == "__main__":
