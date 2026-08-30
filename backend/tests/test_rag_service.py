@@ -5,6 +5,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from langchain_core.documents import Document
 
 
 class FakeEmbedding:
@@ -130,3 +131,46 @@ def test_ensure_city_index_no_poi_returns_false(rag, monkeypatch):
     with patch("app.services.amap_service.get_amap_service", return_value=fake_amap):
         ok = rag.ensure_city_index("华盛顿")
     assert ok is False
+
+
+def test_retrieve_embeds_shared_query_once(rag):
+    """城市知识与个人历史检索应复用同一条查询向量。"""
+    embedding = MagicMock()
+    embedding.embed_query.return_value = [0.1] * 3072
+    rag._embedding = embedding
+    rag._knowledge_store = MagicMock()
+    rag._history_store = MagicMock()
+    rag._knowledge_store.similarity_search_by_vector.return_value = [
+        Document(page_content="故宫信息", metadata={"city": "北京", "source": "beijing.md"})
+    ]
+    rag._history_store.similarity_search_by_vector.return_value = [
+        Document(page_content="我的历史", metadata={})
+    ]
+
+    results = rag.retrieve("北京 两天旅行", city="北京", user_id=7)
+
+    embedding.embed_query.assert_called_once_with("北京 两天旅行")
+    assert rag._knowledge_store.similarity_search_by_vector.call_count == 1
+    assert rag._history_store.similarity_search_by_vector.call_count == 1
+    assert len(results) == 2
+
+
+def test_batch_attraction_details_embeds_once(rag):
+    """多个景点详情应批量嵌入，而非每个景点单独请求外部服务。"""
+    embedding = MagicMock()
+    embedding.embed_documents.return_value = [[0.1] * 3072, [0.2] * 3072]
+    rag._embedding = embedding
+    rag._knowledge_store = MagicMock()
+    rag._knowledge_store.similarity_search_by_vector.return_value = [
+        Document(page_content="### 故宫\n- 门票: 60元\n- 开放时间: 08:30", metadata={})
+    ]
+
+    details = rag.get_attraction_rag_texts(["故宫", "天坛", "故宫"], "北京")
+
+    embedding.embed_documents.assert_called_once_with([
+        "北京 故宫 门票 开放时间 交通 避坑 打卡",
+        "北京 天坛 门票 开放时间 交通 避坑 打卡",
+    ])
+    assert rag._knowledge_store.similarity_search_by_vector.call_count == 2
+    assert details["故宫"] == "- 门票: 60元\n- 开放时间: 08:30"
+    assert details["天坛"] == "- 门票: 60元\n- 开放时间: 08:30"

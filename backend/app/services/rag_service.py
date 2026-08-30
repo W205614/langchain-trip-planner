@@ -333,10 +333,13 @@ class RagService:
             return []
         results: List[str] = []
         try:
+            # 城市知识与个人历史使用同一查询文本；只做一次远程嵌入，再在本地 Chroma
+            # 对两个集合检索，避免一次规划产生两次相同的 embedding HTTP 请求。
+            query_embedding = self._embedding.embed_query(query)
             # 1. 城市知识库 (限定城市, 相关性最高)
             if city:
-                docs = self._knowledge_store.similarity_search(
-                    query, k=k, filter={"city": city}
+                docs = self._knowledge_store.similarity_search_by_vector(
+                    query_embedding, k=k, filter={"city": city}
                 )
                 results.extend(
                     f"[知识库-{doc.metadata.get('city')} / {doc.metadata.get('source', '未知来源')}] "
@@ -345,8 +348,8 @@ class RagService:
                 )
             # 2. 历史行程（仅限当前用户；旧版无 user_id 的向量不会被命中）
             if user_id is not None:
-                docs = self._history_store.similarity_search(
-                    query, k=2, filter={"user_id": user_id}
+                docs = self._history_store.similarity_search_by_vector(
+                    query_embedding, k=2, filter={"user_id": user_id}
                 )
                 results.extend(f"[我的历史行程] {doc.page_content}" for doc in docs)
         except Exception as e:
@@ -462,27 +465,44 @@ class RagService:
         供行程生成后回填到景点描述, 让知识库内容真正落到前端每个景点上。
         只取最相关的一段, 避免把其他景点的内容拼进来。
         """
+        return self.get_attraction_rag_texts([name], city, max_chars).get(name, "")
+
+    def get_attraction_rag_texts(
+        self, names: List[str], city: str, max_chars: int = 320
+    ) -> dict[str, str]:
+        """批量获取景点详情。
+
+        先把所有景点查询一次性向量化，再用向量在 Chroma 中本地检索，避免 N 个景点
+        串行发 N 次 embedding 请求而阻塞行程接口返回。
+        """
         if not self.enabled:
-            return ""
+            return {}
+        unique_names = list(dict.fromkeys(name for name in names if name))
+        if not unique_names:
+            return {}
         try:
-            docs = self._knowledge_store.similarity_search(
-                f"{city} {name} 门票 开放时间 交通 避坑 打卡",
-                k=1,
-                filter={"city": city},
-            )
-            if not docs:
-                return ""
-            lines = []
-            for line in docs[0].page_content.splitlines():
-                line = line.strip()
-                if not line or line.startswith("##") or line.startswith("###"):
-                    continue  # 跳过标题行
-                lines.append(line)
-            text = "\n".join(lines).strip()
-            return text[:max_chars]
+            queries = [f"{city} {name} 门票 开放时间 交通 避坑 打卡" for name in unique_names]
+            embeddings = self._embedding.embed_documents(queries)
+            details: dict[str, str] = {}
+            for name, embedding in zip(unique_names, embeddings):
+                docs = self._knowledge_store.similarity_search_by_vector(
+                    embedding, k=1, filter={"city": city}
+                )
+                if not docs:
+                    continue
+                lines = []
+                for line in docs[0].page_content.splitlines():
+                    line = line.strip()
+                    if not line or line.startswith("##") or line.startswith("###"):
+                        continue
+                    lines.append(line)
+                detail = "\n".join(lines).strip()[:max_chars]
+                if detail:
+                    details[name] = detail
+            return details
         except Exception as e:
-            logger.warning(f"⚠️  知识库景点详情检索失败: {e}")
-            return ""
+            logger.warning(f"⚠️  知识库景点详情批量检索失败: {e}")
+            return {}
 
 
 # 全局单例
