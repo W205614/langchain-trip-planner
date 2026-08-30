@@ -19,7 +19,10 @@ os.environ["LLM_BASE_URL"] = "http://localhost:9999/v1"  # 无效端点, 防止�
 os.environ["LLM_MODEL_ID"] = "test-model"
 # 开发机可能在 backend/.env 指向 PostgreSQL。测试必须独立于该本机配置，
 # 否则收集阶段会因未安装的 PostgreSQL 驱动而失败。
-os.environ["DATABASE_URL"] = "sqlite:///./data/pytest_trip_planner.db"
+_TEST_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "pytest_trip_planner.db"
+if _TEST_DB_PATH.exists():
+    _TEST_DB_PATH.unlink()
+os.environ["DATABASE_URL"] = f"sqlite:///{_TEST_DB_PATH.as_posix()}"
 
 import pytest
 from fastapi.testclient import TestClient

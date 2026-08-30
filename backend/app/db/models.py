@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String, Text, func
+from sqlalchemy import Boolean, DateTime, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
@@ -20,6 +20,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(64), unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String(128))  # bcrypt 哈希
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now()
     )
@@ -72,4 +73,47 @@ class RagSyncJob(Base):
         DateTime,
         server_default=func.now(),
         onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+    )
+
+
+class KnowledgeDocument(Base):
+    """用户提交、管理员审核后可公开检索的图文旅游资料。"""
+
+    __tablename__ = "knowledge_documents"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    submitted_by: Mapped[int] = mapped_column(Integer, index=True)
+    reviewed_by: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    city: Mapped[str] = mapped_column(String(64), index=True)
+    title: Mapped[str] = mapped_column(String(160))
+    original_filename: Mapped[str] = mapped_column(String(255))
+    stored_path: Mapped[str] = mapped_column(String(512))
+    sha256: Mapped[str] = mapped_column(String(64), index=True)
+    media_type: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)
+    review_note: Mapped[str] = mapped_column(String(512), default="")
+    page_count: Mapped[int] = mapped_column(Integer, default=0)
+    source_text: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None)
+    )
+
+
+class KnowledgeIngestJob(Base):
+    """审核通过的知识资料解析与向量化 outbox。"""
+
+    __tablename__ = "knowledge_ingest_jobs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    document_id: Mapped[int] = mapped_column(Integer, index=True)
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    next_retry_at: Mapped[datetime] = mapped_column(
+        DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), index=True
+    )
+    last_error: Mapped[str] = mapped_column(String(512), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None)
     )

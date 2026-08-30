@@ -80,6 +80,14 @@ class Settings(BaseSettings):
     embedding_base_url: str = Field(default="")
     embedding_api_key: str = Field(default="")
 
+    # 多模态知识解析使用独立模型；缺省复用 LLM 的 key/base_url，避免影响行程生成模型。
+    vision_model: str = Field(default="", validation_alias=AliasChoices("VISION_MODEL_ID", "VISION_MODEL"))
+    vision_base_url: str = Field(default="")
+    vision_api_key: str = Field(default="")
+    vision_timeout: int = Field(default=60, ge=10, le=180)
+    # 启动时将已存在的该用户名授予审核权限；空值表示不自动授予任何管理员。
+    bootstrap_admin_username: str = Field(default="")
+
     # 接口鉴权 (JWT)
     # 生产环境务必设置强随机 SECRET_KEY (可: python -c "import secrets; print(secrets.token_urlsafe(48))")
     jwt_secret_key: str = Field(default="dev-secret-change-me")
@@ -173,6 +181,7 @@ def print_config():
     embedding_api_key = settings.embedding_api_key or settings.llm_api_key
     embedding_base_url = settings.embedding_base_url or settings.llm_base_url or "https://api.openai.com/v1"
     print(f"RAG 嵌入模型: {settings.embedding_model} @ {embedding_base_url} ({'已配置(走中转)' if embedding_api_key else '未配置(自动禁用)'})")
+    print(f"视觉解析模型: {settings.vision_model or '未配置'}")
     print(f"日志级别: {settings.log_level}")
 
 

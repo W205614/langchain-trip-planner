@@ -123,7 +123,7 @@ const handleSubmit = async () => {
     const resp = isRegister.value
       ? await register(form.username, form.password)
       : await login(form.username, form.password)
-    setAuth(resp.access_token, resp.username)
+    setAuth(resp.access_token, resp.username, resp.is_admin)
     message.success(isRegister.value ? '注册成功!' : '登录成功!')
     // 登录后跳回来源页(默认历史页)
     const redirect = (route.query.redirect as string) || '/history'

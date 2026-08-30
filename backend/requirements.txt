@@ -17,6 +17,7 @@ python-dotenv>=1.0.0
 
 # CORS支持
 python-multipart>=0.0.9
+pymupdf>=1.24.0
 
 # 可观测性: Prometheus 指标
 prometheus-fastapi-instrumentator>=7.0.0

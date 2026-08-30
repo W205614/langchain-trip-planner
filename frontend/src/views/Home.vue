@@ -14,6 +14,12 @@
         <a-button class="history-entry" @click="goHistory">
           📜 历史行程
         </a-button>
+        <a-button class="history-entry" @click="goKnowledge">
+          📚 投稿攻略
+        </a-button>
+        <a-button v-if="admin" class="history-entry" @click="goKnowledgeAdmin">
+          🛡️ 知识审核
+        </a-button>
         <a-button class="logout-btn" @click="handleLogout">
           退出
         </a-button>
@@ -241,11 +247,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { generateTripPlanStream } from '@/services/api'
-import { isAuthenticated, getUsername, clearAuth } from '@/services/auth'
+import { isAuthenticated, getUsername, clearAuth, isAdmin } from '@/services/auth'
 import type { TripFormData } from '@/types'
 import type { Dayjs } from 'dayjs'
 
@@ -257,6 +263,7 @@ const loadingStatus = ref('')
 // 登录态
 const isLoggedIn = ref(isAuthenticated())
 const username = ref(getUsername() || '')
+const admin = computed(() => isAdmin())
 
 const goLogin = () => {
   router.push('/login')
@@ -296,6 +303,14 @@ const selectCity = (city: string) => {
 // 跳转历史记录页
 const goHistory = () => {
   router.push('/history')
+}
+
+const goKnowledge = () => {
+  router.push('/knowledge')
+}
+
+const goKnowledgeAdmin = () => {
+  router.push('/knowledge/admin')
 }
 
 // 监听日期变化,自动计算旅行天数

@@ -17,7 +17,7 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from ..config import get_settings
-from ..db.database import get_db
+from ..db.database import SessionLocal, get_db
 from ..db.models import User
 
 logger = logging.getLogger(__name__)
@@ -81,3 +81,26 @@ def get_current_user(
     if user is None:
         raise cred_exc
     return user
+
+
+def require_admin(current_user: User = Depends(get_current_user)) -> User:
+    """审核和发布公共知识只能由显式管理员执行。"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="需要管理员权限")
+    return current_user
+
+
+def bootstrap_admin_user() -> None:
+    """仅将环境变量指定的既有账号提权，绝不在注册接口中自动授予角色。"""
+    username = get_settings().bootstrap_admin_username.strip()
+    if not username:
+        return
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.username == username).first()
+        if user and not user.is_admin:
+            user.is_admin = True
+            db.commit()
+            logger.info("已授予配置管理员账号审核权限: %s", username)
+    finally:
+        db.close()

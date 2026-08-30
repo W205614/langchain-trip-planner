@@ -184,4 +184,35 @@ export async function deleteHistory(id: number): Promise<any> {
   return response.data
 }
 
+export async function submitKnowledge(city: string, title: string, file: File): Promise<any> {
+  const form = new FormData()
+  form.append('city', city)
+  form.append('title', title)
+  form.append('file', file)
+  const response = await apiClient.post('/api/knowledge/submissions', form, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+  return response.data
+}
+
+export async function fetchMyKnowledge(): Promise<any> {
+  return (await apiClient.get('/api/knowledge/submissions/mine')).data
+}
+
+export async function fetchAdminKnowledge(status?: string): Promise<any> {
+  return (await apiClient.get('/api/knowledge/admin/submissions', { params: { status_filter: status } })).data
+}
+
+export async function approveKnowledge(id: number, note: string = ''): Promise<any> {
+  return (await apiClient.post(`/api/knowledge/admin/submissions/${id}/approve`, { note })).data
+}
+
+export async function rejectKnowledge(id: number, note: string = ''): Promise<any> {
+  return (await apiClient.post(`/api/knowledge/admin/submissions/${id}/reject`, { note })).data
+}
+
+export async function deleteKnowledge(id: number): Promise<any> {
+  return (await apiClient.delete(`/api/knowledge/admin/submissions/${id}`)).data
+}
+
 export default apiClient

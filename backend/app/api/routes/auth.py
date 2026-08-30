@@ -34,6 +34,7 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     username: str
+    is_admin: bool = False
 
 
 @router.post("/register", summary="注册", response_model=TokenResponse)
@@ -49,7 +50,7 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
     logger.info(f"新用户注册: {user.username}")
-    return TokenResponse(access_token=create_access_token(user.id), username=user.username)
+    return TokenResponse(access_token=create_access_token(user.id), username=user.username, is_admin=user.is_admin)
 
 
 @router.post("/login", summary="登录", response_model=TokenResponse)
@@ -62,7 +63,7 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
             detail="用户名或密码错误",
         )
     logger.info(f"用户登录: {user.username}")
-    return TokenResponse(access_token=create_access_token(user.id), username=user.username)
+    return TokenResponse(access_token=create_access_token(user.id), username=user.username, is_admin=user.is_admin)
 
 
 @router.get("/me", summary="当前登录用户")
@@ -71,5 +72,6 @@ def me(current_user: User = Depends(get_current_user)):
     return {
         "id": current_user.id,
         "username": current_user.username,
+        "is_admin": current_user.is_admin,
         "created_at": current_user.created_at.strftime("%Y-%m-%d %H:%M:%S") if current_user.created_at else None,
     }

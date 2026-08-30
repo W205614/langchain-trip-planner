@@ -16,7 +16,7 @@ from ..core.logging import setup_logging
 from ..core.exceptions import BizException, biz_exception_handler, global_exception_handler
 from ..core.rate_limit import limiter
 from ..db.database import check_database_ready, init_db
-from .routes import trip, poi, map as map_routes, history, rag, auth
+from .routes import trip, poi, map as map_routes, history, rag, auth, knowledge
 
 
 # 初始化日志(幂等): 控制台 + 文件落盘。
@@ -60,6 +60,8 @@ async def lifespan(app: FastAPI):
     # 初始化数据库 (SQLite 建表, 幂等)
     try:
         init_db()
+        from ..core.security import bootstrap_admin_user
+        bootstrap_admin_user()
     except Exception as e:
         print(f"❌ 数据库初始化失败: {e}")
 
@@ -83,9 +85,15 @@ async def lifespan(app: FastAPI):
     rag_sync_worker.start()
     app.state.rag_sync_worker = rag_sync_worker
 
+    from ..services.knowledge_ingest import KnowledgeIngestWorker
+    knowledge_ingest_worker = KnowledgeIngestWorker()
+    knowledge_ingest_worker.start()
+    app.state.knowledge_ingest_worker = knowledge_ingest_worker
+
     yield  # 应用运行期间挂起
 
     rag_sync_worker.stop()
+    knowledge_ingest_worker.stop()
 
     print("\n" + "=" * 60)
     print("👋 应用正在关闭...")
@@ -154,6 +162,7 @@ app.include_router(map_routes.router, prefix="/api")
 app.include_router(history.router, prefix="/api")
 app.include_router(rag.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
+app.include_router(knowledge.router, prefix="/api")
 
 
 @app.get("/")

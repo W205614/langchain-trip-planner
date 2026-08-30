@@ -347,6 +347,51 @@ class RagService:
         """删除历史记录时同步移除其私有向量，遵守数据删除语义。"""
         if not self.enabled:
             return False
+
+    def replace_public_knowledge_document(
+        self, document_id: int, city: str, title: str, page_texts: List[str]
+    ) -> bool:
+        """以来源文档为单位替换公共图文知识，保留页码与可追溯元数据。"""
+        if not self.enabled:
+            return False
+        try:
+            self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
+            self._knowledge_store.delete(where={"document_id": document_id})
+            documents: List[Document] = []
+            ids: List[str] = []
+            for page, text in enumerate(page_texts, start=1):
+                for index, chunk in enumerate(self._text_splitter.split_text(text)):
+                    chunk_id = f"submission:{document_id}:{page}:{index}"
+                    documents.append(Document(
+                        page_content=chunk,
+                        metadata={
+                            "city": city,
+                            "source": title,
+                            "source_type": "multimodal",
+                            "document_id": document_id,
+                            "page": page,
+                            "chunk_id": chunk_id,
+                        },
+                    ))
+                    ids.append(chunk_id)
+            if documents:
+                with observe_rag_operation("multimodal_knowledge_embedding"):
+                    self._knowledge_store.add_documents(documents, ids=ids)
+            return True
+        except Exception as exc:
+            logger.warning("公共图文知识写入失败: document_id=%s, error=%s", document_id, exc)
+            return False
+
+    def delete_public_knowledge_document(self, document_id: int) -> bool:
+        if not self.enabled:
+            return False
+        try:
+            self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
+            self._knowledge_store.delete(where={"document_id": document_id})
+            return True
+        except Exception as exc:
+            logger.warning("公共图文知识删除失败: document_id=%s, error=%s", document_id, exc)
+            return False
         try:
             self._refresh_store("_history_store", _HISTORY_COLLECTION)
             self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
@@ -375,11 +420,11 @@ class RagService:
                     docs = self._knowledge_store.similarity_search_by_vector(
                         query_embedding, k=k, filter={"city": city}
                     )
-                results.extend(
-                    f"[知识库-{doc.metadata.get('city')} / {doc.metadata.get('source', '未知来源')}] "
-                    f"{doc.page_content}"
-                    for doc in docs
-                )
+                for doc in docs:
+                    source = doc.metadata.get("source", "未知来源")
+                    page = doc.metadata.get("page")
+                    source_label = f"{source} 第{page}页" if page else source
+                    results.append(f"[知识库-{doc.metadata.get('city')} / {source_label}] {doc.page_content}")
             # 2. 历史行程（仅限当前用户；旧版无 user_id 的向量不会被命中）
             if user_id is not None:
                 with observe_rag_operation("history_vector_search"):
@@ -541,6 +586,10 @@ class RagService:
                     lines.append(line)
                 detail = "\n".join(lines).strip()[:max_chars]
                 if detail:
+                    if docs[0].metadata.get("source_type") == "multimodal":
+                        source = docs[0].metadata.get("source", "公共攻略")
+                        page = docs[0].metadata.get("page")
+                        detail = f"[知识来源: {source}{f' 第{page}页' if page else ''}]\n{detail}"
                     details[name] = detail
             return details
         except Exception as e:

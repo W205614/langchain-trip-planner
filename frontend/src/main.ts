@@ -7,6 +7,8 @@ import Home from './views/Home.vue'
 import Result from './views/Result.vue'
 import History from './views/History.vue'
 import Login from './views/Login.vue'
+import Knowledge from './views/Knowledge.vue'
+import KnowledgeAdmin from './views/KnowledgeAdmin.vue'
 import { isAuthenticated } from './services/auth'
 
 const router = createRouter({
@@ -32,6 +34,18 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/knowledge',
+      name: 'Knowledge',
+      component: Knowledge,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/knowledge/admin',
+      name: 'KnowledgeAdmin',
+      component: KnowledgeAdmin,
+      meta: { requiresAuth: true }
     }
   ]
 })
