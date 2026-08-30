@@ -202,6 +202,25 @@ class RagService:
             persist_directory=str(CHROMA_DIR),
         )
 
+    def _refresh_store(self, attribute: str, collection_name: str) -> None:
+        """删除/重建集合后，丢弃可能持有旧 collection ID 的 Chroma 实例。"""
+        store = getattr(self, attribute)
+        try:
+            store._collection.count()
+        except Exception as exc:
+            logger.warning("RAG 集合句柄失效，重新连接: %s", collection_name)
+            setattr(self, attribute, self._new_store(collection_name))
+
+    def is_ready(self) -> bool:
+        """验证本地 Chroma 句柄可用；RAG 未配置时不阻塞核心服务就绪。"""
+        if not self.enabled:
+            return True
+        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
+        self._refresh_store("_history_store", _HISTORY_COLLECTION)
+        self._knowledge_store._collection.count()
+        self._history_store._collection.count()
+        return True
+
     # ============ 知识文档索引 ============
 
     def _load_knowledge_documents(self) -> List[Document]:
@@ -227,6 +246,7 @@ class RagService:
         """
         if not self.enabled:
             return False
+        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         try:
             if self._knowledge_store._collection.count() > 0:
                 return True  # 已有数据, 无需重建
@@ -242,6 +262,7 @@ class RagService:
          # ① RAG 没启用 → 直接报告"未启用"
         if not self.enabled:
             return {"success": False, "message": "RAG 未启用 (缺少嵌入配置)", "chunks": 0}
+        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         #  ② 读取 knowledge/*.md 并切块
         documents = self._load_knowledge_documents()
         # ③ 目录为空 → 报告"知识目录为空"
@@ -280,6 +301,7 @@ class RagService:
         if not self.enabled:
             return False
         try:
+            self._refresh_store("_history_store", _HISTORY_COLLECTION)
             text = self._plan_to_text(request, trip_plan)
             self._history_store.add_documents(
                 [
@@ -319,6 +341,7 @@ class RagService:
         if not self.enabled:
             return False
         try:
+            self._refresh_store("_history_store", _HISTORY_COLLECTION)
             self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
             return True
         except Exception as exc:
@@ -333,6 +356,8 @@ class RagService:
             return []
         results: List[str] = []
         try:
+            self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
+            self._refresh_store("_history_store", _HISTORY_COLLECTION)
             # 城市知识与个人历史使用同一查询文本；只做一次远程嵌入，再在本地 Chroma
             # 对两个集合检索，避免一次规划产生两次相同的 embedding HTTP 请求。
             query_embedding = self._embedding.embed_query(query)
@@ -388,6 +413,7 @@ class RagService:
         if not self.enabled or not city:
             return False
         try:
+            self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
             # 幂等: 该城市是否已有高德自动数据(或手写md数据)
             existing = self._knowledge_store.get(where={"source": f"{_GAODE_SOURCE_PREFIX}{city}"})
             if existing and existing.get("ids"):
@@ -440,6 +466,7 @@ class RagService:
         """
         if not self.enabled:
             return []
+        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         # 任意城市增强: 未覆盖城市先用高德自动建知识, 使景点补充也生效
         self.ensure_city_index(city)
         try:
@@ -477,6 +504,7 @@ class RagService:
         """
         if not self.enabled:
             return {}
+        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         unique_names = list(dict.fromkeys(name for name in names if name))
         if not unique_names:
             return {}

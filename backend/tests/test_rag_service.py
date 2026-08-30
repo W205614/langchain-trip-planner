@@ -174,3 +174,15 @@ def test_batch_attraction_details_embeds_once(rag):
     assert rag._knowledge_store.similarity_search_by_vector.call_count == 2
     assert details["故宫"] == "- 门票: 60元\n- 开放时间: 08:30"
     assert details["天坛"] == "- 门票: 60元\n- 开放时间: 08:30"
+
+
+def test_readiness_reconnects_a_stale_chroma_collection_handle(rag, monkeypatch):
+    stale = MagicMock()
+    stale._collection.count.side_effect = RuntimeError("collection does not exist")
+    fresh = MagicMock()
+    fresh._collection.count.return_value = 0
+    rag._knowledge_store = stale
+    monkeypatch.setattr(rag, "_new_store", lambda _name: fresh)
+
+    assert rag.is_ready() is True
+    assert rag._knowledge_store is fresh

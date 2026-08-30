@@ -96,18 +96,24 @@ class RagSyncWorker:
         from .rag_service import get_rag_service
 
         rag = get_rag_service()
+        if not rag.enabled:
+            return
         if job.operation == "delete":
-            rag.delete_history_plan(job.record_id, job.user_id)
+            if not rag.delete_history_plan(job.record_id, job.user_id):
+                raise RuntimeError("RAG delete operation returned false")
             return
 
         record = db.get(TripRecord, job.record_id)
         # 若 upsert 任务之后已删除主记录，删除旧向量即可，不能重新创建幻影记录。
         if record is None:
-            rag.delete_history_plan(job.record_id, job.user_id)
+            if not rag.delete_history_plan(job.record_id, job.user_id):
+                raise RuntimeError("RAG stale-record delete returned false")
             return
         plan = TripPlan.model_validate_json(record.plan_json)
-        rag.delete_history_plan(record.id, record.user_id)
-        rag.add_history_plan(record.id, record.user_id, trip_record_to_request(record), plan)
+        if not rag.delete_history_plan(record.id, record.user_id):
+            raise RuntimeError("RAG replace delete returned false")
+        if not rag.add_history_plan(record.id, record.user_id, trip_record_to_request(record), plan):
+            raise RuntimeError("RAG upsert operation returned false")
 
     @staticmethod
     def _schedule_retry(job: RagSyncJob, exc: Exception) -> None:

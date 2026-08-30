@@ -186,9 +186,7 @@ async def readyz():
         from ..services.rag_service import get_rag_service
 
         rag = get_rag_service()
-        if rag.enabled:
-            rag._knowledge_store._collection.count()
-            rag._history_store._collection.count()
+        rag.is_ready()
         return {"status": "healthy", "service": settings.app_name}
     except Exception as exc:
         logger.warning("就绪检查失败: %s", exc)

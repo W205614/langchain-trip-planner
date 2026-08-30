@@ -112,3 +112,24 @@ def test_outbox_keeps_user_ids_isolated(tmp_path, monkeypatch):
         assert len(calls) == 2
     finally:
         db.close()
+
+
+def test_outbox_retries_when_rag_reports_unsuccessful_write(tmp_path, monkeypatch):
+    session_factory = _database(tmp_path)
+    db = session_factory()
+    try:
+        history_service.create_trip_record(db, 13, _request(), _plan())
+        rag = MagicMock()
+        rag.enabled = True
+        rag.delete_history_plan.return_value = True
+        rag.add_history_plan.return_value = False
+        monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: rag)
+
+        RagSyncWorker(session_factory).run_once()
+
+        job = db.query(models_mod.RagSyncJob).one()
+        db.refresh(job)
+        assert job.status == "retry"
+        assert "returned false" in job.last_error
+    finally:
+        db.close()
