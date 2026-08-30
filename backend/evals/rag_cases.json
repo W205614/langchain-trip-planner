@@ -1,0 +1,16 @@
+[
+  {
+    "id": "beijing-ticket",
+    "query": "北京故宫门票和开放时间",
+    "city": "北京",
+    "relevant_chunk_ids": ["beijing.md:0"],
+    "expected_facts": ["故宫"]
+  },
+  {
+    "id": "shanghai-transport",
+    "query": "上海外滩怎么去",
+    "city": "上海",
+    "relevant_chunk_ids": ["shanghai.md:0"],
+    "expected_facts": ["外滩"]
+  }
+]

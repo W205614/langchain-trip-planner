@@ -17,6 +17,9 @@ os.environ["AMAP_API_KEY"] = "test_amap_key"
 os.environ["LLM_API_KEY"] = "test_llm_key"
 os.environ["LLM_BASE_URL"] = "http://localhost:9999/v1"  # 无效端点, 防止误发请求
 os.environ["LLM_MODEL_ID"] = "test-model"
+# 开发机可能在 backend/.env 指向 PostgreSQL。测试必须独立于该本机配置，
+# 否则收集阶段会因未安装的 PostgreSQL 驱动而失败。
+os.environ["DATABASE_URL"] = "sqlite:///./data/pytest_trip_planner.db"
 
 import pytest
 from fastapi.testclient import TestClient

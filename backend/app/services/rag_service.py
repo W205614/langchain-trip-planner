@@ -26,6 +26,7 @@ from langchain_core.embeddings import Embeddings as LangChainEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from ..config import get_settings
+from ..core.rag_metrics import observe_rag_operation
 from ..models.schemas import TripPlan, TripRequest
 
 logger = logging.getLogger(__name__)
@@ -229,11 +230,16 @@ class RagService:
         for md_path in sorted(KNOWLEDGE_DIR.glob("*.md")):
             city = _CITY_NAME_MAP.get(md_path.stem, md_path.stem)
             content = md_path.read_text(encoding="utf-8")
-            for chunk in self._text_splitter.split_text(content):
+            for index, chunk in enumerate(self._text_splitter.split_text(content)):
                 documents.append(
                     Document(
                         page_content=chunk,
-                        metadata={"city": city, "source": md_path.name},
+                        metadata={
+                            "city": city,
+                            "source": md_path.name,
+                            "chunk_id": f"{md_path.name}:{index}",
+                            "source_type": "markdown",
+                        },
                     )
                 )
         return documents
@@ -279,7 +285,8 @@ class RagService:
                  # ⑤ 新建实例连接空集合
                 self._knowledge_store = self._new_store(_KNOWLEDGE_COLLECTION)
                  # ⑥ 全部向量化并写入
-                self._knowledge_store.add_documents(documents)
+                with observe_rag_operation("knowledge_index_embedding"):
+                    self._knowledge_store.add_documents(documents)
                 logger.info(f"📚 知识索引重建完成: {len(documents)} 个文本块")
                 return {"success": True, "message": f"已索引 {len(documents)} 个文本块", "chunks": len(documents)}
             except Exception as e:
@@ -360,12 +367,14 @@ class RagService:
             self._refresh_store("_history_store", _HISTORY_COLLECTION)
             # 城市知识与个人历史使用同一查询文本；只做一次远程嵌入，再在本地 Chroma
             # 对两个集合检索，避免一次规划产生两次相同的 embedding HTTP 请求。
-            query_embedding = self._embedding.embed_query(query)
+            with observe_rag_operation("query_embedding"):
+                query_embedding = self._embedding.embed_query(query)
             # 1. 城市知识库 (限定城市, 相关性最高)
             if city:
-                docs = self._knowledge_store.similarity_search_by_vector(
-                    query_embedding, k=k, filter={"city": city}
-                )
+                with observe_rag_operation("knowledge_vector_search"):
+                    docs = self._knowledge_store.similarity_search_by_vector(
+                        query_embedding, k=k, filter={"city": city}
+                    )
                 results.extend(
                     f"[知识库-{doc.metadata.get('city')} / {doc.metadata.get('source', '未知来源')}] "
                     f"{doc.page_content}"
@@ -373,9 +382,10 @@ class RagService:
                 )
             # 2. 历史行程（仅限当前用户；旧版无 user_id 的向量不会被命中）
             if user_id is not None:
-                docs = self._history_store.similarity_search_by_vector(
-                    query_embedding, k=2, filter={"user_id": user_id}
-                )
+                with observe_rag_operation("history_vector_search"):
+                    docs = self._history_store.similarity_search_by_vector(
+                        query_embedding, k=2, filter={"user_id": user_id}
+                    )
                 results.extend(f"[我的历史行程] {doc.page_content}" for doc in docs)
         except Exception as e:
             logger.warning(f"⚠️  RAG 检索失败: {e}")
@@ -388,13 +398,14 @@ class RagService:
         if not self.enabled:
             return ""
         # 任意城市增强: 若该城市尚无高德自动入库数据, 先用高德实时搜索自动建知识
-        self.ensure_city_index(request.city)
-        query = (
-            f"{request.city} {request.travel_days}天旅行 "
-            f"{','.join(request.preferences) if request.preferences else ''} "
-            f"{request.free_text_input or ''}"
-        )
-        chunks = self.retrieve(query, city=request.city, k=top_k, user_id=user_id)
+        with observe_rag_operation("context_build"):
+            self.ensure_city_index(request.city)
+            query = (
+                f"{request.city} {request.travel_days}天旅行 "
+                f"{','.join(request.preferences) if request.preferences else ''} "
+                f"{request.free_text_input or ''}"
+            )
+            chunks = self.retrieve(query, city=request.city, k=top_k, user_id=user_id)
         if not chunks:
             return ""
         header = "## 检索到的相关知识 (供你参考, 让行程更真实/贴合当地实际):"
@@ -423,9 +434,11 @@ class RagService:
 
             amap = get_amap_service()
             # 用「城市名 + 景点」搜索, 让高德返回偏旅游景点的POI(纯城市名会混入餐饮/住宿)
-            pois = amap.search_poi(f"{city}必去景点", city)
+            with observe_rag_operation("city_index_build"):
+                pois = amap.search_poi(f"{city}必去景点", city)
             if not pois:
-                pois = amap.search_poi(city, city)
+                with observe_rag_operation("city_index_build"):
+                    pois = amap.search_poi(city, city)
             if not pois:
                 # 高德没搜到(输入可能是乡镇/国外等), 不强写, 退回现有检索
                 return False
@@ -451,7 +464,8 @@ class RagService:
                 ))
 
             if chunks:
-                self._knowledge_store.add_documents(chunks)
+                with observe_rag_operation("city_index_embedding"):
+                    self._knowledge_store.add_documents(chunks)
                 logger.info(f"📍 任意城市增强: 已为「{city}」自动写入 {len(chunks)} 个景点知识块")
             return True
         except Exception as e:
@@ -510,7 +524,8 @@ class RagService:
             return {}
         try:
             queries = [f"{city} {name} 门票 开放时间 交通 避坑 打卡" for name in unique_names]
-            embeddings = self._embedding.embed_documents(queries)
+            with observe_rag_operation("attraction_detail_embedding"):
+                embeddings = self._embedding.embed_documents(queries)
             details: dict[str, str] = {}
             for name, embedding in zip(unique_names, embeddings):
                 docs = self._knowledge_store.similarity_search_by_vector(
