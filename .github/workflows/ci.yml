@@ -87,3 +87,27 @@ jobs:
         run: |
           python -m alembic upgrade head
           python -c "import sqlite3; c=sqlite3.connect('data/trip_planner.db'); print('tables:', [r[0] for r in c.execute(\"SELECT name FROM sqlite_master WHERE type='table'\")])"
+
+  docker-compose-check:
+    name: Docker Compose config and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare non-secret Docker environment
+        run: |
+          cp backend/.env.example backend/.env
+          cat >> backend/.env <<'EOF'
+          AMAP_API_KEY=test_amap_key
+          LLM_API_KEY=test_llm_key
+          LLM_BASE_URL=http://localhost:9999/v1
+          LLM_MODEL_ID=test-model
+          JWT_SECRET_KEY=test-jwt-secret-for-ci-only-0123456789
+          EOF
+
+      - name: Validate Compose configuration
+        run: docker compose --env-file backend/.env config --quiet
+
+      - name: Build images
+        run: docker compose --env-file backend/.env build

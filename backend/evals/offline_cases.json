@@ -1,0 +1,22 @@
+[
+  {
+    "id": "unknown_poi_rejected",
+    "description": "模型返回不属于当日高德候选集的 POI ID 时，后端必须拒绝该景点。"
+  },
+  {
+    "id": "route_duration_repaired",
+    "description": "真实路线超过每日 120 分钟时，确定性删除当天末尾 POI 后重新计算。"
+  },
+  {
+    "id": "route_unavailable_degraded",
+    "description": "路线 API 不可用时保留真实 POI，质量结果声明直线距离降级。"
+  },
+  {
+    "id": "daily_llm_timeout_degraded",
+    "description": "单日模型调用超时后使用当前天真实 POI 兜底，并标记降级日期。"
+  },
+  {
+    "id": "history_rag_user_isolation",
+    "description": "不同 user_id 的历史 outbox 任务仅以各自用户 ID 写入或删除派生向量。"
+  }
+]

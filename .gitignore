@@ -10,6 +10,7 @@
 !deploy/.env.example
 backend/data/chroma/
 backend/data/trip_planner.db*
+backend/data/backups/
 backend/logs/
 frontend/dist/
 frontend/.vite/
