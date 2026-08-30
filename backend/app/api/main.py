@@ -77,7 +77,15 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"⚠️ RAG 初始化失败(不影响主流程): {e}")
 
+    from ..services.rag_sync import RagSyncWorker
+
+    rag_sync_worker = RagSyncWorker()
+    rag_sync_worker.start()
+    app.state.rag_sync_worker = rag_sync_worker
+
     yield  # 应用运行期间挂起
+
+    rag_sync_worker.stop()
 
     print("\n" + "=" * 60)
     print("👋 应用正在关闭...")

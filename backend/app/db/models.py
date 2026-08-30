@@ -1,6 +1,6 @@
 """ORM 数据模型"""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import DateTime, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
@@ -46,4 +46,30 @@ class TripRecord(Base):
     plan_json: Mapped[str] = mapped_column(Text)  # 完整行程计划 JSON
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), index=True
+    )
+
+
+class RagSyncJob(Base):
+    """历史主数据到 Chroma 的最终一致性任务。
+
+    不设外键：删除历史记录后仍须保留 delete 任务，才能清除派生向量。
+    """
+
+    __tablename__ = "rag_sync_jobs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    record_id: Mapped[int] = mapped_column(Integer, index=True)
+    user_id: Mapped[int] = mapped_column(Integer, index=True)
+    operation: Mapped[str] = mapped_column(String(16))  # upsert / delete
+    status: Mapped[str] = mapped_column(String(16), default="pending", index=True)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    next_retry_at: Mapped[datetime] = mapped_column(
+        DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), index=True
+    )
+    last_error: Mapped[str] = mapped_column(String(512), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+        onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
     )

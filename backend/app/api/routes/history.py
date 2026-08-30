@@ -16,7 +16,6 @@ from ...db.database import get_db
 from ...db.models import User
 from ...models.schemas import TripPlan
 from ...services import history_service
-from ...services.rag_service import get_rag_service
 
 router = APIRouter(prefix="/history", tags=["历史记录"])
 
@@ -82,19 +81,7 @@ def update_history(
     record = history_service.update_trip_record(db, current_user.id, record_id, plan)
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
-    try:
-        # 向量库是派生索引：更新主数据库后，以新计划覆盖旧向量。
-        rag = get_rag_service()
-        rag.delete_history_plan(record.id, current_user.id)
-        rag.add_history_plan(
-            record.id,
-            current_user.id,
-            history_service.trip_record_to_request(record),
-            plan,
-        )
-    except Exception:
-        logger.warning("历史记录已更新，但 RAG 向量同步失败: id=%s", record_id, exc_info=True)
-    return {"success": True, "message": "更新成功", "id": record.id}
+    return {"success": True, "message": "更新成功", "id": record.id, "rag_sync_pending": True}
 
 
 @router.delete("/{record_id}", summary="删除历史记录")
@@ -104,9 +91,8 @@ def delete_history(
     current_user: User = Depends(get_current_user),  # 需登录
 ):
     """删除一条历史记录 (仅限本人记录)"""
-    # 向量库仅是派生数据：主数据库删除成功后尽力同步清除对应用户向量。
+    # 向量库仅是派生数据：删除与 outbox 入队在同一数据库事务，随后异步清除。
     ok = history_service.delete_trip_record(db, current_user.id, record_id)
     if not ok:
         raise BizException("历史记录不存在", status_code=404)
-    get_rag_service().delete_history_plan(record_id, current_user.id)
-    return {"success": True, "message": "删除成功"}
+    return {"success": True, "message": "删除成功", "rag_sync_pending": True}

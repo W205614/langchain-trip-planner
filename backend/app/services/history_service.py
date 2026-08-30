@@ -7,10 +7,17 @@ from typing import Optional
 from sqlalchemy import desc, func, select
 from sqlalchemy.orm import Session
 
-from ..db.models import TripRecord
+from ..db.models import RagSyncJob, TripRecord
 from ..models.schemas import TripPlan, TripRequest
 
 logger = logging.getLogger(__name__)
+
+
+def _enqueue_rag_sync(db: Session, record_id: int, user_id: int, operation: str) -> RagSyncJob:
+    """在同一事务中写入派生向量同步任务。"""
+    job = RagSyncJob(record_id=record_id, user_id=user_id, operation=operation)
+    db.add(job)
+    return job
 
 
 def create_trip_record(
@@ -30,6 +37,8 @@ def create_trip_record(
         plan_json=trip_plan.model_dump_json(),
     )
     db.add(record)
+    db.flush()  # 在 commit 前取得主记录 ID，使主表与 outbox 原子提交。
+    _enqueue_rag_sync(db, record.id, user_id, "upsert")
     db.commit()
     db.refresh(record)
     logger.info(f"💾 历史记录已保存: id={record.id}, 用户={user_id}, 城市={record.city}")
@@ -75,6 +84,7 @@ def update_trip_record(
     if record is None:
         return None
     record.plan_json = trip_plan.model_dump_json()
+    _enqueue_rag_sync(db, record.id, user_id, "upsert")
     db.commit()
     db.refresh(record)
     logger.info(f"✏️  历史记录已更新: id={record_id}")
@@ -100,6 +110,7 @@ def delete_trip_record(db: Session, user_id: int, record_id: int) -> bool:
     record = get_trip_record(db, user_id, record_id)
     if record is None:
         return False
+    _enqueue_rag_sync(db, record.id, user_id, "delete")
     db.delete(record)
     db.commit()
     logger.info(f"🗑️  历史记录已删除: id={record_id}")
