@@ -21,8 +21,8 @@ from ...db.database import get_db
 from ...db.models import User
 from ...services import history_service
 from ...services.idempotency import idempotency_store
-from ...services.plan_quality import evaluate_plan
-from ...services.rag_service import get_rag_service
+from ...services.amap_service import get_amap_service
+from ...services.plan_quality import evaluate_plan, repair_plan_routes
 
 router = APIRouter(prefix="/trip", tags=["旅行规划"])
 
@@ -77,10 +77,10 @@ def plan_trip(
     def _generate_and_persist() -> TripPlanResponse:
         agent = get_trip_planner_agent()
         trip_plan = agent.plan_trip(body, user_id=current_user.id)
-        quality = evaluate_plan(trip_plan, body.travel_days).to_dict()
+        route_quality = repair_plan_routes(trip_plan, get_amap_service(), body.transportation)
+        quality = evaluate_plan(trip_plan, body.travel_days).to_dict() | route_quality
         try:
-            record = history_service.create_trip_record(db, current_user.id, body, trip_plan)
-            get_rag_service().add_history_plan(record.id, current_user.id, body, trip_plan)
+            history_service.create_trip_record(db, current_user.id, body, trip_plan)
         except Exception as e:
             logger.warning(f"⚠️ 历史记录/RAG 保存失败(不影响行程): {e}")
         return TripPlanResponse(
@@ -128,10 +128,10 @@ def plan_trip_stream(
             def _generate_and_persist() -> TripPlanResponse:
                 agent = get_trip_planner_agent()
                 trip_plan = agent.plan_trip(body, user_id=current_user.id, progress_callback=_emit)
-                quality = evaluate_plan(trip_plan, body.travel_days).to_dict()
+                route_quality = repair_plan_routes(trip_plan, get_amap_service(), body.transportation)
+                quality = evaluate_plan(trip_plan, body.travel_days).to_dict() | route_quality
                 try:
-                    record = history_service.create_trip_record(db, current_user.id, body, trip_plan)
-                    get_rag_service().add_history_plan(record.id, current_user.id, body, trip_plan)
+                    history_service.create_trip_record(db, current_user.id, body, trip_plan)
                 except Exception as exc:
                     logger.warning("历史记录/RAG 保存失败(不影响流式返回): %s", exc)
                 return TripPlanResponse(success=True, message="旅行计划生成成功", data=trip_plan, quality=quality)

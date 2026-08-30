@@ -174,7 +174,37 @@ class AmapService:
         if not origin or not destination:
             return {}
 
-        # 2. 根据路线类型选择接口
+        return self._plan_route_by_coordinates(
+            origin,
+            destination,
+            route_type=route_type,
+            city=origin_city or destination_city,
+        )
+
+    def plan_route_by_locations(
+        self,
+        origin: Location,
+        destination: Location,
+        route_type: str = "walking",
+        city: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """使用已验证 POI 坐标规划路线，避免对地址重复地理编码。"""
+        return self._plan_route_by_coordinates(
+            f"{origin.longitude},{origin.latitude}",
+            f"{destination.longitude},{destination.latitude}",
+            route_type=route_type,
+            city=city,
+        )
+
+    def _plan_route_by_coordinates(
+        self,
+        origin: str,
+        destination: str,
+        route_type: str,
+        city: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """调用路线 API 并统一解析步行、驾车和公交返回结构。"""
+        # 根据路线类型选择接口
         if route_type == "driving":
             path = "/v3/direction/driving"
         elif route_type == "transit":
@@ -182,15 +212,20 @@ class AmapService:
         else:
             path = "/v3/direction/walking"
 
-        data = self._get(path, {
+        params = {
             "origin": origin,
             "destination": destination,
-        })
+        }
+        # 公交接口需要城市名；缺失时仍让高德按坐标尝试，但不伪造结果。
+        if route_type == "transit" and city:
+            params["city"] = city
+        data = self._get(path, params)
 
-        paths = data.get("route", {}).get("paths", [])
-        if not paths:
+        route = data.get("route", {})
+        candidates = route.get("transits", []) if route_type == "transit" else route.get("paths", [])
+        if not candidates:
             return {}
-        first = paths[0]
+        first = candidates[0]
         distance = float(first.get("distance", 0))
         duration = int(first.get("duration", 0))
 

@@ -132,3 +132,44 @@ def test_plan_route_parses_result(service, monkeypatch):
     assert route["distance"] == 1200
     assert route["duration"] == 900
     assert "公里" in route["description"]
+
+
+def test_plan_route_by_locations_uses_poi_coordinates_without_geocoding(service, monkeypatch):
+    calls = []
+    monkeypatch.setattr(service, "geocode", lambda *_args, **_kwargs: pytest.fail("must not geocode"))
+    monkeypatch.setattr(
+        service,
+        "_get",
+        lambda path, params: calls.append((path, params)) or {
+            "status": "1", "route": {"paths": [{"distance": "800", "duration": "600"}]}
+        },
+    )
+
+    route = service.plan_route_by_locations(
+        Location(longitude=116.39, latitude=39.91),
+        Location(longitude=116.40, latitude=39.92),
+    )
+
+    assert route["duration"] == 600
+    assert calls[0][1]["origin"] == "116.39,39.91"
+    assert calls[0][1]["destination"] == "116.4,39.92"
+
+
+def test_transit_route_parses_transits_and_uses_city(service, monkeypatch):
+    seen = {}
+    monkeypatch.setattr(
+        service,
+        "_get",
+        lambda path, params: seen.update(path=path, params=params) or {
+            "status": "1", "route": {"transits": [{"distance": "1200", "duration": "900"}]}
+        },
+    )
+
+    route = service.plan_route_by_locations(
+        Location(longitude=116.39, latitude=39.91),
+        Location(longitude=116.40, latitude=39.92), route_type="transit", city="北京",
+    )
+
+    assert route["duration"] == 900
+    assert seen["path"] == "/v3/direction/transit/integrated"
+    assert seen["params"]["city"] == "北京"

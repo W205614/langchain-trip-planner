@@ -8,13 +8,20 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from math import asin, cos, radians, sin, sqrt
-from typing import Iterable
+from typing import Any, Iterable, Protocol
 
 from ..models.schemas import Attraction, DayPlan, TripPlan
 
 
 REQUIRED_MEALS = {"breakfast", "lunch", "dinner"}
 MAX_VISIT_MINUTES_PER_DAY = 480
+MAX_ROUTE_MINUTES_PER_DAY = 120
+
+
+class RoutePlanner(Protocol):
+    """最小路线接口，方便在离线测试中替换高德客户端。"""
+
+    def plan_route_by_locations(self, left, right, route_type: str, city: str | None = None) -> dict: ...
 
 
 @dataclass
@@ -26,6 +33,12 @@ class PlanQuality:
     attractions_checked: int
     duplicate_attractions_removed: int = 0
     estimated_intra_day_distance_km: float = 0.0
+    route_checked: bool = False
+    actual_route_distance_km: float = 0.0
+    actual_route_minutes: int = 0
+    repairs: list[dict[str, Any]] | None = None
+    data_gaps: list[str] | None = None
+    degraded_days: list[int] | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -105,4 +118,73 @@ def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
         days_checked=len(plan.days),
         attractions_checked=attraction_count,
         estimated_intra_day_distance_km=round(total_distance, 2),
+        # 当前高德 POI 查询未提供足够稳定的营业/预约事实，不能假装已校验。
+        data_gaps=["opening_hours_unavailable"],
+        degraded_days=[
+            day.day_index for day in plan.days
+            if getattr(day, "generation_mode", "llm") == "fallback"
+        ],
     )
+
+
+def transport_to_route_type(transportation: str) -> str:
+    """将前端中文交通偏好映射为高德路线类型。"""
+    normalized = transportation.strip().lower()
+    if any(word in normalized for word in ("自驾", "驾车", "driving")):
+        return "driving"
+    if any(word in normalized for word in ("公交", "地铁", "公共交通", "transit")):
+        return "transit"
+    return "walking"
+
+
+def repair_plan_routes(plan: TripPlan, route_planner: RoutePlanner, transportation: str) -> dict[str, Any]:
+    """用真实高德路线验证同日相邻景点，超限时确定性删除末尾景点。
+
+    路线服务不可用时不虚构导航数据，保留已验证 POI，并显式返回直线距离降级标记。
+    """
+    route_type = transport_to_route_type(transportation)
+    total_distance_m = 0.0
+    total_minutes = 0
+    repairs: list[dict[str, Any]] = []
+    data_gaps: list[str] = ["opening_hours_unavailable"]
+    route_available = True
+
+    for day in plan.days:
+        while len(day.attractions) >= 2:
+            route_distance_m = 0.0
+            route_seconds = 0
+            try:
+                for left, right in zip(day.attractions, day.attractions[1:]):
+                    route = route_planner.plan_route_by_locations(
+                        left.location, right.location, route_type=route_type, city=plan.city
+                    )
+                    if not route or route.get("duration") is None:
+                        raise RuntimeError("AMap route response is empty")
+                    route_distance_m += float(route.get("distance", 0))
+                    route_seconds += int(route["duration"])
+            except Exception:
+                route_available = False
+                if "route_duration_unavailable_fallback_to_straight_line" not in data_gaps:
+                    data_gaps.append("route_duration_unavailable_fallback_to_straight_line")
+                break
+
+            route_minutes = (route_seconds + 59) // 60
+            if route_minutes <= MAX_ROUTE_MINUTES_PER_DAY:
+                total_distance_m += route_distance_m
+                total_minutes += route_minutes
+                break
+
+            removed = day.attractions.pop()
+            repairs.append({
+                "day_index": day.day_index,
+                "removed_poi_id": removed.poi_id,
+                "reason": "route_duration_exceeded",
+            })
+
+    return {
+        "route_checked": route_available,
+        "actual_route_distance_km": round(total_distance_m / 1000, 2),
+        "actual_route_minutes": total_minutes,
+        "repairs": repairs,
+        "data_gaps": data_gaps,
+    }
