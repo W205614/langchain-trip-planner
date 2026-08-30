@@ -2,7 +2,8 @@ import axios from 'axios'
 import type { TripFormData, TripPlanResponse } from '@/types'
 import { getToken, clearAuth } from './auth'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:9000'
+// Docker/Nginx 生产演示使用同源代理；Vite 开发仍直连本机后端，保持原有联调体验。
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:9000' : '')
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

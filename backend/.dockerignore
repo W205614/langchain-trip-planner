@@ -1,15 +1,7 @@
-# 构建上下文排除项 (避免把本地环境/密钥/日志打镜像)
-venv/
-.venv/
+.env
 __pycache__/
 *.py[cod]
-logs/
-.env
-*.log
-.git/
-.gitignore
 .pytest_cache/
-tests/
-Dockerfile
-docker-compose.yml
-*.md
+logs/
+data/chroma/
+data/trip_planner.db*

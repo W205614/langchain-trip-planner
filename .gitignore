@@ -2,3 +2,17 @@
 .idea/
 .vscode/
 *.iml
+
+# Secrets and local runtime state
+.env
+**/.env
+!deploy/.env.example
+backend/data/chroma/
+backend/data/trip_planner.db*
+backend/logs/
+frontend/dist/
+frontend/.vite/
+.pytest-tmp/
+backend/.pytest_cache/
+__pycache__/
+*.py[cod]
