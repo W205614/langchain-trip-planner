@@ -16,6 +16,16 @@ TRIP_PLAN_WARNINGS_TOTAL = Counter(
     "trip_plan_quality_warnings_total",
     "行程质量告警总数",
 )
+DAILY_LLM_SECONDS = Histogram(
+    "trip_daily_llm_seconds",
+    "单日 LLM 草稿调用耗时（秒）",
+    buckets=(1, 5, 10, 20, 30, 45, 60),
+)
+DAILY_LLM_DEGRADATIONS_TOTAL = Counter(
+    "trip_daily_llm_degradations_total",
+    "单日 LLM 降级总数",
+    ["reason"],
+)
 
 
 def observe_trip_plan(quality: dict, cached: bool) -> None:
@@ -25,3 +35,10 @@ def observe_trip_plan(quality: dict, cached: bool) -> None:
     TRIP_PLAN_TOTAL.labels(outcome=outcome, quality=quality_label).inc()
     TRIP_PLAN_QUALITY_SCORE.observe(float(quality.get("score", 0)))
     TRIP_PLAN_WARNINGS_TOTAL.inc(len(quality.get("warnings", [])))
+
+
+def observe_daily_llm(invoke_seconds: float, fallback_reason: str | None = None) -> None:
+    """只记录低基数耗时与降级原因，不附带用户、城市或模型文本。"""
+    DAILY_LLM_SECONDS.observe(invoke_seconds)
+    if fallback_reason:
+        DAILY_LLM_DEGRADATIONS_TOTAL.labels(reason=fallback_reason).inc()

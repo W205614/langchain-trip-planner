@@ -139,6 +139,9 @@ class DayPlan(BaseModel):
     hotel: Optional[Hotel] = Field(default=None, description="推荐酒店")
     attractions: List[Attraction] = Field(default=[], description="景点列表")
     meals: List[Meal] = Field(default=[], description="餐饮列表")
+    # 降级信息为兼容性新增字段：真实 POI 兜底时让前端和质量报告明确可见。
+    generation_mode: str = Field(default="llm", description="生成来源: llm 或 fallback")
+    fallback_reason: Optional[str] = Field(default=None, description="降级原因（如 timeout）")
 
 
 class WeatherInfo(BaseModel):

@@ -17,7 +17,20 @@ _llm_instance = None
 _LLM_MAX_RETRIES = 0
 
 
-def get_llm() -> ChatOpenAI:
+def _build_llm(timeout: int) -> ChatOpenAI:
+    """按给定超时创建 LLM；单日硬超时不污染默认单例。"""
+    settings = get_settings()
+    return ChatOpenAI(
+        model=settings.llm_model,
+        api_key=settings.llm_api_key or None,
+        base_url=settings.llm_base_url or None,
+        temperature=settings.llm_temperature,
+        timeout=timeout,
+        max_retries=_LLM_MAX_RETRIES,
+    )
+
+
+def get_llm(timeout: int | None = None) -> ChatOpenAI:
     """
     获取LLM实例(单例模式)
 
@@ -29,18 +42,15 @@ def get_llm() -> ChatOpenAI:
         ChatOpenAI实例
     """
     global _llm_instance
+    settings = get_settings()
+    effective_timeout = timeout or settings.llm_timeout
+
+    # 单日调用需要独立硬超时，不能修改共享客户端影响其他请求。
+    if timeout is not None and effective_timeout != settings.llm_timeout:
+        return _build_llm(effective_timeout)
 
     if _llm_instance is None:
-        settings = get_settings()
-
-        _llm_instance = ChatOpenAI(
-            model=settings.llm_model,
-            api_key=settings.llm_api_key or None,
-            base_url=settings.llm_base_url or None,
-            temperature=settings.llm_temperature,
-            timeout=settings.llm_timeout,
-            max_retries=_LLM_MAX_RETRIES,  # 网络抖动/限流时自动重试
-        )
+        _llm_instance = _build_llm(effective_timeout)
 
         logger.info(
             f"LLM服务初始化成功 | model={settings.llm_model}, "

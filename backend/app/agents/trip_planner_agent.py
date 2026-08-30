@@ -12,6 +12,7 @@ from langchain_core.output_parsers import StrOutputParser
 from ..services.llm_service import get_llm
 from ..services.amap_service import get_amap_service
 from ..core.exceptions import BizException
+from ..core.trip_metrics import observe_daily_llm
 from ..models.schemas import (
     TripRequest,
     TripPlan,
@@ -322,10 +323,11 @@ class MultiAgentTripPlanner:
             concurrency = settings.llm_concurrency
             max_workers = max(1, min(request.travel_days, concurrency))
             logger.info(
-                "   单日并发=%s, 每日候选上限=%s, 输出上限=%s tokens",
+                "   单日并发=%s, 每日候选上限=%s, 输出上限=%s tokens, 超时=%ss",
                 max_workers,
                 _MAX_DAILY_POI_CANDIDATES,
                 settings.llm_day_max_tokens,
+                min(settings.llm_timeout, settings.llm_day_timeout),
             )
             with ThreadPoolExecutor(max_workers=max_workers) as ex:
                 futures = {
@@ -346,11 +348,17 @@ class MultiAgentTripPlanner:
                     days[day_index] = future.result()
                     completed += 1
                     percent = 60 + int(completed / request.travel_days * 22)
+                    message = f"第{day_index + 1}天行程已生成（{completed}/{request.travel_days}）"
+                    if days[day_index].generation_mode == "fallback":
+                        message = (
+                            f"第{day_index + 1}天已降级为真实 POI 兜底"
+                            f"（{days[day_index].fallback_reason or 'llm_error'}，{completed}/{request.travel_days}）"
+                        )
                     self._emit_progress(
                         state,
                         "generate_trip_plan",
                         percent,
-                        f"第{day_index + 1}天行程已生成（{completed}/{request.travel_days}）",
+                        message,
                     )
 
             trip_plan = TripPlan(
@@ -389,14 +397,29 @@ class MultiAgentTripPlanner:
             ])
             from ..config import get_settings
 
-            day_chain = prompt_template | get_llm().bind(
-                max_tokens=get_settings().llm_day_max_tokens
+            settings = get_settings()
+            day_timeout = min(settings.llm_timeout, settings.llm_day_timeout)
+            day_chain = prompt_template | get_llm(timeout=day_timeout).bind(
+                max_tokens=settings.llm_day_max_tokens
             )
 
             for attempt in range(2):
                 started_at = time.perf_counter()
-                response = day_chain.invoke({"query": day_query})
+                try:
+                    response = day_chain.invoke({"query": day_query})
+                except Exception as exc:
+                    invoke_seconds = time.perf_counter() - started_at
+                    reason = "timeout" if self._is_timeout_error(exc) else "llm_error"
+                    observe_daily_llm(invoke_seconds, reason)
+                    logger.warning(
+                        "   ⚠️ 第%s天 LLM %s (%.2fs)，使用真实 POI 兜底日",
+                        day_index + 1, reason, invoke_seconds,
+                    )
+                    return self._fallback_day(
+                        request, day_index, current_date, state, fallback_reason=reason
+                    )
                 invoke_seconds = time.perf_counter() - started_at
+                observe_daily_llm(invoke_seconds)
                 content = response.content if hasattr(response, "content") else str(response)
                 try:
                     # 解析紧凑草稿，再由可信 POI 候选构造完整 DayPlan。
@@ -424,10 +447,21 @@ class MultiAgentTripPlanner:
                         f"上一次输出: {content[:1500]}\n"
                         f"请重新输出该天的一个合法 JSON。\n原始需求:\n{day_query}"
                     )
-            raise ValueError(f"第{day_index + 1}天两次生成均失败")
+            return self._fallback_day(
+                request, day_index, current_date, state, fallback_reason="invalid_response"
+            )
         except Exception as e:
             logger.warning(f"   ⚠️ 第{day_index + 1}天生成失败, 使用兜底日: {e}")
-            return self._fallback_day(request, day_index, current_date, state)
+            return self._fallback_day(
+                request, day_index, current_date, state, fallback_reason="llm_error"
+            )
+
+    @staticmethod
+    def _is_timeout_error(exc: Exception) -> bool:
+        """兼容 httpx、SDK 和字符串化后的超时错误。"""
+        import httpx
+
+        return isinstance(exc, (httpx.TimeoutException, TimeoutError)) or "timeout" in str(exc).lower()
 
     @staticmethod
     def _validate_attractions_against_pois(day_plan: DayPlan, state: GraphState) -> None:
@@ -500,7 +534,12 @@ class MultiAgentTripPlanner:
         )
 
     def _fallback_day(
-        self, request: TripRequest, day_index: int, current_date: str, state: GraphState = None
+        self,
+        request: TripRequest,
+        day_index: int,
+        current_date: str,
+        state: GraphState = None,
+        fallback_reason: str = "llm_error",
     ) -> DayPlan:
         """兜底单日只使用已验证的高德 POI，绝不构造虚拟景点。"""
         from ..models.schemas import Attraction, Location, Meal
@@ -537,6 +576,8 @@ class MultiAgentTripPlanner:
                 Meal(type="lunch", name=f"第{day_index + 1}天午餐", description="午餐推荐", estimated_cost=50),
                 Meal(type="dinner", name=f"第{day_index + 1}天晚餐", description="晚餐推荐", estimated_cost=80),
             ],
+            generation_mode="fallback",
+            fallback_reason=fallback_reason,
         )
 
     @staticmethod

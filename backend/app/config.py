@@ -13,6 +13,7 @@ _LLM_FIELD_DEFAULTS = {
     "llm_model": "gpt-4o",
     "llm_temperature": 0.7,
     "llm_timeout": 60,
+    "llm_day_timeout": 45,
 }
 
 
@@ -65,6 +66,8 @@ class Settings(BaseSettings):
     )
     llm_temperature: float = 0.7
     llm_timeout: int = 60
+    # 单日草稿的硬上限。取值会与全局 LLM_TIMEOUT 取较小者，超时立即返回真实 POI 兜底。
+    llm_day_timeout: int = Field(default=45, ge=5, le=120)
     # 逐日生成时的并发数。本机演示默认同时生成最多四天；可按模型供应商限流下调。
     llm_concurrency: int = Field(default=4)
     # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
@@ -89,7 +92,7 @@ class Settings(BaseSettings):
     
     # @field_validator：Pydantic 字段校验钩子
     # 在环境变量赋值给类字段之前 / 之后，拦截值，自定义处理逻辑。
-    @field_validator("llm_model", "llm_temperature", "llm_timeout", mode="before")
+    @field_validator("llm_model", "llm_temperature", "llm_timeout", "llm_day_timeout", mode="before")
     @classmethod
     def _empty_env_to_default(cls, v, info):
         """环境变量为空字符串时回退到默认值,避免覆盖默认配置"""
@@ -166,6 +169,7 @@ def print_config():
     print(f"LLM Model: {settings.llm_model}")
     print(f"LLM Temperature: {settings.llm_temperature}")
     print(f"LLM Timeout: {settings.llm_timeout}s")
+    print(f"单日 LLM Timeout: {settings.llm_day_timeout}s")
     embedding_api_key = settings.embedding_api_key or settings.llm_api_key
     embedding_base_url = settings.embedding_base_url or settings.llm_base_url or "https://api.openai.com/v1"
     print(f"RAG 嵌入模型: {settings.embedding_model} @ {embedding_base_url} ({'已配置(走中转)' if embedding_api_key else '未配置(自动禁用)'})")
