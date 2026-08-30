@@ -225,6 +225,13 @@ EMBEDDING_MODEL=text-embedding-v4           # 与运行时默认值一致
 EMBEDDING_BASE_URL=你的嵌入中转地址
 EMBEDDING_API_KEY=你的嵌入Key
 
+# 公共图文知识解析（复用 LLM Key/Base URL；不影响 LLM_MODEL_ID 的行程生成）
+VISION_MODEL_ID=deepseek-v4-flash-vision-exp
+# VISION_BASE_URL=可选：单独的视觉模型中转地址
+# VISION_API_KEY=可选：单独的视觉模型密钥
+# 配置后重启服务：该既有账号可审核用户投稿；注册接口不会自动授予管理员权限
+BOOTSTRAP_ADMIN_USERNAME=你的管理员用户名
+
 # 可选: 模型参数与日志级别
 LLM_TEMPERATURE=0.7
 LLM_TIMEOUT=60        # 全局单次调用超时
@@ -331,6 +338,17 @@ pytest -v
 
 测试使用 mock 环境变量隔离真实网络，**不会发出任何真实的高德/LLM 请求**，可放心本地运行。
 
+### RAG 检索评测
+
+`backend/evals/rag_cases.json` 是带城市、相关知识块和事实期望的标注集。离线模式只校验指标计算与报告格式，不能把 mock 的 100% 结果写成生产召回率：
+
+```bash
+cd backend
+python -m app.evals.rag_benchmark --mode offline --output .pytest-tmp/rag_report.json
+```
+
+配置真实 embedding 并重建知识库后，可运行 `--mode live` 生成当前向量检索基线。报告包含 Recall@3/@5、Precision@3/@5、MRR、nDCG、事实覆盖率、来源覆盖率和检索延迟；任何 chunk、top-k 或排序改动必须在同一标注集上与该基线比较。
+
 ## 📝 使用指南
 
 1. 在首页填写旅行信息：目的地城市、旅行日期/天数、交通与住宿偏好、旅行风格
@@ -388,6 +406,14 @@ builder.add_edge("fallback_plan", END)
 - **注入**: 规划前检索该城市 top-k 片段，以"检索到的相关知识"段落注入 Prompt；知识库景点按名补坐标进候选；生成后逐景点回填详情
 - **降级**: 未配置嵌入 Key/Base URL 时自动禁用，所有相关代码 try/except 静默跳过，不影响主流程
 - **重建索引**: `POST /api/rag/rebuild`（修改知识文档后调用）；状态查看 `GET /api/rag/status`
+- **可观测性**: `/metrics` 提供 `rag_operation_seconds` 与 `rag_operation_total`，覆盖动态建库、embedding、知识/历史向量检索、上下文构建及景点详情批量检索；指标不包含用户文本。
+
+### 公共图文知识库（审核发布）
+
+- 登录用户可在「投稿攻略」提交 JPEG、PNG、GIF、WebP 或扫描 PDF，单文件不超过 20 MB、PDF 最多 10 页；原文件仅保存在服务端运行数据目录，不提交 Git。
+- 资料默认 `pending`。只有由 `BOOTSTRAP_ADMIN_USERNAME` 授权的管理员可批准、拒绝或删除；批准后后台任务把 PDF 转为图片页，调用 `VISION_MODEL_ID` 提取受限旅游事实并写入公共 Chroma 知识库。
+- 图片内文字与模型输出均视为不可信资料：解析器只接受受 Pydantic 校验的摘要/事实，失败自动重试，连续失败不会发布。已发布资料会在检索上下文和景点说明中保留文件名、页码来源。
+- 上传前应确认拥有公开发布与发送到视觉模型服务的权利；本期不支持 PPT、Excel、复杂表格或公式解析。
 
 ```python
 # Embedding 走 OpenAI 兼容接口 (langchain-openai, 支持中转/代理)
@@ -485,6 +511,12 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 | `DELETE /api/history/{id}` | 删除历史记录 🔒 需登录 |
 | `GET /api/rag/status` | RAG 状态（是否启用、索引数量） |
 | `POST /api/rag/rebuild` | 重建知识索引（修改知识文档后调用） |
+| `POST /api/knowledge/submissions` | 登录用户提交公共攻略图片或扫描 PDF |
+| `GET /api/knowledge/submissions/mine` | 查看自己的投稿状态 |
+| `GET /api/knowledge/admin/submissions` | 管理员查看审核队列 |
+| `POST /api/knowledge/admin/submissions/{id}/approve` | 管理员批准并进入解析队列 |
+| `POST /api/knowledge/admin/submissions/{id}/reject` | 管理员拒绝投稿 |
+| `DELETE /api/knowledge/admin/submissions/{id}` | 管理员删除资料及公共向量 |
 | `GET /api/map/poi` | 搜索 POI |
 | `GET /api/map/weather` | 查询天气 |
 | `POST /api/map/route` | 规划路线 |
@@ -499,7 +531,7 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 
 - `POST /api/trip/plan` 与流式接口的成功响应包含 `quality`：评分、告警、检查天数、真实路线距离/分钟、`route_checked`、`repairs`、`data_gaps` 与 `degraded_days`。路线可用时使用高德坐标到坐标的返回值；不可用时显式回退为直线距离估算，不将其伪装为导航时长。营业时间和预约规则目前只记录为数据缺口，尚非硬约束。
 - 对可重试的普通请求，客户端可传入 `Idempotency-Key`；相同用户、相同请求内容在当前服务进程的 10 分钟内只生成和保存一次。多副本生产部署应将该进程内存实现替换为 Redis 等共享存储。
-- `/metrics` 额外提供 `trip_plan_total`、`trip_plan_quality_score`、`trip_plan_quality_warnings_total`。这些指标不带用户、城市或输入文本标签，避免敏感与高基数标签。
+- `/metrics` 额外提供 `trip_plan_total`、`trip_plan_quality_score`、`trip_plan_quality_warnings_total`、RAG 分段耗时与调用结果。所有指标不带用户、城市或输入文本标签，避免敏感与高基数标签。
 
 ## ❓ 常见问题
 
