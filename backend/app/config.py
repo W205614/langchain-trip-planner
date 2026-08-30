@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     # 应用基本配置
     app_name: str = "LangChain智能旅行助手"
     app_version: str = "1.0.0"
+    app_env: str = "development"
     debug: bool = False
 
     # 服务器配置
@@ -64,9 +65,10 @@ class Settings(BaseSettings):
     )
     llm_temperature: float = 0.7
     llm_timeout: int = 60
-    # 逐日生成时的并发数。部分中转(如 DeepSeek 官方)对大输出请求是服务端排队处理,
-    # 过高的并发反而会让多个请求排队累积, 总耗时≈N×单日。默认2兼顾速度与稳定。
-    llm_concurrency: int = Field(default=2)
+    # 逐日生成时的并发数。本机演示默认同时生成最多四天；可按模型供应商限流下调。
+    llm_concurrency: int = Field(default=4)
+    # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
+    llm_day_max_tokens: int = Field(default=1800, ge=800, le=4096)
 
     # RAG 嵌入模型配置 (OpenAI 兼容接口 / 中转, 与 LLM 同一中转服务)
     # 复用 LLM_BASE_URL/LLM_API_KEY, 也可单独用 EMBEDDING_BASE_URL/EMBEDDING_API_KEY 覆盖;
@@ -110,23 +112,32 @@ def get_settings() -> Settings:
 
 
 # 验证必要的配置
-def validate_config():
+def validate_config(config: Settings | None = None):
     """验证配置是否完整"""
+    active_settings = config or settings
     errors = []
     warnings = []
 
-    if not settings.amap_api_key:
+    if not active_settings.amap_api_key:
         errors.append("AMAP_API_KEY未配置")
 
-    if not settings.llm_api_key:
-        warnings.append("LLM_API_KEY或OPENAI_API_KEY未配置,LLM功能可能无法使用")
+    if not active_settings.llm_api_key:
+        message = "LLM_API_KEY或OPENAI_API_KEY未配置,LLM功能可能无法使用"
+        if active_settings.app_env.lower() == "production":
+            errors.append(message)
+        else:
+            warnings.append(message)
 
-    # 安全: 检测 JWT 默认密钥。生产环境用默认密钥 = token 可被伪造, 必须告警。
-    if settings.jwt_secret_key in ("dev-secret-change-me", ""):
-        warnings.append(
-            "JWT_SECRET_KEY 使用默认值, 存在安全风险! 生产环境请设置为强随机值 "
+    jwt_is_weak = active_settings.jwt_secret_key in ("dev-secret-change-me", "") or len(active_settings.jwt_secret_key) < 32
+    if jwt_is_weak:
+        message = (
+            "JWT_SECRET_KEY 使用默认值或长度不足32字符，生产环境必须设置强随机值 "
             "(python -c \"import secrets; print(secrets.token_urlsafe(48))\")"
         )
+        if active_settings.app_env.lower() == "production":
+            errors.append(message)
+        else:
+            warnings.append(message)
 
     if errors:
         error_msg = "配置错误:\n" + "\n".join(f"  - {e}" for e in errors)
@@ -144,6 +155,7 @@ def validate_config():
 def print_config():
     """打印当前配置(隐藏敏感信息)"""
     print(f"应用名称: {settings.app_name}")
+    print(f"运行环境: {settings.app_env}")
     print(f"版本: {settings.app_version}")
     print(f"服务器: {settings.host}:{settings.port}")
     print(f"数据库: {'外部 DATABASE_URL' if settings.database_url else '本地 SQLite'}")

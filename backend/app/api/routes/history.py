@@ -82,6 +82,18 @@ def update_history(
     record = history_service.update_trip_record(db, current_user.id, record_id, plan)
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
+    try:
+        # 向量库是派生索引：更新主数据库后，以新计划覆盖旧向量。
+        rag = get_rag_service()
+        rag.delete_history_plan(record.id, current_user.id)
+        rag.add_history_plan(
+            record.id,
+            current_user.id,
+            history_service.trip_record_to_request(record),
+            plan,
+        )
+    except Exception:
+        logger.warning("历史记录已更新，但 RAG 向量同步失败: id=%s", record_id, exc_info=True)
     return {"success": True, "message": "更新成功", "id": record.id}
 
 

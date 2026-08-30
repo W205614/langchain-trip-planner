@@ -85,9 +85,19 @@ class Attraction(BaseModel):
     category: Optional[str] = Field(default="景点", description="景点类别")
     rating: Optional[float] = Field(default=None, description="评分")
     photos: Optional[List[str]] = Field(default_factory=list, description="景点图片URL列表")
-    poi_id: Optional[str] = Field(default="", description="POI ID")
+    # 成功行程中的景点必须能追溯到高德候选 POI；不接受模型自行编造的名称或坐标。
+    poi_id: str = Field(..., min_length=1, description="高德 POI ID")
     image_url: Optional[str] = Field(default=None, description="图片URL")
     ticket_price: int = Field(default=0, description="门票价格(元)")
+
+
+class AttractionDraft(BaseModel):
+    """LLM 的轻量景点草稿；真实 POI 事实字段由后端候选集回填。"""
+    poi_id: str = Field(..., min_length=1, description="高德候选 POI ID")
+    visit_duration: int = Field(default=120, ge=30, le=480, description="建议游览时间(分钟)")
+    description: str = Field(default="", max_length=240, description="游览建议")
+    category: Optional[str] = Field(default="景点", description="景点类别")
+    ticket_price: int = Field(default=0, ge=0, description="门票估算(元)")
 
 
 class Meal(BaseModel):
@@ -98,6 +108,13 @@ class Meal(BaseModel):
     location: Optional[Location] = Field(default=None, description="经纬度坐标")
     description: Optional[str] = Field(default=None, description="描述")
     estimated_cost: int = Field(default=0, description="预估费用(元)")
+
+
+class DayPlanDraft(BaseModel):
+    """单日 LLM 轻量输出，解析后再构造完整 DayPlan。"""
+    description: str = Field(default="", max_length=300, description="当日概述")
+    attractions: List[AttractionDraft] = Field(default_factory=list, description="景点草稿")
+    meals: List[Meal] = Field(default_factory=list, description="餐食安排")
 
 
 class Hotel(BaseModel):

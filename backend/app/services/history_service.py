@@ -81,6 +81,20 @@ def update_trip_record(
     return record
 
 
+def trip_record_to_request(record: TripRecord) -> TripRequest:
+    """从持久化历史还原原始请求，供派生 RAG 向量重新索引。"""
+    return TripRequest(
+        city=record.city,
+        start_date=record.start_date,
+        end_date=record.end_date,
+        travel_days=record.travel_days,
+        transportation=record.transportation,
+        accommodation=record.accommodation,
+        preferences=json.loads(record.preferences or "[]"),
+        free_text_input=record.free_text_input or "",
+    )
+
+
 def delete_trip_record(db: Session, user_id: int, record_id: int) -> bool:
     """删除历史记录 (仅限该用户的记录)"""
     record = get_trip_record(db, user_id, record_id)

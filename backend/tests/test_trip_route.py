@@ -52,6 +52,7 @@ def make_fake_trip_plan() -> TripPlan:
                 attractions=[
                     Attraction(
                         name="故宫博物院",
+                        poi_id="B000A8UIN9",
                         address="北京市东城区景山前街4号",
                         location=Location(longitude=116.397026, latitude=39.918058),
                         visit_duration=180,

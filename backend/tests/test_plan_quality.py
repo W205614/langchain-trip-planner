@@ -7,6 +7,7 @@ from app.services.plan_quality import evaluate_plan, normalize_day
 def _attraction(name: str, longitude: float, duration: int = 120) -> Attraction:
     return Attraction(
         name=name,
+        poi_id=f"test-{name}",
         address="测试地址",
         location=Location(longitude=longitude, latitude=39.9),
         visit_duration=duration,
