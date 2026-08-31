@@ -87,6 +87,23 @@ def test_daily_timeout_uses_real_poi_fallback_without_retry(monkeypatch):
     assert evaluate_plan(plan, 1).degraded_days == [0]
 
 
+def test_streamed_day_response_records_only_first_non_empty_token():
+    from langchain_core.messages import AIMessageChunk
+
+    class _Stream:
+        @staticmethod
+        def stream(_payload):
+            return iter([AIMessageChunk(content=""), AIMessageChunk(content="{"), AIMessageChunk(content="}")])
+
+    first_tokens = []
+    response = MultiAgentTripPlanner._stream_day_response(
+        _Stream(), {"query": "测试"}, lambda: first_tokens.append("seen")
+    )
+
+    assert response.content == "{}"
+    assert first_tokens == ["seen"]
+
+
 def test_four_daily_tasks_start_concurrently(monkeypatch):
     from app.config import get_settings
 

@@ -261,9 +261,10 @@ class RagService:
         return self.build_knowledge_index()["success"]
 
     def build_knowledge_index(self, retries: int = 2) -> dict:
-        """重建知识索引 (清空旧数据后重新索引)
+        """重建静态 Markdown 知识索引，不清除动态或审核发布的公共资料。
 
         网络瞬断(嵌入 API 偶发抖动)时自动重试 retries 次, 避免一次性失败留空库。
+        公共图文资料和高德动态资料共享 collection，不能为重建 Markdown 而删除。
         """
          # ① RAG 没启用 → 直接报告"未启用"
         if not self.enabled:
@@ -280,15 +281,13 @@ class RagService:
         last_err = None
         for attempt in range(retries + 1):
             try:
-                # ④ 清空旧索引
-                self._knowledge_store.delete_collection()
-                 # ⑤ 新建实例连接空集合
-                self._knowledge_store = self._new_store(_KNOWLEDGE_COLLECTION)
-                 # ⑥ 全部向量化并写入
+                # ④ 仅替换静态 Markdown 块；保留 source_type=multimodal 和高德动态块。
+                self._knowledge_store.delete(where={"source_type": "markdown"})
+                 # ⑤ 全部向量化并写入
                 with observe_rag_operation("knowledge_index_embedding"):
                     self._knowledge_store.add_documents(documents)
-                logger.info(f"📚 知识索引重建完成: {len(documents)} 个文本块")
-                return {"success": True, "message": f"已索引 {len(documents)} 个文本块", "chunks": len(documents)}
+                logger.info(f"📚 静态知识索引重建完成: {len(documents)} 个文本块")
+                return {"success": True, "message": f"已替换 {len(documents)} 个静态文本块", "chunks": len(documents)}
             except Exception as e:
                 last_err = e
                 if attempt < retries:

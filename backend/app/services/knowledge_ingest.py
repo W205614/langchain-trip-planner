@@ -10,6 +10,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from threading import Event, Thread
+from time import perf_counter
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
@@ -17,6 +18,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 
 from ..config import get_settings
+from ..core.trip_metrics import observe_model_call
 from ..db.database import DATA_DIR, SessionLocal
 from ..db.models import KnowledgeDocument, KnowledgeIngestJob
 
@@ -105,17 +107,37 @@ class VisionExtractor:
             timeout=settings.vision_timeout,
             max_retries=0,
         )
+        self._input_price_per_million_usd = settings.vision_input_price_per_million_usd
+        self._output_price_per_million_usd = settings.vision_output_price_per_million_usd
 
     def extract(self, image: bytes, media_type: str, city: str, title: str, page: int) -> VisionExtraction:
         encoded = base64.b64encode(image).decode("ascii")
         prompt = f"资料标题：{title}\n目标城市：{city}\n页码：{page}\n请提取旅游事实。"
-        response = self._client.invoke([
-            SystemMessage(content=self._SYSTEM_PROMPT),
-            HumanMessage(content=[
-                {"type": "text", "text": prompt},
-                {"type": "image_url", "image_url": {"url": f"data:{media_type};base64,{encoded}"}},
-            ]),
-        ])
+        started_at = perf_counter()
+        try:
+            response = self._client.invoke([
+                SystemMessage(content=self._SYSTEM_PROMPT),
+                HumanMessage(content=[
+                    {"type": "text", "text": prompt},
+                    {"type": "image_url", "image_url": {"url": f"data:{media_type};base64,{encoded}"}},
+                ]),
+            ])
+        except Exception:
+            observe_model_call(
+                "vision_extract",
+                perf_counter() - started_at,
+                outcome="error",
+                input_price_per_million_usd=self._input_price_per_million_usd,
+                output_price_per_million_usd=self._output_price_per_million_usd,
+            )
+            raise
+        observe_model_call(
+            "vision_extract",
+            perf_counter() - started_at,
+            getattr(response, "usage_metadata", None) or {},
+            input_price_per_million_usd=self._input_price_per_million_usd,
+            output_price_per_million_usd=self._output_price_per_million_usd,
+        )
         content = response.content if isinstance(response.content, str) else str(response.content)
         match = re.search(r"\{.*\}", content, flags=re.S)
         if not match:

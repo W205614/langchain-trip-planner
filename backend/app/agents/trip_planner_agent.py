@@ -12,7 +12,7 @@ from langchain_core.output_parsers import StrOutputParser
 from ..services.llm_service import get_llm
 from ..services.amap_service import get_amap_service
 from ..core.exceptions import BizException
-from ..core.trip_metrics import observe_daily_llm
+from ..core.trip_metrics import observe_daily_llm, observe_model_call, observe_model_first_token
 from ..models.schemas import (
     TripRequest,
     TripPlan,
@@ -406,11 +406,24 @@ class MultiAgentTripPlanner:
             for attempt in range(2):
                 started_at = time.perf_counter()
                 try:
-                    response = day_chain.invoke({"query": day_query})
+                    response = self._stream_day_response(
+                        day_chain,
+                        {"query": day_query},
+                        lambda: observe_model_first_token(
+                            "trip_day", time.perf_counter() - started_at
+                        ),
+                    )
                 except Exception as exc:
                     invoke_seconds = time.perf_counter() - started_at
                     reason = "timeout" if self._is_timeout_error(exc) else "llm_error"
                     observe_daily_llm(invoke_seconds, reason)
+                    observe_model_call(
+                        "trip_day",
+                        invoke_seconds,
+                        outcome="error",
+                        input_price_per_million_usd=settings.llm_input_price_per_million_usd,
+                        output_price_per_million_usd=settings.llm_output_price_per_million_usd,
+                    )
                     logger.warning(
                         "   ⚠️ 第%s天 LLM %s (%.2fs)，使用真实 POI 兜底日",
                         day_index + 1, reason, invoke_seconds,
@@ -421,6 +434,14 @@ class MultiAgentTripPlanner:
                 invoke_seconds = time.perf_counter() - started_at
                 observe_daily_llm(invoke_seconds)
                 content = response.content if hasattr(response, "content") else str(response)
+                usage = getattr(response, "usage_metadata", None) or {}
+                observe_model_call(
+                    "trip_day",
+                    invoke_seconds,
+                    usage,
+                    input_price_per_million_usd=settings.llm_input_price_per_million_usd,
+                    output_price_per_million_usd=settings.llm_output_price_per_million_usd,
+                )
                 try:
                     # 解析紧凑草稿，再由可信 POI 候选构造完整 DayPlan。
                     data = self._extract_json(content)
@@ -430,7 +451,6 @@ class MultiAgentTripPlanner:
                     )
                     if not day_plan.attractions:
                         raise ValueError("没有可验证的高德 POI 景点")
-                    usage = getattr(response, "usage_metadata", None) or {}
                     logger.info(
                         "   第%s天 LLM 调用完成: %.2fs, 第%s次尝试, tokens=%s",
                         day_index + 1,
@@ -455,6 +475,21 @@ class MultiAgentTripPlanner:
             return self._fallback_day(
                 request, day_index, current_date, state, fallback_reason="llm_error"
             )
+
+    @staticmethod
+    def _stream_day_response(day_chain, payload: dict, on_first_token: Callable[[], None]):
+        """聚合流式 LLM 响应，同时只记录一次真实模型首 token。"""
+        response = None
+        first_token_observed = False
+        for chunk in day_chain.stream(payload):
+            content = getattr(chunk, "content", chunk)
+            if content and not first_token_observed:
+                on_first_token()
+                first_token_observed = True
+            response = chunk if response is None else response + chunk
+        if response is None:
+            raise RuntimeError("LLM 未返回任何流式内容")
+        return response
 
     @staticmethod
     def _is_timeout_error(exc: Exception) -> bool:

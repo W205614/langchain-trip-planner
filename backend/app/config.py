@@ -73,6 +73,10 @@ class Settings(BaseSettings):
     llm_concurrency: int = Field(default=4)
     # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
     llm_day_max_tokens: int = Field(default=1800, ge=800, le=4096)
+    # 成本不写死在代码中：模型供应商、套餐和汇率会变化，部署时按实际账单填入。
+    # 保持 0 表示只记录供应商返回 token，不输出未经校准的金额。
+    llm_input_price_per_million_usd: float = Field(default=0.0, ge=0)
+    llm_output_price_per_million_usd: float = Field(default=0.0, ge=0)
 
     # RAG 嵌入模型配置 (OpenAI 兼容接口 / 中转, 与 LLM 同一中转服务)
     # 复用 LLM_BASE_URL/LLM_API_KEY, 也可单独用 EMBEDDING_BASE_URL/EMBEDDING_API_KEY 覆盖;
@@ -90,6 +94,8 @@ class Settings(BaseSettings):
     vision_base_url: str = Field(default="")
     vision_api_key: str = Field(default="")
     vision_timeout: int = Field(default=60, ge=10, le=180)
+    vision_input_price_per_million_usd: float = Field(default=0.0, ge=0)
+    vision_output_price_per_million_usd: float = Field(default=0.0, ge=0)
     # 启动时将已存在的该用户名授予审核权限；空值表示不自动授予任何管理员。
     bootstrap_admin_username: str = Field(default="")
 

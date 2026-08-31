@@ -4,7 +4,8 @@ import hashlib
 import json
 import logging
 from queue import Empty, Queue
-from threading import Thread
+from threading import Lock, Thread
+from time import perf_counter
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Header, Request
@@ -16,7 +17,7 @@ from ...agents.trip_planner_agent import get_trip_planner_agent
 from ...core.exceptions import BizException
 from ...core.rate_limit import limiter
 from ...core.security import get_current_user
-from ...core.trip_metrics import observe_trip_plan
+from ...core.trip_metrics import observe_trip_plan, observe_trip_stream
 from ...db.database import get_db
 from ...db.models import User
 from ...services import history_service
@@ -116,14 +117,23 @@ def plan_trip_stream(
 ):
     """流式包装同步 Agent，前端不再伪造定时进度条。"""
     events: Queue[tuple[str, dict]] = Queue()
+    stream_started_at = perf_counter()
+    first_event_seconds: float | None = None
+    first_event_lock = Lock()
     fingerprint = hashlib.sha256(
         json.dumps(body.model_dump(), ensure_ascii=False, sort_keys=True).encode("utf-8")
     ).hexdigest()
 
     def _emit(stage: str, percent: int, message: str) -> None:
+        nonlocal first_event_seconds
+        with first_event_lock:
+            if first_event_seconds is None:
+                # 当前 Agent 以 invoke 获取完整日计划，不能把这个 UX 指标冒充模型 TTFT。
+                first_event_seconds = perf_counter() - stream_started_at
         events.put(("progress", {"stage": stage, "percent": percent, "message": message}))
 
     def _run() -> None:
+        outcome = "error"
         try:
             def _generate_and_persist() -> TripPlanResponse:
                 agent = get_trip_planner_agent()
@@ -143,9 +153,12 @@ def plan_trip_stream(
                 observe_trip_plan(response.quality, cached)
             payload = response.model_copy(update={"cached": cached}).model_dump(mode="json")
             events.put(("complete", payload))
+            outcome = "success"
         except Exception:
             logger.exception("流式旅行规划失败")
             events.put(("error", {"message": "旅行计划生成失败，请稍后重试"}))
+        finally:
+            observe_trip_stream(first_event_seconds, perf_counter() - stream_started_at, outcome)
 
     Thread(target=_run, name="trip-plan-stream", daemon=True).start()
 

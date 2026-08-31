@@ -13,6 +13,7 @@ backend/data/trip_planner.db*
 backend/data/backups/
 backend/data/knowledge_uploads/
 backend/evals/rag_report.json
+backend/evals/results/
 backend/logs/
 frontend/dist/
 frontend/.vite/

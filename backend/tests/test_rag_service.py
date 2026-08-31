@@ -133,6 +133,27 @@ def test_ensure_city_index_no_poi_returns_false(rag, monkeypatch):
     assert ok is False
 
 
+def test_rebuild_markdown_preserves_reviewed_multimodal_knowledge(rag, monkeypatch):
+    """管理员已发布的资料与静态 Markdown 共用 collection 时不能被重建误删。"""
+    rag._knowledge_store.add_documents([
+        Document(page_content="旧静态资料", metadata={"city": "北京", "source": "beijing.md", "source_type": "markdown"}),
+        Document(page_content="审核通过的图片事实", metadata={
+            "city": "北京", "source": "故宫攻略.webp", "source_type": "multimodal", "document_id": 9, "page": 1,
+        }),
+    ])
+    monkeypatch.setattr(rag, "_load_knowledge_documents", lambda: [
+        Document(page_content="新静态资料", metadata={"city": "北京", "source": "beijing.md", "source_type": "markdown"}),
+    ])
+
+    result = rag.build_knowledge_index()
+
+    assert result["success"] is True
+    multimodal = rag._knowledge_store.get(where={"document_id": 9})
+    assert multimodal["documents"] == ["审核通过的图片事实"]
+    static = rag._knowledge_store.get(where={"source_type": "markdown"})
+    assert static["documents"] == ["新静态资料"]
+
+
 def test_retrieve_embeds_shared_query_once(rag):
     """城市知识与个人历史检索应复用同一条查询向量。"""
     embedding = MagicMock()

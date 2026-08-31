@@ -1,16 +1,30 @@
-[
-  {
-    "id": "beijing-ticket",
-    "query": "北京故宫门票和开放时间",
-    "city": "北京",
-    "relevant_chunk_ids": ["beijing.md:0"],
-    "expected_facts": ["故宫"]
-  },
-  {
-    "id": "shanghai-transport",
-    "query": "上海外滩怎么去",
-    "city": "上海",
-    "relevant_chunk_ids": ["shanghai.md:0"],
-    "expected_facts": ["外滩"]
-  }
-]
+{
+  "schema_version": "1.0",
+  "dataset_id": "travel-rag-static-v1",
+  "description": "面向四个内置城市攻略的人工标注检索集。事实仅用于检验召回片段覆盖，不代表实时官方信息。",
+  "cases": [
+    {"id": "beijing-season", "category": "overview", "query": "北京适合几月旅游", "city": "北京", "relevant_chunk_ids": ["beijing.md:0"], "expected_facts": ["4-5 月"]},
+    {"id": "beijing-palace-ticket", "category": "ticket", "query": "故宫门票和预约要求", "city": "北京", "relevant_chunk_ids": ["beijing.md:1"], "expected_facts": ["旺季 60 元", "提前 7 天"]},
+    {"id": "beijing-great-wall-transit", "category": "transport", "query": "去八达岭长城坐什么车", "city": "北京", "relevant_chunk_ids": ["beijing.md:2"], "expected_facts": ["S2 线"]},
+    {"id": "beijing-temple-ticket", "category": "ticket", "query": "天坛联票多少钱", "city": "北京", "relevant_chunk_ids": ["beijing.md:3"], "expected_facts": ["联票 34 元"]},
+    {"id": "beijing-airport", "category": "transport", "query": "首都机场到市区怎么坐地铁", "city": "北京", "relevant_chunk_ids": ["beijing.md:10"], "expected_facts": ["机场快线 25 元"]},
+
+    {"id": "shanghai-bund-transit", "category": "transport", "query": "上海外滩怎么坐地铁去", "city": "上海", "relevant_chunk_ids": ["shanghai.md:1"], "expected_facts": ["南京东路站 7 号口"]},
+    {"id": "shanghai-oriental-pearl", "category": "ticket", "query": "东方明珠门票和开放时间", "city": "上海", "relevant_chunk_ids": ["shanghai.md:2"], "expected_facts": ["199 元", "08:00-21:30"]},
+    {"id": "shanghai-disney-transit", "category": "transport", "query": "上海迪士尼地铁怎么去", "city": "上海", "relevant_chunk_ids": ["shanghai.md:3"], "expected_facts": ["11 号线"]},
+    {"id": "shanghai-yuyuan-hours", "category": "opening-hours", "query": "豫园几点停止入园", "city": "上海", "relevant_chunk_ids": ["shanghai.md:4"], "expected_facts": ["16:00 停止入园"]},
+    {"id": "shanghai-maglev", "category": "transport", "query": "上海磁悬浮票价是多少", "city": "上海", "relevant_chunk_ids": ["shanghai.md:8"], "expected_facts": ["磁悬浮 50 元"]},
+
+    {"id": "guangzhou-tower-ticket", "category": "ticket", "query": "广州塔观景台门票多少钱", "city": "广州", "relevant_chunk_ids": ["guangzhou.md:1"], "expected_facts": ["150 元"]},
+    {"id": "guangzhou-chimelong-transit", "category": "transport", "query": "长隆野生动物世界怎么坐地铁去", "city": "广州", "relevant_chunk_ids": ["guangzhou.md:2"], "expected_facts": ["汉溪长隆站"]},
+    {"id": "guangzhou-river-cruise", "category": "planning", "query": "珠江夜游选几点班次夜景好", "city": "广州", "relevant_chunk_ids": ["guangzhou.md:3"], "expected_facts": ["19:30-21:00"]},
+    {"id": "guangzhou-shamian-transit", "category": "transport", "query": "沙面岛地铁怎么去", "city": "广州", "relevant_chunk_ids": ["guangzhou.md:5"], "expected_facts": ["黄沙站 F 口"]},
+    {"id": "guangzhou-airport", "category": "transport", "query": "白云机场到市区要多久", "city": "广州", "relevant_chunk_ids": ["guangzhou.md:8"], "expected_facts": ["约 50 分钟"]},
+
+    {"id": "shenzhen-window-ticket", "category": "ticket", "query": "世界之窗网上买票多少钱", "city": "深圳", "relevant_chunk_ids": ["shenzhen.md:1"], "expected_facts": ["网上预订 190 元"]},
+    {"id": "shenzhen-happy-valley-night", "category": "ticket", "query": "欢乐谷夜场票价和时间", "city": "深圳", "relevant_chunk_ids": ["shenzhen.md:2"], "expected_facts": ["夜场 100 元", "18:00 后"]},
+    {"id": "shenzhen-dameisha-booking", "category": "planning", "query": "去大梅沙需要预约吗", "city": "深圳", "relevant_chunk_ids": ["shenzhen.md:3"], "expected_facts": ["提前公众号预约"]},
+    {"id": "shenzhen-pingan-hours", "category": "opening-hours", "query": "平安金融中心几点停止入场", "city": "深圳", "relevant_chunk_ids": ["shenzhen.md:4"], "expected_facts": ["21:00 停止入场"]},
+    {"id": "shenzhen-xichong-transit", "category": "transport", "query": "西涌海滩有地铁直达吗", "city": "深圳", "relevant_chunk_ids": ["shenzhen.md:6"], "expected_facts": ["无直达地铁"]}
+  ]
+}
