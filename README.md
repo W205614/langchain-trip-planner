@@ -226,6 +226,7 @@ EMBEDDING_BASE_URL=你的嵌入中转地址
 EMBEDDING_API_KEY=你的嵌入Key
 
 # 公共图文知识解析（复用 LLM Key/Base URL；不影响 LLM_MODEL_ID 的行程生成）
+# 可省略：默认 deepseek-v4-flash-vision-exp，复用上方 LLM Key/Base URL
 VISION_MODEL_ID=deepseek-v4-flash-vision-exp
 # VISION_BASE_URL=可选：单独的视觉模型中转地址
 # VISION_API_KEY=可选：单独的视觉模型密钥

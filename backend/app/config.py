@@ -14,6 +14,7 @@ _LLM_FIELD_DEFAULTS = {
     "llm_temperature": 0.7,
     "llm_timeout": 60,
     "llm_day_timeout": 45,
+    "vision_model": "deepseek-v4-flash-vision-exp",
 }
 
 
@@ -80,8 +81,12 @@ class Settings(BaseSettings):
     embedding_base_url: str = Field(default="")
     embedding_api_key: str = Field(default="")
 
-    # 多模态知识解析使用独立模型；缺省复用 LLM 的 key/base_url，避免影响行程生成模型。
-    vision_model: str = Field(default="", validation_alias=AliasChoices("VISION_MODEL_ID", "VISION_MODEL"))
+    # 多模态知识解析默认使用 DeepSeek Vision；缺省复用 LLM 的 key/base_url，
+    # 不影响行程生成模型。需要切换视觉模型时再用 VISION_MODEL_ID 覆盖。
+    vision_model: str = Field(
+        default="deepseek-v4-flash-vision-exp",
+        validation_alias=AliasChoices("VISION_MODEL_ID", "VISION_MODEL"),
+    )
     vision_base_url: str = Field(default="")
     vision_api_key: str = Field(default="")
     vision_timeout: int = Field(default=60, ge=10, le=180)
@@ -100,7 +105,7 @@ class Settings(BaseSettings):
     
     # @field_validator：Pydantic 字段校验钩子
     # 在环境变量赋值给类字段之前 / 之后，拦截值，自定义处理逻辑。
-    @field_validator("llm_model", "llm_temperature", "llm_timeout", "llm_day_timeout", mode="before")
+    @field_validator("llm_model", "llm_temperature", "llm_timeout", "llm_day_timeout", "vision_model", mode="before")
     @classmethod
     def _empty_env_to_default(cls, v, info):
         """环境变量为空字符串时回退到默认值,避免覆盖默认配置"""
