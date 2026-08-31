@@ -30,6 +30,8 @@ def test_rag_benchmark_calculates_ranked_metrics():
     assert report["metrics"]["precision_at_3"] == 2 / 3
     assert report["metrics"]["mrr_at_3"] == 0.5
     assert report["metrics"]["fact_coverage"] == 1.0
+    assert report["category_metrics"]["other"]["cases"] == 1
+    assert report["category_metrics"]["other"]["recall_at_3"] == 1.0
 
 
 def test_dataset_loader_requires_unique_complete_cases(tmp_path):

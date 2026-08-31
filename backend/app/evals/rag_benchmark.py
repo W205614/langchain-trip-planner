@@ -81,16 +81,32 @@ def score_case(case: dict, results: list[RetrievalResult], k: int) -> dict:
 
 def evaluate(cases: list[dict], rankings: dict[str, list[RetrievalResult]], k_values=(3, 5)) -> dict:
     reports = []
+    categories: dict[str, list[dict]] = {}
     for case in cases:
-        results = rankings.get(case["id"], [])
-        reports.append({str(k): score_case(case, results, k) for k in k_values})
+        report = {str(k): score_case(case, rankings.get(case["id"], []), k) for k in k_values}
+        reports.append(report)
+        categories.setdefault(case.get("category", "other"), []).append(report)
     aggregate: dict[str, float] = {}
     for k in k_values:
         for name in (f"recall_at_{k}", f"precision_at_{k}", f"mrr_at_{k}", f"ndcg_at_{k}"):
             aggregate[name] = mean(report[str(k)][name] for report in reports) if reports else 0.0
     aggregate["fact_coverage"] = mean(report[str(k_values[0])]["fact_coverage"] for report in reports) if reports else 0.0
     aggregate["source_coverage"] = mean(report[str(k_values[0])]["source_coverage"] for report in reports) if reports else 0.0
-    return {"cases": len(cases), "metrics": aggregate, "details": reports}
+    category_metrics = {
+        category: {
+            "cases": len(category_reports),
+            **{
+                metric: mean(item[str(k_values[-1])][metric] for item in category_reports)
+                for metric in (f"recall_at_{k_values[-1]}", f"mrr_at_{k_values[-1]}", f"ndcg_at_{k_values[-1]}")
+            },
+            "fact_coverage": mean(item[str(k_values[0])]["fact_coverage"] for item in category_reports),
+        }
+        for category, category_reports in sorted(categories.items())
+    }
+    return {
+        "cases": len(cases), "metrics": aggregate, "category_metrics": category_metrics,
+        "category_metric_k": k_values[-1], "details": reports,
+    }
 
 
 def load_dataset(path: Path) -> tuple[list[dict], dict]:
@@ -232,6 +248,15 @@ def markdown_report(report: dict) -> str:
             f"p50 {values['p50_seconds']:.4f}s，p95 {values['p95_seconds']:.4f}s，"
             f"最大 {values['max_seconds']:.4f}s"
         )
+    if categories := report.get("category_metrics"):
+        category_k = int(report.get("category_metric_k", 5))
+        lines.extend(["", "## 分类表现", "", f"| 分类 | 案例数 | Recall@{category_k} | MRR@{category_k} | nDCG@{category_k} | 事实覆盖率 |", "| --- | ---: | ---: | ---: | ---: | ---: |"])
+        for category, values in categories.items():
+            lines.append(
+                f"| {category} | {values['cases']} | {values.get(f'recall_at_{category_k}', 0.0):.4f} | "
+                f"{values.get(f'mrr_at_{category_k}', 0.0):.4f} | {values.get(f'ndcg_at_{category_k}', 0.0):.4f} | "
+                f"{values['fact_coverage']:.4f} |"
+            )
     if comparison := report.get("comparison"):
         lines.extend(["", "## 相对基线变化", "", f"- 基线模式：`{comparison['baseline_mode']}`"])
         lines.extend(f"- `{name}`：{delta:+.4f}" for name, delta in comparison["metric_delta"].items())

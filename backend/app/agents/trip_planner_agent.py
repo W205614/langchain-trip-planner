@@ -161,6 +161,7 @@ class GraphState(TypedDict, total=False):
     error: bool                        # 是否出错(用于条件路由)
     user_id: int                       # RAG 历史检索的用户隔离键
     progress_callback: Callable[[str, int, str], None]
+    trace_callback: Callable[[str, dict], None]  # 仅用于评测/观测，不参与业务决策
 
 
 class MultiAgentTripPlanner:
@@ -189,6 +190,16 @@ class MultiAgentTripPlanner:
                 callback(stage, percent, message)
             except Exception:
                 logger.debug("进度回调失败", exc_info=True)
+
+    @staticmethod
+    def _emit_trace(state: GraphState, event: str, **payload) -> None:
+        """发出低频性能事件；观测回调失败绝不影响旅行规划。"""
+        callback = state.get("trace_callback")
+        if callback:
+            try:
+                callback(event, payload)
+            except Exception:
+                logger.debug("性能追踪回调失败", exc_info=True)
 
     def _search_attractions(self, state: GraphState) -> dict:
         """节点1: 搜索景点 (服务直调, 不走LLM)
@@ -409,9 +420,7 @@ class MultiAgentTripPlanner:
                     response = self._stream_day_response(
                         day_chain,
                         {"query": day_query},
-                        lambda: observe_model_first_token(
-                            "trip_day", time.perf_counter() - started_at
-                        ),
+                        lambda: self._on_day_first_token(state, day_index, started_at),
                     )
                 except Exception as exc:
                     invoke_seconds = time.perf_counter() - started_at
@@ -490,6 +499,12 @@ class MultiAgentTripPlanner:
         if response is None:
             raise RuntimeError("LLM 未返回任何流式内容")
         return response
+
+    def _on_day_first_token(self, state: GraphState, day_index: int, started_at: float) -> None:
+        """同时记录 Prometheus TTFT 与评测用事件，不泄露 prompt 或模型输出。"""
+        seconds = time.perf_counter() - started_at
+        observe_model_first_token("trip_day", seconds)
+        self._emit_trace(state, "llm_first_token", day_index=day_index, seconds=seconds)
 
     @staticmethod
     def _is_timeout_error(exc: Exception) -> bool:
@@ -717,6 +732,7 @@ class MultiAgentTripPlanner:
         request: TripRequest,
         user_id: int | None = None,
         progress_callback: Callable[[str, int, str], None] | None = None,
+        trace_callback: Callable[[str, dict], None] | None = None,
     ) -> TripPlan:
         """使用 LangGraph 工作流生成旅行计划
 
@@ -736,6 +752,7 @@ class MultiAgentTripPlanner:
             "request": request,
             "user_id": user_id or 0,
             "progress_callback": progress_callback,
+            "trace_callback": trace_callback,
         })
         trip_plan = result["trip_plan"]
 
