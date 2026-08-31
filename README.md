@@ -371,7 +371,7 @@ python -m app.evals.rag_benchmark --mode live --output evals/results/candidate.j
 
 ### 真实旅行规划性能评测
 
-`planning_benchmark` 用少量真实请求直接调用 Agent，报告高德数据节点、RAG、逐日 LLM 和本地质量修复构成的完整规划耗时。它记录首个工作流进度、从规划开始到首个 LLM token、单日 LLM TTFT、成功率、可信 POI 覆盖率、LLM 兜底率以及供应商返回的 Token/按配置单价估算的成本。
+`planning_benchmark` 用少量真实请求直接调用 Agent，报告高德景点/天气/酒店节点、RAG 上下文、单日 LLM 调用和本地质量修复构成的完整规划耗时。它记录首个工作流进度、从规划开始到首个 LLM token、单日 LLM TTFT、各阶段耗时、成功率、可信 POI 覆盖率、LLM 兜底率、确定性质量分以及供应商返回的 Token/按配置单价估算的成本。
 
 ```bash
 cd backend
@@ -379,7 +379,9 @@ cd backend
 python -m app.evals.planning_benchmark --city 北京 --days 1 --runs 3 --output evals/results/planning_live.json
 ```
 
-该命令不经过 HTTP、SSE、鉴权、历史持久化与路线 API 二次校验，因此报告中的首个工作流进度不等于模型 TTFT；只有 `first_llm_token_from_plan_start` 与 `per_day_llm_ttft` 可用于分析模型首 Token。它是低频功能评测，不是并发压测或生产 SLA。
+已提交的规划小样本基线见 `backend/evals/baselines/planning-beijing-1day-2026-08-31.json`：北京 1 日、公共交通、历史文化偏好、连续 3 次真实运行均成功，可信 POI 覆盖率和确定性质量通过率均为 **100%**，无 LLM 兜底。完整规划 p50/p95 为 **22.48s / 27.12s**，从规划开始到首个 LLM token 为 **19.80s / 23.30s**，RAG 上下文 p50 为 **1.04s**，单日 LLM 调用 p50 为 **18.39s**。这说明当前主要时延在模型调用而不是 Chroma 检索；样本量仅 3，不能视为并发压测或生产 SLA。
+
+该命令不经过 HTTP、SSE、鉴权、历史持久化与路线 API 二次校验，因此报告中的首个工作流进度不等于模型 TTFT；只有 `first_llm_token_from_plan_start` 与 `per_day_llm_ttft` 可用于分析模型首 Token。确定性质量分检查天数、餐饮、日程时长和可信 POI，不等同于主观行程满意度或最终问答事实正确率。
 
 ## 📝 使用指南
 
