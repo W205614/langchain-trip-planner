@@ -189,9 +189,8 @@ export async function submitKnowledge(city: string, title: string, file: File): 
   form.append('city', city)
   form.append('title', title)
   form.append('file', file)
-  const response = await apiClient.post('/api/knowledge/submissions', form, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
+  // 不手动设置 Content-Type，让浏览器补上 multipart boundary；否则部分环境会把文件请求判为无效。
+  const response = await apiClient.post('/api/knowledge/submissions', form)
   return response.data
 }
 
