@@ -7,10 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ?
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 300000, // 2分钟超时
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  timeout: 300000 // 2分钟超时；由 Axios 按 JSON/FormData 自动设置 Content-Type
 })
 
 // 请求拦截器: 自动附带 JWT

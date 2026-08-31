@@ -40,6 +40,13 @@ const submitting = ref(false)
 const load = async () => { items.value = (await fetchMyKnowledge()).data || [] }
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 const SUPPORTED_FILE = /\.(jpe?g|png|gif|webp|pdf)$/i
+const readableSubmitError = (error: any) => {
+  const detail = error.response?.data?.detail
+  if (Array.isArray(detail)) {
+    return detail.map((item) => item.msg || item.message || '请求参数不正确').join('；')
+  }
+  return typeof detail === 'string' ? detail : (error.message || '提交失败')
+}
 const selectFile = (event: Event) => {
   const candidate = (event.target as HTMLInputElement).files?.[0] || null
   file.value = null
@@ -54,7 +61,7 @@ const submit = async () => {
   if (!city.value.trim() || !title.value.trim() || !file.value) return message.error('请填写城市、标题并选择文件')
   submitting.value = true
   try { await submitKnowledge(city.value.trim(), title.value.trim(), file.value); message.success('已提交审核'); title.value = ''; file.value = null; selectedFileName.value = ''; await load() }
-  catch (error: any) { message.error(error.response?.data?.detail || error.message || '提交失败') }
+  catch (error: any) { message.error(readableSubmitError(error)) }
   finally { submitting.value = false }
 }
 onMounted(load)
