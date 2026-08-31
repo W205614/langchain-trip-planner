@@ -343,10 +343,10 @@ $env:PG_BIN = 'C:\Program Files\PostgreSQL\16\bin' # 未加入 PATH 时设置
 
 ```bash
 cd backend
-pytest -v
+python -m pytest -q
 ```
 
-测试使用 mock 环境变量隔离真实网络，**不会发出任何真实的高德/LLM 请求**，可放心本地运行。
+测试使用 mock 环境变量隔离真实网络，**不会发出任何真实的高德/LLM 请求**，可放心本地运行。`backend/pytest.ini` 会把 `tmp_path` 固定到 Git 忽略的 `.pytest-basetemp`，避免 Windows 系统临时目录权限异常。
 
 ### RAG 检索评测
 

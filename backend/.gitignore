@@ -47,6 +47,7 @@ data/chroma/
 
 # 测试
 .pytest_cache/
+.pytest-basetemp/
 .coverage
 htmlcov/
 
