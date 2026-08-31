@@ -47,6 +47,8 @@ data/chroma/
 
 # 测试
 .pytest_cache/
+# 旧临时目录可能由其他 Windows 账户创建；保留忽略，运行时不再使用。
+.pytest-basetemp/
 .pytest-runtime-tmp/
 .coverage
 htmlcov/
