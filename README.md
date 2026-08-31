@@ -367,6 +367,8 @@ python -m app.evals.rag_benchmark --mode live --output evals/results/candidate.j
 
 每次执行同时生成 JSON 和同名 Markdown。指标包含 Recall@3/@5、Precision@3/@5、MRR、nDCG、事实覆盖率、来源覆盖率及 query embedding / Chroma 检索分段时延。`fact_coverage` 只是召回片段包含标注事实的比例，**不是**最终 LLM 答案正确率；小样本 p95 也不能当作线上 SLA。
 
+当前已提交的真实稠密检索基线见 `backend/evals/baselines/travel-rag-static-v1-dense-chroma-2026-08-31.json`：在 `text-embedding-3-large`、top-k=5、20 条静态攻略案例下，Recall@3/@5 为 **1.000**，MRR 为 **0.975**，nDCG 为 **0.982**；端到端检索 p50/p95 为 **2.012s / 9.895s**。其中 query embedding p95 为 **9.886s**，Chroma 向量检索 p95 仅 **9.1ms**，所以当前不引入 rerank、混合检索或更换向量索引；它们会增加复杂度，且没有针对这份基线的质量收益证据。该结果不代表真实生产流量或最终答案正确率。
+
 ## 📝 使用指南
 
 1. 在首页填写旅行信息：目的地城市、旅行日期/天数、交通与住宿偏好、旅行风格
