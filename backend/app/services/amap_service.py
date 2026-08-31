@@ -2,6 +2,8 @@
 
 import logging
 import time
+from copy import deepcopy
+from threading import RLock
 
 import httpx
 from typing import List, Dict, Any, Optional
@@ -29,6 +31,15 @@ class AmapService:
             raise ValueError("高德地图API Key未配置,请在.env文件中设置AMAP_API_KEY")
 
         self.client = httpx.Client(timeout=10)
+        # 热点请求的事实缓存只在当前后端进程内保存：POI 可短时复用，天气 TTL 更短。
+        # 返回深拷贝，避免调用方修改 POI/天气对象污染后续请求。
+        self._poi_cache: Dict[tuple[str, str, bool], tuple[List[POIInfo], float]] = {}
+        self._weather_cache: Dict[str, tuple[List[WeatherInfo], float]] = {}
+        self._cache_lock = RLock()
+        self._poi_cache_ttl_seconds = settings.amap_poi_cache_ttl_seconds
+        self._weather_cache_ttl_seconds = settings.amap_weather_cache_ttl_seconds
+        self._cache_hits = {"poi": 0, "weather": 0}
+        self._cache_misses = {"poi": 0, "weather": 0}
         # 图片URL内存缓存: name -> (url, expire_ts), 避免重复调用高德消耗配额/QPS
         self._photo_cache: Dict[str, tuple] = {}
         # QPS熔断时间戳: 触发CUQPS超限后, 该时间之前不再调用高德图片接口
@@ -56,6 +67,37 @@ class AmapService:
             raise ValueError(f"高德API错误: {data.get('info', '未知错误')}")
         return data
 
+    def _read_fact_cache(self, cache: dict, key: Any, ttl_seconds: int, cache_name: str):
+        """读取未过期的事实缓存；TTL=0 时显式禁用。"""
+        if ttl_seconds <= 0:
+            return None
+        now = time.monotonic()
+        with self._cache_lock:
+            cached = cache.get(key)
+            if cached and cached[1] > now:
+                self._cache_hits[cache_name] += 1
+                return deepcopy(cached[0])
+            if cached:
+                cache.pop(key, None)
+            self._cache_misses[cache_name] += 1
+        return None
+
+    def _write_fact_cache(self, cache: dict, key: Any, value: Any, ttl_seconds: int) -> None:
+        if ttl_seconds <= 0:
+            return
+        with self._cache_lock:
+            cache[key] = (deepcopy(value), time.monotonic() + ttl_seconds)
+
+    def cache_stats(self) -> Dict[str, int]:
+        """返回进程内高德事实缓存计数，供低频评测与运行排障使用。"""
+        with self._cache_lock:
+            return {
+                "poi_hits": self._cache_hits["poi"],
+                "poi_misses": self._cache_misses["poi"],
+                "weather_hits": self._cache_hits["weather"],
+                "weather_misses": self._cache_misses["weather"],
+            }
+
     @staticmethod   # 静态方法装饰器，无需实例化即可调用，不需要读取或修改类里面的任何属性（所以连 self 参数都不需要传）
     def _parse_location(location: str) -> Location:
         """解析高德坐标字符串 "经度,纬度" 为 Location"""
@@ -73,6 +115,13 @@ class AmapService:
         Returns:
             POI信息列表
         """
+        cache_key = (keywords.strip().lower(), city.strip().lower(), citylimit)
+        cached = self._read_fact_cache(
+            self._poi_cache, cache_key, self._poi_cache_ttl_seconds, "poi"
+        )
+        if cached is not None:
+            return cached
+
         data = self._get("/v3/place/text", {
             "keywords": keywords,
             "city": city,
@@ -103,6 +152,7 @@ class AmapService:
                 location=self._parse_location(location) if location else Location(longitude=0, latitude=0),
                 tel=item.get("tel") or None,
             ))
+        self._write_fact_cache(self._poi_cache, cache_key, pois, self._poi_cache_ttl_seconds)
         return pois
 
     def get_weather(self, city: str) -> List[WeatherInfo]:
@@ -116,6 +166,13 @@ class AmapService:
         Returns:
             天气信息列表
         """
+        cache_key = city.strip().lower()
+        cached = self._read_fact_cache(
+            self._weather_cache, cache_key, self._weather_cache_ttl_seconds, "weather"
+        )
+        if cached is not None:
+            return cached
+
         # 1. 地理编码获取城市 adcode
         geocodes = self.geocode(city)
         if not geocodes:
@@ -140,6 +197,9 @@ class AmapService:
                     wind_direction=cast.get("daywind", ""),
                     wind_power=cast.get("daypower", ""),
                 ))
+        self._write_fact_cache(
+            self._weather_cache, cache_key, weather_list, self._weather_cache_ttl_seconds
+        )
         return weather_list
 
     def plan_route(

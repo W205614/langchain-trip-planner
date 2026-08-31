@@ -11,6 +11,14 @@ def test_day_planner_keeps_verified_output_default():
     assert settings.llm_day_max_tokens == 1800
 
 
+def test_amap_fact_cache_defaults_are_short_and_can_be_disabled():
+    settings = Settings(_env_file=None)
+
+    assert settings.amap_poi_cache_ttl_seconds == 900
+    assert settings.amap_weather_cache_ttl_seconds == 300
+    assert Settings(_env_file=None, amap_poi_cache_ttl_seconds=0).amap_poi_cache_ttl_seconds == 0
+
+
 def test_development_allows_default_jwt_with_warning(capsys):
     settings = Settings(
         app_env="development",

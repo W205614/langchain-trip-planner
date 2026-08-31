@@ -43,6 +43,19 @@ def _usage_delta(before: dict[str, float], after: dict[str, float]) -> dict[str,
     return {name: max(0.0, after[name] - before[name]) for name in before}
 
 
+def _amap_cache_snapshot(planner: Any) -> dict[str, int]:
+    """评测可选读取事实缓存计数；mock Agent 不需要实现该能力。"""
+    cache_stats = getattr(getattr(planner, "amap_service", None), "cache_stats", None)
+    if not callable(cache_stats):
+        return {}
+    stats = cache_stats()
+    return {str(key): int(value) for key, value in stats.items() if isinstance(value, (int, float))}
+
+
+def _counter_delta(before: dict[str, int], after: dict[str, int]) -> dict[str, int]:
+    return {key: max(0, after.get(key, 0) - before.get(key, 0)) for key in set(before) | set(after)}
+
+
 def _quality_snapshot(plan: Any, expected_days: int) -> dict[str, float | bool | int]:
     days = list(getattr(plan, "days", []) or [])
     attractions = [item for day in days for item in (getattr(day, "attractions", []) or [])]
@@ -80,6 +93,7 @@ def run_benchmark(
 
     for index in range(runs):
         started_at = clock()
+        cache_before = _amap_cache_snapshot(planner)
         first_progress: float | None = None
         first_token: float | None = None
         run: dict[str, Any] = {"run": index + 1, "outcome": "error"}
@@ -117,6 +131,7 @@ def run_benchmark(
             run["plan_total_seconds"] = clock() - started_at
             run["first_progress_seconds"] = first_progress
             run["first_llm_token_from_plan_start_seconds"] = first_token
+            run["amap_fact_cache"] = _counter_delta(cache_before, _amap_cache_snapshot(planner))
             reports.append(run)
             total_latencies.append(run["plan_total_seconds"])
             if first_progress is not None:
@@ -127,6 +142,10 @@ def run_benchmark(
     successful = [item for item in reports if item["outcome"] == "success"]
     qualities = [item["quality"] for item in successful]
     after_usage = _usage_snapshot()
+    cache_totals: dict[str, int] = {}
+    for run in reports:
+        for key, value in run.get("amap_fact_cache", {}).items():
+            cache_totals[key] = cache_totals.get(key, 0) + int(value)
     return {
         "mode": "planning_live",
         "scope": (
@@ -165,6 +184,7 @@ def run_benchmark(
             **{stage: summarize_latencies(values) for stage, values in sorted(stage_latencies.items())},
         },
         "model_usage": _usage_delta(before_usage, after_usage),
+        "amap_fact_cache": cache_totals,
         "details": reports,
         "limitations": [
             "这是低频功能评测，不能用作并发压测或线上 SLA。",
@@ -209,6 +229,17 @@ def markdown_report(report: dict) -> str:
         f"- 调用数：{usage['model_calls']:.0f}",
         f"- 输入 / 输出 Token：{usage['input_tokens']:.0f} / {usage['output_tokens']:.0f}",
         f"- 估算成本（USD）：{usage['estimated_cost_usd']:.6f}",
+    ])
+    cache_stats = report.get("amap_fact_cache")
+    if cache_stats:
+        lines.extend([
+            "",
+            "## 高德事实缓存",
+            "",
+            f"- POI 命中 / 未命中：{cache_stats.get('poi_hits', 0)} / {cache_stats.get('poi_misses', 0)}",
+            f"- 天气命中 / 未命中：{cache_stats.get('weather_hits', 0)} / {cache_stats.get('weather_misses', 0)}",
+        ])
+    lines.extend([
         "",
         "## 解释边界",
         "",
@@ -239,6 +270,7 @@ def combine_single_run_reports(reports: list[dict]) -> dict:
     first_token_latencies: list[float] = []
     stage_latencies: dict[str, list[float]] = {}
     model_usage = {key: 0.0 for key in reference["model_usage"]}
+    cache_totals: dict[str, int] = {}
 
     for index, report in enumerate(reports, start=1):
         detail = dict(report["details"][0])
@@ -256,6 +288,8 @@ def combine_single_run_reports(reports: list[dict]) -> dict:
                 stage_latencies.setdefault(stage, []).append(float(summary["mean_seconds"]))
         for key, value in report["model_usage"].items():
             model_usage[key] += float(value)
+        for key, value in report.get("amap_fact_cache", {}).items():
+            cache_totals[key] = cache_totals.get(key, 0) + int(value)
         if detail.get("outcome") == "success":
             successful.append(detail["quality"])
 
@@ -286,6 +320,7 @@ def combine_single_run_reports(reports: list[dict]) -> dict:
         },
         "timings": timings,
         "model_usage": model_usage,
+        "amap_fact_cache": cache_totals,
         "details": details,
         "limitations": [
             *reference["limitations"],

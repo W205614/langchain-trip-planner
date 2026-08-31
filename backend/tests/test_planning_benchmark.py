@@ -98,3 +98,4 @@ def test_combine_single_run_reports_preserves_samples():
     assert report["outcomes"] == {"success": 2, "error": 0, "success_rate": 1.0}
     assert report["timings"]["plan_total"]["samples"] == 2
     assert report["model_usage"]["input_tokens"] == 22.0
+    assert report["amap_fact_cache"] == {}

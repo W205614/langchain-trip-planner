@@ -48,6 +48,9 @@ class Settings(BaseSettings):
 
     # 高德地图API配置
     amap_api_key: str = ""
+    # 热点城市事实缓存。POI 变化相对低频，天气更短，设为 0 可禁用以排查数据问题。
+    amap_poi_cache_ttl_seconds: int = Field(default=900, ge=0, le=86400)
+    amap_weather_cache_ttl_seconds: int = Field(default=300, ge=0, le=3600)
 
     # LLM配置 (LangChain ChatOpenAI, 兼容任意OpenAI格式端点)
     # 优先读取 LLM_* 命名, 同时兼容 OPENAI_* 旧命名

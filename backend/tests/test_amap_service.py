@@ -83,6 +83,33 @@ def test_search_poi_empty_result(service, monkeypatch):
     assert pois == []
 
 
+def test_search_poi_reuses_short_ttl_cache_without_shared_mutation(service, monkeypatch):
+    calls = []
+    monkeypatch.setattr(service, "_get", lambda *_args, **_kwargs: calls.append(1) or AMAP_POI_RESPONSE)
+
+    first = service.search_poi("故宫", "北京")
+    first[0].name = "被调用方修改"
+    second = service.search_poi("故宫", "北京")
+
+    assert len(calls) == 1
+    assert second[0].name == "故宫博物院"
+    assert service.cache_stats()["poi_hits"] == 1
+
+
+def test_weather_cache_can_be_disabled(service, monkeypatch):
+    service._weather_cache_ttl_seconds = 0
+    geocode_calls = []
+    monkeypatch.setattr(
+        service, "geocode", lambda *_args, **_kwargs: geocode_calls.append(1) or [{"adcode": "110000"}],
+    )
+    monkeypatch.setattr(service, "_get", lambda *_args, **_kwargs: AMAP_WEATHER_RESPONSE)
+
+    service.get_weather("北京")
+    service.get_weather("北京")
+
+    assert len(geocode_calls) == 2
+
+
 def test_get_weather_parses_result(service, monkeypatch):
     """get_weather 应先地理编码再解析天气预报"""
     # mock 地理编码返回 adcode
