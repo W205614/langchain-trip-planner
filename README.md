@@ -211,6 +211,9 @@ pip install -r requirements.txt
 ```bash
 # 高德地图
 AMAP_API_KEY=你的高德Web服务Key
+# 热点城市事实缓存；POI 15 分钟、天气 5 分钟，设为 0 可关闭排障
+AMAP_POI_CACHE_TTL_SECONDS=900
+AMAP_WEATHER_CACHE_TTL_SECONDS=300
 
 # LLM (以DeepSeek官方为例; 换其他模型只需改这三项)
 LLM_API_KEY=你的LLM Key
@@ -388,6 +391,8 @@ python -m app.evals.planning_benchmark --combine-single-runs run_1.json run_2.js
 在不改变模型、检索算法或质量规则的前提下，已完成一轮输入压缩消融：每日景点候选从 6 限为 4、酒店候选从 3 限为 2，规划 Prompt 的 RAG 上下文从 top-k=3 改为 top-k=2 且每块最多 600 字符。结果见 `backend/evals/baselines/planning-beijing-1day-input-compression-2026-08-31.json`：同一北京一日请求的 3 次真实运行仍为 **100%** 成功、可信 POI 覆盖与确定性质量通过均为 **100%**、无兜底；供应商记录的输入 Token 从基线每次约 **1,507** 降至 **1,223**（**-18.9%**）。本轮 p50 总耗时为 **16.15s**、首 LLM Token 为 **11.54s**，但 p95 分别为 **28.48s / 25.28s**，未优于原基线。因此只将“减少输入量且质量未回退”作为已验证结论，不把 p50 变化宣传为稳定时延收益。
 
 输出 Token 上限的反例也保留在 `backend/evals/baselines/planning-beijing-1day-output-cap-1000-rejected-2026-08-31.json`：虽然运行时读取到了 `1000`，上游仍返回最高 **5,830** 个输出 Token，且 p50/p95 总耗时恶化到 **23.94s / 66.16s**。这说明当前供应商未可靠执行该参数；默认值保持 **1800**，不将这个未通过实验部署为优化。
+
+随后加入进程内高德事实缓存：POI 默认 15 分钟、天气默认 5 分钟，均可设为 `0` 关闭；缓存返回深拷贝，避免一个请求修改对象影响另一个请求。真实冷/热评测见 `backend/evals/baselines/planning-beijing-1day-amap-cache-2026-08-31.json`：同一进程连续 3 次北京一日请求均成功、可信 POI 与确定性质量通过率均为 **100%**。首轮冷缓存耗时 **24.11s**；后两次产生 **8 次 POI**、**2 次天气**命中，完整耗时为 **16.75s / 13.71s**，天气和酒店节点 p50 约 **0.14ms**。外部 LLM 时延仍会波动，因此缓存作为“热点请求加速”保留，不承诺完整规划的 15 秒 SLA。
 
 该命令不经过 HTTP、SSE、鉴权、历史持久化与路线 API 二次校验，因此报告中的首个工作流进度不等于模型 TTFT；只有 `first_llm_token_from_plan_start` 与 `per_day_llm_ttft` 可用于分析模型首 Token。确定性质量分检查天数、餐饮、日程时长和可信 POI，不等同于主观行程满意度或最终问答事实正确率。
 
