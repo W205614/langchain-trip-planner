@@ -436,11 +436,21 @@ class RagService:
         return results
 
     def build_rag_context(
-        self, request: TripRequest, top_k: int = 3, user_id: Optional[int] = None
+        self,
+        request: TripRequest,
+        top_k: int = 3,
+        user_id: Optional[int] = None,
+        max_chunk_chars: Optional[int] = None,
     ) -> str:
-        """为规划请求构建 RAG 上下文文本 (注入 LLM prompt 用)"""
+        """为规划请求构建 RAG 上下文文本 (注入 LLM prompt 用)。
+
+        ``max_chunk_chars`` 仅限制送入模型的单个 chunk 长度，不影响向量
+        检索或评测使用的原始结果；用于对延迟敏感的规划 prompt。
+        """
         if not self.enabled:
             return ""
+        if max_chunk_chars is not None and max_chunk_chars < 1:
+            raise ValueError("max_chunk_chars 必须为正数")
         # 任意城市增强: 若该城市尚无高德自动入库数据, 先用高德实时搜索自动建知识
         with observe_rag_operation("context_build"):
             self.ensure_city_index(request.city)
@@ -453,7 +463,12 @@ class RagService:
         if not chunks:
             return ""
         header = "## 检索到的相关知识 (供你参考, 让行程更真实/贴合当地实际):"
-        return header + "\n" + "\n\n".join(f"- {c}" for c in chunks)
+        visible_chunks = (
+            [chunk[:max_chunk_chars] for chunk in chunks]
+            if max_chunk_chars is not None
+            else chunks
+        )
+        return header + "\n" + "\n\n".join(f"- {c}" for c in visible_chunks)
 
     def ensure_city_index(self, city: str) -> bool:
         """确保任意城市在知识库中有可检索数据 (幂等)。

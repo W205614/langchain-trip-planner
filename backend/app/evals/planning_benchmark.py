@@ -217,6 +217,83 @@ def markdown_report(report: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def combine_single_run_reports(reports: list[dict]) -> dict:
+    """汇总同一请求的独立单次报告，保留 n=3 的原始样本口径。
+
+    发生瞬时供应商网络波动时，独立单次运行比一个长进程更容易保留已完成
+    的样本。该函数仅接收 ``runs=1`` 且请求完全相同的报告，避免把不同
+    城市、日期或配置混成一条基线。
+    """
+    if not reports:
+        raise ValueError("至少需要一份单次报告")
+    reference = reports[0]
+    if any(report.get("runs") != 1 for report in reports):
+        raise ValueError("只能汇总 runs=1 的独立报告")
+    if any(report.get("request") != reference.get("request") for report in reports[1:]):
+        raise ValueError("待汇总报告的请求必须完全一致")
+
+    details: list[dict] = []
+    successful: list[dict] = []
+    total_latencies: list[float] = []
+    first_progress_latencies: list[float] = []
+    first_token_latencies: list[float] = []
+    stage_latencies: dict[str, list[float]] = {}
+    model_usage = {key: 0.0 for key in reference["model_usage"]}
+
+    for index, report in enumerate(reports, start=1):
+        detail = dict(report["details"][0])
+        detail["run"] = index
+        details.append(detail)
+        total_latencies.append(float(detail["plan_total_seconds"]))
+        if detail.get("first_progress_seconds") is not None:
+            first_progress_latencies.append(float(detail["first_progress_seconds"]))
+        if detail.get("first_llm_token_from_plan_start_seconds") is not None:
+            first_token_latencies.append(float(detail["first_llm_token_from_plan_start_seconds"]))
+        for stage, summary in report["timings"].items():
+            if stage in {"plan_total", "first_progress", "first_llm_token_from_plan_start"}:
+                continue
+            if summary.get("samples"):
+                stage_latencies.setdefault(stage, []).append(float(summary["mean_seconds"]))
+        for key, value in report["model_usage"].items():
+            model_usage[key] += float(value)
+        if detail.get("outcome") == "success":
+            successful.append(detail["quality"])
+
+    total_days = sum(int(item["days"]) for item in successful)
+    timings = {
+        "plan_total": summarize_latencies(total_latencies),
+        "first_progress": summarize_latencies(first_progress_latencies),
+        "first_llm_token_from_plan_start": summarize_latencies(first_token_latencies),
+        **{stage: summarize_latencies(values) for stage, values in sorted(stage_latencies.items())},
+    }
+    return {
+        "mode": reference["mode"],
+        "scope": reference["scope"],
+        "request": reference["request"],
+        "runs": len(reports),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "outcomes": {
+            "success": len(successful),
+            "error": len(reports) - len(successful),
+            "success_rate": len(successful) / len(reports),
+        },
+        "quality": {
+            "days_match_rate": sum(bool(item["days_match"]) for item in successful) / len(successful) if successful else 0.0,
+            "trusted_poi_rate": sum(bool(item["trusted_poi"]) for item in successful) / len(successful) if successful else 0.0,
+            "fallback_day_rate": sum(int(item["fallback_days"]) for item in successful) / total_days if total_days else 0.0,
+            "deterministic_score_mean": sum(float(item["deterministic_score"]) for item in successful) / len(successful) if successful else 0.0,
+            "deterministic_pass_rate": sum(bool(item["deterministic_passed"]) for item in successful) / len(successful) if successful else 0.0,
+        },
+        "timings": timings,
+        "model_usage": model_usage,
+        "details": details,
+        "limitations": [
+            *reference["limitations"],
+            "该报告由相同请求的独立单次运行汇总；样本数量有限，不能推断线上 SLA。",
+        ],
+    }
+
+
 def _request_from_args(args: argparse.Namespace) -> TripRequest:
     start = date.fromisoformat(args.start_date) if args.start_date else date.today()
     end = start + timedelta(days=args.days - 1)
@@ -242,14 +319,23 @@ def main() -> int:
     parser.add_argument("--preferences", nargs="*", default=["历史文化"])
     parser.add_argument("--free-text-input", default="")
     parser.add_argument("--runs", type=int, default=3)
+    parser.add_argument(
+        "--combine-single-runs", type=Path, nargs="+", metavar="REPORT",
+        help="汇总多个相同请求、runs=1 的 JSON 报告；不会调用外部服务",
+    )
     parser.add_argument("--output", type=Path, default=Path("evals/results/planning_live.json"))
     args = parser.parse_args()
     if not 1 <= args.days <= 30:
         raise ValueError("days 必须在 1 到 30 之间")
 
-    from app.agents.trip_planner_agent import get_trip_planner_agent
+    if args.combine_single_runs:
+        report = combine_single_run_reports([
+            json.loads(path.read_text(encoding="utf-8")) for path in args.combine_single_runs
+        ])
+    else:
+        from app.agents.trip_planner_agent import get_trip_planner_agent
 
-    report = run_benchmark(get_trip_planner_agent(), _request_from_args(args), args.runs)
+        report = run_benchmark(get_trip_planner_agent(), _request_from_args(args), args.runs)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     markdown_output = args.output.with_suffix(".md")

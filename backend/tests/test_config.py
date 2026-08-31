@@ -5,6 +5,12 @@ import pytest
 from app.config import Settings, validate_config
 
 
+def test_day_planner_keeps_verified_output_default():
+    settings = Settings(_env_file=None)
+
+    assert settings.llm_day_max_tokens == 1800
+
+
 def test_development_allows_default_jwt_with_warning(capsys):
     settings = Settings(
         app_env="development",

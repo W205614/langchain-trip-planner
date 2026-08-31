@@ -29,8 +29,12 @@ from ..models.schemas import (
 
 logger = logging.getLogger(__name__)
 
-# 单日只需选择 2-3 个景点；保留适量候选即可，避免无意义地放大全部 prompt。
-_MAX_DAILY_POI_CANDIDATES = 6
+# 单日只需选择 2-3 个景点。候选、酒店和 RAG 上下文均限制在足以
+# 做出选择的范围，避免无意义地放大全部 prompt 与首 Token 等待时间。
+_MAX_DAILY_POI_CANDIDATES = 4
+_MAX_DAILY_HOTEL_CANDIDATES = 2
+_DAY_RAG_TOP_K = 2
+_DAY_RAG_MAX_CHUNK_CHARS = 600
 
 # ============ 行程规划提示词 ============
 
@@ -662,9 +666,11 @@ class MultiAgentTripPlanner:
         """构建每天共用的基础信息文本。
 
         景点候选只在各自单日 query 中发送，避免把全量 POI 重复注入每一天。
-        酒店仅保留前三个参考候选，控制 prompt 体积。
+        酒店仅保留两个参考候选，控制 prompt 体积。
         """
-        hotel_text = self._pois_to_text((state.get("hotel_pois") or [])[:3])
+        hotel_text = self._pois_to_text(
+            (state.get("hotel_pois") or [])[:_MAX_DAILY_HOTEL_CANDIDATES]
+        )
         weather_text = self._weather_to_text(state.get("weather_info", []))
         base = (
             f"城市: {request.city}\n"
@@ -682,7 +688,10 @@ class MultiAgentTripPlanner:
         try:
             from ..services.rag_service import get_rag_service
             rag_context = get_rag_service().build_rag_context(
-                request, user_id=state.get("user_id")
+                request,
+                top_k=_DAY_RAG_TOP_K,
+                max_chunk_chars=_DAY_RAG_MAX_CHUNK_CHARS,
+                user_id=state.get("user_id"),
             )
             if rag_context:
                 base += f"\n\n{rag_context}"
@@ -903,7 +912,10 @@ class MultiAgentTripPlanner:
             from ..services.rag_service import get_rag_service
 
             rag_context = get_rag_service().build_rag_context(
-                request, user_id=(state or {}).get("user_id")
+                request,
+                top_k=_DAY_RAG_TOP_K,
+                max_chunk_chars=_DAY_RAG_MAX_CHUNK_CHARS,
+                user_id=(state or {}).get("user_id"),
             )
             if rag_context:
                 query += f"\n\n{rag_context}\n"

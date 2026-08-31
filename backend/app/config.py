@@ -72,6 +72,7 @@ class Settings(BaseSettings):
     # 逐日生成时的并发数。本机演示默认同时生成最多四天；可按模型供应商限流下调。
     llm_concurrency: int = Field(default=4)
     # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
+    # 当前供应商对 1000-token 上限的执行不稳定，因此保留经验证的 1800 默认值。
     llm_day_max_tokens: int = Field(default=1800, ge=800, le=4096)
     # 成本不写死在代码中：模型供应商、套餐和汇率会变化，部署时按实际账单填入。
     # 保持 0 表示只记录供应商返回 token，不输出未经校准的金额。

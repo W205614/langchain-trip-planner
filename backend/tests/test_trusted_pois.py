@@ -141,7 +141,9 @@ def test_daily_rag_context_receives_current_user_id():
             _request(),
             {"user_id": 42, "attraction_pois": [], "hotel_pois": [], "weather_info": []},
         )
-    rag.build_rag_context.assert_called_once_with(_request(), user_id=42)
+    rag.build_rag_context.assert_called_once_with(
+        _request(), top_k=2, max_chunk_chars=600, user_id=42
+    )
 
 
 def test_day_base_info_does_not_repeat_all_attraction_candidates():

@@ -72,3 +72,29 @@ def test_planning_benchmark_keeps_upstream_failure_as_failure(monkeypatch):
     assert report["outcomes"] == {"success": 0, "error": 1, "success_rate": 0.0}
     assert report["details"][0]["error_type"] == "RuntimeError"
     assert report["timings"]["first_llm_token_from_plan_start"]["samples"] == 1
+
+
+def test_combine_single_run_reports_preserves_samples():
+    base = {
+        "mode": "planning_live", "scope": "direct", "request": {"city": "北京"}, "runs": 1,
+        "model_usage": {"model_calls": 1.0, "input_tokens": 10.0, "output_tokens": 5.0, "estimated_cost_usd": 0.0},
+        "timings": {
+            "plan_total": {"samples": 1, "mean_seconds": 2.0},
+            "first_progress": {"samples": 1, "mean_seconds": 0.1},
+            "first_llm_token_from_plan_start": {"samples": 1, "mean_seconds": 1.0},
+            "per_day_llm_ttft": {"samples": 1, "mean_seconds": 0.8},
+        },
+        "details": [{"run": 1, "outcome": "success", "plan_total_seconds": 2.0,
+                     "first_progress_seconds": 0.1, "first_llm_token_from_plan_start_seconds": 1.0,
+                     "quality": {"days_match": True, "trusted_poi": True, "days": 1,
+                                 "fallback_days": 0, "deterministic_score": 100, "deterministic_passed": True}}],
+        "limitations": ["sample"],
+    }
+    second = {**base, "model_usage": {**base["model_usage"], "input_tokens": 12.0}}
+
+    report = planning_benchmark.combine_single_run_reports([base, second])
+
+    assert report["runs"] == 2
+    assert report["outcomes"] == {"success": 2, "error": 0, "success_rate": 1.0}
+    assert report["timings"]["plan_total"]["samples"] == 2
+    assert report["model_usage"]["input_tokens"] == 22.0

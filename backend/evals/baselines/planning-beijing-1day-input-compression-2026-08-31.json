@@ -1,0 +1,168 @@
+{
+  "mode": "planning_live",
+  "scope": "直接调用 Agent；包含高德数据节点、RAG、逐日 LLM 与本地质量修复，不包含 HTTP/SSE 传输、鉴权、历史持久化和路线 API 二次校验。",
+  "request": {
+    "city": "北京",
+    "start_date": "2026-08-31",
+    "end_date": "2026-08-31",
+    "travel_days": 1,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "free_text_input": ""
+  },
+  "runs": 3,
+  "generated_at": "2026-08-31T07:45:51.557039+00:00",
+  "outcomes": {
+    "success": 3,
+    "error": 0,
+    "success_rate": 1.0
+  },
+  "quality": {
+    "days_match_rate": 1.0,
+    "trusted_poi_rate": 1.0,
+    "fallback_day_rate": 0.0,
+    "deterministic_score_mean": 100.0,
+    "deterministic_pass_rate": 1.0
+  },
+  "timings": {
+    "plan_total": {
+      "samples": 3,
+      "mean_seconds": 20.01801856233457,
+      "p50_seconds": 16.152323048001563,
+      "p95_seconds": 28.479922404202807,
+      "max_seconds": 29.849655666002946
+    },
+    "first_progress": {
+      "samples": 3,
+      "mean_seconds": 0.002643697000166867,
+      "p50_seconds": 0.002606442001706455,
+      "p95_seconds": 0.0028219613988767376,
+      "max_seconds": 0.002845907998562325
+    },
+    "first_llm_token_from_plan_start": {
+      "samples": 3,
+      "mean_seconds": 15.96201724499891,
+      "p50_seconds": 11.535867851998773,
+      "p95_seconds": 25.279984675499506,
+      "max_seconds": 26.80710876699959
+    },
+    "attraction_search": {
+      "samples": 3,
+      "mean_seconds": 6.024999892001991,
+      "p50_seconds": 6.375833747002616,
+      "p95_seconds": 6.412961128401366,
+      "max_seconds": 6.417086393001227
+    },
+    "hotel_search": {
+      "samples": 3,
+      "mean_seconds": 0.2860070370006724,
+      "p50_seconds": 0.2981732039988856,
+      "p95_seconds": 0.30445051770147985,
+      "max_seconds": 0.3051479970017681
+    },
+    "per_day_llm_call": {
+      "samples": 3,
+      "mean_seconds": 10.089879372666474,
+      "p50_seconds": 6.163722119999875,
+      "p95_seconds": 18.26342599260024,
+      "max_seconds": 19.607837534000282
+    },
+    "per_day_llm_ttft": {
+      "samples": 3,
+      "mean_seconds": 7.676129949999449,
+      "p50_seconds": 2.891097259998787,
+      "p95_seconds": 16.624630053798317,
+      "max_seconds": 18.150578141998267
+    },
+    "plan_generation": {
+      "samples": 3,
+      "mean_seconds": 12.347033297001568,
+      "p50_seconds": 9.522999641001661,
+      "p95_seconds": 20.61118535780188,
+      "max_seconds": 21.843205993001902
+    },
+    "rag_context": {
+      "samples": 3,
+      "mean_seconds": 2.252317032666421,
+      "p50_seconds": 2.2307416809999268,
+      "p95_seconds": 3.24230665839932,
+      "max_seconds": 3.354702766999253
+    },
+    "weather_query": {
+      "samples": 3,
+      "mean_seconds": 0.3120813323330367,
+      "p50_seconds": 0.3185539779988176,
+      "p95_seconds": 0.32552103729867665,
+      "max_seconds": 0.326295154998661
+    }
+  },
+  "model_usage": {
+    "model_calls": 3.0,
+    "input_tokens": 3669.0,
+    "output_tokens": 2888.0,
+    "estimated_cost_usd": 0.0
+  },
+  "details": [
+    {
+      "run": 1,
+      "outcome": "success",
+      "quality": {
+        "days_match": true,
+        "trusted_poi": true,
+        "days": 1,
+        "attractions": 2,
+        "fallback_days": 0,
+        "deterministic_score": 100,
+        "deterministic_passed": true,
+        "deterministic_warning_count": 0
+      },
+      "plan_total_seconds": 29.849655666002946,
+      "first_progress_seconds": 0.002606442001706455,
+      "first_llm_token_from_plan_start_seconds": 26.80710876699959
+    },
+    {
+      "run": 2,
+      "outcome": "success",
+      "quality": {
+        "days_match": true,
+        "trusted_poi": true,
+        "days": 1,
+        "attractions": 3,
+        "fallback_days": 0,
+        "deterministic_score": 100,
+        "deterministic_passed": true,
+        "deterministic_warning_count": 0
+      },
+      "plan_total_seconds": 16.152323048001563,
+      "first_progress_seconds": 0.002845907998562325,
+      "first_llm_token_from_plan_start_seconds": 11.535867851998773
+    },
+    {
+      "run": 3,
+      "outcome": "success",
+      "quality": {
+        "days_match": true,
+        "trusted_poi": true,
+        "days": 1,
+        "attractions": 2,
+        "fallback_days": 0,
+        "deterministic_score": 100,
+        "deterministic_passed": true,
+        "deterministic_warning_count": 0
+      },
+      "plan_total_seconds": 14.052076972999203,
+      "first_progress_seconds": 0.002478741000231821,
+      "first_llm_token_from_plan_start_seconds": 9.543075115998363
+    }
+  ],
+  "limitations": [
+    "这是低频功能评测，不能用作并发压测或线上 SLA。",
+    "estimated_cost_usd 仅在部署环境配置模型单价且供应商返回 usage 时有效。",
+    "first_progress 是工作流阶段事件；first_llm_token_from_plan_start 才是从规划开始到首个模型 token。",
+    "确定性质量分校验天数、餐饮、时长与可信 POI 等规则，不等同于主观行程满意度或最终问答事实正确率。",
+    "该报告由相同请求的独立单次运行汇总；样本数量有限，不能推断线上 SLA。"
+  ]
+}

@@ -176,6 +176,25 @@ def test_retrieve_embeds_shared_query_once(rag):
     assert len(results) == 2
 
 
+def test_build_rag_context_can_limit_prompt_chunk_size(rag):
+    """Prompt 截断不改变检索本身，只限制送给规划模型的上下文体积。"""
+    from app.models.schemas import TripRequest
+
+    rag.ensure_city_index = MagicMock(return_value=True)
+    rag.retrieve = MagicMock(return_value=["甲" * 700, "乙" * 700])
+    request = TripRequest(
+        city="北京", start_date="2026-08-01", end_date="2026-08-01", travel_days=1,
+        transportation="公共交通", accommodation="经济型酒店",
+    )
+
+    context = rag.build_rag_context(request, top_k=2, user_id=7, max_chunk_chars=600)
+
+    rag.retrieve.assert_called_once()
+    assert context.count("甲") == 600
+    assert context.count("乙") == 600
+    assert len(context) < 1300
+
+
 def test_delete_history_plan_removes_only_targeted_vector(rag):
     """删除历史记录必须调用用户和记录号组成的稳定向量 ID。"""
     store = MagicMock()
