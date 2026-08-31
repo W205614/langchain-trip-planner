@@ -346,7 +346,7 @@ pytest -v
 
 ### RAG 检索评测
 
-`backend/evals/rag_cases.json` 是冻结的 `travel-rag-static-v1` 标注集：覆盖北京、上海、广州、深圳的 20 条门票、开放时间、交通与行程问题，并标注相关 chunk 和应覆盖事实。报告会记录标注集和四份静态知识文件的 SHA-256；快照、embedding 模型或 top-k 不一致时拒绝与旧基线比较。
+`backend/evals/rag_cases.json` 是冻结的 `travel-rag-static-v1` 标注集：覆盖北京、上海、广州、深圳的 40 条门票、开放时间、交通、概览与行程问题，并标注相关 chunk 和应覆盖事实。报告会记录标注集和四份静态知识文件的 SHA-256；快照、embedding 模型或 top-k 不一致时拒绝与旧基线比较。报告还会按问题类别输出 Recall、MRR、nDCG 与事实覆盖率，便于定位排序薄弱类型。
 
 离线模式只校验指标计算与 JSON/Markdown 报告格式，不能把 fixture 的 100% 结果写成生产召回率：
 
@@ -367,7 +367,19 @@ python -m app.evals.rag_benchmark --mode live --output evals/results/candidate.j
 
 每次执行同时生成 JSON 和同名 Markdown。指标包含 Recall@3/@5、Precision@3/@5、MRR、nDCG、事实覆盖率、来源覆盖率及 query embedding / Chroma 检索分段时延。`fact_coverage` 只是召回片段包含标注事实的比例，**不是**最终 LLM 答案正确率；小样本 p95 也不能当作线上 SLA。
 
-当前已提交的真实稠密检索基线见 `backend/evals/baselines/travel-rag-static-v1-dense-chroma-2026-08-31.json`：在 `text-embedding-3-large`、top-k=5、20 条静态攻略案例下，Recall@3/@5 为 **1.000**，MRR 为 **0.975**，nDCG 为 **0.982**；端到端检索 p50/p95 为 **2.012s / 9.895s**。其中 query embedding p95 为 **9.886s**，Chroma 向量检索 p95 仅 **9.1ms**，所以当前不引入 rerank、混合检索或更换向量索引；它们会增加复杂度，且没有针对这份基线的质量收益证据。该结果不代表真实生产流量或最终答案正确率。
+当前已提交的真实稠密检索基线见 `backend/evals/baselines/travel-rag-static-v1-1-dense-chroma-2026-08-31.json`：在 `text-embedding-3-large`、top-k=5、40 条静态攻略案例下，Recall@3/@5 为 **1.000**，MRR 为 **0.946**，nDCG 为 **0.960**；端到端检索 p50/p95 为 **1.022s / 1.435s**。其中 query embedding p95 为 **1.430s**，Chroma 向量检索 p95 仅 **6.7ms**。新增同义问法后，概览与行程类的排序弱于门票、开放时间类，因此当前先保留失败案例和分类报告，不引入 rerank、混合检索或更换向量索引；它们会增加复杂度，且尚无针对该快照的质量收益证据。该结果不代表真实生产流量、最终 LLM 答案正确率或线上 SLA。
+
+### 真实旅行规划性能评测
+
+`planning_benchmark` 用少量真实请求直接调用 Agent，报告高德数据节点、RAG、逐日 LLM 和本地质量修复构成的完整规划耗时。它记录首个工作流进度、从规划开始到首个 LLM token、单日 LLM TTFT、成功率、可信 POI 覆盖率、LLM 兜底率以及供应商返回的 Token/按配置单价估算的成本。
+
+```bash
+cd backend
+# 默认以当天为起点，运行 3 次；会实际调用高德与配置的模型服务并可能产生费用
+python -m app.evals.planning_benchmark --city 北京 --days 1 --runs 3 --output evals/results/planning_live.json
+```
+
+该命令不经过 HTTP、SSE、鉴权、历史持久化与路线 API 二次校验，因此报告中的首个工作流进度不等于模型 TTFT；只有 `first_llm_token_from_plan_start` 与 `per_day_llm_ttft` 可用于分析模型首 Token。它是低频功能评测，不是并发压测或生产 SLA。
 
 ## 📝 使用指南
 
