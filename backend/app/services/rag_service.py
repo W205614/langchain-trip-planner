@@ -347,6 +347,13 @@ class RagService:
         """删除历史记录时同步移除其私有向量，遵守数据删除语义。"""
         if not self.enabled:
             return False
+        try:
+            self._refresh_store("_history_store", _HISTORY_COLLECTION)
+            self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
+            return True
+        except Exception as exc:
+            logger.warning("历史向量删除失败: record_id=%s, error=%s", record_id, exc)
+            return False
 
     def replace_public_knowledge_document(
         self, document_id: int, city: str, title: str, page_texts: List[str]
@@ -391,13 +398,6 @@ class RagService:
             return True
         except Exception as exc:
             logger.warning("公共图文知识删除失败: document_id=%s, error=%s", document_id, exc)
-            return False
-        try:
-            self._refresh_store("_history_store", _HISTORY_COLLECTION)
-            self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
-            return True
-        except Exception as exc:
-            logger.warning("历史向量删除失败: record_id=%s, error=%s", record_id, exc)
             return False
 
     def retrieve(

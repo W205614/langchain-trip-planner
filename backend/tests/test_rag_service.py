@@ -155,6 +155,23 @@ def test_retrieve_embeds_shared_query_once(rag):
     assert len(results) == 2
 
 
+def test_delete_history_plan_removes_only_targeted_vector(rag):
+    """删除历史记录必须调用用户和记录号组成的稳定向量 ID。"""
+    store = MagicMock()
+    rag._history_store = store
+
+    assert rag.delete_history_plan(record_id=42, user_id=7) is True
+
+    store.delete.assert_called_once_with(ids=["history-7-42"])
+
+
+def test_delete_history_plan_returns_false_when_vector_store_fails(rag):
+    rag._history_store = MagicMock()
+    rag._history_store.delete.side_effect = RuntimeError("collection unavailable")
+
+    assert rag.delete_history_plan(record_id=42, user_id=7) is False
+
+
 def test_batch_attraction_details_embeds_once(rag):
     """多个景点详情应批量嵌入，而非每个景点单独请求外部服务。"""
     embedding = MagicMock()
