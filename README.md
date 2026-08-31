@@ -238,6 +238,7 @@ LLM_TEMPERATURE=0.7
 LLM_TIMEOUT=60        # 全局单次调用超时
 LLM_DAY_TIMEOUT=45    # 单日硬上限；与 LLM_TIMEOUT 取较小值
 LLM_CONCURRENCY=4     # 最大逐日并发；供应商限流时可下调为2
+LLM_DAY_MAX_TOKENS=1800 # 经实测验证的单日输出上限；供应商支持情况需单独验证
 # 可选：仅在按当前供应商账单填入后输出美元成本；默认 0 只记录 token，不猜价格
 LLM_INPUT_PRICE_PER_MILLION_USD=0
 LLM_OUTPUT_PRICE_PER_MILLION_USD=0
@@ -377,9 +378,16 @@ python -m app.evals.rag_benchmark --mode live --output evals/results/candidate.j
 cd backend
 # 默认以当天为起点，运行 3 次；会实际调用高德与配置的模型服务并可能产生费用
 python -m app.evals.planning_benchmark --city 北京 --days 1 --runs 3 --output evals/results/planning_live.json
+
+# 当一次长进程受外部网络中断时，可汇总同一请求的独立单次报告；不会调用外部服务
+python -m app.evals.planning_benchmark --combine-single-runs run_1.json run_2.json run_3.json --output evals/results/planning_merged.json
 ```
 
 已提交的规划小样本基线见 `backend/evals/baselines/planning-beijing-1day-2026-08-31.json`：北京 1 日、公共交通、历史文化偏好、连续 3 次真实运行均成功，可信 POI 覆盖率和确定性质量通过率均为 **100%**，无 LLM 兜底。完整规划 p50/p95 为 **22.48s / 27.12s**，从规划开始到首个 LLM token 为 **19.80s / 23.30s**，RAG 上下文 p50 为 **1.04s**，单日 LLM 调用 p50 为 **18.39s**。这说明当前主要时延在模型调用而不是 Chroma 检索；样本量仅 3，不能视为并发压测或生产 SLA。
+
+在不改变模型、检索算法或质量规则的前提下，已完成一轮输入压缩消融：每日景点候选从 6 限为 4、酒店候选从 3 限为 2，规划 Prompt 的 RAG 上下文从 top-k=3 改为 top-k=2 且每块最多 600 字符。结果见 `backend/evals/baselines/planning-beijing-1day-input-compression-2026-08-31.json`：同一北京一日请求的 3 次真实运行仍为 **100%** 成功、可信 POI 覆盖与确定性质量通过均为 **100%**、无兜底；供应商记录的输入 Token 从基线每次约 **1,507** 降至 **1,223**（**-18.9%**）。本轮 p50 总耗时为 **16.15s**、首 LLM Token 为 **11.54s**，但 p95 分别为 **28.48s / 25.28s**，未优于原基线。因此只将“减少输入量且质量未回退”作为已验证结论，不把 p50 变化宣传为稳定时延收益。
+
+输出 Token 上限的反例也保留在 `backend/evals/baselines/planning-beijing-1day-output-cap-1000-rejected-2026-08-31.json`：虽然运行时读取到了 `1000`，上游仍返回最高 **5,830** 个输出 Token，且 p50/p95 总耗时恶化到 **23.94s / 66.16s**。这说明当前供应商未可靠执行该参数；默认值保持 **1800**，不将这个未通过实验部署为优化。
 
 该命令不经过 HTTP、SSE、鉴权、历史持久化与路线 API 二次校验，因此报告中的首个工作流进度不等于模型 TTFT；只有 `first_llm_token_from_plan_start` 与 `per_day_llm_ttft` 可用于分析模型首 Token。确定性质量分检查天数、餐饮、日程时长和可信 POI，不等同于主观行程满意度或最终问答事实正确率。
 
@@ -437,7 +445,7 @@ builder.add_edge("fallback_plan", END)
 - **向量化**: `text-embedding-3-large`（3072 维，OpenAI 兼容接口/中转），`RecursiveCharacterTextSplitter` 切块（300 字符/50 重叠）
 - **存储**: ChromaDB 双 collection——`trip_knowledge`（知识库）+ `trip_history`（增量保存生成的行程）
 - **维度自愈**: 启动时 `_ensure_collections_consistent` 校验集合维度与嵌入模型一致，切换模型自动清空重建，避免 "expecting dimension of X, got Y" 入库报错
-- **注入**: 规划前检索该城市 top-k 片段，以"检索到的相关知识"段落注入 Prompt；知识库景点按名补坐标进候选；生成后逐景点回填详情
+- **注入**: 原始检索结果保留给评测；规划 Prompt 只注入该城市 top-k=2 的片段、每片最多 600 字符，以"检索到的相关知识"段落提供事实参考；知识库景点按名补坐标进候选；生成后逐景点回填详情
 - **降级**: 未配置嵌入 Key/Base URL 时自动禁用，所有相关代码 try/except 静默跳过，不影响主流程
 - **重建索引**: `POST /api/rag/rebuild` 只替换 `source_type=markdown` 的静态块，保留审核发布的图文资料和高德动态块；状态查看 `GET /api/rag/status`。
 - **可观测性**: `/metrics` 的 `rag_operation_seconds` / `rag_operation_total` 覆盖动态建库、embedding、知识/历史向量检索、上下文构建及景点详情批量检索；指标不包含用户文本。
