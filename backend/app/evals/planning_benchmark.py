@@ -17,6 +17,7 @@ from prometheus_client import REGISTRY
 
 from .rag_benchmark import summarize_latencies
 from ..models.schemas import TripRequest
+from ..services.plan_quality import evaluate_plan
 
 
 def _counter_value(metric_name: str, operation: str = "trip_day") -> float:
@@ -46,12 +47,16 @@ def _quality_snapshot(plan: Any, expected_days: int) -> dict[str, float | bool |
     days = list(getattr(plan, "days", []) or [])
     attractions = [item for day in days for item in (getattr(day, "attractions", []) or [])]
     fallback_days = sum(getattr(day, "generation_mode", "") == "fallback" for day in days)
+    deterministic_quality = evaluate_plan(plan, expected_days)
     return {
         "days_match": len(days) == expected_days,
         "trusted_poi": bool(attractions) and all(bool(getattr(item, "poi_id", "")) for item in attractions),
         "days": len(days),
         "attractions": len(attractions),
         "fallback_days": fallback_days,
+        "deterministic_score": deterministic_quality.score,
+        "deterministic_passed": deterministic_quality.passed,
+        "deterministic_warning_count": len(deterministic_quality.warnings),
     }
 
 
@@ -71,6 +76,7 @@ def run_benchmark(
     first_progress_latencies: list[float] = []
     first_token_from_start: list[float] = []
     day_ttft_latencies: list[float] = []
+    stage_latencies: dict[str, list[float]] = {}
 
     for index in range(runs):
         started_at = clock()
@@ -89,6 +95,11 @@ def run_benchmark(
                 day_ttft_latencies.append(float(payload["seconds"]))
                 if first_token is None:
                     first_token = clock() - started_at
+            elif event == "stage_duration":
+                stage = str(payload.get("stage", "unknown"))
+                seconds = payload.get("seconds")
+                if isinstance(seconds, (int, float)) and seconds >= 0:
+                    stage_latencies.setdefault(stage, []).append(float(seconds))
 
         try:
             plan = planner.plan_trip(
@@ -97,8 +108,8 @@ def run_benchmark(
                 progress_callback=progress_callback,
                 trace_callback=trace_callback,
             )
-            run["outcome"] = "success"
             run["quality"] = _quality_snapshot(plan, request.travel_days)
+            run["outcome"] = "success"
         except Exception as exc:  # 报告失败类型，后续运行仍继续，避免一个上游波动中止全批。
             run["error_type"] = type(exc).__name__
             run["error"] = str(exc)[:200]
@@ -137,12 +148,21 @@ def run_benchmark(
                 sum(int(item["fallback_days"]) for item in qualities)
                 / max(1, sum(int(item["days"]) for item in qualities))
             ) if qualities else 0.0,
+            "deterministic_score_mean": (
+                sum(float(item["deterministic_score"]) for item in qualities) / len(qualities)
+                if qualities else 0.0
+            ),
+            "deterministic_pass_rate": (
+                sum(bool(item["deterministic_passed"]) for item in qualities) / len(qualities)
+                if qualities else 0.0
+            ),
         },
         "timings": {
             "plan_total": summarize_latencies(total_latencies),
             "first_progress": summarize_latencies(first_progress_latencies),
             "first_llm_token_from_plan_start": summarize_latencies(first_token_from_start),
             "per_day_llm_ttft": summarize_latencies(day_ttft_latencies),
+            **{stage: summarize_latencies(values) for stage, values in sorted(stage_latencies.items())},
         },
         "model_usage": _usage_delta(before_usage, after_usage),
         "details": reports,
@@ -150,6 +170,7 @@ def run_benchmark(
             "这是低频功能评测，不能用作并发压测或线上 SLA。",
             "estimated_cost_usd 仅在部署环境配置模型单价且供应商返回 usage 时有效。",
             "first_progress 是工作流阶段事件；first_llm_token_from_plan_start 才是从规划开始到首个模型 token。",
+            "确定性质量分校验天数、餐饮、时长与可信 POI 等规则，不等同于主观行程满意度或最终问答事实正确率。",
         ],
     }
 
@@ -168,6 +189,8 @@ def markdown_report(report: dict) -> str:
         f"- 行程天数匹配率：{report['quality']['days_match_rate']:.2%}",
         f"- 可信 POI 覆盖率：{report['quality']['trusted_poi_rate']:.2%}",
         f"- 单日 LLM 兜底率：{report['quality']['fallback_day_rate']:.2%}",
+        f"- 确定性质量分均值：{report['quality']['deterministic_score_mean']:.1f}/100",
+        f"- 确定性质量通过率：{report['quality']['deterministic_pass_rate']:.2%}",
         "",
         "## 时延",
         "",

@@ -11,8 +11,12 @@ class _FakePlanner:
         assert user_id == 0
         progress_callback("search_attractions", 10, "正在搜索真实景点")
         trace_callback("llm_first_token", {"day_index": 0, "seconds": 0.12})
-        attraction = SimpleNamespace(poi_id="B0001")
-        day = SimpleNamespace(attractions=[attraction], generation_mode="llm")
+        trace_callback("stage_duration", {"stage": "rag_context", "seconds": 0.04})
+        attraction = SimpleNamespace(poi_id="B0001", visit_duration=60)
+        meals = [
+            SimpleNamespace(type="breakfast"), SimpleNamespace(type="lunch"), SimpleNamespace(type="dinner"),
+        ]
+        day = SimpleNamespace(attractions=[attraction], meals=meals, day_index=1, generation_mode="llm")
         return SimpleNamespace(days=[day])
 
 
@@ -39,9 +43,12 @@ def test_planning_benchmark_reports_trace_quality_and_usage(monkeypatch):
     assert report["outcomes"] == {"success": 2, "error": 0, "success_rate": 1.0}
     assert report["quality"]["days_match_rate"] == 1.0
     assert report["quality"]["trusted_poi_rate"] == 1.0
+    assert report["quality"]["deterministic_score_mean"] == 100.0
+    assert report["quality"]["deterministic_pass_rate"] == 1.0
     assert report["timings"]["first_progress"]["samples"] == 2
     assert report["timings"]["first_llm_token_from_plan_start"]["samples"] == 2
     assert report["timings"]["per_day_llm_ttft"]["p50_seconds"] == 0.12
+    assert report["timings"]["rag_context"]["p50_seconds"] == 0.04
     assert report["model_usage"]["model_calls"] == 2.0
     assert report["model_usage"]["input_tokens"] == 60.0
     assert report["model_usage"]["output_tokens"] == 30.0
