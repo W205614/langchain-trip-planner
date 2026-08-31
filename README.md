@@ -238,6 +238,11 @@ LLM_TEMPERATURE=0.7
 LLM_TIMEOUT=60        # 全局单次调用超时
 LLM_DAY_TIMEOUT=45    # 单日硬上限；与 LLM_TIMEOUT 取较小值
 LLM_CONCURRENCY=4     # 最大逐日并发；供应商限流时可下调为2
+# 可选：仅在按当前供应商账单填入后输出美元成本；默认 0 只记录 token，不猜价格
+LLM_INPUT_PRICE_PER_MILLION_USD=0
+LLM_OUTPUT_PRICE_PER_MILLION_USD=0
+VISION_INPUT_PRICE_PER_MILLION_USD=0
+VISION_OUTPUT_PRICE_PER_MILLION_USD=0
 LOG_LEVEL=INFO
 
 # 接口鉴权 (JWT) — 生产务必改为强随机值
@@ -341,14 +346,26 @@ pytest -v
 
 ### RAG 检索评测
 
-`backend/evals/rag_cases.json` 是带城市、相关知识块和事实期望的标注集。离线模式只校验指标计算与报告格式，不能把 mock 的 100% 结果写成生产召回率：
+`backend/evals/rag_cases.json` 是冻结的 `travel-rag-static-v1` 标注集：覆盖北京、上海、广州、深圳的 20 条门票、开放时间、交通与行程问题，并标注相关 chunk 和应覆盖事实。报告会记录标注集和四份静态知识文件的 SHA-256；快照、embedding 模型或 top-k 不一致时拒绝与旧基线比较。
+
+离线模式只校验指标计算与 JSON/Markdown 报告格式，不能把 fixture 的 100% 结果写成生产召回率：
 
 ```bash
 cd backend
 python -m app.evals.rag_benchmark --mode offline --output .pytest-tmp/rag_report.json
 ```
 
-配置真实 embedding 并重建知识库后，可运行 `--mode live` 生成当前向量检索基线。报告包含 Recall@3/@5、Precision@3/@5、MRR、nDCG、事实覆盖率、来源覆盖率和检索延迟；任何 chunk、top-k 或排序改动必须在同一标注集上与该基线比较。
+真实基线会把评测 query 发送到配置的 embedding 服务，可能产生费用；确认服务目的地和费用后再运行：
+
+```bash
+cd backend
+python -m app.evals.rag_benchmark --mode live --output evals/results/dense_chroma_baseline.json --variant dense_chroma_baseline
+
+# 每次只改一个检索因素；只有相同快照、embedding 模型和 top-k 才会输出差异
+python -m app.evals.rag_benchmark --mode live --output evals/results/candidate.json --baseline evals/results/dense_chroma_baseline.json --variant <one_changed_factor>
+```
+
+每次执行同时生成 JSON 和同名 Markdown。指标包含 Recall@3/@5、Precision@3/@5、MRR、nDCG、事实覆盖率、来源覆盖率及 query embedding / Chroma 检索分段时延。`fact_coverage` 只是召回片段包含标注事实的比例，**不是**最终 LLM 答案正确率；小样本 p95 也不能当作线上 SLA。
 
 ## 📝 使用指南
 
@@ -406,8 +423,11 @@ builder.add_edge("fallback_plan", END)
 - **维度自愈**: 启动时 `_ensure_collections_consistent` 校验集合维度与嵌入模型一致，切换模型自动清空重建，避免 "expecting dimension of X, got Y" 入库报错
 - **注入**: 规划前检索该城市 top-k 片段，以"检索到的相关知识"段落注入 Prompt；知识库景点按名补坐标进候选；生成后逐景点回填详情
 - **降级**: 未配置嵌入 Key/Base URL 时自动禁用，所有相关代码 try/except 静默跳过，不影响主流程
-- **重建索引**: `POST /api/rag/rebuild`（修改知识文档后调用）；状态查看 `GET /api/rag/status`
-- **可观测性**: `/metrics` 提供 `rag_operation_seconds` 与 `rag_operation_total`，覆盖动态建库、embedding、知识/历史向量检索、上下文构建及景点详情批量检索；指标不包含用户文本。
+- **重建索引**: `POST /api/rag/rebuild` 只替换 `source_type=markdown` 的静态块，保留审核发布的图文资料和高德动态块；状态查看 `GET /api/rag/status`。
+- **可观测性**: `/metrics` 的 `rag_operation_seconds` / `rag_operation_total` 覆盖动态建库、embedding、知识/历史向量检索、上下文构建及景点详情批量检索；指标不包含用户文本。
+- **模型时延与成本**: 单日规划改用内部流式调用，`ai_model_time_to_first_token_seconds` 记录供应商返回首个非空 token 的 TTFT，`ai_model_call_seconds` 记录完整调用，`ai_model_*_tokens_total` 记录供应商返回 usage。`ai_model_estimated_cost_usd_total` 仅按显式配置的单价估算；未配置或 embedding 未返回 token 时不猜测成本。
+- **用户可见流式进度**: `trip_stream_time_to_first_event_seconds` 记录首个真实 SSE 进度事件，`trip_stream_generation_seconds` 记录服务端生成完成时间。前端 SSE 当前发送进度与最终 JSON，前者不是模型首 token，不能混为 TTFT。
+- **优化准入**: 当前以 Chroma 稠密检索为基线，尚未加入查询缓存、混合检索或 rerank。只有在固定标注集的质量回归或运行时指标证明问题后，才引入其中一个因素并与基线比较。
 
 ### 公共图文知识库（审核发布）
 
