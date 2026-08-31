@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 2. 复制应用代码
 COPY app ./app
+COPY evals ./evals
 COPY run.py .
 COPY alembic.ini .
 COPY alembic ./alembic
