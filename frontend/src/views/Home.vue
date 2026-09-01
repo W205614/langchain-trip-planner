@@ -17,6 +17,9 @@
         <a-button class="history-entry" @click="goKnowledge">
           📚 投稿攻略
         </a-button>
+        <a-button class="history-entry" @click="goResearch">
+          🔎 旅行资料研究
+        </a-button>
         <a-button v-if="admin" class="history-entry" @click="goKnowledgeAdmin">
           🛡️ 知识审核
         </a-button>
@@ -326,6 +329,10 @@ const goHistory = () => {
 
 const goKnowledge = () => {
   router.push('/knowledge')
+}
+
+const goResearch = () => {
+  router.push('/research')
 }
 
 const goKnowledgeAdmin = () => {

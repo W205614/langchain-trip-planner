@@ -9,6 +9,7 @@ import History from './views/History.vue'
 import Login from './views/Login.vue'
 import Knowledge from './views/Knowledge.vue'
 import KnowledgeAdmin from './views/KnowledgeAdmin.vue'
+import Research from './views/Research.vue'
 import { isAuthenticated } from './services/auth'
 
 const router = createRouter({
@@ -45,6 +46,12 @@ const router = createRouter({
       path: '/knowledge/admin',
       name: 'KnowledgeAdmin',
       component: KnowledgeAdmin,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/research',
+      name: 'Research',
+      component: Research,
       meta: { requiresAuth: true }
     }
   ]

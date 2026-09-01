@@ -444,6 +444,45 @@ class RagService:
             logger.warning(f"⚠️  RAG 检索失败: {e}")
         return results
 
+    @staticmethod
+    def _source_tier_for_document(metadata: dict) -> str:
+        """给没有显式等级的内置/动态知识一个准确的来源标记。"""
+        if metadata.get("source_tier"):
+            return str(metadata["source_tier"])
+        if metadata.get("source_type") == "markdown":
+            return "curated_static"
+        if str(metadata.get("source", "")).startswith(_GAODE_SOURCE_PREFIX):
+            return "amap_live"
+        return "community"
+
+    def retrieve_research_evidence(self, query: str, city: str, k: int = 5) -> List[dict]:
+        """返回可直接展示的公开资料证据，不读取任何用户私有历史。"""
+        if not self.enabled or not query.strip() or not city.strip():
+            return []
+        try:
+            self.ensure_city_index(city)
+            self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
+            with observe_rag_operation("research_query_embedding"):
+                embedding = self._embedding.embed_query(f"{city} {query}")
+            with observe_rag_operation("research_vector_search"):
+                docs = self._knowledge_store.similarity_search_by_vector(
+                    embedding, k=max(1, min(k, 8)), filter={"city": city}
+                )
+            return [
+                {
+                    "content": document.page_content,
+                    "source": document.metadata.get("source", "未知来源"),
+                    "page": document.metadata.get("page"),
+                    "source_type": document.metadata.get("source_type", "unknown"),
+                    "source_tier": self._source_tier_for_document(document.metadata),
+                    "chunk_id": document.metadata.get("chunk_id", ""),
+                }
+                for document in docs
+            ]
+        except Exception as exc:
+            logger.warning("旅行资料研究检索失败: %s", exc)
+            return []
+
     def build_rag_context(
         self,
         request: TripRequest,

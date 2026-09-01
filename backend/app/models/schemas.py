@@ -71,6 +71,13 @@ class TravelPreferenceRequest(BaseModel):
     accommodation: str = Field(default="经济型酒店", min_length=1, max_length=32)
 
 
+class TravelResearchRequest(BaseModel):
+    """面向公开城市资料的来源优先研究请求，不检索私人历史。"""
+
+    city: str = Field(..., min_length=1, max_length=64)
+    query: str = Field(..., min_length=2, max_length=300)
+
+
 class POISearchRequest(BaseModel):
     """POI搜索请求"""
     keywords: str = Field(..., description="搜索关键词", json_schema_extra={"example": "故宫"})

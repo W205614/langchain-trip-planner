@@ -203,6 +203,10 @@ export async function saveTravelPreferences(payload: {
   return (await apiClient.put('/api/preferences/me', payload)).data
 }
 
+export async function researchTravel(city: string, query: string): Promise<any> {
+  return (await apiClient.post('/api/research', { city, query })).data
+}
+
 /** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
 export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string): Promise<any> {
   return (await apiClient.post(`/api/history/${id}/revise-day`, {

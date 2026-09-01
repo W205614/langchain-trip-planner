@@ -190,6 +190,30 @@ def test_retrieve_embeds_shared_query_once(rag):
     assert len(results) == 2
 
 
+def test_research_evidence_uses_only_public_city_knowledge(rag):
+    """研究入口只查询公共 collection，不读取个人历史向量。"""
+    embedding = MagicMock()
+    embedding.embed_query.return_value = [0.1] * 3072
+    rag._embedding = embedding
+    rag.ensure_city_index = MagicMock(return_value=True)
+    rag._knowledge_store = MagicMock()
+    rag._history_store = MagicMock()
+    rag._knowledge_store.similarity_search_by_vector.return_value = [
+        Document(page_content="故宫需提前预约", metadata={
+            "source": "故宫参观须知.pdf", "page": 2, "source_type": "multimodal", "source_tier": "official",
+        })
+    ]
+
+    evidence = rag.retrieve_research_evidence("预约要求", "北京")
+
+    embedding.embed_query.assert_called_once_with("北京 预约要求")
+    rag._history_store.similarity_search_by_vector.assert_not_called()
+    assert evidence == [{
+        "content": "故宫需提前预约", "source": "故宫参观须知.pdf", "page": 2,
+        "source_type": "multimodal", "source_tier": "official", "chunk_id": "",
+    }]
+
+
 def test_build_rag_context_can_limit_prompt_chunk_size(rag):
     """Prompt 截断不改变检索本身，只限制送给规划模型的上下文体积。"""
     from app.models.schemas import TripRequest

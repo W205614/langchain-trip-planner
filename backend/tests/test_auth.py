@@ -136,3 +136,23 @@ def test_travel_preferences_are_opt_in_and_user_scoped(auth_client):
     assert isolated.json()["data"]["saved"] is False
     assert auth_client.delete("/api/preferences/me", headers=first_headers).status_code == 200
     assert auth_client.get("/api/preferences/me", headers=first_headers).json()["data"]["saved"] is False
+
+
+def test_research_endpoint_returns_public_evidence_only(auth_client, monkeypatch):
+    token = _register(auth_client, "researcher").json()["access_token"]
+    # 这里的 mock 明确只表示公开资料；接口不接受或传入 user_id。
+    fake_service = type("Rag", (), {
+        "enabled": True,
+        "retrieve_research_evidence": staticmethod(lambda query, city, k: [{
+            "content": "请提前预约", "source": "故宫参观须知.pdf", "page": 2,
+            "source_type": "multimodal", "source_tier": "official", "chunk_id": "submission:1:2:0",
+        }]),
+    })()
+    monkeypatch.setattr("app.api.routes.research.get_rag_service", lambda: fake_service)
+
+    response = auth_client.post(
+        "/api/research", headers={"Authorization": f"Bearer {token}"},
+        json={"city": "北京", "query": "故宫怎么预约"},
+    )
+    assert response.status_code == 200
+    assert response.json()["data"]["evidence"][0]["source_tier"] == "official"
