@@ -145,7 +145,15 @@
               <template #header>
                 <div class="day-header">
                   <span class="day-title">第{{ day.day_index + 1 }}天</span>
-                  <span class="day-date">{{ day.date }}</span>
+                  <a-space>
+                    <span class="day-date">{{ day.date }}</span>
+                    <a-button
+                      v-if="historyRecordId && !editMode"
+                      size="small"
+                      type="dashed"
+                      @click.stop="openRevision(day.day_index)"
+                    >✨ AI 重新安排</a-button>
+                  </a-space>
                 </div>
               </template>
 
@@ -323,6 +331,28 @@
       <a-button type="primary" @click="goBack">返回首页创建行程</a-button>
     </a-empty>
 
+    <a-modal
+      v-model:open="revisionOpen"
+      title="重新安排当天行程"
+      :confirm-loading="revisionLoading"
+      ok-text="仅重新安排这一天"
+      @ok="submitRevision"
+    >
+      <a-alert
+        type="info"
+        show-icon
+        message="只会调用一次规划模型并修改当前日期；其余日期保持不变。"
+        style="margin-bottom: 16px"
+      />
+      <a-textarea
+        v-model:value="revisionInstruction"
+        :rows="4"
+        :maxlength="500"
+        show-count
+        placeholder="例如：下雨，改为室内博物馆并减少步行"
+      />
+    </a-modal>
+
     <!-- 回到顶部按钮 -->
     <a-back-top :visibility-height="300">
       <div class="back-top-button">
@@ -341,7 +371,7 @@ import AMapLoader from '@amap/amap-jsapi-loader'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import type { TripPlan } from '@/types'
-import { updateHistory } from '@/services/api'
+import { reviseHistoryDay, updateHistory } from '@/services/api'
 
 const router = useRouter()
 const tripPlan = ref<TripPlan | null>(null)
@@ -351,6 +381,10 @@ const attractionPhotos = ref<Record<string, string>>({})
 const activeSection = ref('overview')
 const activeDays = ref<number[]>([0]) // 默认展开第一天
 const historyRecordId = ref<number>(0) // 从历史打开时的记录 id (0=新规划)
+const revisionOpen = ref(false)
+const revisionLoading = ref(false)
+const revisionDayIndex = ref<number | null>(null)
+const revisionInstruction = ref('')
 let map: any = null
 
 // 统计所有景点数量
@@ -440,6 +474,38 @@ const cancelEdit = () => {
   }
   editMode.value = false
   message.info('已取消编辑')
+}
+
+const openRevision = (dayIndex: number) => {
+  revisionDayIndex.value = dayIndex
+  revisionInstruction.value = ''
+  revisionOpen.value = true
+}
+
+const submitRevision = async () => {
+  if (!historyRecordId.value || revisionDayIndex.value === null || !tripPlan.value) return
+  const instruction = revisionInstruction.value.trim()
+  if (instruction.length < 2) {
+    message.warning('请填写具体的改排要求')
+    return
+  }
+  revisionLoading.value = true
+  try {
+    const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction)
+    if (!response.success || !response.data) throw new Error(response.message || '改排失败')
+    tripPlan.value = response.data
+    sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
+    revisionOpen.value = false
+    message.success(response.message || '当天行程已重新安排')
+    if (map) map.destroy()
+    await nextTick()
+    await loadAttractionPhotos()
+    initMap()
+  } catch (error: any) {
+    message.error(error.response?.data?.detail || error.message || '改排失败')
+  } finally {
+    revisionLoading.value = false
+  }
 }
 
 // 删除景点

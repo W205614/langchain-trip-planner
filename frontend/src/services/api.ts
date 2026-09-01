@@ -191,6 +191,14 @@ export async function submitKnowledge(city: string, title: string, file: File): 
   return response.data
 }
 
+/** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
+export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string): Promise<any> {
+  return (await apiClient.post(`/api/history/${id}/revise-day`, {
+    day_index: dayIndex,
+    instruction
+  })).data
+}
+
 export async function fetchMyKnowledge(): Promise<any> {
   return (await apiClient.get('/api/knowledge/submissions/mine')).data
 }

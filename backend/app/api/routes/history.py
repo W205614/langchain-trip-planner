@@ -14,7 +14,10 @@ from ...core.exceptions import BizException
 from ...core.security import get_current_user
 from ...db.database import get_db
 from ...db.models import User
-from ...models.schemas import TripPlan
+from ...models.schemas import TripPlan, TripRevisionRequest
+from ...agents.trip_planner_agent import get_trip_planner_agent
+from ...services.amap_service import get_amap_service
+from ...services.plan_quality import evaluate_plan, repair_plan_routes
 from ...services import history_service
 
 router = APIRouter(prefix="/history", tags=["历史记录"])
@@ -82,6 +85,46 @@ def update_history(
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
     return {"success": True, "message": "更新成功", "id": record.id, "rag_sync_pending": True}
+
+
+@router.post("/{record_id}/revise-day", summary="增量改排行程中的一天")
+def revise_history_day(
+    record_id: int,
+    body: TripRevisionRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """对指定历史行程只重排一天，保留其余日期并重新进行确定性路线校验。"""
+    record = history_service.get_trip_record(db, current_user.id, record_id)
+    if record is None:
+        raise BizException("历史记录不存在", status_code=404)
+    try:
+        trip_plan = TripPlan.model_validate_json(record.plan_json)
+    except ValueError as exc:
+        logger.warning("历史行程 JSON 无法解析: id=%s", record_id)
+        raise BizException("历史行程数据损坏，无法改排", status_code=409) from exc
+
+    request = history_service.trip_record_to_request(record)
+    try:
+        trip_plan = get_trip_planner_agent().revise_trip_day(
+            request, trip_plan, body.day_index, body.instruction, user_id=current_user.id
+        )
+    except ValueError as exc:
+        raise BizException(str(exc), status_code=422) from exc
+
+    route_quality = repair_plan_routes(trip_plan, get_amap_service(), request.transportation)
+    quality = evaluate_plan(trip_plan, request.travel_days).to_dict() | route_quality
+    updated = history_service.update_trip_record(db, current_user.id, record_id, trip_plan)
+    if updated is None:  # 防御并发删除；不覆盖其它用户记录。
+        raise BizException("历史记录不存在", status_code=404)
+    return {
+        "success": True,
+        "message": f"第{body.day_index + 1}天已重新安排",
+        "data": trip_plan,
+        "quality": quality,
+        "id": updated.id,
+        "rag_sync_pending": True,
+    }
 
 
 @router.delete("/{record_id}", summary="删除历史记录")

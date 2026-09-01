@@ -51,6 +51,18 @@ class TripRequest(BaseModel):
         return self
 
 
+class TripRevisionRequest(BaseModel):
+    """对已保存行程中某一天发起受限的增量改排请求。"""
+
+    day_index: int = Field(..., ge=0, le=29, description="要改排的天序号（从 0 开始）")
+    instruction: str = Field(
+        ...,
+        min_length=2,
+        max_length=500,
+        description="本次改排要求，例如：下雨，改为室内博物馆并减少步行",
+    )
+
+
 class POISearchRequest(BaseModel):
     """POI搜索请求"""
     keywords: str = Field(..., description="搜索关键词", json_schema_extra={"example": "故宫"})

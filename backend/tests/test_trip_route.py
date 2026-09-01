@@ -164,3 +164,52 @@ def test_plan_trip_failure_returns_500(monkeypatch):
     data = resp.json()
     assert data["success"] is False
     assert "服务器内部错误" in data["message"]
+
+
+def test_revise_one_history_day_persists_only_the_revised_plan(client, monkeypatch):
+    """增量改排只调用一次改排入口，写回原记录并保留其它日期。"""
+    fake_agent = Mock()
+    original = make_fake_trip_plan()
+    revised = make_fake_trip_plan()
+    revised.days[0].description = "改为室内博物馆行程"
+    revised.days[0].attractions[0].name = "国家博物馆"
+    revised.days[0].attractions[0].poi_id = "B000A7VYV0"
+    fake_agent.plan_trip.return_value = original
+    fake_agent.revise_trip_day.return_value = revised
+    monkeypatch.setattr("app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent)
+    monkeypatch.setattr("app.api.routes.history.get_trip_planner_agent", lambda: fake_agent)
+    route_planner = Mock()
+    route_planner.plan_route_by_locations.return_value = {"distance": 1_000, "duration": 600}
+    monkeypatch.setattr("app.api.routes.history.get_amap_service", lambda: route_planner)
+
+    before = {item["id"] for item in client.get("/api/history", params={"page_size": 50}).json()["data"]}
+    assert client.post("/api/trip/plan", json=VALID_REQUEST).status_code == 200
+    records = client.get("/api/history", params={"page_size": 50}).json()["data"]
+    record_id = next(item["id"] for item in records if item["id"] not in before)
+
+    response = client.post(
+        f"/api/history/{record_id}/revise-day",
+        json={"day_index": 0, "instruction": "下雨，改成室内博物馆并减少步行"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["data"]["days"][0]["description"] == "改为室内博物馆行程"
+    assert data["data"]["days"][1]["description"] == original.days[1].description
+    fake_agent.revise_trip_day.assert_called_once()
+    persisted = client.get(f"/api/history/{record_id}").json()["data"]["plan"]
+    assert persisted["days"][0]["description"] == "改为室内博物馆行程"
+
+
+def test_revise_day_rejects_unknown_record_and_invalid_index(client):
+    unknown = client.post(
+        "/api/history/999999/revise-day",
+        json={"day_index": 0, "instruction": "改成室内活动"},
+    )
+    assert unknown.status_code == 404
+
+    invalid = client.post(
+        "/api/history/1/revise-day",
+        json={"day_index": 50, "instruction": "改成室内活动"},
+    )
+    assert invalid.status_code == 422
