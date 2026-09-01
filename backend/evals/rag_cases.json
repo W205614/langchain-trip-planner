@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.1",
-  "dataset_id": "travel-rag-static-v1",
+  "schema_version": "1.2",
+  "dataset_id": "travel-rag-static-v1-2",
   "description": "面向四个内置城市攻略的人工标注检索集。事实仅用于检验召回片段覆盖，不代表实时官方信息。",
   "cases": [
     {"id": "beijing-season", "category": "overview", "query": "北京适合几月旅游", "city": "北京", "relevant_chunk_ids": ["beijing.md:0"], "expected_facts": ["4-5 月"]},

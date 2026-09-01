@@ -40,6 +40,7 @@
 - 🔐 **JWT 接口鉴权**: 用户注册/登录（bcrypt 密码哈希 + JWT），历史记录等私有接口需登录后访问
 - 🛡️ **AI 安全分层防御**: Prompt 注入防护（不可信输入声明）、候选 POI ID 严格校验与事实字段回填、API 限流、请求追踪 ID、统一错误结构
 - ✅ **可审计的可信边界与质量控制**: LLM 仅返回候选 `poi_id`，后端以高德候选回填名称、地址和坐标；再执行去重、每日游览时长（最多 480 分钟）、餐饮完整性、天数一致性、最近邻排序与真实路线时长校验（最多 120 分钟）
+- ✨ **增量改排行程**: 历史行程可只重新安排指定一天；其它日期不变，候选 POI 排除其它日期已用景点，改排后重新执行路线校验、预算回算与私有历史向量同步
 - ⚡ **真实流式进度与幂等生成**: `POST /api/trip/plan/stream` 按 LangGraph 实际阶段推送 SSE；单进程内 `Idempotency-Key` 复用相同重试请求
 - 🧱 **可验证交付**: GitHub Actions 执行 pytest、前端构建、Alembic 和 Docker Compose 构建校验；提供本机全栈 Docker 演示与 PostgreSQL 备份/恢复脚本
 - 🤖 **LangGraph 工作流编排**: 用 StateGraph 构建景点、天气、酒店并行查询，再汇合为逐日生成与兜底流程
@@ -47,6 +48,8 @@
 - 🏆 **知识库景点落地**: 知识库知名景点按名搜索补真实坐标进入行程候选；生成后每个景点自动回填门票/开放时间/交通/避坑详情
 - 📈 **集合维度自愈**: 启动时校验 Chroma 集合向量维度与嵌入模型一致，切换嵌入模型（如 1024→3072 维）自动清空重建，不再报 "expecting dimension of X, got Y"
 - 📜 **行程历史记录**: 默认 SQLite 零配置；本机 PostgreSQL 使用 Alembic 管理 schema。支持分页、筛选、查看、编辑与删除，主数据库始终是事实源
+- 🧩 **主动偏好记忆**: 用户可选择保存交通方式、住宿偏好与旅行标签；不保存自由文本，读取、覆盖和删除均严格按用户隔离
+- 🔎 **来源优先资料研究**: 单独检索公开城市资料并返回文件名、页码和来源等级；研究模式不读取私人历史，也不把资料片段改写成未经验证的结论
 - 🗺️ **高德地图直调**: httpx 直接调用高德 Web 服务 REST API，无外部 MCP 进程依赖
 - 📸 **国内图源**: 景点图片优先取高德 POI 实景图（国内 CDN，快且稳），带 QPS 节流与熔断保护
 - 🛡️ **可见降级**: 单日 LLM 在 45 秒（或全局超时的更小值）内未完成、输出无效或 POI 不可信时，只使用当前候选中的真实 POI 兜底，并通过 SSE 与 `quality.degraded_days` 暴露；没有候选则返回上游数据不可用
@@ -87,7 +90,8 @@
 ```
 ┌──────────────────────────────────────────────────┐
 │  FastAPI 路由层  app/api/routes/                  │
-│  trip.py / map.py / poi.py / history.py / rag.py │
+│ trip.py / map.py / poi.py / history.py / rag.py   │
+│ preferences.py / research.py                       │
 └──────────┬──────────────────────────┬────────────┘
            │                          │
 ┌──────────▼──────────────┐  ┌───────▼─────────────┐
@@ -125,7 +129,9 @@ langchain-trip-planner/
 │   │   │       ├── map.py         # 地图/天气/路线
 │   │   │       ├── poi.py         # 景点图片
 │   │   │       ├── history.py     # 历史记录 CRUD
-│   │   │       └── rag.py         # RAG 状态/重建
+│   │   │       ├── rag.py         # RAG 状态/重建
+│   │   │       ├── preferences.py # 用户主动保存的旅行偏好
+│   │   │       └── research.py    # 来源优先的公开资料研究
 │   │   ├── services/              # 服务层
 │   │   │   ├── amap_service.py    # 高德 REST API 客户端
 │   │   │   ├── llm_service.py     # ChatOpenAI 工厂
@@ -350,7 +356,7 @@ python -m pytest -q
 
 ### RAG 检索评测
 
-`backend/evals/rag_cases.json` 是冻结的 `travel-rag-static-v1` 标注集：覆盖北京、上海、广州、深圳的 40 条门票、开放时间、交通、概览与行程问题，并标注相关 chunk 和应覆盖事实。报告会记录标注集和四份静态知识文件的 SHA-256；快照、embedding 模型或 top-k 不一致时拒绝与旧基线比较。报告还会按问题类别输出 Recall、MRR、nDCG 与事实覆盖率，便于定位排序薄弱类型。
+`backend/evals/rag_cases.json` 是冻结的 `travel-rag-static-v1-2` 标注集：覆盖北京、上海、广州、深圳的 40 条门票、开放时间、交通、概览与行程问题，并标注相关 chunk 和应覆盖事实。报告会记录标注集和四份静态知识文件的 SHA-256；快照、embedding 模型或 top-k 不一致时拒绝与旧基线比较。报告还会按问题类别输出 Recall、MRR、nDCG 与事实覆盖率，便于定位排序薄弱类型。
 
 离线模式只校验指标计算与 JSON/Markdown 报告格式，不能把 fixture 的 100% 结果写成生产召回率：
 
@@ -371,7 +377,7 @@ python -m app.evals.rag_benchmark --mode live --output evals/results/candidate.j
 
 每次执行同时生成 JSON 和同名 Markdown。指标包含 Recall@3/@5、Precision@3/@5、MRR、nDCG、事实覆盖率、来源覆盖率及 query embedding / Chroma 检索分段时延。`fact_coverage` 只是召回片段包含标注事实的比例，**不是**最终 LLM 答案正确率；小样本 p95 也不能当作线上 SLA。
 
-当前已提交的真实稠密检索基线见 `backend/evals/baselines/travel-rag-static-v1-1-dense-chroma-2026-08-31.json`：在 `text-embedding-3-large`、top-k=5、40 条静态攻略案例下，Recall@3/@5 为 **1.000**，MRR 为 **0.946**，nDCG 为 **0.960**；端到端检索 p50/p95 为 **1.022s / 1.435s**。其中 query embedding p95 为 **1.430s**，Chroma 向量检索 p95 仅 **6.7ms**。新增同义问法后，概览与行程类的排序弱于门票、开放时间类，因此当前先保留失败案例和分类报告，不引入 rerank、混合检索或更换向量索引；它们会增加复杂度，且尚无针对该快照的质量收益证据。该结果不代表真实生产流量、最终 LLM 答案正确率或线上 SLA。
+当前已提交的真实稠密检索基线见 `backend/evals/baselines/travel-rag-static-v1-2-dense-chroma-2026-09-01.json`：在 `text-embedding-3-large`、top-k=5、40 条静态攻略案例下，Recall@3/@5 为 **1.000**，MRR 为 **0.946**，nDCG 为 **0.960**；端到端检索 p50/p95 为 **1.606s / 2.740s**。其中 query embedding p95 为 **2.734s**，Chroma 向量检索 p95 仅 **7.4ms**。因此当前瓶颈是远程 embedding，不是 Chroma 索引；在该快照中不引入 rerank、混合检索或更换向量索引，它们会增加调用或复杂度，却没有可验证的质量收益。`v1.1` 的历史报告使用不同案例 SHA-256，不能与本基线作前后对比。该结果不代表真实生产流量、最终 LLM 答案正确率或线上 SLA。
 
 ### 真实旅行规划性能评测
 
@@ -410,6 +416,8 @@ python -m app.evals.planning_benchmark --combine-single-runs run_1.json run_2.js
    - 任一步失败自动降级，LLM 失败走备用计划
 4. 结果页展示：每日详细行程、景点地图标记与实景图、天气预报、酒店推荐、知识库详情
 5. **历史行程**: 首页右上角「📜 历史行程」进入历史页，可查看/编辑/删除历史计划；编辑保存后修改会写回数据库
+6. **增量改排**: 从历史打开计划后，在指定日期点击「✨ AI 重新安排」；仅该日变化，系统会重新校验路线
+7. **资料研究**: 登录后点击首页「🔎 旅行资料研究」，按城市和问题查看带来源的公开资料证据卡
 
 ## 🔧 核心实现
 
@@ -462,8 +470,14 @@ builder.add_edge("fallback_plan", END)
 
 - 登录用户可在「投稿攻略」提交 JPEG、PNG、GIF、WebP 或扫描 PDF，单文件不超过 20 MB、PDF 最多 10 页；原文件仅保存在服务端运行数据目录，不提交 Git。
 - 资料默认 `pending`。只有由 `BOOTSTRAP_ADMIN_USERNAME` 授权的管理员可批准、拒绝或删除；批准后后台任务把 PDF 转为图片页，调用 `VISION_MODEL_ID` 提取受限旅游事实并写入公共 Chroma 知识库。
-- 图片内文字与模型输出均视为不可信资料：解析器只接受受 Pydantic 校验的摘要/事实，失败自动重试，连续失败不会发布。已发布资料会在检索上下文和景点说明中保留文件名、页码来源。
+- 图片内文字与模型输出均视为不可信资料：解析器只接受受 Pydantic 校验的摘要/事实，失败自动重试，连续失败不会发布。审核时管理员可标记 `community`（投稿资料）、`reviewed`（人工核验）或 `official`（官方资料）；该等级会写入向量元数据并随文件名、页码展示。来源等级只描述来源与审核状态，**不表示每条事实已被逐条证明**。
 - 上传前应确认拥有公开发布与发送到视觉模型服务的权利；本期不支持 PPT、Excel、复杂表格或公式解析。
+
+### 行程管理与资料研究
+
+- 历史详情页中，每一天可点击「✨ AI 重新安排」并输入改排要求。系统只调用一次单日规划链路，候选仅来自高德 POI 或当天既有 POI，且排除其它日期已使用的 POI；更新后会重新执行 120 分钟同日通勤校验、预算回算和 RAG outbox 同步。
+- 首页勾选「保存交通、住宿和旅行标签」后，下一次登录会自动回填这三类信息。额外要求不会进入偏好记忆；可通过 `GET` / `PUT` / `DELETE /api/preferences/me` 读取、保存或删除。
+- 首页「🔎 旅行资料研究」只访问公共城市知识，接口为 `POST /api/research`，返回证据片段、文件名、页码和来源等级。它不检索 `user_id` 历史向量，不能将结果当作模型事实核验或实时票务承诺。
 
 ```python
 # Embedding 走 OpenAI 兼容接口 (langchain-openai, 支持中转/代理)
