@@ -57,6 +57,17 @@ def ensure_tables() -> None:
     from . import models  # noqa: F401  确保模型注册到 Base.metadata
 
     Base.metadata.create_all(bind=engine)
+    # `create_all` 只会创建缺失的表，不能给用户已有的 SQLite 表补列。
+    # Docker/生产启动由 Alembic 负责；这里仅维持零配置本地开发的平滑升级。
+    with engine.begin() as connection:
+        columns = {
+            row[1] for row in connection.execute(text("PRAGMA table_info(knowledge_documents)"))
+        }
+        if columns and "source_tier" not in columns:
+            connection.execute(text(
+                "ALTER TABLE knowledge_documents "
+                "ADD COLUMN source_tier VARCHAR(16) NOT NULL DEFAULT 'community'"
+            ))
     _tables_ready = True
 
 
