@@ -6,7 +6,8 @@ WORKDIR /app
 
 # 1. 先复制依赖清单并安装 (利用 Docker 分层缓存: 依赖变更频率远低于代码)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# 公网镜像源偶发慢速读取时重试；仍不在最终镜像保留 pip 缓存。
+RUN pip install --retries 5 --timeout 120 --no-cache-dir -r requirements.txt
 
 # 2. 复制应用代码
 COPY app ./app
