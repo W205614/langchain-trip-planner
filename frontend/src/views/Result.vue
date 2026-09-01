@@ -549,32 +549,16 @@ const getMealLabel = (type: string): string => {
 const svgToDataUrl = (svg: string): string =>
   `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`
 
-// 加载所有景点图片
+// 页面和导出都直接使用同源受控代理，避免先解析一次、渲染时再解析一次。
+// 代理会在无图或上游失败时返回 SVG 占位图，因此无需额外的预检请求。
 const loadAttractionPhotos = async () => {
   if (!tripPlan.value) return
 
-  const promises: Promise<void>[] = []
-
   tripPlan.value.days.forEach(day => {
     day.attractions.forEach(attraction => {
-      const promise = fetch(`/api/poi/photo?name=${encodeURIComponent(attraction.name)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data.photo_url) {
-            // 页面和导出都使用后端按景点名受控代理的同源图片。
-            // 外部 CDN 图片即使能在页面显示，也可能因 CORS 无法被 html2canvas 绘制。
-            attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}`
-          }
-        })
-        .catch(err => {
-          console.error(`获取${attraction.name}图片失败:`, err)
-        })
-
-      promises.push(promise)
+      attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}`
     })
   })
-
-  await Promise.all(promises)
 }
 
 // 获取景点图片

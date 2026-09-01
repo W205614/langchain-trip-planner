@@ -1,16 +1,20 @@
 """POI相关API路由"""
 
+import ipaddress
 import logging
+import socket
 import threading
 import time
 from html import escape
 from typing import Optional
+from urllib.parse import urljoin, urlparse
 
 import httpx
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import Response
 from pydantic import BaseModel
 
+from ...core.rate_limit import limiter
 from ...services.amap_service import get_amap_service
 
 router = APIRouter(prefix="/poi", tags=["POI"])
@@ -23,6 +27,10 @@ _photo_semaphore = threading.BoundedSemaphore(3)
 _PHOTO_MIN_INTERVAL = 0.4  # 高德图片调用最小间隔(秒), 0.4s/次 ≈ 2.5 QPS
 _photo_last_call = 0.0
 _photo_call_lock = threading.Lock()
+_photo_url_cache: dict[str, tuple[float, Optional[str]]] = {}
+_photo_url_cache_lock = threading.Lock()
+_PHOTO_URL_CACHE_TTL_SECONDS = 60 * 60
+_MAX_PROXY_IMAGE_BYTES = 5 * 1024 * 1024
 
 
 def _rate_limited_photo_call(amap_service, name: str) -> Optional[str]:
@@ -100,7 +108,8 @@ def search_poi(keywords: str, city: str = "北京"):
     summary="获取景点图片",
     description="根据景点名称获取高德POI实景图(国内图源), 无图返回空由前端用占位图兜底",
 )
-def get_attraction_photo(name: str):
+@limiter.limit("30/minute")
+def get_attraction_photo(request: Request, name: str = Query(min_length=1, max_length=100)):
     """
     获取景点图片
 
@@ -127,34 +136,80 @@ def get_attraction_photo(name: str):
 
 def _resolve_attraction_photo(name: str) -> Optional[str]:
     """解析景点图片地址，供元数据和同源图片代理共用。"""
+    normalized_name = name.strip()
+    now = time.monotonic()
+    with _photo_url_cache_lock:
+        cached = _photo_url_cache.get(normalized_name)
+        if cached and cached[0] > now:
+            return cached[1]
+
     # 高德POI图片 (国内图源); 信号量限并发 + 间隔节流限QPS, 防止CUQPS超限
     amap_service = get_amap_service()
     with _photo_semaphore:
-        photo_url = _rate_limited_photo_call(amap_service, name)
+        photo_url = _rate_limited_photo_call(amap_service, normalized_name)
 
     # 高德无图 → 必应图片兜底 (免费稳定, 返回 CDN 直链)
     if not photo_url:
-        photo_url = _bing_image_fallback(name)
+        photo_url = _bing_image_fallback(normalized_name)
+
+    with _photo_url_cache_lock:
+        _photo_url_cache[normalized_name] = (now + _PHOTO_URL_CACHE_TTL_SECONDS, photo_url)
 
     return photo_url
 
 
-def _download_photo(url: str) -> tuple[bytes, str] | None:
-    """下载已由服务端解析出的远程图片，拒绝非图片和过大的响应。"""
+def _is_safe_remote_url(url: str) -> bool:
+    """仅允许解析到公网地址的 HTTP(S) 图片地址，避免代理访问内网。"""
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password:
+        return False
     try:
-        with httpx.Client(timeout=10.0, follow_redirects=True) as client:
-            response = client.get(url)
-            response.raise_for_status()
-        content_type = response.headers.get("content-type", "").split(";", 1)[0].lower()
-        if not content_type.startswith("image/"):
-            logger.warning("景点图片代理收到非图片响应: %s", content_type)
-            return None
-        # 导出仅需展示用缩略图，限制单张大小以避免被异常上游响应拖垮。
-        if len(response.content) > 5 * 1024 * 1024:
-            logger.warning("景点图片代理拒绝超大图片: %s bytes", len(response.content))
-            return None
-        return response.content, content_type
-    except httpx.HTTPError as exc:
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        addresses = socket.getaddrinfo(parsed.hostname, port, type=socket.SOCK_STREAM)
+    except OSError:
+        return False
+    try:
+        return bool(addresses) and all(ipaddress.ip_address(item[4][0]).is_global for item in addresses)
+    except ValueError:
+        return False
+
+
+def _download_photo(url: str) -> tuple[bytes, str] | None:
+    """下载受验证的公网图片；逐跳验证跳转并流式限制内容大小。"""
+    try:
+        next_url = url
+        with httpx.Client(timeout=10.0, follow_redirects=False) as client:
+            for _ in range(4):
+                if not _is_safe_remote_url(next_url):
+                    logger.warning("景点图片代理拒绝非公网地址")
+                    return None
+                with client.stream("GET", next_url) as response:
+                    if response.is_redirect:
+                        location = response.headers.get("location")
+                        if not location:
+                            return None
+                        next_url = urljoin(next_url, location)
+                        continue
+                    response.raise_for_status()
+                    content_type = response.headers.get("content-type", "").split(";", 1)[0].lower()
+                    if not content_type.startswith("image/"):
+                        logger.warning("景点图片代理收到非图片响应: %s", content_type)
+                        return None
+                    content_length = response.headers.get("content-length")
+                    if content_length and int(content_length) > _MAX_PROXY_IMAGE_BYTES:
+                        logger.warning("景点图片代理拒绝超大图片: %s bytes", content_length)
+                        return None
+                    chunks: list[bytes] = []
+                    size = 0
+                    for chunk in response.iter_bytes():
+                        size += len(chunk)
+                        if size > _MAX_PROXY_IMAGE_BYTES:
+                            logger.warning("景点图片代理拒绝超大图片")
+                            return None
+                        chunks.append(chunk)
+                    return b"".join(chunks), content_type
+        return None
+    except (httpx.HTTPError, OSError, ValueError) as exc:
         logger.info("下载景点图片失败: %s", exc)
         return None
 
@@ -180,11 +235,12 @@ def _photo_placeholder(name: str) -> Response:
     summary="获取可导出的景点图片",
     description="按景点名称解析图片并以同源响应返回，供页面与图片/PDF 导出安全绘制。",
 )
-def get_attraction_photo_image(name: str = Query(min_length=1, max_length=100)):
+@limiter.limit("30/minute")
+def get_attraction_photo_image(request: Request, name: str = Query(min_length=1, max_length=100)):
     """将已解析的景点图片作为同源图片返回，不接受任意 URL，避免开放代理。"""
     photo_url = _resolve_attraction_photo(name)
     if not photo_url:
-        raise HTTPException(status_code=404, detail="暂未找到景点图片")
+        return _photo_placeholder(name)
 
     downloaded = _download_photo(photo_url)
     if not downloaded:

@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 from ...models.schemas import TripRequest, TripPlanResponse
 from ...agents.trip_planner_agent import get_trip_planner_agent
 from ...core.exceptions import BizException
-from ...core.rate_limit import limiter
+from ...core.rate_limit import limiter, llm_request_gate
 from ...core.security import get_current_user
 from ...core.trip_metrics import observe_trip_plan, observe_trip_stream
 from ...db.database import get_db
@@ -76,8 +76,9 @@ def plan_trip(
     ).hexdigest()
 
     def _generate_and_persist() -> TripPlanResponse:
-        agent = get_trip_planner_agent()
-        trip_plan = agent.plan_trip(body, user_id=current_user.id)
+        with llm_request_gate.slot():
+            agent = get_trip_planner_agent()
+            trip_plan = agent.plan_trip(body, user_id=current_user.id)
         route_quality = repair_plan_routes(trip_plan, get_amap_service(), body.transportation)
         quality = evaluate_plan(trip_plan, body.travel_days).to_dict() | route_quality
         try:
@@ -109,13 +110,21 @@ def plan_trip(
     summary="流式生成旅行计划",
     description="以 Server-Sent Events 返回真实 LangGraph 阶段进度及最终行程（需登录）。",
 )
+@limiter.limit("5/minute")
 def plan_trip_stream(
+    request: Request,
     body: TripRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
     idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
 ):
     """流式包装同步 Agent，前端不再伪造定时进度条。"""
+    if not llm_request_gate.try_acquire():
+        raise BizException(
+            "当前规划请求较多，请稍后重试",
+            status_code=429,
+            code="LLM_CONCURRENCY_LIMITED",
+        )
     events: Queue[tuple[str, dict]] = Queue()
     stream_started_at = perf_counter()
     first_event_seconds: float | None = None
@@ -159,8 +168,13 @@ def plan_trip_stream(
             events.put(("error", {"message": "旅行计划生成失败，请稍后重试"}))
         finally:
             observe_trip_stream(first_event_seconds, perf_counter() - stream_started_at, outcome)
+            llm_request_gate.release()
 
-    Thread(target=_run, name="trip-plan-stream", daemon=True).start()
+    try:
+        Thread(target=_run, name="trip-plan-stream", daemon=True).start()
+    except Exception:
+        llm_request_gate.release()
+        raise
 
     def _event_stream():
         while True:

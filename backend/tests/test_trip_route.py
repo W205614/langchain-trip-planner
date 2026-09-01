@@ -8,7 +8,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.api.main import app
+from app.core.rate_limit import LLMRequestGate
 from app.core.security import get_current_user
+from app.db.database import SessionLocal
 from app.db.models import User
 from app.models.schemas import (
     TripPlan,
@@ -18,7 +20,9 @@ from app.models.schemas import (
     Location,
     Budget,
     WeatherInfo,
+    TripRequest,
 )
+from app.services import history_service
 
 
 @pytest.fixture(autouse=True)
@@ -135,6 +139,18 @@ def test_plan_stream_returns_complete_event(client, monkeypatch):
     assert '"success": true' in body
 
 
+def test_plan_stream_rejects_when_llm_request_slots_are_full(client, monkeypatch):
+    gate = LLMRequestGate(1)
+    assert gate.try_acquire() is True
+    monkeypatch.setattr("app.api.routes.trip.llm_request_gate", gate)
+    try:
+        response = client.post("/api/trip/plan/stream", json=VALID_REQUEST)
+        assert response.status_code == 429
+        assert response.json()["code"] == "LLM_CONCURRENCY_LIMITED"
+    finally:
+        gate.release()
+
+
 def test_plan_trip_invalid_days(client):
     """travel_days 超出范围应返回 422 校验错误"""
     bad_request = {**VALID_REQUEST, "travel_days": 999}
@@ -213,3 +229,30 @@ def test_revise_day_rejects_unknown_record_and_invalid_index(client):
         json={"day_index": 50, "instruction": "改成室内活动"},
     )
     assert invalid.status_code == 422
+
+
+def test_revise_day_rejects_when_llm_request_slots_are_full(client, monkeypatch):
+    db = SessionLocal()
+    try:
+        record = history_service.create_trip_record(
+            db,
+            user_id=1,
+            request=TripRequest.model_validate(VALID_REQUEST),
+            trip_plan=make_fake_trip_plan(),
+        )
+        record_id = record.id
+    finally:
+        db.close()
+
+    gate = LLMRequestGate(1)
+    assert gate.try_acquire() is True
+    monkeypatch.setattr("app.api.routes.history.llm_request_gate", gate)
+    try:
+        response = client.post(
+            f"/api/history/{record_id}/revise-day",
+            json={"day_index": 0, "instruction": "下雨改为室内博物馆"},
+        )
+        assert response.status_code == 429
+        assert response.json()["code"] == "LLM_CONCURRENCY_LIMITED"
+    finally:
+        gate.release()

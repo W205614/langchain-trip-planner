@@ -74,6 +74,9 @@ class Settings(BaseSettings):
     llm_day_timeout: int = Field(default=45, ge=5, le=120)
     # 逐日生成时的并发数。本机演示默认同时生成最多四天；可按模型供应商限流下调。
     llm_concurrency: int = Field(default=4)
+    # 同一进程中允许同时执行的高成本 LLM 请求数。覆盖普通规划、SSE 规划和历史单日改排，
+    # 防止某一入口绕过其它入口的接口限流后耗尽线程或模型配额。
+    llm_request_max_concurrency: int = Field(default=4, ge=1, le=32)
     # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
     # 当前供应商对 1000-token 上限的执行不稳定，因此保留经验证的 1800 默认值。
     llm_day_max_tokens: int = Field(default=1800, ge=800, le=4096)

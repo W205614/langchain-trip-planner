@@ -7,10 +7,11 @@ import json
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.orm import Session
 
 from ...core.exceptions import BizException
+from ...core.rate_limit import limiter, llm_request_gate
 from ...core.security import get_current_user
 from ...db.database import get_db
 from ...db.models import User
@@ -88,7 +89,9 @@ def update_history(
 
 
 @router.post("/{record_id}/revise-day", summary="增量改排行程中的一天")
+@limiter.limit("5/minute")
 def revise_history_day(
+    request: Request,
     record_id: int,
     body: TripRevisionRequest,
     db: Session = Depends(get_db),
@@ -104,16 +107,17 @@ def revise_history_day(
         logger.warning("历史行程 JSON 无法解析: id=%s", record_id)
         raise BizException("历史行程数据损坏，无法改排", status_code=409) from exc
 
-    request = history_service.trip_record_to_request(record)
+    trip_request = history_service.trip_record_to_request(record)
     try:
-        trip_plan = get_trip_planner_agent().revise_trip_day(
-            request, trip_plan, body.day_index, body.instruction, user_id=current_user.id
-        )
+        with llm_request_gate.slot():
+            trip_plan = get_trip_planner_agent().revise_trip_day(
+                trip_request, trip_plan, body.day_index, body.instruction, user_id=current_user.id
+            )
     except ValueError as exc:
         raise BizException(str(exc), status_code=422) from exc
 
-    route_quality = repair_plan_routes(trip_plan, get_amap_service(), request.transportation)
-    quality = evaluate_plan(trip_plan, request.travel_days).to_dict() | route_quality
+    route_quality = repair_plan_routes(trip_plan, get_amap_service(), trip_request.transportation)
+    quality = evaluate_plan(trip_plan, trip_request.travel_days).to_dict() | route_quality
     updated = history_service.update_trip_record(db, current_user.id, record_id, trip_plan)
     if updated is None:  # 防御并发删除；不覆盖其它用户记录。
         raise BizException("历史记录不存在", status_code=404)
