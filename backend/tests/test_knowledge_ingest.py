@@ -40,10 +40,11 @@ def test_image_submission_requires_admin_review(client, monkeypatch):
         db.close()
     approved = client.post(
         f"/api/knowledge/admin/submissions/{document['id']}/approve",
-        headers={"Authorization": f"Bearer {token}"}, json={"note": "来源可信"},
+        headers={"Authorization": f"Bearer {token}"}, json={"note": "来源可信", "source_tier": "official"},
     )
     assert approved.status_code == 200
     assert approved.json()["data"]["status"] == "queued"
+    assert approved.json()["data"]["source_tier"] == "official"
 
     db = SessionLocal()
     try:
@@ -88,6 +89,7 @@ def test_process_document_publishes_page_text_with_source(monkeypatch, tmp_path)
         assert "来源页: 1" in document.source_text
         rag.replace_public_knowledge_document.assert_called_once()
         assert rag.replace_public_knowledge_document.call_args.args[:3] == (document.id, "北京", "故宫攻略")
+        assert rag.replace_public_knowledge_document.call_args.kwargs["source_tier"] == "community"
     finally:
         db.rollback()
         db.close()

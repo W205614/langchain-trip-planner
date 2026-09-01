@@ -26,6 +26,22 @@ class User(Base):
     )
 
 
+class UserTravelPreference(Base):
+    """用户主动保存的非敏感旅行偏好，不保存自由文本。"""
+
+    __tablename__ = "user_travel_preferences"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(Integer, unique=True, index=True)
+    preferences: Mapped[str] = mapped_column(Text, default="[]")
+    transportation: Mapped[str] = mapped_column(String(32), default="公共交通")
+    accommodation: Mapped[str] = mapped_column(String(32), default="经济型酒店")
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None)
+    )
+
+
 class TripRecord(Base):
     """旅行计划历史记录
 
@@ -90,6 +106,8 @@ class KnowledgeDocument(Base):
     stored_path: Mapped[str] = mapped_column(String(512))
     sha256: Mapped[str] = mapped_column(String(64), index=True)
     media_type: Mapped[str] = mapped_column(String(64))
+    # 资料来源等级，不代表模型提取的每一条事实都已被逐条证明。
+    source_tier: Mapped[str] = mapped_column(String(16), default="community", server_default="community")
     status: Mapped[str] = mapped_column(String(16), default="pending", index=True)
     review_note: Mapped[str] = mapped_column(String(512), default="")
     page_count: Mapped[int] = mapped_column(Integer, default=0)

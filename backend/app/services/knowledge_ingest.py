@@ -166,7 +166,9 @@ def process_document(db, document: KnowledgeDocument, extractor: VisionExtractor
     rag = get_rag_service()
     if not rag.enabled:
         raise RuntimeError("RAG 未启用，不能发布公共知识")
-    if not rag.replace_public_knowledge_document(document.id, document.city, document.title, page_texts):
+    if not rag.replace_public_knowledge_document(
+        document.id, document.city, document.title, page_texts, source_tier=document.source_tier
+    ):
         raise RuntimeError("公共知识向量化失败")
     document.page_count = len(page_texts)
     document.source_text = "\n\n".join(page_texts)

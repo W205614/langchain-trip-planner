@@ -197,6 +197,9 @@
               class="custom-textarea"
             />
           </a-form-item>
+          <a-checkbox v-if="isLoggedIn" v-model:checked="rememberPreferences">
+            保存交通、住宿和旅行标签，用于下次填表（不保存额外要求）
+          </a-checkbox>
         </div>
 
         <!-- 提交按钮 -->
@@ -247,10 +250,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, watch } from 'vue'
+import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { generateTripPlanStream } from '@/services/api'
+import { fetchTravelPreferences, generateTripPlanStream, saveTravelPreferences } from '@/services/api'
 import { isAuthenticated, getUsername, clearAuth, isAdmin } from '@/services/auth'
 import type { TripFormData } from '@/types'
 import type { Dayjs } from 'dayjs'
@@ -264,6 +267,7 @@ const loadingStatus = ref('')
 const isLoggedIn = ref(isAuthenticated())
 const username = ref(getUsername() || '')
 const admin = computed(() => isAdmin())
+const rememberPreferences = ref(false)
 
 const goLogin = () => {
   router.push('/login')
@@ -295,6 +299,21 @@ const formData = reactive<FormDataType>({
 
 // 热门目的地快捷选择
 const hotCities = ['北京', '上海', '杭州', '成都', '西安', '桂林', '丽江', '重庆']
+
+onMounted(async () => {
+  if (!isLoggedIn.value) return
+  try {
+    const response = await fetchTravelPreferences()
+    const saved = response.data
+    if (!saved?.saved) return
+    formData.transportation = saved.transportation || formData.transportation
+    formData.accommodation = saved.accommodation || formData.accommodation
+    formData.preferences = Array.isArray(saved.preferences) ? saved.preferences : []
+    rememberPreferences.value = true
+  } catch {
+    // 偏好是增强体验，读取失败不阻止行程规划。
+  }
+})
 
 const selectCity = (city: string) => {
   formData.city = city
@@ -361,6 +380,17 @@ const handleSubmit = async () => {
     loadingStatus.value = '✅ 完成!'
 
     if (response.success && response.data) {
+      if (isLoggedIn.value && rememberPreferences.value) {
+        try {
+          await saveTravelPreferences({
+            preferences: formData.preferences,
+            transportation: formData.transportation,
+            accommodation: formData.accommodation
+          })
+        } catch {
+          message.warning('行程已生成，但偏好保存失败')
+        }
+      }
       // 保存到sessionStorage (并清除历史编辑标识, 新规划不受历史影响)
       sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
       sessionStorage.removeItem('tripPlanId')

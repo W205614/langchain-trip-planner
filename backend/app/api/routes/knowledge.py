@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
+from typing import Literal
 from sqlalchemy.orm import Session
 
 from ...core.security import get_current_user, require_admin
@@ -18,6 +19,7 @@ def _serialize(document: KnowledgeDocument) -> dict:
     return {
         "id": document.id, "city": document.city, "title": document.title,
         "original_filename": document.original_filename, "status": document.status,
+        "source_tier": document.source_tier,
         "review_note": document.review_note, "page_count": document.page_count,
         "submitted_by": document.submitted_by, "reviewed_by": document.reviewed_by,
         "created_at": document.created_at.isoformat() if document.created_at else None,
@@ -27,6 +29,7 @@ def _serialize(document: KnowledgeDocument) -> dict:
 
 class ReviewRequest(BaseModel):
     note: str = Field(default="", max_length=500)
+    source_tier: Literal["community", "reviewed", "official"] = "community"
 
 
 @router.post("/submissions", status_code=status.HTTP_201_CREATED, summary="提交公共旅游图文资料")
@@ -84,6 +87,7 @@ def approve_submission(document_id: int, body: ReviewRequest, db: Session = Depe
     if document.status == "published":
         raise HTTPException(status_code=409, detail="资料已经发布")
     document.status, document.reviewed_by, document.review_note = "queued", current_user.id, body.note.strip()
+    document.source_tier = body.source_tier
     db.add(KnowledgeIngestJob(document_id=document.id, status="pending"))
     db.commit()
     return {"success": True, "message": "审核通过，正在解析并写入知识库", "data": _serialize(document)}

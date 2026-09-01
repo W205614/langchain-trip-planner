@@ -154,6 +154,20 @@ def test_rebuild_markdown_preserves_reviewed_multimodal_knowledge(rag, monkeypat
     assert static["documents"] == ["新静态资料"]
 
 
+def test_multimodal_knowledge_keeps_declared_source_tier(rag):
+    """管理员选择的来源等级必须跟随 chunk 写入，供检索结果追溯。"""
+    assert rag.replace_public_knowledge_document(
+        document_id=12,
+        city="北京",
+        title="故宫官方参观须知",
+        page_texts=["## 故宫\n- 请提前预约"],
+        source_tier="official",
+    ) is True
+
+    stored = rag._knowledge_store.get(where={"document_id": 12})
+    assert stored["metadatas"][0]["source_tier"] == "official"
+
+
 def test_retrieve_embeds_shared_query_once(rag):
     """城市知识与个人历史检索应复用同一条查询向量。"""
     embedding = MagicMock()

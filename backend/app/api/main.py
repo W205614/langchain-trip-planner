@@ -16,7 +16,7 @@ from ..core.logging import setup_logging
 from ..core.exceptions import BizException, biz_exception_handler, global_exception_handler
 from ..core.rate_limit import limiter
 from ..db.database import check_database_ready, init_db
-from .routes import trip, poi, map as map_routes, history, rag, auth, knowledge
+from .routes import trip, poi, map as map_routes, history, rag, auth, knowledge, preferences
 
 
 # 初始化日志(幂等): 控制台 + 文件落盘。
@@ -163,6 +163,7 @@ app.include_router(history.router, prefix="/api")
 app.include_router(rag.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(knowledge.router, prefix="/api")
+app.include_router(preferences.router, prefix="/api")
 
 
 @app.get("/")

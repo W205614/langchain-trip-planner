@@ -355,7 +355,12 @@ class RagService:
             return False
 
     def replace_public_knowledge_document(
-        self, document_id: int, city: str, title: str, page_texts: List[str]
+        self,
+        document_id: int,
+        city: str,
+        title: str,
+        page_texts: List[str],
+        source_tier: str = "community",
     ) -> bool:
         """以来源文档为单位替换公共图文知识，保留页码与可追溯元数据。"""
         if not self.enabled:
@@ -374,6 +379,7 @@ class RagService:
                             "city": city,
                             "source": title,
                             "source_type": "multimodal",
+                            "source_tier": source_tier,
                             "document_id": document_id,
                             "page": page,
                             "chunk_id": chunk_id,
@@ -423,6 +429,9 @@ class RagService:
                     source = doc.metadata.get("source", "未知来源")
                     page = doc.metadata.get("page")
                     source_label = f"{source} 第{page}页" if page else source
+                    tier = doc.metadata.get("source_tier")
+                    if tier:
+                        source_label = f"{source_label} / 来源等级:{tier}"
                     results.append(f"[知识库-{doc.metadata.get('city')} / {source_label}] {doc.page_content}")
             # 2. 历史行程（仅限当前用户；旧版无 user_id 的向量不会被命中）
             if user_id is not None:
@@ -603,7 +612,8 @@ class RagService:
                     if docs[0].metadata.get("source_type") == "multimodal":
                         source = docs[0].metadata.get("source", "公共攻略")
                         page = docs[0].metadata.get("page")
-                        detail = f"[知识来源: {source}{f' 第{page}页' if page else ''}]\n{detail}"
+                        tier = docs[0].metadata.get("source_tier", "community")
+                        detail = f"[知识来源: {source}{f' 第{page}页' if page else ''} / 来源等级:{tier}]\n{detail}"
                     details[name] = detail
             return details
         except Exception as e:

@@ -3,8 +3,8 @@
     <a-button type="link" @click="router.push('/')">← 返回首页</a-button><h1>公共知识审核</h1>
     <a-alert show-icon type="info" message="批准后会由后台解析并写入公共知识库；失败资料可再次批准重试。" />
     <a-list :data-source="items" bordered class="list"><template #renderItem="{ item }"><a-list-item>
-      <div><b>{{ item.title }}</b> · {{ item.city }}<br><small>{{ item.original_filename }} · 状态：{{ item.status }} {{ item.review_note }}</small></div>
-      <template #actions><a-button v-if="item.status !== 'published'" type="primary" size="small" @click="approve(item.id)">批准</a-button><a-button v-if="item.status !== 'published'" danger size="small" @click="reject(item.id)">拒绝</a-button><a-button danger size="small" @click="remove(item.id)">删除</a-button></template>
+      <div><b>{{ item.title }}</b> · {{ item.city }}<br><small>{{ item.original_filename }} · 状态：{{ item.status }} · 来源等级：{{ item.source_tier }} {{ item.review_note }}</small></div>
+      <template #actions><a-select v-if="item.status !== 'published'" v-model:value="item.source_tier" size="small" style="width: 112px"><a-select-option value="community">投稿资料</a-select-option><a-select-option value="reviewed">人工核验</a-select-option><a-select-option value="official">官方资料</a-select-option></a-select><a-button v-if="item.status !== 'published'" type="primary" size="small" @click="approve(item)">批准</a-button><a-button v-if="item.status !== 'published'" danger size="small" @click="reject(item.id)">拒绝</a-button><a-button danger size="small" @click="remove(item.id)">删除</a-button></template>
     </a-list-item></template></a-list>
   </section></main>
 </template>
@@ -16,7 +16,7 @@ import { useRouter } from 'vue-router'
 import { approveKnowledge, deleteKnowledge, fetchAdminKnowledge, rejectKnowledge } from '@/services/api'
 const router = useRouter(); const items = ref<any[]>([])
 const load = async () => { try { items.value = (await fetchAdminKnowledge()).data || [] } catch (error: any) { message.error(error.response?.data?.detail || '需要管理员权限') } }
-const approve = async (id: number) => { await approveKnowledge(id); message.success('已进入解析队列'); await load() }
+const approve = async (item: any) => { await approveKnowledge(item.id, '', item.source_tier || 'community'); message.success('已进入解析队列'); await load() }
 const reject = async (id: number) => { await rejectKnowledge(id); message.success('已拒绝'); await load() }
 const remove = async (id: number) => { await deleteKnowledge(id); message.success('已删除'); await load() }
 onMounted(load)

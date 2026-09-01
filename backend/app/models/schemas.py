@@ -1,6 +1,6 @@
 """数据模型定义"""
 
-from typing import Any, List, Optional, Union
+from typing import Any, List, Literal, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from datetime import date
 
@@ -61,6 +61,14 @@ class TripRevisionRequest(BaseModel):
         max_length=500,
         description="本次改排要求，例如：下雨，改为室内博物馆并减少步行",
     )
+
+
+class TravelPreferenceRequest(BaseModel):
+    """用户显式保存的可复用旅行偏好。自由文本不进入长期记忆。"""
+
+    preferences: List[str] = Field(default_factory=list, max_length=12)
+    transportation: str = Field(default="公共交通", min_length=1, max_length=32)
+    accommodation: str = Field(default="经济型酒店", min_length=1, max_length=32)
 
 
 class POISearchRequest(BaseModel):

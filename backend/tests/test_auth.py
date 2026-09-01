@@ -112,3 +112,27 @@ def test_auth_me(auth_client):
     r = auth_client.get("/api/auth/me", headers={"Authorization": f"Bearer {tok}"})
     assert r.status_code == 200
     assert r.json()["username"] == "tester"
+
+
+def test_travel_preferences_are_opt_in_and_user_scoped(auth_client):
+    first_token = _register(auth_client, "traveler_one").json()["access_token"]
+    second_token = _register(auth_client, "traveler_two").json()["access_token"]
+    first_headers = {"Authorization": f"Bearer {first_token}"}
+    second_headers = {"Authorization": f"Bearer {second_token}"}
+
+    default = auth_client.get("/api/preferences/me", headers=first_headers)
+    assert default.status_code == 200
+    assert default.json()["data"]["saved"] is False
+
+    saved = auth_client.put("/api/preferences/me", headers=first_headers, json={
+        "preferences": ["历史文化", "历史文化", "美食"],
+        "transportation": "公共交通",
+        "accommodation": "舒适型酒店",
+    })
+    assert saved.status_code == 200
+    assert saved.json()["data"]["preferences"] == ["历史文化", "美食"]
+
+    isolated = auth_client.get("/api/preferences/me", headers=second_headers)
+    assert isolated.json()["data"]["saved"] is False
+    assert auth_client.delete("/api/preferences/me", headers=first_headers).status_code == 200
+    assert auth_client.get("/api/preferences/me", headers=first_headers).json()["data"]["saved"] is False

@@ -191,6 +191,18 @@ export async function submitKnowledge(city: string, title: string, file: File): 
   return response.data
 }
 
+export async function fetchTravelPreferences(): Promise<any> {
+  return (await apiClient.get('/api/preferences/me')).data
+}
+
+export async function saveTravelPreferences(payload: {
+  preferences: string[]
+  transportation: string
+  accommodation: string
+}): Promise<any> {
+  return (await apiClient.put('/api/preferences/me', payload)).data
+}
+
 /** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
 export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string): Promise<any> {
   return (await apiClient.post(`/api/history/${id}/revise-day`, {
@@ -207,8 +219,8 @@ export async function fetchAdminKnowledge(status?: string): Promise<any> {
   return (await apiClient.get('/api/knowledge/admin/submissions', { params: { status_filter: status } })).data
 }
 
-export async function approveKnowledge(id: number, note: string = ''): Promise<any> {
-  return (await apiClient.post(`/api/knowledge/admin/submissions/${id}/approve`, { note })).data
+export async function approveKnowledge(id: number, note: string = '', sourceTier: 'community' | 'reviewed' | 'official' = 'community'): Promise<any> {
+  return (await apiClient.post(`/api/knowledge/admin/submissions/${id}/approve`, { note, source_tier: sourceTier })).data
 }
 
 export async function rejectKnowledge(id: number, note: string = ''): Promise<any> {
