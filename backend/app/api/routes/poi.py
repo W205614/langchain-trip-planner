@@ -3,9 +3,12 @@
 import logging
 import threading
 import time
+from html import escape
 from typing import Optional
 
-from fastapi import APIRouter
+import httpx
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import Response
 from pydantic import BaseModel
 
 from ...services.amap_service import get_amap_service
@@ -110,14 +113,7 @@ def get_attraction_photo(name: str):
     Returns:
         图片URL
     """
-    # 高德POI图片 (国内图源); 信号量限并发 + 间隔节流限QPS, 防止CUQPS超限
-    amap_service = get_amap_service()
-    with _photo_semaphore:
-        photo_url = _rate_limited_photo_call(amap_service, name)
-
-    # 高德无图 → 必应图片兜底 (免费稳定, 返回 CDN 直链)
-    if not photo_url:
-        photo_url = _bing_image_fallback(name)
+    photo_url = _resolve_attraction_photo(name)
 
     return {
         "success": True,
@@ -127,6 +123,79 @@ def get_attraction_photo(name: str):
             "photo_url": photo_url,
         },
     }
+
+
+def _resolve_attraction_photo(name: str) -> Optional[str]:
+    """解析景点图片地址，供元数据和同源图片代理共用。"""
+    # 高德POI图片 (国内图源); 信号量限并发 + 间隔节流限QPS, 防止CUQPS超限
+    amap_service = get_amap_service()
+    with _photo_semaphore:
+        photo_url = _rate_limited_photo_call(amap_service, name)
+
+    # 高德无图 → 必应图片兜底 (免费稳定, 返回 CDN 直链)
+    if not photo_url:
+        photo_url = _bing_image_fallback(name)
+
+    return photo_url
+
+
+def _download_photo(url: str) -> tuple[bytes, str] | None:
+    """下载已由服务端解析出的远程图片，拒绝非图片和过大的响应。"""
+    try:
+        with httpx.Client(timeout=10.0, follow_redirects=True) as client:
+            response = client.get(url)
+            response.raise_for_status()
+        content_type = response.headers.get("content-type", "").split(";", 1)[0].lower()
+        if not content_type.startswith("image/"):
+            logger.warning("景点图片代理收到非图片响应: %s", content_type)
+            return None
+        # 导出仅需展示用缩略图，限制单张大小以避免被异常上游响应拖垮。
+        if len(response.content) > 5 * 1024 * 1024:
+            logger.warning("景点图片代理拒绝超大图片: %s bytes", len(response.content))
+            return None
+        return response.content, content_type
+    except httpx.HTTPError as exc:
+        logger.info("下载景点图片失败: %s", exc)
+        return None
+
+
+def _photo_placeholder(name: str) -> Response:
+    """返回可导出的同源 SVG 占位图，避免上游 CDN 波动造成页面/PDF 留白。"""
+    safe_name = escape(name[:40])
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs><linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#667eea"/><stop offset="1" stop-color="#764ba2"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#background)"/>
+  <text x="400" y="230" text-anchor="middle" font-family="sans-serif" font-size="36" font-weight="700" fill="#fff">{safe_name}</text>
+  <text x="400" y="285" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#ede9fe">景点图片暂不可用</text>
+</svg>'''
+    return Response(
+        content=svg.encode("utf-8"),
+        media_type="image/svg+xml",
+        headers={"Cache-Control": "no-store"},
+    )
+
+
+@router.get(
+    "/photo/image",
+    summary="获取可导出的景点图片",
+    description="按景点名称解析图片并以同源响应返回，供页面与图片/PDF 导出安全绘制。",
+)
+def get_attraction_photo_image(name: str = Query(min_length=1, max_length=100)):
+    """将已解析的景点图片作为同源图片返回，不接受任意 URL，避免开放代理。"""
+    photo_url = _resolve_attraction_photo(name)
+    if not photo_url:
+        raise HTTPException(status_code=404, detail="暂未找到景点图片")
+
+    downloaded = _download_photo(photo_url)
+    if not downloaded:
+        return _photo_placeholder(name)
+
+    content, content_type = downloaded
+    return Response(
+        content=content,
+        media_type=content_type,
+        headers={"Cache-Control": "public, max-age=3600"},
+    )
 
 
 # 必应图片兜底: 简单抓取搜索结果中的 CDN 图 URL (免费稳定, 不依赖第三方key)
