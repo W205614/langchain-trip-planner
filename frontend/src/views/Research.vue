@@ -4,12 +4,12 @@
       <a-button type="link" @click="router.push('/')">← 返回首页</a-button>
       <h1>旅行资料研究</h1>
       <a-alert type="info" show-icon message="仅展示检索到的公开资料及来源，不把资料片段改写为未经验证的结论。" />
-      <a-form layout="vertical" class="form" @finish="search">
+      <a-form :model="form" layout="vertical" class="form" @finish="search">
         <a-form-item label="城市" name="city" :rules="[{ required: true, message: '请输入城市' }]">
-          <a-input v-model:value="city" placeholder="例如：北京" />
+          <a-input v-model:value="form.city" placeholder="例如：北京" />
         </a-form-item>
         <a-form-item label="想了解什么" name="query" :rules="[{ required: true, message: '请输入问题' }]">
-          <a-textarea v-model:value="query" :rows="3" :maxlength="300" show-count placeholder="例如：带孩子参观博物馆需要注意什么？" />
+          <a-textarea v-model:value="form.query" :rows="3" :maxlength="300" show-count placeholder="例如：带孩子参观博物馆需要注意什么？" />
         </a-form-item>
         <a-button type="primary" html-type="submit" :loading="loading">检索资料</a-button>
       </a-form>
@@ -31,14 +31,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { researchTravel } from '@/services/api'
 
 const router = useRouter()
-const city = ref('')
-const query = ref('')
+const form = reactive({ city: '', query: '' })
 const loading = ref(false)
 const searched = ref(false)
 const evidence = ref<any[]>([])
@@ -49,10 +48,14 @@ const labels: Record<string, string> = {
 const tierLabel = (tier: string) => labels[tier] || tier || '来源未标注'
 
 const search = async () => {
+  if (!form.city.trim() || form.query.trim().length < 2) {
+    message.warning('请输入城市和至少两个字的问题')
+    return
+  }
   loading.value = true
   searched.value = false
   try {
-    const response = await researchTravel(city.value.trim(), query.value.trim())
+    const response = await researchTravel(form.city.trim(), form.query.trim())
     evidence.value = response.data?.evidence || []
     searched.value = true
   } catch (error: any) {
