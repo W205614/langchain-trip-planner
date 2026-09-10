@@ -5,7 +5,9 @@
 基于 **LangChain + LangGraph + FastAPI** 构建的智能旅行规划助手。系统直调高德地图 Web 服务 API 获取可验证的景点、近期天气预报和酒店 POI 候选；LLM 只在受控候选上编排行程，并具备 RAG、历史记录、JWT 鉴权与基础工程化能力。
 
 
-本轮可靠性实现、接口契约、隔离验收与恢复操作见 [可靠性运行手册](docs/reliability.md)。本地 Docker 验证不代表生产流量或 SLA。
+本轮可靠性实现、接口契约、隔离验收与恢复操作见 [可靠性运行手册](docs/reliability.md)，测试过程见 [本地验收记录](docs/evidence/verification-20260910.md)。
+
+2026-09-10 已完成：后端隔离测试 125 项、浏览器测试 2 项、20 个离线业务场景，以及独立恢复和真实容器重启演练。追加的一次真实模型/高德功能验收通过 18 项 HTTP 检查，生成并保存成功；部分公交路线进入可见降级。详见 [真实功能报告](docs/evidence/live-functional-20260910.json)。这些结果不代表生产流量、用户满意度或 SLA。
 
 ## 🧭 项目整体逻辑
 
@@ -183,8 +185,8 @@ langchain-trip-planner/
 
 ### 前提条件
 
-- Python 3.10+（本项目在 **Python 3.13.15** 上开发验证）
-- Node.js 16+
+- Python **3.11**（本轮锁定依赖、Docker 与 CI 验证环境；其他版本未在本轮验收）
+- Node.js **20**（Docker 与 CI 使用版本）
 - 高德地图 API Key（Web 服务 API：`AMAP_API_KEY`；前端 JS API：`VITE_AMAP_WEB_JS_KEY`）
 - LLM API Key（OpenAI / DeepSeek 等，需支持 OpenAI 兼容协议；**支持中转/代理服务**）
 
@@ -324,9 +326,9 @@ docker compose down
 ```
 
 - 前端由 Nginx 托管在 `http://localhost:8080`，同源代理 API 与 SSE；后端不直接暴露到宿主机
-- 两个容器都有 healthcheck；`docker compose ps` 显示 `healthy` 即部署成功
+- 两个容器都有 healthcheck；`healthy` 说明探针通过，业务链路仍需执行功能验收
 - `backend/data` 绑定为运行数据目录，SQLite 与 Chroma 在容器重启后保留；手工维护的知识库 Markdown 也从该目录读取
-- 验证: `http://localhost:8080/healthz`（进程存活）、`/readyz`（数据库与本地 Chroma 就绪）、`/metrics`
+- 验证: `http://localhost:8080/healthz`（进程存活）、`/readyz`（数据库与本地 Chroma 就绪）；`/metrics` 仅向内部监控开放，Nginx 入口返回 404
 - 本机 Compose 使用 `development`，可直接沿用现有本地 JWT；生产部署须改为 `APP_ENV=production`，届时会拒绝默认或不足 32 字符的 JWT 密钥
 
 ### 本机 PostgreSQL、备份与恢复
@@ -556,7 +558,7 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 
 ### Prometheus 监控
 
-- 端点: `GET /metrics`（本机全栈 Docker 部署时验证: `http://localhost:8080/metrics`）
+- 端点: 后端内网 `GET /metrics`；Nginx 的 `http://localhost:8080/metrics` 返回 404。生产 Compose 中 Prometheus 从内部网络抓取，控制台仅绑定 `127.0.0.1:9090`。
 - 输出标准 Prometheus 格式指标（HTTP 请求数、耗时分布、延迟直方图等），可接入 Grafana 可视化
 
 ## 📚 API 文档
@@ -570,22 +572,27 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 | `POST /api/auth/register` | 注册用户（返回 JWT） |
 | `POST /api/auth/login` | 登录（返回 JWT） |
 | `GET /api/auth/me` | 当前登录用户信息（需 Bearer token） |
-| `POST /api/trip/plan` | 生成旅行计划（核心，成功后自动存历史 + RAG 入库） |
+| `POST /api/trip/tasks` | 创建持久化任务，返回 202；支持按用户隔离的 Idempotency-Key 🔒 |
+| `GET /api/trip/tasks/{id}` | 查询本人任务状态与已保存结果 🔒 |
+| `GET /api/trip/tasks/{id}/events` | SSE 订阅当前任务进度，断线不取消任务 🔒 |
+| `POST /api/trip/plan` | 同步兼容入口；成功状态、历史与 RAG outbox 同事务提交，向量异步同步 🔒 |
 | `POST /api/trip/plan/stream` | SSE 流式生成：返回真实阶段进度，最后发送 `complete` 事件（需登录） |
-| `POST /api/history/{id}/revise-day` | 仅重排历史行程中的指定日期（需登录） |
+| `POST /api/history/{id}/revise-day` | 仅重排历史行程中的指定日期，要求 If-Match 版本（需登录） |
 | `GET /api/trip/health` | Agent 健康检查 |
 | `GET /api/history` | 历史记录列表（分页、按城市筛选）🔒 需登录 |
 | `GET /api/history/{id}` | 历史记录详情（含完整行程）🔒 需登录 |
-| `PUT /api/history/{id}` | 更新历史记录（前端编辑保存）🔒 需登录 |
+| `PUT /api/history/{id}` | 更新历史记录，要求 If-Match 版本；冲突返回 409 🔒 |
 | `DELETE /api/history/{id}` | 删除历史记录 🔒 需登录 |
-| `GET /api/rag/status` | RAG 状态（是否启用、索引数量） |
-| `POST /api/rag/rebuild` | 重建知识索引（修改知识文档后调用） |
+| `GET /api/rag/status` | RAG 状态（是否启用、嵌入模型） |
+| `POST /api/rag/rebuild` | 管理员重建新集合，验证后切换，保留旧集合；限流与互斥 |
+| `GET /api/rag/jobs` | 管理员查看失败或等待的同步任务 |
+| `POST /api/rag/jobs/{kind}/{id}/replay` | 管理员重放有效任务，kind 为 history 或 knowledge |
 | `POST /api/knowledge/submissions` | 登录用户提交公共攻略图片或扫描 PDF |
 | `GET /api/knowledge/submissions/mine` | 查看自己的投稿状态 |
 | `GET /api/knowledge/admin/submissions` | 管理员查看审核队列 |
 | `POST /api/knowledge/admin/submissions/{id}/approve` | 管理员批准并进入解析队列 |
 | `POST /api/knowledge/admin/submissions/{id}/reject` | 管理员拒绝投稿 |
-| `DELETE /api/knowledge/admin/submissions/{id}` | 管理员删除资料及公共向量 |
+| `DELETE /api/knowledge/admin/submissions/{id}` | 管理员标记删除，检索立即过滤；文件及向量异步清理 |
 | `GET /api/map/poi` | 搜索 POI |
 | `GET /api/map/weather` | 查询天气 |
 | `POST /api/map/route` | 规划路线 |
