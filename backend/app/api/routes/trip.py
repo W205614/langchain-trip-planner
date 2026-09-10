@@ -2,7 +2,7 @@
 import asyncio
 import json
 import time
-from fastapi import APIRouter, Depends, Header, Request
+from fastapi import APIRouter, Depends, Header, Request, Query
 from fastapi.responses import StreamingResponse
 from ...core.exceptions import BizException
 from ...core.rate_limit import limiter
@@ -37,6 +37,26 @@ def create_task(request: Request, body: TripRequest, user: User = Depends(get_cu
     return {"success": True, "cached": cached, "data": trip_tasks.snapshot(user.id, task_id)}
 
 
+@router.get("/tasks")
+def task_list(page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=50),
+              user: User = Depends(get_current_user)):
+    return trip_tasks.list_tasks(user.id, page, page_size)
+
+
+@router.post("/tasks/{task_id}/cancel")
+def cancel_task(task_id: str, user: User = Depends(get_current_user)):
+    return {"success": True, "data": trip_tasks.cancel(user.id, task_id)}
+
+
+@router.post("/tasks/{task_id}/retry", status_code=202)
+@limiter.limit("5/minute")
+def retry_task(request: Request, task_id: str, user: User = Depends(get_current_user),
+               idempotency_key: str = Header(..., alias="Idempotency-Key", min_length=1, max_length=128)):
+    task, cached = trip_tasks.retry(user.id, task_id, idempotency_key, request.state.request_id)
+    trip_tasks.runner.start()
+    return {"success": True, "cached": cached, "data": trip_tasks.snapshot(user.id, task)}
+
+
 @router.get("/tasks/{task_id}")
 def get_task(task_id: str, user: User = Depends(get_current_user)):
     return {"success": True, "data": trip_tasks.snapshot(user.id, task_id)}
@@ -50,7 +70,7 @@ async def _events(request, user_id, task_id, cached=False):
             payload = state["result"] | {"cached": cached}
             yield "event: complete\ndata: " + json.dumps(payload, ensure_ascii=False) + "\n\n"
             return
-        if state["status"] == "failed":
+        if state["status"] in {"failed", "cancelled"}:
             yield "event: error\ndata: " + json.dumps(state, ensure_ascii=False) + "\n\n"
             return
         payload = json.dumps(state, ensure_ascii=False)
@@ -82,7 +102,7 @@ def plan_trip(request: Request, body: TripRequest, user: User = Depends(get_curr
         state = trip_tasks.snapshot(user.id, task_id)
         if state["status"] == "succeeded":
             return state["result"] | {"cached": cached}
-        if state["status"] == "failed":
+        if state["status"] in {"failed", "cancelled"}:
             raise BizException(state["message"], status_code=504 if state["error_code"] == "TASK_TIMEOUT" else 500,
                                code=state["error_code"])
         time.sleep(0.1)

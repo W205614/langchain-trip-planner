@@ -35,6 +35,8 @@ def run(output):
     # Seed one already-extracted public document; reconstruction must not invoke a vision model.
     sql("trip", "INSERT INTO knowledge_documents (submitted_by,city,title,original_filename,stored_path,sha256,media_type,source_tier,status,review_note,page_count,source_text,version) "
         "VALUES (1,'fixture','recovery-source','fixture.jpg','fixture.jpg','fixture','image/jpeg','reviewed','published','',1,'Verified recovery fixture source',1)")
+    command("exec", "-T", "backend", "python", "-c",
+        "from pathlib import Path; p=Path('/app/data/knowledge_uploads'); p.mkdir(parents=True, exist_ok=True); (p/'fixture.jpg').write_bytes(b'recovery-fixture')")
     files = command("exec", "-T", "backend", "tar", "-C", "/app/data", "-cf", "-", "knowledge_uploads")
     command("stop", "backend")
     created = False

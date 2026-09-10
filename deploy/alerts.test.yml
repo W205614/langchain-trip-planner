@@ -1,0 +1,17 @@
+rule_files:
+  - alerts.yml
+evaluation_interval: 15s
+tests:
+  - interval: 15s
+    input_series:
+      - series: trip_oldest_queue_age_seconds
+        values: '0+15x19 0 0 0 0'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: TripQueueStalled
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+      - eval_time: 6m
+        alertname: TripQueueStalled
+        exp_alerts: []

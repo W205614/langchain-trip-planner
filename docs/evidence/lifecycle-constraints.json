@@ -1,0 +1,7 @@
+{
+  "mode": "isolated_fixture_real_container_restart",
+  "disconnect_kept_running": true,
+  "restart_error": "PROCESS_INTERRUPTED",
+  "same_key_did_not_regenerate": true,
+  "history_count": 0
+}

@@ -11,6 +11,7 @@
     <div class="top-actions">
       <template v-if="isLoggedIn">
         <span class="user-badge">👤 {{ username }}</span>
+        <a-button class="history-entry" @click="router.push('/tasks')">我的任务</a-button>
         <a-button class="history-entry" @click="goHistory">
           📜 历史行程
         </a-button>
@@ -191,6 +192,18 @@
             <span class="section-title">额外要求</span>
           </div>
 
+          <a-form-item label="必去景点（完整名称）">
+            <a-select v-model:value="planningConstraints.must_visit" mode="tags" :max-tag-count="8" placeholder="输入景点完整名称，按回车添加，最多8项" />
+          </a-form-item>
+          <a-form-item label="不去景点（完整名称）">
+            <a-select v-model:value="planningConstraints.avoid" mode="tags" :max-tag-count="8" placeholder="输入景点完整名称，按回车添加，最多8项" />
+          </a-form-item>
+          <a-form-item label="每日安排上限（分钟，含交通与用餐预留）">
+            <a-input-number v-model:value="planningConstraints.daily_minutes" :min="120" :max="900" :step="30" />
+          </a-form-item>
+          <a-form-item label="景点间步行上限（公里，不含景区内部，可留空）">
+            <a-input-number v-model:value="planningConstraints.max_inter_stop_walking_km" :min="0.1" :max="30" :step="0.5" />
+          </a-form-item>
           <a-form-item name="free_text_input">
             <a-textarea
               v-model:value="formData.free_text_input"
@@ -256,8 +269,8 @@
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences } from '@/services/api'
-import { isAuthenticated, getUsername, clearAuth, isAdmin } from '@/services/auth'
+import { fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences, logout } from '@/services/api'
+import { isAuthenticated, getUsername, isAdmin } from '@/services/auth'
 import type { TripFormData } from '@/types'
 import type { Dayjs } from 'dayjs'
 
@@ -276,8 +289,8 @@ const goLogin = () => {
   router.push('/login')
 }
 
-const handleLogout = () => {
-  clearAuth()
+const handleLogout = async () => {
+  try { await logout() } catch { message.error('服务器退出失败，请重试'); return }
   isLoggedIn.value = false
   username.value = ''
   message.success('已退出登录')
@@ -289,6 +302,8 @@ type FormDataType = Omit<TripFormData, 'start_date' | 'end_date'> & {
   end_date: Dayjs | null
 }
 
+const planningConstraints = reactive({ must_visit: [] as string[], avoid: [] as string[], daily_minutes: 600,
+  max_inter_stop_walking_km: null as number | null })
 const formData = reactive<FormDataType>({
   city: '',
   start_date: null,
@@ -388,7 +403,8 @@ const handleSubmit = async () => {
       transportation: formData.transportation,
       accommodation: formData.accommodation,
       preferences: formData.preferences,
-      free_text_input: formData.free_text_input
+      free_text_input: formData.free_text_input,
+      constraints: { ...planningConstraints }
     }
 
     const response = await generateTripPlanStream(requestData, (progress) => {

@@ -7,7 +7,7 @@ from uuid import uuid4
 import httpx
 
 
-def run():
+def run(output=Path("docs/evidence/lifecycle-offline.json")):
     compose = ["docker", "compose", "-p", "trip-validation", "-f", "docker-compose.validation.yml"]
     with httpx.Client(base_url="http://127.0.0.1:18080", timeout=30) as client:
         assert client.get("/api/validation/fixture").json()["offline_fixture"] is True
@@ -48,9 +48,13 @@ def run():
         assert client.get("/api/history").json()["total"] == 0
         report = {"mode": "isolated_fixture_real_container_restart", "disconnect_kept_running": True,
                   "restart_error": state["error_code"], "same_key_did_not_regenerate": True, "history_count": 0}
-        Path("docs/evidence/lifecycle-offline.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, indent=2), encoding="utf-8")
         print(json.dumps(report))
 
 
 if __name__ == "__main__":
-    run()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, default=Path("docs/evidence/lifecycle-offline.json"))
+    run(parser.parse_args().output)

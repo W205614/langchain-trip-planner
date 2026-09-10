@@ -1,5 +1,22 @@
 # Dedicated project (-p trip-validation); never mounts backend/data or reads backend/.env.
 services:
+  notification-receiver:
+    image: langchain-trip-planner-backend
+    entrypoint: [python, scripts/notification_receiver.py]
+    ports: ["127.0.0.1:19088:9088"]
+    volumes:
+      - ./backend/scripts:/app/scripts:ro
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    volumes:
+      - ./deploy/alertmanager.validation.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports: ["127.0.0.1:19093:9093"]
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    volumes:
+      - ./deploy/prometheus.validation.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports: ["127.0.0.1:19090:9090"]
   postgres:
     image: postgres:17.6-alpine
     environment:

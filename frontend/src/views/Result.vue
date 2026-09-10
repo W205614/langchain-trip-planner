@@ -64,6 +64,11 @@
       <!-- 主内容区 -->
       <div class="main-content">
         <div class="result-notices">
+          <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
+            :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
+          <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
+            :message="`第${check.day_index + 1}天：安排 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）；景点间步行 ${check.inter_stop_walking_km == null ? '待核实' : check.inter_stop_walking_km.toFixed(1) + ' 公里'}`" />
+          <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处重复、不去或超限景点；请确认必去要求是否满足。`" />
           <a-alert v-if="unsaved" type="warning" show-icon message="当前修改尚未保存到服务器，请重新保存或从历史记录加载。" />
           <a-alert v-if="quality.degraded_days?.length" type="warning" show-icon
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />

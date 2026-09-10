@@ -49,6 +49,9 @@ class Settings(BaseSettings):
     rag_enabled: bool = True
     trip_task_timeout_seconds: int = Field(default=300, ge=1, le=1800)
     trip_task_queue_limit: int = Field(default=32, ge=1, le=1000)
+    trip_user_active_limit: int = Field(default=4, ge=1, le=100)
+    trip_user_daily_limit: int = Field(default=50, ge=1, le=10000)
+    trip_global_daily_limit: int = Field(default=500, ge=1, le=100000)
     trip_tasks_enabled: bool = True
     live_eval_enabled: bool = False
     live_eval_max_calls: int = Field(default=0, ge=0)

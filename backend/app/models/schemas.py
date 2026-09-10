@@ -1,11 +1,29 @@
 """数据模型定义"""
 
-from typing import Any, List, Literal, Optional, Union
+from typing import Annotated, Any, List, Literal, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from datetime import date
 
 
 # ============ 请求模型 ============
+
+class PlanningConstraints(BaseModel):
+    """Explicit user constraints; names match exactly after trimming/case folding."""
+    must_visit: List[Annotated[str, Field(min_length=1, max_length=64)]] = Field(default_factory=list, max_length=8)
+    avoid: List[Annotated[str, Field(min_length=1, max_length=64)]] = Field(default_factory=list, max_length=8)
+    daily_minutes: int = Field(default=600, ge=120, le=900)
+    max_inter_stop_walking_km: float | None = Field(default=None, gt=0, le=30)
+
+    @model_validator(mode="after")
+    def validate_names(self):
+        self.must_visit = list(dict.fromkeys(name.strip() for name in self.must_visit))
+        self.avoid = list(dict.fromkeys(name.strip() for name in self.avoid))
+        if any(not name for name in self.must_visit + self.avoid):
+            raise ValueError("景点名称不能为空")
+        if {name.casefold() for name in self.must_visit} & {name.casefold() for name in self.avoid}:
+            raise ValueError("同一景点不能同时必去和不去")
+        return self
+
 
 class TripRequest(BaseModel):
     """旅行规划请求"""
@@ -14,8 +32,9 @@ class TripRequest(BaseModel):
     end_date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$", description="结束日期 YYYY-MM-DD", json_schema_extra={"example": "2025-06-03"})
     travel_days: int = Field(..., description="旅行天数", ge=1, le=30, json_schema_extra={"example": 3})
     transportation: str = Field(..., max_length=32, description="交通方式", json_schema_extra={"example": "公共交通"})
-    accommodation: str = Field(..., description="住宿偏好", json_schema_extra={"example": "经济型酒店"})
-    preferences: List[str] = Field(default=[], description="旅行偏好标签", json_schema_extra={"example": ["历史文化", "美食"]})
+    accommodation: str = Field(..., max_length=64, description="住宿偏好", json_schema_extra={"example": "经济型酒店"})
+    preferences: List[Annotated[str, Field(max_length=64)]] = Field(default_factory=list, max_length=12, description="旅行偏好标签")
+    constraints: PlanningConstraints = Field(default_factory=PlanningConstraints)
     free_text_input: Optional[str] = Field(
         default="", max_length=500,
         description="额外要求", json_schema_extra={"example": "希望多安排一些博物馆"},
@@ -218,6 +237,7 @@ class TripPlan(BaseModel):
     weather_notice: str = Field(default="", description="天气预报覆盖范围说明")
     overall_suggestions: str = Field(..., description="总体建议")
     budget: Optional[Budget] = Field(default=None, description="预算信息")
+    constraints: PlanningConstraints = Field(default_factory=PlanningConstraints)
 
 
 class TripPlanResponse(BaseModel):

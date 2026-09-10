@@ -82,6 +82,7 @@ def get_trip_record(db: Session, user_id: int, record_id: int) -> Optional[TripR
 def update_trip_record(
     db: Session, user_id: int, record_id: int, trip_plan: TripPlan,
     expected_version: int | None = None, quality: dict | None = None,
+    commit: bool = True,
 ) -> Optional[TripRecord]:
     """更新历史记录的行程计划 (仅限该用户的记录)"""
     record = get_trip_record(db, user_id, record_id)
@@ -96,8 +97,9 @@ def update_trip_record(
         from ..core.exceptions import BizException
         raise BizException("行程已被其它页面修改，请重新加载", status_code=409, code="VERSION_CONFLICT")
     _enqueue_rag_sync(db, record.id, user_id, "upsert")
-    db.commit()
-    db.refresh(record)
+    if commit:
+        db.commit()
+        db.refresh(record)
     logger.info(f"✏️  历史记录已更新: id={record_id}")
     return record
 
@@ -113,6 +115,7 @@ def trip_record_to_request(record: TripRecord) -> TripRequest:
         accommodation=record.accommodation,
         preferences=json.loads(record.preferences or "[]"),
         free_text_input=record.free_text_input or "",
+        constraints=json.loads(record.plan_json).get("constraints", {}),
     )
 
 

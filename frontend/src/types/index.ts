@@ -80,6 +80,12 @@ export interface TripPlan {
 }
 
 export interface TripFormData {
+  constraints?: {
+    must_visit: string[]
+    avoid: string[]
+    daily_minutes: number
+    max_inter_stop_walking_km: number | null
+  }
   city: string
   start_date: string
   end_date: string

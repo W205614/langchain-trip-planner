@@ -6,10 +6,10 @@
 
 - `POST /api/trip/tasks` 接收原旅行请求，返回 202 和 `data.id`。携带稳定的 `Idempotency-Key`；同用户、同键、同内容返回同一任务，不同内容返回 409。
 - `GET /api/trip/tasks/{id}` 与 `GET /api/trip/tasks/{id}/events` 均验证归属，跨用户返回 404。SSE 恢复时发送当前状态，不重放所有进度。旧 `/plan`、`/plan/stream` 共用该执行层。
-- 前端把请求、幂等键、任务 ID 保存在 sessionStorage；同一标签页刷新可恢复。跨设备可通过任务 ID 查询，尚未提供完整任务列表页。主动退出登录清除本地缓存。
+- 前端把请求、幂等键、任务 ID 保存在 sessionStorage；同一标签页刷新可恢复。“我的任务”提供按用户分页、取消、显式重试和结果找回。主动退出会撤销该账号所有旧登录凭证并清除本地缓存。
 - 等待和执行共享默认 300 秒截止时间；单日异步模型流与纠错共用单日预算。断线只停止订阅；重启把原 running 标记 `PROCESS_INTERRUPTED`，不自动重付模型费用；queued 继续调度。
 - 成功状态、历史记录、质量报告与 RAG outbox 在同一事务提交。提交失败不能显示“已保存”。调用线程拥有独立数据库会话；SSE 鉴权查询后立即归还连接。
-- 历史 PUT 与单日改排要求 `If-Match: <version>`，版本冲突返回 409。单日改排仍是同步接口，不具备独立任务恢复契约。
+- 历史 PUT 与单日改排要求 `If-Match: <version>`。前端改排通过 revise-task 提交持久化任务，执行与提交分别校验版本；冲突以 VERSION_CONFLICT 终止。旧同步 revise-day 使用同一任务执行层，冲突返回409。
 - `quality` 与预算的不确定项持久化；零金额保持零，缺少价格不等于免费。门票、餐饮、酒店属于估算，交通金额未知；候选 POI 并不核实开放时间、预约条件或价格。
 
 ## 数据与权限
@@ -42,7 +42,7 @@ docker compose -p langchain-trip-planner up -d --wait
 
 `docker-compose.production.yml` 提供 PostgreSQL 独立卷、应用数据卷、生产密钥校验和只绑定本机端口的前端/监控。它是可部署配置，尚未购买云资源或接入真实生产流量。准备 `POSTGRES_PASSWORD` 与 `JWT_SECRET_KEY` 环境变量后，用该文件显式启动；建议密码使用 URL 安全字符，数据库密码含特殊字符时需正确 URL 编码。不要与原本机 Compose 共用项目名后直接启动，以免意外切换数据库。
 
-`DATA_DIR`、`CHROMA_DIR`、`UPLOAD_DIR`、`LOG_DIR` 均可配置；备份必须覆盖实际路径。API 的 `/metrics` 仅内网访问，Nginx 拒绝公网 `/metrics`。Prometheus 展示任务积压、超时/中断、同步状态及索引重建耗时；`deploy/alerts.yml` 配置服务不可用和积压规则。当前告警只在 Prometheus 中评估，未配置短信、邮件或外部通知渠道。
+`DATA_DIR`、`CHROMA_DIR`、`UPLOAD_DIR`、`LOG_DIR` 均可配置；备份必须覆盖实际路径。API 的 `/metrics` 仅内网访问，Nginx 拒绝公网 `/metrics`。Prometheus 展示任务积压、超时/中断、同步状态及索引重建耗时；`deploy/alerts.yml` 配置服务不可用和积压规则。隔离验证栈已接入 Alertmanager 与本地通知接收器，生产配置尚未配置短信、邮件或外部通知渠道。
 
 ## 隔离验收
 

@@ -12,7 +12,12 @@ groups:
         labels:
           severity: warning
       - alert: TripQueueStalled
-        expr: trip_oldest_queue_age_seconds > 300
-        for: 1m
+        expr: trip_oldest_queue_age_seconds > 120
+        for: 30s
+        labels:
+          severity: warning
+      - alert: TripTaskTimeouts
+        expr: delta(trip_task_failures{code="TASK_TIMEOUT"}[5m]) > 0
+        for: 0s
         labels:
           severity: warning

@@ -1,0 +1,19 @@
+{
+  "mode": "isolated_postgres_and_deterministic_index",
+  "tables_verified": 7,
+  "row_digests": {
+    "users": "10:87e4337605d4b0315366abf86c3351fe",
+    "trip_records": "38:de9d4266d6759e5dd02d7ed0a9e88abb",
+    "trip_tasks": "40:bf0f5e2bf2357ed4ccb12a11f16bcfaf",
+    "rag_sync_jobs": "38:37b2c9bdc0df7cad3c98d7de4b3b8010",
+    "knowledge_documents": "2:35c82bac47a6c5e3cad2533830e56676",
+    "knowledge_ingest_jobs": "0:d41d8cd98f00b204e9800998ecf8427e",
+    "user_travel_preferences": "0:d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "archive_sha256": "3584a26263657cc1f1c89a4c9e2216e6bde4203333bafd4eea261c9d34522bc5",
+  "uploads_sha256": "a63a6279625f4e6f2cec2688a1129927de4a0c6a9f3f734c5daacc39ab34f56b",
+  "corrupt_archive_rejected": true,
+  "index_verification": "{'restored_history': 38, 'restored_published': 2, 'mode': 'deterministic_embedding'}",
+  "seconds": 16.495,
+  "production_data_touched": false
+}

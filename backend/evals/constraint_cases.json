@@ -1,0 +1,18 @@
+{
+  "version": "travel-constraints-v1",
+  "boundary": "Synthetic POIs and route fixtures; expected outcomes are authored independently of the implementation. Not real-model quality or user satisfaction.",
+  "cases": [
+    {"id":"normal", "days":[["A","B"]], "expected":[["A","B"]], "passed":true},
+    {"id":"same-poi", "days":[["A","A","B"]], "expected":[["A","B"]], "passed":true},
+    {"id":"cross-day", "days":[["A","B"],["B","C"]], "expected":[["A","B"],["C"]], "passed":true},
+    {"id":"avoid", "days":[["A","B","C"]], "constraints":{"avoid":["B"]}, "expected":[["A","C"]], "passed":true},
+    {"id":"daily-budget", "days":[["A","B","C"]], "constraints":{"daily_minutes":400}, "expected":[["A","B"]], "passed":true},
+    {"id":"protect-required", "days":[["A","B","C"]], "constraints":{"daily_minutes":400,"must_visit":["C"]}, "expected":[["A","C"]], "passed":true},
+    {"id":"impossible-required", "days":[["A","B"]], "constraints":{"daily_minutes":200,"must_visit":["A","B"]}, "expected":[["A","B"]], "passed":false},
+    {"id":"required-not-found", "days":[["A","B"]], "constraints":{"must_visit":["Unknown"]}, "expected":[["A","B"]], "passed":false},
+    {"id":"walking-limit", "days":[["A","B","C"]], "constraints":{"max_inter_stop_walking_km":3}, "expected":[["A","B"]], "passed":true},
+    {"id":"route-unavailable", "days":[["A","B"]], "route":"unavailable", "expected":[["A","B"]], "passed":true, "unknown_route":true},
+    {"id":"transit-walking-unknown", "days":[["A","B"]], "transportation":"公共交通", "constraints":{"max_inter_stop_walking_km":1}, "expected":[["A","B"]], "passed":true, "unknown_walking":true},
+    {"id":"no-attractions", "days":[["A"]], "constraints":{"avoid":["A"]}, "expected":[[]], "passed":false}
+  ]
+}

@@ -57,7 +57,7 @@ def register(request: Request, body: RegisterRequest, db: Session = Depends(get_
         raise HTTPException(status_code=409, detail="用户名已存在")
     db.refresh(user)
     logger.info(f"新用户注册: {user.username}")
-    return TokenResponse(access_token=create_access_token(user.id), username=user.username, is_admin=user.is_admin)
+    return TokenResponse(access_token=create_access_token(user.id, user.token_version), username=user.username, is_admin=user.is_admin)
 
 
 @router.post("/login", summary="登录", response_model=TokenResponse)
@@ -71,7 +71,15 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             detail="用户名或密码错误",
         )
     logger.info(f"用户登录: {user.username}")
-    return TokenResponse(access_token=create_access_token(user.id), username=user.username, is_admin=user.is_admin)
+    return TokenResponse(access_token=create_access_token(user.id, user.token_version), username=user.username, is_admin=user.is_admin)
+
+
+@router.post("/logout", summary="撤销当前账号的全部登录会话")
+def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from sqlalchemy import update
+    db.execute(update(User).where(User.id == current_user.id).values(token_version=User.token_version + 1))
+    db.commit()
+    return {"success": True, "message": "该账号的所有旧登录凭证已失效"}
 
 
 @router.get("/me", summary="当前登录用户")

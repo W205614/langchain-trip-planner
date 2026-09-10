@@ -61,6 +61,27 @@ export async function login(username: string, password: string): Promise<any> {
   return response.data
 }
 
+export async function logout(): Promise<void> {
+  await apiClient.post('/api/auth/logout')
+  clearAuth()
+}
+
+export async function fetchTasks(page = 1): Promise<any> {
+  return (await apiClient.get('/api/trip/tasks', { params: { page } })).data
+}
+
+export async function fetchTask(id: string): Promise<any> {
+  return (await apiClient.get(`/api/trip/tasks/${id}`)).data.data
+}
+
+export async function cancelTask(id: string): Promise<any> {
+  return (await apiClient.post(`/api/trip/tasks/${id}/cancel`)).data
+}
+
+export async function retryTask(id: string, key: string): Promise<any> {
+  return (await apiClient.post(`/api/trip/tasks/${id}/retry`, {}, { headers: { 'Idempotency-Key': key } })).data
+}
+
 /**
  * 生成旅行计划
  */
@@ -224,10 +245,33 @@ export async function researchTravel(city: string, query: string): Promise<any> 
 
 /** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
 export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string, version: number): Promise<any> {
-  return (await apiClient.post(`/api/history/${id}/revise-day`, {
-    day_index: dayIndex,
-    instruction
-  }, { headers: { 'If-Match': String(version) } })).data
+  const fingerprint = JSON.stringify({ id, dayIndex, instruction, version })
+  let pending = JSON.parse(sessionStorage.getItem('pendingRevision') || 'null')
+  if (!pending || pending.fingerprint !== fingerprint) {
+    pending = { fingerprint, key: crypto.randomUUID(), id: null }
+    sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
+  }
+  if (!pending.id) {
+    const created = await apiClient.post(`/api/history/${id}/revise-task`, {
+      day_index: dayIndex, instruction
+    }, { headers: { 'If-Match': String(version), 'Idempotency-Key': pending.key } })
+    pending.id = created.data.data.id
+    sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
+  }
+  const deadline = Date.now() + 310000
+  while (Date.now() < deadline) {
+    const state = await fetchTask(pending.id)
+    if (state.status === 'succeeded') {
+      sessionStorage.removeItem('pendingRevision')
+      return state.result
+    }
+    if (['failed', 'cancelled'].includes(state.status)) {
+      sessionStorage.removeItem('pendingRevision')
+      throw new Error(`${state.message} (${state.error_code})`)
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+  throw new Error('等待超时，请在“我的任务”查看改排结果')
 }
 
 export async function fetchMyKnowledge(): Promise<any> {

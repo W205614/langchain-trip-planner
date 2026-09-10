@@ -29,7 +29,7 @@ export function isAdmin(): boolean {
 }
 
 export function clearAuth(): void {
-  for (const key of ['pendingTripTask', 'tripPlan', 'tripPlanId', 'tripPlanVersion', 'tripQuality', 'tripUnsaved']) sessionStorage.removeItem(key)
+  for (const key of ['pendingRevision', 'pendingTripTask', 'tripPlan', 'tripPlanId', 'tripPlanVersion', 'tripQuality', 'tripUnsaved']) sessionStorage.removeItem(key)
   sessionStorage.removeItem(TOKEN_KEY)
   sessionStorage.removeItem(USERNAME_KEY)
   sessionStorage.removeItem(ADMIN_KEY)

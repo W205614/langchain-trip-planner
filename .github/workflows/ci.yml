@@ -39,6 +39,13 @@ jobs:
       - name: Run backend tests
         run: |
           pytest -v --tb=short
+          python -m app.evals.constraint_benchmark --output ../evidence/constraints.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: constraint-evaluation
+          path: evidence/constraints.json
 
   # ===== 前端: 类型检查 + 构建 =====
   frontend-build:
@@ -140,6 +147,12 @@ jobs:
 
       - name: Isolated recovery drill
         run: python backend/scripts/recovery_drill.py --output evidence/recovery.json
+
+      - name: Local notification failure and recovery
+        run: |
+          docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.2.1 test rules alerts.test.yml
+          python backend/scripts/notification_smoke.py
+          cp docs/evidence/notifications.json evidence/notifications.json
 
       - name: Generation interrupted by container restart
         run: |

@@ -734,3 +734,8 @@ LLM_MODEL_ID=新模型名
 - [OpenAI 兼容接口](https://platform.openai.com/docs/api-reference) - Embedding/LLM 兼容协议（可通过中转/代理服务对接任意模型）
 - [ChromaDB](https://github.com/chroma-core/chroma) - 向量数据库
 - [HelloAgents](https://github.com/datawhalechina/hello-agents) - 原版项目（本项目的重构起点）
+# 最新迭代：行程约束与可复现评测
+
+新增必去/不去、每日总时间和景点间步行约束，跨天去重与地理分组；质量报告区分规则通过、事实缺失和生成降级。前端“我的任务”支持结果找回、取消及显式重试，单日改排接入持久化任务。配额和调用用量持久化，退出登录可撤销旧凭证。
+
+实现范围、验收命令和未覆盖的事实边界见 [行程与可靠性迭代说明](docs/planning-iteration.md)。冻结案例报告见 [约束评测](docs/evidence/constraint-benchmark.json)。所有新增验收定位为本地 Docker/确定性测试，不代表生产流量或真实模型满意度。

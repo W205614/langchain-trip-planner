@@ -70,6 +70,8 @@ def ensure_tables() -> None:
             ))
         # Backwards-compatible additive changes for an existing development SQLite file.
         for table, additions in {
+            "users": {"token_version": "INTEGER NOT NULL DEFAULT 0"},
+            "trip_tasks": {"usage_json": "TEXT NOT NULL DEFAULT '{}'"},
             "trip_records": {"version": "INTEGER NOT NULL DEFAULT 1", "quality_json": "TEXT NOT NULL DEFAULT '{}'"},
             "knowledge_documents": {"version": "INTEGER NOT NULL DEFAULT 1"},
             "knowledge_ingest_jobs": {"document_version": "INTEGER NOT NULL DEFAULT 1"},

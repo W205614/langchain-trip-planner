@@ -1,0 +1,15 @@
+{
+  "mode": "daily_docker_deployment",
+  "checks": {
+    "ready": true,
+    "frontend": true,
+    "fixture_disabled": true,
+    "register": true,
+    "task_list": true,
+    "contradictory_constraints_rejected": true,
+    "no_generation_created": true,
+    "logout": true,
+    "old_token_revoked": true
+  },
+  "boundary": "Deployment/auth/schema acceptance; no generation or paid upstream evaluation."
+}

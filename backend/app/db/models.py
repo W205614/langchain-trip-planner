@@ -21,6 +21,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(64), unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String(128))  # bcrypt 哈希
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
+    token_version: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now()
     )
@@ -150,6 +151,7 @@ class TripTask(Base):
     idempotency_key: Mapped[str] = mapped_column(String(128))
     fingerprint: Mapped[str] = mapped_column(String(64))
     request_json: Mapped[str] = mapped_column(Text)
+    usage_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     request_id: Mapped[str] = mapped_column(String(64), default="")
     status: Mapped[str] = mapped_column(String(16), default="queued", index=True)
     stage: Mapped[str] = mapped_column(String(64), default="queued")

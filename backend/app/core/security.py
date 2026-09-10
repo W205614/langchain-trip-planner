@@ -46,11 +46,11 @@ def verify_password(plain: str, hashed: str) -> bool:
         return False
 
 
-def create_access_token(user_id: int) -> str:
+def create_access_token(user_id: int, token_version: int = 0) -> str:
     """签发 JWT: sub=用户ID, exp=当前时间+有效期"""
     settings = get_settings()
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
-    payload = {"sub": str(user_id), "exp": expire}
+    payload = {"sub": str(user_id), "exp": expire, "ver": token_version}
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=_ALGO)
 
 
@@ -83,7 +83,7 @@ def get_current_user(
     ensure_tables()
     with SessionLocal() as db:
         user = db.get(User, user_id)
-        if user is None:
+        if user is None or payload.get("ver", 0) != user.token_version:
             raise cred_exc
         db.expunge(user)
         return user
