@@ -98,7 +98,7 @@ def test_plan_trip_success(client, monkeypatch):
     fake_agent = Mock()
     fake_agent.plan_trip.return_value = make_fake_trip_plan()
     monkeypatch.setattr(
-        "app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent
+        "app.agents.trip_planner_agent.get_trip_planner_agent", lambda: fake_agent
     )
 
     resp = client.post("/api/trip/plan", json=VALID_REQUEST)
@@ -108,16 +108,18 @@ def test_plan_trip_success(client, monkeypatch):
     assert data["success"] is True
     assert data["data"]["city"] == "北京"
     assert len(data["data"]["days"]) == 2
-    assert data["data"]["budget"]["total"] == 400
+    assert data["data"]["budget"]["total"] == 0
+    assert data["saved"] is True
     assert data["quality"]["days_checked"] == 2
 
 
 def test_plan_trip_idempotency_reuses_the_first_result(client, monkeypatch):
     fake_agent = Mock()
     fake_agent.plan_trip.return_value = make_fake_trip_plan()
-    monkeypatch.setattr("app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent)
+    monkeypatch.setattr("app.agents.trip_planner_agent.get_trip_planner_agent", lambda: fake_agent)
 
-    headers = {"Idempotency-Key": "test-trip-route-repeat-key"}
+    from uuid import uuid4
+    headers = {"Idempotency-Key": str(uuid4())}
     first = client.post("/api/trip/plan", json=VALID_REQUEST, headers=headers)
     second = client.post("/api/trip/plan", json=VALID_REQUEST, headers=headers)
 
@@ -130,7 +132,7 @@ def test_plan_trip_idempotency_reuses_the_first_result(client, monkeypatch):
 def test_plan_stream_returns_complete_event(client, monkeypatch):
     fake_agent = Mock()
     fake_agent.plan_trip.return_value = make_fake_trip_plan()
-    monkeypatch.setattr("app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent)
+    monkeypatch.setattr("app.agents.trip_planner_agent.get_trip_planner_agent", lambda: fake_agent)
 
     with client.stream("POST", "/api/trip/plan/stream", json=VALID_REQUEST) as response:
         body = "\n".join(response.iter_lines())
@@ -139,14 +141,20 @@ def test_plan_stream_returns_complete_event(client, monkeypatch):
     assert '"success": true' in body
 
 
-def test_plan_stream_rejects_when_llm_request_slots_are_full(client, monkeypatch):
+def test_task_queues_when_slots_are_full(client, monkeypatch):
+    from app.services import trip_tasks
     gate = LLMRequestGate(1)
-    assert gate.try_acquire() is True
-    monkeypatch.setattr("app.api.routes.trip.llm_request_gate", gate)
+    assert gate.try_acquire()
+    monkeypatch.setattr(trip_tasks, "llm_request_gate", gate)
     try:
-        response = client.post("/api/trip/plan/stream", json=VALID_REQUEST)
-        assert response.status_code == 429
-        assert response.json()["code"] == "LLM_CONCURRENCY_LIMITED"
+        response = client.post("/api/trip/tasks", json=VALID_REQUEST)
+        assert response.status_code == 202
+        task_id = response.json()["data"]["id"]
+        assert trip_tasks.snapshot(1, task_id)["status"] == "queued"
+        from app.db.models import TripTask
+        with SessionLocal() as db:
+            db.get(TripTask, task_id).status = "failed"
+            db.commit()
     finally:
         gate.release()
 
@@ -169,7 +177,7 @@ def test_plan_trip_failure_returns_500(monkeypatch):
     fake_agent = Mock()
     fake_agent.plan_trip.side_effect = RuntimeError("LLM 服务不可用")
     monkeypatch.setattr(
-        "app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent
+        "app.agents.trip_planner_agent.get_trip_planner_agent", lambda: fake_agent
     )
 
     # 模拟真实服务器行为: 未捕获异常不抛给客户端, 由全局处理器返回500
@@ -179,7 +187,7 @@ def test_plan_trip_failure_returns_500(monkeypatch):
     assert resp.status_code == 500
     data = resp.json()
     assert data["success"] is False
-    assert "服务器内部错误" in data["message"]
+    assert "未保存" in data["message"]
 
 
 def test_revise_one_history_day_persists_only_the_revised_plan(client, monkeypatch):
@@ -192,7 +200,7 @@ def test_revise_one_history_day_persists_only_the_revised_plan(client, monkeypat
     revised.days[0].attractions[0].poi_id = "B000A7VYV0"
     fake_agent.plan_trip.return_value = original
     fake_agent.revise_trip_day.return_value = revised
-    monkeypatch.setattr("app.api.routes.trip.get_trip_planner_agent", lambda: fake_agent)
+    monkeypatch.setattr("app.agents.trip_planner_agent.get_trip_planner_agent", lambda: fake_agent)
     monkeypatch.setattr("app.api.routes.history.get_trip_planner_agent", lambda: fake_agent)
     route_planner = Mock()
     route_planner.plan_route_by_locations.return_value = {"distance": 1_000, "duration": 600}
@@ -205,7 +213,7 @@ def test_revise_one_history_day_persists_only_the_revised_plan(client, monkeypat
 
     response = client.post(
         f"/api/history/{record_id}/revise-day",
-        json={"day_index": 0, "instruction": "下雨，改成室内博物馆并减少步行"},
+        headers={"If-Match": "1"}, json={"day_index": 0, "instruction": "下雨，改成室内博物馆并减少步行"},
     )
 
     assert response.status_code == 200
@@ -220,13 +228,13 @@ def test_revise_one_history_day_persists_only_the_revised_plan(client, monkeypat
 def test_revise_day_rejects_unknown_record_and_invalid_index(client):
     unknown = client.post(
         "/api/history/999999/revise-day",
-        json={"day_index": 0, "instruction": "改成室内活动"},
+        headers={"If-Match": "1"}, json={"day_index": 0, "instruction": "改成室内活动"},
     )
     assert unknown.status_code == 404
 
     invalid = client.post(
         "/api/history/1/revise-day",
-        json={"day_index": 50, "instruction": "改成室内活动"},
+        headers={"If-Match": "1"}, json={"day_index": 50, "instruction": "改成室内活动"},
     )
     assert invalid.status_code == 422
 
@@ -250,7 +258,7 @@ def test_revise_day_rejects_when_llm_request_slots_are_full(client, monkeypatch)
     try:
         response = client.post(
             f"/api/history/{record_id}/revise-day",
-            json={"day_index": 0, "instruction": "下雨改为室内博物馆"},
+            headers={"If-Match": "1"}, json={"day_index": 0, "instruction": "下雨改为室内博物馆"},
         )
         assert response.status_code == 429
         assert response.json()["code"] == "LLM_CONCURRENCY_LIMITED"

@@ -89,15 +89,22 @@ export async function generateTripPlanStream(
   onProgress: (progress: TripPlanProgress) => void
 ): Promise<TripPlanResponse> {
   const token = getToken()
-  const idempotencyKey = crypto.randomUUID()
-  const response = await fetch(`${API_BASE_URL}/api/trip/plan/stream`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'Idempotency-Key': idempotencyKey
-    },
-    body: JSON.stringify(formData)
+  const fingerprint = JSON.stringify(formData)
+  let pending = JSON.parse(sessionStorage.getItem('pendingTripTask') || 'null')
+  if (!pending || pending.fingerprint !== fingerprint) {
+    pending = { fingerprint, body: formData, key: crypto.randomUUID(), id: null }
+    sessionStorage.setItem('pendingTripTask', JSON.stringify(pending))
+  }
+  if (!pending.id) {
+    const created = await apiClient.post('/api/trip/tasks', formData, {
+      headers: { 'Idempotency-Key': pending.key }
+    })
+    pending.id = created.data.data.id
+    sessionStorage.setItem('pendingTripTask', JSON.stringify(pending))
+  }
+  const response = await fetch(`${API_BASE_URL}/api/trip/tasks/${pending.id}/events`, {
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    signal: AbortSignal.timeout(310000)
   })
   if (response.status === 401) {
     clearAuth()
@@ -122,8 +129,16 @@ export async function generateTripPlanStream(
       if (!event || !data) continue
       const payload = JSON.parse(data)
       if (event === 'progress') onProgress(payload as TripPlanProgress)
-      if (event === 'complete') return payload as TripPlanResponse
-      if (event === 'error') throw new Error(payload.message || '生成旅行计划失败')
+      if (event === 'complete') {
+        sessionStorage.removeItem('pendingTripTask')
+        await reader.cancel()
+        return payload as TripPlanResponse
+      }
+      if (event === 'error') {
+        sessionStorage.removeItem('pendingTripTask')
+        await reader.cancel()
+        throw new Error(payload.message || '生成旅行计划失败')
+      }
     }
     if (done) break
   }
@@ -168,8 +183,8 @@ export async function fetchHistoryDetail(id: number): Promise<any> {
 /**
  * 更新历史行程 (编辑保存后持久化)
  */
-export async function updateHistory(id: number, plan: any): Promise<any> {
-  const response = await apiClient.put(`/api/history/${id}`, plan)
+export async function updateHistory(id: number, plan: any, version: number): Promise<any> {
+  const response = await apiClient.put(`/api/history/${id}`, plan, { headers: { 'If-Match': String(version) } })
   return response.data
 }
 
@@ -208,11 +223,11 @@ export async function researchTravel(city: string, query: string): Promise<any> 
 }
 
 /** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
-export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string): Promise<any> {
+export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string, version: number): Promise<any> {
   return (await apiClient.post(`/api/history/${id}/revise-day`, {
     day_index: dayIndex,
     instruction
-  })).data
+  }, { headers: { 'If-Match': String(version) } })).data
 }
 
 export async function fetchMyKnowledge(): Promise<any> {
@@ -236,3 +251,11 @@ export async function deleteKnowledge(id: number): Promise<any> {
 }
 
 export default apiClient
+
+export function storeTripResult(response: TripPlanResponse): void {
+  sessionStorage.removeItem('tripUnsaved')
+  sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
+  sessionStorage.setItem('tripPlanId', String(response.id || 0))
+  sessionStorage.setItem('tripPlanVersion', String(response.version || 1))
+  sessionStorage.setItem('tripQuality', JSON.stringify(response.quality || {}))
+}

@@ -35,8 +35,10 @@ def auth_client(tmp_path, monkeypatch):
             db.close()
 
     app.dependency_overrides[dbmod.get_db] = _override_get_db
+    monkeypatch.setattr("app.core.security.SessionLocal", session_local)
     yield TestClient(app)
     app.dependency_overrides.clear()
+    engine.dispose()
 
 
 def _register(client, username="tester", password="secret123"):

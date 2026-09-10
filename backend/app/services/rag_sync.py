@@ -20,6 +20,10 @@ logger = logging.getLogger(__name__)
 MAX_ATTEMPTS = 5
 
 
+class DependencyUnavailable(RuntimeError):
+    pass
+
+
 def _utcnow() -> datetime:
     """返回与现有无时区数据库列兼容的 UTC 时间。"""
     return datetime.now(timezone.utc).replace(tzinfo=None)
@@ -60,7 +64,7 @@ class RagSyncWorker:
             job = db.scalar(
                 select(RagSyncJob)
                 .where(
-                    RagSyncJob.status.in_(("pending", "retry", "running")),
+                    RagSyncJob.status.in_(("pending", "retry", "running", "waiting")),
                     RagSyncJob.next_retry_at <= now,
                 )
                 .order_by(RagSyncJob.id)
@@ -76,6 +80,11 @@ class RagSyncWorker:
 
             try:
                 self._synchronize_job(db, job)
+            except DependencyUnavailable:
+                job.status = "waiting"
+                job.attempts -= 1
+                job.next_retry_at = now + timedelta(seconds=30)
+                db.commit()
             except Exception as exc:
                 self._schedule_retry(job, exc)
                 db.commit()
@@ -97,7 +106,7 @@ class RagSyncWorker:
 
         rag = get_rag_service()
         if not rag.enabled:
-            return
+            raise DependencyUnavailable("RAG unavailable")
         if job.operation == "delete":
             if not rag.delete_history_plan(job.record_id, job.user_id):
                 raise RuntimeError("RAG delete operation returned false")

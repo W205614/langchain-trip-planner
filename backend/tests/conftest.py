@@ -19,15 +19,41 @@ os.environ["LLM_BASE_URL"] = "http://localhost:9999/v1"  # 无效端点, 防止�
 os.environ["LLM_MODEL_ID"] = "test-model"
 # 开发机可能在 backend/.env 指向 PostgreSQL。测试必须独立于该本机配置，
 # 否则收集阶段会因未安装的 PostgreSQL 驱动而失败。
-_TEST_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "pytest_trip_planner.db"
-if _TEST_DB_PATH.exists():
-    _TEST_DB_PATH.unlink()
-os.environ["DATABASE_URL"] = f"sqlite:///{_TEST_DB_PATH.as_posix()}"
+import tempfile
+_TEST_ROOT = Path(tempfile.mkdtemp(prefix="trip-tests-"))
+os.environ["DATA_DIR"] = str(_TEST_ROOT)
+os.environ["CHROMA_DIR"] = str(_TEST_ROOT / "chroma")
+os.environ["UPLOAD_DIR"] = str(_TEST_ROOT / "knowledge_uploads")
+os.environ["LOG_DIR"] = str(_TEST_ROOT / "logs")
+os.environ["DATABASE_URL"] = os.environ.get("TEST_DATABASE_URL", "sqlite:///" + (_TEST_ROOT / "test.db").as_posix())
+os.environ["EMBEDDING_API_KEY"] = "test"
+os.environ["EMBEDDING_BASE_URL"] = "http://127.0.0.1:9999/v1"
+os.environ["VISION_API_KEY"] = "test"
+os.environ["VISION_BASE_URL"] = "http://127.0.0.1:9999/v1"
+os.environ["BOOTSTRAP_ADMIN_USERNAME"] = ""
+os.environ["JWT_SECRET_KEY"] = "test-secret-only-01234567890123456789"
+os.environ["APP_ENV"] = "development"
+os.environ["RAG_ENABLED"] = "false"
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.api.main import app
+
+
+@pytest.fixture(autouse=True, scope="session")
+def reset_isolated_postgres():
+    """Repeated integration runs start clean, without ever accepting a daily DB name."""
+    from app.db.database import engine
+    from app.db.models import Base
+    from sqlalchemy import text
+    if engine.dialect.name == "postgresql":
+        if engine.url.database != "trip_tests":
+            raise RuntimeError("Integration tests require the isolated trip_tests database")
+        tables = ', '.join('"' + table.name + '"' for table in Base.metadata.sorted_tables)
+        with engine.begin() as connection:
+            connection.execute(text("TRUNCATE " + tables + " RESTART IDENTITY CASCADE"))
+    yield
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -51,3 +77,8 @@ def _isolate_logs():
 def client() -> TestClient:
     """测试客户端 (整个测试会话复用同一个应用实例)"""
     return TestClient(app)
+
+@pytest.fixture(autouse=True)
+def reset_rate_limits():
+    from app.core.rate_limit import limiter
+    limiter.reset()

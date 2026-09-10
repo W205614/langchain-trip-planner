@@ -14,6 +14,7 @@ export function getToken(): string | null {
 }
 
 export function setAuth(token: string, username: string, isAdmin: boolean = false): void {
+  if (getUsername() !== username) clearAuth()
   sessionStorage.setItem(TOKEN_KEY, token)
   sessionStorage.setItem(USERNAME_KEY, username)
   sessionStorage.setItem(ADMIN_KEY, String(isAdmin))
@@ -28,6 +29,7 @@ export function isAdmin(): boolean {
 }
 
 export function clearAuth(): void {
+  for (const key of ['pendingTripTask', 'tripPlan', 'tripPlanId', 'tripPlanVersion', 'tripQuality', 'tripUnsaved']) sessionStorage.removeItem(key)
   sessionStorage.removeItem(TOKEN_KEY)
   sessionStorage.removeItem(USERNAME_KEY)
   sessionStorage.removeItem(ADMIN_KEY)

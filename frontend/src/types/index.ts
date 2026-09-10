@@ -38,6 +38,8 @@ export interface Hotel {
 }
 
 export interface Budget {
+  estimated?: boolean
+  unknown_items?: string[]
   total_attractions: number
   total_hotels: number
   total_meals: number
@@ -89,6 +91,10 @@ export interface TripFormData {
 }
 
 export interface TripPlanResponse {
+  id?: number
+  version?: number
+  saved?: boolean
+  quality?: { warnings?: string[]; data_gaps?: string[]; degraded_days?: number[] }
   success: boolean
   message: string
   data?: TripPlan

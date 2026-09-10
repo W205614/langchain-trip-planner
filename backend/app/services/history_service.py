@@ -4,7 +4,7 @@ import json
 import logging
 from typing import Optional
 
-from sqlalchemy import desc, func, select
+from sqlalchemy import desc, func, select, update
 from sqlalchemy.orm import Session
 
 from ..db.models import RagSyncJob, TripRecord
@@ -21,7 +21,8 @@ def _enqueue_rag_sync(db: Session, record_id: int, user_id: int, operation: str)
 
 
 def create_trip_record(
-    db: Session, user_id: int, request: TripRequest, trip_plan: TripPlan
+    db: Session, user_id: int, request: TripRequest, trip_plan: TripPlan,
+    quality: dict | None = None, commit: bool = True,
 ) -> TripRecord:
     """保存一条旅行计划历史记录 (归属指定用户)"""
     record = TripRecord(
@@ -35,12 +36,14 @@ def create_trip_record(
         preferences=json.dumps(request.preferences, ensure_ascii=False),
         free_text_input=request.free_text_input or "",
         plan_json=trip_plan.model_dump_json(),
+        quality_json=json.dumps(quality or {}, ensure_ascii=False),
     )
     db.add(record)
     db.flush()  # 在 commit 前取得主记录 ID，使主表与 outbox 原子提交。
     _enqueue_rag_sync(db, record.id, user_id, "upsert")
-    db.commit()
-    db.refresh(record)
+    if commit:
+        db.commit()
+        db.refresh(record)
     logger.info(f"💾 历史记录已保存: id={record.id}, 用户={user_id}, 城市={record.city}")
     return record
 
@@ -77,13 +80,21 @@ def get_trip_record(db: Session, user_id: int, record_id: int) -> Optional[TripR
 
 
 def update_trip_record(
-    db: Session, user_id: int, record_id: int, trip_plan: TripPlan
+    db: Session, user_id: int, record_id: int, trip_plan: TripPlan,
+    expected_version: int | None = None, quality: dict | None = None,
 ) -> Optional[TripRecord]:
     """更新历史记录的行程计划 (仅限该用户的记录)"""
     record = get_trip_record(db, user_id, record_id)
     if record is None:
         return None
-    record.plan_json = trip_plan.model_dump_json()
+    version = expected_version if expected_version is not None else record.version
+    result = db.execute(update(TripRecord).where(
+        TripRecord.id == record_id, TripRecord.user_id == user_id, TripRecord.version == version,
+    ).values(plan_json=trip_plan.model_dump_json(), quality_json=json.dumps(quality or {}), version=version + 1))
+    if result.rowcount != 1:
+        db.rollback()
+        from ..core.exceptions import BizException
+        raise BizException("行程已被其它页面修改，请重新加载", status_code=409, code="VERSION_CONFLICT")
     _enqueue_rag_sync(db, record.id, user_id, "upsert")
     db.commit()
     db.refresh(record)
@@ -126,6 +137,7 @@ def trip_record_to_summary(record: TripRecord) -> dict:
 
     return {
         "id": record.id,
+        "version": record.version,
         "city": record.city,
         "start_date": record.start_date,
         "end_date": record.end_date,

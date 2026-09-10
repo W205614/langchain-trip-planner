@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Integer, String, Text, func
+from sqlalchemy import Boolean, DateTime, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
@@ -61,6 +61,8 @@ class TripRecord(Base):
     preferences: Mapped[str] = mapped_column(Text, default="[]")  # JSON 数组字符串
     free_text_input: Mapped[str] = mapped_column(Text, default="")
     plan_json: Mapped[str] = mapped_column(Text)  # 完整行程计划 JSON
+    quality_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), index=True
     )
@@ -112,6 +114,7 @@ class KnowledgeDocument(Base):
     review_note: Mapped[str] = mapped_column(String(512), default="")
     page_count: Mapped[int] = mapped_column(Integer, default=0)
     source_text: Mapped[str] = mapped_column(Text, default="")
+    version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None)
@@ -125,6 +128,7 @@ class KnowledgeIngestJob(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     document_id: Mapped[int] = mapped_column(Integer, index=True)
+    document_version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     status: Mapped[str] = mapped_column(String(16), default="pending", index=True)
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     next_retry_at: Mapped[datetime] = mapped_column(
@@ -135,3 +139,24 @@ class KnowledgeIngestJob(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None)
     )
+
+
+class TripTask(Base):
+    """Durable single-host generation. A committed success always references saved history."""
+    __tablename__ = "trip_tasks"
+    __table_args__ = (UniqueConstraint("user_id", "idempotency_key", name="uq_trip_task_user_key"),)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, index=True)
+    idempotency_key: Mapped[str] = mapped_column(String(128))
+    fingerprint: Mapped[str] = mapped_column(String(64))
+    request_json: Mapped[str] = mapped_column(Text)
+    request_id: Mapped[str] = mapped_column(String(64), default="")
+    status: Mapped[str] = mapped_column(String(16), default="queued", index=True)
+    stage: Mapped[str] = mapped_column(String(64), default="queued")
+    percent: Mapped[int] = mapped_column(Integer, default=0)
+    message: Mapped[str] = mapped_column(String(255), default="等待生成")
+    error_code: Mapped[str] = mapped_column(String(64), default="")
+    record_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    deadline_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None))

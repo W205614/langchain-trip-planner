@@ -1,6 +1,7 @@
 """高德地图服务封装 (httpx 直调高德 REST API)"""
 
 import logging
+from .execution import remaining
 import time
 from copy import deepcopy
 from threading import RLock
@@ -59,7 +60,7 @@ class AmapService:
             ValueError: 高德返回 status != 1 时
         """
         request_params = {**params, "key": self.api_key}
-        resp = self.client.get(f"{AMAP_BASE_URL}{path}", params=request_params)
+        resp = self.client.get(f"{AMAP_BASE_URL}{path}", params=request_params, timeout=remaining(10))
         resp.raise_for_status()
 
         data = resp.json()

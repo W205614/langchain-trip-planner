@@ -92,8 +92,9 @@ def test_streamed_day_response_records_only_first_non_empty_token():
 
     class _Stream:
         @staticmethod
-        def stream(_payload):
-            return iter([AIMessageChunk(content=""), AIMessageChunk(content="{"), AIMessageChunk(content="}")])
+        async def astream(_payload):
+            for chunk in [AIMessageChunk(content=""), AIMessageChunk(content="{"), AIMessageChunk(content="}")]:
+                yield chunk
 
     first_tokens = []
     response = MultiAgentTripPlanner._stream_day_response(

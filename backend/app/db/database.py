@@ -8,7 +8,7 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from ..config import get_settings
 
 # backend/data 目录 (数据库 + 向量库统一放这里)
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+DATA_DIR = Path(get_settings().data_dir).resolve() if get_settings().data_dir else Path(__file__).resolve().parents[2] / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # SQLite 数据库文件
@@ -68,6 +68,16 @@ def ensure_tables() -> None:
                 "ALTER TABLE knowledge_documents "
                 "ADD COLUMN source_tier VARCHAR(16) NOT NULL DEFAULT 'community'"
             ))
+        # Backwards-compatible additive changes for an existing development SQLite file.
+        for table, additions in {
+            "trip_records": {"version": "INTEGER NOT NULL DEFAULT 1", "quality_json": "TEXT NOT NULL DEFAULT '{}'"},
+            "knowledge_documents": {"version": "INTEGER NOT NULL DEFAULT 1"},
+            "knowledge_ingest_jobs": {"document_version": "INTEGER NOT NULL DEFAULT 1"},
+        }.items():
+            existing = {row[1] for row in connection.execute(text(f"PRAGMA table_info({table})"))}
+            for column, definition in additions.items():
+                if column not in existing:
+                    connection.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {definition}"))
     _tables_ready = True
 
 

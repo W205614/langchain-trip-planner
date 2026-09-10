@@ -1,0 +1,90 @@
+{
+  "mode": "local_real_upstream_functional",
+  "checks": {
+    "ready": true,
+    "fixture_disabled": true,
+    "anonymous_rebuild_denied": true,
+    "register_and_login": true,
+    "ordinary_rebuild_denied": true,
+    "save_preferences": true,
+    "read_preferences": true,
+    "task_accepted": true,
+    "same_key_same_task": true,
+    "same_key_changed_body_conflict": true,
+    "generation_saved": true,
+    "real_poi_ids": true,
+    "history_matches_result": true,
+    "history_save": true,
+    "stale_edit_conflict": true,
+    "cross_user_task_denied": true,
+    "cross_user_history_denied": true,
+    "public_research": true
+  },
+  "task_status": "succeeded",
+  "error_code": "",
+  "quality": {
+    "score": 100,
+    "passed": true,
+    "warnings": [],
+    "days_checked": 1,
+    "attractions_checked": 3,
+    "duplicate_attractions_removed": 0,
+    "estimated_intra_day_distance_km": 2.02,
+    "route_checked": false,
+    "actual_route_distance_km": 0.0,
+    "actual_route_minutes": 0,
+    "repairs": [],
+    "data_gaps": [
+      "opening_hours_unavailable",
+      "route_duration_unavailable_fallback_to_straight_line"
+    ],
+    "degraded_days": [],
+    "usage": {
+      "calls": 1,
+      "input_tokens": 1231,
+      "output_tokens": 1469
+    }
+  },
+  "attractions": [
+    {
+      "name": "故宫博物院",
+      "poi_id": "B000A8UIN8"
+    },
+    {
+      "name": "故宫博物院-交泰殿",
+      "poi_id": "B000A9PIPI"
+    },
+    {
+      "name": "中国国家博物馆",
+      "poi_id": "B000A83U0P"
+    }
+  ],
+  "research_evidence_count": 5,
+  "record_id": 26,
+  "seconds": 23.51,
+  "boundary": "One local real-upstream request; not a quality benchmark or SLA; model output may degrade.",
+  "browser_checks": {
+    "login": true,
+    "saved_preferences_restored": true,
+    "history_open": true,
+    "map_loaded": true,
+    "edit_saved_version": 3,
+    "edited_visit_minutes": 230,
+    "reload_preserved_edit": true,
+    "pdf_success_notification": true,
+    "layout_no_horizontal_overflow": true,
+    "viewport_width": 1280,
+    "document_width": 1272
+  },
+  "additional_route_check": {
+    "mode": "walking",
+    "http_status": 200,
+    "distance_m": 4918,
+    "duration_seconds": 3934
+  },
+  "limitations": [
+    "One transit segment in the generated itinerary had no usable result; the UI displayed a data-gap notice.",
+    "Parent POI and an interior POI can still appear together; rule score is not human itinerary quality.",
+    "PDF UI reported success; exported file pages were not visually audited."
+  ]
+}

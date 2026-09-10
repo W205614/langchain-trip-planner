@@ -63,6 +63,14 @@
 
       <!-- 主内容区 -->
       <div class="main-content">
+        <div class="result-notices">
+          <a-alert v-if="unsaved" type="warning" show-icon message="当前修改尚未保存到服务器，请重新保存或从历史记录加载。" />
+          <a-alert v-if="quality.degraded_days?.length" type="warning" show-icon
+            :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
+          <a-alert v-if="quality.data_gaps?.length" type="info" show-icon
+            message="开放时间、预约及部分路线信息未完全核实，请在出发前确认。" />
+          <a-alert v-for="warning in quality.warnings || []" :key="warning" type="warning" :message="warning" />
+        </div>
         <!-- 顶部信息区:左侧概览+预算,右侧地图 -->
         <div class="top-info-section">
           <!-- 左侧:行程概览和预算明细 -->
@@ -100,7 +108,7 @@
             </a-card>
 
             <!-- 预算明细 -->
-            <a-card id="budget" v-if="tripPlan.budget" title="💰 预算明细" :bordered="false" class="budget-card">
+            <a-card id="budget" v-if="tripPlan.budget" title="💰 预算估算（非实时报价，未知费用未计入）" :bordered="false" class="budget-card">
               <div class="budget-grid">
                 <div class="budget-item">
                   <div class="budget-label">景点门票</div>
@@ -375,6 +383,15 @@ import { reviseHistoryDay, updateHistory } from '@/services/api'
 
 const router = useRouter()
 const tripPlan = ref<TripPlan | null>(null)
+const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
+const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
+const quality = ref(JSON.parse(sessionStorage.getItem('tripQuality') || '{}'))
+const acceptVersion = (response: any) => {
+  recordVersion.value = response.version
+  quality.value = response.quality || {}
+  sessionStorage.setItem('tripPlanVersion', String(response.version))
+  sessionStorage.setItem('tripQuality', JSON.stringify(quality.value))
+}
 const editMode = ref(false)
 const originalPlan = ref<TripPlan | null>(null)
 const attractionPhotos = ref<Record<string, string>>({})
@@ -442,6 +459,8 @@ const toggleEditMode = () => {
 // 保存修改
 const saveChanges = async () => {
   editMode.value = false
+  unsaved.value = true
+  sessionStorage.setItem('tripUnsaved', 'true')
   // 更新sessionStorage (始终保留当前渲染数据)
   if (tripPlan.value) {
     sessionStorage.setItem('tripPlan', JSON.stringify(tripPlan.value))
@@ -449,13 +468,18 @@ const saveChanges = async () => {
   // 从历史打开时: 把编辑结果持久化回数据库, 下次打开历史仍是编辑后的内容
   if (historyRecordId.value && tripPlan.value) {
     try {
-      await updateHistory(historyRecordId.value, tripPlan.value)
+      const response = await updateHistory(historyRecordId.value, tripPlan.value, recordVersion.value)
+      acceptVersion(response)
+      tripPlan.value = response.data
+      sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
+      unsaved.value = false
+      sessionStorage.removeItem('tripUnsaved')
       message.success('修改已保存到历史记录')
     } catch (error: any) {
-      message.error(error.message || '保存失败, 修改仅保留在本地')
+      message.error(error.response?.status === 409 ? '其它页面已修改行程，请从历史记录重新打开；本次修改未保存' : '保存失败，本次修改仅保留在本地')
     }
   } else {
-    message.success('修改已保存')
+    message.info('修改仅保留在当前浏览器')
   }
 
   // 重新初始化地图以反映更改
@@ -491,8 +515,9 @@ const submitRevision = async () => {
   }
   revisionLoading.value = true
   try {
-    const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction)
+    const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction, recordVersion.value)
     if (!response.success || !response.data) throw new Error(response.message || '改排失败')
+    acceptVersion(response)
     tripPlan.value = response.data
     sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
     revisionOpen.value = false
@@ -998,6 +1023,12 @@ const drawRoutes = (AMap: any, attractions: any[]) => {
 .main-content {
   flex: 1;
   min-width: 0;
+}
+
+.result-notices {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 /* 景点图片样式 */

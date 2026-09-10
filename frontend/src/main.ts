@@ -3,13 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
 import App from './App.vue'
-import Home from './views/Home.vue'
-import Result from './views/Result.vue'
-import History from './views/History.vue'
-import Login from './views/Login.vue'
-import Knowledge from './views/Knowledge.vue'
-import KnowledgeAdmin from './views/KnowledgeAdmin.vue'
-import Research from './views/Research.vue'
+const Home = () => import('./views/Home.vue')
+const Result = () => import('./views/Result.vue')
+const History = () => import('./views/History.vue')
+const Login = () => import('./views/Login.vue')
+const Knowledge = () => import('./views/Knowledge.vue')
+const KnowledgeAdmin = () => import('./views/KnowledgeAdmin.vue')
+const Research = () => import('./views/Research.vue')
 import { isAuthenticated } from './services/auth'
 
 const router = createRouter({

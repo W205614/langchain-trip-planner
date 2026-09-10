@@ -1,4 +1,7 @@
-"""基于 LangGraph 的多智能体旅行规划系统"""
+import asyncio
+from contextvars import copy_context
+from ..services.execution import remaining
+"""基于 LangGraph 的旅行规划工作流"""
 
 import json
 import logging
@@ -169,19 +172,19 @@ class GraphState(TypedDict, total=False):
 
 
 class MultiAgentTripPlanner:
-    """基于 LangGraph 的多智能体旅行规划系统
+    """基于 LangGraph 的旅行规划工作流
 
     工作流: 搜索景点 → 查询天气 → 搜索酒店 → LLM生成行程 → (LLM失败)备用计划
     数据获取节点直接调用高德服务(不走LLM), 仅行程规划调用LLM, 高效且省成本。
     """
 
     def __init__(self):
-        """初始化多智能体系统"""
-        logger.info("🔄 开始初始化多智能体旅行规划系统...")
+        """初始化旅行规划工作流"""
+        logger.info("🔄 开始初始化旅行规划工作流...")
         self.llm = get_llm()
         self.amap_service = get_amap_service()
         self.graph = self._build_graph()
-        logger.info("✅ 多智能体系统初始化成功")
+        logger.info("✅ 旅行规划工作流初始化成功")
 
     # ============ LangGraph 节点 ============
 
@@ -357,7 +360,7 @@ class MultiAgentTripPlanner:
             with ThreadPoolExecutor(max_workers=max_workers) as ex:
                 futures = {
                     ex.submit(
-                        self._generate_one_day,
+                        copy_context().run, self._generate_one_day,
                         _make_query(i), i,
                         (start + timedelta(days=i)).strftime("%Y-%m-%d"),
                         request,
@@ -430,13 +433,19 @@ class MultiAgentTripPlanner:
                 max_tokens=settings.llm_day_max_tokens
             )
 
+            day_deadline = time.monotonic() + remaining(day_timeout)
             for attempt in range(2):
                 started_at = time.perf_counter()
                 try:
+                    from ..services.eval_budget import reserve
+                    reserve(day_query, settings.llm_day_max_tokens)
+                    from ..services.execution import record_usage
+                    record_usage()
                     response = self._stream_day_response(
                         day_chain,
                         {"query": day_query},
                         lambda: self._on_day_first_token(state, day_index, started_at),
+                        timeout=max(0.001, min(day_deadline - time.monotonic(), remaining(day_timeout))),
                     )
                 except Exception as exc:
                     invoke_seconds = time.perf_counter() - started_at
@@ -462,6 +471,7 @@ class MultiAgentTripPlanner:
                 observe_daily_llm(invoke_seconds)
                 content = response.content if hasattr(response, "content") else str(response)
                 usage = getattr(response, "usage_metadata", None) or {}
+                record_usage(usage)
                 observe_model_call(
                     "trip_day",
                     invoke_seconds,
@@ -487,7 +497,7 @@ class MultiAgentTripPlanner:
                     )
                     return day_plan
                 except Exception as e:
-                    logger.warning(f"   第{attempt + 1}次单日解析失败: {str(e)[:80]}")
+                    logger.warning("单日解析失败 attempt=%s error_type=%s", attempt + 1, type(e).__name__)
                     # 自纠错: 把错误反馈给 LLM 重新生成
                     day_query = (
                         f"你上一次输出的 JSON 不符合要求, 错误: {e}\n"
@@ -498,25 +508,30 @@ class MultiAgentTripPlanner:
                 request, day_index, current_date, state, fallback_reason="invalid_response"
             )
         except Exception as e:
-            logger.warning(f"   ⚠️ 第{day_index + 1}天生成失败, 使用兜底日: {e}")
+            logger.warning("单日生成降级 day=%s error_type=%s", day_index + 1, type(e).__name__)
             return self._fallback_day(
                 request, day_index, current_date, state, fallback_reason="llm_error"
             )
 
     @staticmethod
-    def _stream_day_response(day_chain, payload: dict, on_first_token: Callable[[], None]):
-        """聚合流式 LLM 响应，同时只记录一次真实模型首 token。"""
-        response = None
-        first_token_observed = False
-        for chunk in day_chain.stream(payload):
-            content = getattr(chunk, "content", chunk)
-            if content and not first_token_observed:
-                on_first_token()
-                first_token_observed = True
-            response = chunk if response is None else response + chunk
-        if response is None:
-            raise RuntimeError("LLM 未返回任何流式内容")
-        return response
+    def _stream_day_response(day_chain, payload: dict, on_first_token: Callable[[], None], timeout=45):
+        async def consume():
+            response = None
+            first = False
+            async with asyncio.timeout(timeout):
+                stream = day_chain.astream(payload)
+                try:
+                    async for chunk in stream:
+                        if getattr(chunk, "content", chunk) and not first:
+                            first = True
+                            on_first_token()
+                        response = chunk if response is None else response + chunk
+                finally:
+                    await stream.aclose()
+            if response is None:
+                raise RuntimeError("LLM returned no content")
+            return response
+        return asyncio.run(consume())
 
     def _on_day_first_token(self, state: GraphState, day_index: int, started_at: float) -> None:
         """同时记录 Prometheus TTFT 与评测用事件，不泄露 prompt 或模型输出。"""
@@ -588,7 +603,7 @@ class MultiAgentTripPlanner:
                     visit_duration=item.visit_duration,
                     description=item.description or f"游览{poi.name}，建议合理安排时间。",
                     category=item.category or "景点",
-                    ticket_price=item.ticket_price,
+                    **({"ticket_price": item.ticket_price} if "ticket_price" in item.model_fields_set else {}),
                 )
             )
         return DayPlan(
@@ -771,7 +786,7 @@ class MultiAgentTripPlanner:
         logger.info(f"\n{'='*60}")
         logger.info(f"🚀 开始 LangGraph 工作流规划旅行...")
         logger.info(f"目的地: {request.city} | 日期: {request.start_date} 至 {request.end_date} | {request.travel_days}天")
-        logger.info(f"偏好: {', '.join(request.preferences) if request.preferences else '无'}")
+        logger.info("旅行偏好标签数量: %s", len(request.preferences))
         logger.info(f"{'='*60}\n")
 
         result = self.graph.invoke({
@@ -1041,22 +1056,8 @@ class MultiAgentTripPlanner:
         if trip_plan.budget is not None:
             return trip_plan
 
-        total_attractions = sum(a.ticket_price for day in trip_plan.days for a in day.attractions)
-        total_meals = sum(m.estimated_cost for day in trip_plan.days for m in day.meals)
-        total_hotels = sum(day.hotel.estimated_cost for day in trip_plan.days if day.hotel and day.hotel.estimated_cost)
-        total_transportation = 50 * request.travel_days
-
-        total_attractions = total_attractions or 200
-        total_meals = total_meals or 150 * request.travel_days
-        total_hotels = total_hotels or 400 * request.travel_days
-
-        trip_plan.budget = Budget(
-            total_attractions=total_attractions,
-            total_hotels=total_hotels,
-            total_meals=total_meals,
-            total_transportation=total_transportation,
-            total=total_attractions + total_hotels + total_meals + total_transportation,
-        )
+        from ..services.plan_quality import recalculate_budget
+        recalculate_budget(trip_plan)
         return trip_plan
 
     def _refresh_budget(self, trip_plan: TripPlan, request: TripRequest) -> TripPlan:

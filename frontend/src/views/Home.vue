@@ -256,7 +256,7 @@
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { fetchTravelPreferences, generateTripPlanStream, saveTravelPreferences } from '@/services/api'
+import { fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences } from '@/services/api'
 import { isAuthenticated, getUsername, clearAuth, isAdmin } from '@/services/auth'
 import type { TripFormData } from '@/types'
 import type { Dayjs } from 'dayjs'
@@ -305,6 +305,20 @@ const hotCities = ['北京', '上海', '杭州', '成都', '西安', '桂林', '
 
 onMounted(async () => {
   if (!isLoggedIn.value) return
+  const pending = JSON.parse(sessionStorage.getItem('pendingTripTask') || 'null')
+  if (pending) {
+    loading.value = true
+    try {
+      const response = await generateTripPlanStream(pending.body, progress => {
+        loadingProgress.value = progress.percent
+        loadingStatus.value = progress.message
+      })
+      storeTripResult(response)
+      await router.push('/result')
+    } catch (error: any) {
+      message.error(error.message || '恢复连接失败，可刷新后重试')
+    } finally { loading.value = false }
+  }
   try {
     const response = await fetchTravelPreferences()
     const saved = response.data
@@ -399,8 +413,7 @@ const handleSubmit = async () => {
         }
       }
       // 保存到sessionStorage (并清除历史编辑标识, 新规划不受历史影响)
-      sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
-      sessionStorage.removeItem('tripPlanId')
+      storeTripResult(response)
 
       message.success('旅行计划生成成功!')
 

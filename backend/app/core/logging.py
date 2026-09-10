@@ -7,6 +7,7 @@
 
 import logging
 import os
+import re
 from logging.handlers import RotatingFileHandler
 
 from ..config import get_settings
@@ -16,6 +17,7 @@ _LOG_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
     "logs",
 )
+_LOG_DIR = get_settings().log_dir or _LOG_DIR
 
 # 日志格式: 时间 级别 模块名: 内容
 _FORMAT = "%(asctime)s %(levelname)s %(name)s: %(message)s"
@@ -25,6 +27,18 @@ _MAX_BYTES = 5 * 1024 * 1024
 _BACKUP_COUNT = 5
 
 _configured = False
+
+
+class RedactingFormatter(logging.Formatter):
+    def format(self, record):
+        message = super().format(record)
+        settings = get_settings()
+        for name in ("amap_api_key", "llm_api_key", "embedding_api_key", "jwt_secret_key", "database_url"):
+            value = getattr(settings, name, "")
+            if value and len(value) >= 4:
+                message = message.replace(value, "[REDACTED]")
+        message = re.sub(r"(?i)([?&](?:key|api_key|token|access_token)=)[^&\s]+", r"\1[REDACTED]", message)
+        return re.sub(r"(?i)Bearer\s+[A-Za-z0-9._~-]+", "Bearer [REDACTED]", message)
 
 
 def setup_logging() -> None:
@@ -38,7 +52,7 @@ def setup_logging() -> None:
 
     settings = get_settings()
     level = getattr(logging, settings.log_level.upper(), logging.INFO)
-    formatter = logging.Formatter(_FORMAT)
+    formatter = RedactingFormatter(_FORMAT)
 
     handlers: list = [logging.StreamHandler()]  # 控制台
 

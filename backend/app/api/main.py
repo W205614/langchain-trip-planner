@@ -17,6 +17,10 @@ from ..core.exceptions import BizException, biz_exception_handler, global_except
 from ..core.rate_limit import limiter
 from ..db.database import check_database_ready, init_db
 from .routes import trip, poi, map as map_routes, history, rag, auth, knowledge, preferences, research
+from prometheus_client import REGISTRY
+from ..core.durable_metrics import DurableCollector
+
+REGISTRY.register(DurableCollector())
 
 
 # 初始化日志(幂等): 控制台 + 文件落盘。
@@ -30,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def _lifespan(app: FastAPI):
     """应用生命周期管理 (替代已弃用的 @app.on_event)
 
     startup: 打印横幅、打印配置并验证必要配置项
@@ -64,6 +68,7 @@ async def lifespan(app: FastAPI):
         bootstrap_admin_user()
     except Exception as e:
         print(f"❌ 数据库初始化失败: {e}")
+        raise
 
     # 初始化 RAG 知识库 (自动索引 data/knowledge, 未配置 key 时自动降级)
     try:
@@ -90,14 +95,29 @@ async def lifespan(app: FastAPI):
     knowledge_ingest_worker.start()
     app.state.knowledge_ingest_worker = knowledge_ingest_worker
 
+    from ..services.trip_tasks import runner
+    if settings.trip_tasks_enabled:
+        runner.start()
+
     yield  # 应用运行期间挂起
 
+    runner.stop()
     rag_sync_worker.stop()
     knowledge_ingest_worker.stop()
 
     print("\n" + "=" * 60)
     print("👋 应用正在关闭...")
     print("=" * 60 + "\n")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Queue recovery and local Chroma require a single API process per data directory.
+    from filelock import FileLock
+    from ..db.database import DATA_DIR
+    with FileLock(str(DATA_DIR / "service.lock"), timeout=0):
+        async with _lifespan(app):
+            yield
 
 
 # 创建FastAPI应用
@@ -131,7 +151,8 @@ async def add_request_context(request: Request, call_next):
     - 响应头返回 X-Request-ID / X-Process-Time, 便于排查与前端定位
     """
     start_time = time.perf_counter()
-    request_id = request.headers.get("X-Request-ID") or uuid.uuid4().hex[:16]
+    supplied_id = request.headers.get("X-Request-ID", "")
+    request_id = supplied_id if 0 < len(supplied_id) <= 64 and all(c.isalnum() or c in "-_" for c in supplied_id) else uuid.uuid4().hex[:16]
     request.state.request_id = request_id
 
     response = await call_next(request)

@@ -5,6 +5,8 @@
 基于 **LangChain + LangGraph + FastAPI** 构建的智能旅行规划助手。系统直调高德地图 Web 服务 API 获取可验证的景点、近期天气预报和酒店 POI 候选；LLM 只在受控候选上编排行程，并具备 RAG、历史记录、JWT 鉴权与基础工程化能力。
 
 
+本轮可靠性实现、接口契约、隔离验收与恢复操作见 [可靠性运行手册](docs/reliability.md)。本地 Docker 验证不代表生产流量或 SLA。
+
 ## 🧭 项目整体逻辑
 
 ```
@@ -41,12 +43,12 @@
 - 🛡️ **AI 安全分层防御**: Prompt 注入防护（不可信输入声明）、候选 POI ID 严格校验与事实字段回填、API 限流、请求追踪 ID、统一错误结构
 - ✅ **可审计的可信边界与质量控制**: LLM 仅返回候选 `poi_id`，后端以高德候选回填名称、地址和坐标；再执行去重、每日游览时长（最多 480 分钟）、餐饮完整性、天数一致性、最近邻排序与真实路线时长校验（最多 120 分钟）
 - ✨ **增量改排行程**: 历史行程可只重新安排指定一天；其它日期不变，候选 POI 排除其它日期已用景点，改排后重新执行路线校验、预算回算与私有历史向量同步
-- ⚡ **真实流式进度与幂等生成**: `POST /api/trip/plan/stream` 按 LangGraph 实际阶段推送 SSE；单进程内 `Idempotency-Key` 复用相同重试请求
+- ⚡ **真实流式进度与幂等生成**: `POST /api/trip/plan/stream` 按 LangGraph 实际阶段推送 SSE；数据库持久化任务与 `Idempotency-Key`，刷新或断线后按任务 ID 恢复
 - 🧱 **可验证交付**: GitHub Actions 执行 pytest、前端构建、Alembic 和 Docker Compose 构建校验；提供本机全栈 Docker 演示与 PostgreSQL 备份/恢复脚本
 - 🤖 **LangGraph 工作流编排**: 用 StateGraph 构建景点、天气、酒店并行查询，再汇合为逐日生成与兜底流程
 - 🧠 **RAG 最终一致性**: 内置 4 城市知识库（深圳/北京/上海/广州），默认 `text-embedding-v4` 存入 ChromaDB；历史向量按 `user_id` 隔离，通过数据库 outbox 异步同步、失败退避与重启恢复
 - 🏆 **知识库景点落地**: 知识库知名景点按名搜索补真实坐标进入行程候选；生成后每个景点自动回填门票/开放时间/交通/避坑详情
-- 📈 **集合维度自愈**: 启动时校验 Chroma 集合向量维度与嵌入模型一致，切换嵌入模型（如 1024→3072 维）自动清空重建，不再报 "expecting dimension of X, got Y"
+- 📈 **安全索引恢复**: 探测失败与维度变化只降级，保留原集合；管理员显式构建新集合并验证后切换
 - 📜 **行程历史记录**: 默认 SQLite 零配置；本机 PostgreSQL 使用 Alembic 管理 schema。支持分页、筛选、查看、编辑与删除，主数据库始终是事实源
 - 🧩 **主动偏好记忆**: 用户可选择保存交通方式、住宿偏好与旅行标签；不保存自由文本，读取、覆盖和删除均严格按用户隔离
 - 🔎 **来源优先资料研究**: 单独检索公开城市资料并返回文件名、页码和来源等级；研究模式不读取私人历史，也不把资料片段改写成未经验证的结论
@@ -288,7 +290,7 @@ cd frontend
 
 2. 安装依赖并配置环境变量
 ```bash
-npm install
+npm ci
 # 编辑 frontend/.env: 至少填 VITE_AMAP_WEB_JS_KEY (高德 Web端 JS API Key, 前端渲染地图必需)
 #   VITE_API_BASE_URL=http://localhost:9000
 #   VITE_AMAP_WEB_JS_KEY=你的_Web端JS_API_Key
@@ -303,7 +305,7 @@ npm run dev
 
 ### 本地联调（Conda 环境，一条命令启动前后端）
 
-本项目的本地联调以 Conda 环境为准。先完成后端依赖安装和前端 `npm install`，然后在**项目根目录**执行：
+本项目的本地联调以 Conda 环境为准。先完成后端依赖安装和前端 `npm ci`，然后在**项目根目录**执行：
 
 ```powershell
 conda activate langchain-trip-planner
@@ -458,7 +460,7 @@ builder.add_edge("fallback_plan", END)
 - **任意城市动态增强**: 查询未预置城市时，`ensure_city_index` 用高德搜索该城市"必去景点"→ 过滤非景点 POI → 生成结构化知识（名称/地址/坐标/类别）写入知识库，`source="gaode:<城市>"` 标记幂等，同一城市只写一次；手写 md 城市保留精选内容，两者按 `filter={city}` 天然合并
 - **向量化**: `text-embedding-3-large`（3072 维，OpenAI 兼容接口/中转），`RecursiveCharacterTextSplitter` 切块（300 字符/50 重叠）
 - **存储**: ChromaDB 双 collection——`trip_knowledge`（知识库）+ `trip_history`（增量保存生成的行程）
-- **维度自愈**: 启动时 `_ensure_collections_consistent` 校验集合维度与嵌入模型一致，切换模型自动清空重建，避免 "expecting dimension of X, got Y" 入库报错
+- **维度校验**: `_ensure_collections_consistent` 检测异常时保留旧集合并降级；管理员重建通过验证后才切换
 - **注入**: 原始检索结果保留给评测；规划 Prompt 只注入该城市 top-k=2 的片段、每片最多 600 字符，以"检索到的相关知识"段落提供事实参考；知识库景点按名补坐标进候选；生成后逐景点回填详情
 - **降级**: 未配置嵌入 Key/Base URL 时自动禁用，所有相关代码 try/except 静默跳过，不影响主流程
 - **重建索引**: `POST /api/rag/rebuild` 只替换 `source_type=markdown` 的静态块，保留审核发布的图文资料和高德动态块；状态查看 `GET /api/rag/status`。
@@ -598,7 +600,7 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 ### 质量、幂等与监控
 
 - `POST /api/trip/plan` 与流式接口的成功响应包含 `quality`：评分、告警、检查天数、真实路线距离/分钟、`route_checked`、`repairs`、`data_gaps` 与 `degraded_days`。路线可用时使用高德坐标到坐标的返回值；不可用时显式回退为直线距离估算，不将其伪装为导航时长。营业时间和预约规则目前只记录为数据缺口，尚非硬约束。
-- 对可重试的普通请求，客户端可传入 `Idempotency-Key`；相同用户、相同请求内容在当前服务进程的 10 分钟内只生成和保存一次。多副本生产部署应将该进程内存实现替换为 Redis 等共享存储。
+- 客户端传入稳定的 `Idempotency-Key`；同用户、同键与同内容复用数据库任务，内容变化返回 409。任务跨服务重启保留；当前执行器仍限定单 API 进程。
 - 图片代理和 LLM 并发门控均为单进程保护，适用于当前本机 Docker 单实例。多副本生产部署应在网关或 Redis 等共享存储层增加全局限流、并发与缓存。
 - `/metrics` 额外提供 `trip_plan_total`、`trip_plan_quality_score`、`trip_plan_quality_warnings_total`、RAG 分段耗时与调用结果。所有指标不带用户、城市或输入文本标签，避免敏感与高基数标签。
 
@@ -628,7 +630,7 @@ LLM_MODEL_ID=新模型名
 
 **Q8: 日志报 `Collection expecting embedding with dimension of X, got Y`？**
 
-切换嵌入模型（如从 1024 维 bge-m3 换到 3072 维 text-embedding-3-large）后，旧 Chroma 集合仍是旧维度。本版已内置维度自愈：启动时自动探测集合维度，不一致即清空重建。若仍报错，重启后端即可，或删掉 `backend/data/chroma` 后重启。
+切换嵌入模型（如从 1024 维 bge-m3 换到 3072 维 text-embedding-3-large）后，旧 Chroma 集合仍是旧维度。本版会保留旧集合并禁用不兼容索引。确认配置后由管理员调用 `/api/rag/rebuild`，从静态文件、已发布资料主表和历史主表构建新集合，验证后切换。不要删除日常数据目录。
 
 **Q9: 查询未预置的城市（如成都/杭州）会有知识库增强吗？**
 
@@ -696,8 +698,8 @@ LLM_MODEL_ID=新模型名
 
 ### 7. RAG 向量库维度与嵌入模型强绑定 🟢
 
-- **现状**：切换嵌入模型（如 1024→3072 维）需重建向量库。已内置启动时维度自愈（`_ensure_collections_consistent` 自动清空重建），但会丢失旧索引，需重新索引。
-- **优化方向**：多维度向量库并存 / 自动迁移，而非清空重建。
+- **现状**：切换嵌入模型（如 1024→3072 维）需重建向量库。已实现探测失败保留数据与新集合验证后切换，旧集合保留供人工检查。
+- **优化方向**：增加索引代际清理、容量与检索回归策略。
 
 ### 8. 用户体系较基础（仅账号密码，无 OAuth/找回密码）🟢
 
@@ -706,7 +708,7 @@ LLM_MODEL_ID=新模型名
 
 ### 9. P2 生产化路线（本机演示版未实施）
 
-- Redis 共享幂等与分布式限流；多实例部署时替换当前进程内实现。
+- 当前任务幂等已持久化；多实例部署仍需共享限流、跨进程任务租约及独立索引服务，本轮仅支持单进程。
 - PostgreSQL 高可用、备份策略与迁移回滚；本仓库只验证单机 PostgreSQL 与可恢复备份。
 - 高德真实路线、开放时间、预约规则的更细粒度硬约束；当前仅对路线时长做硬限制，并把营业时间标为数据缺口。
 - OpenTelemetry、Grafana 告警、云服务器 HTTPS 和公网密钥管理。

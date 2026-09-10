@@ -204,6 +204,8 @@ class Budget(BaseModel):
     total_meals: int = Field(default=0, description="餐饮总费用")
     total_transportation: int = Field(default=0, description="交通总费用")
     total: int = Field(default=0, description="总费用")
+    estimated: bool = True
+    unknown_items: List[str] = Field(default_factory=list)
 
 
 class TripPlan(BaseModel):
@@ -225,6 +227,10 @@ class TripPlanResponse(BaseModel):
     data: Optional[TripPlan] = Field(default=None, description="旅行计划数据")
     quality: Optional[dict[str, Any]] = Field(default=None, description="确定性质量校验结果")
     cached: bool = Field(default=False, description="是否由幂等缓存返回")
+    saved: bool = False
+    id: Optional[int] = None
+    version: Optional[int] = None
+    task_id: Optional[str] = None
 
 
 class POIInfo(BaseModel):

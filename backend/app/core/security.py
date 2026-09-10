@@ -14,10 +14,10 @@ import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session
 
 from ..config import get_settings
-from ..db.database import SessionLocal, get_db
+from ..db.database import SessionLocal
+from ..db.database import ensure_tables
 from ..db.models import User
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,6 @@ def create_access_token(user_id: int) -> str:
 
 def get_current_user(
     token: Optional[str] = Depends(oauth2_scheme),
-    db: Session = Depends(get_db),
 ) -> User:
     """FastAPI 依赖: 解析 Bearer token → 返回当前用户
 
@@ -77,10 +76,17 @@ def get_current_user(
     except JWTError:
         raise cred_exc
 
-    user = db.get(User, int(user_id))
-    if user is None:
+    try:
+        user_id = int(user_id)
+    except (TypeError, ValueError):
         raise cred_exc
-    return user
+    ensure_tables()
+    with SessionLocal() as db:
+        user = db.get(User, user_id)
+        if user is None:
+            raise cred_exc
+        db.expunge(user)
+        return user
 
 
 def require_admin(current_user: User = Depends(get_current_user)) -> User:

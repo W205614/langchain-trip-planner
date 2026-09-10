@@ -58,7 +58,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install frontend deps
-        run: npm ci || npm install
+        run: npm ci
 
       - name: Type-check + build
         run: npm run build
@@ -91,7 +91,7 @@ jobs:
   docker-compose-check:
     name: Docker Compose config and build
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -110,4 +110,51 @@ jobs:
         run: docker compose --env-file backend/.env config --quiet
 
       - name: Build images
-        run: docker compose --env-file backend/.env build
+        run: docker compose -p langchain-trip-planner --env-file backend/.env build
+
+      - name: Start isolated validation stack
+        run: |
+          docker compose -p trip-validation -f docker-compose.validation.yml up -d --wait postgres backend frontend
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T postgres createdb -U trip trip_tests
+
+      - name: PostgreSQL regression tests
+        run: docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
+
+      - name: Nginx contracts and business scenarios
+        run: |
+          mkdir -p evidence
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T backend python scripts/smoke_http.py --base-url http://frontend
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T backend python scripts/business_benchmark.py --base-url http://frontend --output /tmp/business.json
+          docker compose -p trip-validation -f docker-compose.validation.yml cp backend:/tmp/business.json evidence/business.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Browser recovery and isolation
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npx playwright test
+
+      - name: Isolated recovery drill
+        run: python backend/scripts/recovery_drill.py --output evidence/recovery.json
+
+      - name: Generation interrupted by container restart
+        run: |
+          python -m pip install httpx==0.28.1
+          python backend/scripts/lifecycle_smoke.py
+          cp docs/evidence/lifecycle-offline.json evidence/lifecycle.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reliability-evidence
+          path: |
+            evidence/
+            frontend/test-results/
+
+      - name: Remove validation resources
+        if: always()
+        run: docker compose -p trip-validation -f docker-compose.validation.yml down -v

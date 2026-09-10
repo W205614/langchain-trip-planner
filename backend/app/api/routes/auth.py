@@ -2,7 +2,9 @@
 
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from ...core.rate_limit import limiter
+from sqlalchemy.exc import IntegrityError
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -38,7 +40,8 @@ class TokenResponse(BaseModel):
 
 
 @router.post("/register", summary="注册", response_model=TokenResponse)
-def register(body: RegisterRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def register(request: Request, body: RegisterRequest, db: Session = Depends(get_db)):
     """注册新用户, 成功即返回 JWT (自动登录)"""
     if db.query(User).filter(User.username == body.username).first():
         raise HTTPException(
@@ -47,14 +50,19 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
         )
     user = User(username=body.username, hashed_password=hash_password(body.password))
     db.add(user)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="用户名已存在")
     db.refresh(user)
     logger.info(f"新用户注册: {user.username}")
     return TokenResponse(access_token=create_access_token(user.id), username=user.username, is_admin=user.is_admin)
 
 
 @router.post("/login", summary="登录", response_model=TokenResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     """用户名+密码登录, 返回 JWT"""
     user = db.query(User).filter(User.username == body.username).first()
     if user is None or not verify_password(body.password, user.hashed_password):

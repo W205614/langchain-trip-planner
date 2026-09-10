@@ -1,0 +1,18 @@
+groups:
+  - name: trip-reliability
+    rules:
+      - alert: TripServiceDown
+        expr: up{job="trip"} == 0
+        for: 1m
+        labels:
+          severity: critical
+      - alert: TripSyncBacklog
+        expr: sum(trip_durable_jobs{kind=~"history|knowledge",status=~"failed|waiting|retry"}) > 0
+        for: 5m
+        labels:
+          severity: warning
+      - alert: TripQueueStalled
+        expr: trip_oldest_queue_age_seconds > 300
+        for: 1m
+        labels:
+          severity: warning

@@ -145,6 +145,9 @@ const viewRecord = async (id: number) => {
     if (resp.success && resp.data.plan) {
       sessionStorage.setItem('tripPlan', JSON.stringify(resp.data.plan))
       sessionStorage.setItem('tripPlanId', String(id))
+        sessionStorage.setItem('tripPlanVersion', String(resp.data.version))
+        sessionStorage.setItem('tripQuality', JSON.stringify(resp.data.quality || {}))
+        sessionStorage.removeItem('tripUnsaved')
       router.push('/result')
     } else {
       message.error('记录数据异常')

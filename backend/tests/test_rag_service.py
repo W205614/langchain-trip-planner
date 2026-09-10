@@ -8,6 +8,22 @@ import pytest
 from langchain_core.documents import Document
 
 
+
+def published_document(document_id, text="审核通过的图片事实"):
+    from app.db.database import SessionLocal
+    from app.db.models import KnowledgeDocument
+    with SessionLocal() as db:
+        record = db.get(KnowledgeDocument, document_id)
+        if record is None:
+            record = KnowledgeDocument(id=document_id, submitted_by=1, city="北京", title="故宫攻略.webp",
+                original_filename="guide.webp", stored_path="guide.webp", sha256="a"*64,
+                media_type="image/webp", status="published", source_text=text, version=1)
+            db.add(record)
+        else:
+            record.status = "published"
+            record.source_text = text
+        db.commit()
+
 class FakeEmbedding:
     """假的嵌入对象: 返回固定维度向量, 供维度校验测试"""
 
@@ -69,7 +85,7 @@ def test_ensure_collections_consistent_same_dim(rag):
     assert rag._knowledge_store._collection.count() == 1
 
 
-def test_ensure_collections_consistent_dim_mismatch_rebuilds(rag, tmp_path):
+def test_ensure_collections_consistent_dim_mismatch_preserves_data(rag, tmp_path):
     """维度不一致时应清空重建"""
     from langchain_chroma import Chroma
     from langchain_core.documents import Document
@@ -94,7 +110,8 @@ def test_ensure_collections_consistent_dim_mismatch_rebuilds(rag, tmp_path):
         embedding_function=FakeEmbedding(dim=3072),
         persist_directory=str(tmp_path / "chroma"),
     )
-    assert fresh._collection.count() == 0
+    assert fresh._collection.count() == 1
+    assert rag.enabled is False
 
 
 def test_ensure_city_index_idempotent(rag, monkeypatch):
@@ -145,6 +162,7 @@ def test_rebuild_markdown_preserves_reviewed_multimodal_knowledge(rag, monkeypat
         Document(page_content="新静态资料", metadata={"city": "北京", "source": "beijing.md", "source_type": "markdown"}),
     ])
 
+    published_document(9)
     result = rag.build_knowledge_index()
 
     assert result["success"] is True
@@ -200,10 +218,11 @@ def test_research_evidence_uses_only_public_city_knowledge(rag):
     rag._history_store = MagicMock()
     rag._knowledge_store.similarity_search_by_vector.return_value = [
         Document(page_content="故宫需提前预约", metadata={
-            "source": "故宫参观须知.pdf", "page": 2, "source_type": "multimodal", "source_tier": "official",
+            "source": "故宫参观须知.pdf", "page": 2, "source_type": "multimodal", "source_tier": "official", "document_id": 10,
         })
     ]
 
+    published_document(10, "故宫需提前预约")
     evidence = rag.retrieve_research_evidence("预约要求", "北京")
 
     embedding.embed_query.assert_called_once_with("北京 预约要求")

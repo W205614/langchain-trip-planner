@@ -7,7 +7,7 @@ import json
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, Request, Header
 from sqlalchemy.orm import Session
 
 from ...core.exceptions import BizException
@@ -18,7 +18,7 @@ from ...db.models import User
 from ...models.schemas import TripPlan, TripRevisionRequest
 from ...agents.trip_planner_agent import get_trip_planner_agent
 from ...services.amap_service import get_amap_service
-from ...services.plan_quality import evaluate_plan, repair_plan_routes
+from ...services.plan_quality import evaluate_plan, repair_plan_routes, recalculate_budget
 from ...services import history_service
 
 router = APIRouter(prefix="/history", tags=["历史记录"])
@@ -60,6 +60,8 @@ def get_history(
         "success": True,
         "data": {
             "id": record.id,
+            "version": record.version,
+            "quality": json.loads(record.quality_json),
             "city": record.city,
             "start_date": record.start_date,
             "end_date": record.end_date,
@@ -78,14 +80,19 @@ def get_history(
 def update_history(
     record_id: int,
     plan: TripPlan,
+    expected_version: int = Header(..., alias="If-Match", ge=1),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),  # 需登录
 ):
     """编辑保存: 用前端编辑后的完整行程计划覆盖历史记录 (仅限本人记录)"""
-    record = history_service.update_trip_record(db, current_user.id, record_id, plan)
+    recalculate_budget(plan)
+    quality = evaluate_plan(plan, len(plan.days)).to_dict()
+    quality["data_gaps"].append("user_edited_plan_not_externally_verified")
+    record = history_service.update_trip_record(db, current_user.id, record_id, plan, expected_version, quality)
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
-    return {"success": True, "message": "更新成功", "id": record.id, "rag_sync_pending": True}
+    return {"success": True, "message": "更新成功", "id": record.id, "version": record.version,
+            "data": plan, "quality": quality, "saved": True, "rag_sync_pending": True}
 
 
 @router.post("/{record_id}/revise-day", summary="增量改排行程中的一天")
@@ -94,6 +101,7 @@ def revise_history_day(
     request: Request,
     record_id: int,
     body: TripRevisionRequest,
+    expected_version: int = Header(..., alias="If-Match", ge=1),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -101,6 +109,8 @@ def revise_history_day(
     record = history_service.get_trip_record(db, current_user.id, record_id)
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
+    if record.version != expected_version:
+        raise BizException("行程版本冲突，请重新加载", status_code=409, code="VERSION_CONFLICT")
     try:
         trip_plan = TripPlan.model_validate_json(record.plan_json)
     except ValueError as exc:
@@ -117,8 +127,9 @@ def revise_history_day(
         raise BizException(str(exc), status_code=422) from exc
 
     route_quality = repair_plan_routes(trip_plan, get_amap_service(), trip_request.transportation)
+    recalculate_budget(trip_plan)
     quality = evaluate_plan(trip_plan, trip_request.travel_days).to_dict() | route_quality
-    updated = history_service.update_trip_record(db, current_user.id, record_id, trip_plan)
+    updated = history_service.update_trip_record(db, current_user.id, record_id, trip_plan, expected_version, quality)
     if updated is None:  # 防御并发删除；不覆盖其它用户记录。
         raise BizException("历史记录不存在", status_code=404)
     return {
@@ -127,6 +138,8 @@ def revise_history_day(
         "data": trip_plan,
         "quality": quality,
         "id": updated.id,
+        "version": updated.version,
+        "saved": True,
         "rag_sync_pending": True,
     }
 

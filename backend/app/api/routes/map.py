@@ -2,7 +2,8 @@
 
 import logging
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
+from ...core.rate_limit import limiter
 
 from ...models.schemas import (
     POISearchRequest,
@@ -25,7 +26,9 @@ logger = logging.getLogger(__name__)
     summary="搜索POI",
     description="根据关键词搜索POI(兴趣点)",
 )
+@limiter.limit("30/minute")
 def search_poi(
+    request: Request,
     keywords: str = Query(..., description="搜索关键词", examples=["故宫"]),
     city: str = Query(..., description="城市", examples=["北京"]),
     citylimit: bool = Query(True, description="是否限制在城市范围内"),
@@ -57,7 +60,9 @@ def search_poi(
     summary="查询天气",
     description="查询指定城市的天气信息",
 )
+@limiter.limit("30/minute")
 def get_weather(
+    request: Request,
     city: str = Query(..., description="城市名称", examples=["北京"])
 ):
     """
@@ -85,7 +90,8 @@ def get_weather(
     summary="规划路线",
     description="规划两点之间的路线",
 )
-def plan_route(request: RouteRequest):
+@limiter.limit("30/minute")
+def plan_route(request: Request, body: RouteRequest):
     """
     规划路线 (同步端点, 线程池执行, 不阻塞事件循环)
 
@@ -97,11 +103,11 @@ def plan_route(request: RouteRequest):
     """
     service = get_amap_service()
     route_info = service.plan_route(
-        origin_address=request.origin_address,
-        destination_address=request.destination_address,
-        origin_city=request.origin_city,
-        destination_city=request.destination_city,
-        route_type=request.route_type,
+        origin_address=body.origin_address,
+        destination_address=body.destination_address,
+        origin_city=body.origin_city,
+        destination_city=body.destination_city,
+        route_type=body.route_type,
     )
 
     return RouteResponse(

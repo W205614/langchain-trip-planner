@@ -11,6 +11,7 @@ from ...core.security import get_current_user, require_admin
 from ...db.database import DATA_DIR, get_db
 from ...db.models import KnowledgeDocument, KnowledgeIngestJob, User
 from ...services.knowledge_ingest import MAX_UPLOAD_BYTES, content_hash, detect_upload_type, save_uploaded_content
+from ...services.coordination import knowledge_serialized
 
 router = APIRouter(prefix="/knowledge", tags=["公共知识库"])
 
@@ -21,6 +22,7 @@ def _serialize(document: KnowledgeDocument) -> dict:
         "original_filename": document.original_filename, "status": document.status,
         "source_tier": document.source_tier,
         "review_note": document.review_note, "page_count": document.page_count,
+        "version": document.version,
         "submitted_by": document.submitted_by, "reviewed_by": document.reviewed_by,
         "created_at": document.created_at.isoformat() if document.created_at else None,
         "updated_at": document.updated_at.isoformat() if document.updated_at else None,
@@ -80,47 +82,47 @@ def admin_submissions(status_filter: str | None = None, db: Session = Depends(ge
 
 
 @router.post("/admin/submissions/{document_id}/approve", summary="审核通过并进入解析队列")
+@knowledge_serialized
 def approve_submission(document_id: int, body: ReviewRequest, db: Session = Depends(get_db), current_user: User = Depends(require_admin)):
     document = db.get(KnowledgeDocument, document_id)
     if document is None:
         raise HTTPException(status_code=404, detail="资料不存在")
-    if document.status == "published":
-        raise HTTPException(status_code=409, detail="资料已经发布")
+    if document.status not in {"pending", "rejected", "failed"}:
+        raise HTTPException(status_code=409, detail="当前状态不能重复审核")
+    document.version += 1
     document.status, document.reviewed_by, document.review_note = "queued", current_user.id, body.note.strip()
     document.source_tier = body.source_tier
-    db.add(KnowledgeIngestJob(document_id=document.id, status="pending"))
+    db.add(KnowledgeIngestJob(document_id=document.id, document_version=document.version, status="pending"))
     db.commit()
     return {"success": True, "message": "审核通过，正在解析并写入知识库", "data": _serialize(document)}
 
 
 @router.post("/admin/submissions/{document_id}/reject", summary="拒绝资料投稿")
+@knowledge_serialized
 def reject_submission(document_id: int, body: ReviewRequest, db: Session = Depends(get_db), current_user: User = Depends(require_admin)):
     document = db.get(KnowledgeDocument, document_id)
     if document is None:
         raise HTTPException(status_code=404, detail="资料不存在")
-    if document.status == "published":
+    if document.status in {"published", "deleted"}:
         raise HTTPException(status_code=409, detail="已发布资料请使用删除接口")
     document.status, document.reviewed_by = "rejected", current_user.id
+    document.version += 1
     document.review_note = body.note.strip() or "管理员拒绝发布"
     db.commit()
     return {"success": True, "message": "已拒绝该资料", "data": _serialize(document)}
 
 
 @router.delete("/admin/submissions/{document_id}", summary="删除已发布或待审资料")
+@knowledge_serialized
 def delete_submission(document_id: int, db: Session = Depends(get_db), _: User = Depends(require_admin)):
     document = db.get(KnowledgeDocument, document_id)
     if document is None:
         raise HTTPException(status_code=404, detail="资料不存在")
-    if document.status == "published":
-        from ...services.rag_service import get_rag_service
-        rag = get_rag_service()
-        if rag.enabled and not rag.delete_public_knowledge_document(document.id):
-            raise HTTPException(status_code=503, detail="向量知识删除失败，请稍后重试")
-    path = DATA_DIR / document.stored_path
-    db.delete(document)
+    if document.status == "deleted":
+        return {"success": True, "message": "资料已删除"}
+    document.status = "deleted"
+    document.version += 1
+    document.source_text = ""
+    db.add(KnowledgeIngestJob(document_id=document.id, document_version=document.version, status="pending"))
     db.commit()
-    try:
-        path.unlink(missing_ok=True)
-    except OSError:
-        pass
-    return {"success": True, "message": "资料及其公共知识已删除"}
+    return {"success": True, "message": "资料已不可检索，文件与向量清理已排队"}

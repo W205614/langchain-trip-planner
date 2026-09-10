@@ -10,6 +10,7 @@
 !deploy/.env.example
 backend/data/chroma/
 backend/data/trip_planner.db*
+backend/data/service.lock
 backend/data/backups/
 backend/data/knowledge_uploads/
 backend/evals/rag_report.json
@@ -21,3 +22,6 @@ frontend/.vite/
 backend/.pytest_cache/
 __pycache__/
 *.py[cod]
+.codex-*/
+backend/.codex-*/
+.pytest_cache/

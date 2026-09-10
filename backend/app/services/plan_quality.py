@@ -18,6 +18,27 @@ MAX_VISIT_MINUTES_PER_DAY = 480
 MAX_ROUTE_MINUTES_PER_DAY = 120
 
 
+def recalculate_budget(plan: TripPlan) -> None:
+    """Recompute after repair; zero remains zero and absent prices are explicit."""
+    from ..models.schemas import Budget
+    attractions = [a for day in plan.days for a in day.attractions]
+    meals = [m for day in plan.days for m in day.meals]
+    hotels = [day.hotel for day in plan.days if day.hotel]
+    # Serialization fills numeric defaults; retain the original uncertainty on edits/reloads.
+    unknown = list(plan.budget.unknown_items) if plan.budget else []
+    if any("ticket_price" not in a.model_fields_set for a in attractions):
+        unknown.append("attraction_prices")
+    if any("estimated_cost" not in m.model_fields_set for m in meals):
+        unknown.append("meal_prices")
+    if len(hotels) < max(0, len(plan.days) - 1) or any("estimated_cost" not in h.model_fields_set for h in hotels):
+        unknown.append("hotel_prices")
+    unknown.append("transportation_prices")
+    values = dict(total_attractions=sum(a.ticket_price for a in attractions),
+                  total_meals=sum(m.estimated_cost for m in meals),
+                  total_hotels=sum(h.estimated_cost for h in hotels), total_transportation=0)
+    plan.budget = Budget(**values, total=sum(values.values()), estimated=True, unknown_items=sorted(set(unknown)))
+
+
 class RoutePlanner(Protocol):
     """最小路线接口，方便在离线测试中替换高德客户端。"""
 

@@ -1,0 +1,62 @@
+# Dedicated project (-p trip-validation); never mounts backend/data or reads backend/.env.
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_USER: trip
+      POSTGRES_PASSWORD: validation-only
+      POSTGRES_DB: trip
+    volumes:
+      - validation_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U trip -d trip]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  backend:
+    image: langchain-trip-planner-backend
+    environment: &validation_environment
+      APP_ENV: validation
+      VALIDATION_ALLOW_FIXTURES: "yes"
+      DATABASE_URL: postgresql+psycopg://trip:validation-only@postgres:5432/trip
+      AMAP_API_KEY: test
+      LLM_API_KEY: test
+      LLM_BASE_URL: http://127.0.0.1:9/v1
+      JWT_SECRET_KEY: validation-secret-not-for-production-0123456789
+      RAG_ENABLED: "false"
+      DATA_DIR: /app/data
+      LOG_DIR: /tmp/logs
+    command: [sh, -c, "python -m alembic upgrade head && exec python scripts/validation_server.py"]
+    volumes:
+      - validation_data:/app/data
+      - ./backend/scripts:/app/scripts:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz')"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+  frontend:
+    image: langchain-trip-planner-frontend
+    ports: ["127.0.0.1:18080:80"]
+    depends_on:
+      backend:
+        condition: service_healthy
+  tests:
+    image: langchain-trip-planner-backend
+    profiles: [test]
+    environment:
+      <<: *validation_environment
+      TEST_DATABASE_URL: postgresql+psycopg://trip:validation-only@postgres:5432/trip_tests
+      DATABASE_URL: postgresql+psycopg://trip:validation-only@postgres:5432/trip_tests
+    volumes:
+      - ./backend/tests:/app/tests:ro
+    command: [sh, -c, "python -m alembic upgrade head && python -m pytest -q -p no:cacheprovider --basetemp=/tmp/pytest --tb=short --show-capture=no"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  validation_postgres:
+  validation_data:

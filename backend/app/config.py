@@ -42,6 +42,17 @@ class Settings(BaseSettings):
     # 本地默认 SQLite；生产可设置 DATABASE_URL 为 PostgreSQL 等 SQLAlchemy 连接串。
     # 不配置时保留零依赖、可离线启动的本地体验。
     database_url: str = Field(default="")
+    data_dir: str = ""
+    chroma_dir: str = ""
+    upload_dir: str = ""
+    log_dir: str = ""
+    rag_enabled: bool = True
+    trip_task_timeout_seconds: int = Field(default=300, ge=1, le=1800)
+    trip_task_queue_limit: int = Field(default=32, ge=1, le=1000)
+    trip_tasks_enabled: bool = True
+    live_eval_enabled: bool = False
+    live_eval_max_calls: int = Field(default=0, ge=0)
+    live_eval_max_cost_usd: float = Field(default=0, ge=0)
 
     # CORS配置 - 使用字符串,在代码中分割
     cors_origins: str = "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000"

@@ -16,6 +16,8 @@
 """
 
 import logging
+import json
+from functools import wraps
 import os
 import re
 from pathlib import Path
@@ -28,6 +30,15 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from ..config import get_settings
 from ..core.rag_metrics import observe_rag_operation
 from ..models.schemas import TripPlan, TripRequest
+from .coordination import rag_lock
+
+
+def serialized(method):
+    @wraps(method)
+    def wrapped(*args, **kwargs):
+        with rag_lock:
+            return method(*args, **kwargs)
+    return wrapped
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +82,8 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
             api_key=self.api_key,
             base_url=self.base_url,
             check_embedding_ctx_length=False,
+            request_timeout=20,
+            max_retries=0,
         )
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
@@ -85,9 +98,9 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         return self._client().embed_query(text.replace("\n", " "))
 
 # backend/data/knowledge 与 backend/data/chroma
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
-KNOWLEDGE_DIR = DATA_DIR / "knowledge"
-CHROMA_DIR = DATA_DIR / "chroma"
+from ..db.database import DATA_DIR
+KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / "data" / "knowledge"
+CHROMA_DIR = Path(get_settings().chroma_dir).resolve() if get_settings().chroma_dir else DATA_DIR / "chroma"
 
 _KNOWLEDGE_COLLECTION = "trip_knowledge"
 _HISTORY_COLLECTION = "trip_history"
@@ -101,6 +114,8 @@ class RagService:
         self._embedding = None
         self._knowledge_store = None
         self._history_store = None
+        self._collection_names = {}
+        self._degraded = False
         self._text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=300,
             chunk_overlap=50,
@@ -112,6 +127,12 @@ class RagService:
 
     def _init(self) -> None:
         """初始化嵌入模型与向量库 (失败则降级禁用)"""
+        if not self.settings.rag_enabled:
+            return
+        manifest = CHROMA_DIR / "active-index.json"
+        if manifest.exists():
+            self._collection_names = json.loads(manifest.read_text(encoding="utf-8"))
+            self._degraded = self._collection_names.get("embedding_model") != self.settings.embedding_model
         api_key = self.settings.embedding_api_key or self.settings.llm_api_key
         base_url = self.settings.embedding_base_url or self.settings.llm_base_url
         if not api_key or not base_url:
@@ -131,12 +152,12 @@ class RagService:
             )
             self._ensure_collections_consistent()
             self._knowledge_store = Chroma(
-                collection_name=_KNOWLEDGE_COLLECTION,
+                collection_name=self._collection_names.get(_KNOWLEDGE_COLLECTION, _KNOWLEDGE_COLLECTION),
                 embedding_function=self._embedding,
                 persist_directory=str(CHROMA_DIR),
             )
             self._history_store = Chroma(
-                collection_name=_HISTORY_COLLECTION,
+                collection_name=self._collection_names.get(_HISTORY_COLLECTION, _HISTORY_COLLECTION),
                 embedding_function=self._embedding,
                 persist_directory=str(CHROMA_DIR),
             )
@@ -156,14 +177,14 @@ class RagService:
         切换嵌入模型(如 bge-m3 1024 维 → text-embedding-3-large 3072 维)后,
         旧的 Chroma 集合仍按旧维度建表, 新向量写入会报
         "Collection expecting embedding with dimension of X, got Y"。
-        此处每次启动探测集合维度, 不一致则清空该集合让首次索引/入库按新维度重建。
+        此处每次启动探测集合维度, 不一致时禁用当前检索，保留集合并等待管理员显式重建。
         """
         try:
             from langchain_chroma import Chroma
 
             for name in (_KNOWLEDGE_COLLECTION, _HISTORY_COLLECTION):
                 store = Chroma(
-                    collection_name=name,
+                    collection_name=getattr(self, "_collection_names", {}).get(name, name),
                     embedding_function=self._embedding,
                     persist_directory=str(CHROMA_DIR),
                 )
@@ -179,26 +200,27 @@ class RagService:
                     if stored_dim != len(sample):
                         logger.warning(
                             f"⚠️  集合 [{name}] 向量维度 {stored_dim} 与当前嵌入 {len(sample)} 不一致, "
-                            f"清空重建 (可能由切换嵌入模型引起)"
+                            f"保留原集合，等待管理员重建"
                         )
-                        store.delete_collection()
+                        self._degraded = True
+                        logger.error("Index rebuild required; existing collection retained")
                 except Exception as e:
-                    logger.warning(f"⚠️  集合 [{name}] 维度探测失败, 按需重建: {e}")
-                    store.delete_collection()
+                    logger.warning(f"⚠️  集合 [{name}] 维度探测失败, 保留集合并降级: {e}")
+                    self._degraded = True
         except Exception as e:
             logger.warning(f"⚠️  集合一致性校验失败: {e}")
 
     @property
     def enabled(self) -> bool:
         """RAG 是否可用"""
-        return self._embedding is not None
+        return self._embedding is not None and not getattr(self, "_degraded", False)
 
     def _new_store(self, collection_name: str):
         """(重建用) 创建新的 Chroma 实例"""
         from langchain_chroma import Chroma
 
         return Chroma(
-            collection_name=collection_name,
+            collection_name=getattr(self, "_collection_names", {}).get(collection_name, collection_name),
             embedding_function=self._embedding,
             persist_directory=str(CHROMA_DIR),
         )
@@ -261,45 +283,16 @@ class RagService:
         return self.build_knowledge_index()["success"]
 
     def build_knowledge_index(self, retries: int = 2) -> dict:
-        """重建静态 Markdown 知识索引，不清除动态或审核发布的公共资料。
-
-        网络瞬断(嵌入 API 偶发抖动)时自动重试 retries 次, 避免一次性失败留空库。
-        公共图文资料和高德动态资料共享 collection，不能为重建 Markdown 而删除。
-        """
-         # ① RAG 没启用 → 直接报告"未启用"
-        if not self.enabled:
-            return {"success": False, "message": "RAG 未启用 (缺少嵌入配置)", "chunks": 0}
-        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
-        #  ② 读取 knowledge/*.md 并切块
-        documents = self._load_knowledge_documents()
-        # ③ 目录为空 → 报告"知识目录为空"
-        if not documents:
-            return {"success": True, "message": "知识目录为空", "chunks": 0}
-
-        import time as _time
-
-        last_err = None
-        for attempt in range(retries + 1):
-            try:
-                # ④ 仅替换静态 Markdown 块；保留 source_type=multimodal 和高德动态块。
-                self._knowledge_store.delete(where={"source_type": "markdown"})
-                 # ⑤ 全部向量化并写入
-                with observe_rag_operation("knowledge_index_embedding"):
-                    self._knowledge_store.add_documents(documents)
-                logger.info(f"📚 静态知识索引重建完成: {len(documents)} 个文本块")
-                return {"success": True, "message": f"已替换 {len(documents)} 个静态文本块", "chunks": len(documents)}
-            except Exception as e:
-                last_err = e
-                if attempt < retries:
-                    # 网络瞬断(嵌入API抖动)等可恢复错误, 退避重试
-                    logger.warning(f"⚠️ 知识索引构建失败(第{attempt + 1}次), 重试中: {e}")
-                    _time.sleep(2 * (attempt + 1))
-        # ⑦ 多次失败 → 记录错误并返回失败信息
-        logger.error(f"❌ 知识索引构建失败: {last_err}")
-        return {"success": False, "message": str(last_err), "chunks": 0}
+        from .index_rebuild import rebuild
+        try:
+            return rebuild(self)
+        except Exception:
+            logger.exception("Index rebuild failed; active generation retained")
+            return {"success": False, "message": "索引重建失败，原索引保留，请查看服务日志", "chunks": 0}
 
     # ============ 历史行程入库 ============
 
+    @serialized
     def add_history_plan(
         self, record_id: int, user_id: int, request: TripRequest, trip_plan: TripPlan
     ) -> bool:
@@ -342,6 +335,7 @@ class RagService:
 
     # ============ 检索 ============
 
+    @serialized
     def delete_history_plan(self, record_id: int, user_id: int) -> bool:
         """删除历史记录时同步移除其私有向量，遵守数据删除语义。"""
         if not self.enabled:
@@ -354,6 +348,7 @@ class RagService:
             logger.warning("历史向量删除失败: record_id=%s, error=%s", record_id, exc)
             return False
 
+    @serialized
     def replace_public_knowledge_document(
         self,
         document_id: int,
@@ -361,6 +356,7 @@ class RagService:
         title: str,
         page_texts: List[str],
         source_tier: str = "community",
+        document_version: int = 1,
     ) -> bool:
         """以来源文档为单位替换公共图文知识，保留页码与可追溯元数据。"""
         if not self.enabled:
@@ -381,6 +377,7 @@ class RagService:
                             "source_type": "multimodal",
                             "source_tier": source_tier,
                             "document_id": document_id,
+                            "document_version": document_version,
                             "page": page,
                             "chunk_id": chunk_id,
                         },
@@ -394,6 +391,7 @@ class RagService:
             logger.warning("公共图文知识写入失败: document_id=%s, error=%s", document_id, exc)
             return False
 
+    @serialized
     def delete_public_knowledge_document(self, document_id: int) -> bool:
         if not self.enabled:
             return False
@@ -405,6 +403,7 @@ class RagService:
             logger.warning("公共图文知识删除失败: document_id=%s, error=%s", document_id, exc)
             return False
 
+    @serialized
     def retrieve(
         self, query: str, city: Optional[str] = None, k: int = 3, user_id: Optional[int] = None
     ) -> List[str]:
@@ -425,7 +424,7 @@ class RagService:
                     docs = self._knowledge_store.similarity_search_by_vector(
                         query_embedding, k=k, filter={"city": city}
                     )
-                for doc in docs:
+                for doc in self._visible_documents(docs):
                     source = doc.metadata.get("source", "未知来源")
                     page = doc.metadata.get("page")
                     source_label = f"{source} 第{page}页" if page else source
@@ -439,10 +438,31 @@ class RagService:
                     docs = self._history_store.similarity_search_by_vector(
                         query_embedding, k=2, filter={"user_id": user_id}
                     )
-                results.extend(f"[我的历史行程] {doc.page_content}" for doc in docs)
+                results.extend(f"[我的历史行程] {doc.page_content}" for doc in self._visible_documents(docs, user_id))
         except Exception as e:
             logger.warning(f"⚠️  RAG 检索失败: {e}")
         return results
+
+    @staticmethod
+    def _visible_documents(documents, user_id=None):
+        from ..db.database import SessionLocal
+        from ..db.models import KnowledgeDocument, TripRecord
+        visible = []
+        with SessionLocal() as db:
+            for doc in documents:
+                meta = doc.metadata
+                if meta.get("source_type") == "multimodal":
+                    if not meta.get("document_id"):
+                        continue
+                    record = db.get(KnowledgeDocument, meta["document_id"])
+                    if record is None or record.status != "published" or record.version != int(meta.get("document_version", 1)):
+                        continue
+                if "record_id" in meta:
+                    record = db.get(TripRecord, meta["record_id"])
+                    if record is None or record.user_id != user_id:
+                        continue
+                visible.append(doc)
+        return visible
 
     @staticmethod
     def _source_tier_for_document(metadata: dict) -> str:
@@ -455,6 +475,7 @@ class RagService:
             return "amap_live"
         return "community"
 
+    @serialized
     def retrieve_research_evidence(self, query: str, city: str, k: int = 5) -> List[dict]:
         """返回可直接展示的公开资料证据，不读取任何用户私有历史。"""
         if not self.enabled or not query.strip() or not city.strip():
@@ -477,7 +498,7 @@ class RagService:
                     "source_tier": self._source_tier_for_document(document.metadata),
                     "chunk_id": document.metadata.get("chunk_id", ""),
                 }
-                for document in docs
+                for document in self._visible_documents(docs)
             ]
         except Exception as exc:
             logger.warning("旅行资料研究检索失败: %s", exc)
@@ -518,6 +539,7 @@ class RagService:
         )
         return header + "\n" + "\n\n".join(f"- {c}" for c in visible_chunks)
 
+    @serialized
     def ensure_city_index(self, city: str) -> bool:
         """确保任意城市在知识库中有可检索数据 (幂等)。
 
@@ -579,6 +601,7 @@ class RagService:
             logger.warning(f"⚠️  任意城市增强失败(不影响主流程): {e}")
             return False
 
+    @serialized
     def get_knowledge_attractions(self, city: str, max_names: int = 5) -> List[str]:
         """从知识库提取该城市知名景点名 (供补充进"可选景点"列表, 让LLM能真实采用)
 
@@ -597,7 +620,7 @@ class RagService:
                 filter={"city": city},
             )
             names: List[str] = []
-            for doc in docs:
+            for doc in self._visible_documents(docs):
                 for m in re.finditer(r"^###\s+(.+)$", doc.page_content, re.M):
                     name = m.group(1).strip()
                     if name and name not in names:
@@ -615,6 +638,7 @@ class RagService:
         """
         return self.get_attraction_rag_texts([name], city, max_chars).get(name, "")
 
+    @serialized
     def get_attraction_rag_texts(
         self, names: List[str], city: str, max_chars: int = 320
     ) -> dict[str, str]:
@@ -638,6 +662,7 @@ class RagService:
                 docs = self._knowledge_store.similarity_search_by_vector(
                     embedding, k=1, filter={"city": city}
                 )
+                docs = self._visible_documents(docs)
                 if not docs:
                     continue
                 lines = []

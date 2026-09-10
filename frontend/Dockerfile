@@ -2,7 +2,7 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci --fetch-retries=5 --fetch-retry-mintimeout=10000
 
 COPY . .
 # 前端 .env 的地图 Key 属于浏览器公开配置；Docker 演示强制同源 API，

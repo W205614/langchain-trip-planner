@@ -16,14 +16,16 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 from sqlalchemy import select
+from sqlalchemy.orm import object_session
 
 from ..config import get_settings
 from ..core.trip_metrics import observe_model_call
 from ..db.database import DATA_DIR, SessionLocal
 from ..db.models import KnowledgeDocument, KnowledgeIngestJob
+from .coordination import knowledge_lock
 
 logger = logging.getLogger(__name__)
-UPLOAD_DIR = DATA_DIR / "knowledge_uploads"
+UPLOAD_DIR = Path(get_settings().upload_dir).resolve() if get_settings().upload_dir else DATA_DIR / "knowledge_uploads"
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 MAX_PDF_PAGES = 10
 MAX_ATTEMPTS = 5
@@ -59,12 +61,13 @@ def save_uploaded_content(document_id: int, content: bytes, suffix: str) -> str:
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     relative = Path("knowledge_uploads") / f"{document_id}{suffix}"
     path = DATA_DIR / relative
+    path = UPLOAD_DIR / relative.name
     path.write_bytes(content)
-    return relative.as_posix()
+    return relative.name
 
 
 def _render_pages(document: KnowledgeDocument) -> list[tuple[int, bytes, str]]:
-    path = DATA_DIR / document.stored_path
+    path = upload_path(document.stored_path)
     content = path.read_bytes()
     if document.media_type != "application/pdf":
         return [(1, content, document.media_type)]
@@ -78,6 +81,8 @@ def _render_pages(document: KnowledgeDocument) -> list[tuple[int, bytes, str]]:
             raise ValueError(f"PDF 最多允许 {MAX_PDF_PAGES} 页")
         pages = []
         for index, page in enumerate(pdf, start=1):
+            if page.rect.width * page.rect.height * 2.25 > 24_000_000:
+                raise ValueError("PDF page exceeds rendering pixel budget")
             pix = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5), alpha=False)
             pages.append((index, pix.tobytes("png"), "image/png"))
         return pages
@@ -153,8 +158,27 @@ def _page_text(title: str, page: int, extraction: VisionExtraction) -> str:
     return "\n".join(lines)
 
 
+class PublicationCancelled(RuntimeError):
+    pass
+
+
+class IndexUnavailable(RuntimeError):
+    pass
+
+
+def upload_path(stored_path):
+    # Older records include knowledge_uploads/; new records store a basename.
+    name = Path(stored_path).name
+    return UPLOAD_DIR / name
+
+
 def process_document(db, document: KnowledgeDocument, extractor: VisionExtractor | None = None) -> None:
     """解析资料，只有所有页成功后才整体替换向量，避免部分公开。"""
+    from .rag_service import get_rag_service
+    rag = get_rag_service()
+    if not rag.enabled:
+        raise IndexUnavailable("RAG 暂不可用")
+    document_id, version = document.id, document.version
     extractor = extractor or VisionExtractor()
     pages = _render_pages(document)
     page_texts = [
@@ -165,14 +189,21 @@ def process_document(db, document: KnowledgeDocument, extractor: VisionExtractor
 
     rag = get_rag_service()
     if not rag.enabled:
-        raise RuntimeError("RAG 未启用，不能发布公共知识")
-    if not rag.replace_public_knowledge_document(
-        document.id, document.city, document.title, page_texts, source_tier=document.source_tier
-    ):
-        raise RuntimeError("公共知识向量化失败")
-    document.page_count = len(page_texts)
-    document.source_text = "\n\n".join(page_texts)
-    document.status = "published"
+        raise IndexUnavailable("RAG 暂不可用")
+    with knowledge_lock:
+        db.rollback()  # End the old read snapshot before validating publication permission.
+        current = db.get(KnowledgeDocument, document_id, populate_existing=True)
+        if current is None or current.version != version or current.status not in {"queued", "processing"}:
+            raise PublicationCancelled("Publication superseded")
+        if not rag.replace_public_knowledge_document(
+            current.id, current.city, current.title, page_texts, source_tier=current.source_tier,
+            document_version=version,
+        ):
+            raise RuntimeError("公共知识向量化失败")
+        current.page_count = len(page_texts)
+        current.source_text = "\n\n".join(page_texts)
+        current.status = "published"
+        db.commit()
 
 
 class KnowledgeIngestWorker:
@@ -205,7 +236,7 @@ class KnowledgeIngestWorker:
         db = self._session_factory()
         try:
             job = db.scalar(select(KnowledgeIngestJob).where(
-                KnowledgeIngestJob.status.in_(("pending", "retry", "running")),
+                KnowledgeIngestJob.status.in_(("pending", "retry", "running", "waiting")),
                 KnowledgeIngestJob.next_retry_at <= _utcnow(),
             ).order_by(KnowledgeIngestJob.id).limit(1))
             if job is None:
@@ -214,13 +245,46 @@ class KnowledgeIngestWorker:
             job.attempts += 1
             document = db.get(KnowledgeDocument, job.document_id)
             db.commit()
-            if document is None or document.status not in {"queued", "processing", "failed"}:
-                job.status = "succeeded"
+            if document is None or document.version != job.document_version:
+                job.status = "cancelled"
                 db.commit()
                 return True
-            document.status = "processing"
+            if document.status == "deleted":
+                from .rag_service import get_rag_service
+                rag = get_rag_service()
+                if not rag.enabled or not rag.delete_public_knowledge_document(document.id):
+                    job.status = "retry"
+                    job.next_retry_at = _utcnow() + timedelta(seconds=30)
+                else:
+                    upload_path(document.stored_path).unlink(missing_ok=True)
+                    job.status = "succeeded"
+                db.commit()
+                return True
+            if document.status not in {"queued", "processing", "failed"}:
+                job.status = "cancelled"
+                db.commit()
+                return True
+            with knowledge_lock:
+                db.refresh(document)
+                if document.version != job.document_version or document.status not in {"queued", "processing", "failed"}:
+                    job.status = "cancelled"
+                    db.commit()
+                    return True
+                document.status = "processing"
+                db.commit()
             try:
                 process_document(db, document)
+            except PublicationCancelled:
+                job.status = "cancelled"
+            except IndexUnavailable:
+                db.refresh(document)
+                if document.version != job.document_version or document.status in {"deleted", "rejected"}:
+                    job.status = "cancelled"
+                else:
+                    job.status = "waiting"
+                    job.attempts -= 1
+                    job.next_retry_at = _utcnow() + timedelta(seconds=30)
+                    document.status = "queued"
             except Exception as exc:
                 self._retry(job, document, exc)
             else:
@@ -237,7 +301,12 @@ class KnowledgeIngestWorker:
 
     @staticmethod
     def _retry(job: KnowledgeIngestJob, document: KnowledgeDocument, exc: Exception) -> None:
-        job.last_error = " ".join(str(exc).split())[:480] or exc.__class__.__name__
+        db = object_session(document)
+        db.refresh(document)
+        if document.version != job.document_version or document.status in {"deleted", "rejected"}:
+            job.status = "cancelled"
+            return
+        job.last_error = "资料解析或索引暂不可用，请联系管理员检查日志"
         document.review_note = job.last_error
         if job.attempts >= MAX_ATTEMPTS:
             job.status = "failed"

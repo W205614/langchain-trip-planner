@@ -57,7 +57,8 @@ class POIDetailResponse(BaseModel):
     summary="获取POI详情",
     description="根据POI ID获取详细信息,包括图片",
 )
-def get_poi_detail(poi_id: str):
+@limiter.limit("30/minute")
+def get_poi_detail(request: Request, poi_id: str):
     """
     获取POI详情 (同步端点, 线程池执行, 不阻塞事件循环)
 
@@ -82,7 +83,8 @@ def get_poi_detail(poi_id: str):
     summary="搜索POI",
     description="根据关键词搜索POI",
 )
-def search_poi(keywords: str, city: str = "北京"):
+@limiter.limit("30/minute")
+def search_poi(request: Request, keywords: str, city: str = "北京"):
     """
     搜索POI (同步端点, 线程池执行, 不阻塞事件循环)
 

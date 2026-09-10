@@ -58,7 +58,8 @@ def test_image_submission_requires_admin_review(client, monkeypatch):
     monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: rag)
     removed = client.delete(f"/api/knowledge/admin/submissions/{document['id']}", headers={"Authorization": f"Bearer {token}"})
     assert removed.status_code == 200
-    rag.delete_public_knowledge_document.assert_called_once_with(document["id"])
+    with SessionLocal() as check:
+        assert check.get(KnowledgeDocument, document["id"]).status == "deleted"
 
 
 def test_process_document_publishes_page_text_with_source(monkeypatch, tmp_path):
@@ -101,6 +102,7 @@ def test_scanned_pdf_is_rendered_before_vision_extraction(monkeypatch, tmp_path)
     db = SessionLocal()
     try:
         monkeypatch.setattr(ingest, "DATA_DIR", tmp_path)
+        monkeypatch.setattr(ingest, "UPLOAD_DIR", tmp_path / "knowledge_uploads")
         path = tmp_path / "knowledge_uploads" / "2.pdf"
         path.parent.mkdir()
         pdf = pymupdf.open()
