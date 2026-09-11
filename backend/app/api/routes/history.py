@@ -56,12 +56,17 @@ def get_history(
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
 
+    plan = TripPlan.model_validate_json(record.plan_json)
+    quality = json.loads(record.quality_json or "{}")
+    from ...services.planning_constraints import POLICY_VERSION, refresh_saved_quality
+    if quality.get("policy_version") != POLICY_VERSION:
+        quality = refresh_saved_quality(plan, history_service.trip_record_to_request(record), quality)
     return {
         "success": True,
         "data": {
             "id": record.id,
             "version": record.version,
-            "quality": json.loads(record.quality_json),
+            "quality": quality,
             "city": record.city,
             "start_date": record.start_date,
             "end_date": record.end_date,
@@ -70,7 +75,7 @@ def get_history(
             "accommodation": record.accommodation,
             "preferences": json.loads(record.preferences or "[]"),
             "free_text_input": record.free_text_input,
-            "plan": json.loads(record.plan_json),
+            "plan": plan.model_dump(),
             "created_at": record.created_at.strftime("%Y-%m-%d %H:%M:%S"),
         },
     }
@@ -89,6 +94,12 @@ def update_history(
     if record is None:
         raise BizException("历史记录不存在", status_code=404)
     from ...services.planning_constraints import finalize_plan
+    original = TripPlan.model_validate_json(record.plan_json)
+    original_pois = {a.poi_id: a for day in original.days for a in day.attractions}
+    for day in plan.days:
+        for attraction in day.attractions:
+            saved = original_pois.get(attraction.poi_id)
+            attraction.requested_names = saved.requested_names if saved and saved.name == attraction.name else []
     quality = finalize_plan(plan, history_service.trip_record_to_request(record), repair=False)
     quality["data_gaps"].append("user_edited_plan_not_externally_verified")
     record = history_service.update_trip_record(db, current_user.id, record_id, plan, expected_version, quality)

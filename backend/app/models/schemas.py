@@ -8,11 +8,26 @@ from datetime import date
 # ============ 请求模型 ============
 
 class PlanningConstraints(BaseModel):
-    """Explicit user constraints; names match exactly after trimming/case folding."""
+    """Human names are resolved against trusted candidates by the planning service."""
     must_visit: List[Annotated[str, Field(min_length=1, max_length=64)]] = Field(default_factory=list, max_length=8)
     avoid: List[Annotated[str, Field(min_length=1, max_length=64)]] = Field(default_factory=list, max_length=8)
     daily_minutes: int = Field(default=600, ge=120, le=900)
     max_inter_stop_walking_km: float | None = Field(default=None, gt=0, le=30)
+
+    @field_validator("must_visit", "avoid", mode="before")
+    @classmethod
+    def split_names(cls, value):
+        import re
+        if isinstance(value, str):
+            value = [value]
+        if not isinstance(value, list):
+            return value
+        if any(not isinstance(item, str) for item in value):
+            return value
+        if any(not item.strip() for item in value):
+            raise ValueError("景点名称不能为空")
+        return list(dict.fromkeys(part.strip() for item in value
+            for part in re.split(r"[,，、;；\n\r]+", item) if part.strip()))
 
     @model_validator(mode="after")
     def validate_names(self):
@@ -135,6 +150,10 @@ class Attraction(BaseModel):
     poi_id: str = Field(..., min_length=1, description="高德 POI ID")
     image_url: Optional[str] = Field(default=None, description="图片URL")
     ticket_price: int = Field(default=0, description="门票价格(元)")
+    price_source: str = "unknown"
+    requested_names: List[str] = Field(default_factory=list)
+    opening_hours: str = ""
+    fact_source: str = ""
 
 
 class AttractionDraft(BaseModel):
@@ -225,6 +244,7 @@ class Budget(BaseModel):
     total: int = Field(default=0, description="总费用")
     estimated: bool = True
     unknown_items: List[str] = Field(default_factory=list)
+    assumptions: List[str] = Field(default_factory=list)
 
 
 class TripPlan(BaseModel):
@@ -261,6 +281,9 @@ class POIInfo(BaseModel):
     address: str = Field(..., description="地址")
     location: Location = Field(..., description="经纬度坐标")
     tel: Optional[str] = Field(default=None, description="电话")
+    photos: List[str] = Field(default_factory=list)
+    opening_hours: str = ""
+    requested_names: List[str] = Field(default_factory=list)
 
 
 class POISearchResponse(BaseModel):

@@ -23,7 +23,7 @@ test('login and task recovery preserve the saved result and quality', async ({ p
   await page.reload()
   await expect(page).toHaveURL(/\/result$/)
   await expect(page.getByText(/使用规则兜底/)).toBeVisible()
-  await expect(page.getByText(/预算估算（非实时报价/)).toBeVisible()
+  await expect(page.getByText(/预算估算（含费用预留/)).toBeVisible()
   await expect(page.getByText(/当前规则检查|部分旅行要求尚未满足/)).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy()
   const saved = await page.evaluate(() => ({ id: sessionStorage.getItem('tripPlanId'), quality: sessionStorage.getItem('tripQuality') }))

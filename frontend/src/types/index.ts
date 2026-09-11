@@ -6,6 +6,11 @@ export interface Location {
 }
 
 export interface Attraction {
+  poi_id?: string
+  opening_hours?: string
+  fact_source?: string
+  price_source?: string
+  requested_names?: string[]
   name: string
   address: string
   location: Location
@@ -38,6 +43,7 @@ export interface Hotel {
 }
 
 export interface Budget {
+  assumptions?: string[]
   estimated?: boolean
   unknown_items?: string[]
   total_attractions: number

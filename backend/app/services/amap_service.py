@@ -32,6 +32,8 @@ class AmapService:
             raise ValueError("高德地图API Key未配置,请在.env文件中设置AMAP_API_KEY")
 
         self.client = httpx.Client(timeout=10)
+        self._request_lock = RLock()
+        self._last_requests: dict[str, float] = {}
         # 热点请求的事实缓存只在当前后端进程内保存：POI 可短时复用，天气 TTL 更短。
         # 返回深拷贝，避免调用方修改 POI/天气对象污染后续请求。
         self._poi_cache: Dict[tuple[str, str, bool], tuple[List[POIInfo], float]] = {}
@@ -60,13 +62,25 @@ class AmapService:
             ValueError: 高德返回 status != 1 时
         """
         request_params = {**params, "key": self.api_key}
-        resp = self.client.get(f"{AMAP_BASE_URL}{path}", params=request_params, timeout=remaining(10))
-        resp.raise_for_status()
-
-        data = resp.json()
-        if data.get("status") != "1":
+        for attempt in range(2):
+            with self._request_lock:
+                wait = self._last_requests.get(path, 0) + 0.4 - time.monotonic()
+                if wait > 0:
+                    if remaining() <= wait:
+                        raise TimeoutError("Task deadline exceeded")
+                    time.sleep(wait)
+                self._last_requests[path] = time.monotonic()
+            resp = self.client.get(f"{AMAP_BASE_URL}{path}", params=request_params, timeout=remaining(10))
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "1":
+                return data
+            if attempt == 0 and data.get("info") == "CUQPS_HAS_EXCEEDED_THE_LIMIT":
+                if remaining() <= 0.6:
+                    raise TimeoutError("Task deadline exceeded")
+                time.sleep(0.6)
+                continue
             raise ValueError(f"高德API错误: {data.get('info', '未知错误')}")
-        return data
 
     def _read_fact_cache(self, cache: dict, key: Any, ttl_seconds: int, cache_name: str):
         """读取未过期的事实缓存；TTL=0 时显式禁用。"""
@@ -152,6 +166,10 @@ class AmapService:
                 address=_to_str(item.get("address")),
                 location=self._parse_location(location) if location else Location(longitude=0, latitude=0),
                 tel=item.get("tel") or None,
+                photos=[p["url"] for p in (item.get("photos") or []) if isinstance(p, dict) and p.get("url")],
+                opening_hours=_to_str((item.get("biz_ext") or {}).get("opentime2") or
+                    (item.get("biz_ext") or {}).get("open_time") or
+                    (item.get("biz_ext") or {}).get("opentime")) if isinstance(item.get("biz_ext"), dict) else "",
             ))
         self._write_fact_cache(self._poi_cache, cache_key, pois, self._poi_cache_ttl_seconds)
         return pois
@@ -250,12 +268,21 @@ class AmapService:
         city: Optional[str] = None,
     ) -> Dict[str, Any]:
         """使用已验证 POI 坐标规划路线，避免对地址重复地理编码。"""
-        return self._plan_route_by_coordinates(
+        route = self._plan_route_by_coordinates(
             f"{origin.longitude},{origin.latitude}",
             f"{destination.longitude},{destination.latitude}",
             route_type=route_type,
             city=city,
         )
+        if not route and route_type == "transit":
+            # Nearby attractions often have no transit itinerary. Verify a short
+            # walk instead of reporting an unknown route or inventing a duration.
+            walking = self._plan_route_by_coordinates(
+                f"{origin.longitude},{origin.latitude}",
+                f"{destination.longitude},{destination.latitude}", "walking", city)
+            if walking and walking["distance"] <= 1500:
+                return {**walking, "fallback_from": "transit"}
+        return route
 
     def _plan_route_by_coordinates(
         self,
@@ -287,12 +314,16 @@ class AmapService:
         if not candidates:
             return {}
         first = candidates[0]
-        distance = float(first.get("distance", 0))
-        duration = int(first.get("duration", 0))
+        if first.get("distance") in (None, "", []) or first.get("duration") in (None, "", []):
+            return {}
+        distance = float(first["distance"])
+        duration = int(first["duration"])
 
         return {
             "distance": distance,
             "duration": duration,
+            "walking_distance": distance if route_type == "walking" else (
+                float(first["walking_distance"]) if first.get("walking_distance") not in (None, "", []) else None),
             "route_type": route_type,
             "description": f"全程约{distance / 1000:.1f}公里,预计{duration // 60}分钟",
         }

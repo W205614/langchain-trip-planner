@@ -138,7 +138,8 @@ DAY_PLANNER_SYSTEM_PROMPT = """你是专业的行程规划专家。用户会给�
     {{
       "poi_id": "高德候选 POI ID",
       "visit_duration": 120,
-      "description": "不超过80字的游览建议"
+      "description": "不超过80字的游览建议",
+      "ticket_price": 60
     }}
   ],
   "meals": [
@@ -154,6 +155,7 @@ DAY_PLANNER_SYSTEM_PROMPT = """你是专业的行程规划专家。用户会给�
 3. 每个景点必须原样返回可选景点中的 poi_id；不得编造、留空或使用其他 ID
 4. 不要输出 name/address/location/date/day_index/transportation/accommodation 等后端已知字段
 5. 只输出这一天, 不要输出其他天
+6. ticket_price仅填写有参考依据的门票估算，免费填0；无法估算时省略该字段，不得用0代替未知。
 """
 
 
@@ -251,8 +253,17 @@ class MultiAgentTripPlanner:
 
             from ..services.planning_constraints import name_key
             for name in request.constraints.must_visit:
-                if not any(name_key(p.name) == name_key(name) for p in pois):
-                    pois.extend(self.amap_service.search_poi(name, request.city))
+                try:
+                    candidates = self.amap_service.search_poi(name, request.city)
+                    candidates = list({p.id: p for p in [*pois, *candidates]}.values())
+                    match = self._resolve_required_poi(name, candidates, request.city)
+                    if match:
+                        match = match.model_copy(deep=True)
+                        match.requested_names = list(dict.fromkeys([*match.requested_names, name]))
+                        pois = [p for p in pois if p.id != match.id]
+                        pois.append(match)
+                except Exception:
+                    logger.warning("必去景点查询失败，保留其它已取得的候选")
             avoided = {name_key(n) for n in request.constraints.avoid}
             unique = {p.id: p for p in pois if p.id and name_key(p.name) not in avoided}
             return {"attraction_pois": list(unique.values())}
@@ -335,7 +346,7 @@ class MultiAgentTripPlanner:
                 current_date = (start + timedelta(days=i)).strftime("%Y-%m-%d")
                 required = {n.casefold() for n in request.constraints.must_visit}
                 sub = sorted(subsets[i] if i < len(subsets) else [],
-                             key=lambda p: p.name.casefold() not in required)[:_MAX_DAILY_POI_CANDIDATES]
+                             key=lambda p: not (p.name.casefold() in required or p.requested_names))[:_MAX_DAILY_POI_CANDIDATES]
                 sub_text = "\n".join(
                     f"{j + 1}. poi_id={p.id} | {p.name} | {p.address or ''} | "
                     f"{p.location.longitude},{p.location.latitude}"
@@ -614,7 +625,7 @@ class MultiAgentTripPlanner:
                     **({"ticket_price": item.ticket_price} if "ticket_price" in item.model_fields_set else {}),
                 )
             )
-        return DayPlan(
+        day = DayPlan(
             date=current_date,
             day_index=day_index,
             description=draft.description or f"第{day_index + 1}天行程",
@@ -623,6 +634,50 @@ class MultiAgentTripPlanner:
             attractions=attractions,
             meals=draft.meals,
         )
+        MultiAgentTripPlanner._complete_day(day, request, state)
+        return day
+
+    @staticmethod
+    def _resolve_required_poi(name: str, candidates: List[POIInfo], city: str = "") -> POIInfo | None:
+        from ..services.attraction_names import resolve_name
+        return resolve_name(name, candidates, city)
+
+    @staticmethod
+    def _complete_day(day: DayPlan, request: TripRequest, state) -> None:
+        """Enforce required POIs and attach searched facts independently of model output."""
+        from ..models.schemas import Hotel
+        from ..services.planning_constraints import name_key
+        pois = (state or {}).get("attraction_pois") or []
+        from ..services.attraction_names import resolve_name
+        for name in request.constraints.must_visit:
+            matched = resolve_name(name, pois, request.city)
+            if matched:
+                matched.requested_names = list(dict.fromkeys([*matched.requested_names, name]))
+        required = {name_key(n) for n in request.constraints.must_visit}
+        selected = {a.poi_id for a in day.attractions}
+        for poi in pois:
+            if ({name_key(poi.name), *(name_key(n) for n in poi.requested_names)} & required) and poi.id not in selected:
+                day.attractions.append(Attraction(poi_id=poi.id, name=poi.name,
+                    address=poi.address, location=poi.location, visit_duration=120,
+                    description="按必去要求安排，请结合开放与预约情况确认游览时间。"))
+                selected.add(poi.id)
+        by_id = {p.id: p for p in pois}
+        for attraction in day.attractions:
+            poi = by_id.get(attraction.poi_id)
+            if poi:
+                attraction.requested_names = poi.requested_names
+                attraction.photos = poi.photos
+                attraction.opening_hours = poi.opening_hours
+                attraction.fact_source = "高德 POI"
+            if any(n in attraction.name for n in ("迪士尼乐园", "环球影城")):
+                attraction.visit_duration = max(480, attraction.visit_duration)
+            if "ticket_price" in attraction.model_fields_set and attraction.price_source == "unknown":
+                attraction.price_source = "model_estimate"
+        hotels = (state or {}).get("hotel_pois") or []
+        if day.day_index < request.travel_days - 1 and hotels and not day.hotel:
+            hotel = hotels[0]
+            day.hotel = Hotel(name=hotel.name, address=hotel.address, location=hotel.location,
+                              type=request.accommodation)
 
     def _fallback_day(
         self,
@@ -655,7 +710,7 @@ class MultiAgentTripPlanner:
         else:
             attractions = []
 
-        return DayPlan(
+        day = DayPlan(
             date=current_date,
             day_index=day_index,
             description=f"第{day_index + 1}天行程",
@@ -670,6 +725,8 @@ class MultiAgentTripPlanner:
             generation_mode="fallback",
             fallback_reason=fallback_reason,
         )
+        self._complete_day(day, request, state)
+        return day
 
     @staticmethod
     def _extract_json(content: str) -> dict:
@@ -905,6 +962,9 @@ class MultiAgentTripPlanner:
                 type=attraction.category or "景点",
                 address=attraction.address,
                 location=attraction.location,
+                requested_names=attraction.requested_names,
+                opening_hours=attraction.opening_hours,
+                photos=attraction.photos or [],
             )
             for attraction in trip_plan.days[day_index].attractions
             if attraction.poi_id
@@ -955,6 +1015,7 @@ class MultiAgentTripPlanner:
                 code="TRUSTED_POI_UNAVAILABLE",
             )
 
+        revised_day.hotel = day.hotel
         trip_plan.days[day_index] = revised_day
         from ..services.plan_quality import normalize_day
 
@@ -1087,9 +1148,11 @@ class MultiAgentTripPlanner:
         start_date = datetime.strptime(request.start_date, "%Y-%m-%d")
 
         days = []
+        subsets = self._split_pois_for_days(state.get("attraction_pois", []), request.travel_days)
         for i in range(request.travel_days):
             current_date = start_date + timedelta(days=i)
-            days.append(self._fallback_day(request, i, current_date.strftime("%Y-%m-%d"), state))
+            days.append(self._fallback_day(request, i, current_date.strftime("%Y-%m-%d"),
+                {**state, "attraction_pois": subsets[i]}))
 
         total_attractions = sum(attr.ticket_price for day in days for attr in day.attractions) or 200
         total_meals = sum(meal.estimated_cost for day in days for meal in day.meals) or 150 * request.travel_days

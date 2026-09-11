@@ -108,7 +108,9 @@ def test_plan_trip_success(client, monkeypatch):
     assert data["success"] is True
     assert data["data"]["city"] == "北京"
     assert len(data["data"]["days"]) == 2
-    assert data["data"]["budget"]["total"] == 0
+    budget = data["data"]["budget"]
+    assert budget["total"] == 390  # 80 ticket allowance + one 250 room night + 2 x 30 transit
+    assert budget["assumptions"]
     assert data["saved"] is True
     assert data["quality"]["days_checked"] == 2
 

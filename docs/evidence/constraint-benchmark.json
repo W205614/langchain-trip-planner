@@ -1,7 +1,7 @@
 {
   "dataset": "travel-constraints-v1",
   "sha256": "b967e37b7629a2726e0a559dce4fba74be03075a793fdf6dcfe9dbd00f9c680a",
-  "policy": "constraints-v1",
+  "policy": "constraints-v2",
   "boundary": "Synthetic POIs and route fixtures; expected outcomes are authored independently of the implementation. Not real-model quality or user satisfaction.",
   "cases": [
     {
@@ -35,7 +35,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -48,7 +48,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -90,7 +101,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -103,7 +114,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -145,7 +167,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -158,7 +180,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           },
           {
             "day_index": 1,
@@ -168,7 +201,9 @@
             "route_minutes": 0.0,
             "planned_minutes": 240.0,
             "inter_stop_walking_km": 0.0,
-            "route_distance_km": 0.0
+            "route_distance_km": 0.0,
+            "routes": [],
+            "walking_status": "available"
           }
         ]
       }
@@ -210,7 +245,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -223,7 +258,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "C",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -265,7 +311,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -278,7 +324,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -320,7 +377,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -333,7 +390,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "C",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -371,7 +439,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": false,
         "facts_complete": false,
         "feasibility_status": "violated",
@@ -384,7 +452,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -405,7 +484,7 @@
         "score": 85,
         "passed": false,
         "warnings": [
-          "未满足必去景点：Unknown（按完整名称匹配，请核对名称或调整约束）"
+          "未满足必去景点：Unknown（当前行程中未找到唯一对应景点，可补充所在区域或具体名称）"
         ],
         "days_checked": 1,
         "attractions_checked": 2,
@@ -422,7 +501,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": false,
         "facts_complete": false,
         "feasibility_status": "violated",
@@ -435,7 +514,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -477,7 +567,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -490,7 +580,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": 2.0,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
           }
         ]
       }
@@ -529,7 +630,7 @@
           "route_duration_unavailable_fallback_to_straight_line"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -542,7 +643,18 @@
             "route_minutes": null,
             "planned_minutes": null,
             "inter_stop_walking_km": null,
-            "route_distance_km": null
+            "route_distance_km": null,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": null,
+                "distance_km": null,
+                "walking_km": null
+              }
+            ],
+            "walking_status": "unavailable"
           }
         ]
       }
@@ -581,7 +693,7 @@
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": true,
         "facts_complete": false,
         "feasibility_status": "needs_verification",
@@ -594,7 +706,18 @@
             "route_minutes": 20.0,
             "planned_minutes": 380.0,
             "inter_stop_walking_km": null,
-            "route_distance_km": 2.0
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "transit",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": null
+              }
+            ],
+            "walking_status": "unavailable"
           }
         ]
       }
@@ -634,11 +757,11 @@
         "data_gaps": [
           "hotel_and_meal_routes_unverified",
           "in_attraction_walking_unknown",
-          "opening_hours_unavailable",
+          "opening_hours_travel_date_unverified",
           "reservation_unverified"
         ],
         "degraded_days": [],
-        "policy_version": "constraints-v1",
+        "policy_version": "constraints-v2",
         "rules_passed": false,
         "facts_complete": false,
         "feasibility_status": "violated",
@@ -651,7 +774,9 @@
             "route_minutes": 0.0,
             "planned_minutes": 120.0,
             "inter_stop_walking_km": 0.0,
-            "route_distance_km": 0.0
+            "route_distance_km": 0.0,
+            "routes": [],
+            "walking_status": "available"
           }
         ]
       }

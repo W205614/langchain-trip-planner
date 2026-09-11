@@ -1,6 +1,7 @@
 """POI相关API路由"""
 
 import ipaddress
+import re
 import logging
 import socket
 import threading
@@ -171,7 +172,17 @@ def _is_safe_remote_url(url: str) -> bool:
     except OSError:
         return False
     try:
-        return bool(addresses) and all(ipaddress.ip_address(item[4][0]).is_global for item in addresses)
+        ips = [ipaddress.ip_address(item[4][0]) for item in addresses]
+        if ips and all(ip.is_global for ip in ips):
+            return True
+        # Local proxy fake-IP DNS uses the benchmark range. Only the exact AMap
+        # image endpoint is eligible; HTTPS still validates its hostname and every
+        # redirect is checked again. Private/LAN targets remain forbidden.
+        trusted_path = ((parsed.hostname == "store.is.autonavi.com" and parsed.path.startswith("/showpic/")) or
+                        (parsed.hostname == "aos-cdn-image.amap.com" and parsed.path.startswith("/sns/")) or
+                        (parsed.hostname == "aos-comment.amap.com" and re.match(r"^/[A-Za-z0-9]+/headerImg/", parsed.path)))
+        return bool(ips) and parsed.scheme == "https" and trusted_path and port == 443 \
+            and all(ip in ipaddress.ip_network("198.18.0.0/15") for ip in ips)
     except ValueError:
         return False
 
@@ -179,7 +190,10 @@ def _is_safe_remote_url(url: str) -> bool:
 def _download_photo(url: str) -> tuple[bytes, str] | None:
     """下载受验证的公网图片；逐跳验证跳转并流式限制内容大小。"""
     try:
-        next_url = url
+        parsed = urlparse(url)
+        # AMap returns legacy HTTP URLs even though both official CDNs serve TLS.
+        next_url = parsed._replace(scheme="https").geturl() if parsed.scheme == "http" and parsed.hostname in {
+            "store.is.autonavi.com", "aos-cdn-image.amap.com", "aos-comment.amap.com"} and parsed.port in (None, 80) else url
         with httpx.Client(timeout=10.0, follow_redirects=False) as client:
             for _ in range(4):
                 if not _is_safe_remote_url(next_url):
@@ -194,7 +208,7 @@ def _download_photo(url: str) -> tuple[bytes, str] | None:
                         continue
                     response.raise_for_status()
                     content_type = response.headers.get("content-type", "").split(";", 1)[0].lower()
-                    if not content_type.startswith("image/"):
+                    if not content_type.startswith("image/") and content_type != "application/octet-stream":
                         logger.warning("景点图片代理收到非图片响应: %s", content_type)
                         return None
                     content_length = response.headers.get("content-length")
@@ -209,7 +223,19 @@ def _download_photo(url: str) -> tuple[bytes, str] | None:
                             logger.warning("景点图片代理拒绝超大图片")
                             return None
                         chunks.append(chunk)
-                    return b"".join(chunks), content_type
+                    content = b"".join(chunks)
+                    if content_type == "application/octet-stream":
+                        if content.startswith(b"\xff\xd8\xff"):
+                            content_type = "image/jpeg"
+                        elif content.startswith(b"\x89PNG\r\n\x1a\n"):
+                            content_type = "image/png"
+                        elif content[:6] in (b"GIF87a", b"GIF89a"):
+                            content_type = "image/gif"
+                        elif content[:4] == b"RIFF" and content[8:12] == b"WEBP":
+                            content_type = "image/webp"
+                        else:
+                            return None
+                    return content, content_type
         return None
     except (httpx.HTTPError, OSError, ValueError) as exc:
         logger.info("下载景点图片失败: %s", exc)
@@ -238,9 +264,38 @@ def _photo_placeholder(name: str) -> Response:
     description="按景点名称解析图片并以同源响应返回，供页面与图片/PDF 导出安全绘制。",
 )
 @limiter.limit("30/minute")
-def get_attraction_photo_image(request: Request, name: str = Query(min_length=1, max_length=100)):
+def get_attraction_photo_image(request: Request, name: str = Query(min_length=1, max_length=100),
+                               poi_id: str = Query(default="", max_length=64, pattern=r"^[A-Za-z0-9]*$"),
+                               city: str = Query(default="", max_length=32)):
     """将已解析的景点图片作为同源图片返回，不接受任意 URL，避免开放代理。"""
-    photo_url = _resolve_attraction_photo(name)
+    if poi_id:
+        # Resolve by the actual attraction ID; try other photos when a CDN URL is stale.
+        try:
+            service = get_amap_service()
+            cache_key = "id:" + poi_id
+            with _photo_url_cache_lock:
+                cached = _photo_url_cache.get(cache_key)
+            urls = cached[1] if cached and cached[0] > time.monotonic() else None
+            if urls is None:
+                with _photo_semaphore:
+                    with _photo_call_lock:
+                        global _photo_last_call
+                        wait = _photo_last_call + _PHOTO_MIN_INTERVAL - time.monotonic()
+                        if wait > 0:
+                            time.sleep(wait)
+                        _photo_last_call = time.monotonic()
+                    detail = service.get_poi_detail(poi_id)
+                urls = [p["url"] for p in (detail.get("photos") or []) if isinstance(p, dict) and p.get("url")]
+                with _photo_url_cache_lock:
+                    _photo_url_cache[cache_key] = (time.monotonic() + (3600 if urls else 30), urls)
+            for url in urls[:3]:
+                downloaded = _download_photo(url)
+                if downloaded:
+                    return Response(content=downloaded[0], media_type=downloaded[1],
+                                    headers={"Cache-Control": "public, max-age=3600"})
+        except Exception:
+            logger.info("POI图片查询暂不可用")
+    photo_url = _resolve_attraction_photo(f"{city} {name}".strip())
     if not photo_url:
         return _photo_placeholder(name)
 

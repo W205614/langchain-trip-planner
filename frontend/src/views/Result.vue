@@ -17,7 +17,7 @@
         </a-button>
 
         <!-- 导出按钮 -->
-        <a-dropdown v-if="!editMode">
+        <a-dropdown v-if="!editMode" :disabled="exportBusy">
           <template #overlay>
             <a-menu>
               <a-menu-item key="image" @click="exportAsImage">
@@ -26,9 +26,12 @@
               <a-menu-item key="pdf" @click="exportAsPDF">
                 📄 导出为PDF
               </a-menu-item>
+              <a-menu-item key="html" @click="exportAsHTML">
+                🌐 导出离线网页（可展开/收起）
+              </a-menu-item>
             </a-menu>
           </template>
-          <a-button type="default">
+          <a-button type="default" :loading="exportBusy" :disabled="exportBusy">
             📥 导出行程 <DownOutlined />
           </a-button>
         </a-dropdown>
@@ -67,13 +70,13 @@
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
-            :message="`第${check.day_index + 1}天：安排 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）；景点间步行 ${check.inter_stop_walking_km == null ? '待核实' : check.inter_stop_walking_km.toFixed(1) + ' 公里'}`" />
+            :message="`第${check.day_index + 1}天：安排 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）；${check.walking_status === 'not_applicable' ? '自驾路线不含停车后步行' : '景点间步行 ' + (check.inter_stop_walking_km == null ? '暂无数据' : check.inter_stop_walking_km.toFixed(1) + ' 公里')}`" />
           <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处重复、不去或超限景点；请确认必去要求是否满足。`" />
           <a-alert v-if="unsaved" type="warning" show-icon message="当前修改尚未保存到服务器，请重新保存或从历史记录加载。" />
           <a-alert v-if="quality.degraded_days?.length" type="warning" show-icon
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
           <a-alert v-if="quality.data_gaps?.length" type="info" show-icon
-            message="开放时间、预约及部分路线信息未完全核实，请在出发前确认。" />
+            :message="factGapMessage" />
           <a-alert v-for="warning in quality.warnings || []" :key="warning" type="warning" :message="warning" />
         </div>
         <!-- 顶部信息区:左侧概览+预算,右侧地图 -->
@@ -113,7 +116,7 @@
             </a-card>
 
             <!-- 预算明细 -->
-            <a-card id="budget" v-if="tripPlan.budget" title="💰 预算估算（非实时报价，未知费用未计入）" :bordered="false" class="budget-card">
+            <a-card id="budget" v-if="tripPlan.budget" title="💰 预算估算（含费用预留，非实时报价）" :bordered="false" class="budget-card">
               <div class="budget-grid">
                 <div class="budget-item">
                   <div class="budget-label">景点门票</div>
@@ -132,6 +135,7 @@
                   <div class="budget-value">¥{{ formatMoney(tripPlan.budget.total_transportation) }}</div>
                 </div>
               </div>
+              <p v-for="note in tripPlan.budget.assumptions || []" :key="note" class="budget-note">{{ note }}</p>
               <div class="budget-total">
                 <span class="total-label">预估总费用</span>
                 <span class="total-value">¥{{ formatMoney(tripPlan.budget.total) }}</span>
@@ -154,6 +158,7 @@
               v-for="(day, index) in tripPlan.days"
               :key="index"
               :id="`day-${index}`"
+              :force-render="true"
             >
               <template #header>
                 <div class="day-header">
@@ -186,6 +191,12 @@
                 </div>
               </div>
 
+              <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" title="景点间交通（高德查询参考）">
+                <p v-for="leg in quality.day_checks.find((c: any) => c.day_index === day.day_index).routes" :key="leg.from + leg.to">
+                  {{ leg.from }} → {{ leg.to }}（{{ leg.route_type === 'walking' ? '步行' : leg.route_type === 'driving' ? '驾车' : '公共交通' }}）：{{ leg.minutes == null ? '暂未取得路线，请在地图中确认' : `${leg.minutes} 分钟 / ${leg.distance_km} 公里` }}
+                  <span v-if="leg.walking_km != null">，其中步行 {{ leg.walking_km }} 公里</span>
+                </p>
+              </a-card>
               <!-- 景点安排 -->
               <a-divider orientation="left">🎯 景点安排</a-divider>
               <a-list
@@ -228,13 +239,14 @@
                           :src="getAttractionImage(item.name, index)"
                           :alt="item.name"
                           class="attraction-image"
+                          loading="lazy"
                           @error="handleImageError"
                         />
                         <div class="attraction-badge">
                           <span class="badge-number">{{ index + 1 }}</span>
                         </div>
                         <div v-if="item.ticket_price" class="price-tag">
-                          ¥{{ item.ticket_price }}
+                          估算 ¥{{ item.ticket_price }}
                         </div>
                       </div>
 
@@ -252,8 +264,11 @@
 
                       <!-- 查看模式 -->
                       <div v-else>
+                        <p v-if="item.requested_names?.length"><strong>必去要求:</strong> {{ item.requested_names.join('、') }}（已匹配此景点）</p>
                         <p><strong>地址:</strong> {{ item.address }}</p>
                         <p><strong>游览时长:</strong> {{ item.visit_duration }}分钟</p>
+                        <p><strong>开放时间:</strong> {{ item.opening_hours ? item.opening_hours + "（高德参考，出行日请确认）" : "暂无可靠数据，请查景区公告" }}</p>
+                        <p><strong>预约:</strong> 请通过景区官方渠道确认是否需要预约及剩余名额</p>
                         <p><strong>描述:</strong> <span class="attraction-desc">{{ item.description }}</span></p>
                         <p v-if="item.rating"><strong>评分:</strong> {{ item.rating }}⭐</p>
                       </div>
@@ -384,13 +399,21 @@ import AMapLoader from '@amap/amap-jsapi-loader'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import type { TripPlan } from '@/types'
-import { reviseHistoryDay, updateHistory } from '@/services/api'
+import { reviseHistoryDay, updateHistory, fetchHistoryDetail } from '@/services/api'
 
 const router = useRouter()
 const tripPlan = ref<TripPlan | null>(null)
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
 const quality = ref(JSON.parse(sessionStorage.getItem('tripQuality') || '{}'))
+const factGapMessage = computed(() => {
+  const gaps: string[] = quality.value.data_gaps || []
+  const notes = ['预约要求及余票请通过景区官方渠道确认']
+  notes.push(gaps.includes('opening_hours_unavailable') ? '部分景点暂无开放时间数据' : '开放时间为查询参考，出行日请再次确认')
+  if (gaps.includes('route_duration_unavailable_fallback_to_straight_line')) notes.push('部分景点间路线查询失败，详见每日交通')
+  notes.push('酒店、餐厅接驳及景区内部步行未计入路线核实')
+  return notes.join('；') + '。'
+})
 const acceptVersion = (response: any) => {
   recordVersion.value = response.version
   quality.value = response.quality || {}
@@ -398,6 +421,7 @@ const acceptVersion = (response: any) => {
   sessionStorage.setItem('tripQuality', JSON.stringify(quality.value))
 }
 const editMode = ref(false)
+const exportBusy = ref(false)
 const originalPlan = ref<TripPlan | null>(null)
 const attractionPhotos = ref<Record<string, string>>({})
 const activeSection = ref('overview')
@@ -426,6 +450,18 @@ onMounted(async () => {
     tripPlan.value = JSON.parse(data)
     // 历史打开时记录 id (供编辑保存写回数据库); 新规划则为 0
     historyRecordId.value = Number(sessionStorage.getItem('tripPlanId') || '0')
+    if (historyRecordId.value && !unsaved.value && quality.value.policy_version !== 'constraints-v2' && sessionStorage.getItem('access_token')) {
+      try {
+        const response = await fetchHistoryDetail(historyRecordId.value)
+        if (response.success && response.data) {
+          tripPlan.value = response.data.plan
+          acceptVersion(response.data)
+          sessionStorage.setItem('tripPlan', JSON.stringify(tripPlan.value))
+        }
+      } catch {
+        message.warning('暂时无法刷新行程检查，当前显示上次保存结果')
+      }
+    }
     // 加载景点图片
     await loadAttractionPhotos()
     // 等待DOM渲染完成后初始化地图
@@ -586,7 +622,7 @@ const loadAttractionPhotos = async () => {
 
   tripPlan.value.days.forEach(day => {
     day.attractions.forEach(attraction => {
-      attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}`
+      attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}&poi_id=${encodeURIComponent(attraction.poi_id || "")}&city=${encodeURIComponent(tripPlan.value!.city)}`
     })
   })
 }
@@ -682,25 +718,35 @@ const buildExportMapImage = (): string => {
 }
 
 const waitForExportImages = async (container: HTMLElement): Promise<void> => {
-  const images = Array.from(container.querySelectorAll('img'))
-  await Promise.all(images.map(async image => {
-    if (!image.complete) {
-      await new Promise<void>(resolve => {
-        image.addEventListener('load', () => resolve(), { once: true })
-        image.addEventListener('error', () => resolve(), { once: true })
-      })
+  const fallback = svgToDataUrl('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><rect width="100%" height="100%" fill="#e2e8f0"/><text x="50%" y="50%" text-anchor="middle" font-family="sans-serif" font-size="24" fill="#475569">图片暂不可用，请以文字行程为准</text></svg>')
+  await Promise.all(Array.from(container.querySelectorAll('img')).map(image => new Promise<void>(resolve => {
+    let done = false
+    const finish = (ok: boolean) => {
+      if (done) return
+      done = true
+      clearTimeout(timer)
+      image.removeEventListener('load', loaded)
+      image.removeEventListener('error', failed)
+      if (!ok) {
+        image.removeAttribute('srcset')
+        image.src = fallback
+      }
+      resolve()
     }
-    try {
-      await image.decode()
-    } catch {
-      // 图片错误会由页面原有的占位图兜底，不能阻塞整份行程导出。
-    }
-  }))
+    const loaded = () => finish(image.naturalWidth > 0)
+    const failed = () => finish(false)
+    const timer = window.setTimeout(failed, 8000)
+    image.addEventListener('load', loaded)
+    image.addEventListener('error', failed)
+    image.loading = 'eager'
+    if (image.complete) finish(image.naturalWidth > 0)
+  })))
 }
 
 const prepareExportContainer = (element: HTMLElement): HTMLElement => {
   const exportContainer = document.createElement('div')
-  exportContainer.style.width = `${element.offsetWidth}px`
+  exportContainer.style.width = `${Math.max(1000, element.offsetWidth)}px`
+  exportContainer.dataset.tripExport = "true"
   exportContainer.style.backgroundColor = '#f5f7fa'
   exportContainer.style.padding = '20px'
   exportContainer.innerHTML = element.innerHTML
@@ -755,7 +801,17 @@ const prepareExportContainer = (element: HTMLElement): HTMLElement => {
     itemEl.style.setProperty('border-radius', '8px')
     itemEl.style.setProperty('margin-bottom', '12px')
   })
+  exportContainer.querySelectorAll('.ant-collapse-content').forEach(content => {
+    const panel = content as HTMLElement
+    panel.classList.remove('ant-collapse-content-hidden')
+    panel.style.display = 'block'
+    panel.style.height = 'auto'
+    panel.style.visibility = 'visible'
+  })
+  exportContainer.querySelectorAll('button, .ant-collapse-expand-icon').forEach(control => control.remove())
   exportContainer.querySelectorAll('img').forEach(image => {
+    image.loading = 'eager'
+    image.decoding = 'sync'
     image.setAttribute('crossorigin', 'anonymous')
     // cloneNode/innerHTML 不会复制 Vue 绑定的 @error 监听器；导出副本也要替换失败图片，
     // 否则单张上游图片异常仍会留下空白区域。
@@ -774,9 +830,14 @@ const createExportCanvas = async (): Promise<HTMLCanvasElement> => {
   document.body.appendChild(exportContainer)
   try {
     await waitForExportImages(exportContainer)
+    const width = exportContainer.offsetWidth
+    const height = exportContainer.scrollHeight
+    // Bound both browser canvas dimensions and memory for multi-week itineraries.
+    const scale = Math.min(2, 16000 / width, 16000 / height, Math.sqrt(24000000 / (width * height)))
+    if (!Number.isFinite(scale) || scale <= 0) throw new Error('行程尺寸无效，请刷新后重试')
     return await html2canvas(exportContainer, {
       backgroundColor: '#f5f7fa',
-      scale: 2,
+      scale,
       logging: false,
       useCORS: true,
       allowTaint: false,
@@ -787,49 +848,160 @@ const createExportCanvas = async (): Promise<HTMLCanvasElement> => {
   }
 }
 
+// Native details/summary provides portable offline interaction without executable scripts.
+const exportAsHTML = async () => {
+  if (exportBusy.value || !tripPlan.value) return
+  exportBusy.value = true
+  let container: HTMLElement | null = null
+  try {
+    message.loading({ content: '正在打包离线网页...', key: 'export', duration: 0 })
+    const source = document.querySelector('.main-content') as HTMLElement
+    container = prepareExportContainer(source)
+    document.body.appendChild(container)
+    const images = Array.from(container.querySelectorAll('img'))
+    await Promise.all(images.map(async image => {
+      if (image.src.startsWith('data:')) return
+      try {
+        const response = await fetch(image.src, { signal: AbortSignal.timeout(8000) })
+        if (!response.ok) throw new Error('图片下载失败')
+        const blob = await response.blob()
+        image.src = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(String(reader.result))
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        })
+      } catch {
+        image.src = svgToDataUrl('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><rect width="100%" height="100%" fill="#e2e8f0"/><text x="50%" y="50%" text-anchor="middle" font-family="sans-serif" font-size="24">图片暂不可用，请以文字行程为准</text></svg>')
+      }
+      image.removeAttribute('srcset')
+      image.removeAttribute('crossorigin')
+    }))
+    container.querySelectorAll('.ant-collapse-item').forEach((panel, index) => {
+      const details = document.createElement('details')
+      details.className = 'offline-day'
+      details.open = index === 0
+      const summary = document.createElement('summary')
+      summary.textContent = panel.querySelector('.ant-collapse-header')?.textContent?.trim() || `第${index + 1}天`
+      details.appendChild(summary)
+      const content = panel.querySelector('.ant-collapse-content')
+      if (content) details.appendChild(content)
+      panel.replaceWith(details)
+    })
+    const css = Array.from(document.styleSheets).map(sheet => {
+      try { return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n') } catch { return '' }
+    }).join('\n')
+    const offline = document.implementation.createHTMLDocument(`${tripPlan.value.city}旅行计划`)
+    offline.documentElement.lang = 'zh-CN'
+    const charset = offline.createElement('meta')
+    charset.setAttribute('charset', 'utf-8')
+    offline.head.prepend(charset)
+    const policy = offline.createElement('meta')
+    policy.httpEquiv = 'Content-Security-Policy'
+    policy.content = "default-src 'none'; img-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+    offline.head.appendChild(policy)
+    const styles = offline.createElement('style')
+    styles.textContent = css + '\nbody{margin:0;background:#f5f7fa;font-family:Arial,sans-serif} .offline-day{margin:16px 0;border:1px solid #dbe2ed;border-radius:10px;overflow:hidden} .offline-day>summary{cursor:pointer;padding:18px;background:#667eea;color:white;font-size:18px;font-weight:bold} .offline-day .ant-collapse-content{display:block!important} .offline-note{padding:16px;background:#eef2ff;color:#334155}'
+    offline.head.appendChild(styles)
+    const note = offline.createElement('p')
+    note.className = 'offline-note'
+    note.textContent = '离线旅行计划：点击每天的标题可展开或收起。图片和正文已打包，无需登录；PNG/PDF 为完整静态版本。'
+    offline.body.appendChild(note)
+    const copy = container.cloneNode(true) as HTMLElement
+    copy.removeAttribute('data-trip-export')
+    copy.style.position = 'static'
+    copy.style.left = ''
+    copy.style.margin = '0 auto'
+    copy.style.maxWidth = '100%'
+    copy.style.boxSizing = 'border-box'
+    offline.body.appendChild(copy)
+    const blob = new Blob(['<!DOCTYPE html>\n', offline.documentElement.outerHTML], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.download = `旅行计划_${tripPlan.value.city}_可交互.html`
+    link.href = url
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.setTimeout(() => URL.revokeObjectURL(url), 60000)
+    message.success({ content: '离线网页已导出，用浏览器打开即可展开/收起每天行程', key: 'export' })
+  } catch (error: any) {
+    message.error({ content: `离线网页导出失败: ${error.message}`, key: 'export' })
+  } finally {
+    container?.remove()
+    exportBusy.value = false
+  }
+}
+
 // 导出为图片
 const exportAsImage = async () => {
+  if (exportBusy.value) return
+  exportBusy.value = true
   try {
     message.loading({ content: '正在生成图片...', key: 'export', duration: 0 })
     const canvas = await createExportCanvas()
     const link = document.createElement('a')
     link.download = `旅行计划_${tripPlan.value?.city}_${new Date().getTime()}.png`
-    link.href = canvas.toDataURL('image/png')
+    const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(value =>
+      value ? resolve(value) : reject(new Error('图片编码失败')), 'image/png'))
+    const url = URL.createObjectURL(blob)
+    link.href = url
+    document.body.appendChild(link)
     link.click()
+    link.remove()
+    window.setTimeout(() => URL.revokeObjectURL(url), 60000)
     message.success({ content: '图片导出成功!', key: 'export' })
   } catch (error: any) {
     console.error('导出图片失败:', error)
     message.error({ content: `导出图片失败: ${error.message}`, key: 'export' })
+  } finally {
+    exportBusy.value = false
   }
 }
 
 // 导出为PDF
 const exportAsPDF = async () => {
+  if (exportBusy.value) return
+  exportBusy.value = true
   try {
     message.loading({ content: '正在生成PDF...', key: 'export', duration: 0 })
     const canvas = await createExportCanvas()
-    const imgData = canvas.toDataURL('image/png')
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
       format: 'a4'
     })
 
-    const imgWidth = 210 // A4宽度(mm)
-    const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-    // 如果内容高度超过一页,分页处理
-    let heightLeft = imgHeight
-    let position = 0
-
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-    heightLeft -= 297 // A4高度
-
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight
-      pdf.addPage()
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-      heightLeft -= 297
+    const margin = 8
+    const imgWidth = 210 - margin * 2
+    const pixelsPerPage = Math.floor((297 - margin * 2) * canvas.width / imgWidth)
+    const context = canvas.getContext('2d')!
+    let top = 0
+    let pageIndex = 0
+    while (top < canvas.height) {
+      let bottom = Math.min(top + pixelsPerPage, canvas.height)
+      // Prefer a nearby blank row so pagination does not cut text in half.
+      if (bottom < canvas.height) {
+        const scanHeight = Math.min(120, bottom - top)
+        const scanTop = bottom - scanHeight
+        const pixels = context.getImageData(0, scanTop, canvas.width, scanHeight).data
+        for (let row = scanHeight - 1; row >= 0; row--) {
+          let ink = 0
+          for (let x = 0; x < canvas.width; x += 4) {
+            const offset = (row * canvas.width + x) * 4
+            if (pixels[offset + 3] > 0 && Math.min(pixels[offset], pixels[offset + 1], pixels[offset + 2]) < 230) ink++
+          }
+          if (ink < canvas.width / 800) { bottom = scanTop + row; break }
+        }
+      }
+      const pageCanvas = document.createElement('canvas')
+      pageCanvas.width = canvas.width
+      pageCanvas.height = bottom - top
+      pageCanvas.getContext('2d')!.drawImage(canvas, 0, top, canvas.width, bottom - top, 0, 0, canvas.width, bottom - top)
+      if (pageIndex++) pdf.addPage()
+      pdf.addImage(pageCanvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgWidth, pageCanvas.height * imgWidth / canvas.width)
+      pageCanvas.width = pageCanvas.height = 0
+      top = bottom
     }
 
     pdf.save(`旅行计划_${tripPlan.value?.city}_${new Date().getTime()}.pdf`)
@@ -838,6 +1010,8 @@ const exportAsPDF = async () => {
   } catch (error: any) {
     console.error('导出PDF失败:', error)
     message.error({ content: `导出PDF失败: ${error.message}`, key: 'export' })
+  } finally {
+    exportBusy.value = false
   }
 }
 

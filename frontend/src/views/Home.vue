@@ -192,11 +192,11 @@
             <span class="section-title">额外要求</span>
           </div>
 
-          <a-form-item label="必去景点（完整名称）">
-            <a-select v-model:value="planningConstraints.must_visit" mode="tags" :max-tag-count="8" placeholder="输入景点完整名称，按回车添加，最多8项" />
+          <a-form-item label="必去景点（支持常用名称）">
+            <a-select v-model:value="planningConstraints.must_visit" mode="tags" :token-separators="[',', '，', '、', ';', '；']" :max-tag-count="8" placeholder="如：故宫、天安门；用逗号或回车分隔，最多8项" />
           </a-form-item>
           <a-form-item label="不去景点（完整名称）">
-            <a-select v-model:value="planningConstraints.avoid" mode="tags" :max-tag-count="8" placeholder="输入景点完整名称，按回车添加，最多8项" />
+            <a-select v-model:value="planningConstraints.avoid" mode="tags" :token-separators="[',', '，', '、', ';', '；']" :max-tag-count="8" placeholder="如：故宫、天安门；用逗号或回车分隔，最多8项" />
           </a-form-item>
           <a-form-item label="每日安排上限（分钟，含交通与用餐预留）">
             <a-input-number v-model:value="planningConstraints.daily_minutes" :min="120" :max="900" :step="30" />

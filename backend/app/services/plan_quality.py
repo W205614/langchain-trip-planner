@@ -18,12 +18,12 @@ MAX_VISIT_MINUTES_PER_DAY = 480
 MAX_ROUTE_MINUTES_PER_DAY = 120
 
 
-def recalculate_budget(plan: TripPlan) -> None:
+def recalculate_budget(plan: TripPlan, *, estimate_missing: bool = False) -> None:
     """Recompute after repair; zero remains zero and absent prices are explicit."""
     from ..models.schemas import Budget
     attractions = [a for day in plan.days for a in day.attractions]
     meals = [m for day in plan.days for m in day.meals]
-    hotels = [day.hotel for day in plan.days if day.hotel]
+    hotels = [day.hotel for day in plan.days[:-1] if day.hotel]
     # Serialization fills numeric defaults; retain the original uncertainty on edits/reloads.
     unknown = list(plan.budget.unknown_items) if plan.budget else []
     if any("ticket_price" not in a.model_fields_set for a in attractions):
@@ -36,7 +36,26 @@ def recalculate_budget(plan: TripPlan) -> None:
     values = dict(total_attractions=sum(a.ticket_price for a in attractions),
                   total_meals=sum(m.estimated_cost for m in meals),
                   total_hotels=sum(h.estimated_cost for h in hotels), total_transportation=0)
-    plan.budget = Budget(**values, total=sum(values.values()), estimated=True, unknown_items=sorted(set(unknown)))
+    assumptions = []
+    if estimate_missing or (plan.budget and plan.budget.assumptions):
+        missing_tickets = sum(a.ticket_price == 0 and a.price_source == "unknown" for a in attractions)
+        values["total_attractions"] += 80 * missing_tickets
+        if missing_tickets:
+            assumptions.append(f"{missing_tickets}个景点缺少票价，暂按80元/人/景点预留；不代表实际售价或收费。")
+            unknown.append("attraction_prices")
+        missing_nights = max(0, len(plan.days) - 1) - sum(h.estimated_cost > 0 for h in hotels)
+        if missing_nights:
+            accommodation = plan.days[0].accommodation if plan.days else ""
+            nightly = 600 if any(s in accommodation for s in ("豪华", "五星")) else 350 if "舒适" in accommodation else 250
+            values["total_hotels"] += missing_nights * nightly
+            assumptions.append(f"住宿按{len(plan.days) - 1}晚、1间房计算，缺少报价的{missing_nights}晚按{nightly}元/晚预留。")
+            unknown.append("hotel_prices")
+        values["total_transportation"] = sum(0 if transport_to_route_type(d.transportation) == "walking" else
+            100 if transport_to_route_type(d.transportation) == "driving" else 30 for d in plan.days)
+        assumptions.append("市内交通按步行0元、公共交通30元/人/天、自驾100元/车/天预留；不含往返目的地的大交通。")
+        assumptions.append("门票与餐饮按1人计算，所有金额仅作预算预留，出行前确认价格。")
+    plan.budget = Budget(**values, total=sum(values.values()), estimated=True,
+                         unknown_items=sorted(set(unknown)), assumptions=assumptions)
 
 
 class RoutePlanner(Protocol):
