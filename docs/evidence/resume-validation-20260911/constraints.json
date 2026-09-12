@@ -1,0 +1,788 @@
+{
+  "dataset": "travel-constraints-v1",
+  "sha256": "b967e37b7629a2726e0a559dce4fba74be03075a793fdf6dcfe9dbd00f9c680a",
+  "policy": "constraints-v2",
+  "boundary": "Synthetic POIs and route fixtures; expected outcomes are authored independently of the implementation. Not real-model quality or user satisfaction.",
+  "cases": [
+    {
+      "id": "normal",
+      "baseline": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "same-poi",
+      "baseline": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [
+          {
+            "day_index": 0,
+            "removed_poi_id": "A",
+            "reason": "duplicate_poi"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cross-day",
+      "baseline": {
+        "selected_pois": false,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 2,
+        "attractions_checked": 3,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [
+          {
+            "day_index": 1,
+            "removed_poi_id": "B",
+            "reason": "duplicate_poi"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          },
+          {
+            "day_index": 1,
+            "visit_minutes": 120,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 0.0,
+            "planned_minutes": 240.0,
+            "inter_stop_walking_km": 0.0,
+            "route_distance_km": 0.0,
+            "routes": [],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "avoid",
+      "baseline": {
+        "selected_pois": false,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 1.73,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [
+          {
+            "day_index": 0,
+            "removed_poi_id": "B",
+            "reason": "excluded_attraction"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "C",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "daily-budget",
+      "baseline": {
+        "selected_pois": false,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [
+          {
+            "day_index": 0,
+            "removed_poi_id": "C",
+            "reason": "daily_time_exceeded"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "protect-required",
+      "baseline": {
+        "selected_pois": false,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 1.73,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [
+          {
+            "day_index": 0,
+            "removed_poi_id": "B",
+            "reason": "daily_time_exceeded"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "C",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "impossible-required",
+      "baseline": {
+        "selected_pois": true,
+        "constraint_result": false,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 85,
+        "passed": false,
+        "warnings": [
+          "第1天：安排超过每日200分钟上限"
+        ],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": false,
+        "facts_complete": false,
+        "feasibility_status": "violated",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "required-not-found",
+      "baseline": {
+        "selected_pois": true,
+        "constraint_result": false,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 85,
+        "passed": false,
+        "warnings": [
+          "未满足必去景点：Unknown（当前行程中未找到唯一对应景点，可补充所在区域或具体名称）"
+        ],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": false,
+        "facts_complete": false,
+        "feasibility_status": "violated",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "walking-limit",
+      "baseline": {
+        "selected_pois": false,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [
+          {
+            "day_index": 0,
+            "removed_poi_id": "C",
+            "reason": "walking_limit_exceeded"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": 2.0,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": 2.0
+              }
+            ],
+            "walking_status": "available"
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-unavailable",
+      "baseline": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true,
+        "missing_route_not_zero": false
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true,
+        "missing_route_not_zero": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": false,
+        "actual_route_distance_km": 0,
+        "actual_route_minutes": 0,
+        "repairs": [],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_unavailable",
+          "reservation_unverified",
+          "route_duration_unavailable_fallback_to_straight_line"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": null,
+            "planned_minutes": null,
+            "inter_stop_walking_km": null,
+            "route_distance_km": null,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "walking",
+                "minutes": null,
+                "distance_km": null,
+                "walking_km": null
+              }
+            ],
+            "walking_status": "unavailable"
+          }
+        ]
+      }
+    },
+    {
+      "id": "transit-walking-unknown",
+      "baseline": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true,
+        "missing_walk_not_zero": false
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true,
+        "missing_walk_not_zero": true
+      },
+      "quality": {
+        "score": 100,
+        "passed": true,
+        "warnings": [],
+        "days_checked": 1,
+        "attractions_checked": 2,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.86,
+        "route_checked": true,
+        "actual_route_distance_km": 2.0,
+        "actual_route_minutes": 20,
+        "repairs": [],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "inter_stop_walking_unverified",
+          "opening_hours_unavailable",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": true,
+        "facts_complete": false,
+        "feasibility_status": "needs_verification",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 240,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 20.0,
+            "planned_minutes": 380.0,
+            "inter_stop_walking_km": null,
+            "route_distance_km": 2.0,
+            "routes": [
+              {
+                "from": "A",
+                "to": "B",
+                "route_type": "transit",
+                "minutes": 20.0,
+                "distance_km": 2.0,
+                "walking_km": null
+              }
+            ],
+            "walking_status": "unavailable"
+          }
+        ]
+      }
+    },
+    {
+      "id": "no-attractions",
+      "baseline": {
+        "selected_pois": false,
+        "constraint_result": false,
+        "facts_not_overclaimed": true
+      },
+      "current": {
+        "selected_pois": true,
+        "constraint_result": true,
+        "facts_not_overclaimed": true
+      },
+      "quality": {
+        "score": 85,
+        "passed": false,
+        "warnings": [
+          "第 1 天没有可验证的景点"
+        ],
+        "days_checked": 1,
+        "attractions_checked": 0,
+        "duplicate_attractions_removed": 0,
+        "estimated_intra_day_distance_km": 0.0,
+        "route_checked": true,
+        "actual_route_distance_km": 0,
+        "actual_route_minutes": 0,
+        "repairs": [
+          {
+            "day_index": 0,
+            "removed_poi_id": "A",
+            "reason": "excluded_attraction"
+          }
+        ],
+        "data_gaps": [
+          "hotel_and_meal_routes_unverified",
+          "in_attraction_walking_unknown",
+          "opening_hours_travel_date_unverified",
+          "reservation_unverified"
+        ],
+        "degraded_days": [],
+        "policy_version": "constraints-v2",
+        "rules_passed": false,
+        "facts_complete": false,
+        "feasibility_status": "violated",
+        "day_checks": [
+          {
+            "day_index": 0,
+            "visit_minutes": 0,
+            "meal_allowance_minutes": 90,
+            "buffer_minutes": 30,
+            "route_minutes": 0.0,
+            "planned_minutes": 120.0,
+            "inter_stop_walking_km": 0.0,
+            "route_distance_km": 0.0,
+            "routes": [],
+            "walking_status": "available"
+          }
+        ]
+      }
+    }
+  ],
+  "baseline_passed": 2,
+  "current_passed": 12,
+  "total": 12
+}

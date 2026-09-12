@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-09-11T04:54:46.306868+00:00",
+  "statuses": [
+    {
+      "name": "initialize",
+      "exit_code": 0
+    },
+    {
+      "name": "rag",
+      "exit_code": 0
+    },
+    {
+      "name": "beijing-1",
+      "exit_code": 0
+    },
+    {
+      "name": "beijing-3",
+      "exit_code": 0
+    },
+    {
+      "name": "shanghai-2",
+      "exit_code": 0
+    },
+    {
+      "name": "guangzhou-2",
+      "exit_code": 0
+    },
+    {
+      "name": "shenzhen-1",
+      "exit_code": 0
+    },
+    {
+      "name": "hangzhou-2",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Current configured endpoint; isolated index and database; six predeclared Agent scenarios, not HTTP or real-world itinerary accuracy."
+}

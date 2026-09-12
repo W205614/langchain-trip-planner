@@ -25,3 +25,8 @@ __pycache__/
 .codex-*/
 backend/.codex-*/
 .pytest_cache/
+
+# Local project study and interview preparation
+/导学-智能旅行.md
+/面经-智能旅行.md
+/docs/evidence/resume-validation-20260911/resume.md
