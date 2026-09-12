@@ -99,11 +99,17 @@ async def _lifespan(app: FastAPI):
     if settings.trip_tasks_enabled:
         runner.start()
 
-    yield  # 应用运行期间挂起
-
-    runner.stop()
-    rag_sync_worker.stop()
-    knowledge_ingest_worker.stop()
+    try:
+        yield  # 应用运行期间挂起
+    finally:
+        try:
+            runner.stop()
+            rag_sync_worker.stop()
+            knowledge_ingest_worker.stop()
+        finally:
+            from ..services.amap_service import close_amap_service
+            import asyncio
+            await asyncio.to_thread(close_amap_service)
 
     print("\n" + "=" * 60)
     print("👋 应用正在关闭...")

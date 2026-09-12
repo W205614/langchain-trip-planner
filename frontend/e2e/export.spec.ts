@@ -14,7 +14,7 @@ test('PNG and PDF download all days and offline HTML toggles without a network',
   })
   await page.addInitScript(plan=>{sessionStorage.setItem('tripPlan',JSON.stringify(plan));sessionStorage.setItem('tripQuality','{}')},plan)
   await page.goto('/result')
-  expect(await page.locator('.ant-collapse-item-active').count()).toBe(1)
+  await expect(page.locator('.ant-collapse-item-active')).toHaveCount(1)
   for(const [label,extension] of [['导出为图片','png'],['导出为PDF','pdf'],['导出离线网页','html']]){
     await page.getByRole('button',{name:/导出行程/}).hover()
     const downloaded=page.waitForEvent('download',{timeout:45000})

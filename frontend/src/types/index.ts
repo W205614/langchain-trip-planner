@@ -5,6 +5,16 @@ export interface Location {
   latitude: number
 }
 
+export interface POIInfo {
+  id: string
+  name: string
+  type: string
+  address: string
+  location: Location
+  photos: string[]
+  opening_hours: string
+}
+
 export interface Attraction {
   poi_id?: string
   opening_hours?: string

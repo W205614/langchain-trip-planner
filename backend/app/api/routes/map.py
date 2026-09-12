@@ -132,8 +132,10 @@ async def health_check():
         return {
             "status": "healthy",
             "service": "map-service",
+            "transport": service.transport,
+            "connectivity_checked": False,
             "amap_api_key_configured": bool(service.api_key),
-            "base_url": AMAP_BASE_URL,
+            "base_url": AMAP_BASE_URL if service.transport == "rest" else "MCP (configured endpoint)",
         }
     except Exception as e:
         raise BizException(f"服务不可用: {str(e)}", status_code=503)

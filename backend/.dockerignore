@@ -3,6 +3,9 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.codex-*/
+.venv/
+tests/
 logs/
 data/chroma/
 data/trip_planner.db*

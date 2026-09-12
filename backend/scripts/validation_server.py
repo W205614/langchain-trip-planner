@@ -18,6 +18,11 @@ from app.agents import trip_planner_agent
 
 class FixtureMap:
     api_key = "fixture"
+    transport = "fixture"
+
+    def close(self):
+        pass
+
     def search_poi(self, keywords, city, *args, **kwargs):
         if city == "无候选":
             return []

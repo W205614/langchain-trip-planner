@@ -1,6 +1,6 @@
 """配置管理模块"""
 
-from typing import List
+from typing import List, Literal
 from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
@@ -62,6 +62,10 @@ class Settings(BaseSettings):
 
     # 高德地图API配置
     amap_api_key: str = ""
+    amap_transport: Literal["mcp", "rest"] = "mcp"
+    amap_mcp_url: str = "https://mcp.amap.com/mcp"
+    amap_mcp_timeout_seconds: float = Field(default=20, ge=1, le=60)
+    amap_mcp_search_limit: int = Field(default=10, ge=1, le=20)
     # 热点城市事实缓存。POI 变化相对低频，天气更短，设为 0 可禁用以排查数据问题。
     amap_poi_cache_ttl_seconds: int = Field(default=900, ge=0, le=86400)
     amap_weather_cache_ttl_seconds: int = Field(default=300, ge=0, le=3600)
@@ -203,6 +207,7 @@ def print_config():
     print(f"服务器: {settings.host}:{settings.port}")
     print(f"数据库: {'外部 DATABASE_URL' if settings.database_url else '本地 SQLite'}")
     print(f"高德地图API Key: {'已配置' if settings.amap_api_key else '未配置'}")
+    print(f"高德工具调用方式: {settings.amap_transport}")
 
     print(f"LLM API Key: {'已配置' if settings.llm_api_key else '未配置'}")
     print(f"LLM Base URL: {settings.llm_base_url or 'https://api.openai.com/v1 (官方默认)'}")

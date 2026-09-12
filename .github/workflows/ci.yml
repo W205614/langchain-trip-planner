@@ -112,6 +112,7 @@ jobs:
           LLM_MODEL_ID=test-model
           JWT_SECRET_KEY=test-jwt-secret-for-ci-only-0123456789
           EOF
+          echo 'VITE_AMAP_WEB_JS_KEY=offline-test-key' > frontend/.env
 
       - name: Validate Compose configuration
         run: docker compose --env-file backend/.env config --quiet

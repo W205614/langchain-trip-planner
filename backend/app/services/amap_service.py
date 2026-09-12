@@ -21,8 +21,13 @@ class AmapService:
     """高德地图服务封装类
 
     通过高德开放平台 Web 服务 API 提供: POI搜索、天气查询、路线规划、地理编码、POI详情。
-    相比原来基于 MCP 的实现, 直调 REST API 无需启动外部 MCP 服务进程, 自包含、易调试。
+    REST 实现供显式回退与离线夹具使用；默认工厂选择 AmapMCPService。
     """
+
+    transport = "rest"
+
+    def close(self):
+        self.client.close()
 
     def __init__(self):
         """初始化服务"""
@@ -258,6 +263,7 @@ class AmapService:
             destination,
             route_type=route_type,
             city=origin_city or destination_city,
+            destination_city=destination_city,
         )
 
     def plan_route_by_locations(
@@ -290,6 +296,7 @@ class AmapService:
         destination: str,
         route_type: str,
         city: Optional[str] = None,
+        destination_city: Optional[str] = None,
     ) -> Dict[str, Any]:
         """调用路线 API 并统一解析步行、驾车和公交返回结构。"""
         # 根据路线类型选择接口
@@ -307,6 +314,8 @@ class AmapService:
         # 公交接口需要城市名；缺失时仍让高德按坐标尝试，但不伪造结果。
         if route_type == "transit" and city:
             params["city"] = city
+            if destination_city:
+                params["cityd"] = destination_city
         data = self._get(path, params)
 
         route = data.get("route", {})
@@ -422,13 +431,27 @@ class AmapService:
 
 # 创建全局服务实例
 _amap_service = None
+_service_lock = RLock()
 
 
 def get_amap_service() -> AmapService:
     """获取高德地图服务实例(单例模式)"""
     global _amap_service
 
-    if _amap_service is None:
-        _amap_service = AmapService()
+    with _service_lock:
+        if _amap_service is None:
+            if get_settings().amap_transport == "mcp":
+                from .amap_mcp_service import AmapMCPService
+                _amap_service = AmapMCPService()
+            else:
+                _amap_service = AmapService()
 
     return _amap_service
+
+
+def close_amap_service() -> None:
+    global _amap_service
+    with _service_lock:
+        if _amap_service is not None:
+            _amap_service.close()
+            _amap_service = None

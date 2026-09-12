@@ -1,5 +1,7 @@
 <template>
   <div class="result-container">
+    <AttractionPicker v-if="tripPlan" :open="pickerDay !== null" :city="tripPlan.city"
+      :used-ids="usedPoiIds" @close="pickerDay = null" @select="addAttraction" />
     <!-- 页面头部 -->
     <div class="page-header">
       <a-button class="back-button" size="large" @click="goBack">
@@ -67,6 +69,7 @@
       <!-- 主内容区 -->
       <div class="main-content">
         <div class="result-notices">
+          <a-alert v-if="editMode || editNotice || unsaved" type="info" show-icon message="编辑期间预算为上次保存值；保存到服务器后重新计算预算和规则，路线信息仍需确认。" />
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
@@ -146,6 +149,7 @@
           <!-- 右侧:地图 -->
           <div class="right-map">
             <a-card id="map" title="📍 景点地图" :bordered="false" class="map-card">
+              <p>虚线为景点游览顺序示意，非实际导航路线。</p>
               <div id="amap-container" style="width: 100%; height: 100%"></div>
             </a-card>
           </div>
@@ -199,6 +203,7 @@
               </a-card>
               <!-- 景点安排 -->
               <a-divider orientation="left">🎯 景点安排</a-divider>
+              <a-button v-if="editMode" type="dashed" @click="pickerDay = index">＋ 添加景点</a-button>
               <a-list
                 :data-source="day.attractions"
                 :grid="{ gutter: 16, column: 2 }"
@@ -391,14 +396,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed } from 'vue'
+import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
-import AMapLoader from '@amap/amap-jsapi-loader'
+import { useTripMap } from '@/composables/useTripMap'
+import AttractionPicker from '@/components/trip/AttractionPicker.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import type { TripPlan } from '@/types'
+import type { TripPlan, POIInfo } from '@/types'
 import { reviseHistoryDay, updateHistory, fetchHistoryDetail } from '@/services/api'
 
 const router = useRouter()
@@ -421,6 +427,26 @@ const acceptVersion = (response: any) => {
   sessionStorage.setItem('tripQuality', JSON.stringify(quality.value))
 }
 const editMode = ref(false)
+const pickerDay = ref<number | null>(null)
+const usedPoiIds = computed(() => tripPlan.value?.days.flatMap(day => day.attractions.map(a => a.poi_id || '')) || [])
+const originalQuality = ref<any>(null)
+const editNotice = ref(false)
+const addAttraction = (poi: POIInfo) => {
+  if (!editMode.value || pickerDay.value === null || !tripPlan.value || usedPoiIds.value.includes(poi.id)) return
+  tripPlan.value.days[pickerDay.value].attractions.push({
+    poi_id: poi.id, name: poi.name, address: poi.address, location: { ...poi.location },
+    category: poi.type, opening_hours: poi.opening_hours, fact_source: 'amap', price_source: 'unknown',
+    visit_duration: 120, description: '手动添加的景点，请确认游览时间及预约要求。'
+  })
+  invalidateChecks()
+  pickerDay.value = null
+  loadAttractionPhotos()
+}
+const invalidateChecks = () => {
+  editNotice.value = true
+  quality.value = { data_gaps: ['user_edited_plan_not_externally_verified'] }
+}
+watch(tripPlan, () => { if (editMode.value) invalidateChecks() }, { deep: true, flush: 'sync' })
 const exportBusy = ref(false)
 const originalPlan = ref<TripPlan | null>(null)
 const attractionPhotos = ref<Record<string, string>>({})
@@ -431,7 +457,7 @@ const revisionOpen = ref(false)
 const revisionLoading = ref(false)
 const revisionDayIndex = ref<number | null>(null)
 const revisionInstruction = ref('')
-let map: any = null
+const { initMap } = useTripMap(tripPlan)
 
 // 统计所有景点数量
 const totalAttractions = computed(() => {
@@ -492,6 +518,7 @@ const scrollToSection = ({ key }: { key: string }) => {
 // 切换编辑模式
 const toggleEditMode = () => {
   editMode.value = true
+  originalQuality.value = JSON.parse(JSON.stringify(quality.value))
   // 保存原始数据用于取消编辑
   originalPlan.value = JSON.parse(JSON.stringify(tripPlan.value))
   message.info('进入编辑模式')
@@ -499,6 +526,9 @@ const toggleEditMode = () => {
 
 // 保存修改
 const saveChanges = async () => {
+  invalidateChecks()
+  pickerDay.value = null
+  sessionStorage.setItem('tripQuality', JSON.stringify(quality.value))
   editMode.value = false
   unsaved.value = true
   sessionStorage.setItem('tripUnsaved', 'true')
@@ -511,6 +541,7 @@ const saveChanges = async () => {
     try {
       const response = await updateHistory(historyRecordId.value, tripPlan.value, recordVersion.value)
       acceptVersion(response)
+      editNotice.value = false
       tripPlan.value = response.data
       sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
       unsaved.value = false
@@ -524,9 +555,6 @@ const saveChanges = async () => {
   }
 
   // 重新初始化地图以反映更改
-  if (map) {
-    map.destroy()
-  }
   nextTick(() => {
     initMap()
   })
@@ -538,6 +566,9 @@ const cancelEdit = () => {
     tripPlan.value = JSON.parse(JSON.stringify(originalPlan.value))
   }
   editMode.value = false
+  pickerDay.value = null
+  quality.value = originalQuality.value || {}
+  editNotice.value = false
   message.info('已取消编辑')
 }
 
@@ -563,7 +594,6 @@ const submitRevision = async () => {
     sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
     revisionOpen.value = false
     message.success(response.message || '当天行程已重新安排')
-    if (map) map.destroy()
     await nextTick()
     await loadAttractionPhotos()
     initMap()
@@ -585,6 +615,7 @@ const deleteAttraction = (dayIndex: number, attrIndex: number) => {
   }
 
   day.attractions.splice(attrIndex, 1)
+  invalidateChecks()
   message.success('景点已删除')
 }
 
@@ -594,6 +625,7 @@ const moveAttraction = (dayIndex: number, attrIndex: number, direction: 'up' | '
 
   const day = tripPlan.value.days[dayIndex]
   const attractions = day.attractions
+  invalidateChecks()
 
   if (direction === 'up' && attrIndex > 0) {
     [attractions[attrIndex], attractions[attrIndex - 1]] = [attractions[attrIndex - 1], attractions[attrIndex]]
@@ -1015,131 +1047,6 @@ const exportAsPDF = async () => {
   }
 }
 
-// 初始化地图
-const initMap = async () => {
-  try {
-    const AMap = await AMapLoader.load({
-      key: import.meta.env.VITE_AMAP_WEB_JS_KEY,  // 高德地图Web端(JS API) Key
-      version: '2.0',
-      plugins: ['AMap.Marker', 'AMap.Polyline', 'AMap.InfoWindow']
-    })
-
-    // 创建地图实例
-    map = new AMap.Map('amap-container', {
-      zoom: 12,
-      center: [116.397128, 39.916527], // 默认中心点(北京)
-      viewMode: '3D'
-    })
-
-    // 添加景点标记
-    addAttractionMarkers(AMap)
-
-    message.success('地图加载成功')
-  } catch (error) {
-    console.error('地图加载失败:', error)
-    message.error('地图加载失败')
-  }
-}
-
-// 添加景点标记
-const addAttractionMarkers = (AMap: any) => {
-  if (!tripPlan.value) return
-
-  const markers: any[] = []
-  const allAttractions: any[] = []
-
-  // 收集所有景点
-  tripPlan.value.days.forEach((day, dayIndex) => {
-    day.attractions.forEach((attraction, attrIndex) => {
-      if (attraction.location && attraction.location.longitude && attraction.location.latitude) {
-        allAttractions.push({
-          ...attraction,
-          dayIndex,
-          attrIndex
-        })
-      }
-    })
-  })
-
-  // 创建标记
-  allAttractions.forEach((attraction, index) => {
-    const marker = new AMap.Marker({
-      position: [attraction.location.longitude, attraction.location.latitude],
-      title: attraction.name,
-      label: {
-        content: `<div style="background: #4CAF50; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${index + 1}</div>`,
-        offset: new AMap.Pixel(0, -30)
-      }
-    })
-
-    // 创建信息窗口
-    const infoWindow = new AMap.InfoWindow({
-      content: `
-        <div style="padding: 10px;">
-          <h4 style="margin: 0 0 8px 0;">${attraction.name}</h4>
-          <p style="margin: 4px 0;"><strong>地址:</strong> ${attraction.address}</p>
-          <p style="margin: 4px 0;"><strong>游览时长:</strong> ${attraction.visit_duration}分钟</p>
-          <p style="margin: 4px 0;"><strong>描述:</strong> ${attraction.description}</p>
-          <p style="margin: 4px 0; color: #1890ff;"><strong>第${attraction.dayIndex + 1}天 景点${attraction.attrIndex + 1}</strong></p>
-        </div>
-      `,
-      offset: new AMap.Pixel(0, -30)
-    })
-
-    // 点击标记显示信息窗口
-    marker.on('click', () => {
-      infoWindow.open(map, marker.getPosition())
-    })
-
-    markers.push(marker)
-  })
-
-  // 添加标记到地图
-  map.add(markers)
-
-  // 自动调整视野以包含所有标记
-  if (allAttractions.length > 0) {
-    map.setFitView(markers)
-  }
-
-  // 绘制路线
-  drawRoutes(AMap, allAttractions)
-}
-
-// 绘制路线
-const drawRoutes = (AMap: any, attractions: any[]) => {
-  if (attractions.length < 2) return
-
-  // 按天分组绘制路线
-  const dayGroups: any = {}
-  attractions.forEach(attr => {
-    if (!dayGroups[attr.dayIndex]) {
-      dayGroups[attr.dayIndex] = []
-    }
-    dayGroups[attr.dayIndex].push(attr)
-  })
-
-  // 为每天的景点绘制路线
-  Object.values(dayGroups).forEach((dayAttractions: any) => {
-    if (dayAttractions.length < 2) return
-
-    const path = dayAttractions.map((attr: any) => [
-      attr.location.longitude,
-      attr.location.latitude
-    ])
-
-    const polyline = new AMap.Polyline({
-      path: path,
-      strokeColor: '#1890ff',
-      strokeWeight: 4,
-      strokeOpacity: 0.8,
-      strokeStyle: 'solid',
-      showDir: true // 显示方向箭头
-    })
-
-    map.add(polyline)
-  })
-}
 </script>
 
 <style scoped>

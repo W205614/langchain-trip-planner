@@ -2,10 +2,16 @@
 
 [![CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml/badge.svg)](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml)
 
-基于 **LangChain + LangGraph + FastAPI** 构建的智能旅行规划助手。系统直调高德地图 Web 服务 API 获取可验证的景点、近期天气预报和酒店 POI 候选；LLM 只在受控候选上编排行程，并具备 RAG、持久化任务、历史编辑、JWT 鉴权、恢复演练与自动化验证。项目定位为 **AI 应用后端方向的可靠单机演示服务**，不是已经运营的生产旅行平台。
+基于 **LangChain + LangGraph + FastAPI** 构建的智能旅行规划助手。系统默认通过高德官方 MCP 服务 获取可验证的景点、近期天气预报和酒店 POI 候选；LLM 只在受控候选上编排行程，并具备 RAG、持久化任务、历史编辑、JWT 鉴权、恢复演练与自动化验证。项目定位为 **AI 应用后端方向的可靠单机演示服务**，不是已经运营的生产旅行平台。
 
 
 ## 当前交付与验证
+
+2026-09-12：新增高德官方 MCP 接入，默认通过 MCP 查询景点、天气、酒店与路线；统一工具发现、参数 Schema 校验、共享会话、超时与响应适配，补齐真实 POI 坐标，保留显式 REST 配置。完整后端套件 **184 项通过**，真实地图调用通过。当前仍由 LangGraph 数据节点决定调用哪些工具，尚未将发现的工具绑定给模型自主选择。详见 [MCP 迁移说明](docs/amap-mcp.md)。
+
+2026-09-12：按 Hello Agents 第十三章完成一次分层重构，保留 LangChain/LangGraph；拆分规划提示词、状态及查询节点，抽出前端路由和地图生命周期，补齐搜索添加景点、重复选择限制及编辑时地图即时刷新。功能对照、模块职责和复现步骤见 [第十三章对照重构](docs/chapter13-refactor.md)。
+
+本次前端构建及浏览器回归通过；编辑后会清除旧质量结论，并在保存时重新计算预算。Docker 已完成一次全栈重新构建和重启，当时前后端健康、首页 HTTP 200，且容器内真实 MCP 查询通过。提交前检查未发现运行容器，这是一份部署验证记录，不表示当前服务在线。CI 为地图浏览器测试使用假 Key 和拦截的 SDK，不依赖个人高德凭据。
 
 补充证据：[2026-09-11 隔离环境复测](docs/evidence/resume-validation-20260911/README.md)记录了自动化测试、真实向量检索、有限生成样本和恢复演练，附原始报告及复现脚本。检索指标仅适用于既有开发标注集，生成样本不代表端到端行程准确率；具体环境、失败记录与验证边界见报告。
 
@@ -30,7 +36,7 @@
 ┌─ 后端 FastAPI (端口 9000) ────────────────────────────┐
 │  POST /api/trip/tasks (需 JWT 登录)                    │
 │    │                                                   │
-│    ├─ ① LangGraph 数据节点 (直调高德, 不走 LLM)          │
+│    ├─ ① LangGraph 数据节点 (通过 MCP, 不走 LLM)          │
 │    │   搜景点 → 查天气 → 搜酒店                          │
 │    │   └─ RAG 动态增强: 未预置城市用高德自动建知识        │
 │    │                                                   │
@@ -66,7 +72,7 @@
 - 📜 **行程历史记录**: 默认 SQLite 零配置；本机 PostgreSQL 使用 Alembic 管理 schema。支持分页、筛选、查看、编辑与删除，主数据库始终是事实源
 - 🧩 **主动偏好记忆**: 用户可选择保存交通方式、住宿偏好与旅行标签；不保存自由文本，读取、覆盖和删除均严格按用户隔离
 - 🔎 **来源优先资料研究**: 单独检索公开城市资料并返回文件名、页码和来源等级；研究模式不读取私人历史，也不把资料片段改写成未经验证的结论
-- 🗺️ **高德地图直调**: httpx 直接调用高德 Web 服务 REST API，无外部 MCP 进程依赖
+- 🗺️ **高德 MCP 工具接入**: 官方 Streamable HTTP 服务，工具发现、Schema 校验、共享会话与超时；`AMAP_TRANSPORT=rest` 可显式回退，无自动静默切换
 - 📸 **景点实景图**: 按 POI ID 查询并尝试备用照片，经同源代理返回；上游失败显示占位图，接口有节流与缓存，不承诺图源永久可用
 - 🧭 **名称与事实校验**: 支持城市前缀、城市限定别名和唯一候选名称变体；分馆歧义不静默选择。开放时间显示高德查询参考，预约与余票仍需官方确认
 - 💰 **可解释预算**: 缺价门票、住宿与交通使用明确标注的费用预留；住宿按天数减一计算，展示人数/房间数假设，不将未知费用写成免费
@@ -95,7 +101,7 @@
 - **Embedding**: `text-embedding-v4`（默认值，可通过环境变量切换；复用或独立配置 OpenAI 兼容嵌入端点）
 - **数据库**: SQLAlchemy 2.0 + SQLite（零配置回退）/ PostgreSQL（本机 `trip_planner`，Alembic 迁移）
 - **API**: FastAPI + Pydantic v2
-- **第三方服务**: 高德 Web 服务 API（httpx 直调 REST）
+- **第三方服务**: 高德官方 MCP（Streamable HTTP）；可配置 REST 回退
 
 ### 前端
 - **框架**: Vue 3 + TypeScript
@@ -128,7 +134,7 @@
                              └────────────────────┘
            ┌──────────────────────────────────────┐
            │  服务层  app/services/                │
-           │  amap_service.py (高德REST)           │
+           │  amap_mcp_service.py (高德MCP)           │
            │  llm_service.py  (ChatOpenAI工厂)     │
            └──────────────────────────────────────┘
 ```
@@ -152,7 +158,9 @@ langchain-trip-planner/
 │   │   │       ├── preferences.py # 用户主动保存的旅行偏好
 │   │   │       └── research.py    # 来源优先的公开资料研究
 │   │   ├── services/              # 服务层
-│   │   │   ├── amap_service.py    # 高德 REST API 客户端
+│   │   │   ├── amap_service.py    # 服务工厂与 REST 回退实现
+│   │   │   ├── amap_mcp_service.py # MCP 结果适配与事实缓存
+│   │   │   ├── amap_mcp_client.py # MCP 会话、工具发现与调用
 │   │   │   ├── llm_service.py     # ChatOpenAI 工厂
 │   │   │   ├── rag_service.py     # RAG: 知识索引+检索+上下文注入
 │   │   │   ├── history_service.py # 历史记录: SQLite/PostgreSQL CRUD
@@ -534,12 +542,18 @@ day_plan = DayPlan.model_validate(data)         # Pydantic 校验
 
 > **逐日生成的设计动机**: 一次让 LLM 输出 N 天完整 JSON 易截断、超时或解析失败。系统改为每天一个小 prompt、受 `LLM_CONCURRENCY` 控制并发，最后拼装；每个单日调用最多等待 `min(LLM_TIMEOUT, LLM_DAY_TIMEOUT)` 秒。任何一天失败都只用该天高德候选 POI 兜底，并在 SSE 与质量字段中声明降级，而不是伪造内容或承诺固定耗时。
 
-### 高德 REST 直调（无 MCP 依赖）
+### 高德 MCP 工具接入
 
-- 景点搜索: `GET https://restapi.amap.com/v3/place/text`
-- 天气: 先地理编码拿 adcode → `GET /v3/weather/weatherInfo`
-- 路线: 地理编码 → `GET /v3/direction/{walking|driving|transit}`
-- 图片: `GET /v3/place/detail` 返回 POI 实景图（国内 CDN），带 QPS 节流、1 小时解析缓存和同源代理；代理仅下载经 DNS 校验的公网 HTTP(S) 图片，逐跳验证重定向并流式限制为 5MB
+默认 `AMAP_TRANSPORT=mcp`，接入高德官方 `https://mcp.amap.com/mcp`，沿用 `AMAP_API_KEY`。安装更新后的后端依赖并重启生效；Docker 需重新构建后端镜像。
+
+- 景点/酒店：`maps_text_search` → 缺少坐标时按 ID 调用 `maps_search_detail`，保留 POI ID、图片与开放时间。
+- 天气：`maps_weather`；地址定位：`maps_geo`。
+- 路线：`maps_direction_walking/driving/transit_integrated`，结果适配回原有路线模型。
+- 图片 URL 从 MCP 详情取得；图片文件仍由原同源代理下载，前端底图仍使用高德 JS SDK。
+- 工具列表及参数 Schema 由 MCP 服务器提供；SDK 管理协议，会话由后端共享。当前仍由 LangGraph 数据节点决定调用哪些工具，未改为 LLM 自主选工具。
+- 需要旧实现时设置 `AMAP_TRANSPORT=rest` 并重启。MCP 出错遵循原有可见降级路径，不自动切 REST。
+
+接入、限制和验证见 [MCP 迁移说明](docs/amap-mcp.md)，本轮 [真实调用报告](docs/evidence/amap-mcp-20260912.json) 仅证明记录时刻的地图工具调用，不代表 LLM 行程质量。
 
 ## 🛡️ 安全设计（分层防御）
 

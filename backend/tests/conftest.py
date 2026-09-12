@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 # 测试环境变量 (必须在 import app 之前设置)
 os.environ["AMAP_API_KEY"] = "test_amap_key"
+os.environ["AMAP_TRANSPORT"] = "rest"  # Existing offline REST fixtures; MCP has dedicated protocol tests.
 os.environ["LLM_API_KEY"] = "test_llm_key"
 os.environ["LLM_BASE_URL"] = "http://localhost:9999/v1"  # 无效端点, 防止误发请求
 os.environ["LLM_MODEL_ID"] = "test-model"
