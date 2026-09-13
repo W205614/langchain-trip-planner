@@ -67,7 +67,7 @@
       "preferences": [],
       "free_text_input": ""
     },
-    "expected": "succeeded"
+    "expected": "needs_attention"
   },
   {
     "id": "no-candidates",
@@ -109,7 +109,7 @@
       "preferences": [],
       "free_text_input": ""
     },
-    "expected": "succeeded"
+    "expected": "needs_attention"
   },
   {
     "id": "invalid-json",

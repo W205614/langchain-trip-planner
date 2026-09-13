@@ -28,6 +28,7 @@ def run(base_url, output, live=False, token=None, max_requests=20):
             client.headers["Authorization"] = "Bearer " + response.json()["access_token"]
         rows = []
         for case in cases:
+            print(f"Business case {case['id']}: starting", flush=True)
             if live and rows:
                 time.sleep(13)  # Respect the normal 5/minute submission limit.
             started = time.monotonic()
@@ -41,10 +42,10 @@ def run(base_url, output, live=False, token=None, max_requests=20):
                     current = client.get(f"/api/trip/tasks/{task_id}")
                     current.raise_for_status()
                     state = current.json()["data"]
-                    if state["status"] in {"succeeded", "failed"}:
+                    if state["status"] in {"succeeded", "needs_attention", "failed", "cancelled"}:
                         break
                     if time.monotonic() - started > 325:
-                        raise RuntimeError("Task failed to reach a bounded terminal state")
+                        raise RuntimeError(f"Business case {case['id']}: task {task_id} did not terminate (status={state['status']})")
                     time.sleep(0.2)
             result = state.get("result", {})
             quality = result.get("quality", {})
@@ -58,11 +59,13 @@ def run(base_url, output, live=False, token=None, max_requests=20):
                 "persisted": persisted, "seconds": round(time.monotonic()-started, 3),
                 "token_usage": quality.get("usage"),
                 "human_satisfaction": None})
+            print(f"Business case {case['id']}: {state['status']} (expected {case['expected']})", flush=True)
         report = {"mode": "live_http" if live else "offline_fixture_http", "cases": rows,
             "contract_passed": sum(row["contract_passed"] for row in rows), "total": len(rows),
             "boundary": "HTTP/auth/task/database/quality contracts; fixture timing is not real model latency or SLA"}
         successes = [row for row in rows if row["status"] == "succeeded"]
         report["summary"] = {"successful_generations": len(successes),
+            "draft_generations": sum(row["status"] == "needs_attention" for row in rows),
             "rule_pass_rate": sum(bool(row["rule_passed"]) for row in successes) / len(successes) if successes else None,
             "degraded_rate": sum(bool(row["degraded_days"]) for row in successes) / len(successes) if successes else None,
             "persistence_rate": sum(row["persisted"] for row in successes) / len(successes) if successes else None,
