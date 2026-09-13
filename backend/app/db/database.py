@@ -73,7 +73,7 @@ def ensure_tables() -> None:
             "users": {"token_version": "INTEGER NOT NULL DEFAULT 0"},
             "trip_tasks": {"usage_json": "TEXT NOT NULL DEFAULT '{}'"},
             "trip_records": {"version": "INTEGER NOT NULL DEFAULT 1", "quality_json": "TEXT NOT NULL DEFAULT '{}'"},
-            "knowledge_documents": {"version": "INTEGER NOT NULL DEFAULT 1"},
+            "knowledge_documents": {"version": "INTEGER NOT NULL DEFAULT 1", "extracted_pages_json": "TEXT NOT NULL DEFAULT '[]'"},
             "knowledge_ingest_jobs": {"document_version": "INTEGER NOT NULL DEFAULT 1"},
         }.items():
             existing = {row[1] for row in connection.execute(text(f"PRAGMA table_info({table})"))}

@@ -431,7 +431,7 @@ const handleSubmit = async () => {
       // 保存到sessionStorage (并清除历史编辑标识, 新规划不受历史影响)
       storeTripResult(response)
 
-      message.success('旅行计划生成成功!')
+      response.quality?.outcome === 'draft' ? message.warning('已保存未完成草稿，请查看缺口') : message.success('旅行计划已生成，请核对降级说明')
 
       // 短暂延迟后跳转
       setTimeout(() => {

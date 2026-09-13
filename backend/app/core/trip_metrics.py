@@ -69,7 +69,7 @@ TRIP_STREAM_TOTAL_SECONDS = Histogram(
 def observe_trip_plan(quality: dict, cached: bool) -> None:
     """记录不含用户、城市、提示词等高基数或敏感标签的聚合指标。"""
     quality_label = "passed" if quality.get("passed") else "warning"
-    outcome = "cached" if cached else "generated"
+    outcome = "cached" if cached else quality.get("outcome", "generated")
     TRIP_PLAN_TOTAL.labels(outcome=outcome, quality=quality_label).inc()
     TRIP_PLAN_QUALITY_SCORE.observe(float(quality.get("score", 0)))
     TRIP_PLAN_WARNINGS_TOTAL.inc(len(quality.get("warnings", [])))

@@ -12,7 +12,7 @@
             <a-space wrap>
               <a-button v-if="['queued', 'running'].includes(item.status)" :disabled="busy === item.id" @click="cancel(item.id)">取消任务</a-button>
               <a-button v-if="['failed', 'cancelled'].includes(item.status)" :disabled="busy === item.id" @click="retry(item.id)">重新提交</a-button>
-              <a-button v-if="item.status === 'succeeded'" @click="open(item.id)">查看结果</a-button>
+              <a-button v-if="['succeeded', 'needs_attention'].includes(item.status)" @click="open(item.id)">查看结果</a-button>
             </a-space>
           </a-list-item>
         </template>
@@ -28,7 +28,7 @@ import { useRouter } from 'vue-router'
 import { cancelTask, fetchTask, fetchTasks, retryTask, storeTripResult } from '@/services/api'
 const router = useRouter()
 const tasks = ref<any[]>([]), total = ref(0), page = ref(1), loading = ref(false), error = ref(''), busy = ref('')
-const labels: Record<string, string> = { queued: '排队中', running: '生成中', succeeded: '已保存', failed: '失败', cancelled: '已取消' }
+const labels: Record<string, string> = { queued: '排队中', running: '生成中', succeeded: '已完成', needs_attention: '未完成草稿', failed: '失败', cancelled: '已取消' }
 const keys = new Map<string, string>()
 let timer: ReturnType<typeof setInterval> | undefined
 async function refresh() {

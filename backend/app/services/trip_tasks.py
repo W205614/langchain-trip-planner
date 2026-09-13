@@ -18,7 +18,7 @@ from . import history_service
 from .plan_quality import evaluate_plan, repair_plan_routes, recalculate_budget
 
 logger = logging.getLogger(__name__)
-TERMINAL = {"succeeded", "failed", "cancelled"}
+TERMINAL = {"succeeded", "needs_attention", "failed", "cancelled"}
 submission_lock = Lock()
 
 
@@ -80,12 +80,14 @@ def snapshot(user_id, task_id):
         result = {"id": task.id, "status": task.status, "stage": task.stage, "percent": task.percent,
                   "message": task.message, "error_code": task.error_code, "usage": json.loads(task.usage_json),
                   "deadline_at": task.deadline_at.isoformat() + "Z"}
-        if task.status == "succeeded":
+        from .result_policy import error_info
+        result["retryable"] = error_info(task.error_code)["retryable"] if task.error_code else False
+        if task.status in {"succeeded", "needs_attention"}:
             record = db.get(TripRecord, task.record_id)
             if record is None:
                 result.update(status="failed", error_code="RESULT_DELETED", message="行程已删除")
             else:
-                result["result"] = {"success": True, "message": "旅行计划已生成并保存", "saved": True,
+                result["result"] = {"success": True, "message": task.message, "saved": True,
                     "id": record.id, "version": record.version, "task_id": task.id,
                     "data": json.loads(record.plan_json), "quality": json.loads(record.quality_json)}
         return result
@@ -113,7 +115,7 @@ def cancel(user_id, task_id):
 
 def retry(user_id, task_id, key, request_id=""):
     state = snapshot(user_id, task_id)
-    if state["status"] not in {"failed", "cancelled"}:
+    if state["status"] not in {"failed", "cancelled", "needs_attention"}:
         raise BizException("只有失败或取消的任务可以重试", status_code=409)
     with SessionLocal() as db:
         original = db.get(TripTask, task_id)
@@ -220,15 +222,20 @@ class TripTaskRunner:
                 from .planning_constraints import finalize_plan
                 quality = finalize_plan(plan, body, get_amap_service(), repair=not bool(revision))
                 quality["usage"] = dict(usage)
+                if not any(day.attractions for day in plan.days):
+                    raise BizException("暂无可信景点", status_code=503, code="TRUSTED_POI_UNAVAILABLE")
+                draft = quality.get("outcome") == "draft"
+                if draft and revision:
+                    quality["revision_parent"] = revision
             with SessionLocal() as db:
                 # This CAS and the history/outbox insert form one transaction.
                 changed = db.execute(update(TripTask).where(TripTask.id == task_id, TripTask.status == "running",
-                    TripTask.deadline_at > now()).values(status="succeeded", stage="complete", percent=100,
-                    message="旅行计划已生成并保存"))
+                    TripTask.deadline_at > now()).values(status="needs_attention" if draft else "succeeded", stage="complete", percent=100,
+                    message="已保存未完成草稿，请查看缺口并调整" if draft else "旅行计划已生成并保存"))
                 if changed.rowcount != 1:
                     db.rollback()
                     return
-                if revision:
+                if revision and not draft:
                     record = history_service.update_trip_record(db, user_id, revision["record_id"], plan,
                         revision["version"], quality, commit=False)
                     if record is None:
@@ -242,11 +249,14 @@ class TripTaskRunner:
             logger.info("Generation saved request_id=%s task_id=%s", request_id, task_id)
         except Exception as exc:
             logger.exception("Generation failed task_id=%s", task_id)
+            from .result_policy import error_info
+            code = "TASK_TIMEOUT" if isinstance(exc, TimeoutError) else getattr(exc, "code", "GENERATION_FAILED")
+            if getattr(exc, "status_code", None) in (401, 403):
+                code = "UPSTREAM_CONFIG_ERROR"
             try:
                 with SessionLocal() as db:
                     db.execute(update(TripTask).where(TripTask.id == task_id, TripTask.status == "running").values(
-                        status="failed", error_code="TASK_TIMEOUT" if isinstance(exc, TimeoutError) else getattr(exc, "code", "GENERATION_FAILED"),
-                        message="旅行计划未保存，请稍后重试"))
+                        status="failed", error_code=code, message=error_info(code)["message"]))
                     db.commit()
             except Exception:
                 logger.exception("Cannot persist task failure; deadline/restart recovery will finalize it")

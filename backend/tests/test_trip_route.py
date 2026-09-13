@@ -81,6 +81,14 @@ def make_fake_trip_plan() -> TripPlan:
     )
 
 
+def make_complete_trip_plan():
+    plan = make_fake_trip_plan()
+    plan.days[1].attractions = [plan.days[0].attractions[0].model_copy(update={"poi_id": "second-poi", "name": "天安门广场"})]
+    for day in plan.days:
+        day.meals = [Meal(type=t, name=t) for t in ("breakfast", "lunch", "dinner")]
+    return plan
+
+
 VALID_REQUEST = {
     "city": "北京",
     "start_date": "2026-08-01",
@@ -189,14 +197,14 @@ def test_plan_trip_failure_returns_500(monkeypatch):
     assert resp.status_code == 500
     data = resp.json()
     assert data["success"] is False
-    assert "未保存" in data["message"]
+    assert "规划未完成" in data["message"]
 
 
 def test_revise_one_history_day_persists_only_the_revised_plan(client, monkeypatch):
     """增量改排只调用一次改排入口，写回原记录并保留其它日期。"""
     fake_agent = Mock()
-    original = make_fake_trip_plan()
-    revised = make_fake_trip_plan()
+    original = make_complete_trip_plan()
+    revised = make_complete_trip_plan()
     revised.days[0].description = "改为室内博物馆行程"
     revised.days[0].attractions[0].name = "国家博物馆"
     revised.days[0].attractions[0].poi_id = "B000A7VYV0"

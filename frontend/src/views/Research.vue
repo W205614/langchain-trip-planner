@@ -54,6 +54,7 @@ const search = async () => {
   }
   loading.value = true
   searched.value = false
+  evidence.value = []
   try {
     const response = await researchTravel(form.city.trim(), form.query.trim())
     evidence.value = response.data?.evidence || []

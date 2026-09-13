@@ -261,7 +261,7 @@ export async function reviseHistoryDay(id: number, dayIndex: number, instruction
   const deadline = Date.now() + 310000
   while (Date.now() < deadline) {
     const state = await fetchTask(pending.id)
-    if (state.status === 'succeeded') {
+    if (['succeeded', 'needs_attention'].includes(state.status)) {
       sessionStorage.removeItem('pendingRevision')
       return state.result
     }

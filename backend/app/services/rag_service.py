@@ -31,12 +31,14 @@ from ..config import get_settings
 from ..core.rag_metrics import observe_rag_operation
 from ..models.schemas import TripPlan, TripRequest
 from .coordination import rag_lock
+from .rag_runtime import operation, budget, index_lock, EVENTS
+from .knowledge_chunks import sections, complete_excerpt, entity_excerpt
 
 
 def serialized(method):
     @wraps(method)
     def wrapped(*args, **kwargs):
-        with rag_lock:
+        with operation():
             return method(*args, **kwargs)
     return wrapped
 
@@ -65,7 +67,7 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
     """嵌入模型 (OpenAI 兼容接口)
 
     通过中转/兼容端点 (如 SiliconFlow 等, 复用 LLM 的 base_url + api_key)
-    调用 text-embedding 模型, 走 langchain_openai.OpenAIEmbeddings;
+    调用 text-embedding 模型, 使用带总超时的 HTTP 适配器;
     实现 LangChain Embeddings 接口 (embed_documents/embed_query), 供 ChromaDB 使用。
     """
 
@@ -74,28 +76,43 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         self.base_url = base_url.rstrip("/")
         self.model = model
 
-    def _client(self):
-        from langchain_openai import OpenAIEmbeddings
-
-        return OpenAIEmbeddings(
-            model=self.model,
-            api_key=self.api_key,
-            base_url=self.base_url,
-            check_embedding_ctx_length=False,
-            request_timeout=20,
-            max_retries=0,
-        )
-
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         # 部分中转接口单次限制 10 条, 超出分批 (OpenAI 官方单次上限 2048 条)
         cleaned = [t.replace("\n", " ") for t in texts]
         results: List[List[float]] = []
         for i in range(0, len(cleaned), _EMBED_BATCH_SIZE):
-            results.extend(self._client().embed_documents(cleaned[i:i + _EMBED_BATCH_SIZE]))
+            results.extend(self._embed_bounded(cleaned[i:i + _EMBED_BATCH_SIZE]))
         return results
 
     def embed_query(self, text: str) -> List[float]:
-        return self._client().embed_query(text.replace("\n", " "))
+        return self._embed_bounded([text.replace("\n", " ")])[0]
+
+    def _embed_bounded(self, texts):
+        """Total timeout, including a provider that keeps sending tiny chunks.
+
+        The portal also supports callers inside an ASGI startup event loop. Closing
+        the async client cancels transport I/O rather than leaving detached work.
+        """
+        import asyncio
+        import httpx
+        from anyio.from_thread import start_blocking_portal
+        seconds = budget()
+        async def request():
+            async with asyncio.timeout(seconds), httpx.AsyncClient(timeout=seconds, follow_redirects=False) as client:
+                response = await client.post(self.base_url + "/embeddings",
+                    headers={"Authorization": "Bearer " + self.api_key},
+                    json={"model": self.model, "input": texts, "encoding_format": "float"})
+                response.raise_for_status()
+                data = sorted(response.json()["data"], key=lambda row: row["index"])
+                if [row["index"] for row in data] != list(range(len(texts))):
+                    raise ValueError("Embedding response does not match inputs")
+                return [row["embedding"] for row in data]
+        try:
+            with start_blocking_portal() as portal:
+                return portal.call(request)
+        except TimeoutError:
+            EVENTS.labels("timeout").inc()
+            raise
 
 # backend/data/knowledge 与 backend/data/chroma
 from ..db.database import DATA_DIR
@@ -122,6 +139,19 @@ class RagService:
             separators=["\n## ", "\n### ", "\n- ", "\n", "。", "；", " "],
         )
         self._init()
+
+    def _write_documents(self, attribute, documents, ids=None, replace_where=None):
+        from uuid import uuid4
+        store = getattr(self, attribute)
+        vectors = self._embedding.embed_documents([d.page_content for d in documents])
+        with index_lock():
+            if getattr(self, attribute) is not store:
+                raise RuntimeError("Index generation changed; retry publication")
+            self._mutation_version = getattr(self, "_mutation_version", 0) + 1
+            if replace_where:
+                store.delete(where=replace_where)
+            store._collection.upsert(ids=ids or [uuid4().hex for _ in documents], embeddings=vectors,
+                documents=[d.page_content for d in documents], metadatas=[d.metadata for d in documents])
 
     # ============ 初始化 ============
 
@@ -179,6 +209,7 @@ class RagService:
         "Collection expecting embedding with dimension of X, got Y"。
         此处每次启动探测集合维度, 不一致时禁用当前检索，保留集合并等待管理员显式重建。
         """
+        import httpx
         try:
             from langchain_chroma import Chroma
 
@@ -204,6 +235,11 @@ class RagService:
                         )
                         self._degraded = True
                         logger.error("Index rebuild required; existing collection retained")
+                except (TimeoutError, httpx.TransportError) as e:
+                    # A failed probe proves no dimension mismatch. Chroma still
+                    # checks each query/write vector; allow the next request to
+                    # recover instead of latching an outage until restart.
+                    logger.warning("Index dimension probe temporarily unavailable (%s); defer validation to next request", type(e).__name__)
                 except Exception as e:
                     logger.warning(f"⚠️  集合 [{name}] 维度探测失败, 保留集合并降级: {e}")
                     self._degraded = True
@@ -252,7 +288,8 @@ class RagService:
         for md_path in sorted(KNOWLEDGE_DIR.glob("*.md")):
             city = _CITY_NAME_MAP.get(md_path.stem, md_path.stem)
             content = md_path.read_text(encoding="utf-8")
-            for index, chunk in enumerate(self._text_splitter.split_text(content)):
+            for index, section in enumerate(sections(content)):
+                chunk = section["text"]
                 documents.append(
                     Document(
                         page_content=chunk,
@@ -261,6 +298,8 @@ class RagService:
                             "source": md_path.name,
                             "chunk_id": f"{md_path.name}:{index}",
                             "source_type": "markdown",
+                            "entity_name": section["entity_name"],
+                            "heading_path": section["heading_path"],
                         },
                     )
                 )
@@ -302,7 +341,7 @@ class RagService:
         try:
             self._refresh_store("_history_store", _HISTORY_COLLECTION)
             text = self._plan_to_text(request, trip_plan)
-            self._history_store.add_documents(
+            self._write_documents("_history_store",
                 [
                     Document(
                         page_content=text,
@@ -342,7 +381,9 @@ class RagService:
             return False
         try:
             self._refresh_store("_history_store", _HISTORY_COLLECTION)
-            self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
+            with index_lock():
+                self._mutation_version = getattr(self, "_mutation_version", 0) + 1
+                self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
             return True
         except Exception as exc:
             logger.warning("历史向量删除失败: record_id=%s, error=%s", record_id, exc)
@@ -363,11 +404,11 @@ class RagService:
             return False
         try:
             self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
-            self._knowledge_store.delete(where={"document_id": document_id})
             documents: List[Document] = []
             ids: List[str] = []
             for page, text in enumerate(page_texts, start=1):
-                for index, chunk in enumerate(self._text_splitter.split_text(text)):
+                for index, section in enumerate(sections(text)):
+                    chunk = section["text"]
                     chunk_id = f"submission:{document_id}:{page}:{index}"
                     documents.append(Document(
                         page_content=chunk,
@@ -380,12 +421,14 @@ class RagService:
                             "document_version": document_version,
                             "page": page,
                             "chunk_id": chunk_id,
+                            "heading_path": section["heading_path"],
+                            "entity_name": section["entity_name"],
                         },
                     ))
                     ids.append(chunk_id)
             if documents:
                 with observe_rag_operation("multimodal_knowledge_embedding"):
-                    self._knowledge_store.add_documents(documents, ids=ids)
+                    self._write_documents("_knowledge_store", documents, ids=ids, replace_where={"document_id": document_id})
             return True
         except Exception as exc:
             logger.warning("公共图文知识写入失败: document_id=%s, error=%s", document_id, exc)
@@ -397,7 +440,9 @@ class RagService:
             return False
         try:
             self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
-            self._knowledge_store.delete(where={"document_id": document_id})
+            with index_lock():
+                self._mutation_version = getattr(self, "_mutation_version", 0) + 1
+                self._knowledge_store.delete(where={"document_id": document_id})
             return True
         except Exception as exc:
             logger.warning("公共图文知识删除失败: document_id=%s, error=%s", document_id, exc)
@@ -459,7 +504,7 @@ class RagService:
                         continue
                 if "record_id" in meta:
                     record = db.get(TripRecord, meta["record_id"])
-                    if record is None or record.user_id != user_id:
+                    if record is None or record.user_id != user_id or json.loads(record.quality_json or "{}").get("outcome") == "draft":
                         continue
                 visible.append(doc)
         return visible
@@ -501,8 +546,9 @@ class RagService:
                 for document in self._visible_documents(docs)
             ]
         except Exception as exc:
-            logger.warning("旅行资料研究检索失败: %s", exc)
-            return []
+            logger.warning("旅行资料研究检索失败: %s", type(exc).__name__)
+            from ..core.exceptions import BizException
+            raise BizException("资料检索暂不可用，请稍后重试", status_code=503, code="RAG_UNAVAILABLE") from exc
 
     def build_rag_context(
         self,
@@ -533,11 +579,12 @@ class RagService:
             return ""
         header = "## 检索到的相关知识 (供你参考, 让行程更真实/贴合当地实际):"
         visible_chunks = (
-            [chunk[:max_chunk_chars] for chunk in chunks]
+            [complete_excerpt(chunk, max_chunk_chars) for chunk in chunks]
             if max_chunk_chars is not None
             else chunks
         )
-        return header + "\n" + "\n\n".join(f"- {c}" for c in visible_chunks)
+        visible_chunks = [c for c in visible_chunks if c]
+        return header + "\n" + "\n\n".join(f"- {c}" for c in visible_chunks) if visible_chunks else ""
 
     @serialized
     def ensure_city_index(self, city: str) -> bool:
@@ -589,12 +636,12 @@ class RagService:
                 )
                 chunks.append(Document(
                     page_content=line,
-                    metadata={"city": city, "source": f"{_GAODE_SOURCE_PREFIX}{city}"},
+                    metadata={"city": city, "source": f"{_GAODE_SOURCE_PREFIX}{city}", "entity_name": poi.name, "poi_id": poi.id},
                 ))
 
             if chunks:
                 with observe_rag_operation("city_index_embedding"):
-                    self._knowledge_store.add_documents(chunks)
+                    self._write_documents("_knowledge_store", chunks, ids=[f"gaode:{city}:{i}" for i in range(len(chunks))])
                 logger.info(f"📍 任意城市增强: 已为「{city}」自动写入 {len(chunks)} 个景点知识块")
             return True
         except Exception as e:
@@ -640,7 +687,7 @@ class RagService:
 
     @serialized
     def get_attraction_rag_texts(
-        self, names: List[str], city: str, max_chars: int = 320
+        self, names: List[str], city: str, max_chars: int = 320, poi_ids: Optional[dict] = None
     ) -> dict[str, str]:
         """批量获取景点详情。
 
@@ -665,13 +712,9 @@ class RagService:
                 docs = self._visible_documents(docs)
                 if not docs:
                     continue
-                lines = []
-                for line in docs[0].page_content.splitlines():
-                    line = line.strip()
-                    if not line or line.startswith("##") or line.startswith("###"):
-                        continue
-                    lines.append(line)
-                detail = "\n".join(lines).strip()[:max_chars]
+                detail = entity_excerpt(docs[0], name, city, max_chars, (poi_ids or {}).get(name))
+                if not detail:
+                    EVENTS.labels("entity_rejected").inc()
                 if detail:
                     if docs[0].metadata.get("source_type") == "multimodal":
                         source = docs[0].metadata.get("source", "公共攻略")

@@ -85,6 +85,7 @@ export interface WeatherInfo {
 }
 
 export interface TripPlan {
+  enrichment_notices?: string[]
   city: string
   start_date: string
   end_date: string
@@ -116,7 +117,7 @@ export interface TripPlanResponse {
   id?: number
   version?: number
   saved?: boolean
-  quality?: { warnings?: string[]; data_gaps?: string[]; degraded_days?: number[] }
+  quality?: { outcome?: string; revision_parent?: { record_id: number; version: number }; issues?: { code: string; reason: string; action: string; scope: string; blocking: boolean }[]; warnings?: string[]; data_gaps?: string[]; degraded_days?: number[] }
   success: boolean
   message: string
   data?: TripPlan

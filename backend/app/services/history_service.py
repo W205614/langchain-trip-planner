@@ -40,7 +40,8 @@ def create_trip_record(
     )
     db.add(record)
     db.flush()  # 在 commit 前取得主记录 ID，使主表与 outbox 原子提交。
-    _enqueue_rag_sync(db, record.id, user_id, "upsert")
+    if (quality or {}).get("outcome") != "draft":
+        _enqueue_rag_sync(db, record.id, user_id, "upsert")
     if commit:
         db.commit()
         db.refresh(record)
@@ -96,7 +97,7 @@ def update_trip_record(
         db.rollback()
         from ..core.exceptions import BizException
         raise BizException("行程已被其它页面修改，请重新加载", status_code=409, code="VERSION_CONFLICT")
-    _enqueue_rag_sync(db, record.id, user_id, "upsert")
+    _enqueue_rag_sync(db, record.id, user_id, "delete" if (quality or {}).get("outcome") == "draft" else "upsert")
     if commit:
         db.commit()
         db.refresh(record)
@@ -141,6 +142,7 @@ def trip_record_to_summary(record: TripRecord) -> dict:
     return {
         "id": record.id,
         "version": record.version,
+        "outcome": json.loads(record.quality_json or "{}").get("outcome", "unassessed"),
         "city": record.city,
         "start_date": record.start_date,
         "end_date": record.end_date,

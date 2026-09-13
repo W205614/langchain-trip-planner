@@ -1,0 +1,127 @@
+{
+  "mode": "single_real_task_isolated_sqlite",
+  "status": "succeeded",
+  "error_code": "",
+  "usage": {
+    "calls": 1,
+    "input_tokens": 1099,
+    "output_tokens": 911
+  },
+  "quality": {
+    "score": 100,
+    "passed": true,
+    "warnings": [],
+    "days_checked": 1,
+    "attractions_checked": 2,
+    "duplicate_attractions_removed": 0,
+    "estimated_intra_day_distance_km": 4.79,
+    "route_checked": true,
+    "actual_route_distance_km": 8.27,
+    "actual_route_minutes": 69,
+    "repairs": [
+      {
+        "day_index": 0,
+        "removed_poi_id": "B000A76B0A",
+        "reason": "daily_time_exceeded"
+      }
+    ],
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "in_attraction_walking_unknown",
+      "opening_hours_travel_date_unverified",
+      "reservation_unverified"
+    ],
+    "degraded_days": [],
+    "policy_version": "constraints-v2",
+    "rules_passed": true,
+    "facts_complete": false,
+    "feasibility_status": "needs_verification",
+    "day_checks": [
+      {
+        "day_index": 0,
+        "visit_minutes": 270,
+        "meal_allowance_minutes": 90,
+        "buffer_minutes": 30,
+        "route_minutes": 68.8,
+        "planned_minutes": 458.9,
+        "inter_stop_walking_km": 2.758,
+        "route_distance_km": 8.268,
+        "routes": [
+          {
+            "from": "故宫博物院-交泰殿",
+            "to": "北京古代建筑博物馆",
+            "route_type": "transit",
+            "minutes": 68.8,
+            "distance_km": 8.27,
+            "walking_km": 2.76
+          }
+        ],
+        "walking_status": "available"
+      }
+    ],
+    "completion_policy": "reliability-v1",
+    "issues": [
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "hotel_and_meal_routes_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "in_attraction_walking_unknown",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_hours_travel_date_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "reservation_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "RAG_UNAVAILABLE",
+        "scope": "plan",
+        "reason": "部分攻略资料暂无可靠匹配，请以官方信息为准",
+        "action": "可继续查看行程，攻略资料请稍后查询",
+        "blocking": false,
+        "retryable": true
+      }
+    ],
+    "outcome": "degraded",
+    "usage": {
+      "calls": 1,
+      "input_tokens": 1099,
+      "output_tokens": 911
+    }
+  },
+  "pois": [
+    {
+      "id": "B000A9PIPI",
+      "name": "故宫博物院-交泰殿"
+    },
+    {
+      "id": "B000A16BBC",
+      "name": "北京古代建筑博物馆"
+    }
+  ],
+  "limitations": [
+    "One sample; no accuracy or availability claim",
+    "No daily user records read or written",
+    "Provider cost not inferred when prices are absent"
+  ]
+}

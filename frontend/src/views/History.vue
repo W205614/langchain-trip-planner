@@ -39,6 +39,7 @@
           <div class="record-city">
             <span class="city-name">{{ record.city }}</span>
             <a-tag color="blue">{{ record.travel_days }} 天</a-tag>
+            <a-tag v-if="record.outcome === 'draft'" color="orange">未完成草稿</a-tag>
           </div>
           <div class="record-meta">
             <span class="meta-item">📅 {{ record.start_date }} ~ {{ record.end_date }}</span>

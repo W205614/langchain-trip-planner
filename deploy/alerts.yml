@@ -1,6 +1,38 @@
 groups:
   - name: trip-reliability
     rules:
+      - alert: TripDraftRateHigh
+        expr: sum(increase(trip_plan_total{outcome="draft"}[10m])) >= 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "未完成草稿增多，检查质量问题码和上游依赖"
+          runbook_url: "docs/operations/reliability.md#草稿与降级"
+      - alert: TripSyncStalled
+        expr: trip_oldest_sync_age_seconds > 600
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "索引同步停滞，检查 worker 与依赖后重放失败任务"
+          runbook_url: "docs/operations/reliability.md#同步与资源"
+      - alert: TripDiskLow
+        expr: trip_data_disk_free_ratio < 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "数据卷空间不足，暂停上传并检查备份和日志保留"
+          runbook_url: "docs/operations/reliability.md#同步与资源"
+      - alert: TripRagDegraded
+        expr: sum(increase(trip_rag_events_total{reason=~"timeout|busy|lock_timeout|entity_rejected"}[10m])) >= 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "攻略增强拒绝或超时增多；检查来源归属、嵌入服务和索引"
+          runbook_url: "docs/operations/reliability.md#草稿与降级"
       - alert: TripServiceDown
         expr: up{job="trip"} == 0
         for: 1m

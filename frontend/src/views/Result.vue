@@ -70,6 +70,11 @@
       <div class="main-content">
         <div class="result-notices">
           <a-alert v-if="editMode || editNotice || unsaved" type="info" show-icon message="编辑期间预算为上次保存值；保存到服务器后重新计算预算和规则，路线信息仍需确认。" />
+          <a-alert v-if="quality.outcome === 'draft'" type="warning" show-icon message="未完成草稿：以下要求尚未满足，不能视为完整可执行行程。" />
+          <a-alert v-for="notice in tripPlan.enrichment_notices || []" :key="notice" type="info" :message="notice" />
+          <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
+          <p v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`">{{ issue.reason }} · {{ issue.action }}</p>
+          <a-button v-if="quality.revision_parent" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
@@ -80,7 +85,7 @@
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
           <a-alert v-if="quality.data_gaps?.length" type="info" show-icon
             :message="factGapMessage" />
-          <a-alert v-for="warning in quality.warnings || []" :key="warning" type="warning" :message="warning" />
+          <a-alert v-for="warning in (quality.warnings || []).filter((w: string) => !(quality.issues || []).some((i: any) => i.blocking && i.reason === w))" :key="warning" type="warning" :message="warning" />
         </div>
         <!-- 顶部信息区:左侧概览+预算,右侧地图 -->
         <div class="top-info-section">
@@ -411,6 +416,14 @@ const router = useRouter()
 const tripPlan = ref<TripPlan | null>(null)
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
+async function applyRevisionDraft() {
+  try {
+    const { default: api } = await import('@/services/api')
+    await api.post(`/api/history/${historyRecordId.value}/apply-draft`, {}, { headers: { 'If-Match': String(recordVersion.value) } })
+    message.success('已应用，未满足要求仍保留为草稿提示')
+    delete quality.value.revision_parent
+  } catch (e: any) { message.error(e.response?.data?.message || e.response?.data?.detail || '应用失败，请重新打开原行程确认版本') }
+}
 const quality = ref(JSON.parse(sessionStorage.getItem('tripQuality') || '{}'))
 const factGapMessage = computed(() => {
   const gaps: string[] = quality.value.data_gaps || []
@@ -588,6 +601,7 @@ const submitRevision = async () => {
   revisionLoading.value = true
   try {
     const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction, recordVersion.value)
+    if (response.id) { historyRecordId.value = response.id; sessionStorage.setItem("tripPlanId", String(response.id)) }
     if (!response.success || !response.data) throw new Error(response.message || '改排失败')
     acceptVersion(response)
     tripPlan.value = response.data

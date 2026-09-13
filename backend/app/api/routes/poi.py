@@ -180,7 +180,9 @@ def _is_safe_remote_url(url: str) -> bool:
         # redirect is checked again. Private/LAN targets remain forbidden.
         trusted_path = ((parsed.hostname == "store.is.autonavi.com" and parsed.path.startswith("/showpic/")) or
                         (parsed.hostname == "aos-cdn-image.amap.com" and parsed.path.startswith("/sns/")) or
-                        (parsed.hostname == "aos-comment.amap.com" and re.match(r"^/[A-Za-z0-9]+/headerImg/", parsed.path)))
+                        (parsed.hostname == "aos-comment.amap.com" and (
+                            re.match(r"^/[A-Za-z0-9]+/headerImg/", parsed.path) or
+                            re.fullmatch(r"/[A-Za-z0-9]+/comment/[A-Za-z0-9_-]+\.(?:jpg|jpeg|png|webp)", parsed.path))))
         return bool(ips) and parsed.scheme == "https" and trusted_path and port == 443 \
             and all(ip in ipaddress.ip_network("198.18.0.0/15") for ip in ips)
     except ValueError:

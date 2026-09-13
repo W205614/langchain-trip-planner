@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import re
+import json
 from datetime import datetime, timedelta, timezone
 from threading import Event, Thread
 from typing import Callable
@@ -114,7 +115,7 @@ class RagSyncWorker:
 
         record = db.get(TripRecord, job.record_id)
         # 若 upsert 任务之后已删除主记录，删除旧向量即可，不能重新创建幻影记录。
-        if record is None:
+        if record is None or json.loads(record.quality_json or "{}").get("outcome") == "draft":
             if not rag.delete_history_plan(job.record_id, job.user_id):
                 raise RuntimeError("RAG stale-record delete returned false")
             return

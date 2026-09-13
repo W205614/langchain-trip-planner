@@ -11,6 +11,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from threading import Event, Thread
 from time import perf_counter
+from uuid import uuid4
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
@@ -59,7 +60,7 @@ def detect_upload_type(content: bytes) -> tuple[str, str]:
 
 def save_uploaded_content(document_id: int, content: bytes, suffix: str) -> str:
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    relative = Path("knowledge_uploads") / f"{document_id}{suffix}"
+    relative = Path("knowledge_uploads") / f"{document_id}-{uuid4().hex}{suffix}"
     path = DATA_DIR / relative
     path = UPLOAD_DIR / relative.name
     path.write_bytes(content)
@@ -179,12 +180,30 @@ def process_document(db, document: KnowledgeDocument, extractor: VisionExtractor
     if not rag.enabled:
         raise IndexUnavailable("RAG 暂不可用")
     document_id, version = document.id, document.version
+    if document.status == "publishing":
+        page_texts = json.loads(document.extracted_pages_json)
+        if not page_texts or any(not p.strip() for p in page_texts):
+            raise ValueError("没有可发布的已复核内容")
+        if not rag.replace_public_knowledge_document(document.id, document.city, document.title, page_texts,
+                source_tier=document.source_tier, document_version=version):
+            raise RuntimeError("公共知识向量化失败")
+        with knowledge_lock:
+            db.rollback()
+            current = db.get(KnowledgeDocument, document_id, populate_existing=True)
+            if current is None or current.version != version or current.status != "publishing":
+                raise PublicationCancelled("Publication superseded")
+            current.source_text = "\n\n".join(page_texts)
+            current.status = "published"
+            db.commit()
+        return
     extractor = extractor or VisionExtractor()
     pages = _render_pages(document)
-    page_texts = [
-        _page_text(document.title, page, extractor.extract(content, media_type, document.city, document.title, page))
-        for page, content, media_type in pages
-    ]
+    page_texts = []
+    for page, content, media_type in pages:
+        extracted = extractor.extract(content, media_type, document.city, document.title, page)
+        if not any(f.strip() for f in extracted.facts):
+            raise ValueError(f"第{page}页未提取到可复核事实，请换清晰资料或人工整理")
+        page_texts.append(_page_text(document.title, page, extracted))
     from .rag_service import get_rag_service
 
     rag = get_rag_service()
@@ -195,14 +214,9 @@ def process_document(db, document: KnowledgeDocument, extractor: VisionExtractor
         current = db.get(KnowledgeDocument, document_id, populate_existing=True)
         if current is None or current.version != version or current.status not in {"queued", "processing"}:
             raise PublicationCancelled("Publication superseded")
-        if not rag.replace_public_knowledge_document(
-            current.id, current.city, current.title, page_texts, source_tier=current.source_tier,
-            document_version=version,
-        ):
-            raise RuntimeError("公共知识向量化失败")
         current.page_count = len(page_texts)
-        current.source_text = "\n\n".join(page_texts)
-        current.status = "published"
+        current.extracted_pages_json = json.dumps(page_texts, ensure_ascii=False)
+        current.status = "awaiting_review"
         db.commit()
 
 
@@ -260,17 +274,19 @@ class KnowledgeIngestWorker:
                     job.status = "succeeded"
                 db.commit()
                 return True
-            if document.status not in {"queued", "processing", "failed"}:
+            if document.status not in {"queued", "processing", "failed", "publishing"}:
                 job.status = "cancelled"
                 db.commit()
                 return True
             with knowledge_lock:
                 db.refresh(document)
-                if document.version != job.document_version or document.status not in {"queued", "processing", "failed"}:
+                if document.version != job.document_version or document.status not in {"queued", "processing", "failed", "publishing"}:
                     job.status = "cancelled"
                     db.commit()
                     return True
-                document.status = "processing"
+                publishing = document.status == "publishing"
+                if not publishing:
+                    document.status = "processing"
                 db.commit()
             try:
                 process_document(db, document)
@@ -284,7 +300,7 @@ class KnowledgeIngestWorker:
                     job.status = "waiting"
                     job.attempts -= 1
                     job.next_retry_at = _utcnow() + timedelta(seconds=30)
-                    document.status = "queued"
+                    document.status = "publishing" if publishing else "queued"
             except Exception as exc:
                 self._retry(job, document, exc)
             else:
@@ -308,12 +324,13 @@ class KnowledgeIngestWorker:
             return
         job.last_error = "资料解析或索引暂不可用，请联系管理员检查日志"
         document.review_note = job.last_error
-        if job.attempts >= MAX_ATTEMPTS:
+        permanent = isinstance(exc, ValueError) or getattr(exc, "status_code", None) in (400, 401, 403, 422)
+        if job.attempts >= MAX_ATTEMPTS or permanent:
             job.status = "failed"
             document.status = "failed"
         else:
             job.status = "retry"
-            document.status = "queued"
+            document.status = "publishing" if document.status == "publishing" else "queued"
             job.next_retry_at = _utcnow() + timedelta(seconds=min(300, 2 ** (job.attempts - 1)))
 
 

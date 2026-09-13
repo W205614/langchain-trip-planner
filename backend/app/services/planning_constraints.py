@@ -183,4 +183,5 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         actual_route_minutes=round(sum(d["route_minutes"] or 0 for d in day_reports)),
         actual_route_distance_km=round(sum(d["route_distance_km"] or 0 for d in day_reports), 2))
     recalculate_budget(plan, estimate_missing=True)
-    return report
+    from .result_policy import classify
+    return classify(plan, request, report)

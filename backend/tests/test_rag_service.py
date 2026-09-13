@@ -71,6 +71,19 @@ def rag(tmp_path, monkeypatch):
     return svc
 
 
+@pytest.mark.parametrize("already_degraded", [False, True])
+def test_dimension_probe_timeout_does_not_latch_outage(rag, already_degraded):
+    rag._knowledge_store.add_documents([Document(page_content="北京攻略")])
+    rag._degraded = already_degraded
+    with patch.object(rag._embedding, "embed_query", side_effect=TimeoutError):
+        rag._ensure_collections_consistent()
+    assert rag._degraded is already_degraded
+    assert rag._knowledge_store._collection.count() == 1
+    if not already_degraded:
+        assert rag.enabled
+        assert rag._knowledge_store.similarity_search_by_vector(rag._embedding.embed_query("北京"), k=1)
+
+
 def test_ensure_collections_consistent_same_dim(rag):
     """维度一致时不应重建集合"""
     # 预写一条 3072 维数据
@@ -118,7 +131,7 @@ def test_ensure_city_index_idempotent(rag, monkeypatch):
     """动态城市增强应幂等: 同一城市只写一次"""
     from app.services import rag_service as rag_mod
     fake_amap = MagicMock()
-    fake_poi = MagicMock()
+    fake_poi = MagicMock(id="test-poi")
     fake_poi.name = "都江堰"
     fake_poi.address = "公园路"
     fake_poi.type = "风景名胜"
@@ -247,8 +260,8 @@ def test_build_rag_context_can_limit_prompt_chunk_size(rag):
     context = rag.build_rag_context(request, top_k=2, user_id=7, max_chunk_chars=600)
 
     rag.retrieve.assert_called_once()
-    assert context.count("甲") == 600
-    assert context.count("乙") == 600
+    assert context.count("甲") == 0
+    assert context.count("乙") == 0
     assert len(context) < 1300
 
 
@@ -286,8 +299,8 @@ def test_batch_attraction_details_embeds_once(rag):
         "北京 天坛 门票 开放时间 交通 避坑 打卡",
     ])
     assert rag._knowledge_store.similarity_search_by_vector.call_count == 2
-    assert details["故宫"] == "- 门票: 60元\n- 开放时间: 08:30"
-    assert details["天坛"] == "- 门票: 60元\n- 开放时间: 08:30"
+    assert details["故宫"] == "### 故宫\n- 门票: 60元\n- 开放时间: 08:30"
+    assert "天坛" not in details
 
 
 def test_readiness_reconnects_a_stale_chroma_collection_handle(rag, monkeypatch):

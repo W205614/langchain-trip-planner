@@ -1,5 +1,6 @@
 """Reconstruct derived indexes in an isolated directory using deterministic embeddings."""
 import os
+import json
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -28,7 +29,11 @@ rag._text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overla
 result = rag.build_knowledge_index()
 assert result["success"], result
 with SessionLocal() as db:
-    records = db.query(TripRecord).all()
+    all_records = db.query(TripRecord).all()
+    records = [r for r in all_records if json.loads(r.quality_json or "{}").get("outcome") != "draft"]
+    drafts = [r for r in all_records if r not in records]
+    for record in drafts:
+        assert not rag._history_store.get(ids=[f"history-{record.user_id}-{record.id}"])["ids"]
     assert result["history_records"] == len(records) and records
     for record in records:
         item = rag._history_store.get(ids=[f"history-{record.user_id}-{record.id}"])

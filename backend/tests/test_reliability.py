@@ -15,7 +15,7 @@ from app.models.schemas import TripRequest
 from app.services import trip_tasks, history_service
 from app.services.rag_sync import RagSyncWorker
 from app.agents.trip_planner_agent import MultiAgentTripPlanner
-from test_trip_route import VALID_REQUEST, make_fake_trip_plan
+from test_trip_route import VALID_REQUEST, make_fake_trip_plan, make_complete_trip_plan
 from test_rag_service import rag, published_document
 
 
@@ -120,7 +120,7 @@ def test_history_outbox_success_are_atomic(sql, monkeypatch, fail_save):
         db.get(TripTask, task_id).status = "running"
         db.commit()
     monkeypatch.setattr("app.agents.trip_planner_agent.get_trip_planner_agent",
-                        lambda: MagicMock(plan_trip=MagicMock(return_value=make_fake_trip_plan())))
+                        lambda: MagicMock(plan_trip=MagicMock(return_value=make_complete_trip_plan())))
     monkeypatch.setattr("app.services.amap_service.get_amap_service", lambda: MagicMock())
     if fail_save:
         original = history_service.create_trip_record
@@ -190,7 +190,7 @@ def test_reject_during_extraction_cannot_publish(sql, monkeypatch, tmp_path):
                 item = other.get(KnowledgeDocument, document_id)
                 item.status, item.version = "rejected", item.version + 1
                 other.commit()
-            return ingest.VisionExtraction(summary="facts")
+            return ingest.VisionExtraction(summary="facts", facts=["提前预约"])
         rag_mock = MagicMock(enabled=True)
         monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: rag_mock)
         with pytest.raises(ingest.PublicationCancelled):

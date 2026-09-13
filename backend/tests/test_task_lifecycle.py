@@ -7,7 +7,7 @@ from app.db.models import TripTask, TripRecord
 from app.models.schemas import TripRequest
 from app.services import trip_tasks, history_service
 from test_reliability import sql
-from test_trip_route import VALID_REQUEST, make_fake_trip_plan
+from test_trip_route import VALID_REQUEST, make_fake_trip_plan, make_complete_trip_plan
 
 
 def test_cancelled_task_never_commits_late_result(sql, monkeypatch):
@@ -51,7 +51,7 @@ def test_daily_quota_survives_scheduler_recreation(sql, monkeypatch):
 def test_revision_task_updates_original_atomically(sql, monkeypatch, conflict):
     body = TripRequest(**VALID_REQUEST)
     with sql() as db:
-        record = history_service.create_trip_record(db, 1, body, make_fake_trip_plan())
+        record = history_service.create_trip_record(db, 1, body, make_complete_trip_plan())
         record_id = record.id
     task, _ = trip_tasks.submit(1, body, revision={"record_id": record_id, "version": 1, "day_index": 0, "instruction": "少走路"})
     with sql() as db:
@@ -60,7 +60,7 @@ def test_revision_task_updates_original_atomically(sql, monkeypatch, conflict):
     def revised(request, plan, *args, **kwargs):
         if conflict:
             with sql() as db:
-                history_service.update_trip_record(db, 1, record_id, make_fake_trip_plan(), 1)
+                history_service.update_trip_record(db, 1, record_id, make_complete_trip_plan(), 1)
         plan.overall_suggestions = "revised"
         return plan
     monkeypatch.setattr("app.agents.trip_planner_agent.get_trip_planner_agent", lambda: MagicMock(revise_trip_day=revised))

@@ -671,7 +671,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
             attraction_names = [
                 attr.name for day in trip_plan.days for attr in day.attractions
             ]
-            details = rag.get_attraction_rag_texts(attraction_names, trip_plan.city)
+            details = rag.get_attraction_rag_texts(attraction_names, trip_plan.city,
+                poi_ids={a.name: a.poi_id for day in trip_plan.days for a in day.attractions})
+            if len(details) < len(set(attraction_names)):
+                trip_plan.enrichment_notices.append("部分攻略资料暂无可靠匹配，请以官方信息为准")
             for day in trip_plan.days:
                 for attr in day.attractions:
                     detail = details.get(attr.name, "")
@@ -679,6 +682,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
                         attr.description = f"{attr.description}\n\n——知识库参考——\n{detail}"
         except Exception as e:
             logger.warning(f"⚠️  知识库详情增强失败(不影响主流程): {e}")
+            trip_plan.enrichment_notices.append("攻略资料增强暂不可用，已保留真实景点安排")
 
         if progress_callback:
             self._emit_progress(result, "quality_check", 92, "已完成确定性质量校验")

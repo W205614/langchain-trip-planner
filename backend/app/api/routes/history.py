@@ -58,6 +58,7 @@ def get_history(
 
     plan = TripPlan.model_validate_json(record.plan_json)
     quality = json.loads(record.quality_json or "{}")
+    quality.setdefault("completion_policy", "unassessed")
     from ...services.planning_constraints import POLICY_VERSION, refresh_saved_quality
     if quality.get("policy_version") != POLICY_VERSION:
         quality = refresh_saved_quality(plan, history_service.trip_record_to_request(record), quality)
@@ -136,7 +137,7 @@ def revise_history_day(
     task_id = result["data"]["id"]
     while True:
         state = trip_tasks.snapshot(current_user.id, task_id)
-        if state["status"] == "succeeded":
+        if state["status"] in {"succeeded", "needs_attention"}:
             return state["result"] | {"rag_sync_pending": True}
         if state["status"] in {"failed", "cancelled"}:
             raise BizException(state["message"], status_code=409 if state["error_code"] == "VERSION_CONFLICT" else 500,
@@ -164,6 +165,30 @@ def submit_revision_task(request: Request, record_id: int, body: TripRevisionReq
         request.state.request_id, revision=revision)
     trip_tasks.runner.start()
     return {"success": True, "cached": cached, "data": trip_tasks.snapshot(current_user.id, task)}
+
+
+@router.post("/{record_id}/apply-draft", summary="确认将改排草稿应用到原行程")
+def apply_draft(record_id: int, expected_version: int = Header(..., alias="If-Match", ge=1),
+                db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    draft = history_service.get_trip_record(db, current_user.id, record_id)
+    if draft is None:
+        raise BizException("草稿不存在", status_code=404)
+    quality = json.loads(draft.quality_json or "{}")
+    parent = quality.get("revision_parent")
+    if not parent or draft.version != expected_version:
+        raise BizException("草稿已变更或不是改排草稿，请重新打开", status_code=409, code="VERSION_CONFLICT")
+    plan = TripPlan.model_validate_json(draft.plan_json)
+    updated_quality = {k: v for k, v in quality.items() if k != "revision_parent"}
+    target = history_service.update_trip_record(db, current_user.id, parent["record_id"], plan,
+        parent["version"], updated_quality, commit=False)
+    if target is None:
+        raise BizException("原行程已删除", status_code=409, code="RESULT_DELETED")
+    # Keep the user's explicit acceptance auditable and prevent a second application.
+    updated_quality["applied_to"] = parent["record_id"]
+    history_service.update_trip_record(db, current_user.id, record_id, plan, expected_version,
+        updated_quality, commit=False)
+    db.commit()
+    return {"success": True, "id": parent["record_id"], "message": "已应用；未满足的要求仍保留为草稿提示"}
 
 
 @router.delete("/{record_id}", summary="删除历史记录")

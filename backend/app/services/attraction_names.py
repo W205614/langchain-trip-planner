@@ -1,6 +1,24 @@
 """Resolve human attraction names against trusted POIs, with ambiguity rejection."""
 import re
 import unicodedata
+from math import isfinite
+
+
+def valid_attraction(p, city=""):
+    """Common gate for every candidate source (not just the initial search)."""
+    identity = getattr(p, "id", None) or getattr(p, "poi_id", None)
+    loc = getattr(p, "location", None)
+    if not identity or not getattr(p, "name", "").strip() or loc is None:
+        return False
+    source_city = getattr(p, "city", "")
+    if city and isinstance(source_city, str) and source_city and source_city.removesuffix("市") != city.removesuffix("市"):
+        return False
+    if not (isfinite(loc.longitude) and isfinite(loc.latitude)
+            and -180 <= loc.longitude <= 180 and -90 <= loc.latitude <= 90
+            and (loc.longitude != 0 or loc.latitude != 0)):
+        return False
+    text = p.name + " " + (getattr(p, "type", "") or "")
+    return not re.search(r"售票处|售票口|停车场|游客中心|服务中心|地铁站|公交站|酒店|宾馆|餐厅|银行|超市|足疗|洗浴", text)
 
 # Area-level intent is allowed only for these explicit, city-scoped aliases.
 # Tiananmen Square satisfies a general Tiananmen visit, not a tower admission.

@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from typing import List
 from ..models.schemas import TripRequest, WeatherInfo
 from .state import GraphState
+from ..services.attraction_names import valid_attraction
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +36,7 @@ class TravelDataNodes:
             _NON_ATTRACTION_TYPES = ("餐饮", "中餐厅", "餐厅", "酒店", "宾馆", "住宿", "购物", "超市", "银行", "KTV", "酒吧", "足疗", "洗浴", "火锅", "烤肉", "快餐")
             pois = [
                 p for p in pois
-                if p.id and not any(t in (p.type or "") for t in _NON_ATTRACTION_TYPES)
+                if valid_attraction(p, request.city) and not any(t in (p.type or "") for t in _NON_ATTRACTION_TYPES)
             ]
             logger.info(f"   找到 {len(pois)} 个景点")
 
@@ -48,9 +49,10 @@ class TravelDataNodes:
                     if any(name in n for n in known_names):
                         continue
                     kb_pois = self.amap_service.search_poi(name, request.city)
-                    if kb_pois:
-                        pois.append(kb_pois[0])
-                        known_names.add(kb_pois[0].name or "")
+                    match = self._resolve_required_poi(name, [p for p in kb_pois if valid_attraction(p, request.city)], request.city)
+                    if match:
+                        pois.append(match)
+                        known_names.add(match.name or "")
                         logger.info(f"   + 知识库补充景点: {name}")
             except Exception as e:
                 logger.warning(f"   ⚠️ 知识库景点补充失败(不影响主流程): {e}")
@@ -59,7 +61,7 @@ class TravelDataNodes:
             for name in request.constraints.must_visit:
                 try:
                     candidates = self.amap_service.search_poi(name, request.city)
-                    candidates = list({p.id: p for p in [*pois, *candidates]}.values())
+                    candidates = list({p.id: p for p in [*pois, *candidates] if valid_attraction(p, request.city)}.values())
                     match = self._resolve_required_poi(name, candidates, request.city)
                     if match:
                         match = match.model_copy(deep=True)
@@ -69,7 +71,7 @@ class TravelDataNodes:
                 except Exception:
                     logger.warning("必去景点查询失败，保留其它已取得的候选")
             avoided = {name_key(n) for n in request.constraints.avoid}
-            unique = {p.id: p for p in pois if p.id and name_key(p.name) not in avoided}
+            unique = {p.id: p for p in pois if valid_attraction(p, request.city) and name_key(p.name) not in avoided}
             return {"attraction_pois": list(unique.values())}
         except Exception as e:
             logger.warning(f"   ⚠️ 景点搜索失败: {e}")

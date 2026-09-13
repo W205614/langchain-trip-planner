@@ -115,6 +115,7 @@ class KnowledgeDocument(Base):
     review_note: Mapped[str] = mapped_column(String(512), default="")
     page_count: Mapped[int] = mapped_column(Integer, default=0)
     source_text: Mapped[str] = mapped_column(Text, default="")
+    extracted_pages_json: Mapped[str] = mapped_column(Text, default="[]", server_default="[]")
     version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
     updated_at: Mapped[datetime] = mapped_column(

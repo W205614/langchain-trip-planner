@@ -165,6 +165,7 @@ class AmapService:
                 return str(v) if v is not None else default
 
             pois.append(POIInfo(
+                city=_to_str(item.get("cityname")),
                 id=_to_str(item.get("id")),
                 name=_to_str(item.get("name")),
                 type=_to_str(item.get("type")),

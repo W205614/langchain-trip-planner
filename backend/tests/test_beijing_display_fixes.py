@@ -80,5 +80,9 @@ def test_official_amap_comment_cdn_fake_ip_is_scoped(monkeypatch):
     from app.api.routes.poi import _is_safe_remote_url
     monkeypatch.setattr(socket,'getaddrinfo',lambda *a,**kw:[(socket.AF_INET,socket.SOCK_STREAM,6,'',('198.18.0.2',443))])
     assert _is_safe_remote_url('https://aos-comment.amap.com/B000A83U0P/headerImg/photo.jpg')
+    assert _is_safe_remote_url('https://aos-comment.amap.com/B0LAB73CTR/comment/content_media_external_file_100014081_1759506340047_82018524.jpg')
+    assert not _is_safe_remote_url('http://aos-comment.amap.com/B0LAB73CTR/comment/photo.jpg')
+    assert not _is_safe_remote_url('https://aos-comment.amap.com/B0LAB73CTR/comment/../../admin.jpg')
+    assert not _is_safe_remote_url('https://aos-comment.amap.com/B0LAB73CTR/comment/photo.html')
     assert not _is_safe_remote_url('https://aos-comment.amap.com/admin')
     assert not _is_safe_remote_url('https://aos-comment.amap.com.evil.test/B000/headerImg/photo.jpg')

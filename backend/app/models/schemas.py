@@ -255,6 +255,7 @@ class TripPlan(BaseModel):
     days: List[DayPlan] = Field(..., description="每日行程")
     weather_info: List[WeatherInfo] = Field(default=[], description="天气信息")
     weather_notice: str = Field(default="", description="天气预报覆盖范围说明")
+    enrichment_notices: List[str] = Field(default_factory=list, description="可选资料增强缺口")
     overall_suggestions: str = Field(..., description="总体建议")
     budget: Optional[Budget] = Field(default=None, description="预算信息")
     constraints: PlanningConstraints = Field(default_factory=PlanningConstraints)
@@ -275,6 +276,7 @@ class TripPlanResponse(BaseModel):
 
 class POIInfo(BaseModel):
     """POI信息"""
+    city: str = Field(default="", description="上游明确返回的所属城市；缺失时不猜测")
     id: str = Field(..., description="POI ID")
     name: str = Field(..., description="名称")
     type: str = Field(..., description="类型")

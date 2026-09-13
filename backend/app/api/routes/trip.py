@@ -66,7 +66,7 @@ async def _events(request, user_id, task_id, cached=False):
     previous = None
     while not await request.is_disconnected():
         state = await asyncio.to_thread(trip_tasks.snapshot, user_id, task_id)
-        if state["status"] == "succeeded":
+        if state["status"] in {"succeeded", "needs_attention"}:
             payload = state["result"] | {"cached": cached}
             yield "event: complete\ndata: " + json.dumps(payload, ensure_ascii=False) + "\n\n"
             return
@@ -100,7 +100,7 @@ def plan_trip(request: Request, body: TripRequest, user: User = Depends(get_curr
     task_id, cached = _submit(request, body, user, idempotency_key)
     while True:
         state = trip_tasks.snapshot(user.id, task_id)
-        if state["status"] == "succeeded":
+        if state["status"] in {"succeeded", "needs_attention"}:
             return state["result"] | {"cached": cached}
         if state["status"] in {"failed", "cancelled"}:
             raise BizException(state["message"], status_code=504 if state["error_code"] == "TASK_TIMEOUT" else 500,

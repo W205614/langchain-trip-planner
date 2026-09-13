@@ -1,5 +1,6 @@
 """Exercise real Prometheus -> Alertmanager -> local receiver with a stopped test backend."""
 import json
+import argparse
 import subprocess
 import time
 import urllib.request
@@ -22,6 +23,10 @@ def wait_status(status, timeout=110):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, default=ROOT / "docs/evidence/notifications.json")
+    output = parser.parse_args().output
+    output.parent.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
     # A fresh receiver prevents a previous run's events from satisfying this run.
     subprocess.run(COMPOSE + ["up", "-d", "--force-recreate", "notification-receiver"], check=True)
@@ -36,5 +41,5 @@ if __name__ == "__main__":
     wait_status("resolved")
     report = {"firing_delivered": True, "resolved_delivered": True,
               "seconds": round(time.monotonic() - started, 2), "boundary": "Local isolated Docker notification channel"}
-    (ROOT / "docs/evidence/notifications.json").write_text(json.dumps(report, indent=2))
+    output.write_text(json.dumps(report, indent=2))
     print(json.dumps(report))

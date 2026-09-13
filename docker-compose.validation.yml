@@ -1,7 +1,7 @@
 # Dedicated project (-p trip-validation); never mounts backend/data or reads backend/.env.
 services:
   notification-receiver:
-    image: langchain-trip-planner-backend
+    image: trip-validation-backend
     entrypoint: [python, scripts/notification_receiver.py]
     ports: ["127.0.0.1:19088:9088"]
     volumes:
@@ -31,7 +31,8 @@ services:
       timeout: 3s
       retries: 30
   backend:
-    image: langchain-trip-planner-backend
+    build: ./backend
+    image: trip-validation-backend
     environment: &validation_environment
       APP_ENV: validation
       VALIDATION_ALLOW_FIXTURES: "yes"
@@ -56,13 +57,14 @@ services:
       timeout: 5s
       retries: 30
   frontend:
-    image: langchain-trip-planner-frontend
+    build: ./frontend
+    image: trip-validation-frontend
     ports: ["127.0.0.1:18080:80"]
     depends_on:
       backend:
         condition: service_healthy
   tests:
-    image: langchain-trip-planner-backend
+    image: trip-validation-backend
     profiles: [test]
     environment:
       <<: *validation_environment

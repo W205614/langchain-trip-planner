@@ -1,3 +1,4 @@
+import json
 from unittest.mock import MagicMock
 from uuid import uuid4
 
@@ -62,7 +63,7 @@ def test_image_submission_requires_admin_review(client, monkeypatch):
         assert check.get(KnowledgeDocument, document["id"]).status == "deleted"
 
 
-def test_process_document_publishes_page_text_with_source(monkeypatch, tmp_path):
+def test_process_document_stages_page_text_for_review(monkeypatch, tmp_path):
     db = SessionLocal()
     try:
         monkeypatch.setattr(ingest, "DATA_DIR", tmp_path)
@@ -85,12 +86,10 @@ def test_process_document_publishes_page_text_with_source(monkeypatch, tmp_path)
 
         ingest.process_document(db, document, extractor=extractor)
 
-        assert document.status == "published"
+        assert document.status == "awaiting_review"
         assert document.page_count == 1
-        assert "来源页: 1" in document.source_text
-        rag.replace_public_knowledge_document.assert_called_once()
-        assert rag.replace_public_knowledge_document.call_args.args[:3] == (document.id, "北京", "故宫攻略")
-        assert rag.replace_public_knowledge_document.call_args.kwargs["source_tier"] == "community"
+        assert "来源页: 1" in json.loads(document.extracted_pages_json)[0]
+        rag.replace_public_knowledge_document.assert_not_called()
     finally:
         db.rollback()
         db.close()
@@ -127,7 +126,8 @@ def test_scanned_pdf_is_rendered_before_vision_extraction(monkeypatch, tmp_path)
 
         assert extractor.extract.call_count == 2
         assert document.page_count == 2
-        assert rag.replace_public_knowledge_document.call_args.args[3][1].startswith("## 两页攻略")
+        assert json.loads(document.extracted_pages_json)[1].startswith("## 两页攻略")
+        rag.replace_public_knowledge_document.assert_not_called()
     finally:
         db.rollback()
         db.close()

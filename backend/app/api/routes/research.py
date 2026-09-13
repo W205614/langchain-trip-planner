@@ -19,14 +19,18 @@ def research_city(
     """返回公开资料证据卡，不将检索片段伪装为模型验证后的结论。"""
     rag = get_rag_service()
     if not rag.enabled:
-        raise BizException("旅行资料研究暂不可用，请检查嵌入服务配置", status_code=503)
-    evidence = rag.retrieve_research_evidence(body.query, body.city, k=5)
+        raise BizException("旅行资料研究未启用或索引需要修复，请管理员检查服务状态", status_code=503, code="RAG_DISABLED")
+    try:
+        evidence = rag.retrieve_research_evidence(body.query, body.city, k=5)
+    except TimeoutError as exc:
+        raise BizException("资料检索繁忙或超时，请稍后重试", status_code=503, code="RAG_UNAVAILABLE") from exc
     return {
         "success": True,
-        "message": "以下为公开资料检索结果；请以原文件和页码为准。",
+        "message": "以下为公开资料检索结果；请以原文件和页码为准。" if evidence else "暂无匹配资料，可更换关键词；不会据此生成事实。",
         "data": {
             "city": body.city,
             "query": body.query,
             "evidence": evidence,
+            "status": "matched" if evidence else "no_match",
         },
     }
