@@ -40,13 +40,19 @@ def test_rebuild_requires_admin(client, monkeypatch):
         app.dependency_overrides.clear()
 
 
-def test_probe_timeout_keeps_existing_vectors(rag):
+def test_probe_timeout_keeps_existing_vectors(rag, monkeypatch):
     from langchain_core.documents import Document
     rag._knowledge_store.add_documents([Document(page_content="retained")])
-    rag._embedding.embed_query = MagicMock(side_effect=TimeoutError())
-    rag._ensure_collections_consistent()
+    with monkeypatch.context() as probe:
+        probe.setattr(rag._embedding, "embed_query", MagicMock(side_effect=TimeoutError()))
+        rag._ensure_collections_consistent()
     assert rag._knowledge_store._collection.count() == 1
-    assert not rag.enabled
+    # A transient probe failure must not latch an outage until process restart.
+    assert rag.enabled
+    recovered = rag._knowledge_store.similarity_search_by_vector(
+        rag._embedding.embed_query("retained"), k=1,
+    )
+    assert [doc.page_content for doc in recovered] == ["retained"]
 
 
 def test_rebuild_failure_keeps_active_generation(rag, monkeypatch):
