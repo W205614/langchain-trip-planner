@@ -1150,9 +1150,11 @@ const exportAsPDF = async () => {
 
 .attraction-image {
   width: 100%;
-  height: 200px;
-  /* Keep the source/reference caption visible on wide cards and in exports. */
-  object-fit: contain;
+  height: auto;
+  /* Match the reference SVG's 800x500 canvas: fill the card without cropping its caption. */
+  aspect-ratio: 8 / 5;
+  object-fit: cover;
+  display: block;
   background: #f1f5f9;
   transition: transform 0.3s ease;
 }

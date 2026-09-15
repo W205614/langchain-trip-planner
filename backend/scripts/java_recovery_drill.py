@@ -8,10 +8,29 @@ import json
 from pathlib import Path
 import subprocess
 import time
+from urllib.error import URLError
+from urllib.request import urlopen
 from uuid import uuid4
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-p","trip-validation","-f",str(ROOT/"docker-compose.validation.yml")]
+
+
+def wait_for_public_fixture(timeout=30):
+    """Container started is not application ready; verify the Nginx route too."""
+    deadline = time.monotonic() + timeout
+    last_error = None
+    while time.monotonic() < deadline:
+        try:
+            with urlopen("http://127.0.0.1:18080/api/validation/fixture", timeout=2) as response:
+                fixture = json.load(response)
+            if fixture.get("offline_fixture") is not True:
+                raise RuntimeError("Restored entry is not the isolated offline fixture")
+            return
+        except (URLError, TimeoutError, json.JSONDecodeError) as error:
+            last_error = error
+            time.sleep(.5)
+    raise RuntimeError("Validation entry not ready after recovery") from last_error
 
 
 def run(output):
@@ -72,7 +91,8 @@ def run(output):
             if created:command("exec","-T","postgres","dropdb","-U","trip",target)
         else:
             print(f"Recovery artifacts retained: container={container}, database={target}")
-        command("start","backend","agent")
+        command("start","--wait","--wait-timeout","90","backend","agent")
+        wait_for_public_fixture()
 
 
 if __name__=="__main__":
