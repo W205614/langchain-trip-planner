@@ -41,7 +41,7 @@ def run(output=Path("docs/evidence/lifecycle-offline.json")):
             time.sleep(.5)
         current.raise_for_status()
         state = current.json()["data"]
-        assert (state["status"], state["error_code"]) == ("failed", "PROCESS_INTERRUPTED")
+        assert (state["status"], state["error_code"]) == ("failed", "PROCESS_INTERRUPTED"), state
         repeat = client.post("/api/trip/tasks", json=body, headers={"Idempotency-Key": key})
         assert repeat.json()["data"]["id"] == task_id
         assert repeat.json()["data"]["status"] == "failed"

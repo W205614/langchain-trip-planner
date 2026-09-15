@@ -1,7 +1,8 @@
 {
   "date": "2026-09-15",
   "scope": "single_host_java_agent_cleanup_offline",
-  "java_tests": 39,
+  "java_tests": 41,
+  "shutdown_restart_repetitions": 3,
   "agent_tests": 196,
   "browser_tests": 12,
   "business_cases": {

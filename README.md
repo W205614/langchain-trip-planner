@@ -229,6 +229,8 @@ PostgreSQL 数据卷、`backend/data/knowledge_uploads`、`backend/data/chroma`�
 
 详见 [当前运行手册](docs/operations/java-migration.md)。旧业务代码和历史部署脚本不再留在工作树；清理前源码提交为 `6c72a24`，本机另有仓库外源码备份。容器清理仅针对本项目辅助实例，不使用全局 prune，不删除其他项目容器或持久卷。
 
+镜像清理在准确提交的 CI 通过后执行：只删除经项目标签／名称核对且不再使用的本项目镜像或验证标签。保留当前运行镜像和明确标记的回滚镜像；不删除其他项目镜像或共享基础镜像，不使用全局 image prune。
+
 ## ❓ 常见问题与局限
 
 - **为什么还有 Python？** Python 仅承担 Agent、地图、检索、解析和索引能力；用户、任务、审核与业务数据由 Java 管理。

@@ -32,6 +32,7 @@ public class TaskService {
   private final Semaphore slots;
   private final ConcurrentHashMap<String, FutureTask<Void>> active = new ConcurrentHashMap<>();
   private final int timeout, queueLimit, userLimit, userDaily, globalDaily;
+  private volatile boolean closing;
 
   @Value("${WORKERS_ENABLED:true}")
   private boolean workersEnabled;
@@ -70,13 +71,21 @@ public class TaskService {
   }
 
   @PreDestroy
-  void close() {
-    active.values().forEach(f -> f.cancel(true));
-    pool.shutdownNow();
+  synchronized void close() {
+    closing = true;
+    try {
+      // Persist the shutdown reason before interrupting HTTP workers. Otherwise
+      // their catch block can win the race and misclassify restart as a timeout.
+      if (workersEnabled) tasks.recover();
+    } finally {
+      active.values().forEach(f -> f.cancel(true));
+      pool.shutdownNow();
+    }
   }
 
   public synchronized ObjectNode submit(
       long uid, ObjectNode input, String key, String requestId, ObjectNode revision) {
+    if (closing) throw new ApiException(503, "服务正在停止，请稍后重试", "PROCESS_INTERRUPTED");
     ObjectNode body = TripRequests.normalize(input);
     if (revision != null) body.set("_revision", revision);
     String idempotency = key == null ? UUID.randomUUID().toString() : key;
@@ -218,8 +227,8 @@ public class TaskService {
   }
 
   @Scheduled(fixedDelay = 250)
-  public void tick() {
-    if (!workersEnabled) return;
+  public synchronized void tick() {
+    if (!workersEnabled || closing) return;
     tasks.expire();
     active.forEach(
         (id, future) -> {
@@ -344,9 +353,11 @@ public class TaskService {
           });
     } catch (Exception ex) {
       String code =
-          ex instanceof ApiException ae
-              ? ae.code
-              : ex instanceof InterruptedException ? "TASK_TIMEOUT" : "AGENT_CONNECTION_LOST";
+          closing
+              ? "PROCESS_INTERRUPTED"
+              : ex instanceof ApiException ae
+                  ? ae.code
+                  : ex instanceof InterruptedException ? "TASK_TIMEOUT" : "AGENT_CONNECTION_LOST";
       tasks.fail(id, execution, code, "规划未完成，请查看任务状态后重试");
       if (ex instanceof InterruptedException) Thread.currentThread().interrupt();
     }
