@@ -54,10 +54,16 @@ def test_beijing_driving_saved_plan_is_corrected_without_regeneration():
     assert before==[a.poi_id for a in plan.days[0].attractions]
 
 
-@pytest.mark.parametrize('body,expected', [(b'\xff\xd8\xfftest','image/jpeg'),(b'<html>error</html>',None)])
+@pytest.mark.parametrize('body,expected', [(None,'image/jpeg'),(b'\xff\xd8\xfftest',None),(b'<html>error</html>',None)])
 def test_amap_legacy_http_octet_stream_is_upgraded_and_sniffed(monkeypatch,body,expected):
     from app.api.routes import poi as api
     import httpx
+    if body is None:
+        from io import BytesIO
+        from PIL import Image
+        buffer = BytesIO()
+        Image.new('RGB', (2, 2), 'blue').save(buffer, format='JPEG')
+        body = buffer.getvalue()
     seen=[]
     class Client:
         def __init__(self,**kw): pass

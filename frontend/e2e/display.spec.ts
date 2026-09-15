@@ -14,6 +14,7 @@ test('result retains required-name mapping, cost assumptions and precise photo i
     const url = new URL(route.request().url())
     expect(url.searchParams.get('poi_id')).toBe('B0KDJ78DYD')
     expect(url.searchParams.get('city')).toBe('上海')
+    expect(url.searchParams.get('v')).toBe('java-photo-v3')
     return route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="blue"/></svg>' })
   })
   await page.addInitScript(plan => {
@@ -28,6 +29,7 @@ test('result retains required-name mapping, cost assumptions and precise photo i
   await expect(page.locator('#budget')).toContainText('¥750')
   await expect(page.locator('#budget')).toContainText('¥120')
   await expect(page.locator('img[alt="上海迪士尼乐园"]')).toBeVisible()
+  await expect(page.locator('img[alt="上海迪士尼乐园"]')).toHaveCSS('object-fit', 'contain')
   await expect.poll(() => page.locator('img[alt="上海迪士尼乐园"]').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

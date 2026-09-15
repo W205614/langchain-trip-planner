@@ -668,7 +668,8 @@ const loadAttractionPhotos = async () => {
 
   tripPlan.value.days.forEach(day => {
     day.attractions.forEach(attraction => {
-      attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}&poi_id=${encodeURIComponent(attraction.poi_id || "")}&city=${encodeURIComponent(tripPlan.value!.city)}`
+      // Invalidate placeholders cached by the first Java proxy; real photos still keep their normal TTL.
+      attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}&poi_id=${encodeURIComponent(attraction.poi_id || "")}&city=${encodeURIComponent(tripPlan.value!.city)}&v=java-photo-v3`
     })
   })
 }
@@ -1150,12 +1151,14 @@ const exportAsPDF = async () => {
 .attraction-image {
   width: 100%;
   height: 200px;
-  object-fit: cover;
+  /* Keep the source/reference caption visible on wide cards and in exports. */
+  object-fit: contain;
+  background: #f1f5f9;
   transition: transform 0.3s ease;
 }
 
 .attraction-image-wrapper:hover .attraction-image {
-  transform: scale(1.05);
+  transform: none;
 }
 
 .attraction-badge {
