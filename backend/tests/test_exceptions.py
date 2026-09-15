@@ -3,13 +3,17 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.api.main import app
+from fastapi import FastAPI
+from app.core.exceptions import biz_exception_handler, global_exception_handler
 from app.core.exceptions import BizException
 
 
 @pytest.fixture
 def no_raise_client():
     """模拟真实服务器行为: 未捕获异常不抛给客户端, 由全局处理器返回500"""
+    app = FastAPI()
+    app.add_exception_handler(BizException, biz_exception_handler)
+    app.add_exception_handler(Exception, global_exception_handler)
     return TestClient(app, raise_server_exceptions=False)
 
 

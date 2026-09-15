@@ -7,37 +7,15 @@ from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.db.models import Base, TripTask, TripRecord, RagSyncJob, KnowledgeDocument, KnowledgeIngestJob, User
 from app.core.exceptions import BizException
 from app.models.schemas import TripRequest
-from app.services import trip_tasks, history_service
-from app.services.rag_sync import RagSyncWorker
 from app.agents.trip_planner_agent import MultiAgentTripPlanner
-from test_trip_route import VALID_REQUEST, make_fake_trip_plan, make_complete_trip_plan
+from planning_fixtures import VALID_REQUEST, make_fake_trip_plan, make_complete_trip_plan
 from test_rag_service import rag, published_document
 
 
-@pytest.fixture
-def sql(tmp_path, monkeypatch):
-    engine = create_engine("sqlite:///" + str(tmp_path / "isolated.db"), connect_args={"check_same_thread": False})
-    Base.metadata.create_all(engine)
-    factory = sessionmaker(bind=engine)
-    monkeypatch.setattr(trip_tasks, "SessionLocal", factory)
-    yield factory
-    engine.dispose()
 
 
-def test_rebuild_requires_admin(client, monkeypatch):
-    from app.api.main import app
-    from app.core.security import get_current_user
-    assert client.post("/api/rag/rebuild").status_code == 401
-    app.dependency_overrides[get_current_user] = lambda: User(id=44, username="ordinary", is_admin=False)
-    try:
-        assert client.post("/api/rag/rebuild").status_code == 403
-    finally:
-        app.dependency_overrides.clear()
 
 
 def test_probe_timeout_keeps_existing_vectors(rag, monkeypatch):
@@ -66,81 +44,14 @@ def test_rebuild_failure_keeps_active_generation(rag, monkeypatch):
     assert old._collection.count() == 1
 
 
-def test_disabled_rag_waits_then_recovers(sql, monkeypatch):
-    with sql() as db:
-        record = history_service.create_trip_record(db, 1, TripRequest(**VALID_REQUEST), make_fake_trip_plan())
-    worker = RagSyncWorker(sql)
-    monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: MagicMock(enabled=False))
-    worker.run_once()
-    with sql() as db:
-        job = db.query(RagSyncJob).one()
-        assert (job.status, job.attempts) == ("waiting", 0)
-        job.next_retry_at = trip_tasks.now() - timedelta(seconds=1)
-        db.commit()
-    healthy = MagicMock(enabled=True)
-    monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: healthy)
-    worker.run_once()
-    with sql() as db:
-        assert db.query(RagSyncJob).one().status == "succeeded"
 
 
-def test_durable_idempotency_and_owner_isolation(sql):
-    body = TripRequest(**VALID_REQUEST)
-    key = str(uuid4())
-    task_id, cached = trip_tasks.submit(1, body, key)
-    assert not cached
-    assert trip_tasks.submit(1, body, key) == (task_id, True)
-    with pytest.raises(BizException):
-        trip_tasks.submit(1, body.model_copy(update={"city": "上海"}), key)
-    with pytest.raises(BizException):
-        trip_tasks.snapshot(2, task_id)
 
 
-def test_restart_marks_running_interrupted_and_keeps_queue(sql, monkeypatch):
-    first, _ = trip_tasks.submit(1, TripRequest(**VALID_REQUEST))
-    queued, _ = trip_tasks.submit(1, TripRequest(**VALID_REQUEST))
-    with sql() as db:
-        db.get(TripTask, first).status = "running"
-        db.commit()
-    runner = trip_tasks.TripTaskRunner()
-    monkeypatch.setattr(runner, "_loop", lambda: None)
-    runner.start()
-    runner.stop()
-    assert trip_tasks.snapshot(1, first)["error_code"] == "PROCESS_INTERRUPTED"
-    assert trip_tasks.snapshot(1, queued)["status"] == "queued"
 
 
-def test_queue_deadline_is_terminal(sql):
-    task_id, _ = trip_tasks.submit(1, TripRequest(**VALID_REQUEST))
-    with sql() as db:
-        db.get(TripTask, task_id).deadline_at = trip_tasks.now() - timedelta(seconds=1)
-        db.commit()
-    trip_tasks.TripTaskRunner().tick()
-    assert trip_tasks.snapshot(1, task_id)["error_code"] == "TASK_TIMEOUT"
 
 
-@pytest.mark.parametrize("fail_save", [False, True])
-def test_history_outbox_success_are_atomic(sql, monkeypatch, fail_save):
-    task_id, _ = trip_tasks.submit(1, TripRequest(**VALID_REQUEST))
-    with sql() as db:
-        db.get(TripTask, task_id).status = "running"
-        db.commit()
-    monkeypatch.setattr("app.agents.trip_planner_agent.get_trip_planner_agent",
-                        lambda: MagicMock(plan_trip=MagicMock(return_value=make_complete_trip_plan())))
-    monkeypatch.setattr("app.services.amap_service.get_amap_service", lambda: MagicMock())
-    if fail_save:
-        original = history_service.create_trip_record
-        def failing(*args, **kwargs):
-            original(*args, **kwargs)
-            raise RuntimeError("commit unavailable")
-        monkeypatch.setattr(history_service, "create_trip_record", failing)
-    assert trip_tasks.llm_request_gate.try_acquire()
-    trip_tasks.TripTaskRunner().execute(task_id)
-    state = trip_tasks.snapshot(1, task_id)
-    with sql() as db:
-        assert db.query(TripRecord).count() == (0 if fail_save else 1)
-        assert db.query(RagSyncJob).count() == (0 if fail_save else 1)
-    assert state["status"] == ("failed" if fail_save else "succeeded")
 
 
 def test_slow_continuous_stream_is_cancelled_at_total_deadline():
@@ -161,79 +72,22 @@ def test_slow_continuous_stream_is_cancelled_at_total_deadline():
     assert closed == [True]
 
 
-def test_edit_compare_and_swap_prevents_lost_update(sql):
-    with sql() as db:
-        record = history_service.create_trip_record(db, 1, TripRequest(**VALID_REQUEST), make_fake_trip_plan())
-        history_service.update_trip_record(db, 1, record.id, make_fake_trip_plan(), expected_version=1)
-        with pytest.raises(BizException):
-            history_service.update_trip_record(db, 1, record.id, make_fake_trip_plan(), expected_version=1)
-        assert db.get(TripRecord, record.id).version == 2
 
 
 def test_rejected_publication_is_filtered_even_before_vector_cleanup(rag):
     from langchain_core.documents import Document
-    from app.db.database import SessionLocal
+    from test_rag_service import _published
     published_document(987)
     doc = Document(page_content="private now", metadata={"source_type": "multimodal", "document_id": 987})
     assert rag._visible_documents([doc]) == [doc]
-    with SessionLocal() as db:
-        db.get(KnowledgeDocument, 987).status = "deleted"
-        db.commit()
+    _published[987]["status"] = "deleted"
     assert rag._visible_documents([doc]) == []
 
 
-def test_reject_during_extraction_cannot_publish(sql, monkeypatch, tmp_path):
-    from app.services import knowledge_ingest as ingest
-    with sql() as db:
-        record = KnowledgeDocument(submitted_by=1, city="北京", title="test", original_filename="x.jpg",
-            stored_path="x.jpg", sha256="a"*64, media_type="image/jpeg", status="queued")
-        db.add(record)
-        db.commit()
-        document_id = record.id
-        monkeypatch.setattr(ingest, "_render_pages", lambda document: [(1, b"image", "image/jpeg")])
-        def extraction(*args):
-            with sql() as other:
-                item = other.get(KnowledgeDocument, document_id)
-                item.status, item.version = "rejected", item.version + 1
-                other.commit()
-            return ingest.VisionExtraction(summary="facts", facts=["提前预约"])
-        rag_mock = MagicMock(enabled=True)
-        monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: rag_mock)
-        with pytest.raises(ingest.PublicationCancelled):
-            ingest.process_document(db, record, MagicMock(extract=extraction))
-        rag_mock.replace_public_knowledge_document.assert_not_called()
 
 
-def test_queue_capacity_is_atomic_under_concurrent_submission(sql, monkeypatch):
-    from concurrent.futures import ThreadPoolExecutor
-    monkeypatch.setattr(trip_tasks.get_settings(), "trip_task_queue_limit", 1)
-    def send(_):
-        try:
-            trip_tasks.submit(1, TripRequest(**VALID_REQUEST))
-            return 202
-        except BizException as exc:
-            return exc.status_code
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        assert sorted(pool.map(send, range(4))) == [202, 429, 429, 429]
 
 
-def test_knowledge_dependency_wait_does_not_spend_retry_or_call_vision(sql, monkeypatch):
-    from app.services import knowledge_ingest as ingest
-    with sql() as db:
-        document = KnowledgeDocument(submitted_by=1, city="北京", title="test", original_filename="x.jpg",
-            stored_path="x.jpg", sha256="a"*64, media_type="image/jpeg", status="queued")
-        db.add(document)
-        db.flush()
-        db.add(KnowledgeIngestJob(document_id=document.id, document_version=1))
-        db.commit()
-    vision = MagicMock(side_effect=AssertionError("must not call paid vision"))
-    monkeypatch.setattr(ingest, "VisionExtractor", vision)
-    monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: MagicMock(enabled=False))
-    assert ingest.KnowledgeIngestWorker(sql).run_once()
-    with sql() as db:
-        job = db.query(KnowledgeIngestJob).one()
-        assert (job.status, job.attempts) == ("waiting", 0)
-    vision.assert_not_called()
 
 
 def test_live_evaluation_gate_limits_calls_and_requires_prices(monkeypatch):

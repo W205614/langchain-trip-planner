@@ -12,9 +12,9 @@ from .business_client import post
 from .indexing import _lock
 
 
-def rebuild():
+def rebuild(rag=None):
     with _lock:
-        rag=get_rag_service()
+        rag=rag if rag is not None else get_rag_service()
         if rag._embedding is None:
             return {"success":False,"message":"嵌入服务未配置","chunks":0}
         snapshot=post("/evidence/snapshot",{})

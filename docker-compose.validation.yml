@@ -21,17 +21,11 @@ services:
     image: trip-validation-agent
     profiles: [test]
     environment:
-      TEST_DATABASE_URL: postgresql+psycopg://trip:migration-fixture-only@postgres:5432/trip_tests
-      DATABASE_URL: postgresql+psycopg://trip:migration-fixture-only@postgres:5432/trip_tests
       AMAP_API_KEY: fixture
       LLM_API_KEY: fixture
       LLM_BASE_URL: http://127.0.0.1:1
       RAG_ENABLED: "false"
-      JWT_SECRET_KEY: fixture-tests-not-for-production-0123456789
     volumes:
       - ./backend/tests:/app/tests:ro
       - ./contracts:/contracts:ro
-    command: [sh, -c, "python -m alembic upgrade head && python -m pytest -q -p no:cacheprovider --basetemp=/tmp/pytest --tb=short"]
-    depends_on:
-      postgres:
-        condition: service_healthy
+    command: [python, -m, pytest, -q, -p, "no:cacheprovider", "--basetemp=/tmp/pytest", "--tb=short"]

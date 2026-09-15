@@ -9,20 +9,32 @@ from langchain_core.documents import Document
 
 
 
+_published = {}
+
 def published_document(document_id, text="审核通过的图片事实"):
-    from app.db.database import SessionLocal
-    from app.db.models import KnowledgeDocument
-    with SessionLocal() as db:
-        record = db.get(KnowledgeDocument, document_id)
-        if record is None:
-            record = KnowledgeDocument(id=document_id, submitted_by=1, city="北京", title="故宫攻略.webp",
-                original_filename="guide.webp", stored_path="guide.webp", sha256="a"*64,
-                media_type="image/webp", status="published", source_text=text, version=1)
-            db.add(record)
-        else:
-            record.status = "published"
-            record.source_text = text
-        db.commit()
+    _published[document_id] = {"status": "published", "version": 1, "text": text}
+
+
+def fake_visibility(path, payload):
+    if path == "/evidence/snapshot":
+        return {"revision": 1, "records": [], "documents": [
+            {"id": identity, "city": "北京", "title": "fixture", "source_tier": "reviewed",
+             "version": record["version"], "source_text": record["text"],
+             "extracted_pages_json": "[]"} for identity, record in _published.items()
+            if record["status"] == "published"]}
+    if path == "/evidence/revision":
+        return {"revision": 1}
+    assert path == "/evidence/visible"
+    allowed = []
+    for index, meta in enumerate(payload["candidates"]):
+        if meta.get("source_type") == "multimodal":
+            record = _published.get(meta.get("document_id"), {})
+            if record.get("status") != "published" or record.get("version") != int(meta.get("document_version", 1)):
+                continue
+        if "record_id" in meta and meta.get("user_id") != payload.get("user_id"):
+            continue
+        allowed.append(index)
+    return {"allowed": allowed}
 
 class FakeEmbedding:
     """假的嵌入对象: 返回固定维度向量, 供维度校验测试"""
@@ -42,6 +54,10 @@ class FakeEmbedding:
 def rag(tmp_path, monkeypatch):
     """隔离临时 Chroma 目录的 RagService"""
     from app.services import rag_service as rag_mod
+    _published.clear()
+    monkeypatch.setattr("app.agent_api.business_client.post", fake_visibility)
+    monkeypatch.setattr("app.agent_api.rebuild.post", fake_visibility)
+    monkeypatch.setattr("app.agent_api.rebuild.CHROMA_DIR", tmp_path / "chroma")
 
     monkeypatch.setattr(rag_mod, "CHROMA_DIR", tmp_path / "chroma")
     monkeypatch.setattr(rag_mod, "KNOWLEDGE_DIR", tmp_path / "knowledge")
@@ -130,6 +146,8 @@ def test_ensure_collections_consistent_dim_mismatch_preserves_data(rag, tmp_path
 def test_ensure_city_index_idempotent(rag, monkeypatch):
     """动态城市增强应幂等: 同一城市只写一次"""
     from app.services import rag_service as rag_mod
+    _published.clear()
+    monkeypatch.setattr("app.agent_api.business_client.post", fake_visibility)
     fake_amap = MagicMock()
     fake_poi = MagicMock(id="test-poi")
     fake_poi.name = "都江堰"
@@ -156,6 +174,8 @@ def test_ensure_city_index_idempotent(rag, monkeypatch):
 def test_ensure_city_index_no_poi_returns_false(rag, monkeypatch):
     """高德搜不到 POI 时不应强写知识库"""
     from app.services import rag_service as rag_mod
+    _published.clear()
+    monkeypatch.setattr("app.agent_api.business_client.post", fake_visibility)
     fake_amap = MagicMock()
     fake_amap.search_poi.return_value = []
     with patch("app.services.amap_service.get_amap_service", return_value=fake_amap):

@@ -1,6 +1,6 @@
 """配置管理模块"""
 
-from typing import List, Literal
+from typing import Literal
 from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
@@ -37,28 +37,16 @@ class Settings(BaseSettings):
 
     # 服务器配置
     host: str = "0.0.0.0"
-    port: int = 8000
+    port: int = 9000
 
-    # 本地默认 SQLite；生产可设置 DATABASE_URL 为 PostgreSQL 等 SQLAlchemy 连接串。
-    # 不配置时保留零依赖、可离线启动的本地体验。
-    database_url: str = Field(default="")
+    # Agent operational files and Chroma only; no business database.
     data_dir: str = ""
     chroma_dir: str = ""
-    upload_dir: str = ""
     log_dir: str = ""
     rag_enabled: bool = True
-    trip_task_timeout_seconds: int = Field(default=300, ge=1, le=1800)
-    trip_task_queue_limit: int = Field(default=32, ge=1, le=1000)
-    trip_user_active_limit: int = Field(default=4, ge=1, le=100)
-    trip_user_daily_limit: int = Field(default=50, ge=1, le=10000)
-    trip_global_daily_limit: int = Field(default=500, ge=1, le=100000)
-    trip_tasks_enabled: bool = True
     live_eval_enabled: bool = False
     live_eval_max_calls: int = Field(default=0, ge=0)
     live_eval_max_cost_usd: float = Field(default=0, ge=0)
-
-    # CORS配置 - 使用字符串,在代码中分割
-    cors_origins: str = "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000"
 
     # 高德地图API配置
     amap_api_key: str = ""
@@ -92,9 +80,6 @@ class Settings(BaseSettings):
     llm_day_timeout: int = Field(default=45, ge=5, le=120)
     # 逐日生成时的并发数。本机演示默认同时生成最多四天；可按模型供应商限流下调。
     llm_concurrency: int = Field(default=4)
-    # 同一进程中允许同时执行的高成本 LLM 请求数。覆盖普通规划、SSE 规划和历史单日改排，
-    # 防止某一入口绕过其它入口的接口限流后耗尽线程或模型配额。
-    llm_request_max_concurrency: int = Field(default=4, ge=1, le=32)
     # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
     # 当前供应商对 1000-token 上限的执行不稳定，因此保留经验证的 1800 默认值。
     llm_day_max_tokens: int = Field(default=1800, ge=800, le=4096)
@@ -121,14 +106,9 @@ class Settings(BaseSettings):
     vision_timeout: int = Field(default=60, ge=10, le=180)
     vision_input_price_per_million_usd: float = Field(default=0.0, ge=0)
     vision_output_price_per_million_usd: float = Field(default=0.0, ge=0)
-    # 启动时将已存在的该用户名授予审核权限；空值表示不自动授予任何管理员。
-    bootstrap_admin_username: str = Field(default="")
-
-    # 接口鉴权 (JWT)
+    # Internal service authentication; Java owns user JWT.
     # 生产环境务必设置强随机 SECRET_KEY (可: python -c "import secrets; print(secrets.token_urlsafe(48))")
-    jwt_secret_key: str = Field(default="dev-secret-change-me")
-    jwt_algorithm: str = Field(default="HS256")
-    access_token_expire_minutes: int = Field(default=60 * 24)  # token 有效期, 默认24小时
+    internal_service_key: str = Field(default="dev-secret-change-me")
 
     # 日志配置
     log_level: str = "INFO"
@@ -144,9 +124,6 @@ class Settings(BaseSettings):
             return _LLM_FIELD_DEFAULTS.get(info.field_name)
         return v
 
-    def get_cors_origins_list(self) -> List[str]:
-        """获取CORS origins列表"""
-        return [origin.strip() for origin in self.cors_origins.split(",")]
 
 
 # 创建全局配置实例
@@ -175,10 +152,10 @@ def validate_config(config: Settings | None = None):
         else:
             warnings.append(message)
 
-    jwt_is_weak = active_settings.jwt_secret_key in ("dev-secret-change-me", "") or len(active_settings.jwt_secret_key) < 32
-    if jwt_is_weak:
+    service_key_is_weak = active_settings.internal_service_key in ("dev-secret-change-me", "") or len(active_settings.internal_service_key) < 32
+    if service_key_is_weak:
         message = (
-            "JWT_SECRET_KEY 使用默认值或长度不足32字符，生产环境必须设置强随机值 "
+            "INTERNAL_SERVICE_KEY 使用默认值或长度不足32字符，生产环境必须设置强随机值 "
             "(python -c \"import secrets; print(secrets.token_urlsafe(48))\")"
         )
         if active_settings.app_env.lower() == "production":
@@ -205,7 +182,6 @@ def print_config():
     print(f"运行环境: {settings.app_env}")
     print(f"版本: {settings.app_version}")
     print(f"服务器: {settings.host}:{settings.port}")
-    print(f"数据库: {'外部 DATABASE_URL' if settings.database_url else '本地 SQLite'}")
     print(f"高德地图API Key: {'已配置' if settings.amap_api_key else '未配置'}")
     print(f"高德工具调用方式: {settings.amap_transport}")
 

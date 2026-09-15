@@ -13,7 +13,7 @@ if __name__ == "__main__":
     log_config["disable_existing_loggers"] = False
 
     uvicorn.run(
-        "app.api.main:app",
+        "app.agent_api.main:app",
         host=settings.host,
         port=settings.port,
         reload=True,

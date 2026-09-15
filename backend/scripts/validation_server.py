@@ -76,13 +76,10 @@ if os.environ.get("VALIDATION_AGENT_ONLY") == "yes":
         def delete_public_knowledge_document(self, *args, **kwargs): return True
     indexing.get_rag_service = lambda: FixtureIndex()
 else:
-    from app.api.main import app
+    raise SystemExit("Validation serves Agent capabilities only; Java owns public APIs")
 @app.get("/api/validation/fixture")
 def fixture_marker():
     return {"offline_fixture": True}
 
-from app.core.rate_limit import limiter
-# Throughput here is fixture throughput, never an upstream performance measurement.
-limiter.enabled = False
 import uvicorn
 uvicorn.run(app, host="0.0.0.0", port=9000)

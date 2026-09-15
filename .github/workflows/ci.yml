@@ -41,7 +41,7 @@ jobs:
           path: business-backend/target/surefire-reports/
   # ===== 后端: 安装依赖 + 跑测试 =====
   backend-test:
-    name: Backend pytest
+    name: Python Agent tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -53,7 +53,7 @@ jobs:
       LLM_API_KEY: test_llm_key
       LLM_BASE_URL: http://localhost:9999/v1
       LLM_MODEL_ID: test-model
-      JWT_SECRET_KEY: test-secret-for-ci
+      INTERNAL_SERVICE_KEY: test-internal-service-key-for-ci-only
     steps:
       - uses: actions/checkout@v4
 
@@ -102,31 +102,6 @@ jobs:
       - name: Type-check + build
         run: npm run build
 
-  # ===== 迁移校验: 确认 Alembic 迁移可生成/可执行 =====
-  migration-check:
-    name: Legacy Alembic import-reference check
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: backend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run migrations to head
-        run: |
-          python -m alembic upgrade head
-          python -c "import sqlite3; c=sqlite3.connect('data/trip_planner.db'); print('tables:', [r[0] for r in c.execute(\"SELECT name FROM sqlite_master WHERE type='table'\")])"
-
   docker-compose-check:
     name: Docker Compose config and build
     runs-on: ubuntu-latest
@@ -157,9 +132,8 @@ jobs:
       - name: Start isolated validation stack
         run: |
           docker compose -p trip-validation -f docker-compose.validation.yml up -d --build --wait postgres backend agent frontend
-          docker compose -p trip-validation -f docker-compose.validation.yml exec -T postgres createdb -U trip trip_tests
 
-      - name: PostgreSQL regression tests
+      - name: Agent container regression and layout checks
         run: docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
 
       - name: Nginx contracts and business scenarios
@@ -187,6 +161,7 @@ jobs:
         run: |
           python -m pip install httpx==0.28.1
           python backend/scripts/java_knowledge_smoke.py --output evidence/knowledge.json
+          python backend/scripts/java_api_contract_smoke.py --output evidence/public-api.json
 
       - name: Local notification failure and recovery
         run: |

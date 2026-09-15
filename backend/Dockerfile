@@ -16,8 +16,6 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install --retries 5 --timeout
 COPY app ./app
 COPY evals ./evals
 COPY run.py .
-COPY alembic.ini .
-COPY alembic ./alembic
 COPY scripts ./scripts
 # 手工维护的旅游知识随镜像发布；运行数据通过 Compose 绑定到宿主机持久化。
 COPY data/knowledge ./data/knowledge

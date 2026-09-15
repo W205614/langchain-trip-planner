@@ -59,17 +59,17 @@ def test_real_opening_hours_and_transit_walking_are_retained(monkeypatch):
     assert service.plan_route_by_locations(poi.location, poi.location, 'transit', '北京') == {}
 
 
-def test_photo_id_tries_second_image_without_name_search(client, monkeypatch):
-    from app.api.routes import poi
+def test_photo_id_tries_second_image_without_name_search(monkeypatch):
+    from app.services import poi_photos as poi
     from types import SimpleNamespace
     poi._photo_url_cache.clear()
     monkeypatch.setattr(poi, 'get_amap_service', lambda: SimpleNamespace(get_poi_detail=lambda id: {
         'photos': [{'url': 'https://example.test/broken'}, {'url': 'https://example.test/good'}]}))
     monkeypatch.setattr(poi, '_download_photo', lambda url: (b'image', 'image/jpeg') if url.endswith('good') else None)
     monkeypatch.setattr(poi, '_resolve_attraction_photo', lambda name: (_ for _ in ()).throw(AssertionError('wrong lookup')))
-    response = client.get('/api/poi/photo/image', params={'name': '故宫', 'poi_id': 'P1', 'city': '北京'})
+    response = poi.render_attraction_photo('故宫', 'P1', '北京')
     assert response.status_code == 200
-    assert response.content == b'image'
+    assert response.body == b'image'
     poi._photo_url_cache.clear()
 
 def test_shanghai_disney_park_variant_resolves_unique_park_not_resort_or_ticket_office():
@@ -111,7 +111,7 @@ def test_transit_empty_uses_verified_short_walk_but_not_long_walk(monkeypatch):
 
 def test_fake_ip_compatibility_is_limited_to_verified_amap_https_endpoint(monkeypatch):
     import socket
-    from app.api.routes.poi import _is_safe_remote_url
+    from app.services.poi_photos import _is_safe_remote_url
     monkeypatch.setattr(socket, 'getaddrinfo', lambda *a, **kw: [
         (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('198.18.0.85', 443))])
     assert _is_safe_remote_url('https://store.is.autonavi.com/showpic/photo?type=pic')

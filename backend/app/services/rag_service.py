@@ -324,7 +324,7 @@ class RagService:
         return self.build_knowledge_index()["success"]
 
     def build_knowledge_index(self, retries: int = 2) -> dict:
-        from .index_rebuild import rebuild
+        from ..agent_api.rebuild import rebuild
         try:
             return rebuild(self)
         except Exception:
@@ -494,28 +494,8 @@ class RagService:
 
     @staticmethod
     def _visible_documents(documents, user_id=None):
-        import os
-        if os.environ.get("BUSINESS_URL"):
-            from ..agent_api.business_client import visible
-            return visible(documents, user_id)
-        from ..db.database import SessionLocal
-        from ..db.models import KnowledgeDocument, TripRecord
-        visible = []
-        with SessionLocal() as db:
-            for doc in documents:
-                meta = doc.metadata
-                if meta.get("source_type") == "multimodal":
-                    if not meta.get("document_id"):
-                        continue
-                    record = db.get(KnowledgeDocument, meta["document_id"])
-                    if record is None or record.status != "published" or record.version != int(meta.get("document_version", 1)):
-                        continue
-                if "record_id" in meta:
-                    record = db.get(TripRecord, meta["record_id"])
-                    if record is None or record.user_id != user_id or json.loads(record.quality_json or "{}").get("outcome") == "draft":
-                        continue
-                visible.append(doc)
-        return visible
+        from ..agent_api.business_client import visible
+        return visible(documents, user_id)
 
     @staticmethod
     def _source_tier_for_document(metadata: dict) -> str:

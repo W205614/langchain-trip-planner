@@ -2,7 +2,23 @@
 
 日期：2026-09-15。范围：单 Windows 主机 Docker，单 Java、单 Python、独立 PostgreSQL；不代表生产 SLA、长期压力测试或旅行事实准确率。旧 Python 架构证据不与本表累加。
 
-## 已执行
+## 整理后的当前验收（2026-09-15）
+
+用户要求只保留当前 Java 业务后端和 Python Agent，并合并日常 Docker 项目。清理分支为 `codex/cleanup-java-agent`；[cleanup.json](cleanup.json) 是本轮脱敏结果。
+
+- Java 39 项、Agent 196 项、HTTP 业务 20/20、Java 账号／偏好／权限接口 20/20、Playwright 12/12 通过。
+- 恢复演练七表及上传内容一致；源服务健康和公开入口就绪后才判定通过。资料人工审核发布、Java 重启、Python 断流、取消后迟到均复验通过。
+- 浏览器首轮最后 3 项因与停服务恢复演练重叠失败，调整执行顺序后完整重跑 12/12；没有修改断言或降低门槛。
+- Agent 从官方 Python 基础镜像重新构建，锁定依赖安装与 `pip check` 通过；新增部署配置和密钥脱敏检查。运行镜像无旧业务 API／ORM 源码、无用户本地 RAG 验证脚本，未接收数据库或 JWT 凭据。
+- 日常 Agent 已更新，`langchain-trip-planner` 下仅四服务且全部健康，`http://localhost:8080` 返回 200。
+- 删除 15 个本项目验证／恢复／测试库容器；25 个其他项目及独立容器的 ID、状态、启动时间不变。所有原有 Docker 卷、宿主数据、备份及旧镜像保留，不执行全局 prune。
+- 删除旧 Python 业务接口、ORM、鉴权、任务调度、Alembic、旧部署／迁移脚本和过时证据文档。保留生成所需纯函数与冻结对照，最终业务裁决仍只由 Java 执行。旧源码可从 `6c72a24` 或 `E:\project\trip-planner-backups\pre-cleanup-source-20260915.zip` 恢复到独立目录。
+- 用户未跟踪的 `backend/scripts/rag_current_validation.py`、`docs/evidence/rag-current-20260913/` 原样保留，不提交；本机忽略的缓存和历史数据不是当前运行源码。
+- 本轮只执行离线夹具测试，没有追加模型、视觉、embedding 或高德付费调用。清理后的测试数与下方迁移阶段 255 项不能直接比较为覆盖率。
+
+远程 CI 是提交后的独立门槛，以最终提交对应运行结果为准。
+
+## 迁移阶段已执行（清理前历史记录）
 
 | 检查 | 结果 | 原始证据/复现入口 |
 |---|---|---|
@@ -20,7 +36,7 @@
 | 旧索引副本兼容 | 82 公开向量、5 历史向量、3072 维；复制后检查，无 embedding 调用 | [chroma-copy.json](chroma-copy.json) |
 | 日常新架构备份恢复 | 切换后七表摘要一致、恢复 Java 就绪、未改日常配置 | [daily-restore.json](daily-restore.json) |
 
-Java 测试使用独立 PostgreSQL 17.6；Python 测试使用隔离 `trip_tests`。运行时入口为 `app.agent_api.main:app`，导入边界测试确保不导入业务 ORM。公开入口保持 Java/Nginx；Python 不暴露宿主端口。
+该阶段 Java 测试使用独立 PostgreSQL 17.6；混合 Python 回归曾使用隔离 `trip_tests`。清理后 Agent 测试不再需要业务数据库。运行时入口为 `app.agent_api.main:app`，导入边界测试确保不导入业务 ORM。公开入口保持 Java/Nginx；Python 不暴露宿主端口。
 
 ## 真实小样本
 

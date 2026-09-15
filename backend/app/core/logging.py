@@ -33,7 +33,7 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record):
         message = super().format(record)
         settings = get_settings()
-        for name in ("amap_api_key", "llm_api_key", "embedding_api_key", "jwt_secret_key", "database_url"):
+        for name in ("amap_api_key", "llm_api_key", "embedding_api_key", "vision_api_key", "internal_service_key"):
             value = getattr(settings, name, "")
             if value and len(value) >= 4:
                 message = message.replace(value, "[REDACTED]")

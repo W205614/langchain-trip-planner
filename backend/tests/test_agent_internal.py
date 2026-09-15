@@ -30,6 +30,12 @@ def test_cancel_unknown_is_idempotent(client):
         assert client.post(f"/internal/v1/executions/{uuid.uuid4()}/cancel", headers=headers).status_code == 200
 
 
+def test_photo_rejects_empty_name_before_provider_call(client):
+    response = client.post("/internal/v1/capabilities/photo-image", json={"name": ""},
+        headers={"X-Service-Key": "internal-test-key-01234567890123456789"})
+    assert response.status_code == 422
+
+
 def test_research_disabled_preserves_business_error_code(client, monkeypatch):
     from types import SimpleNamespace
     from app.services import rag_service

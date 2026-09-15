@@ -8,7 +8,7 @@ def test_internal_runtime_does_not_import_business_orm():
     code="""
 import importlib,sys
 for name in ('app.agent_api.main','app.agent_api.extraction','app.agent_api.indexing',
-             'app.agent_api.rebuild','app.agents.trip_planner_agent','app.api.routes.poi'):
+             'app.agent_api.rebuild','app.agents.trip_planner_agent','app.services.poi_photos'):
     importlib.import_module(name)
 assert not any(name=='app.db' or name.startswith('app.db.') for name in sys.modules)
 """

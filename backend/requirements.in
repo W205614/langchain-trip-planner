@@ -31,17 +31,5 @@ dashscope>=1.14.1
 langchain-chroma>=0.1.0
 langchain-text-splitters>=0.3.0
 
-# 历史记录数据库 (SQLAlchemy + SQLite, 可无缝切换 PostgreSQL)
-sqlalchemy>=2.0.0
-psycopg[binary]>=3.2.0
-
 # 测试
 pytest>=8.0.0
-
-# 接口鉴权 (JWT) 与数据库迁移
-python-jose[cryptography]>=3.3.0
-bcrypt>=4.1.0
-alembic>=1.13.0
-
-# API 限流 (防 AI 生成被刷)
-slowapi>=0.1.9

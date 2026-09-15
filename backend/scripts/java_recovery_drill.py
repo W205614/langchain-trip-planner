@@ -103,7 +103,7 @@ def run(output):
                 return {f.name:hashlib.sha256(files.extractfile(f).read()).hexdigest() for f in files if f.isfile()}
         assert entries(archive)==entries(restored)
         manifest=hashlib.sha256(dump).hexdigest()
-        from recovery_drill import validate_archive
+        from archive_checks import validate_archive
         validate_archive(dump,manifest)
         try:validate_archive(dump[:-1],manifest)
         except ValueError:pass

@@ -32,18 +32,15 @@ AMAP_MCP_SEARCH_LIMIT=10
 
 Key 单独配置，不需要写进 URL；客户端会在连接时添加。URL 要求 HTTPS，本机协议测试允许 localhost HTTP。不要将带 Key 的连接 URL 写进文档或截图。常规应用日志使用已有脱敏格式器；公共异常不附带上游原始文本。
 
-正常部署在后端虚拟环境执行 `python -m pip install -r requirements.txt`，随后按原启动方式重启后端。前端不需更改配置。Docker 执行 `docker compose up -d --build --wait --wait-timeout 180`，使前后端使用更新后的镜像。
+当前地图能力位于 Python Agent，公开入口由 Java 鉴权。首次部署按根 README 生成私有配置；已有部署修改 `deploy/runtime/agent.env` 的对应设置，再执行 `docker compose up -d --build --wait --wait-timeout 180 agent`。不需要重建业务数据库。
 
-2026-09-12 已完成上述全栈构建及重启：当时两个容器均健康，前端返回 HTTP 200，地图探针显示 `transport=mcp`，容器内真实 MCP 查询脚本通过。首次构建因 NumPy 下载不完整触发哈希校验失败，重试成功，未绕过依赖校验。提交前再次检查时没有运行容器；上述结果是当时的部署验证记录，不代表服务持续运行。
-
-本轮在 Windows 创建了独立的 `backend/.codex-mcp-venv` 验证环境，复用现有环境中的其余依赖，并在该环境安装 MCP、sse-starlette、pywin32；没有把这些新增包写入系统 Python。若要直接复现本轮测试，从 `backend` 运行：
+离线回归从项目根目录运行：
 
 ```powershell
-.\.codex-mcp-venv\Scripts\python.exe -m pytest tests -q --basetemp=.codex-mcp-final-tests
-.\.codex-mcp-venv\Scripts\python.exe scripts/check_amap_mcp.py --output ../docs/evidence/amap-mcp-check.json
+docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
 ```
 
-第二条命令会真实访问高德服务，但不调用 LLM、不写业务数据库。正常新环境的依赖以 `requirements.lock` 为准，本地验证环境不代表从空环境安装整份锁文件的验证。
+`backend/scripts/check_amap_mcp.py` 是另行授权后使用的真实探针，会消耗高德调用；它不属于上述离线回归。依赖以 `backend/requirements.lock` 为准。
 
 显式回退：设置 `AMAP_TRANSPORT=rest` 并重启后端。不会因为 MCP 请求失败自动切回 REST；景点不足、天气不可用等仍走原有工作流降级和质量提示。健康接口返回 `transport` 与 `connectivity_checked=false`，仅表示配置状态，不把它当作 MCP 连通性检测。
 
@@ -65,12 +62,12 @@ SDK 处理 MCP 握手、消息 ID、HTTP/SSE 消息和工具调用；专用事�
 
 底图显示依然使用前端高德 JS SDK；图片二进制依然通过原有同源图片代理下载。它们不是 MCP 查询工具的替代对象。
 
-## 本轮验证（2026-09-12）
+## 验证与架构归属
 
-- 完整后端测试：**184 passed**。包含新增 **14 项** MCP 测试，其余 170 项沿用离线 REST 夹具。
+- 当前由 Java 提供公开入口，Python Agent 保留 MCP 查询能力；单测入口为 `backend/tests/test_amap_mcp.py`，完整结果见当前架构验收记录。
 - MCP 测试覆盖搜索补详情与缓存、缺坐标/错误 ID、天气字段、公交距离保守转换、跨城参数、短步行回退、禁止静默 REST 回退、错误响应及凭据隐藏。
 - 使用本地真实 HTTP MCP 测试服务器验证工具发现、Schema 校验、共享会话并发调用、工具错误、任务超时和关闭；并非只 mock 客户端函数。
-- [真实高德 MCP 调用报告](evidence/amap-mcp-20260912.json)：发现 15 个工具；故宫和天坛 POI 坐标/详情、4 天天气、地理编码、步行/驾车/公交查询均通过。仅作为当时接口可用性样本。
+- 2026-09-12 的旧架构调用报告和测试统计可从 Git 提交 `6c72a24` 查阅，不作为清理后架构的覆盖率或实时可用性证明。
 - 未运行真实 LLM 规划评测；没有声称 MCP 提高模型准确率、性能或自主性。已有 Starlette/httpx 弃用警告仍存在。
 
 源码入口：`backend/app/services/amap_mcp_client.py`、`amap_mcp_service.py`、`amap_service.py`；测试：`backend/tests/test_amap_mcp.py`；真实调用脚本：`backend/scripts/check_amap_mcp.py`。

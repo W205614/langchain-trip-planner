@@ -19,25 +19,25 @@ def test_amap_fact_cache_defaults_are_short_and_can_be_disabled():
     assert Settings(_env_file=None, amap_poi_cache_ttl_seconds=0).amap_poi_cache_ttl_seconds == 0
 
 
-def test_development_allows_default_jwt_with_warning(capsys):
+def test_development_allows_default_service_key_with_warning(capsys):
     settings = Settings(
         app_env="development",
         AMAP_API_KEY="test-amap",
         LLM_API_KEY="test-llm",
-        jwt_secret_key="dev-secret-change-me",
+        internal_service_key="dev-secret-change-me",
     )
     assert validate_config(settings) is True
-    assert "JWT_SECRET_KEY" in capsys.readouterr().out
+    assert "INTERNAL_SERVICE_KEY" in capsys.readouterr().out
 
 
-def test_production_rejects_default_or_short_jwt():
+def test_production_rejects_default_or_short_service_key():
     settings = Settings(
         app_env="production",
         AMAP_API_KEY="test-amap",
         LLM_API_KEY="test-llm",
-        jwt_secret_key="too-short",
+        internal_service_key="too-short",
     )
-    with pytest.raises(ValueError, match="JWT_SECRET_KEY"):
+    with pytest.raises(ValueError, match="INTERNAL_SERVICE_KEY"):
         validate_config(settings)
 
 
@@ -46,7 +46,7 @@ def test_production_requires_llm_configuration():
         app_env="production",
         AMAP_API_KEY="test-amap",
         LLM_API_KEY="",
-        jwt_secret_key="x" * 32,
+        internal_service_key="x" * 32,
     )
     with pytest.raises(ValueError, match="LLM_API_KEY"):
         validate_config(settings)

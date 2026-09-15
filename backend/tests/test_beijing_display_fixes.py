@@ -56,7 +56,7 @@ def test_beijing_driving_saved_plan_is_corrected_without_regeneration():
 
 @pytest.mark.parametrize('body,expected', [(None,'image/jpeg'),(b'\xff\xd8\xfftest',None),(b'<html>error</html>',None)])
 def test_amap_legacy_http_octet_stream_is_upgraded_and_sniffed(monkeypatch,body,expected):
-    from app.api.routes import poi as api
+    from app.services import poi_photos as api
     import httpx
     if body is None:
         from io import BytesIO
@@ -83,7 +83,7 @@ def test_amap_legacy_http_octet_stream_is_upgraded_and_sniffed(monkeypatch,body,
 
 def test_official_amap_comment_cdn_fake_ip_is_scoped(monkeypatch):
     import socket
-    from app.api.routes.poi import _is_safe_remote_url
+    from app.services.poi_photos import _is_safe_remote_url
     monkeypatch.setattr(socket,'getaddrinfo',lambda *a,**kw:[(socket.AF_INET,socket.SOCK_STREAM,6,'',('198.18.0.2',443))])
     assert _is_safe_remote_url('https://aos-comment.amap.com/B000A83U0P/headerImg/photo.jpg')
     assert _is_safe_remote_url('https://aos-comment.amap.com/B0LAB73CTR/comment/content_media_external_file_100014081_1759506340047_82018524.jpg')

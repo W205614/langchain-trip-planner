@@ -217,6 +217,12 @@ class RouteCoordinates(BaseModel):
     city: str
 
 
+class PhotoRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    poi_id: str = Field(default="", max_length=64, pattern=r"^[A-Za-z0-9]*$")
+    city: str = Field(default="", max_length=32)
+
+
 @app.post("/internal/v1/map/route-coordinates", dependencies=[Depends(authorize)])
 def route(body: RouteCoordinates):
     from ..services.amap_service import get_amap_service
@@ -237,12 +243,14 @@ def capability(kind: str, body: dict):
         request = POISearchRequest.model_validate(body)
         result = get_amap_service().search_poi(request.keywords, request.city, request.citylimit)
     elif kind == "photo":
-        from ..api.routes.poi import _resolve_attraction_photo
-        result = {"name": body["name"], "photo_url": _resolve_attraction_photo(body["name"])}
+        from ..services.poi_photos import _resolve_attraction_photo
+        request = PhotoRequest.model_validate(body)
+        result = {"name": request.name, "photo_url": _resolve_attraction_photo(request.name)}
     elif kind == "photo-image":
         import base64
-        from ..api.routes.poi import render_attraction_photo
-        image = render_attraction_photo(body["name"], body.get("poi_id", ""), body.get("city", ""))
+        from ..services.poi_photos import render_attraction_photo
+        request = PhotoRequest.model_validate(body)
+        image = render_attraction_photo(request.name, request.poi_id, request.city)
         return {"content_type": image.media_type, "content": base64.b64encode(image.body).decode()}
     elif kind == "eval-policy":
         from ..services.eval_budget import policy

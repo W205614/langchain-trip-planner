@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.api.routes import poi
+from app.services import poi_photos as poi
 
 
 @pytest.fixture(autouse=True)

@@ -26,7 +26,9 @@ os.environ["DATA_DIR"] = str(_TEST_ROOT)
 os.environ["CHROMA_DIR"] = str(_TEST_ROOT / "chroma")
 os.environ["UPLOAD_DIR"] = str(_TEST_ROOT / "knowledge_uploads")
 os.environ["LOG_DIR"] = str(_TEST_ROOT / "logs")
-os.environ["DATABASE_URL"] = os.environ.get("TEST_DATABASE_URL", "sqlite:///" + (_TEST_ROOT / "test.db").as_posix())
+os.environ.pop("DATABASE_URL", None)
+os.environ["BUSINESS_URL"] = "http://127.0.0.1:9999"
+os.environ["INTERNAL_SERVICE_KEY"] = "internal-test-key-01234567890123456789"
 os.environ["EMBEDDING_API_KEY"] = "test"
 os.environ["EMBEDDING_BASE_URL"] = "http://127.0.0.1:9999/v1"
 os.environ["VISION_API_KEY"] = "test"
@@ -38,51 +40,3 @@ os.environ["RAG_ENABLED"] = "false"
 
 import pytest
 from fastapi.testclient import TestClient
-
-from app.api.main import app
-
-
-@pytest.fixture(autouse=True, scope="session")
-def reset_isolated_postgres():
-    """Repeated integration runs start clean, without ever accepting a daily DB name."""
-    from app.db.database import engine
-    from app.db.models import Base
-    from sqlalchemy import text
-    if engine.dialect.name == "postgresql":
-        if engine.url.database != "trip_tests":
-            raise RuntimeError("Integration tests require the isolated trip_tests database")
-        tables = ', '.join('"' + table.name + '"' for table in Base.metadata.sorted_tables)
-        with engine.begin() as connection:
-            connection.execute(text("TRUNCATE " + tables + " RESTART IDENTITY CASCADE"))
-    else:
-        # Individual test modules also need a complete isolated schema.
-        Base.metadata.create_all(engine)
-    yield
-
-
-@pytest.fixture(autouse=True, scope="session")
-def _isolate_logs():
-    """测试期间隔离日志: 移除文件 handler。
-
-    异常测试会故意触发异常(如 /test-uncaught), 全局异常处理器会把完整堆栈写入
-    logs/app.log, 导致测试产物污染生产日志。测试只输出到控制台, 不落盘。
-    """
-    import logging
-
-    root = logging.getLogger()
-    for handler in list(root.handlers):
-        if isinstance(handler, logging.FileHandler):
-            root.removeHandler(handler)
-
-    yield
-
-
-@pytest.fixture(scope="session")
-def client() -> TestClient:
-    """测试客户端 (整个测试会话复用同一个应用实例)"""
-    return TestClient(app)
-
-@pytest.fixture(autouse=True)
-def reset_rate_limits():
-    from app.core.rate_limit import limiter
-    limiter.reset()

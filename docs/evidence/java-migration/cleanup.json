@@ -1,0 +1,125 @@
+{
+  "date": "2026-09-15",
+  "scope": "single_host_java_agent_cleanup_offline",
+  "java_tests": 39,
+  "agent_tests": 196,
+  "browser_tests": 12,
+  "business_cases": {
+    "passed": 20,
+    "total": 20
+  },
+  "docker": {
+    "deleted": [
+      "trip-validation-frontend-1",
+      "trip-validation-agent-1",
+      "trip-validation-backend-1",
+      "trip-validation-postgres-1",
+      "trip-validation-prometheus-1",
+      "trip-validation-alertmanager-1",
+      "trip-validation-notification-receiver-1",
+      "trip-java-validation-frontend-1",
+      "trip-java-validation-backend-1",
+      "trip-java-validation-agent-1",
+      "trip-java-validation-postgres-1",
+      "trip-java-restore-validator",
+      "trip-java-restore-08f9c53a2bc7",
+      "trip-java-restore-70fa853a1bb7",
+      "trip-java-migration-test-db"
+    ],
+    "unrelated_container_count": 25,
+    "unrelated_ids_status_start_time_unchanged": true,
+    "all_preexisting_volumes_preserved": true,
+    "daily": [
+      {
+        "name": "langchain-trip-planner-agent-1",
+        "health": "healthy"
+      },
+      {
+        "name": "langchain-trip-planner-frontend-1",
+        "health": "healthy"
+      },
+      {
+        "name": "langchain-trip-planner-backend-1",
+        "health": "healthy"
+      },
+      {
+        "name": "langchain-trip-planner-postgres-1",
+        "health": "healthy"
+      }
+    ],
+    "external_provider_calls": 0
+  },
+  "recovery": {
+    "mode": "isolated_java_postgres_restore",
+    "tables_verified": 7,
+    "row_digests": {
+      "users": "46:53ebe7f687c21b0344afc4d4d625d44b",
+      "trip_records": "101:ccf30ef2ae0c6f2bc63429689c665695",
+      "trip_tasks": "111:5af3894aeb70f8de8a798af2e9af4ca1",
+      "rag_sync_jobs": "80:8bf5a2e1cf864ea67be04c2d9a7586dd",
+      "knowledge_documents": "18:d798718ecc91b8c2a04bbaacc8ee0666",
+      "knowledge_ingest_jobs": "18:4270446cc27b116d0d9224d9e8f7ec02",
+      "user_travel_preferences": "0:d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "uploads_verified": 13,
+    "restored_java_ready": true,
+    "source_data_touched": false,
+    "archive_sha256": "9074d80671e7e8f712e782cc8562f567b2038f87441d3e344e99fc82f4b5073b",
+    "truncated_archive_checksum_rejected": true,
+    "external_provider_calls": 0,
+    "source_services_healthy": true,
+    "public_fixture_ready": true
+  },
+  "knowledge": {
+    "mode": "java_http_offline_parser_index_fixtures",
+    "admin_required": true,
+    "original_file_equal": true,
+    "parser_waited_for_human_review": true,
+    "stale_publish_rejected": true,
+    "published_current_version": true,
+    "deleted_preview_hidden": true,
+    "paid_calls": 0
+  },
+  "lifecycle": {
+    "mode": "isolated_fixture_real_container_restart",
+    "disconnect_kept_running": true,
+    "restart_error": "PROCESS_INTERRUPTED",
+    "same_key_did_not_regenerate": true,
+    "history_count": 0
+  },
+  "faults": {
+    "mode": "isolated_java_agent_faults",
+    "agent_disconnect_error": "AGENT_CONNECTION_LOST",
+    "same_key_did_not_regenerate": true,
+    "cancelled_late_result_rejected": true,
+    "history_count": 0,
+    "paid_calls": 0
+  },
+  "public_api": {
+    "mode": "java_public_api_offline",
+    "passed": 20,
+    "checks": [
+      "anonymous_history_rejected",
+      "invalid_token_rejected",
+      "weak_password_rejected",
+      "registration",
+      "duplicate_username_rejected",
+      "wrong_password_rejected",
+      "unknown_account_rejected",
+      "login",
+      "identity",
+      "empty_owner_history",
+      "preferences_opt_in",
+      "preferences_save",
+      "preferences_read",
+      "preferences_owner_isolation",
+      "preferences_delete",
+      "preferences_deleted",
+      "admin_rebuild_rejected",
+      "invalid_photo_rejected_before_provider",
+      "logout",
+      "revoked_token_rejected"
+    ],
+    "external_provider_calls": 0
+  }
+}

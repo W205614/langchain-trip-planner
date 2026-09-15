@@ -1,6 +1,0 @@
-{
-  "status": "passed",
-  "dimension": 3072,
-  "requests": 1,
-  "scope": "new total-timeout embedding transport; no retrieval quality claim"
-}

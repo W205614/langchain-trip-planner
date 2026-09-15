@@ -1,9 +1,0 @@
-{
-  "scenarios": 6,
-  "successful": 6,
-  "days": 11,
-  "rule_passed": 6,
-  "fallback_days": 0.0,
-  "input_tokens": 13947.0,
-  "output_tokens": 8632.0
-}

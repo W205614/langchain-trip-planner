@@ -19,6 +19,7 @@ services:
   frontend:
     extends: {file: docker-compose.yml, service: frontend}
   prometheus:
+    profiles: [monitoring]
     image: prom/prometheus:v3.2.1
     volumes:
       - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro

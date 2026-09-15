@@ -9,3 +9,8 @@ tests/
 logs/
 data/chroma/
 data/trip_planner.db*
+data/knowledge_uploads/
+data/agent-runtime/
+data/backups/
+data/*.sqlite3*
+scripts/rag_current_validation.py

@@ -49,19 +49,3 @@ def test_benchmark_gate():
     report = run()
     assert report["current_passed"] == report["total"]
     assert report["current_passed"] > report["baseline_passed"]
-
-
-def test_saved_constraints_survive_reload_and_cannot_be_replaced_by_edit():
-    from app.db.models import TripRecord
-    from app.services.history_service import trip_record_to_request
-    request, plan, routes = fixture({"days": [["A", "B"]], "constraints": {"must_visit": ["B"]}})
-    finalize_plan(plan, request, routes)
-    record = TripRecord(city=request.city, start_date=request.start_date, end_date=request.end_date,
-        travel_days=1, transportation=request.transportation, accommodation=request.accommodation,
-        preferences="[]", free_text_input="", plan_json=plan.model_dump_json())
-    restored = trip_record_to_request(record)
-    plan.constraints = PlanningConstraints()
-    plan.days[0].attractions.pop()
-    report = finalize_plan(plan, restored, repair=False)
-    assert not report["rules_passed"]
-    assert plan.constraints.must_visit == ["B"]
