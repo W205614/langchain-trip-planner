@@ -201,6 +201,15 @@ jobs:
           cp docs/evidence/lifecycle-offline.json evidence/lifecycle.json
           python backend/scripts/java_fault_smoke.py --output evidence/cross-service-faults.json
 
+      - name: Preserve isolated failure diagnostics
+        if: failure()
+        run: |
+          mkdir -p evidence
+          docker version
+          docker compose version
+          docker compose -p trip-validation -f docker-compose.validation.yml ps -a
+          docker compose -p trip-validation -f docker-compose.validation.yml logs --no-color --tail 200 > evidence/validation-containers.log
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

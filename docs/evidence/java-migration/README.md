@@ -7,7 +7,7 @@
 | 检查 | 结果 | 原始证据/复现入口 |
 |---|---|---|
 | Java 单元与真实 PostgreSQL 集成 | 39 通过，包括 12 个原冻结约束场景、幂等竞争、用户额度、版本/所有者、取消/截止时间、事务回滚、发布重试及图片缓存契约 | `business-backend/target/surefire-reports/`（本地生成，CI 上传） |
-| Python 全量回归 | SQLite 250、PostgreSQL 250 分别通过，含旧业务参考基线及新 Agent/预算/索引/解析/协议边界、统一图片回退与真实解码 | 隔离镜像 pytest / Compose `run --rm tests` |
+| Python 全量回归 | SQLite 255、PostgreSQL 255 分别通过，含旧业务参考基线及新 Agent/预算/索引/解析/协议边界、统一图片回退与真实解码、恢复就绪检查 | 隔离镜像 pytest / Compose `run --rm tests` |
 | 公开 HTTP 业务场景 | 20/20 通过，原预期和阈值未放宽 | [offline-business.json](offline-business.json) |
 | Nginx HTTP 冒烟 | 健康、管理员权限、内部指标隔离、四类上传边界通过 | `backend/scripts/smoke_http.py` |
 | Playwright | 12/12 通过；真实 Java 登录/任务恢复与浏览器编辑/导出等范围 | `frontend/e2e/`；模型/地图为隔离替身，部分显示测试拦截响应 |
@@ -50,6 +50,7 @@ Java 测试使用独立 PostgreSQL 17.6；Python 测试使用隔离 `trip_tests`
 
 - Java HTTP 客户端升级尝试与 Uvicorn 不兼容：固定内部 HTTP/1.1。
 - 首次远程 CI 的恢复演练只等待容器启动，紧随其后的资料复核请求遇到尚未就绪的入口：恢复后等待服务健康并核验 Nginx 的离线夹具接口，不把“启动了”当作“可接受业务请求”。
+- 第二次 CI 的 `start --wait --wait-timeout` 命令立即失败，旧脚本未输出 stderr，不能据此断言服务故障或具体参数兼容原因。改用普通 `start` 和独立 Docker 健康检查轮询，再核验公开入口；失败显示 stderr，但不输出备份内容。增加 5 项等待/拒绝/错误诊断回归检查，恢复报告仅在源服务和入口恢复后生成。
 - Spring SSE 格式与前端空格假设不一致、异步分派鉴权重复：兼容 SSE 可选空格，初始鉴权后允许异步分派，12 项浏览器复验通过。
 - 发布失败重放可能重走图片解析：持久化作业阶段，重放发布只重试索引；新增测试。
 - 真实图片解码缺少 Pillow：增加固定依赖及真解码、损坏图片、格式不符门禁测试；失败发生在视觉调用前。

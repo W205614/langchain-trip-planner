@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 import time
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -14,6 +15,34 @@ from uuid import uuid4
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-p","trip-validation","-f",str(ROOT/"docker-compose.validation.yml")]
+
+
+def compose_command(*args, data=None):
+    result = subprocess.run(COMPOSE + list(args), input=data, capture_output=True)
+    if result.returncode:
+        # This script is fixed to fixture credentials. Keep command diagnostics
+        # visible; never dump successful stdout, which may contain backup bytes.
+        print(result.stderr.decode("utf-8", errors="replace"), file=sys.stderr)
+        result.check_returncode()
+    return result.stdout
+
+
+def wait_for_service_health(command, timeout=90):
+    """Portable across Compose versions; require both actual healthchecks to pass."""
+    deadline = time.monotonic() + timeout
+    states = {}
+    while time.monotonic() < deadline:
+        for service in ("backend", "agent"):
+            identity = command("ps", "-a", "-q", service).decode().strip()
+            if not identity:
+                raise RuntimeError(f"Missing validation service: {service}")
+            state = json.loads(subprocess.check_output(
+                ["docker", "inspect", "--format", "{{json .State}}", identity]))
+            states[service] = (state.get("Status"), state.get("Health", {}).get("Status"))
+        if all(state == ("running", "healthy") for state in states.values()):
+            return
+        time.sleep(.5)
+    raise RuntimeError(f"Validation services not healthy after recovery: {states}")
 
 
 def wait_for_public_fixture(timeout=30):
@@ -34,8 +63,7 @@ def wait_for_public_fixture(timeout=30):
 
 
 def run(output):
-    def command(*args,data=None):
-        return subprocess.run(COMPOSE+list(args),input=data,capture_output=True,check=True).stdout
+    command = compose_command
     def sql(database,query):
         return command("exec","-T","postgres","psql","-U","trip","-d",database,"-At","-v","ON_ERROR_STOP=1","-c",query).decode().strip()
     target="java_restore_"+uuid4().hex[:12]
@@ -83,16 +111,20 @@ def run(output):
         report={"mode":"isolated_java_postgres_restore","tables_verified":len(tables),"row_digests":expected,
             "uploads_verified":len(entries(archive)),"restored_java_ready":True,"source_data_touched":False,
             "archive_sha256":manifest,"truncated_archive_checksum_rejected":True,"external_provider_calls":0}
-        output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(report,indent=2),encoding="utf-8")
-        print(json.dumps(report));success=True
+        success=True
     finally:
         if success:
             subprocess.run(["docker","rm","-f",container],check=True,capture_output=True)
             if created:command("exec","-T","postgres","dropdb","-U","trip",target)
         else:
             print(f"Recovery artifacts retained: container={container}, database={target}")
-        command("start","--wait","--wait-timeout","90","backend","agent")
+        command("start","backend","agent")
+        wait_for_service_health(command)
         wait_for_public_fixture()
+    report.update(source_services_healthy=True, public_fixture_ready=True)
+    output.parent.mkdir(parents=True,exist_ok=True)
+    output.write_text(json.dumps(report,indent=2),encoding="utf-8")
+    print(json.dumps(report))
 
 
 if __name__=="__main__":
