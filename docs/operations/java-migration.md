@@ -46,13 +46,13 @@ python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-2026
 - 恢复目录：`E:\project\trip-planner-backups\post-java-restored-20260915-1333`。
 - 清理前源码：Git 提交 `6c72a24`；仓库外归档 `E:\project\trip-planner-backups\pre-cleanup-source-20260915.zip`。
 
-旧迁移工具、旧 Compose 和旧业务源码均可从该提交或归档取回到**独立目录**。需要旧架构回滚时，使用迁移前成套备份、旧镜像和旧配置；绝不能让旧代码直接连接新版 `trip_java`，也不能混用切换后的索引。先保留当前新数据，新增数据回迁需单独设计，不自动双写。
+旧迁移工具、旧 Compose 和旧业务源码仅作为历史资料，可从该提交或归档取回到**独立目录**。用户已决定不再回退 Python 架构，5 个旧架构回滚镜像已删除，不再提供现成旧镜像恢复路径。后续恢复以当前 Java＋Agent 的成套数据库、上传文件、索引和配置备份为准；绝不能让旧代码直接连接新版 `trip_java`。
 
 ## 临时验证环境
 
 `docker-compose.validation.yml` / `docker-compose.migration.yml` 仅用于离线夹具验证；`trip-validation` 不作为第二套日常服务常驻。CI 创建后销毁；本地验证后按项目名 `down`，不执行全局 Docker prune。
 
-容器删除不代表删除数据：本次整理保留所有持久卷、宿主数据目录、备份和旧镜像。清理恢复克隆时只删除明确核对的克隆容器，不能按宽泛前缀误删日常四服务，更不能操作其他项目。
+容器或镜像删除不代表删除数据：本次整理保留所有持久卷、宿主数据目录和备份；旧 Python 回滚镜像已另经用户确认删除。清理恢复克隆时只删除明确核对的克隆容器，不能按宽泛前缀误删日常四服务，更不能操作其他项目。
 
 ## 能力与测试归属
 

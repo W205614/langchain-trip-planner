@@ -20,6 +20,10 @@
 
 首个整理提交 `d408494` 的远程运行 `34939583649` 在重启任务错误码断言失败；此前构建、浏览器、恢复、审核和通知均已通过。代码复核发现停机线程先取消 worker，异常处理可能抢先将任务写为超时或连接失败，启动恢复只能更新仍为 running 的记录。修复为停止领取后先持久化 `PROCESS_INTERRUPTED`，再中断 worker，关闭期间异常也保持该错误码；不改变用户取消或截止时间语义。新增两项停机顺序／数据库不可用／禁用 worker 恢复实例保护测试，实际容器重启连续三轮通过。验收脚本失败时补充实际状态诊断，原断言不放宽。
 
+## 取消旧架构回滚（后续用户决定）
+
+用户明确只使用当前 Java＋Agent，不再回退 Python 架构。已删除 `pre-java-migration` 前后端两个镜像、`rollback-20260913-hardening` 前后端两个镜像及 `rollback-20260910` 后端镜像，共 5 个。此前“保留旧镜像”的记录是当时状态，已被本次决定取代；数据库卷、文件备份、历史源码和其他项目不在删除范围。
+
 ## 迁移阶段已执行（清理前历史记录）
 
 | 检查 | 结果 | 原始证据/复现入口 |
@@ -58,7 +62,7 @@
 - 最初恢复验证备份：`E:\project\trip-planner-backups\pre-java-business-20260915-1210`。
 - 切换后新架构备份：`E:\project\trip-planner-backups\post-java-20260915-1331`。
 - 新架构恢复副本：`E:\project\trip-planner-backups\post-java-restored-20260915-1333`；恢复库 `java_restore_1cc0862ae000`，仅作核对。
-- 旧镜像 `langchain-trip-planner-{backend,frontend}:pre-java-migration` 保留。旧库未被新 Java 使用；回滚按 [运行手册](../../operations/java-migration.md) 恢复成套旧数据，不连接新版业务库。
+- 迁移验收时曾保留旧镜像 `langchain-trip-planner-{backend,frontend}:pre-java-migration`；现已按后续决定删除。旧库未被新 Java 使用；当前恢复说明见 [运行手册](../../operations/java-migration.md)。
 
 18 条旧行程原属已不存在的用户 ID 1，经用户确认原样保留，没有转给其他账号。其余 7 条原行程按原所有者读取、版本和 JSON 一致；2 个原文件 SHA-256 一致。账号身份/角色/哈希保留与签名令牌兼容已验证。用户已实际使用原账号登录并查看历史，反馈部分图片不可见；复核发现高德验收额度已满，以及 Java 错误缓存占位图 1 小时的问题。已修复占位图 `Cache-Control: no-store`，用户批准结束本轮验收并恢复日常调用，保留原账本、不再追加代理发起的付费测试。
 
