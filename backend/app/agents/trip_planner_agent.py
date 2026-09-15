@@ -538,7 +538,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
             if rag_context:
                 base += f"\n\n{rag_context}"
         except Exception:
-            pass
+            from ..services.execution import note_rag_degradation
+            note_rag_degradation()
         finally:
             self._emit_trace(state, "stage_duration", stage="rag_context", seconds=time.perf_counter() - rag_started_at)
         return base
@@ -630,6 +631,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
             "trace_callback": trace_callback,
         })
         trip_plan = result["trip_plan"]
+        from ..services.execution import trusted_evidence_var
+        evidence = trusted_evidence_var.get()
+        if evidence is not None:
+            evidence.update({p.id: p.model_dump() for p in result.get("attraction_pois", [])})
 
         # 高德没有可验证景点时，宁可明确提示上游数据不可用，也不返回虚构 POI。
         if not any(day.attractions for day in trip_plan.days):
@@ -749,6 +754,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
             )
 
         day = trip_plan.days[day_index]
+        from ..services.execution import trusted_evidence_var
+        evidence = trusted_evidence_var.get()
+        if evidence is not None:
+            evidence.update({p.id: p.model_dump() for p in candidates})
         candidate_text = "\n".join(
             f"{index + 1}. poi_id={poi.id} | {poi.name} | {poi.address or ''} | "
             f"{poi.location.longitude},{poi.location.latitude}"
@@ -871,6 +880,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 query += f"\n\n{rag_context}\n"
         except Exception as e:
             logger.warning(f"⚠️ RAG 上下文注入失败(不影响生成): {e}")
+            from ..services.execution import note_rag_degradation
+            note_rag_degradation()
 
         query += "\n请严格按照 system 中定义的 JSON 结构输出完整 JSON。"
         return query

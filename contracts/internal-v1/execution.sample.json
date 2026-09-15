@@ -1,0 +1,19 @@
+{
+  "protocol_version": 1,
+  "task_id": "00000000-0000-4000-8000-000000000001",
+  "execution_id": "00000000-0000-4000-8000-000000000002",
+  "request_id": "contract-sample",
+  "user_id": 3,
+  "deadline_at": "2030-10-01T12:00:00Z",
+  "request": {
+    "city": "北京",
+    "start_date": "2026-10-01",
+    "end_date": "2026-10-01",
+    "travel_days": 1,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [],
+    "free_text_input": "",
+    "constraints": {"must_visit": [], "avoid": [], "daily_minutes": 600, "max_inter_stop_walking_km": null}
+  }
+}

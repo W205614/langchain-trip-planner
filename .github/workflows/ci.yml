@@ -7,6 +7,38 @@ on:
     branches: [main]
 
 jobs:
+  java-test:
+    name: Java business PostgreSQL tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_USER: trip
+          POSTGRES_PASSWORD: isolated-test-only
+          POSTGRES_DB: trip
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U trip -d trip"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Java rules, concurrency and PostgreSQL transactions
+        working-directory: business-backend
+        env:
+          TEST_DATABASE_URL: jdbc:postgresql://localhost:5432/trip
+        run: sh mvnw -B -ntp test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: java-tests
+          path: business-backend/target/surefire-reports/
   # ===== 后端: 安装依赖 + 跑测试 =====
   backend-test:
     name: Backend pytest
@@ -72,7 +104,7 @@ jobs:
 
   # ===== 迁移校验: 确认 Alembic 迁移可生成/可执行 =====
   migration-check:
-    name: Alembic migration check
+    name: Legacy Alembic import-reference check
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -113,6 +145,8 @@ jobs:
           JWT_SECRET_KEY=test-jwt-secret-for-ci-only-0123456789
           EOF
           echo 'VITE_AMAP_WEB_JS_KEY=offline-test-key' > frontend/.env
+          python -m pip install python-dotenv
+          python backend/scripts/prepare_java_deployment.py
 
       - name: Validate Compose configuration
         run: docker compose --env-file backend/.env config --quiet
@@ -122,7 +156,7 @@ jobs:
 
       - name: Start isolated validation stack
         run: |
-          docker compose -p trip-validation -f docker-compose.validation.yml up -d --wait postgres backend frontend
+          docker compose -p trip-validation -f docker-compose.validation.yml up -d --build --wait postgres backend agent frontend
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T postgres createdb -U trip trip_tests
 
       - name: PostgreSQL regression tests
@@ -131,9 +165,9 @@ jobs:
       - name: Nginx contracts and business scenarios
         run: |
           mkdir -p evidence
-          docker compose -p trip-validation -f docker-compose.validation.yml exec -T backend python scripts/smoke_http.py --base-url http://frontend
-          docker compose -p trip-validation -f docker-compose.validation.yml exec -T backend python scripts/business_benchmark.py --base-url http://frontend --output /tmp/business.json
-          docker compose -p trip-validation -f docker-compose.validation.yml cp backend:/tmp/business.json evidence/business.json
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/smoke_http.py --base-url http://frontend
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/business_benchmark.py --base-url http://frontend --output /tmp/business.json
+          docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/business.json evidence/business.json
 
       - uses: actions/setup-node@v4
         with:
@@ -147,7 +181,12 @@ jobs:
           npx playwright test
 
       - name: Isolated recovery drill
-        run: python backend/scripts/recovery_drill.py --output evidence/recovery.json
+        run: python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
+
+      - name: Java review and publication lifecycle
+        run: |
+          python -m pip install httpx==0.28.1
+          python backend/scripts/java_knowledge_smoke.py --output evidence/knowledge.json
 
       - name: Local notification failure and recovery
         run: |
@@ -160,6 +199,7 @@ jobs:
           python -m pip install httpx==0.28.1
           python backend/scripts/lifecycle_smoke.py
           cp docs/evidence/lifecycle-offline.json evidence/lifecycle.json
+          python backend/scripts/java_fault_smoke.py --output evidence/cross-service-faults.json
 
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "success": {
+      "title": "Success",
+      "type": "boolean"
+    },
+    "message": {
+      "title": "Message",
+      "type": "string"
+    },
+    "chunks": {
+      "minimum": 0,
+      "title": "Chunks",
+      "type": "integer"
+    },
+    "history_records": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "History Records"
+    },
+    "generation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generation"
+    }
+  },
+  "required": [
+    "success",
+    "message",
+    "chunks"
+  ],
+  "title": "IndexRebuildResult",
+  "type": "object"
+}

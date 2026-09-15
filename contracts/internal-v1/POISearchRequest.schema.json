@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "POI搜索请求",
+  "properties": {
+    "keywords": {
+      "description": "搜索关键词",
+      "example": "故宫",
+      "title": "Keywords",
+      "type": "string"
+    },
+    "city": {
+      "description": "城市",
+      "example": "北京",
+      "title": "City",
+      "type": "string"
+    },
+    "citylimit": {
+      "default": true,
+      "description": "是否限制在城市范围内",
+      "title": "Citylimit",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "keywords",
+    "city"
+  ],
+  "title": "POISearchRequest",
+  "type": "object"
+}

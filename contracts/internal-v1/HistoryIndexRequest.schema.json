@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "operation": {
+      "enum": [
+        "upsert",
+        "delete"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "record_id": {
+      "minimum": 1,
+      "title": "Record Id",
+      "type": "integer"
+    },
+    "user_id": {
+      "minimum": 1,
+      "title": "User Id",
+      "type": "integer"
+    },
+    "job_id": {
+      "minimum": 1,
+      "title": "Job Id",
+      "type": "integer"
+    },
+    "record": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Record"
+    }
+  },
+  "required": [
+    "operation",
+    "record_id",
+    "user_id",
+    "job_id"
+  ],
+  "title": "HistoryIndexRequest",
+  "type": "object"
+}

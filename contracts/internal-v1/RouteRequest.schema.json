@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "路线规划请求",
+  "properties": {
+    "origin_address": {
+      "description": "起点地址",
+      "example": "北京市朝阳区阜通东大街6号",
+      "title": "Origin Address",
+      "type": "string"
+    },
+    "destination_address": {
+      "description": "终点地址",
+      "example": "北京市海淀区上地十街10号",
+      "title": "Destination Address",
+      "type": "string"
+    },
+    "origin_city": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "起点城市",
+      "title": "Origin City"
+    },
+    "destination_city": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "终点城市",
+      "title": "Destination City"
+    },
+    "route_type": {
+      "default": "walking",
+      "description": "路线类型: walking/driving/transit",
+      "title": "Route Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "origin_address",
+    "destination_address"
+  ],
+  "title": "RouteRequest",
+  "type": "object"
+}

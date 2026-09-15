@@ -1,0 +1,23 @@
+server:
+  port: ${PORT:9000}
+  forward-headers-strategy: native
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/trip}
+    username: ${POSTGRES_USER:trip}
+    password: ${POSTGRES_PASSWORD:}
+  flyway:
+    baseline-on-migrate: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
+mybatis:
+  configuration:
+    call-setters-on-nulls: true
+    jdbc-type-for-null: NULL
+trip:
+  jwt-secret: ${JWT_SECRET_KEY}
+  internal-key: ${INTERNAL_SERVICE_KEY}
+  agent-url: ${AGENT_URL:http://localhost:9001}
+  token-minutes: ${ACCESS_TOKEN_EXPIRE_MINUTES:10080}

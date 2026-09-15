@@ -1,0 +1,58 @@
+{
+  "DocumentExtractRequest": {
+    "document_id": 7,
+    "document_version": 2,
+    "city": "北京",
+    "title": "验收资料"
+  },
+  "DocumentExtractResult": {
+    "pages": [
+      "## 合成测试\n出发前核对官方开放时间。"
+    ]
+  },
+  "DocumentIndexRequest": {
+    "operation": "delete",
+    "document_id": 7,
+    "document_version": 3,
+    "document": null
+  },
+  "HistoryIndexRequest": {
+    "operation": "delete",
+    "record_id": 9,
+    "user_id": 4,
+    "job_id": 20,
+    "record": null
+  },
+  "EvidenceVisibilityRequest": {
+    "user_id": 4,
+    "candidates": [
+      {
+        "record_id": 9,
+        "record_version": 2,
+        "user_id": 4
+      },
+      {
+        "source_type": "multimodal",
+        "document_id": 7,
+        "document_version": 2
+      }
+    ]
+  },
+  "EvidenceVisibilityResult": {
+    "allowed": [
+      0
+    ]
+  },
+  "EvidenceSnapshot": {
+    "revision": 42,
+    "documents": [],
+    "records": []
+  },
+  "IndexRebuildResult": {
+    "success": true,
+    "message": "验证完成",
+    "chunks": 0,
+    "history_records": 0,
+    "generation": "sample-generation"
+  }
+}

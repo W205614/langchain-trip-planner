@@ -22,7 +22,7 @@ COPY scripts ./scripts
 # 手工维护的旅游知识随镜像发布；运行数据通过 Compose 绑定到宿主机持久化。
 COPY data/knowledge ./data/knowledge
 
-# 3. 非 root 用户运行 (安全最佳实践: 即使被攻破也无法读写宿主系统)
+# 3. 非 root 用户运行；显式挂载的数据目录仍可按授权权限读写。
 RUN (id -u appuser >/dev/null 2>&1 || useradd -m appuser) \
     && mkdir -p logs data \
     && chown -R appuser:appuser /app
@@ -30,5 +30,5 @@ USER appuser
 
 EXPOSE 9000
 
-# 生产模式启动: 先迁移数据库，再以非 reload 模式启动服务。
-CMD ["sh", "-c", "python -m alembic upgrade head && exec uvicorn app.api.main:app --host 0.0.0.0 --port 9000"]
+# Internal capabilities only. Java/Flyway owns business tables and task scheduling.
+CMD ["uvicorn", "app.agent_api.main:app", "--host", "0.0.0.0", "--port", "9000", "--workers", "1"]

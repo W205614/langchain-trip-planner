@@ -1,0 +1,616 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Attraction": {
+      "description": "景点信息",
+      "properties": {
+        "name": {
+          "description": "景点名称",
+          "title": "Name",
+          "type": "string"
+        },
+        "address": {
+          "description": "地址",
+          "title": "Address",
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/Location",
+          "description": "经纬度坐标"
+        },
+        "visit_duration": {
+          "description": "建议游览时间(分钟)",
+          "title": "Visit Duration",
+          "type": "integer"
+        },
+        "description": {
+          "description": "景点描述",
+          "title": "Description",
+          "type": "string"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "景点",
+          "description": "景点类别",
+          "title": "Category"
+        },
+        "rating": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "评分",
+          "title": "Rating"
+        },
+        "photos": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "景点图片URL列表",
+          "title": "Photos"
+        },
+        "poi_id": {
+          "description": "高德 POI ID",
+          "minLength": 1,
+          "title": "Poi Id",
+          "type": "string"
+        },
+        "image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "图片URL",
+          "title": "Image Url"
+        },
+        "ticket_price": {
+          "default": 0,
+          "description": "门票价格(元)",
+          "title": "Ticket Price",
+          "type": "integer"
+        },
+        "price_source": {
+          "default": "unknown",
+          "title": "Price Source",
+          "type": "string"
+        },
+        "requested_names": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requested Names",
+          "type": "array"
+        },
+        "opening_hours": {
+          "default": "",
+          "title": "Opening Hours",
+          "type": "string"
+        },
+        "fact_source": {
+          "default": "",
+          "title": "Fact Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "location",
+        "visit_duration",
+        "description",
+        "poi_id"
+      ],
+      "title": "Attraction",
+      "type": "object"
+    },
+    "Budget": {
+      "description": "预算信息",
+      "properties": {
+        "total_attractions": {
+          "default": 0,
+          "description": "景点门票总费用",
+          "title": "Total Attractions",
+          "type": "integer"
+        },
+        "total_hotels": {
+          "default": 0,
+          "description": "酒店总费用",
+          "title": "Total Hotels",
+          "type": "integer"
+        },
+        "total_meals": {
+          "default": 0,
+          "description": "餐饮总费用",
+          "title": "Total Meals",
+          "type": "integer"
+        },
+        "total_transportation": {
+          "default": 0,
+          "description": "交通总费用",
+          "title": "Total Transportation",
+          "type": "integer"
+        },
+        "total": {
+          "default": 0,
+          "description": "总费用",
+          "title": "Total",
+          "type": "integer"
+        },
+        "estimated": {
+          "default": true,
+          "title": "Estimated",
+          "type": "boolean"
+        },
+        "unknown_items": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknown Items",
+          "type": "array"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        }
+      },
+      "title": "Budget",
+      "type": "object"
+    },
+    "DayPlan": {
+      "description": "单日行程",
+      "properties": {
+        "date": {
+          "description": "日期 YYYY-MM-DD",
+          "title": "Date",
+          "type": "string"
+        },
+        "day_index": {
+          "description": "第几天(从0开始)",
+          "title": "Day Index",
+          "type": "integer"
+        },
+        "description": {
+          "description": "当日行程描述",
+          "title": "Description",
+          "type": "string"
+        },
+        "transportation": {
+          "description": "交通方式",
+          "title": "Transportation",
+          "type": "string"
+        },
+        "accommodation": {
+          "description": "住宿",
+          "title": "Accommodation",
+          "type": "string"
+        },
+        "hotel": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Hotel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "推荐酒店"
+        },
+        "attractions": {
+          "default": [],
+          "description": "景点列表",
+          "items": {
+            "$ref": "#/$defs/Attraction"
+          },
+          "title": "Attractions",
+          "type": "array"
+        },
+        "meals": {
+          "default": [],
+          "description": "餐饮列表",
+          "items": {
+            "$ref": "#/$defs/Meal"
+          },
+          "title": "Meals",
+          "type": "array"
+        },
+        "generation_mode": {
+          "default": "llm",
+          "description": "生成来源: llm 或 fallback",
+          "title": "Generation Mode",
+          "type": "string"
+        },
+        "fallback_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "降级原因（如 timeout）",
+          "title": "Fallback Reason"
+        }
+      },
+      "required": [
+        "date",
+        "day_index",
+        "description",
+        "transportation",
+        "accommodation"
+      ],
+      "title": "DayPlan",
+      "type": "object"
+    },
+    "Hotel": {
+      "description": "酒店信息",
+      "properties": {
+        "name": {
+          "description": "酒店名称",
+          "title": "Name",
+          "type": "string"
+        },
+        "address": {
+          "default": "",
+          "description": "酒店地址",
+          "title": "Address",
+          "type": "string"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Location"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "酒店位置"
+        },
+        "price_range": {
+          "default": "",
+          "description": "价格范围",
+          "title": "Price Range",
+          "type": "string"
+        },
+        "rating": {
+          "default": "",
+          "description": "评分",
+          "title": "Rating",
+          "type": "string"
+        },
+        "distance": {
+          "default": "",
+          "description": "距离景点距离",
+          "title": "Distance",
+          "type": "string"
+        },
+        "type": {
+          "default": "",
+          "description": "酒店类型",
+          "title": "Type",
+          "type": "string"
+        },
+        "estimated_cost": {
+          "default": 0,
+          "description": "预估费用(元/晚)",
+          "title": "Estimated Cost",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Hotel",
+      "type": "object"
+    },
+    "Location": {
+      "description": "地理位置",
+      "properties": {
+        "longitude": {
+          "description": "经度",
+          "title": "Longitude",
+          "type": "number"
+        },
+        "latitude": {
+          "description": "纬度",
+          "title": "Latitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "longitude",
+        "latitude"
+      ],
+      "title": "Location",
+      "type": "object"
+    },
+    "Meal": {
+      "description": "餐饮信息",
+      "properties": {
+        "type": {
+          "description": "餐饮类型: breakfast/lunch/dinner/snack",
+          "title": "Type",
+          "type": "string"
+        },
+        "name": {
+          "description": "餐饮名称",
+          "title": "Name",
+          "type": "string"
+        },
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "地址",
+          "title": "Address"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Location"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "经纬度坐标"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "描述",
+          "title": "Description"
+        },
+        "estimated_cost": {
+          "default": 0,
+          "description": "预估费用(元)",
+          "title": "Estimated Cost",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "title": "Meal",
+      "type": "object"
+    },
+    "PlanningConstraints": {
+      "description": "Human names are resolved against trusted candidates by the planning service.",
+      "properties": {
+        "must_visit": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Must Visit",
+          "type": "array"
+        },
+        "avoid": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Avoid",
+          "type": "array"
+        },
+        "daily_minutes": {
+          "default": 600,
+          "maximum": 900,
+          "minimum": 120,
+          "title": "Daily Minutes",
+          "type": "integer"
+        },
+        "max_inter_stop_walking_km": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 30,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Inter Stop Walking Km"
+        }
+      },
+      "title": "PlanningConstraints",
+      "type": "object"
+    },
+    "WeatherInfo": {
+      "description": "天气信息",
+      "properties": {
+        "date": {
+          "description": "日期 YYYY-MM-DD",
+          "title": "Date",
+          "type": "string"
+        },
+        "day_weather": {
+          "default": "",
+          "description": "白天天气",
+          "title": "Day Weather",
+          "type": "string"
+        },
+        "night_weather": {
+          "default": "",
+          "description": "夜间天气",
+          "title": "Night Weather",
+          "type": "string"
+        },
+        "day_temp": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "description": "白天温度",
+          "title": "Day Temp"
+        },
+        "night_temp": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "description": "夜间温度",
+          "title": "Night Temp"
+        },
+        "wind_direction": {
+          "default": "",
+          "description": "风向",
+          "title": "Wind Direction",
+          "type": "string"
+        },
+        "wind_power": {
+          "default": "",
+          "description": "风力",
+          "title": "Wind Power",
+          "type": "string"
+        }
+      },
+      "required": [
+        "date"
+      ],
+      "title": "WeatherInfo",
+      "type": "object"
+    }
+  },
+  "description": "旅行计划",
+  "properties": {
+    "city": {
+      "description": "目的地城市",
+      "title": "City",
+      "type": "string"
+    },
+    "start_date": {
+      "description": "开始日期",
+      "title": "Start Date",
+      "type": "string"
+    },
+    "end_date": {
+      "description": "结束日期",
+      "title": "End Date",
+      "type": "string"
+    },
+    "days": {
+      "description": "每日行程",
+      "items": {
+        "$ref": "#/$defs/DayPlan"
+      },
+      "title": "Days",
+      "type": "array"
+    },
+    "weather_info": {
+      "default": [],
+      "description": "天气信息",
+      "items": {
+        "$ref": "#/$defs/WeatherInfo"
+      },
+      "title": "Weather Info",
+      "type": "array"
+    },
+    "weather_notice": {
+      "default": "",
+      "description": "天气预报覆盖范围说明",
+      "title": "Weather Notice",
+      "type": "string"
+    },
+    "enrichment_notices": {
+      "description": "可选资料增强缺口",
+      "items": {
+        "type": "string"
+      },
+      "title": "Enrichment Notices",
+      "type": "array"
+    },
+    "overall_suggestions": {
+      "description": "总体建议",
+      "title": "Overall Suggestions",
+      "type": "string"
+    },
+    "budget": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Budget"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "预算信息"
+    },
+    "constraints": {
+      "$ref": "#/$defs/PlanningConstraints"
+    }
+  },
+  "required": [
+    "city",
+    "start_date",
+    "end_date",
+    "days",
+    "overall_suggestions"
+  ],
+  "title": "TripPlan",
+  "type": "object"
+}

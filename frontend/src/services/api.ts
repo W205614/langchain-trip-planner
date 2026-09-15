@@ -145,8 +145,8 @@ export async function generateTripPlanStream(
     const blocks = buffer.split('\n\n')
     buffer = blocks.pop() || ''
     for (const block of blocks) {
-      const event = block.match(/^event: (.+)$/m)?.[1]
-      const data = block.match(/^data: (.+)$/m)?.[1]
+      const event = block.match(/^event:[ \t]*(.+)$/m)?.[1]
+      const data = block.match(/^data:[ \t]*(.+)$/m)?.[1]
       if (!event || !data) continue
       const payload = JSON.parse(data)
       if (event === 'progress') onProgress(payload as TripPlanProgress)

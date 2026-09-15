@@ -54,6 +54,9 @@ def reset_isolated_postgres():
         tables = ', '.join('"' + table.name + '"' for table in Base.metadata.sorted_tables)
         with engine.begin() as connection:
             connection.execute(text("TRUNCATE " + tables + " RESTART IDENTITY CASCADE"))
+    else:
+        # Individual test modules also need a complete isolated schema.
+        Base.metadata.create_all(engine)
     yield
 
 

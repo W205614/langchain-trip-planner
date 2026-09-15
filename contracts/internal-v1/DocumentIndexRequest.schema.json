@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "operation": {
+      "enum": [
+        "upsert",
+        "delete"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "document_id": {
+      "minimum": 1,
+      "title": "Document Id",
+      "type": "integer"
+    },
+    "document_version": {
+      "minimum": 1,
+      "title": "Document Version",
+      "type": "integer"
+    },
+    "document": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Document"
+    }
+  },
+  "required": [
+    "operation",
+    "document_id",
+    "document_version"
+  ],
+  "title": "DocumentIndexRequest",
+  "type": "object"
+}

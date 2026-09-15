@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "allowed": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Allowed",
+      "type": "array"
+    }
+  },
+  "required": [
+    "allowed"
+  ],
+  "title": "EvidenceVisibilityResult",
+  "type": "object"
+}

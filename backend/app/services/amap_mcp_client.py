@@ -98,6 +98,8 @@ class AmapMCPClient:
                 slot = max(now, self._last_calls.get(name, 0) + 0.4)
                 self._last_calls[name] = slot
             await anyio.sleep(max(0, slot - anyio.current_time()))
+            from .call_budget import reserve
+            reserve("amap")
             return await self._session.call_tool(name, arguments, read_timeout_seconds=timedelta(seconds=timeout))
 
     def call(self, name: str, arguments: dict) -> dict:

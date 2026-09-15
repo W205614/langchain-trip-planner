@@ -1,0 +1,10 @@
+{
+  "copied_index_readable": true,
+  "source_index_modified": false,
+  "embedding_calls": 0,
+  "collections": [
+    {"name": "trip_knowledge", "count": 82, "dimension": 3072},
+    {"name": "trip_history", "count": 5, "dimension": 3072}
+  ],
+  "boundary": "Existing Chroma copy opened with the agent image; no model/query quality claim"
+}

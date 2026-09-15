@@ -2,6 +2,7 @@
 
 import logging
 from .execution import remaining
+from .call_budget import reserve
 import time
 from copy import deepcopy
 from threading import RLock
@@ -75,6 +76,7 @@ class AmapService:
                         raise TimeoutError("Task deadline exceeded")
                     time.sleep(wait)
                 self._last_requests[path] = time.monotonic()
+            reserve("amap")
             resp = self.client.get(f"{AMAP_BASE_URL}{path}", params=request_params, timeout=remaining(10))
             resp.raise_for_status()
             data = resp.json()

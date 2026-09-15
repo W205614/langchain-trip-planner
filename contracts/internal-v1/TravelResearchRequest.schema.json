@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "面向公开城市资料的来源优先研究请求，不检索私人历史。",
+  "properties": {
+    "city": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "City",
+      "type": "string"
+    },
+    "query": {
+      "maxLength": 300,
+      "minLength": 2,
+      "title": "Query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "city",
+    "query"
+  ],
+  "title": "TravelResearchRequest",
+  "type": "object"
+}

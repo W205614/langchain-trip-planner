@@ -1,0 +1,24 @@
+# Pre-migration rollback only. Never connect this service to the Java database.
+services:
+  backend:
+    image: langchain-trip-planner-backend:pre-java-migration
+    env_file:
+      - ../backend/.env
+      - path: ../backend/.env.docker
+        required: false
+    environment:
+      APP_ENV: development
+      CORS_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+    volumes: ["../backend/data:/app/data"]
+    expose: ["9000"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  frontend:
+    image: langchain-trip-planner-frontend:pre-java-migration
+    ports: ["127.0.0.1:8080:80"]
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -1,0 +1,65 @@
+# Isolated offline migration verification; never loads daily credentials or data.
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_USER: trip
+      POSTGRES_PASSWORD: migration-fixture-only
+      POSTGRES_DB: trip
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U trip -d trip]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - migration_database:/var/lib/postgresql/data
+  backend:
+    build: ./business-backend
+    environment:
+      JDBC_DATABASE_URL: jdbc:postgresql://postgres:5432/trip
+      POSTGRES_USER: trip
+      POSTGRES_PASSWORD: migration-fixture-only
+      JWT_SECRET_KEY: migration-fixture-jwt-01234567890123456789
+      INTERNAL_SERVICE_KEY: migration-fixture-internal-01234567890123456789
+      AGENT_URL: http://agent:9000
+      UPLOAD_DIR: /data/uploads
+      APP_ENV: validation
+      VALIDATION_ALLOW_FIXTURES: "yes"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, curl, -fsS, http://localhost:9000/readyz]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    ports: ["127.0.0.1:19000:9000"]
+    volumes:
+      - migration_uploads:/data/uploads
+  agent:
+    build: ./backend
+    command: [python, scripts/validation_server.py]
+    environment:
+      APP_ENV: validation
+      VALIDATION_ALLOW_FIXTURES: "yes"
+      VALIDATION_AGENT_ONLY: "yes"
+      AMAP_API_KEY: fixture
+      AMAP_TRANSPORT: rest
+      LLM_API_KEY: fixture
+      LLM_BASE_URL: http://127.0.0.1:1
+      LLM_MODEL_ID: fixture
+      RAG_ENABLED: "false"
+      BUSINESS_URL: http://backend:9000
+      INTERNAL_SERVICE_KEY: migration-fixture-internal-01234567890123456789
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  frontend:
+    build: ./frontend
+    ports: ["127.0.0.1:18080:80"]
+    depends_on: [backend, agent]
+volumes:
+  migration_database:
+  migration_uploads:

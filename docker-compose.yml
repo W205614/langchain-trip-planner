@@ -1,34 +1,57 @@
 services:
-  backend:
-    build:
-      context: ./backend
-    env_file:
-      - ./backend/.env
-      - path: ./backend/.env.docker
-        required: false
-    environment:
-      # 本机 Docker 演示沿用开发模式，允许现有默认 JWT；生产部署应显式设为 production。
-      APP_ENV: development
-      CORS_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
-    volumes:
-      - ./backend/data:/app/data
-    expose:
-      - "9000"
+  postgres:
+    image: postgres:17.6-alpine
+    env_file: ./deploy/runtime/postgres.env
+    volumes: ["java_business_data:/var/lib/postgresql/data"]
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz', timeout=5)"]
-      interval: 30s
+      test: [CMD-SHELL, pg_isready -U trip -d trip_java]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  backend:
+    build: ./business-backend
+    env_file: ./deploy/runtime/business.env
+    volumes: ["./backend/data/knowledge_uploads:/data/uploads"]
+    expose: ["9000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, curl, -fsS, http://localhost:9000/readyz]
+      interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 20s
+      retries: 12
+    restart: unless-stopped
+
+  agent:
+    build: ./backend
+    env_file: ./deploy/runtime/agent.env
+    command: [uvicorn, app.agent_api.main:app, --host, 0.0.0.0, --port, "9000", --workers, "1"]
+    environment:
+      DATA_DIR: /app/runtime
+      CHROMA_DIR: /app/data/chroma
+    volumes:
+      - ./backend/data/chroma:/app/data/chroma
+      - ./backend/data/agent-runtime:/app/runtime
+    expose: ["9000"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz',timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
     restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       backend:
+        condition: service_healthy
+      agent:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
@@ -37,3 +60,5 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
+volumes:
+  java_business_data:

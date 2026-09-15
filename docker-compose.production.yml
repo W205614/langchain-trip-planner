@@ -1,47 +1,23 @@
+# Standalone single-host production definition. Prepare private runtime env first.
 services:
   postgres:
-    image: postgres:17.6-alpine
-    environment:
-      POSTGRES_USER: trip
-      POSTGRES_DB: trip
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [CMD-SHELL, pg_isready -U trip -d trip]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-    restart: unless-stopped
+    extends: {file: docker-compose.yml, service: postgres}
   backend:
-    build: ./backend
-    env_file: ./backend/.env
+    extends: {file: docker-compose.yml, service: backend}
     environment:
       APP_ENV: production
-      DATABASE_URL: postgresql+psycopg://trip:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/trip
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY}
-      DATA_DIR: /app/data
-      CHROMA_DIR: /app/data/chroma
-      UPLOAD_DIR: /app/data/knowledge_uploads
-      LOG_DIR: /app/data/logs
+      VALIDATION_ALLOW_FIXTURES: "no"
+    volumes: ["production_uploads:/data/uploads"]
+  agent:
+    extends: {file: docker-compose.yml, service: agent}
+    environment:
+      APP_ENV: production
+      VALIDATION_ALLOW_FIXTURES: "no"
     volumes:
-      - application_data:/app/data
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz')"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-    restart: unless-stopped
+      - production_chroma:/app/data/chroma
+      - production_agent_runtime:/app/runtime
   frontend:
-    build: ./frontend
-    ports: ["127.0.0.1:8080:80"]
-    depends_on:
-      backend:
-        condition: service_healthy
-    restart: unless-stopped
+    extends: {file: docker-compose.yml, service: frontend}
   prometheus:
     image: prom/prometheus:v3.2.1
     volumes:
@@ -50,5 +26,7 @@ services:
     ports: ["127.0.0.1:9090:9090"]
     restart: unless-stopped
 volumes:
-  postgres_data:
-  application_data:
+  java_business_data:
+  production_uploads:
+  production_chroma:
+  production_agent_runtime:

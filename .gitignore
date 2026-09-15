@@ -30,3 +30,11 @@ backend/.codex-*/
 /导学-智能旅行.md
 /面经-智能旅行.md
 /docs/evidence/resume-validation-20260911/resume.md
+/business-backend/target/
+/deploy/runtime/
+/backend/data/agent-instance.lock
+/backend/data/index-commands.sqlite3*
+/backend/data/acceptance-budget.sqlite3*
+/backend/data/agent-runtime/
+/frontend/test-results/
+/frontend/playwright-report/

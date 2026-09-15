@@ -1,0 +1,23 @@
+{
+  "mode": "restored_daily_java_snapshot",
+  "seven_table_digests_equal": true,
+  "checksums_verified": true,
+  "restored_java_ready": true,
+  "source_configuration_unchanged": true,
+  "checks": [
+    "users|10|8027bd3c60417632fda38d603474213e",
+    "user_travel_preferences|2|0a01db204787ea95a90e3b42095cb032",
+    "trip_records|28|f2f8d2faca6c62b6fc0b667468cb5c1c",
+    "trip_tasks|7|b326349a74590d4b56c541798f75c19c",
+    "rag_sync_jobs|22|db9a50a05d50e4d7deefb0eb5af5efea",
+    "knowledge_documents|3|94b642bcbcd13153ec9a4cc576d47098",
+    "knowledge_ingest_jobs|7|76b2d197d958b4fced538d45c97685e9"
+  ],
+  "budget": {
+    "text": 4,
+    "vision": 1,
+    "embedding": 14,
+    "amap": 100
+  },
+  "failed_first_drill": "Docker CLI env_file quote parsing; repaired with dotenv parsing and verified in a fresh clone"
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Location": {
+      "description": "地理位置",
+      "properties": {
+        "longitude": {
+          "description": "经度",
+          "title": "Longitude",
+          "type": "number"
+        },
+        "latitude": {
+          "description": "纬度",
+          "title": "Latitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "longitude",
+        "latitude"
+      ],
+      "title": "Location",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "left": {
+      "$ref": "#/$defs/Location"
+    },
+    "right": {
+      "$ref": "#/$defs/Location"
+    },
+    "route_type": {
+      "enum": [
+        "walking",
+        "driving",
+        "transit"
+      ],
+      "title": "Route Type",
+      "type": "string"
+    },
+    "city": {
+      "title": "City",
+      "type": "string"
+    }
+  },
+  "required": [
+    "left",
+    "right",
+    "route_type",
+    "city"
+  ],
+  "title": "RouteCoordinates",
+  "type": "object"
+}

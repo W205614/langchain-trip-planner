@@ -1,0 +1,74 @@
+package com.tripplanner;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.sun.net.httpserver.HttpServer;
+import com.tripplanner.agent.AgentClient;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
+
+class AgentClientTest {
+  @Test
+  void preservesStreamEventsWithoutHttp2UpgradeOrAutomaticRetry() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var calls = new AtomicInteger();
+    server.createContext(
+        "/internal/v1/executions",
+        exchange -> {
+          calls.incrementAndGet();
+          assertNull(exchange.getRequestHeaders().getFirst("Upgrade"));
+          assertEquals("test-key", exchange.getRequestHeaders().getFirst("X-Service-Key"));
+          byte[] body =
+              ": heartbeat\n\nevent: progress\ndata: {\"percent\":10}\n\nevent: result\ndata: {\"execution_id\":\"test\"}\n\n"
+                  .getBytes(StandardCharsets.UTF_8);
+          exchange.getResponseHeaders().add("Content-Type", "text/event-stream");
+          exchange.sendResponseHeaders(200, body.length);
+          exchange.getResponseBody().write(body);
+          exchange.close();
+        });
+    server.start();
+    try {
+      var client =
+          new AgentClient(
+              "http://127.0.0.1:" + server.getAddress().getPort(), "test-key", new JsonMapper());
+      var events = new ArrayList<String>();
+      client.generate(Map.of(), Duration.ofSeconds(3), (event, data) -> events.add(event));
+      assertEquals(List.of("progress", "result"), events);
+      assertEquals(1, calls.get());
+    } finally {
+      server.stop(0);
+    }
+  }
+
+  @Test
+  void disconnectedStreamFailsWithoutRegenerating() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var calls = new AtomicInteger();
+    server.createContext(
+        "/internal/v1/executions",
+        exchange -> {
+          calls.incrementAndGet();
+          byte[] body = "event: progress\ndata: {}\n\n".getBytes(StandardCharsets.UTF_8);
+          exchange.sendResponseHeaders(200, body.length);
+          exchange.getResponseBody().write(body);
+          exchange.close();
+        });
+    server.start();
+    try {
+      var client =
+          new AgentClient(
+              "http://127.0.0.1:" + server.getAddress().getPort(), "test-key", new JsonMapper());
+      assertThrows(
+          java.io.EOFException.class,
+          () -> client.generate(Map.of(), Duration.ofSeconds(3), (event, data) -> {}));
+      assertEquals(1, calls.get());
+    } finally {
+      server.stop(0);
+    }
+  }
+}

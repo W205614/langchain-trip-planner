@@ -260,7 +260,7 @@
 
     <!-- 底部品牌信息 -->
     <div class="home-footer">
-      <span>Powered by LangChain · LangGraph · FastAPI · 高德地图</span>
+      <span>Powered by Spring Boot · Python Agent · LangGraph · 高德地图</span>
     </div>
   </div>
 </template>

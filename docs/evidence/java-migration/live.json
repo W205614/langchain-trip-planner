@@ -1,0 +1,174 @@
+{
+  "mode": "live_java_entry",
+  "limits": {
+    "text": 12,
+    "vision": 1,
+    "embedding": 50,
+    "amap": 100
+  },
+  "counts": {
+    "text": 4,
+    "vision": 1,
+    "embedding": 14,
+    "amap": 100
+  },
+  "cases": {
+    "beijing_one_day": {
+      "task_id": "95e02ebb-cf95-4d01-8dbc-67403bb1a1bd",
+      "status": "succeeded",
+      "error_code": "",
+      "contract_passed": true,
+      "outcome": "degraded",
+      "data_gaps": [
+        "hotel_and_meal_routes_unverified",
+        "in_attraction_walking_unknown",
+        "opening_hours_travel_date_unverified",
+        "reservation_unverified"
+      ],
+      "record_id": 30,
+      "version": 1,
+      "usage": {
+        "calls": 1,
+        "input_tokens": 1314,
+        "output_tokens": 1129
+      },
+      "counts_after": {
+        "text": 1,
+        "vision": 0,
+        "embedding": 6,
+        "amap": 48
+      }
+    },
+    "shanghai_two_days": {
+      "task_id": "c43f94ab-1692-4a91-b9ab-6997fd3aedb7",
+      "status": "needs_attention",
+      "error_code": "",
+      "contract_passed": true,
+      "outcome": "draft",
+      "data_gaps": [
+        "hotel_and_meal_routes_unverified",
+        "in_attraction_walking_unknown",
+        "opening_hours_travel_date_unverified",
+        "reservation_unverified",
+        "route_duration_unavailable_fallback_to_straight_line"
+      ],
+      "record_id": 31,
+      "version": 1,
+      "usage": {
+        "calls": 2,
+        "input_tokens": 2950,
+        "output_tokens": 3138
+      },
+      "counts_after": {
+        "text": 3,
+        "vision": 0,
+        "embedding": 9,
+        "amap": 94
+      }
+    },
+    "revise_one_day": {
+      "task_id": "c87dab2c-0e37-4f29-ab09-d65f795c0ca3",
+      "status": "needs_attention",
+      "error_code": "",
+      "contract_passed": true,
+      "outcome": "draft",
+      "data_gaps": [
+        "hotel_and_meal_routes_unverified",
+        "in_attraction_walking_unknown",
+        "opening_hours_travel_date_unverified",
+        "reservation_unverified",
+        "route_duration_unavailable_fallback_to_straight_line"
+      ],
+      "record_id": 32,
+      "version": 1,
+      "usage": {
+        "calls": 1,
+        "input_tokens": 816,
+        "output_tokens": 998
+      },
+      "counts_after": {
+        "text": 4,
+        "vision": 0,
+        "embedding": 10,
+        "amap": 100
+      }
+    },
+    "public_research": {
+      "http_status": 200,
+      "response": {
+        "success": true,
+        "message": "查询完成",
+        "data": {
+          "city": "北京",
+          "query": "故宫参观注意事项与资料来源",
+          "evidence": [
+            {
+              "content": "## 必去景点\n\n### 故宫博物院（紫禁城）\n- 门票：旺季 60 元，淡季 40 元（周一闭馆）\n- 开放时间：08:30-17:00（旺季），08:30-16:30（淡季）\n- 建议游玩：4 小时\n- 地址：东城区景山前街 4 号\n- 交通：地铁 1 号线天安门东站 B 口出步行 600 米\n- 打卡点：午门、太和殿、乾清宫、御花园、角楼\n- 避坑：必须提前 7 天官网预约，现场不售票；珍宝馆、钟表馆单独购票各 10 元",
+              "source": "beijing.md",
+              "page": null,
+              "source_type": "markdown",
+              "source_tier": "curated_static",
+              "chunk_id": "beijing.md:1"
+            },
+            {
+              "content": "## 避坑指南汇总\n\n1. 故宫、国博必须提前预约，旺季一票难求\n2. 看升旗要查当天时间，凌晨排队\n3. 长城建议坐 S2 线或高铁，别坐黑车\n4. 胡同三轮车先谈价格再上车\n5. 北京地铁末班车约 23:00，注意回程时间\n6. 春秋风大，冬天干冷，注意保暖保湿\n7. 环球影城、欢乐谷门票官方 App 提前买，避免黄牛",
+              "source": "beijing.md",
+              "page": null,
+              "source_type": "markdown",
+              "source_tier": "curated_static",
+              "chunk_id": "beijing.md:12"
+            },
+            {
+              "content": "### 国家博物馆\n- 门票：免费（需预约）\n- 开放时间：09:00-17:00（周一闭馆）\n- 建议游玩：3-4 小时\n- 地址：东城区东长安街 16 号\n- 交通：地铁 1 号线天安门东站 D 口\n- 打卡点：古代中国基本陈列、复兴之路、青铜器馆\n- 避坑：免费但必须提前预约，安检严格，禁止带打火机",
+              "source": "beijing.md",
+              "page": null,
+              "source_type": "markdown",
+              "source_tier": "curated_static",
+              "chunk_id": "beijing.md:7"
+            },
+            {
+              "content": "### 故宫博物院\n- 地址: 景山前街4号\n- 坐标: 116.397029,39.917839\n- 类别: 风景名胜;风景名胜;世界遗产|科教文化服务;博物馆;博物馆",
+              "source": "gaode:北京",
+              "page": null,
+              "source_type": "unknown",
+              "source_tier": "amap_live",
+              "chunk_id": ""
+            },
+            {
+              "content": "# 北京旅游知识库\n\n> 本知识库为学习演示数据，价格/线路为示例，实际以官方为准。\n\n## 城市概览\n\n北京，中国首都，3000 多年建城史，历史文化底蕴深厚，同时拥有现代化的都市面貌。必游元素：故宫、长城、皇家园林、胡同文化、博物馆。最佳旅游季节：4-5 月、9-10 月（春秋季气候宜人）。\n\n- 出行方式：地铁 27 条线路，覆盖绝大多数景点\n- 消费水平：餐饮人均 40-100 元，景点门票多在 20-60 元\n- 语言：普通话，方言较少",
+              "source": "beijing.md",
+              "page": null,
+              "source_type": "markdown",
+              "source_tier": "curated_static",
+              "chunk_id": "beijing.md:0"
+            }
+          ],
+          "status": "matched"
+        }
+      },
+      "counts_after": {
+        "text": 4,
+        "vision": 0,
+        "embedding": 11,
+        "amap": 100
+      }
+    }
+  },
+  "document": {
+    "id": 5,
+    "status": "published",
+    "version": 2,
+    "phase": "publish",
+    "counts_after": {
+      "text": 4,
+      "vision": 1,
+      "embedding": 14,
+      "amap": 100
+    },
+    "synthetic_fixture": true
+  },
+  "user_original_login": "confirmed by user; image recheck pending",
+  "acceptance_closed": true,
+  "normal_use_authorized_by_user": true,
+  "counting": "durable pre-send reservations; failed attempts count; each category capped independently"
+}

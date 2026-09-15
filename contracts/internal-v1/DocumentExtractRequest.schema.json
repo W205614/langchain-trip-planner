@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "document_id": {
+      "minimum": 1,
+      "title": "Document Id",
+      "type": "integer"
+    },
+    "document_version": {
+      "minimum": 1,
+      "title": "Document Version",
+      "type": "integer"
+    },
+    "city": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "City",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 160,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_id",
+    "document_version",
+    "city",
+    "title"
+  ],
+  "title": "DocumentExtractRequest",
+  "type": "object"
+}

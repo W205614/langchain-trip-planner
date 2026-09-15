@@ -269,6 +269,10 @@ def _photo_placeholder(name: str) -> Response:
 def get_attraction_photo_image(request: Request, name: str = Query(min_length=1, max_length=100),
                                poi_id: str = Query(default="", max_length=64, pattern=r"^[A-Za-z0-9]*$"),
                                city: str = Query(default="", max_length=32)):
+    return render_attraction_photo(name, poi_id, city)
+
+
+def render_attraction_photo(name: str, poi_id: str = "", city: str = ""):
     """将已解析的景点图片作为同源图片返回，不接受任意 URL，避免开放代理。"""
     if poi_id:
         # Resolve by the actual attraction ID; try other photos when a CDN URL is stale.

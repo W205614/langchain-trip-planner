@@ -7,6 +7,17 @@ from threading import Lock
 deadline_var = ContextVar("trip_deadline", default=None)
 stats_var = ContextVar("trip_usage", default=None)
 usage_sink_var = ContextVar("trip_usage_sink", default=None)
+cancellation_var = ContextVar("trip_cancellation", default=None)
+trusted_evidence_var = ContextVar("trip_trusted_evidence", default=None)
+rag_degradation_var = ContextVar("trip_rag_degradation", default=None)
+
+
+def note_rag_degradation():
+    notices = rag_degradation_var.get()
+    if notices is not None:
+        message = "资料检索或可见性校验暂不可用，受影响资料已排除"
+        if message not in notices:
+            notices.append(message)
 _stats_lock = Lock()
 
 
@@ -40,6 +51,9 @@ def record_usage(usage=None):
 
 
 def remaining(default=300.0):
+    cancelled = cancellation_var.get()
+    if cancelled is not None and cancelled.is_set():
+        raise TimeoutError("Task cancelled")
     deadline = deadline_var.get()
     if deadline is None:
         return default

@@ -1,0 +1,8 @@
+{
+  "mode": "isolated_java_agent_faults",
+  "agent_disconnect_error": "AGENT_CONNECTION_LOST",
+  "same_key_did_not_regenerate": true,
+  "cancelled_late_result_rejected": true,
+  "history_count": 0,
+  "paid_calls": 0
+}

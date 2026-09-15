@@ -34,7 +34,7 @@ groups:
           summary: "攻略增强拒绝或超时增多；检查来源归属、嵌入服务和索引"
           runbook_url: "docs/operations/reliability.md#草稿与降级"
       - alert: TripServiceDown
-        expr: up{job="trip"} == 0
+        expr: up{job=~"trip|trip-agent"} == 0
         for: 1m
         labels:
           severity: critical

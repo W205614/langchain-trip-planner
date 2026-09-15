@@ -64,7 +64,19 @@ trip_planner_agent.get_amap_service = lambda: fixture_map
 llm_service.get_llm = lambda timeout=None: RunnableLambda(response)
 trip_planner_agent.get_llm = llm_service.get_llm
 
-from app.api.main import app
+if os.environ.get("VALIDATION_AGENT_ONLY") == "yes":
+    from app.agent_api.main import app
+    from app.agent_api import extraction, indexing
+    extraction.extract = lambda body: {"pages": [f"## {body['title']}\n来源页: 1\n摘要: 离线资料解析夹具\n- 开放时间请向官方确认"]}
+    class FixtureIndex:
+        enabled = True
+        def add_history_plan(self, *args, **kwargs): return True
+        def delete_history_plan(self, *args, **kwargs): return True
+        def replace_public_knowledge_document(self, *args, **kwargs): return True
+        def delete_public_knowledge_document(self, *args, **kwargs): return True
+    indexing.get_rag_service = lambda: FixtureIndex()
+else:
+    from app.api.main import app
 @app.get("/api/validation/fixture")
 def fixture_marker():
     return {"offline_fixture": True}

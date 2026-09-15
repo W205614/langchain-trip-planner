@@ -99,6 +99,8 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         seconds = budget()
         async def request():
             async with asyncio.timeout(seconds), httpx.AsyncClient(timeout=seconds, follow_redirects=False) as client:
+                from .call_budget import reserve
+                reserve("embedding")
                 response = await client.post(self.base_url + "/embeddings",
                     headers={"Authorization": "Bearer " + self.api_key},
                     json={"model": self.model, "input": texts, "encoding_format": "float"})
@@ -115,7 +117,7 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
             raise
 
 # backend/data/knowledge 与 backend/data/chroma
-from ..db.database import DATA_DIR
+from .agent_paths import DATA_DIR
 KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / "data" / "knowledge"
 CHROMA_DIR = Path(get_settings().chroma_dir).resolve() if get_settings().chroma_dir else DATA_DIR / "chroma"
 
@@ -333,7 +335,7 @@ class RagService:
 
     @serialized
     def add_history_plan(
-        self, record_id: int, user_id: int, request: TripRequest, trip_plan: TripPlan
+        self, record_id: int, user_id: int, request: TripRequest, trip_plan: TripPlan, record_version: int = 1
     ) -> bool:
         """把一份行程计划写入私有历史向量库（检索时必须按 user_id 过滤）。"""
         if not self.enabled:
@@ -345,7 +347,7 @@ class RagService:
                 [
                     Document(
                         page_content=text,
-                        metadata={"record_id": record_id, "user_id": user_id, "city": request.city},
+                        metadata={"record_id": record_id, "user_id": user_id, "city": request.city, "record_version": record_version},
                     )
                 ],
                 ids=[f"history-{user_id}-{record_id}"],
@@ -486,10 +488,16 @@ class RagService:
                 results.extend(f"[我的历史行程] {doc.page_content}" for doc in self._visible_documents(docs, user_id))
         except Exception as e:
             logger.warning(f"⚠️  RAG 检索失败: {e}")
+            from .execution import note_rag_degradation
+            note_rag_degradation()
         return results
 
     @staticmethod
     def _visible_documents(documents, user_id=None):
+        import os
+        if os.environ.get("BUSINESS_URL"):
+            from ..agent_api.business_client import visible
+            return visible(documents, user_id)
         from ..db.database import SessionLocal
         from ..db.models import KnowledgeDocument, TripRecord
         visible = []
@@ -563,6 +571,8 @@ class RagService:
         检索或评测使用的原始结果；用于对延迟敏感的规划 prompt。
         """
         if not self.enabled:
+            from .execution import note_rag_degradation
+            note_rag_degradation()
             return ""
         if max_chunk_chars is not None and max_chunk_chars < 1:
             raise ValueError("max_chunk_chars 必须为正数")

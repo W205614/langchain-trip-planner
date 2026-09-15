@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "revision": {
+      "minimum": 0,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "documents": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Documents",
+      "type": "array"
+    },
+    "records": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Records",
+      "type": "array"
+    }
+  },
+  "required": [
+    "revision",
+    "documents",
+    "records"
+  ],
+  "title": "EvidenceSnapshot",
+  "type": "object"
+}
