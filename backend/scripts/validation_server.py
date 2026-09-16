@@ -121,6 +121,8 @@ def amap_rest_fixture(path: str, request: Request):
     if path == "v3/weather/weatherInfo":
         return {"status":"1","forecasts":[{"casts":[{"date":"2026-09-11","dayweather":"晴","nightweather":"晴","daytemp":"25","nighttemp":"18","daywind":"东","daypower":"3"}]}]}
     if path.startswith("v3/direction/"):
+        if query.get("origin", "").startswith("118"):
+            return {"status":"1","route":{"paths":[],"transits":[]}}
         return {"status":"1","route":{"paths":[{"distance":"600","duration":"600","walking_distance":"0"}],
             "transits":[{"distance":"600","duration":"600","walking_distance":"200"}]}}
     return {"status":"0","info":"UNKNOWN_FIXTURE_PATH"}
