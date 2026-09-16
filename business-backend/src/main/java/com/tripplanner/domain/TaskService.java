@@ -27,6 +27,7 @@ public class TaskService {
   private final TransactionTemplate tx;
   private final AgentClient agent;
   private final PlanRules rules;
+  private final AmapGateway amap;
   private final JsonMapper json;
   private final ExecutorService pool;
   private final Semaphore slots;
@@ -43,6 +44,7 @@ public class TaskService {
       TransactionTemplate tx,
       AgentClient agent,
       PlanRules rules,
+      AmapGateway amap,
       JsonMapper json,
       @Value("${LLM_REQUEST_MAX_CONCURRENCY:4}") int concurrency,
       @Value("${TRIP_TASK_TIMEOUT_SECONDS:300}") int timeout,
@@ -55,6 +57,7 @@ public class TaskService {
     this.tx = tx;
     this.agent = agent;
     this.rules = rules;
+    this.amap = amap;
     this.json = json;
     this.timeout = timeout;
     this.queueLimit = queueLimit;
@@ -109,6 +112,8 @@ public class TaskService {
               .equals(canonical(body))) throw new ApiException(409, "同一幂等键不能用于不同请求");
       return response(uid, existing.get("id").toString(), true);
     }
+    if (!agent.available())
+      throw new ApiException(503, "智能规划暂不可用，传统行程功能仍可使用", "AGENT_UNAVAILABLE");
     if (tasks.activeUser(uid) >= userLimit)
       throw new ApiException(429, "您的待处理任务过多", "USER_QUEUE_FULL");
     if (tasks.daily() >= globalDaily || tasks.dailyUser(uid) >= userDaily)
@@ -290,7 +295,7 @@ public class TaskService {
               .put("request_id", task.get("request_id").toString())
               .put("deadline_at", deadline.toString());
       request.set("request", body);
-      if (revision != null) {
+      if (revision != null && revision.path("record_id").asLong(0) > 0) {
         var parent = history.owned(uid, revision.path("record_id").asLong(0));
         if (parent == null
             || ((Number) parent.get("version")).intValue() != revision.path("version").asInt(0))
@@ -326,6 +331,7 @@ public class TaskService {
               var plan = (ObjectNode) data.path("plan");
               TrustedCandidates.verify(
                   plan, data.path("trusted_candidates"), request.get("original_plan"));
+              var unverified = canonicalizePois(plan, body.path("city").asText(""));
               var quality =
                   rules.finish(
                       plan,
@@ -338,15 +344,10 @@ public class TaskService {
                             || !"running".equals(current.get("status"))
                             || !execution.equals(current.get("execution_id")))
                           throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
-                        Duration remaining = Duration.between(Instant.now(), deadline);
-                        return agent.post(
-                            "/map/route-coordinates",
-                            Map.of("left", left, "right", right, "route_type", type, "city", city),
-                            remaining.compareTo(Duration.ofSeconds(30)) > 0
-                                ? Duration.ofSeconds(30)
-                                : remaining);
+                        return amap.routeBetween(left, right, type, city);
                       },
                       revision == null);
+              if (!unverified.isEmpty()) markUnverified(quality, unverified);
               quality.set("usage", data.path("usage"));
               complete(task, body, plan, quality, revision);
             }
@@ -363,17 +364,90 @@ public class TaskService {
     }
   }
 
+  private List<String> canonicalizePois(ObjectNode plan, String requestedCity) {
+    var invalid = new ArrayList<String>();
+    var cache = new HashMap<String, ObjectNode>();
+    for (var day : plan.path("days")) {
+      if (!day.path("attractions").isArray()) continue;
+      var attractions = (tools.jackson.databind.node.ArrayNode) day.path("attractions");
+      for (int index = attractions.size() - 1; index >= 0; index--) {
+        JsonNode current = attractions.get(index);
+        String id = current.path("poi_id").asText("");
+        try {
+          if (id.isBlank()) throw new ApiException(422, "POI ID 缺失");
+          ObjectNode canonical = cache.computeIfAbsent(id, amap::detail);
+          if (!cityMatches(requestedCity, canonical.path("city").asText(""))
+              || canonical.path("location").path("longitude").asDouble(0) == 0
+              || canonical.path("location").path("latitude").asDouble(0) == 0)
+            throw new ApiException(422, "POI 城市或坐标无效");
+          var normalized = (ObjectNode) current.deepCopy();
+          normalized.put("poi_id", id);
+          normalized.put("name", canonical.path("name").asText(""));
+          normalized.put("address", canonical.path("address").asText(""));
+          normalized.set("location", canonical.path("location").deepCopy());
+          normalized.put("opening_hours", canonical.path("opening_hours").asText(""));
+          normalized.put("fact_source", "amap_rest");
+          normalized.remove("rating");
+          normalized.remove("ticket_price");
+          normalized.put("price_source", "unknown");
+          if (canonical.path("photos").isArray() && !canonical.path("photos").isEmpty())
+            normalized.put("image_url", canonical.path("photos").get(0).asText(""));
+          else normalized.remove("image_url");
+          attractions.set(index, normalized);
+        } catch (Exception ex) {
+          invalid.add(id.isBlank() ? "missing-poi-id" : id);
+          attractions.remove(index);
+        }
+      }
+    }
+    return invalid;
+  }
+
+  private static String cityKey(String city) {
+    return city == null ? "" : city.strip().replaceAll("(特别行政区|自治区|自治州|地区|盟|省|市)$", "");
+  }
+
+  private static boolean cityMatches(String requested, String actual) {
+    String left = cityKey(requested), right = cityKey(actual);
+    return !left.isBlank() && !right.isBlank() && (left.equals(right) || left.contains(right) || right.contains(left));
+  }
+
+  private void markUnverified(ObjectNode quality, List<String> invalid) {
+    quality.put("outcome", "draft");
+    var gaps = quality.withArray("data_gaps");
+    gaps.add("agent_pois_rejected_by_java_rest:" + String.join(",", invalid));
+    quality.withArray("issues").addObject()
+        .put("code", "INVALID_POI").put("scope", "plan")
+        .put("reason", "部分 Agent 候选无法由 Java 高德 REST 重新确认")
+        .put("action", "重新选择可信景点后再确认行程")
+        .put("blocking", true).put("retryable", true);
+  }
+
   private void complete(
       Map<String, Object> task,
       ObjectNode body,
       ObjectNode plan,
       ObjectNode quality,
       ObjectNode revision) {
+    boolean assistantPreview = revision != null && revision.path("assistant_preview").asBoolean(false);
+    if (assistantPreview) {
+      String validated = quality.path("outcome").asText("draft");
+      quality.put("validated_outcome", validated);
+      quality.put("outcome", "draft");
+      quality.put("assistant_confirmation_required", true);
+      quality.put("assistant_conversation_id", revision.path("conversation_id").asText(""));
+      quality.withArray("issues").addObject()
+          .put("code", "ASSISTANT_CONFIRMATION_REQUIRED").put("scope", "plan")
+          .put("reason", "旅行助手方案等待用户确认")
+          .put("action", "查看 Java 校验结果与差异后确认保存")
+          .put("blocking", true).put("retryable", false);
+    }
     boolean draft = quality.path("outcome").asText("").equals("draft");
     if (plan.path("days").valueStream().allMatch(d -> d.path("attractions").isEmpty()))
       throw new ApiException(503, "暂无可信景点", "TRUSTED_POI_UNAVAILABLE");
     task.put("status", draft ? "needs_attention" : "succeeded");
-    task.put("message", draft ? "已保存未完成草稿，请查看缺口并调整" : "旅行计划已生成并保存");
+    task.put("message", assistantPreview ? "助手方案已通过 Java 校验，等待用户确认"
+        : draft ? "已保存未完成草稿，请查看缺口并调整" : "旅行计划已生成并保存");
     if (draft && revision != null) quality.set("revision_parent", revision);
     tx.executeWithoutResult(
         status -> {
@@ -412,6 +486,9 @@ public class TaskService {
             record.put("user_id", uid);
             record.put("plan_json", json.writeValueAsString(plan));
             record.put("quality_json", json.writeValueAsString(quality));
+            record.put("title", body.path("city").asText("") + "旅行计划");
+            record.put("source", assistantPreview ? "assistant_revision" : "agent");
+            record.put("last_verified_at", java.sql.Timestamp.from(java.time.Instant.now()));
             history.insert(record);
             recordId = ((Number) record.get("id")).longValue();
           }

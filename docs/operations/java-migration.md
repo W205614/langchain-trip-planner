@@ -5,7 +5,8 @@
 ## 配置与数据
 
 - Java 配置：`deploy/runtime/business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
-- Agent 配置：`deploy/runtime/agent.env`；模型、地图、embedding、视觉、内部密钥与固定 Java 地址。
+- Java 地图配置：`deploy/runtime/business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；公开 POI、天气、路线、图片和最终核验都走此通道。
+- Agent 配置：`deploy/runtime/agent.env`；模型、`AMAP_MCP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。
 - PostgreSQL：`langchain-trip-planner_java_business_data` 数据卷。
 - 原文件：`backend/data/knowledge_uploads`，Java 管理。
 - 向量：`backend/data/chroma`；模型／维度变更须受控重建。
@@ -20,7 +21,7 @@ docker compose ps
 docker compose logs --tail 100 backend agent
 ```
 
-Java 存活检查不调用模型，就绪检查验证数据库和迁移；Agent 就绪检查验证本地存储。容器“已启动”不是服务“已就绪”。恢复演练会同时验证两个服务的实际健康状态和 Nginx 的公开夹具入口，完成后才输出成功报告。
+Java 存活检查不调用模型，就绪检查只验证数据库、迁移和本地必要配置；前端只依赖 Java 健康。Agent 就绪检查验证 AI 服务本身。停止 Agent 后必须复测登录、POI 搜索、收藏、手工行程、路线、历史、分享和导出；智能规划应返回 `AGENT_UNAVAILABLE`，而不是拖垮传统业务。容器“已启动”不是服务“已就绪”。
 
 Java 重启中的运行任务标为 `PROCESS_INTERRUPTED`，用户显式重试，不自动重新计费生成。单实例 PostgreSQL advisory lock 不等于跨主机故障接管；数据库异常后应检查并重启唯一 Java 实例，不另起第二套 workers。
 
@@ -64,7 +65,8 @@ python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-2026
 | 历史、编辑、改排、草稿应用 | Java HistoryController | 版本／所有者测试、Playwright |
 | 原文件、审核、发布 | Java KnowledgeService + Agent extraction | `java_knowledge_smoke.py`、Agent 解析故障测试 |
 | 向量同步与重建 | Java outbox + Agent indexing/rebuild | 稳定 ID、版本、墓碑、Java 快照冲突、检索回查 |
-| 模型、地图、图片、检索 | Agent 能力，Java 公开入口 | pytest、MCP 协议、图片和故障用例 |
+| 传统地图、图片、最终路线 | Java 高德 REST | Java 网关测试、缓存／错误映射、Agent 停机演练 |
+| 模型、Agent 候选、检索与解析 | Python Agent + 高德 MCP | pytest、MCP 协议、RAG／视觉故障用例 |
 | 数据恢复与通知 | 当前 Java 运维脚本 | `java_recovery_drill.py`、`notification_smoke.py` |
 
 清理前的 255 项 Python 测试包含已退役业务代码测试，不能用它与清理后的 Agent 测试数直接比较覆盖率。公开业务合同转移到 Java 和 HTTP 验收，不保留可运行的旧业务后端来维持测试计数。

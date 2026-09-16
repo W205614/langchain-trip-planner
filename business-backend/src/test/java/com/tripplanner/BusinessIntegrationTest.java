@@ -1,8 +1,11 @@
 package com.tripplanner;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 import com.tripplanner.agent.AgentClient;
+import com.tripplanner.domain.AmapGateway;
 import com.tripplanner.persistence.*;
 import java.net.URI;
 import java.net.http.*;
@@ -23,8 +26,9 @@ import tools.jackson.databind.json.JsonMapper;
       "trip.internal-key=integration-internal-only-01234567890123456789",
       "spring.datasource.url=${TEST_DATABASE_URL}",
       "spring.datasource.username=trip",
-      "spring.datasource.password=isolated-test-only",
-      "WORKERS_ENABLED=false"
+      "spring.datasource.password=${TEST_DATABASE_PASSWORD:isolated-test-only}",
+      "WORKERS_ENABLED=false",
+      "TRIP_USER_ACTIVE_LIMIT=4"
     })
 @EnabledIfEnvironmentVariable(named = "TEST_DATABASE_URL", matches = ".+")
 class BusinessIntegrationTest {
@@ -38,7 +42,21 @@ class BusinessIntegrationTest {
   @Autowired com.tripplanner.domain.TaskService tasks;
   @Autowired TaskMapper taskMapper;
   @MockitoBean AgentClient agent;
+  @MockitoBean AmapGateway amap;
   final HttpClient http = HttpClient.newHttpClient();
+
+  @BeforeEach
+  void agentIsAvailableForTaskPersistenceTests() {
+    when(agent.available()).thenReturn(true);
+    when(amap.detail(org.mockito.ArgumentMatchers.anyString())).thenAnswer(invocation -> {
+      String id=invocation.getArgument(0);
+      var poi=json.createObjectNode().put("id",id).put("name","Java可信景点").put("city","北京").put("address","可信地址").put("opening_hours","");
+      poi.putObject("location").put("longitude",116.4).put("latitude",39.9); poi.putArray("photos"); return poi;
+    });
+    when(amap.weather(org.mockito.ArgumentMatchers.anyString())).thenReturn(json.createArrayNode());
+    when(amap.routeBetween(any(),any(),anyString(),anyString())).thenReturn(
+        json.createObjectNode().put("distance",600).put("duration",600).put("walking_distance",600).put("route_type","walking"));
+  }
 
   long userId() {
     var row = new HashMap<String, Object>();
@@ -234,6 +252,45 @@ class BusinessIntegrationTest {
     if (body == null) b.GET();
     else b.POST(HttpRequest.BodyPublishers.ofString(body));
     return http.send(b.build(), HttpResponse.BodyHandlers.ofString());
+  }
+
+  HttpResponse<String> request(String method, String path, String body, String token, Map<String,String> headers) throws Exception {
+    var b=HttpRequest.newBuilder(URI.create("http://localhost:"+port+path)).header("Content-Type","application/json");
+    if(token!=null)b.header("Authorization","Bearer "+token); headers.forEach(b::header);
+    b.method(method,body==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(body));
+    return http.send(b.build(),HttpResponse.BodyHandlers.ofString());
+  }
+
+  String registerToken() throws Exception {
+    var response=request("/api/auth/register",json.writeValueAsString(Map.of(
+        "username","api_"+UUID.randomUUID().toString().substring(0,12),"password","browser123")),null);
+    assertEquals(200,response.statusCode(),response.body()); return json.readTree(response.body()).path("access_token").asText();
+  }
+
+  @Test
+  void traditionalTravelDataIsCanonicalIdempotentAndOwnerScoped() throws Exception {
+    String owner=registerToken(),other=registerToken();
+    String favorite=json.writeValueAsString(Map.of("poi_id","fixture-beijing-1","name","篡改名称","longitude",0));
+    var first=request("/api/favorites",favorite,owner); assertEquals(200,first.statusCode(),first.body());
+    assertEquals("Java可信景点",json.readTree(first.body()).path("data").path("name").asText());
+    assertEquals(200,request("/api/favorites",favorite,owner).statusCode());
+    assertEquals(1,json.readTree(request("/api/favorites",null,owner).body()).path("total").asInt());
+    var manual=json.createObjectNode().put("title","传统闭环").put("city","北京")
+        .put("start_date","2026-10-01").put("end_date","2026-10-01").put("travel_days",1)
+        .put("transportation","步行").put("accommodation","经济型酒店").put("free_text_input","");
+    manual.putArray("preferences"); manual.putObject("constraints");
+    manual.putArray("days").addObject().putArray("poi_ids").add("fixture-beijing-1");
+    var created=request("/api/trips",manual.toString(),owner); assertEquals(200,created.statusCode(),created.body());
+    long id=json.readTree(created.body()).path("id").asLong();
+    assertEquals(404,request("/api/trips/"+id,null,other).statusCode());
+    var share=request("/api/trips/"+id+"/shares","{\"expires_days\":7}",owner);
+    assertEquals(200,share.statusCode(),share.body()); String token=json.readTree(share.body()).path("token").asText();
+    assertEquals(200,request("/api/shared-trips/"+token,null,null).statusCode());
+    assertEquals(200,request("/api/shared-trips/"+token+"/copy","{}",other).statusCode());
+    long shareId=json.readTree(share.body()).path("id").asLong();
+    assertEquals(404,request("DELETE","/api/trips/"+id+"/shares/"+shareId,null,other,Map.of()).statusCode());
+    assertEquals(200,request("DELETE","/api/trips/"+id+"/shares/"+shareId,null,owner,Map.of()).statusCode());
+    assertEquals(404,request("/api/shared-trips/"+token,null,null).statusCode());
   }
 
   @Test

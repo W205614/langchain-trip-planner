@@ -33,6 +33,9 @@ public class RequestLimits implements WebMvcConfigurer, HandlerInterceptor {
     if (path.equals("/api/auth/register")) limit = 5;
     else if (path.equals("/api/auth/login")) limit = 10;
     else if (path.startsWith("/api/map/") || path.startsWith("/api/poi/")) limit = 30;
+    else if (req.getMethod().equals("POST") && path.equals("/api/favorites")) limit = 30;
+    else if (req.getMethod().equals("POST") && path.equals("/api/trips")) limit = 10;
+    else if (req.getMethod().equals("POST") && path.startsWith("/api/assistant/conversations")) limit = 10;
     else if (path.equals("/api/rag/rebuild")) {
       limit = 2;
       window = 3_600_000;

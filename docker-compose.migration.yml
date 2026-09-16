@@ -13,6 +13,7 @@ services:
       retries: 20
     volumes:
       - migration_database:/var/lib/postgresql/data
+    ports: ["127.0.0.1:15432:5432"]
   backend:
     build: ./business-backend
     environment:
@@ -22,11 +23,15 @@ services:
       JWT_SECRET_KEY: migration-fixture-jwt-01234567890123456789
       INTERNAL_SERVICE_KEY: migration-fixture-internal-01234567890123456789
       AGENT_URL: http://agent:9000
+      AMAP_REST_API_KEY: fixture
+      AMAP_REST_BASE_URL: http://amap-fixture:9000/amap-fixture
       UPLOAD_DIR: /data/uploads
       APP_ENV: validation
       VALIDATION_ALLOW_FIXTURES: "yes"
     depends_on:
       postgres:
+        condition: service_healthy
+      amap-fixture:
         condition: service_healthy
     healthcheck:
       test: [CMD, curl, -fsS, http://localhost:9000/readyz]
@@ -56,10 +61,26 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+  amap-fixture:
+    build: ./backend
+    command: [python, scripts/validation_server.py]
+    environment:
+      APP_ENV: validation
+      VALIDATION_ALLOW_FIXTURES: "yes"
+      VALIDATION_AMAP_ONLY: "yes"
+      AMAP_API_KEY: fixture
+      LLM_API_KEY: fixture
+      LLM_BASE_URL: http://127.0.0.1:1
+      LLM_MODEL_ID: fixture
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz')"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
   frontend:
     build: ./frontend
     ports: ["127.0.0.1:18080:80"]
-    depends_on: [backend, agent]
+    depends_on: [backend]
 volumes:
   migration_database:
   migration_uploads:

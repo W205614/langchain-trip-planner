@@ -4,6 +4,7 @@ import os
 import re
 import sys
 from pathlib import Path
+from fastapi import Request
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 if os.environ.get("APP_ENV") != "validation" or os.environ.get("VALIDATION_ALLOW_FIXTURES") != "yes":
@@ -19,6 +20,7 @@ from app.agents import trip_planner_agent
 class FixtureMap:
     api_key = "fixture"
     transport = "fixture"
+    details = {}
 
     def close(self):
         pass
@@ -27,8 +29,15 @@ class FixtureMap:
         if city == "无候选":
             return []
         count = 1 if city == "稀疏城市" else 90
-        return [POIInfo(id=f"fixture-{i}", name=f"验证景点{i}", type="风景名胜", address=f"{city}地址{i}",
-            location=Location(longitude=(118 if city == "路线失败" else 116) + i * 0.001, latitude=39.9)) for i in range(count)]
+        default_code = {"北京":"beijing", "上海":"shanghai", "稀疏城市":"sparse", "路线失败":"route", "天气失败":"weather", "跨城候选":"cross"}.get(city, "beijing")
+        result = []
+        for i in range(count):
+            candidate_city = city
+            city_code = default_code
+            result.append(POIInfo(id=f"fixture-{city_code}-{i}", city=candidate_city, name=f"验证景点{i}", type="风景名胜", address=f"{candidate_city}地址{i}",
+                location=Location(longitude=(118 if city == "路线失败" else 116) + i * 0.001, latitude=39.9)))
+        self.details.update({item.id: item for item in result})
+        return result
     def get_weather(self, city):
         if city == "天气失败":
             raise TimeoutError("fixture weather failure")
@@ -52,7 +61,9 @@ def response(prompt, **kwargs):
     if "fixture:unknown-poi" in text:
         ids = ["not-in-candidates"]
     draft = {"description": "离线验证行程", "attractions": [
-        {"poi_id": item, "visit_duration": 60, "description": "fixture", "ticket_price": 0} for item in ids[:3]],
+        {"poi_id": item, "name": "模型篡改名称", "address": "模型错误地址",
+         "location": {"longitude": 0, "latitude": 0}, "visit_duration": 60,
+         "description": "fixture", "ticket_price": 9999} for item in ids[:3]],
         "meals": [{"type": kind, "name": kind, "estimated_cost": 20} for kind in ("breakfast", "lunch", "dinner")]}
     return AIMessage(content=json.dumps(draft), usage_metadata={"input_tokens": 100, "output_tokens": 100, "total_tokens": 200})
 
@@ -75,11 +86,44 @@ if os.environ.get("VALIDATION_AGENT_ONLY") == "yes":
         def replace_public_knowledge_document(self, *args, **kwargs): return True
         def delete_public_knowledge_document(self, *args, **kwargs): return True
     indexing.get_rag_service = lambda: FixtureIndex()
+elif os.environ.get("VALIDATION_AMAP_ONLY") == "yes":
+    from fastapi import FastAPI
+    app = FastAPI(title="isolated-amap-rest-fixture")
+
+    @app.get("/readyz")
+    def ready():
+        return {"status": "ok", "offline_fixture": True}
 else:
-    raise SystemExit("Validation serves Agent capabilities only; Java owns public APIs")
+    raise SystemExit("Select exactly one isolated validation fixture role")
 @app.get("/api/validation/fixture")
 def fixture_marker():
     return {"offline_fixture": True}
+
+@app.get("/amap-fixture/{path:path}")
+def amap_rest_fixture(path: str, request: Request):
+    query = dict(request.query_params)
+    if path == "v3/place/text":
+        city, keyword = query.get("city", "北京"), query.get("keywords", "景点")
+        pois = fixture_map.search_poi(keyword, city)[:20]
+        return {"status":"1","pois":[{"id":p.id,"name":p.name,"type":p.type,"address":p.address,
+            "cityname":p.city,"location":f"{p.location.longitude},{p.location.latitude}","photos":[],"biz_ext":{}} for p in pois]}
+    if path == "v3/place/detail":
+        identity = query.get("id", "")
+        code = identity.split("-")[1] if identity.count("-") >= 2 else "beijing"
+        city = "上海" if identity == "fixture-cross-1" else {"beijing":"北京", "shanghai":"上海", "sparse":"稀疏城市", "route":"路线失败", "weather":"天气失败", "cross":"跨城候选"}.get(code, "北京")
+        longitude = 118 if city == "路线失败" else 116.4
+        poi = fixture_map.details.get(identity) or POIInfo(id=identity,name="验证景点",type="风景名胜",
+            address=f"{city}地址",city=city,location=Location(longitude=longitude,latitude=39.9))
+        return {"status":"1","pois":[{"id":poi.id,"name":poi.name,"type":poi.type,"address":poi.address,
+            "cityname":poi.city,"location":f"{poi.location.longitude},{poi.location.latitude}","photos":[],"biz_ext":{}}]}
+    if path == "v3/geocode/geo":
+        return {"status":"1","geocodes":[{"location":"116.4,39.9","adcode":"110000"}]}
+    if path == "v3/weather/weatherInfo":
+        return {"status":"1","forecasts":[{"casts":[{"date":"2026-09-11","dayweather":"晴","nightweather":"晴","daytemp":"25","nighttemp":"18","daywind":"东","daypower":"3"}]}]}
+    if path.startswith("v3/direction/"):
+        return {"status":"1","route":{"paths":[{"distance":"600","duration":"600","walking_distance":"0"}],
+            "transits":[{"distance":"600","duration":"600","walking_distance":"200"}]}}
+    return {"status":"0","info":"UNKNOWN_FIXTURE_PATH"}
 
 import uvicorn
 uvicorn.run(app, host="0.0.0.0", port=9000)

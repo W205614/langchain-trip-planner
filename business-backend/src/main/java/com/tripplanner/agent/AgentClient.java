@@ -72,6 +72,18 @@ public class AgentClient {
     }
   }
 
+  public boolean available() {
+    try {
+      var response = http.send(
+          HttpRequest.newBuilder(URI.create(base + "/readyz")).timeout(Duration.ofMillis(800)).GET().build(),
+          HttpResponse.BodyHandlers.discarding());
+      return response.statusCode() / 100 == 2;
+    } catch (Exception ex) {
+      if (ex instanceof InterruptedException) Thread.currentThread().interrupt();
+      return false;
+    }
+  }
+
   public void generate(Object body, Duration timeout, BiConsumer<String, JsonNode> consumer)
       throws IOException, InterruptedException {
     var response =

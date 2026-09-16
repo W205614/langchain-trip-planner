@@ -210,58 +210,17 @@ def cancel(execution_id: UUID):
     return {"success": True}
 
 
-class RouteCoordinates(BaseModel):
-    left: Location
-    right: Location
-    route_type: Literal["walking", "driving", "transit"]
-    city: str
-
-
-class PhotoRequest(BaseModel):
-    name: str = Field(min_length=1, max_length=100)
-    poi_id: str = Field(default="", max_length=64, pattern=r"^[A-Za-z0-9]*$")
-    city: str = Field(default="", max_length=32)
-
-
-@app.post("/internal/v1/map/route-coordinates", dependencies=[Depends(authorize)])
-def route(body: RouteCoordinates):
-    from ..services.amap_service import get_amap_service
-    return get_amap_service().plan_route_by_locations(body.left, body.right, route_type=body.route_type, city=body.city)
-
-
 @app.post("/internal/v1/capabilities/{kind}", dependencies=[Depends(authorize)])
 def capability(kind: str, body: dict):
-    from ..services.amap_service import get_amap_service
     from ..services.rag_service import get_rag_service
-    from ..models.schemas import RouteRequest, TravelResearchRequest, POISearchRequest
+    from ..models.schemas import TravelResearchRequest
     if kind == "validation":
         if os.environ.get("APP_ENV") != "validation" or os.environ.get("VALIDATION_ALLOW_FIXTURES") != "yes":
             raise HTTPException(404, "Not available")
-        from ..services.amap_service import get_amap_service
-        return {"offline_fixture": get_amap_service().transport == "fixture"}
-    elif kind == "poi":
-        request = POISearchRequest.model_validate(body)
-        result = get_amap_service().search_poi(request.keywords, request.city, request.citylimit)
-    elif kind == "photo":
-        from ..services.poi_photos import _resolve_attraction_photo
-        request = PhotoRequest.model_validate(body)
-        result = {"name": request.name, "photo_url": _resolve_attraction_photo(request.name)}
-    elif kind == "photo-image":
-        import base64
-        from ..services.poi_photos import render_attraction_photo
-        request = PhotoRequest.model_validate(body)
-        image = render_attraction_photo(request.name, request.poi_id, request.city)
-        return {"content_type": image.media_type, "content": base64.b64encode(image.body).decode()}
+        return {"offline_fixture": os.environ.get("VALIDATION_ALLOW_FIXTURES") == "yes"}
     elif kind == "eval-policy":
         from ..services.eval_budget import policy
         return policy()
-    elif kind == "detail":
-        result = get_amap_service().get_poi_detail(body["poi_id"])
-    elif kind == "weather":
-        result = get_amap_service().get_weather(body["city"])
-    elif kind == "route":
-        request = RouteRequest.model_validate(body)
-        result = get_amap_service().plan_route(**request.model_dump())
     elif kind == "research":
         request = TravelResearchRequest.model_validate(body)
         rag = get_rag_service()
@@ -273,10 +232,12 @@ def capability(kind: str, body: dict):
     elif kind == "rag-status":
         rag = get_rag_service()
         return {"success": True, "enabled": rag.enabled, "embedding_model": rag._embedding.model if rag.enabled else None}
-    elif kind == "map-health":
-        service = get_amap_service()
-        return {"status": "healthy", "service": "map-service", "transport": service.transport,
-                "connectivity_checked": False, "amap_api_key_configured": bool(service.api_key)}
+    elif kind == "status":
+        from ..config import get_settings
+        cfg = get_settings()
+        rag = get_rag_service()
+        return {"success": True, "rag": "available" if rag.enabled else "disabled",
+                "vision": "available" if cfg.vision_model and (cfg.vision_api_key or cfg.llm_api_key) else "not_configured"}
     else:
         raise HTTPException(404, "Unknown capability")
     return {"success": True, "message": "查询完成", "data": result}

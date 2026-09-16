@@ -12,6 +12,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/tasks', component: () => import('../views/Tasks.vue'), meta: { requiresAuth: true } },
+    { path: '/explore', component: () => import('../views/Explore.vue') },
+    { path: '/favorites', component: () => import('../views/Favorites.vue'), meta: { requiresAuth: true } },
+    { path: '/trips/new', component: () => import('../views/ManualTrip.vue'), meta: { requiresAuth: true } },
+    { path: '/assistant', component: () => import('../views/Assistant.vue'), meta: { requiresAuth: true } },
+    { path: '/shared/:token', component: () => import('../views/SharedTrip.vue') },
     {
       path: '/',
       name: 'Home',

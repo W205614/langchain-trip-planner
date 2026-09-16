@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -117,7 +118,10 @@ public class SecurityConfiguration {
                         "/metrics",
                         "/api/auth/login",
                         "/api/auth/register",
+                        "/api/capabilities",
                         "/api/validation/fixture")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/shared-trips/**")
                     .permitAll()
                     .requestMatchers(
                         "/api/map/**", "/api/poi/**", "/api/rag/status", "/api/trip/health")

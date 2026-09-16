@@ -294,6 +294,56 @@ export async function deleteKnowledge(id: number): Promise<any> {
   return (await apiClient.delete(`/api/knowledge/admin/submissions/${id}`)).data
 }
 
+export async function fetchCapabilities(): Promise<any> {
+  return (await apiClient.get('/api/capabilities')).data
+}
+
+export async function addFavorite(poiId: string): Promise<any> {
+  return (await apiClient.post('/api/favorites', { poi_id: poiId })).data
+}
+
+export async function fetchFavorites(city = '', page = 1): Promise<any> {
+  return (await apiClient.get('/api/favorites', { params: { city, page, page_size: 50 } })).data
+}
+
+export async function deleteFavorite(poiId: string): Promise<any> {
+  return (await apiClient.delete(`/api/favorites/${encodeURIComponent(poiId)}`)).data
+}
+
+export async function createManualTrip(payload: any): Promise<any> {
+  return (await apiClient.post('/api/trips', payload)).data
+}
+
+export async function verifyTrip(id: number, version: number): Promise<any> {
+  return (await apiClient.post(`/api/trips/${id}/verify`, {}, { headers: { 'If-Match': String(version) } })).data
+}
+
+export async function createTripShare(id: number, expiresDays = 7): Promise<any> {
+  return (await apiClient.post(`/api/trips/${id}/shares`, { expires_days: expiresDays })).data
+}
+
+export async function fetchSharedTrip(token: string): Promise<any> {
+  return (await apiClient.get(`/api/shared-trips/${encodeURIComponent(token)}`)).data
+}
+
+export async function copySharedTrip(token: string): Promise<any> {
+  return (await apiClient.post(`/api/shared-trips/${encodeURIComponent(token)}/copy`)).data
+}
+
+export async function createAssistantConversation(payload: any = {}): Promise<any> {
+  return (await apiClient.post('/api/assistant/conversations', payload)).data
+}
+
+export async function sendAssistantMessage(id: string, payload: any, key = crypto.randomUUID()): Promise<any> {
+  return (await apiClient.post(`/api/assistant/conversations/${id}/messages`, payload,
+    { headers: { 'Idempotency-Key': key } })).data
+}
+
+export async function confirmAssistantProposal(conversationId: string, recordId: number, version: number): Promise<any> {
+  return (await apiClient.post(`/api/assistant/conversations/${conversationId}/proposals/${recordId}/confirm`, {},
+    { headers: { 'If-Match': String(version) } })).data
+}
+
 export default apiClient
 
 export function storeTripResult(response: TripPlanResponse): void {

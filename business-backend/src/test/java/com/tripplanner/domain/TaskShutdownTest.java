@@ -22,6 +22,7 @@ class TaskShutdownTest {
             mock(TransactionTemplate.class),
             mock(AgentClient.class),
             mock(PlanRules.class),
+            mock(AmapGateway.class),
             JsonMapper.builder().build(),
             1,
             300,

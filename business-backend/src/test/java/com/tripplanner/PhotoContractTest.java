@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.tripplanner.agent.AgentClient;
 import com.tripplanner.api.CapabilitiesController;
+import com.tripplanner.domain.AmapGateway;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -13,13 +14,10 @@ class PhotoContractTest {
   @Test
   void transientPlaceholderMustNeverBeCachedAsRealPhoto() {
     var agent = mock(AgentClient.class);
-    var json = JsonMapper.builder().build();
-    when(agent.post(eq("/capabilities/photo-image"), any()))
-        .thenReturn(
-            json.createObjectNode()
-                .put("content_type", "image/svg+xml")
-                .put("content", "PHN2Zy8+"));
-    var response = new CapabilitiesController(agent).photoImage("颐和园", "B000A7O1CU", "北京");
+    var amap = mock(AmapGateway.class);
+    when(amap.image(anyString(), anyString(), anyString()))
+        .thenReturn(new AmapGateway.Image("<svg/>".getBytes(), "image/svg+xml", true));
+    var response = new CapabilitiesController(agent, amap).photoImage("颐和园", "B000A7O1CU", "北京");
     assertEquals("no-store", response.getHeaders().getFirst("Cache-Control"));
     assertEquals("image/svg+xml", response.getHeaders().getFirst("Content-Type"));
     assertArrayEquals("<svg/>".getBytes(), response.getBody());
@@ -28,11 +26,10 @@ class PhotoContractTest {
   @Test
   void realPhotoRetainsBoundedCache() {
     var agent = mock(AgentClient.class);
-    var json = JsonMapper.builder().build();
-    when(agent.post(eq("/capabilities/photo-image"), any()))
-        .thenReturn(
-            json.createObjectNode().put("content_type", "image/jpeg").put("content", "/9j/"));
-    var response = new CapabilitiesController(agent).photoImage("颐和园", "B000A7O1CU", "北京");
+    var amap = mock(AmapGateway.class);
+    when(amap.image(anyString(), anyString(), anyString()))
+        .thenReturn(new AmapGateway.Image(new byte[] {(byte) 0xff, (byte) 0xd8}, "image/jpeg", false));
+    var response = new CapabilitiesController(agent, amap).photoImage("颐和园", "B000A7O1CU", "北京");
     assertEquals("public, max-age=3600", response.getHeaders().getFirst("Cache-Control"));
   }
 }

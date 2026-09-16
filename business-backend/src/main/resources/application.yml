@@ -21,3 +21,10 @@ trip:
   internal-key: ${INTERNAL_SERVICE_KEY}
   agent-url: ${AGENT_URL:http://localhost:9001}
   token-minutes: ${ACCESS_TOKEN_EXPIRE_MINUTES:10080}
+  amap:
+    base-url: ${AMAP_REST_BASE_URL:https://restapi.amap.com}
+    api-key: ${AMAP_REST_API_KEY:}
+    poi-cache-seconds: ${AMAP_POI_CACHE_TTL_SECONDS:900}
+    weather-cache-seconds: ${AMAP_WEATHER_CACHE_TTL_SECONDS:300}
+    detail-cache-seconds: ${AMAP_DETAIL_CACHE_TTL_SECONDS:3600}
+    cache-maximum-size: ${AMAP_CACHE_MAXIMUM_SIZE:1000}

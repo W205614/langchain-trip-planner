@@ -18,6 +18,7 @@ class OutboxWorkerTest {
     when(jobs.nextHistory()).thenReturn(null);
     var knowledge = mock(KnowledgeMapper.class);
     var agent = mock(AgentClient.class);
+    when(agent.available()).thenReturn(true);
     var job =
         Map.<String, Object>of(
             "id", 10L, "attempts", 4, "document_id", 7L, "document_version", 3, "phase", "publish");
@@ -46,6 +47,7 @@ class OutboxWorkerTest {
     when(jobs.nextHistory()).thenReturn(null);
     var knowledge = mock(KnowledgeMapper.class);
     var agent = mock(AgentClient.class);
+    when(agent.available()).thenReturn(true);
     when(jobs.nextKnowledge())
         .thenReturn(Map.of("id", 10L, "attempts", 0, "document_id", 7L, "document_version", 2));
     when(knowledge.get(7)).thenReturn(Map.of("id", 7L, "version", 3, "status", "deleted"));
@@ -60,8 +62,25 @@ class OutboxWorkerTest {
             mock(KnowledgeService.class));
     ReflectionTestUtils.setField(worker, "workersEnabled", true);
     worker.tick();
-    verifyNoInteractions(agent);
+    verify(agent).available();
+    verify(agent, never()).post(anyString(), any());
     verify(knowledge, never()).update(any());
     verify(jobs).knowledge(10L, "succeeded", 1, "", 0);
+  }
+
+  @Test
+  void unavailableAgentLeavesDurableJobsPendingWithoutConsumingAttempts() {
+    var jobs = mock(OutboxMapper.class);
+    when(jobs.nextHistory()).thenReturn(Map.of("id", 1L, "attempts", 0));
+    var agent = mock(AgentClient.class);
+    when(agent.available()).thenReturn(false);
+    var worker = new OutboxWorker(jobs, mock(HistoryMapper.class), mock(KnowledgeMapper.class),
+        agent, mock(TransactionTemplate.class), JsonMapper.builder().build(), mock(KnowledgeService.class));
+    ReflectionTestUtils.setField(worker, "workersEnabled", true);
+    worker.tick();
+    verify(agent).available();
+    verify(jobs).nextHistory(); verify(jobs).nextKnowledge();
+    verify(jobs, never()).history(anyLong(),anyString(),anyInt(),anyString(),anyInt());
+    verify(jobs, never()).knowledge(anyLong(),anyString(),anyInt(),anyString(),anyInt());
   }
 }

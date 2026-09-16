@@ -17,6 +17,7 @@
         <a-button v-if="editMode" @click="cancelEdit" type="default">
           ❌ 取消编辑
         </a-button>
+        <a-button v-if="!editMode && historyRecordId" @click="shareTrip">🔗 分享</a-button>
 
         <!-- 导出按钮 -->
         <a-dropdown v-if="!editMode" :disabled="exportBusy">
@@ -74,7 +75,8 @@
           <a-alert v-for="notice in tripPlan.enrichment_notices || []" :key="notice" type="info" :message="notice" />
           <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
           <p v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`">{{ issue.reason }} · {{ issue.action }}</p>
-          <a-button v-if="quality.revision_parent" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
+          <a-button v-if="quality.assistant_confirmation_required" type="primary" @click="confirmAssistant">确认保存此助手方案</a-button>
+          <a-button v-else-if="quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
@@ -410,12 +412,21 @@ import AttractionPicker from '@/components/trip/AttractionPicker.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import type { TripPlan, POIInfo } from '@/types'
-import { reviseHistoryDay, updateHistory, fetchHistoryDetail } from '@/services/api'
+import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal } from '@/services/api'
 
 const router = useRouter()
 const tripPlan = ref<TripPlan | null>(null)
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
+async function confirmAssistant() {
+  if (!historyRecordId.value || !quality.value.assistant_conversation_id) return
+  try {
+    const response = await confirmAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value, recordVersion.value)
+    historyRecordId.value = response.id; recordVersion.value = response.version; quality.value = response.quality
+    sessionStorage.setItem('tripPlanId', String(response.id)); sessionStorage.setItem('tripPlanVersion', String(response.version))
+    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); message.success(response.message)
+  } catch (e: any) { message.error(e.response?.data?.message || '确认失败，请重新打开方案') }
+}
 async function applyRevisionDraft() {
   try {
     const { default: api } = await import('@/services/api')
@@ -466,6 +477,16 @@ const attractionPhotos = ref<Record<string, string>>({})
 const activeSection = ref('overview')
 const activeDays = ref<number[]>([0]) // 默认展开第一天
 const historyRecordId = ref<number>(0) // 从历史打开时的记录 id (0=新规划)
+async function shareTrip() {
+  try {
+    const response = await createTripShare(historyRecordId.value, 7)
+    const url = `${window.location.origin}/shared/${response.token}`
+    await navigator.clipboard.writeText(url)
+    message.success('7天有效的只读分享链接已复制')
+  } catch (error: any) {
+    message.error(error.response?.data?.message || '创建分享失败')
+  }
+}
 const revisionOpen = ref(false)
 const revisionLoading = ref(false)
 const revisionDayIndex = ref<number | null>(null)

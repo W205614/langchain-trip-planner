@@ -11,8 +11,9 @@ public interface HistoryMapper {
   @Insert(
       """
 INSERT INTO trip_records(user_id,city,start_date,end_date,travel_days,transportation,accommodation,
-preferences,free_text_input,plan_json,quality_json) VALUES(#{user_id},#{city},#{start_date},#{end_date},
-#{travel_days},#{transportation},#{accommodation},#{preferences},#{free_text_input},#{plan_json},#{quality_json})
+preferences,free_text_input,plan_json,quality_json,title,source,last_verified_at) VALUES(#{user_id},#{city},#{start_date},#{end_date},
+#{travel_days},#{transportation},#{accommodation},#{preferences},#{free_text_input},#{plan_json},#{quality_json},
+COALESCE(#{title},''),COALESCE(#{source},'agent'),#{last_verified_at})
 """)
   @Options(useGeneratedKeys = true, keyProperty = "id")
   int insert(Map<String, Object> record);
@@ -23,6 +24,9 @@ preferences,free_text_input,plan_json,quality_json) VALUES(#{user_id},#{city},#{
       WHERE id=#{id} AND user_id=#{user_id} AND version=#{version}
       """)
   int update(Map<String, Object> record);
+
+  @Update("UPDATE trip_records SET last_verified_at=timezone('UTC',now()) WHERE id=#{id} AND user_id=#{uid}")
+  int markVerified(@Param("uid") long uid, @Param("id") long id);
 
   @Insert(
       "INSERT INTO rag_sync_jobs(record_id,user_id,operation) VALUES(#{id},#{uid},#{operation})")

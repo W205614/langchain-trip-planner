@@ -77,6 +77,10 @@ public class HistoryController {
                           "travel_days",
                           "transportation",
                           "accommodation",
+                          "title",
+                          "source",
+                          "updated_at",
+                          "last_verified_at",
                           "created_at")) result.put(f, row.get(f));
                   result.put("preferences", json.readTree(row.get("preferences").toString()));
                   var plan = json.readTree(row.get("plan_json").toString());

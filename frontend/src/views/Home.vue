@@ -12,6 +12,9 @@
       <template v-if="isLoggedIn">
         <span class="user-badge">👤 {{ username }}</span>
         <a-button class="history-entry" @click="router.push('/tasks')">我的任务</a-button>
+        <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
+        <a-button class="history-entry" @click="router.push('/favorites')">⭐ 我的收藏</a-button>
+        <a-button class="history-entry" @click="router.push('/assistant')">💬 旅行助手</a-button>
         <a-button class="history-entry" @click="goHistory">
           📜 历史行程
         </a-button>
@@ -29,6 +32,7 @@
         </a-button>
       </template>
       <template v-else>
+        <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
         <a-button class="history-entry" @click="goLogin">
           🔐 登录
         </a-button>
@@ -43,6 +47,10 @@
       </div>
       <h1 class="page-title">智能旅行助手</h1>
       <p class="page-subtitle">输入目的地，AI 为你规划每一天的吃、住、行、玩</p>
+      <a-alert v-if="capabilities.agent==='unavailable'" type="warning" show-icon class="capability-alert"
+        message="智能规划暂不可用；景点搜索、收藏、手工行程、历史、分享和导出仍可使用。" />
+      <a-alert v-else-if="capabilities.rag==='disabled'||capabilities.rag==='waiting_for_agent'" type="info" show-icon class="capability-alert"
+        message="攻略检索暂不可用，不影响传统旅行功能。" />
       <!-- 热门目的地快捷选择 -->
       <div class="hot-cities">
         <span class="hot-label">热门目的地</span>
@@ -224,6 +232,7 @@
             type="primary"
             html-type="submit"
             :loading="loading"
+            :disabled="capabilities.agent==='unavailable'"
             size="large"
             block
             class="submit-button"
@@ -269,7 +278,7 @@
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences, logout } from '@/services/api'
+import { fetchCapabilities, fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences, logout } from '@/services/api'
 import { isAuthenticated, getUsername, isAdmin } from '@/services/auth'
 import type { TripFormData } from '@/types'
 import type { Dayjs } from 'dayjs'
@@ -278,6 +287,7 @@ const router = useRouter()
 const loading = ref(false)
 const loadingProgress = ref(0)
 const loadingStatus = ref('')
+const capabilities = reactive({ agent: 'checking', rag: 'checking', map: 'checking', vision: 'checking' })
 
 // 登录态
 const isLoggedIn = ref(isAuthenticated())
@@ -319,6 +329,8 @@ const formData = reactive<FormDataType>({
 const hotCities = ['北京', '上海', '杭州', '成都', '西安', '桂林', '丽江', '重庆']
 
 onMounted(async () => {
+  try { Object.assign(capabilities, await fetchCapabilities()) }
+  catch { capabilities.agent = 'unavailable'; capabilities.rag = 'waiting_for_agent' }
   if (!isLoggedIn.value) return
   const pending = JSON.parse(sessionStorage.getItem('pendingTripTask') || 'null')
   if (pending) {
@@ -459,6 +471,12 @@ const handleSubmit = async () => {
   padding: 60px 20px;
   position: relative;
   overflow: hidden;
+}
+
+.capability-alert {
+  max-width: 760px;
+  margin: 18px auto 0;
+  text-align: left;
 }
 
 /* 顶部操作区 (登录态 + 历史入口) */

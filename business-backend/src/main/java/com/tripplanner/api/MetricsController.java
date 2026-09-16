@@ -1,5 +1,6 @@
 package com.tripplanner.api;
 
+import com.tripplanner.domain.AmapGateway;
 import java.nio.file.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.*;
 public class MetricsController {
   private final JdbcTemplate jdbc;
   private final Path storage;
+  private final AmapGateway amap;
 
   public MetricsController(
-      JdbcTemplate jdbc, @Value("${UPLOAD_DIR:../backend/data/knowledge_uploads}") String storage) {
+      JdbcTemplate jdbc, AmapGateway amap,
+      @Value("${UPLOAD_DIR:../backend/data/knowledge_uploads}") String storage) {
     this.jdbc = jdbc;
+    this.amap = amap;
     this.storage = Path.of(storage);
   }
 
@@ -28,13 +32,7 @@ public class MetricsController {
                 "SELECT count(*) FROM trip_tasks WHERE status='needs_attention'", Long.class))
         .append('\n');
     for (var entry :
-        Map.of(
-                "task",
-                "trip_tasks",
-                "history",
-                "rag_sync_jobs",
-                "knowledge",
-                "knowledge_ingest_jobs")
+        Map.of("task", "trip_tasks", "rag", "rag_sync_jobs", "knowledge", "knowledge_ingest_jobs")
             .entrySet()) {
       for (String status :
           List.of(
@@ -60,6 +58,11 @@ public class MetricsController {
             .append('\n');
       }
     }
+    output.append("trip_records_total ")
+        .append(jdbc.queryForObject("SELECT count(*) FROM trip_records", Long.class)).append('\n');
+    for (var metric : amap.metrics().entrySet())
+      output.append("trip_amap_rest_").append(metric.getKey()).append(' ')
+          .append(metric.getValue()).append('\n');
     output
         .append("trip_oldest_queue_age_seconds ")
         .append(age("SELECT min(created_at) FROM trip_tasks WHERE status='queued'"))

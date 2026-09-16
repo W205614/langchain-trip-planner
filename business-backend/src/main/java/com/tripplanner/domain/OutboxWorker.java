@@ -43,8 +43,12 @@ public class OutboxWorker {
   public synchronized void tick() {
     if (!workersEnabled) return;
     var h = jobs.nextHistory();
-    if (h != null) run(h, false);
     var k = jobs.nextKnowledge();
+    if (h == null && k == null) return;
+    // Keep durable work pending while the AI service is offline. An outage must not burn through
+    // retry attempts or move uploaded documents to a terminal failure state.
+    if (!agent.available()) return;
+    if (h != null) run(h, false);
     if (k != null) run(k, true);
   }
 

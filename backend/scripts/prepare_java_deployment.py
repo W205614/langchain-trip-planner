@@ -22,12 +22,17 @@ def prepare(output):
     postgres = {"POSTGRES_USER": "trip", "POSTGRES_PASSWORD": secrets.token_urlsafe(32), "POSTGRES_DB": "trip_java"}
     business = {**postgres, "JWT_SECRET_KEY": secret, "INTERNAL_SERVICE_KEY": internal,
         "JDBC_DATABASE_URL": "jdbc:postgresql://postgres:5432/trip_java", "AGENT_URL": "http://agent:9000",
-        "UPLOAD_DIR": "/data/uploads", "WORKERS_ENABLED": "true", "APP_ENV": "development"}
+        "UPLOAD_DIR": "/data/uploads", "WORKERS_ENABLED": "true", "APP_ENV": "development",
+        "AMAP_REST_API_KEY": source.get("AMAP_REST_API_KEY") or source.get("AMAP_API_KEY", "")}
     for key in ("ACCESS_TOKEN_EXPIRE_MINUTES", "BOOTSTRAP_ADMIN_USERNAME", "LLM_REQUEST_MAX_CONCURRENCY",
-        "TRIP_TASK_TIMEOUT_SECONDS", "TRIP_TASK_QUEUE_LIMIT", "TRIP_USER_ACTIVE_LIMIT", "TRIP_USER_DAILY_LIMIT", "TRIP_GLOBAL_DAILY_LIMIT"):
+        "TRIP_TASK_TIMEOUT_SECONDS", "TRIP_TASK_QUEUE_LIMIT", "TRIP_USER_ACTIVE_LIMIT", "TRIP_USER_DAILY_LIMIT", "TRIP_GLOBAL_DAILY_LIMIT",
+        "AMAP_REST_BASE_URL", "AMAP_POI_CACHE_TTL_SECONDS", "AMAP_WEATHER_CACHE_TTL_SECONDS",
+        "AMAP_DETAIL_CACHE_TTL_SECONDS", "AMAP_CACHE_MAXIMUM_SIZE"):
         if source.get(key):
             business[key] = source[key]
-    agent = {k:v for k,v in source.items() if k.startswith(("AMAP_", "LLM_", "OPENAI_", "EMBEDDING_", "VISION_", "RAG_"))}
+    agent = {k:v for k,v in source.items() if k.startswith(("LLM_", "OPENAI_", "EMBEDDING_", "VISION_", "RAG_"))}
+    agent.update(AMAP_API_KEY=source.get("AMAP_MCP_API_KEY") or source.get("AMAP_API_KEY", ""),
+        AMAP_TRANSPORT="mcp", AMAP_MCP_URL=source.get("AMAP_MCP_URL", "https://mcp.amap.com/mcp"))
     agent.update(INTERNAL_SERVICE_KEY=internal, BUSINESS_URL="http://backend:9000", DATA_DIR="/app/data",
         CHROMA_DIR="/app/data/chroma", APP_ENV="development", ACCEPTANCE_BUDGET_FILE="")
     configs = (("postgres", postgres), ("business", business), ("agent", agent))
