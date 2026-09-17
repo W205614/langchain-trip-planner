@@ -646,12 +646,11 @@ class MultiAgentTripPlanner(TravelDataNodes):
         if evidence is not None:
             evidence.update({p.id: p.model_dump() for p in result.get("attraction_pois", [])})
 
-        # 每天都必须有可验证景点。宁可明确提示候选不足，也不把空白日
-        # 包装成一份已完成的多日行程。
-        empty_days = [day.day_index + 1 for day in trip_plan.days if not day.attractions]
-        if empty_days:
+        # 完全没有可信景点时才终止。候选稀疏导致的空白日必须继续返回，
+        # 由 Java 最终质量分类标记为 needs_attention，而不是丢失已有真实 POI。
+        if not any(day.attractions for day in trip_plan.days):
             raise BizException(
-                f"可验证景点不足，无法覆盖第 {','.join(map(str, empty_days))} 天，请缩短天数或更换目的地",
+                "暂时无法获取可验证的真实景点，请稍后重试或更换目的地",
                 status_code=503,
                 code="TRUSTED_POI_UNAVAILABLE",
             )
