@@ -37,14 +37,23 @@ public class CapabilitiesController {
       @RequestParam(defaultValue = "") String poi_id,
       @RequestParam(defaultValue = "") String city) {
     photoInput(name, poi_id, city);
-    var result = amap.image(name, poi_id, city);
+    tools.jackson.databind.JsonNode poi = tools.jackson.databind.node.MissingNode.getInstance();
+    if (!poi_id.isBlank()) {
+      try {
+        var response = agent.post("/capabilities/poi-detail", Map.of("poi_id", poi_id));
+        if (response != null) poi = response.path("data");
+      } catch (ApiException ignored) {
+        // A missing or unavailable MCP image is rendered as an explicit placeholder.
+      }
+    }
+    var result = amap.imageFromPoi(name, poi);
     String media = result.mediaType();
     return org.springframework.http.ResponseEntity.ok()
         .header("Content-Type", media)
         .header(
             "Cache-Control", media.equals("image/svg+xml") ? "no-store" : "public, max-age=3600")
         .header("X-Content-Type-Options", "nosniff")
-        .header("X-Trip-Image-Source", result.placeholder() ? "placeholder" : "amap-verified")
+        .header("X-Trip-Image-Source", result.placeholder() ? "placeholder" : "agent-amap-mcp")
         .body(result.body());
   }
 
@@ -58,7 +67,8 @@ public class CapabilitiesController {
       @RequestParam String keywords,
       @RequestParam String city,
       @RequestParam(defaultValue = "true") boolean citylimit) {
-    return Map.of("success", true, "message", "查询完成", "data", amap.search(keywords, city, citylimit));
+    return agent.post("/capabilities/poi-search", Map.of(
+        "keywords", keywords, "city", city, "citylimit", citylimit));
   }
 
   @GetMapping("/poi/search")
@@ -69,7 +79,7 @@ public class CapabilitiesController {
 
   @GetMapping("/poi/detail/{id}")
   public Object detail(@PathVariable String id) {
-    return Map.of("success", true, "message", "查询完成", "data", amap.detail(id));
+    return agent.post("/capabilities/poi-detail", Map.of("poi_id", id));
   }
 
   @GetMapping("/map/weather")
@@ -96,8 +106,10 @@ public class CapabilitiesController {
 
   @GetMapping("/map/health")
   public Object mapHealth() {
-    return Map.of("status", amap.configured() ? "configured" : "not_configured",
-        "service", "java-amap-rest", "connectivity_checked", false);
+    if (!agent.available()) return Map.of("status", "unavailable", "service", "agent-amap-mcp");
+    var status = agent.post("/capabilities/status", Map.of());
+    return Map.of("status", status.path("map").asText("not_configured"),
+        "service", "agent-amap-mcp", "connectivity_checked", false);
   }
 
   @GetMapping("/trip/health")
@@ -110,18 +122,19 @@ public class CapabilitiesController {
     boolean ai = agent.available();
     String rag = ai ? "unknown" : "waiting_for_agent";
     String vision = ai ? "unknown" : "waiting_for_agent";
+    String map = ai ? "unknown" : "waiting_for_agent";
     if (ai) {
       try {
         var status = agent.post("/capabilities/status", Map.of());
         rag = status.path("rag").asText("unknown");
         vision = status.path("vision").asText("unknown");
+        map = status.path("map").asText("unknown");
       } catch (Exception ignored) {
-        ai = false; rag = "waiting_for_agent"; vision = "waiting_for_agent";
+        ai = false; rag = "waiting_for_agent"; vision = "waiting_for_agent"; map = "waiting_for_agent";
       }
     }
     return Map.of(
-        "traditional", "available",
-        "map", amap.configured() ? "configured" : "not_configured",
+        "map", map,
         "agent", ai ? "available" : "unavailable",
         "rag", rag,
         "vision", vision);

@@ -71,4 +71,31 @@ class AgentClientTest {
       server.stop(0);
     }
   }
+
+  @Test
+  void genericCapabilityStreamForwardsTokenAndTerminalResult() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext(
+        "/internal/v1/capabilities/research/stream",
+        exchange -> {
+          byte[] body = ("event: token\ndata: {\"delta\":\"预约\"}\n\n"
+              + "event: result\ndata: {\"answer\":\"预约\"}\n\n")
+              .getBytes(StandardCharsets.UTF_8);
+          exchange.getResponseHeaders().add("Content-Type", "text/event-stream");
+          exchange.sendResponseHeaders(200, body.length);
+          exchange.getResponseBody().write(body);
+          exchange.close();
+        });
+    server.start();
+    try {
+      var client = new AgentClient(
+          "http://127.0.0.1:" + server.getAddress().getPort(), "test-key", new JsonMapper());
+      var events = new ArrayList<String>();
+      client.stream("/capabilities/research/stream", Map.of(), Duration.ofSeconds(3),
+          (event, data) -> events.add(event + ":" + data.path("answer").asText(data.path("delta").asText(""))));
+      assertEquals(List.of("token:预约", "result:预约"), events);
+    } finally {
+      server.stop(0);
+    }
+  }
 }

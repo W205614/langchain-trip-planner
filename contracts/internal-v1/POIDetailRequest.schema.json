@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "poi_id": {
+      "pattern": "^[A-Za-z0-9_-]{1,64}$",
+      "title": "Poi Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "poi_id"
+  ],
+  "title": "POIDetailRequest",
+  "type": "object"
+}

@@ -236,11 +236,16 @@ public class PlanRules {
                 .put("meal_allowance_minutes", 90)
                 .put("buffer_minutes", 30);
         check.set("routes", legs);
+        boolean hasInterStopLeg = attrs.size() > 1;
         check.put(
             "walking_status",
-            type.equals("driving")
-                ? "not_applicable"
-                : complete && walkKnown ? "available" : "unavailable");
+            attrs.isEmpty()
+                ? "no_attractions"
+                : !hasInterStopLeg
+                    ? "single_stop"
+                    : type.equals("driving")
+                        ? "not_applicable"
+                        : complete && walkKnown ? "available" : "unavailable");
         if (complete) {
           check
               .put("route_minutes", round(minutes, 1))
@@ -252,7 +257,8 @@ public class PlanRules {
           check.putNull("route_minutes").putNull("planned_minutes").putNull("route_distance_km");
           routeChecked = false;
         }
-        if (complete && walkKnown) check.put("inter_stop_walking_km", walking / 1000);
+        if (hasInterStopLeg && complete && walkKnown)
+          check.put("inter_stop_walking_km", round(walking / 1000, 2));
         else check.putNull("inter_stop_walking_km");
         break;
       }
@@ -461,7 +467,7 @@ public class PlanRules {
     for (var day : report.path("day_checks")) {
       String scope = "day:" + day.path("day_index").asInt(0);
       if (day.path("route_minutes").isNull())
-        issue(issues, "TIME_LIMIT_UNVERIFIED", scope, "路线缺失，无法核验每日时间上限", "稍后重新规划或减少景点", true, true);
+        issue(issues, "TIME_LIMIT_UNVERIFIED", scope, "路线缺失，无法核验每日时间上限", "先重新核验路线；仍失败时再调整景点", true, true);
       if (request.path("constraints").hasNonNull("max_inter_stop_walking_km")
           && day.path("inter_stop_walking_km").isNull())
         issue(issues, "WALKING_LIMIT_UNVERIFIED", scope, "无法核验指定步行上限", "稍后重试或调整交通要求", true, true);

@@ -36,6 +36,21 @@ test('result retains required-name mapping, cost assumptions and precise photo i
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
+test('a one-attraction day is not displayed as zero walking distance', async ({ page }) => {
+  const plan = { city: '北京', start_date: '2026-10-01', end_date: '2026-10-01', overall_suggestions: '测试',
+    days: [{ date: '2026-10-01', day_index: 0, description: '单景点行程', transportation: '步行', accommodation: '无需住宿',
+      attractions: [{ poi_id: 'P1', name: '故宫', address: '北京', location: { longitude: 116.4, latitude: 39.9 }, visit_duration: 180, description: '参观' }], meals: [] }] }
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" />' }))
+  await page.addInitScript(({ plan }) => {
+    sessionStorage.setItem('tripPlan', JSON.stringify(plan))
+    sessionStorage.setItem('tripQuality', JSON.stringify({ day_checks: [{ day_index: 0, planned_minutes: 300, walking_status: 'single_stop', inter_stop_walking_km: null, routes: [] }] }))
+  }, { plan })
+
+  await page.goto('/result')
+  await expect(page.getByText(/当天只有一个景点，无景点间步行/)).toBeVisible()
+  await expect(page.getByText(/景点间步行 0\.0 公里/)).toHaveCount(0)
+})
+
 for (const unsaved of [false, true]) {
   test(`legacy saved checks refresh without overwriting unsaved edits: ${unsaved}`, async ({ page }) => {
     const plan = { city: '北京', start_date: '2026-09-14', end_date: '2026-09-14', overall_suggestions: '',

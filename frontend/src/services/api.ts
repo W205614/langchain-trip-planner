@@ -298,28 +298,14 @@ export async function fetchCapabilities(): Promise<any> {
   return (await apiClient.get('/api/capabilities')).data
 }
 
-export async function addFavorite(poiId: string): Promise<any> {
-  return (await apiClient.post('/api/favorites', { poi_id: poiId })).data
-}
-
-export async function fetchFavorites(city = '', page = 1): Promise<any> {
-  return (await apiClient.get('/api/favorites', { params: { city, page, page_size: 50 } })).data
-}
-
-export async function deleteFavorite(poiId: string): Promise<any> {
-  return (await apiClient.delete(`/api/favorites/${encodeURIComponent(poiId)}`)).data
-}
-
-export async function createManualTrip(payload: any): Promise<any> {
-  return (await apiClient.post('/api/trips', payload)).data
-}
-
-export async function verifyTrip(id: number, version: number): Promise<any> {
-  return (await apiClient.post(`/api/trips/${id}/verify`, {}, { headers: { 'If-Match': String(version) } })).data
-}
-
 export async function createTripShare(id: number, expiresDays = 7): Promise<any> {
   return (await apiClient.post(`/api/trips/${id}/shares`, { expires_days: expiresDays })).data
+}
+
+export async function reverifyTrip(id: number, version: number): Promise<any> {
+  return (await apiClient.post(`/api/trips/${id}/verify`, {}, {
+    headers: { 'If-Match': String(version) }
+  })).data
 }
 
 export async function fetchSharedTrip(token: string): Promise<any> {
@@ -337,6 +323,58 @@ export async function createAssistantConversation(payload: any = {}): Promise<an
 export async function sendAssistantMessage(id: string, payload: any, key = crypto.randomUUID()): Promise<any> {
   return (await apiClient.post(`/api/assistant/conversations/${id}/messages`, payload,
     { headers: { 'Idempotency-Key': key } })).data
+}
+
+export async function streamAssistantMessage(
+  id: string,
+  payload: any,
+  onEvent: (event: string, data: any) => void,
+  key = crypto.randomUUID()
+): Promise<any> {
+  const token = getToken()
+  const response = await fetch(`${API_BASE_URL}/api/assistant/conversations/${encodeURIComponent(id)}/messages/stream`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Idempotency-Key': key,
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(30000)
+  })
+  if (response.status === 401) {
+    clearAuth()
+    window.location.href = '/login'
+    throw new Error('登录已过期')
+  }
+  if (!response.ok || !response.body) throw new Error(`攻略问答失败 (${response.status})`)
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  while (true) {
+    const { value, done } = await reader.read()
+    buffer += decoder.decode(value || new Uint8Array(), { stream: !done })
+    const blocks = buffer.split('\n\n')
+    buffer = blocks.pop() || ''
+    for (const block of blocks) {
+      const event = block.match(/^event:[ \t]*(.+)$/m)?.[1]
+      const raw = block.match(/^data:[ \t]*(.+)$/m)?.[1]
+      if (!event || !raw) continue
+      const data = JSON.parse(raw)
+      onEvent(event, data)
+      if (event === 'result') {
+        await reader.cancel()
+        return data
+      }
+      if (event === 'error') {
+        await reader.cancel()
+        throw new Error(data.message || '攻略问答暂不可用')
+      }
+    }
+    if (done) break
+  }
+  throw new Error('攻略问答连接意外关闭')
 }
 
 export async function confirmAssistantProposal(conversationId: string, recordId: number, version: number): Promise<any> {

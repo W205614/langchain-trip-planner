@@ -5,6 +5,7 @@ import hmac
 import json
 import os
 import threading
+import time
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from queue import Queue, Empty
@@ -40,6 +41,7 @@ class ExecutionResult(BaseModel):
     execution_id: UUID
     plan: TripPlan
     trusted_candidates: list[POIInfo] = Field(max_length=5000)
+    quality: dict
     usage: dict[str, int]
 
 
@@ -159,7 +161,18 @@ def execute(body: Execution, request: Request):
                     plan = planner.revise_trip_day(body.request, body.original_plan, body.day_index,
                         body.instruction, user_id=body.user_id)
                 plan.enrichment_notices = list(dict.fromkeys([*plan.enrichment_notices, *notices]))
-                emit("result", {"protocol_version":1,"plan": plan.model_dump(), "trusted_candidates": list(evidence.values()), "usage": dict(stats), "execution_id": identity})
+                # Python only performs a network-free draft precheck. Java remains the
+                # final authority for canonical POI facts, route evidence and persistence.
+                from ..services.planning_constraints import finalize_plan
+                precheck_started = time.perf_counter()
+                emit("progress", {"stage":"agent_precheck", "percent":90,
+                    "message":"Agent 草稿已生成，正在执行本地结构检查"})
+                quality = finalize_plan(plan, body.request, None, repair=True)
+                from ..core.trip_metrics import observe_agent_stage
+                observe_agent_stage("agent_precheck", time.perf_counter() - precheck_started)
+                emit("result", {"protocol_version":1,"plan": plan.model_dump(),
+                    "trusted_candidates": list(evidence.values()), "quality": quality,
+                    "usage": dict(stats), "execution_id": identity})
         except Exception as exc:
             if not cancelled.is_set():
                 try:
@@ -213,7 +226,7 @@ def cancel(execution_id: UUID):
 @app.post("/internal/v1/capabilities/{kind}", dependencies=[Depends(authorize)])
 def capability(kind: str, body: dict):
     from ..services.rag_service import get_rag_service
-    from ..models.schemas import TravelResearchRequest
+    from ..models.schemas import TravelResearchRequest, POISearchRequest, POIDetailRequest
     if kind == "validation":
         if os.environ.get("APP_ENV") != "validation" or os.environ.get("VALIDATION_ALLOW_FIXTURES") != "yes":
             raise HTTPException(404, "Not available")
@@ -227,8 +240,29 @@ def capability(kind: str, body: dict):
         if not rag.enabled:
             raise BizException("旅行资料研究未启用或索引需要修复", status_code=503, code="RAG_DISABLED")
         evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
-        result = {"city": request.city, "query": request.query, "evidence": evidence,
-                  "status": "matched" if evidence else "no_match"}
+        from ..services.research_answer import build_research_answer
+        result = build_research_answer(request.query, request.city, evidence, request.trip_context)
+    elif kind == "poi-search":
+        request = POISearchRequest.model_validate(body)
+        from ..services.amap_service import get_amap_service
+        result = [poi.model_dump() for poi in get_amap_service().search_poi(
+            request.keywords, request.city, request.citylimit
+        )]
+    elif kind == "poi-detail":
+        request = POIDetailRequest.model_validate(body)
+        from ..services.amap_service import get_amap_service
+        raw = get_amap_service().get_poi_detail(request.poi_id)
+        if not raw or raw.get("id") != request.poi_id:
+            raise HTTPException(404, "POI not found")
+        photos = raw.get("photos") or []
+        result = {
+            "id": str(raw.get("id") or ""),
+            "name": str(raw.get("name") or ""),
+            "type": raw.get("type") if isinstance(raw.get("type"), str) else "",
+            "address": raw.get("address") if isinstance(raw.get("address"), str) else "",
+            "city": raw.get("cityname") if isinstance(raw.get("cityname"), str) else "",
+            "photos": [p.get("url") for p in photos if isinstance(p, dict) and p.get("url")],
+        }
     elif kind == "rag-status":
         rag = get_rag_service()
         return {"success": True, "enabled": rag.enabled, "embedding_model": rag._embedding.model if rag.enabled else None}
@@ -237,10 +271,47 @@ def capability(kind: str, body: dict):
         cfg = get_settings()
         rag = get_rag_service()
         return {"success": True, "rag": "available" if rag.enabled else "disabled",
+                "map": "mcp" if cfg.amap_transport == "mcp" and bool(cfg.amap_api_key) else "not_configured",
                 "vision": "available" if cfg.vision_model and (cfg.vision_api_key or cfg.llm_api_key) else "not_configured"}
     else:
         raise HTTPException(404, "Unknown capability")
     return {"success": True, "message": "查询完成", "data": result}
+
+
+@app.post("/internal/v1/capabilities/research/stream", dependencies=[Depends(authorize)])
+def research_stream(body: dict):
+    """检索后直接转发模型分片；用终态 result 覆盖可能存在的半截输出。"""
+    from ..models.schemas import TravelResearchRequest
+    from ..services.rag_service import get_rag_service
+
+    request = TravelResearchRequest.model_validate(body)
+    rag = get_rag_service()
+    if not rag.enabled:
+        raise BizException("旅行资料研究未启用或索引需要修复", status_code=503, code="RAG_DISABLED")
+
+    def events():
+        from ..core.trip_metrics import observe_agent_stage
+        started_at = time.perf_counter()
+        try:
+            yield "event: progress\ndata: " + json.dumps(
+                {"stage": "research_retrieval", "message": "正在检索当前旅行资料"}, ensure_ascii=False
+            ) + "\n\n"
+            evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
+            observe_agent_stage("research_retrieval", time.perf_counter() - started_at)
+            from ..services.research_answer import stream_research_answer
+            for event, payload in stream_research_answer(
+                request.query, request.city, evidence, request.trip_context
+            ):
+                yield f"event: {event}\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
+        except Exception as exc:
+            observe_agent_stage("research_retrieval", time.perf_counter() - started_at, "error")
+            payload = {
+                "code": getattr(exc, "code", "RESEARCH_UNAVAILABLE"),
+                "message": "攻略问答暂不可用",
+            }
+            yield f"event: error\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
+
+    return StreamingResponse(events(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
 
 
 @app.post("/internal/v1/index/{kind}", dependencies=[Depends(authorize)])

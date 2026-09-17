@@ -52,3 +52,13 @@ def test_model_first_token_metric_is_recorded_separately(monkeypatch):
 
     metric.labels.assert_called_once_with(operation="trip_day")
     metric.labels.return_value.observe.assert_called_once_with(0.35)
+
+
+def test_agent_stage_uses_only_low_cardinality_labels(monkeypatch):
+    metric = MagicMock()
+    monkeypatch.setattr(trip_metrics, "AGENT_STAGE_SECONDS", metric)
+
+    trip_metrics.observe_agent_stage("research_retrieval", 0.4, "success")
+
+    metric.labels.assert_called_once_with(stage="research_retrieval", outcome="success")
+    metric.labels.return_value.observe.assert_called_once_with(0.4)

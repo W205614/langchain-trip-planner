@@ -1,7 +1,7 @@
 <template>
   <main class="tasks">
     <a-card title="我的规划任务">
-      <template #extra><router-link to="/">返回规划</router-link></template>
+      <template #extra><router-link :to="returnPath">{{ route.query.from === 'history' ? '返回历史行程' : '返回规划' }}</router-link></template>
       <p>刷新页面后仍可查看任务。取消会阻止结果保存，已发出的模型调用可能仍产生费用。失败的改排如遇版本冲突，请从历史行程重新发起。</p>
       <a-alert v-if="error" type="error" :message="error" show-icon />
       <a-button :loading="loading" @click="refresh">刷新</a-button>
@@ -24,9 +24,11 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { cancelTask, fetchTask, fetchTasks, retryTask, storeTripResult } from '@/services/api'
 const router = useRouter()
+const route = useRoute()
+const returnPath = route.query.from === 'history' ? '/history' : '/'
 const tasks = ref<any[]>([]), total = ref(0), page = ref(1), loading = ref(false), error = ref(''), busy = ref('')
 const labels: Record<string, string> = { queued: '排队中', running: '生成中', succeeded: '已完成', needs_attention: '未完成草稿', failed: '失败', cancelled: '已取消' }
 const keys = new Map<string, string>()
@@ -54,7 +56,8 @@ async function open(id: string) {
   try {
     const state = await fetchTask(id)
     if (!state.result) throw new Error('结果已删除或不可用')
-    storeTripResult(state.result); await router.push('/result')
+    storeTripResult(state.result)
+    await router.push({ path: '/result', query: route.query.from === 'history' ? { from: 'history' } : {} })
   } catch (e: any) { error.value = e.message || '读取结果失败' }
 }
 onMounted(() => { refresh(); timer = setInterval(refresh, 5000) })

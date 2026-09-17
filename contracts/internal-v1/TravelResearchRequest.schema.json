@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "面向公开城市资料的来源优先研究请求，不检索私人历史。",
+  "description": "来源优先研究请求；行程上下文由 Java 在鉴权后按需注入。",
   "properties": {
     "city": {
       "maxLength": 64,
@@ -12,6 +12,12 @@
       "maxLength": 300,
       "minLength": 2,
       "title": "Query",
+      "type": "string"
+    },
+    "trip_context": {
+      "default": "",
+      "maxLength": 8000,
+      "title": "Trip Context",
       "type": "string"
     }
   },

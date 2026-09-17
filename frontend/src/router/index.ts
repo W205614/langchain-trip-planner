@@ -13,9 +13,9 @@ const router = createRouter({
   routes: [
     { path: '/tasks', component: () => import('../views/Tasks.vue'), meta: { requiresAuth: true } },
     { path: '/explore', component: () => import('../views/Explore.vue') },
-    { path: '/favorites', component: () => import('../views/Favorites.vue'), meta: { requiresAuth: true } },
-    { path: '/trips/new', component: () => import('../views/ManualTrip.vue'), meta: { requiresAuth: true } },
-    { path: '/assistant', component: () => import('../views/Assistant.vue'), meta: { requiresAuth: true } },
+    { path: '/favorites', redirect: '/explore' },
+    { path: '/trips/new', redirect: '/' },
+    { path: '/assistant', redirect: '/history' },
     { path: '/shared/:token', component: () => import('../views/SharedTrip.vue') },
     {
       path: '/',

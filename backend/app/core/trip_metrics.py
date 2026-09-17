@@ -53,6 +53,12 @@ MODEL_ESTIMATED_COST_USD_TOTAL = Counter(
     "按部署方显式配置单价估算的模型成本（美元）",
     ["operation"],
 )
+AGENT_STAGE_SECONDS = Histogram(
+    "trip_agent_stage_seconds",
+    "Agent 低基数阶段耗时（秒）；不包含城市、用户或提示词标签",
+    ["stage", "outcome"],
+    buckets=(0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 30, 45, 60, 120),
+)
 TRIP_STREAM_FIRST_EVENT_SECONDS = Histogram(
     "trip_stream_time_to_first_event_seconds",
     "从服务接收旅行规划流式请求到首个真实 SSE 进度事件的耗时（不是模型 TTFT）",
@@ -120,6 +126,11 @@ def observe_model_call(
 def observe_model_first_token(operation: str, seconds: float) -> None:
     """仅在供应商通过流式接口返回首个非空 token 时记录。"""
     MODEL_TIME_TO_FIRST_TOKEN_SECONDS.labels(operation=operation).observe(seconds)
+
+
+def observe_agent_stage(stage: str, seconds: float, outcome: str = "success") -> None:
+    """记录固定阶段名与结果，避免把用户数据带进指标标签。"""
+    AGENT_STAGE_SECONDS.labels(stage=stage, outcome=outcome).observe(seconds)
 
 
 def observe_trip_stream(first_event_seconds: float | None, total_seconds: float, outcome: str) -> None:

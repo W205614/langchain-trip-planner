@@ -331,24 +331,20 @@ public class TaskService {
               var plan = (ObjectNode) data.path("plan");
               TrustedCandidates.verify(
                   plan, data.path("trusted_candidates"), request.get("original_plan"));
+              long validationStarted = System.nanoTime();
+              long poiStarted = System.nanoTime();
               var unverified = canonicalizePois(plan, body.path("city").asText(""));
-              var quality =
-                  rules.finish(
-                      plan,
-                      body,
-                      (left, right, type, city) -> {
-                        var current = tasks.get(id);
-                        if (Thread.currentThread().isInterrupted()
-                            || !Instant.now().isBefore(deadline)
-                            || current == null
-                            || !"running".equals(current.get("status"))
-                            || !execution.equals(current.get("execution_id")))
-                          throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
-                        return amap.routeBetween(left, right, type, city);
-                      },
-                      revision == null);
+              long poiMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - poiStarted);
+              long routeStarted = System.nanoTime();
+              var routes = prefetchRoutes(plan, body, id, execution, deadline);
+              var quality = rules.finish(plan, body, routes, revision == null);
+              long routeMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - routeStarted);
               if (!unverified.isEmpty()) markUnverified(quality, unverified);
               quality.set("usage", data.path("usage"));
+              quality.putObject("timings")
+                  .put("java_poi_canonicalization_ms", poiMillis)
+                  .put("java_route_and_rules_ms", routeMillis)
+                  .put("java_final_validation_ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - validationStarted));
               complete(task, body, plan, quality, revision);
             }
           });
@@ -364,6 +360,77 @@ public class TaskService {
     }
   }
 
+  private boolean executionActive(String id, String execution, Instant deadline) {
+    var current = tasks.get(id);
+    return !Thread.currentThread().isInterrupted()
+        && Instant.now().isBefore(deadline)
+        && current != null
+        && "running".equals(current.get("status"))
+        && execution.equals(current.get("execution_id"));
+  }
+
+  private record RouteQuery(String key, JsonNode left, JsonNode right, String type, String city) {}
+
+  private static String routeKey(JsonNode left, JsonNode right, String type) {
+    return left.path("longitude").asText("") + "," + left.path("latitude").asText("") + "->"
+        + right.path("longitude").asText("") + "," + right.path("latitude").asText("") + ":" + type;
+  }
+
+  private PlanRules.Routes prefetchRoutes(
+      ObjectNode plan, ObjectNode body, String id, String execution, Instant deadline) {
+    String type = PlanRules.routeType(body.path("transportation").asText(""));
+    String city = plan.path("city").asText("");
+    var unique = new LinkedHashMap<String, RouteQuery>();
+    for (var day : plan.path("days")) {
+      var attractions = day.path("attractions");
+      for (int index = 1; index < attractions.size(); index++) {
+        JsonNode left = attractions.get(index - 1).path("location");
+        JsonNode right = attractions.get(index).path("location");
+        String key = routeKey(left, right, type);
+        unique.putIfAbsent(key, new RouteQuery(key, left.deepCopy(), right.deepCopy(), type, city));
+      }
+    }
+    var facts = new ConcurrentHashMap<String, Optional<JsonNode>>();
+    if (!unique.isEmpty()) {
+      var routePool = Executors.newFixedThreadPool(Math.min(4, unique.size()));
+      try {
+        var calls = unique.values().stream().<Callable<Void>>map(query -> () -> {
+          if (!executionActive(id, execution, deadline))
+            throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
+          try {
+            facts.put(query.key(), Optional.of(amap.routeBetween(
+                query.left(), query.right(), query.type(), query.city())));
+          } catch (Exception ex) {
+            facts.put(query.key(), Optional.empty());
+          }
+          return null;
+        }).toList();
+        long millis = Math.max(1, Duration.between(Instant.now(), deadline).toMillis());
+        routePool.invokeAll(calls, millis, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException ex) {
+        Thread.currentThread().interrupt();
+        throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
+      } finally {
+        routePool.shutdownNow();
+      }
+    }
+    return (left, right, routeType, routeCity) -> {
+      if (!executionActive(id, execution, deadline))
+        throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
+      String key = routeKey(left, right, routeType);
+      Optional<JsonNode> prefetched = facts.get(key);
+      if (prefetched != null) return prefetched.orElse(null);
+      try {
+        JsonNode route = amap.routeBetween(left, right, routeType, routeCity);
+        facts.put(key, Optional.of(route));
+        return route;
+      } catch (Exception ex) {
+        facts.put(key, Optional.empty());
+        return null;
+      }
+    };
+  }
+
   private List<String> canonicalizePois(ObjectNode plan, String requestedCity) {
     var invalid = new ArrayList<String>();
     var cache = new HashMap<String, ObjectNode>();
@@ -372,16 +439,16 @@ public class TaskService {
       var attractions = (tools.jackson.databind.node.ArrayNode) day.path("attractions");
       for (int index = attractions.size() - 1; index >= 0; index--) {
         JsonNode current = attractions.get(index);
-        String id = current.path("poi_id").asText("");
+        String poiId = current.path("poi_id").asText("");
         try {
-          if (id.isBlank()) throw new ApiException(422, "POI ID 缺失");
-          ObjectNode canonical = cache.computeIfAbsent(id, amap::detail);
+          if (poiId.isBlank()) throw new ApiException(422, "POI ID 缺失");
+          ObjectNode canonical = cache.computeIfAbsent(poiId, amap::detail);
           if (!cityMatches(requestedCity, canonical.path("city").asText(""))
               || canonical.path("location").path("longitude").asDouble(0) == 0
               || canonical.path("location").path("latitude").asDouble(0) == 0)
             throw new ApiException(422, "POI 城市或坐标无效");
           var normalized = (ObjectNode) current.deepCopy();
-          normalized.put("poi_id", id);
+          normalized.put("poi_id", poiId);
           normalized.put("name", canonical.path("name").asText(""));
           normalized.put("address", canonical.path("address").asText(""));
           normalized.set("location", canonical.path("location").deepCopy());
@@ -395,7 +462,7 @@ public class TaskService {
           else normalized.remove("image_url");
           attractions.set(index, normalized);
         } catch (Exception ex) {
-          invalid.add(id.isBlank() ? "missing-poi-id" : id);
+          invalid.add(poiId.isBlank() ? "missing-poi-id" : poiId);
           attractions.remove(index);
         }
       }
@@ -409,13 +476,13 @@ public class TaskService {
 
   private static boolean cityMatches(String requested, String actual) {
     String left = cityKey(requested), right = cityKey(actual);
-    return !left.isBlank() && !right.isBlank() && (left.equals(right) || left.contains(right) || right.contains(left));
+    return !left.isBlank() && !right.isBlank()
+        && (left.equals(right) || left.contains(right) || right.contains(left));
   }
 
   private void markUnverified(ObjectNode quality, List<String> invalid) {
     quality.put("outcome", "draft");
-    var gaps = quality.withArray("data_gaps");
-    gaps.add("agent_pois_rejected_by_java_rest:" + String.join(",", invalid));
+    quality.withArray("data_gaps").add("agent_pois_rejected_by_java_rest:" + String.join(",", invalid));
     quality.withArray("issues").addObject()
         .put("code", "INVALID_POI").put("scope", "plan")
         .put("reason", "部分 Agent 候选无法由 Java 高德 REST 重新确认")
@@ -429,25 +496,11 @@ public class TaskService {
       ObjectNode plan,
       ObjectNode quality,
       ObjectNode revision) {
-    boolean assistantPreview = revision != null && revision.path("assistant_preview").asBoolean(false);
-    if (assistantPreview) {
-      String validated = quality.path("outcome").asText("draft");
-      quality.put("validated_outcome", validated);
-      quality.put("outcome", "draft");
-      quality.put("assistant_confirmation_required", true);
-      quality.put("assistant_conversation_id", revision.path("conversation_id").asText(""));
-      quality.withArray("issues").addObject()
-          .put("code", "ASSISTANT_CONFIRMATION_REQUIRED").put("scope", "plan")
-          .put("reason", "旅行助手方案等待用户确认")
-          .put("action", "查看 Java 校验结果与差异后确认保存")
-          .put("blocking", true).put("retryable", false);
-    }
     boolean draft = quality.path("outcome").asText("").equals("draft");
     if (plan.path("days").valueStream().allMatch(d -> d.path("attractions").isEmpty()))
       throw new ApiException(503, "暂无可信景点", "TRUSTED_POI_UNAVAILABLE");
     task.put("status", draft ? "needs_attention" : "succeeded");
-    task.put("message", assistantPreview ? "助手方案已通过 Java 校验，等待用户确认"
-        : draft ? "已保存未完成草稿，请查看缺口并调整" : "旅行计划已生成并保存");
+    task.put("message", draft ? "Agent 已保存未完成草稿，请查看缺口并调整" : "Agent 行程已生成并保存");
     if (draft && revision != null) quality.set("revision_parent", revision);
     tx.executeWithoutResult(
         status -> {
@@ -487,7 +540,7 @@ public class TaskService {
             record.put("plan_json", json.writeValueAsString(plan));
             record.put("quality_json", json.writeValueAsString(quality));
             record.put("title", body.path("city").asText("") + "旅行计划");
-            record.put("source", assistantPreview ? "assistant_revision" : "agent");
+            record.put("source", revision != null ? "agent_revision" : "agent");
             record.put("last_verified_at", java.sql.Timestamp.from(java.time.Instant.now()));
             history.insert(record);
             recordId = ((Number) record.get("id")).longValue();

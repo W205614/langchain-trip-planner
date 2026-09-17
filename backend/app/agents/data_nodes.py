@@ -5,6 +5,8 @@
 """
 import logging
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextvars import copy_context
 from datetime import datetime, timedelta
 from typing import List
 from ..models.schemas import TripRequest, WeatherInfo
@@ -34,34 +36,74 @@ class TravelDataNodes:
             pois = self.amap_service.search_poi(keywords, request.city)
             # 过滤明显非景点的 POI (餐饮/酒店/购物/银行等), 避免把餐馆当景点
             _NON_ATTRACTION_TYPES = ("餐饮", "中餐厅", "餐厅", "酒店", "宾馆", "住宿", "购物", "超市", "银行", "KTV", "酒吧", "足疗", "洗浴", "火锅", "烤肉", "快餐")
-            pois = [
-                p for p in pois
-                if valid_attraction(p, request.city) and not any(t in (p.type or "") for t in _NON_ATTRACTION_TYPES)
-            ]
+            def attraction_candidates(items):
+                return [p for p in items if valid_attraction(p, request.city)
+                    and not any(t in (p.type or "") for t in _NON_ATTRACTION_TYPES)]
+
+            pois = attraction_candidates(pois)
+            # A narrow preference query can return fewer POIs than the requested
+            # number of days. Broaden through Agent-owned MCP searches before
+            # splitting candidates, so a later day is not silently left empty.
+            desired = min(16, max(request.travel_days, request.travel_days * 2))
+            fallback_keywords = [k for k in ("景点", "博物馆", "公园") if k != keywords]
+            if len({p.id for p in pois}) < desired and fallback_keywords:
+                with ThreadPoolExecutor(max_workers=min(3, len(fallback_keywords))) as executor:
+                    futures = {
+                        executor.submit(copy_context().run, self.amap_service.search_poi, keyword, request.city): keyword
+                        for keyword in fallback_keywords
+                    }
+                    for future in as_completed(futures):
+                        try:
+                            pois.extend(attraction_candidates(future.result()))
+                            pois = list({p.id: p for p in pois}.values())
+                        except Exception:
+                            logger.warning("补充景点候选失败 keyword=%s", futures[future])
             logger.info(f"   找到 {len(pois)} 个景点")
 
-            # RAG 知识库景点补充 (失败/未启用时静默跳过, 不影响主流程)
+            # 城市索引由并行 RAG 节点负责。这里只读取已有知识，避免在景点分支重复建库。
+            knowledge_names = []
             try:
                 from ..services.rag_service import get_rag_service
-
-                known_names = {p.name for p in pois if p.name}
-                for name in get_rag_service().get_knowledge_attractions(request.city):
-                    if any(name in n for n in known_names):
-                        continue
-                    kb_pois = self.amap_service.search_poi(name, request.city)
-                    match = self._resolve_required_poi(name, [p for p in kb_pois if valid_attraction(p, request.city)], request.city)
-                    if match:
-                        pois.append(match)
-                        known_names.add(match.name or "")
-                        logger.info(f"   + 知识库补充景点: {name}")
+                knowledge_names = get_rag_service().get_knowledge_attractions(
+                    request.city, ensure_city=False
+                )
             except Exception as e:
                 logger.warning(f"   ⚠️ 知识库景点补充失败(不影响主流程): {e}")
 
             from ..services.planning_constraints import name_key
-            for name in request.constraints.must_visit:
+            must_visit = list(request.constraints.must_visit)
+            known_names = {p.name for p in pois if p.name}
+            lookup_names = list(dict.fromkeys([
+                *[name for name in knowledge_names if not any(name in known for known in known_names)],
+                *must_visit,
+            ]))
+            lookups = {}
+            if lookup_names:
+                with ThreadPoolExecutor(max_workers=min(3, len(lookup_names))) as executor:
+                    futures = {
+                        executor.submit(copy_context().run, self.amap_service.search_poi, name, request.city): name
+                        for name in lookup_names
+                    }
+                    for future in as_completed(futures):
+                        try:
+                            lookups[futures[future]] = future.result()
+                        except Exception:
+                            logger.warning("指定景点查询失败 name=%s", futures[future])
+
+            for name in knowledge_names:
+                if any(name in known for known in known_names):
+                    continue
+                candidates = [p for p in lookups.get(name, []) if valid_attraction(p, request.city)]
+                match = self._resolve_required_poi(name, candidates, request.city)
+                if match:
+                    pois.append(match)
+                    known_names.add(match.name or "")
+                    logger.info("   + 知识库补充景点: %s", name)
+
+            for name in must_visit:
                 try:
-                    candidates = self.amap_service.search_poi(name, request.city)
-                    candidates = list({p.id: p for p in [*pois, *candidates] if valid_attraction(p, request.city)}.values())
+                    candidates = list({p.id: p for p in [*pois, *lookups.get(name, [])]
+                        if valid_attraction(p, request.city)}.values())
                     match = self._resolve_required_poi(name, candidates, request.city)
                     if match:
                         match = match.model_copy(deep=True)

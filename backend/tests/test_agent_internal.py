@@ -30,8 +30,21 @@ def test_cancel_unknown_is_idempotent(client):
         assert client.post(f"/internal/v1/executions/{uuid.uuid4()}/cancel", headers=headers).status_code == 200
 
 
-def test_public_map_capabilities_are_not_exposed_by_agent(client):
+def test_only_agent_owned_mcp_poi_capabilities_are_exposed(client, monkeypatch):
+    from types import SimpleNamespace
+    from app.services import amap_service
+    poi = {"id":"B0001","name":"故宫博物院","type":"博物馆","address":"景山前街4号",
+           "city":"北京","location":{"longitude":116.4,"latitude":39.9},"photos":["https://store.is.autonavi.com/a.jpg"],"opening_hours":"08:30-17:00"}
+    fake = SimpleNamespace(
+        search_poi=lambda *args: [SimpleNamespace(model_dump=lambda: poi)],
+        get_poi_detail=lambda poi_id: {**poi, "id": poi_id, "cityname":"北京", "photos":[{"url":poi["photos"][0]}]},
+    )
+    monkeypatch.setattr(amap_service, "get_amap_service", lambda: fake)
     headers={"X-Service-Key": "internal-test-key-01234567890123456789"}
+    search = client.post("/internal/v1/capabilities/poi-search", json={"keywords":"故宫","city":"北京"}, headers=headers)
+    assert search.status_code == 200 and search.json()["data"][0]["id"] == "B0001"
+    detail = client.post("/internal/v1/capabilities/poi-detail", json={"poi_id":"B0001"}, headers=headers)
+    assert detail.status_code == 200 and detail.json()["data"]["photos"] == poi["photos"]
     assert client.post("/internal/v1/capabilities/photo-image", json={"name": "故宫"}, headers=headers).status_code == 404
     assert client.post("/internal/v1/capabilities/route", json={}, headers=headers).status_code == 404
     assert client.post("/internal/v1/capabilities/weather", json={}, headers=headers).status_code == 404
@@ -44,6 +57,35 @@ def test_research_disabled_preserves_business_error_code(client, monkeypatch):
     response=client.post("/internal/v1/capabilities/research",json={"city":"北京","query":"故宫资料"},
         headers={"X-Service-Key":"internal-test-key-01234567890123456789"})
     assert response.status_code==503 and response.json()["code"]=="RAG_DISABLED"
+
+
+def test_research_stream_emits_progress_tokens_and_result(client, monkeypatch):
+    from types import SimpleNamespace
+    from app.services import rag_service, research_answer
+
+    fake_rag = SimpleNamespace(
+        enabled=True,
+        retrieve_research_evidence=lambda *args, **kwargs: [{"content": "实行预约。", "source": "资料"}],
+    )
+    monkeypatch.setattr(rag_service, "get_rag_service", lambda: fake_rag)
+    monkeypatch.setattr(
+        research_answer,
+        "stream_research_answer",
+        lambda *args: iter([
+            ("token", {"delta": "提前预约"}),
+            ("result", {"answer": "提前预约", "sources": []}),
+        ]),
+    )
+    response = client.post(
+        "/internal/v1/capabilities/research/stream",
+        json={"city": "北京", "query": "故宫如何预约？"},
+        headers={"X-Service-Key": "internal-test-key-01234567890123456789"},
+    )
+
+    assert response.status_code == 200
+    assert "event: progress" in response.text
+    assert "event: token" in response.text
+    assert "event: result" in response.text
 
 
 def test_cancellation_propagates_without_deadline():
@@ -68,16 +110,19 @@ def test_expired_execution_never_registers(client):
 def test_duplicate_execution_never_calls_planner_twice(client, monkeypatch):
     from types import SimpleNamespace
     from app.agents import trip_planner_agent
+    from app.services import planning_constraints
     calls=[]
     def plan(*args, **kwargs):
         calls.append(1)
         return SimpleNamespace(enrichment_notices=[], model_dump=lambda: {"days": []})
     monkeypatch.setattr(trip_planner_agent,"get_trip_planner_agent",lambda: SimpleNamespace(plan_trip=plan))
+    monkeypatch.setattr(planning_constraints,"finalize_plan",lambda *args, **kwargs: {"outcome":"complete","issues":[]})
     body={"protocol_version":1,"task_id":str(uuid.uuid4()),"execution_id":str(uuid.uuid4()),"request_id":"duplicate",
         "user_id":1,"deadline_at":(datetime.now(timezone.utc)+timedelta(seconds=20)).isoformat(),
         "request":{"city":"北京","start_date":"2026-10-01","end_date":"2026-10-01","travel_days":1,"transportation":"步行","accommodation":"经济"}}
     headers={"X-Service-Key":"internal-test-key-01234567890123456789"}
     response=client.post("/internal/v1/executions",json=body,headers=headers)
     assert response.status_code==200 and "event: result" in response.text
+    assert '"quality": {"outcome": "complete", "issues": []}' in response.text
     assert client.post("/internal/v1/executions",json=body,headers=headers).status_code==409
     assert calls==[1]

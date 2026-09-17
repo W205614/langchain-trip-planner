@@ -16,7 +16,7 @@ import tools.jackson.databind.*;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.*;
 
-/** Java-owned deterministic AMap REST adapter. It never falls back to the Python MCP path. */
+/** Deterministic AMap adapter plus a constrained proxy for Agent/MCP image URLs. */
 @Service
 public class AmapGateway {
   public record Image(byte[] body, String mediaType, boolean placeholder) {}
@@ -28,6 +28,7 @@ public class AmapGateway {
   private final Cache<String, JsonNode> poiCache;
   private final Cache<String, JsonNode> weatherCache;
   private final Cache<String, JsonNode> detailCache;
+  private final Cache<String, JsonNode> routeCache;
   private final AtomicLong requests = new AtomicLong(), failures = new AtomicLong();
 
   public AmapGateway(
@@ -62,6 +63,8 @@ public class AmapGateway {
     this.poiCache = cache(poiTtl, maximumSize);
     this.weatherCache = cache(weatherTtl, maximumSize);
     this.detailCache = cache(detailTtl, maximumSize);
+    // Route facts change more slowly than weather but are kept short-lived to avoid stale travel times.
+    this.routeCache = cache(300, maximumSize);
   }
 
   private static Cache<String, JsonNode> cache(long ttl, long size) {
@@ -74,7 +77,7 @@ public class AmapGateway {
   public Map<String, Long> metrics() {
     return Map.of("requests", requests.get(), "failures", failures.get(),
         "poi_cache_size", poiCache.estimatedSize(), "weather_cache_size", weatherCache.estimatedSize(),
-        "detail_cache_size", detailCache.estimatedSize());
+        "detail_cache_size", detailCache.estimatedSize(), "route_cache_size", routeCache.estimatedSize());
   }
 
   private JsonNode get(String path, Map<String, ?> params) {
@@ -225,7 +228,7 @@ public class AmapGateway {
       right = text(geocode(destinationAddress, body.path("destination_city").asText("")), "location");
     }
     if (left.isBlank() || right.isBlank()) throw new ApiException(503, "无法确认路线端点", "ROUTE_UNVERIFIED");
-    return routeCoordinates(left, right, type,
+    return routeWithShortWalkingFallback(left, right, type,
         body.path("city").asText(body.path("origin_city").asText("")),
         body.path("destination_city").asText(""));
   }
@@ -240,10 +243,36 @@ public class AmapGateway {
     // PlanRules supplies the normalized location nodes directly.
     String l = coordinate(left), r = coordinate(right);
     if (l.isBlank() || r.isBlank()) throw new ApiException(503, "无法确认路线端点", "ROUTE_UNVERIFIED");
-    return routeCoordinates(l, r, type, city, city);
+    return routeWithShortWalkingFallback(l, r, type, city, city);
+  }
+
+  private ObjectNode routeWithShortWalkingFallback(
+      String left, String right, String type, String city, String destinationCity) {
+    try {
+      return routeCoordinates(left, right, type, city, destinationCity);
+    } catch (ApiException original) {
+      // 高德对很近的两个景点经常不返回公交方案。此时用真实步行接口核验，
+      // 仅在 1.5km 内接受结果，不能拿直线距离或模型估算冒充路线事实。
+      if (!"transit".equals(type) || !"ROUTE_UNVERIFIED".equals(original.code)) throw original;
+      try {
+        var walking = routeCoordinates(left, right, "walking", city, destinationCity);
+        if (walking.path("distance").asDouble(Double.POSITIVE_INFINITY) <= 1500) {
+          walking.put("fallback_from", "transit");
+          walking.put("description", "公交未返回短途方案，已核验步行路线：" + walking.path("description").asText(""));
+          return walking;
+        }
+      } catch (ApiException ignored) {
+        // Preserve the original transit failure when walking cannot be verified either.
+      }
+      throw original;
+    }
   }
 
   private ObjectNode routeCoordinates(String left, String right, String type, String city, String destinationCity) {
+    String cacheKey = String.join("\n", left, right, type,
+        Objects.toString(city, ""), Objects.toString(destinationCity, ""));
+    JsonNode cached = routeCache.getIfPresent(cacheKey);
+    if (cached != null) return (ObjectNode) cached.deepCopy();
     String path = switch (type) {
       case "driving" -> "/v3/direction/driving";
       case "transit" -> "/v3/direction/transit/integrated";
@@ -270,6 +299,7 @@ public class AmapGateway {
     if (type.equals("walking")) result.put("walking_distance", distance);
     else if (!text(first, "walking_distance").isBlank()) result.put("walking_distance", Double.parseDouble(text(first, "walking_distance")));
     else result.putNull("walking_distance");
+    routeCache.put(cacheKey, result.deepCopy());
     return result;
   }
 
@@ -278,9 +308,20 @@ public class AmapGateway {
       ObjectNode poi = poiId != null && !poiId.isBlank() ? detail(poiId)
           : search(name, city == null ? "" : city, city != null && !city.isBlank()).isEmpty() ? null
               : (ObjectNode) search(name, city, true).get(0);
-      if (poi == null) return placeholder(name);
+      return imageFromPoi(name, poi);
+    } catch (Exception ignored) {
+      return placeholder(name);
+    }
+  }
+
+  /** Download only image URLs returned by the authenticated Agent/MCP detail capability. */
+  public Image imageFromPoi(String name, JsonNode poi) {
+    if (poi == null || poi.isMissingNode() || poi.isNull()) return placeholder(name);
+    try {
       for (JsonNode candidate : poi.path("photos")) {
-        URI uri = URI.create(candidate.asText(""));
+        String raw = candidate.isTextual() ? candidate.asText("") : text(candidate, "url");
+        if (raw.startsWith("http://")) raw = "https://" + raw.substring("http://".length());
+        URI uri = URI.create(raw);
         String host = Objects.toString(uri.getHost(), "").toLowerCase(Locale.ROOT);
         if (!"https".equals(uri.getScheme()) || !(host.endsWith(".amap.com") || host.endsWith(".autonavi.com"))) continue;
         var response = http.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(8)).GET().build(),

@@ -1,4 +1,4 @@
-# 🧭 智能旅行助手：Java 业务后端 + Python Agent
+# 🧭 AI 旅行规划 Agent：Java 业务后端 + Python Agent
 
 [![CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml/badge.svg)](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml)
 
@@ -9,9 +9,9 @@
 ## ✨ 功能特点
 
 - 🤖 **多日旅行规划**：LangGraph 并行获取景点、天气和酒店，再按日生成；使用经过校验的真实 POI，不用虚构地点填满行程。
-- 🧭 **传统旅行闭环**：无需模型即可搜索景点、收藏、创建和排序手工行程、计算路线、保存历史、生成只读分享并复制行程。
+- 🧭 **Agent 统一入口**：首页创建新行程；历史记录内直接进行攻略问答和单日改排；景点发现由 Agent 调用高德 MCP，不再提供独立助手、收藏转手工行程两套入口。
 - ⚡ **任务与流式进度**：Java 持久化排队、进度和结果；支持 SSE、刷新恢复、幂等提交、取消、超时与中断状态。
-- 🧭 **约束与质量分类**：必去／排除、跨日去重、路线、步行、时间和预算由 Java 最终校验；区分完整、降级和未完成草稿。
+- 🧭 **确定性质量分类**：Agent 生成候选草稿，Java 使用独立高德 REST 完成 POI、路线、步行、时间和预算校验；区分完整、降级和未完成草稿。
 - 🗺️ **地图与图片**：高德地图展示路线；图片按 POI ID 获取，无独立实拍时仅使用经过校验且明确标注的景区参考图，无可信来源则显示占位提示。
 - ✏️ **行程编辑**：添加、删除、调整景点，局部改排；版本冲突不会静默覆盖已有修改，草稿需要明确确认后应用。
 - 🧠 **RAG 检索**：Chroma 管理城市攻略和个人历史向量；Java 回查资料所有者、版本、发布状态和草稿状态，不满足可见性要求的资料不进入上下文。
@@ -37,8 +37,8 @@
 
 | 部分 | 技术 | 职责 |
 |---|---|---|
-| Java 业务后端 | Java 21、Spring Boot 4.0.3、Spring Security、MyBatis Starter 4.0.0、Flyway | 用户、业务 API、任务、确定性规则、资料审核、事务与 outbox |
-| Python Agent | Python 3.11、FastAPI、LangChain、LangGraph | 内部执行协议、模型生成、Agent 的高德 MCP、检索、解析及向量写入 |
+| Java 业务后端 | Java 21、Spring Boot 4.0.3、Spring Security、MyBatis Starter 4.0.0、Flyway | 用户、业务 API、任务、版本、POI/路线最终核验、资料审核、事务与 outbox |
+| Python Agent | Python 3.11、FastAPI、LangChain、LangGraph | 内部执行协议、模型草稿、高德 MCP 候选、检索、解析及向量写入 |
 | 存储 | PostgreSQL 17.6、Chroma、本地持久目录 | 业务数据、向量索引、上传文件及操作账本 |
 | 前端 | Vue 3、TypeScript、Vite、Ant Design Vue、高德 JS API | 交互、SSE、地图、编辑与导出 |
 | 部署与验证 | Docker Compose、Nginx、JUnit、pytest、Playwright、GitHub Actions | 单机部署、自动化回归与恢复演练 |
@@ -53,20 +53,21 @@ Python 依赖锁定在 `backend/requirements.lock`，Maven Wrapper 版本为 3.9
     ▼
 Nginx :8080 → Java 业务后端
                  ├── PostgreSQL：用户、任务、行程、资料、outbox
-                 ├── 高德 REST：公开 POI／天气／路线／图片代理与最终核验
+                 ├── 高德 REST：最终 POI/路线核验、按需复核与安全图片代理
+                 ├── 安全图片代理：下载并校验 Agent/MCP 返回的图片
                  ├── 上传目录：原文件与资料版本
                  └── /internal/v1 → Python Agent
                                       ├── LangGraph → 文本模型
-                                      ├── 高德 MCP：只提供 Agent 候选
+                                      ├── 高德 MCP：景点候选与图片
                                       ├── PDF / 图片解析 → 视觉模型
                                       └── RAG / embedding → Chroma
 
 Python → Java 内部回查：资料可见性、原文件、重建快照与变更序号
 ```
 
-- **Java 负责业务决定和地图事实**：鉴权、收藏、手工行程、分享、任务生命周期、REST 查询、规则裁决和数据提交。
-- **Python 负责能力执行**：返回结构化行程、可信候选、进度、用量和降级信息；不写业务表。
-- **双通道不互为主备**：Java REST 与 Agent MCP 使用独立 Key；Agent 返回的 `provider + poi_id` 必须由 Java REST 回查并覆盖名称、地址、坐标和图片，再重新计算路线。
+- **Java 负责业务事实与状态**：鉴权、历史版本、任务生命周期、POI 规范化、路线事实、确定性约束、最终状态和事务提交。
+- **Python 负责 Agent 能力**：返回结构化草稿、可信候选、无网络预检、流式问答、进度、用量和降级信息；不写业务表，也不审批最终业务结果。
+- **只做一次最终审批**：Python 不查询路线；Java 并发预取唯一线路、复用短时缓存后执行一次最终规则校验，避免两端重复规划。
 - **内部接口不对公网开放**：独立服务密钥，固定地址；Nginx 不代理 `/internal/*` 或 `/metrics`，Agent 不发布宿主机端口。
 - **四容器属于一个项目组**：`langchain-trip-planner` 下保留 `frontend / backend / agent / postgres`，不把数据库与业务进程强塞进同一个容器。
 
@@ -121,6 +122,8 @@ python -m pip install python-dotenv
 python backend/scripts/prepare_java_deployment.py
 ```
 
+已有 `deploy/runtime` 的旧部署升级时使用 `python backend/scripts/prepare_java_deployment.py --upgrade-existing`；它保留数据库、JWT 和内部服务密钥，只补齐当前 Java REST / Python MCP 边界配置。
+
 脚本生成 `deploy/runtime/postgres.env`、`business.env` 和 `agent.env`。新部署 JWT Key 留空时生成随机值；已有账户迁移必须保留原 Key。脚本拒绝覆盖已有目录，**已有日常环境不要重新生成配置**。
 
 ### 2. 构建并启动
@@ -158,22 +161,31 @@ docker compose up -d --wait
 
 ## 📝 使用指南
 
-1. 不使用 AI 时，从“景点发现”搜索并收藏，进入“我的收藏”创建和排序手工行程。
-2. 使用 AI 时，选择城市、日期、偏好及约束，提交后查看持久任务进度。
+1. 在首页选择城市、日期、偏好及约束，提交给 Agent 后查看持久任务进度。
+2. 在“景点发现”中查看 Agent 通过高德 MCP 获取的真实 POI 与对应图片。
 3. 先看结果分类与缺口：`needs_attention` 是未完成草稿，不是完整成功。
-4. 在地图和每日卡片中查看行程；按需手工编辑或局部改排。
-5. 从历史记录重新打开、筛选、删除或导出行程；偏好需要主动选择保存。
+4. 在地图和每日卡片中查看行程；按需手工编辑。
+5. 从历史记录直接问攻略或选择某一天让 Agent 改排，也可重新打开、筛选、删除或导出。
 6. 投稿 PDF／图片后，由管理员解析、核对原文、保存复核版本，再发布。
 
 ## 🔧 核心实现
 
 ### LangGraph 生成
 
-Agent 通过高德 MCP 获取候选并让模型按日返回结构化草稿。Java 只信任 `provider + poi_id`，再用独立高德 REST Key 回查 POI、覆盖事实字段、重算路线并完成确定性规则裁决。无法确认的候选被拒绝，硬约束无法核验时只保存草稿。
+Agent 通过高德 MCP 获取候选并让模型按日返回结构化草稿；景点、天气、酒店和 RAG 上下文并行准备，多日模型调用按配置并发。Java 再用高德 REST 规范化 POI，并发预取路线，执行确定性约束与最终质量分类后按版本原子保存。
+
+历史行程中的攻略问答使用端到端 SSE：检索完成后直接转发模型分片，最终以完整 `result` 收口；同一行程复用最近会话，减少无意义的会话写入。
+
+### 链路延迟与超时
+
+- Agent 使用 `trip_agent_stage_seconds{stage,outcome}` 记录 RAG、候选收集、模型生成和问答等阶段耗时，区分成功与降级，便于定位真正的等待点。
+- 攻略问答的模型超时由 `LLM_RESEARCH_TIMEOUT` 控制，默认 15 秒；Java 到 Agent 的流式调用和浏览器请求还有各自的外层超时，客户端断开时会取消本次转发任务。
+- 候选查询采用有界并发，路线由 Java 并发预取并使用 5 分钟短缓存；缓存只减少重复查询，不替代保存前的 POI、路线和规则校验。
+- 单元测试和替身测试只证明并发、超时与降级路径可控；真实延迟和吞吐需在部署环境分别测量冷启动、热缓存及不同旅行天数的 P50/P95，不在文档中预设提升比例。
 
 ### Python 停机边界
 
-前端只依赖 Java 就绪；Java `/readyz` 只检查数据库和本地必要配置。Python 停止时，登录、景点搜索、收藏、手工行程、路线、历史、分享和导出继续工作；智能规划明确返回 `AGENT_UNAVAILABLE`，资料解析和索引作业保留等待状态。`/api/capabilities` 分别报告地图、Agent、RAG 和视觉能力。
+前端只依赖 Java 就绪；Java `/readyz` 只检查数据库和本地必要配置。Python 停止时，登录、历史、分享和导出仍可使用；行程创建、景点发现、攻略问答和智能改排明确返回 `AGENT_UNAVAILABLE`，不会伪装成传统流程继续执行。`/api/capabilities` 分别报告 MCP 地图、Agent、RAG 和视觉能力。
 
 ### 任务可靠性
 
@@ -202,13 +214,13 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 |---|---|
 | `/api/auth/*`、`/api/preferences/me` | 登录、注销、身份与偏好 |
 | `/api/trip/tasks*`、`/api/trip/plan*` | 任务与兼容规划入口、SSE |
-| `/api/history*`、`/api/trips*` | 兼容历史入口、手工行程、版本化编辑与重新核验 |
-| `/api/favorites*` | 可信 POI 收藏；客户端名称、坐标和价格不作为事实 |
+| `/api/history*`、`/api/trips*` | 历史行程、版本化编辑与重新核验；旧手工接口仅保留兼容，不再提供前端入口 |
+| `/api/favorites*` | 旧收藏兼容接口；不再作为当前产品流程入口 |
 | `/api/trips/{id}/shares`、`/api/shared-trips/{token}` | 不可变只读分享、撤销和复制 |
-| `/api/assistant/conversations*` | 助手会话；规划和改排复用持久任务 |
+| `/api/assistant/conversations*` | 历史行程内的 Agent 问答与改排会话；改排复用持久任务 |
 | `/api/knowledge/*` | 投稿、复核、发布及作业状态 |
 | `/api/map/*`、`/api/poi/*`、`/api/research/*` | 地图、图片与资料研究 |
-| `/health`、`/readyz`、`/api/capabilities` | 存活、传统业务就绪与分能力状态 |
+| `/health`、`/readyz`、`/api/capabilities` | 存活、业务就绪与 Agent/MCP 分能力状态 |
 
 公开请求由 Java 处理；Python 仅提供 `/internal/v1`。Schema 与样例见 `contracts/internal-v1/`。内部 Prometheus 指标与告警规则位于 `deploy/`，日常四容器不默认启动额外监控栈；本地通知接收器仅用于验证，不是生产告警渠道。
 

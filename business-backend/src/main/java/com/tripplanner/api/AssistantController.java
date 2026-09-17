@@ -4,9 +4,13 @@ import com.tripplanner.agent.AgentClient;
 import com.tripplanner.domain.*;
 import com.tripplanner.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 
@@ -26,6 +30,13 @@ public class AssistantController {
     if(title.isBlank()||title.length()>160) throw new ApiException(422,"会话标题无效");
     Long trip=body!=null&&body.path("active_trip_id").canConvertToLong()?body.path("active_trip_id").asLong():null;
     if(trip!=null&&history.owned(uid,trip)==null) throw new ApiException(404,"行程不存在");
+    if(trip!=null){
+      var existing=conversations.latestForTrip(uid,trip);
+      if(existing!=null){
+        String existingId=existing.get("id").toString(); conversations.touch(uid,existingId,trip);
+        return Map.of("success",true,"id",existingId,"reused",true);
+      }
+    }
     var row=new HashMap<String,Object>(); row.put("id",id); row.put("user_id",uid); row.put("title",title); row.put("active_trip_id",trip);
     conversations.conversation(row);
     return Map.of("success",true,"id",id);
@@ -39,36 +50,77 @@ public class AssistantController {
   @PostMapping("/{id}/messages")
   @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
   public Object message(HttpServletRequest req,@PathVariable String id,@RequestHeader(value="Idempotency-Key",required=false)String key,@RequestBody ObjectNode body){
-    long uid=UsersController.uid(req); owned(uid,id);
+    long uid=UsersController.uid(req); var conversation=owned(uid,id);
     String content=body.path("content").asText("").strip(),mode=body.path("mode").asText("");
-    if(content.isBlank()||content.length()>500||!Set.of("help","research","plan","revise").contains(mode)) throw new ApiException(422,"助手消息无效");
+    if(content.isBlank()||content.length()>500||!Set.of("research","revise").contains(mode)) throw new ApiException(422,"Agent 操作无效");
     save(id,uid,"user",content,"","");
-    if(mode.equals("help")){
-      String answer="可以在景点发现页搜索和收藏，再创建手工行程；智能规划失败不会影响已保存行程。";
-      save(id,uid,"assistant",answer,"help",""); return Map.of("success",true,"status","completed","message",answer);
-    }
     if(mode.equals("research")){
-      String city=body.path("city").asText(""); var result=agent.post("/capabilities/research",Map.of("city",city,"query",content));
-      String answer=json.writeValueAsString(result.path("data")); save(id,uid,"assistant",answer,"research","");
-      return Map.of("success",true,"status","completed","data",result.path("data"));
+      String city=body.path("city").asText("");
+      Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
+      if(activeTrip==null)throw new ApiException(422,"请从历史行程中发起攻略问答");
+      String context="";
+      var trip=history.owned(uid,activeTrip);
+      if(trip==null)throw new ApiException(404,"行程不存在");
+      context=tripContext(trip);
+      var result=agent.post("/capabilities/research",Map.of("city",city,"query",content,"trip_context",context));
+      var data=result.path("data");
+      String answer=data.path("answer").asText("").strip();
+      if(answer.isBlank()) answer="当前没有取得可展示的攻略回答，请稍后重试。";
+      save(id,uid,"assistant",answer,"research","");
+      return Map.of("success",true,"status","completed","message",answer,"data",data);
     }
     ObjectNode request;
-    ObjectNode revision=json.createObjectNode().put("assistant_preview",true).put("conversation_id",id);
+    ObjectNode revision=json.createObjectNode();
     Long activeTrip=null;
-    if(mode.equals("plan")) {
-      if(!body.path("trip_request").isObject()) throw new ApiException(422,"缺少行程请求");
-      request=(ObjectNode)body.path("trip_request").deepCopy();
-    }
-    else{
-      long recordId=body.path("record_id").asLong(0); var row=history.owned(uid,recordId);
-      if(row==null) throw new ApiException(404,"行程不存在"); activeTrip=recordId;
-      if(body.path("version").asInt(-1)<0||body.path("day_index").asInt(-1)<0) throw new ApiException(422,"改排版本或日期无效");
-      request=request(row); revision.put("record_id",recordId)
-          .put("version",body.path("version").asInt(0)).put("day_index",body.path("day_index").asInt(-1)).put("instruction",content);
-    }
+    long recordId=body.path("record_id").asLong(0); var row=history.owned(uid,recordId);
+    if(row==null) throw new ApiException(404,"行程不存在"); activeTrip=recordId;
+    if(body.path("version").asInt(-1)<0||body.path("day_index").asInt(-1)<0) throw new ApiException(422,"改排版本或日期无效");
+    request=request(row); revision.put("record_id",recordId)
+        .put("version",body.path("version").asInt(0)).put("day_index",body.path("day_index").asInt(-1)).put("instruction",content);
     ObjectNode created=tasks.submit(uid,request,key==null?UUID.randomUUID().toString():key,req.getHeader("X-Request-ID"),revision);
     String taskId=created.path("data").path("id").asText(""); save(id,uid,"system_event","已创建智能规划任务","trip_task",taskId);
     conversations.touch(uid,id,activeTrip); return Map.of("success",true,"status","accepted","task_id",taskId);
+  }
+
+  @PostMapping(path="/{id}/messages/stream",produces="text/event-stream")
+  public SseEmitter researchStream(HttpServletRequest req,@PathVariable String id,@RequestBody ObjectNode body){
+    long uid=UsersController.uid(req); var conversation=owned(uid,id);
+    String content=body.path("content").asText("").strip(),mode=body.path("mode").asText("");
+    if(content.isBlank()||content.length()>500||!"research".equals(mode))
+      throw new ApiException(422,"流式接口仅支持攻略问答");
+    Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
+    if(activeTrip==null)throw new ApiException(422,"请从历史行程中发起攻略问答");
+    var trip=history.owned(uid,activeTrip);
+    if(trip==null)throw new ApiException(404,"行程不存在");
+    String city=body.path("city").asText(""),context=tripContext(trip);
+    save(id,uid,"user",content,"","");
+    conversations.touch(uid,id,activeTrip);
+
+    var emitter=new SseEmitter(30000L);
+    var worker=new AtomicReference<Thread>();
+    Runnable cancel=()->{var running=worker.get();if(running!=null)running.interrupt();};
+    emitter.onCompletion(cancel); emitter.onTimeout(cancel); emitter.onError(ignored->cancel.run());
+    worker.set(Thread.startVirtualThread(()->{
+      try{
+        agent.stream("/capabilities/research/stream",Map.of("city",city,"query",content,"trip_context",context),
+            Duration.ofSeconds(25),(event,data)->{
+              try{
+                if("result".equals(event)){
+                  String answer=data.path("answer").asText("").strip();
+                  if(!answer.isBlank())save(id,uid,"assistant",answer,"research","");
+                }
+                emitter.send(SseEmitter.event().name(event).data(data));
+              }catch(IOException ex){throw new RuntimeException(ex);}
+            });
+        emitter.complete();
+      }catch(Exception ex){
+        try{emitter.send(SseEmitter.event().name("error").data(Map.of(
+            "code","AGENT_UNAVAILABLE","message","攻略问答暂不可用，请稍后重试")));}catch(Exception ignored){}
+        emitter.complete();
+        if(ex instanceof InterruptedException)Thread.currentThread().interrupt();
+      }
+    }));
+    return emitter;
   }
 
   @PostMapping("/{id}/proposals/{recordId}/confirm")
@@ -100,7 +152,11 @@ public class AssistantController {
         "message","已确认并保存助手方案");
   }
 
-  private void owned(long uid,String id){if(conversations.owned(uid,id)==null)throw new ApiException(404,"助手会话不存在");}
+  private Map<String,Object> owned(long uid,String id){
+    var row=conversations.owned(uid,id);
+    if(row==null)throw new ApiException(404,"助手会话不存在");
+    return row;
+  }
   private void save(String id,long uid,String role,String content,String action,String ref){
     conversations.message(new HashMap<>(Map.of("conversation_id",id,"user_id",uid,"role",role,"content",content,"action_type",action,"action_ref",ref)));
   }
@@ -108,5 +164,21 @@ public class AssistantController {
     var body=json.createObjectNode(); for(String f:List.of("city","start_date","end_date","travel_days","transportation","accommodation","free_text_input"))body.set(f,json.valueToTree(row.get(f)));
     body.set("preferences",json.readTree(row.get("preferences").toString())); body.set("constraints",json.readTree(row.get("plan_json").toString()).path("constraints"));
     return TripRequests.normalize(body);
+  }
+
+  private String tripContext(Map<String,Object> row){
+    var summary=new StringBuilder()
+        .append("目的地：").append(row.get("city"))
+        .append("；日期：").append(row.get("start_date")).append(" 至 ").append(row.get("end_date"));
+    try{
+      var plan=json.readTree(row.get("plan_json").toString());
+      for(var day:plan.path("days")){
+        summary.append("\n第").append(day.path("day_index").asInt()+1).append("天：");
+        var names=new ArrayList<String>();
+        day.path("attractions").forEach(item->names.add(item.path("name").asText("")));
+        summary.append(String.join("、",names));
+      }
+    }catch(Exception ignored){}
+    return summary.length()>8000?summary.substring(0,8000):summary.toString();
   }
 }

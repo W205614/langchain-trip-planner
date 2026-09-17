@@ -714,6 +714,11 @@
       "title": "Trusted Candidates",
       "type": "array"
     },
+    "quality": {
+      "additionalProperties": true,
+      "title": "Quality",
+      "type": "object"
+    },
     "usage": {
       "additionalProperties": {
         "type": "integer"
@@ -726,6 +731,7 @@
     "execution_id",
     "plan",
     "trusted_candidates",
+    "quality",
     "usage"
   ],
   "title": "ExecutionResult",

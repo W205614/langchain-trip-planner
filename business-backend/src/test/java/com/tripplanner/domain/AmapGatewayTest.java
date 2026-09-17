@@ -24,6 +24,8 @@ class AmapGatewayTest {
         exchange.getRequestURI().getRawQuery().contains("120.0%2C39.9")
             ? "{\"status\":\"1\",\"route\":{\"paths\":[]}}"
             : "{\"status\":\"1\",\"route\":{\"paths\":[{\"distance\":\"600\",\"duration\":\"600\"}]}}"));
+    server.createContext("/v3/direction/transit/integrated", exchange -> respond(exchange,
+        "{\"status\":\"1\",\"route\":{\"transits\":[]}}"));
     server.start();
   }
 
@@ -42,6 +44,8 @@ class AmapGatewayTest {
     var route = gateway.routeBetween(left, right, "walking", "北京");
     assertEquals(600, route.path("duration").asInt());
     assertEquals(600, route.path("distance").asInt());
+    gateway.routeBetween(left, right, "walking", "北京");
+    assertEquals(2, calls.get(), "相同路线应复用短时缓存，不重复请求地图服务");
   }
 
   @Test
@@ -56,6 +60,18 @@ class AmapGatewayTest {
     var missing = assertThrows(com.tripplanner.api.ApiException.class,
         () -> gateway.routeBetween(left, right, "walking", "北京"));
     assertEquals(503, missing.status); assertEquals("ROUTE_UNVERIFIED", missing.code);
+  }
+
+  @Test
+  void nearbyTransitWithoutAnItineraryUsesVerifiedWalkingRoute() {
+    var gateway = new AmapGateway("http://127.0.0.1:" + server.getAddress().getPort(), "fixture",
+        0, 0, 0, 10, "test", "no", JsonMapper.builder().build());
+    var left = JsonMapper.builder().build().createObjectNode().put("longitude", 116.4).put("latitude", 39.9);
+    var right = JsonMapper.builder().build().createObjectNode().put("longitude", 116.5).put("latitude", 39.9);
+    var route = gateway.routeBetween(left, right, "transit", "北京");
+    assertEquals("walking", route.path("route_type").asText());
+    assertEquals("transit", route.path("fallback_from").asText());
+    assertEquals(600, route.path("distance").asInt());
   }
 
   @Test

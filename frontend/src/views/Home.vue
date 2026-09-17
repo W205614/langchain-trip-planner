@@ -13,10 +13,8 @@
         <span class="user-badge">👤 {{ username }}</span>
         <a-button class="history-entry" @click="router.push('/tasks')">我的任务</a-button>
         <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
-        <a-button class="history-entry" @click="router.push('/favorites')">⭐ 我的收藏</a-button>
-        <a-button class="history-entry" @click="router.push('/assistant')">💬 旅行助手</a-button>
         <a-button class="history-entry" @click="goHistory">
-          📜 历史行程
+          ✨ 历史行程 · 问答与修改
         </a-button>
         <a-button class="history-entry" @click="goKnowledge">
           📚 投稿攻略
@@ -45,12 +43,12 @@
       <div class="icon-wrapper">
         <span class="icon">✈️</span>
       </div>
-      <h1 class="page-title">智能旅行助手</h1>
-      <p class="page-subtitle">输入目的地，AI 为你规划每一天的吃、住、行、玩</p>
+      <h1 class="page-title">AI 旅行规划 Agent</h1>
+      <p class="page-subtitle">首页创建新行程，历史记录中继续问攻略或让 Agent 修改</p>
       <a-alert v-if="capabilities.agent==='unavailable'" type="warning" show-icon class="capability-alert"
-        message="智能规划暂不可用；景点搜索、收藏、手工行程、历史、分享和导出仍可使用。" />
+        message="Agent 暂不可用，行程创建、景点发现、攻略问答和智能修改暂时无法执行。" />
       <a-alert v-else-if="capabilities.rag==='disabled'||capabilities.rag==='waiting_for_agent'" type="info" show-icon class="capability-alert"
-        message="攻略检索暂不可用，不影响传统旅行功能。" />
+        message="攻略资料检索暂不可用；行程生成仍可使用，但历史行程问答可能缺少资料来源。" />
       <!-- 热门目的地快捷选择 -->
       <div class="hot-cities">
         <span class="hot-label">热门目的地</span>

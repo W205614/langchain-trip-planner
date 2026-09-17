@@ -5,12 +5,16 @@
     "keywords": {
       "description": "搜索关键词",
       "example": "故宫",
+      "maxLength": 100,
+      "minLength": 1,
       "title": "Keywords",
       "type": "string"
     },
     "city": {
       "description": "城市",
       "example": "北京",
+      "maxLength": 64,
+      "minLength": 1,
       "title": "City",
       "type": "string"
     },

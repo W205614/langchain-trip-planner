@@ -19,7 +19,7 @@ def classify(plan, request, report):
         if day.get("route_minutes") is None:
             # The daily limit is part of the persisted request, including its default.
             add("TIME_LIMIT_UNVERIFIED", f"day:{day['day_index']}", "路线缺失，无法核验每日时间上限",
-                "稍后重新规划或减少景点", retryable=True)
+                "先重新核验路线；仍失败时再调整景点", retryable=True)
         if request.constraints.max_inter_stop_walking_km is not None and day.get("inter_stop_walking_km") is None:
             add("WALKING_LIMIT_UNVERIFIED", f"day:{day['day_index']}", "无法核验指定步行上限",
                 "稍后重试或调整交通要求", retryable=True)

@@ -5,7 +5,7 @@
     <!-- 页面头部 -->
     <div class="page-header">
       <a-button class="back-button" size="large" @click="goBack">
-        ← 返回首页
+        ← {{ returnLabel }}
       </a-button>
       <a-space size="middle">
         <a-button v-if="!editMode" @click="toggleEditMode" type="default">
@@ -74,13 +74,14 @@
           <a-alert v-if="quality.outcome === 'draft'" type="warning" show-icon message="未完成草稿：以下要求尚未满足，不能视为完整可执行行程。" />
           <a-alert v-for="notice in tripPlan.enrichment_notices || []" :key="notice" type="info" :message="notice" />
           <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
-          <p v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`">{{ issue.reason }} · {{ issue.action }}</p>
+          <a-alert v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`"
+            type="error" show-icon :message="issue.reason" :description="issue.action" />
           <a-button v-if="quality.assistant_confirmation_required" type="primary" @click="confirmAssistant">确认保存此助手方案</a-button>
           <a-button v-else-if="quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
-            :message="`第${check.day_index + 1}天：安排 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）；${check.walking_status === 'not_applicable' ? '自驾路线不含停车后步行' : '景点间步行 ' + (check.inter_stop_walking_km == null ? '暂无数据' : check.inter_stop_walking_km.toFixed(1) + ' 公里')}`" />
+            :message="dayCheckMessage(check)" />
           <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处重复、不去或超限景点；请确认必去要求是否满足。`" />
           <a-alert v-if="unsaved" type="warning" show-icon message="当前修改尚未保存到服务器，请重新保存或从历史记录加载。" />
           <a-alert v-if="quality.degraded_days?.length" type="warning" show-icon
@@ -202,11 +203,12 @@
                 </div>
               </div>
 
-              <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" title="景点间交通（高德查询参考）">
+              <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" class="route-card" title="景点间交通（高德路线参考）">
                 <p v-for="leg in quality.day_checks.find((c: any) => c.day_index === day.day_index).routes" :key="leg.from + leg.to">
-                  {{ leg.from }} → {{ leg.to }}（{{ leg.route_type === 'walking' ? '步行' : leg.route_type === 'driving' ? '驾车' : '公共交通' }}）：{{ leg.minutes == null ? '暂未取得路线，请在地图中确认' : `${leg.minutes} 分钟 / ${leg.distance_km} 公里` }}
-                  <span v-if="leg.walking_km != null">，其中步行 {{ leg.walking_km }} 公里</span>
+                  {{ leg.from }} → {{ leg.to }}（{{ leg.route_type === 'walking' ? '步行' : leg.route_type === 'driving' ? '驾车' : '公共交通' }}）：{{ leg.minutes == null ? '暂未取得路线，请在地图中确认' : `${leg.minutes} 分钟 / ${formatDistance(leg.distance_km)}` }}
+                  <span v-if="leg.walking_km != null">，其中步行 {{ formatDistance(leg.walking_km) }}</span>
                 </p>
+                <p class="route-total">{{ routeTotalMessage(day.day_index) }}</p>
               </a-card>
               <!-- 景点安排 -->
               <a-divider orientation="left">🎯 景点安排</a-divider>
@@ -404,7 +406,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useTripMap } from '@/composables/useTripMap'
@@ -415,6 +417,8 @@ import type { TripPlan, POIInfo } from '@/types'
 import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal } from '@/services/api'
 
 const router = useRouter()
+const route = useRoute()
+const returnLabel = computed(() => route.query.from === 'history' ? '返回历史行程' : '返回首页')
 const tripPlan = ref<TripPlan | null>(null)
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
@@ -504,6 +508,27 @@ const formatMoney = (value: number): string => {
   return (value || 0).toLocaleString('zh-CN')
 }
 
+const formatDistance = (km: number): string => {
+  if (!Number.isFinite(km)) return '暂未核实'
+  if (km < 0.1) return `${Math.round(km * 1000)} 米`
+  return `${km < 1 ? km.toFixed(2) : km.toFixed(1)} 公里`
+}
+
+const dayCheckMessage = (check: any): string => {
+  const schedule = `第${check.day_index + 1}天：安排 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）`
+  if (check.walking_status === 'no_attractions') return `${schedule}；当天没有可验证景点，无法统计景点间距离`
+  if (check.walking_status === 'single_stop') return `${schedule}；当天只有一个景点，无景点间步行`
+  if (check.walking_status === 'not_applicable') return `${schedule}；自驾路线不含停车后步行`
+  return `${schedule}；景点间步行 ${check.inter_stop_walking_km == null ? '暂未核实' : formatDistance(check.inter_stop_walking_km)}`
+}
+
+const routeTotalMessage = (dayIndex: number): string => {
+  const check = (quality.value.day_checks || []).find((item: any) => item.day_index === dayIndex)
+  if (!check || check.route_distance_km == null) return '合计：部分路线暂未取得，不能给出虚假的 0 公里。'
+  const walking = check.inter_stop_walking_km == null ? '步行距离暂未核实' : `步行 ${formatDistance(check.inter_stop_walking_km)}`
+  return `当日景点间路线合计 ${formatDistance(check.route_distance_km)}，${walking}。`
+}
+
 onMounted(async () => {
   const data = sessionStorage.getItem('tripPlan')
   if (data) {
@@ -531,7 +556,7 @@ onMounted(async () => {
 })
 
 const goBack = () => {
-  router.push('/')
+  router.push(route.query.from === 'history' ? '/history' : '/')
 }
 
 // 滚动到指定区域
@@ -1151,6 +1176,23 @@ const exportAsPDF = async () => {
   display: grid;
   gap: 8px;
   margin-bottom: 16px;
+}
+
+.result-notices :deep(.ant-alert) {
+  color: #1f2937;
+}
+
+.route-card p {
+  color: #344054;
+  line-height: 1.7;
+}
+
+.route-total {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed #d0d5dd;
+  font-weight: 700;
+  color: #4338ca !important;
 }
 
 /* 景点图片样式 */

@@ -106,17 +106,22 @@ class TravelPreferenceRequest(BaseModel):
 
 
 class TravelResearchRequest(BaseModel):
-    """面向公开城市资料的来源优先研究请求，不检索私人历史。"""
+    """来源优先研究请求；行程上下文由 Java 在鉴权后按需注入。"""
 
     city: str = Field(..., min_length=1, max_length=64)
     query: str = Field(..., min_length=2, max_length=300)
+    trip_context: str = Field(default="", max_length=8000)
 
 
 class POISearchRequest(BaseModel):
     """POI搜索请求"""
-    keywords: str = Field(..., description="搜索关键词", json_schema_extra={"example": "故宫"})
-    city: str = Field(..., description="城市", json_schema_extra={"example": "北京"})
+    keywords: str = Field(..., min_length=1, max_length=100, description="搜索关键词", json_schema_extra={"example": "故宫"})
+    city: str = Field(..., min_length=1, max_length=64, description="城市", json_schema_extra={"example": "北京"})
     citylimit: bool = Field(default=True, description="是否限制在城市范围内")
+
+
+class POIDetailRequest(BaseModel):
+    poi_id: str = Field(..., pattern=r"^[A-Za-z0-9_-]{1,64}$")
 
 
 class RouteRequest(BaseModel):

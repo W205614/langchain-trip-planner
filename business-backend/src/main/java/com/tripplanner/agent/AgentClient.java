@@ -86,8 +86,14 @@ public class AgentClient {
 
   public void generate(Object body, Duration timeout, BiConsumer<String, JsonNode> consumer)
       throws IOException, InterruptedException {
+    stream("/executions", body, timeout, consumer);
+  }
+
+  /** Forward a bounded internal SSE capability without buffering the full response. */
+  public void stream(String path, Object body, Duration timeout, BiConsumer<String, JsonNode> consumer)
+      throws IOException, InterruptedException {
     var response =
-        http.send(request("/executions", body, timeout), HttpResponse.BodyHandlers.ofInputStream());
+        http.send(request(path, body, timeout), HttpResponse.BodyHandlers.ofInputStream());
     if (response.statusCode() / 100 != 2) {
       response.body().close();
       throw new IOException("Agent rejected execution: " + response.statusCode());

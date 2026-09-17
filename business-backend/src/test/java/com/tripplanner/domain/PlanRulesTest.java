@@ -71,4 +71,15 @@ class PlanRulesTest {
     // 240 visit + 120 allowances + 250 route exceeds the 600-minute day limit first.
     assertEquals("daily_time_exceeded", quality.path("repairs").get(0).path("reason").asText());
   }
+
+  @Test
+  void aSingleAttractionDoesNotPretendThereWasZeroWalking() {
+    var plan = plan();
+    ((tools.jackson.databind.node.ArrayNode) plan.path("days").get(0).path("attractions")).remove(1);
+    var quality = rules.finish(plan, request(), null, false);
+    var check = quality.path("day_checks").get(0);
+    assertEquals("single_stop", check.path("walking_status").asText());
+    assertTrue(check.path("inter_stop_walking_km").isNull());
+    assertEquals(0, check.path("routes").size());
+  }
 }

@@ -639,7 +639,7 @@ class RagService:
             return False
 
     @serialized
-    def get_knowledge_attractions(self, city: str, max_names: int = 5) -> List[str]:
+    def get_knowledge_attractions(self, city: str, max_names: int = 5, *, ensure_city: bool = True) -> List[str]:
         """从知识库提取该城市知名景点名 (供补充进"可选景点"列表, 让LLM能真实采用)
 
         知识库景点带门票/交通/避坑信息, 但本身无坐标;
@@ -649,7 +649,8 @@ class RagService:
             return []
         self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         # 任意城市增强: 未覆盖城市先用高德自动建知识, 使景点补充也生效
-        self.ensure_city_index(city)
+        if ensure_city:
+            self.ensure_city_index(city)
         try:
             docs = self._knowledge_store.similarity_search(
                 f"{city} 必去景点 门票 交通 打卡",

@@ -138,10 +138,8 @@ def test_daily_rag_context_receives_current_user_id():
     rag = MagicMock()
     rag.build_rag_context.return_value = ""
     with patch("app.services.rag_service.get_rag_service", return_value=rag):
-        planner._build_day_base_info(
-            _request(),
-            {"user_id": 42, "attraction_pois": [], "hotel_pois": [], "weather_info": []},
-        )
+        result = planner._build_rag_context({"request": _request(), "user_id": 42})
+    assert result == {"rag_context": ""}
     rag.build_rag_context.assert_called_once_with(
         _request(), top_k=2, max_chunk_chars=600, user_id=42
     )
@@ -162,3 +160,27 @@ def test_day_base_info_does_not_repeat_all_attraction_candidates():
             },
         )
     assert "故宫博物院" not in base_info
+
+
+def test_attraction_search_broadens_narrow_preference_for_multi_day_plan(monkeypatch):
+    planner = object.__new__(MultiAgentTripPlanner)
+    planner.amap_service = MagicMock()
+
+    def poi(index: int) -> POIInfo:
+        return POIInfo(id=f"B{index:04d}", name=f"景点{index}", city="北京", type="风景名胜",
+            address=f"地址{index}", location=Location(longitude=116.3 + index / 1000, latitude=39.9))
+
+    planner.amap_service.search_poi.side_effect = lambda keyword, _city: (
+        [poi(1), poi(2)] if keyword == "历史文化" else [poi(index) for index in range(3, 9)]
+    )
+    rag = MagicMock()
+    rag.get_knowledge_attractions.return_value = []
+    monkeypatch.setattr("app.services.rag_service.get_rag_service", lambda: rag)
+    request = TripRequest(city="北京", start_date="2026-08-01", end_date="2026-08-04", travel_days=4,
+        transportation="公共交通", accommodation="经济型酒店", preferences=["历史文化"])
+
+    result = planner._search_attractions({"request": request})
+
+    assert len(result["attraction_pois"]) == 8
+    assert planner.amap_service.search_poi.call_args_list[1].args == ("景点", "北京")
+    assert all(planner._split_pois_for_days(result["attraction_pois"], 4))

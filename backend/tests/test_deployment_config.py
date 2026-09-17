@@ -40,3 +40,28 @@ def test_invalid_config_writes_nothing(tmp_path, monkeypatch, config):
     with pytest.raises((RuntimeError, ValueError)):
         module.prepare(output)
     assert not output.exists()
+
+
+def test_upgrade_preserves_credentials_and_adds_split_amap_keys(tmp_path, monkeypatch):
+    output = tmp_path / "runtime"
+    output.mkdir()
+    (output / "postgres.env").write_text("POSTGRES_PASSWORD='existing-db'\n", encoding="utf-8")
+    (output / "business.env").write_text(
+        "JWT_SECRET_KEY='existing-jwt-secret-with-more-than-32-bytes'\n"
+        "INTERNAL_SERVICE_KEY='existing-internal'\nJDBC_DATABASE_URL='jdbc:existing'\n", encoding="utf-8")
+    (output / "agent.env").write_text(
+        "INTERNAL_SERVICE_KEY='existing-internal'\nLLM_API_KEY='existing-model'\n", encoding="utf-8")
+    monkeypatch.setattr(module, "dotenv_values", lambda path: (
+        {"AMAP_REST_API_KEY": "rest-key", "AMAP_MCP_API_KEY": "mcp-key"}
+        if path.name == ".env" else dotenv_values(path)))
+    module.upgrade(output)
+
+    business = dotenv_values(output / "business.env")
+    agent = dotenv_values(output / "agent.env")
+    assert business["JWT_SECRET_KEY"] == "existing-jwt-secret-with-more-than-32-bytes"
+    assert business["JDBC_DATABASE_URL"] == "jdbc:existing"
+    assert business["AMAP_REST_API_KEY"] == "rest-key"
+    assert agent["INTERNAL_SERVICE_KEY"] == "existing-internal"
+    assert agent["LLM_API_KEY"] == "existing-model"
+    assert agent["AMAP_API_KEY"] == "mcp-key"
+    assert not any(key in agent for key in ("JWT_SECRET_KEY", "POSTGRES_PASSWORD", "DATABASE_URL", "JDBC_DATABASE_URL"))
