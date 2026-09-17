@@ -33,9 +33,21 @@ public interface TaskMapper {
   long count(long uid);
 
   @Select(
+      "SELECT count(*) FROM trip_tasks WHERE user_id=#{uid}"
+          + " AND status IN ('queued','running','failed','cancelled')")
+  long actionableCount(long uid);
+
+  @Select(
       "SELECT * FROM trip_tasks WHERE user_id=#{uid} ORDER BY created_at DESC,id LIMIT #{limit}"
           + " OFFSET #{offset}")
   List<Map<String, Object>> list(
+      @Param("uid") long uid, @Param("offset") int offset, @Param("limit") int limit);
+
+  @Select(
+      "SELECT * FROM trip_tasks WHERE user_id=#{uid}"
+          + " AND status IN ('queued','running','failed','cancelled')"
+          + " ORDER BY created_at DESC,id LIMIT #{limit} OFFSET #{offset}")
+  List<Map<String, Object>> actionableList(
       @Param("uid") long uid, @Param("offset") int offset, @Param("limit") int limit);
 
   @Insert(

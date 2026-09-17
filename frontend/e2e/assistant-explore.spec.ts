@@ -43,6 +43,26 @@ test('history list keeps contextual Q&A but removes the duplicate revision entry
   await expect(page.getByText('修改安排请先进入具体行程。')).toBeVisible()
 })
 
+test('legacy tasks route opens only actionable task states inside my trips', async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
+  await page.route('**/api/history**', route => route.fulfill({ json: { success: true, data: [], total: 0 } }))
+  await page.route('**/api/trip/tasks**', route => {
+    expect(new URL(route.request().url()).searchParams.get('actionable')).toBe('true')
+    return route.fulfill({ json: { data: [
+      { id: 'running-1', city: '北京', status: 'running', message: '正在生成', error_code: null },
+      { id: 'failed-1', city: '上海', status: 'failed', message: '生成中断', error_code: 'PROCESS_INTERRUPTED' }
+    ], total: 2 } })
+  })
+
+  await page.goto('/tasks')
+  await expect(page).toHaveURL(/\/history\?tab=tasks$/)
+  await expect(page.getByText('我的行程', { exact: true })).toBeVisible()
+  await expect(page.getByText('北京', { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: '取消任务' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '重新提交' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '查看结果' })).toHaveCount(0)
+})
+
 test('explore formats provider categories and renders a same-origin reference image', async ({ page }) => {
   await page.route('**/api/map/poi**', route => route.fulfill({ json: { success: true, data: [{
     id: 'B0001', name: '故宫博物院', type: '风景名胜;风景名胜;世界遗产|科教文化服务;博物馆;博物馆',
@@ -99,7 +119,7 @@ test('result opened from history returns to history for another selection', asyn
   await page.getByRole('button', { name: '👁️ 查看行程' }).click()
   await expect(page).toHaveURL(/\/result\?from=history$/)
   await expect(page.getByRole('button', { name: '✨ AI 重新安排' })).toBeVisible()
-  await page.getByRole('button', { name: '← 返回历史行程' }).click()
+  await page.getByRole('button', { name: '← 返回我的行程' }).click()
   await expect(page).toHaveURL(/\/history$/)
   await expect(page.getByText('行程 #61')).toBeVisible()
 })

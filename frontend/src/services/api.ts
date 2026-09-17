@@ -66,8 +66,8 @@ export async function logout(): Promise<void> {
   clearAuth()
 }
 
-export async function fetchTasks(page = 1): Promise<any> {
-  return (await apiClient.get('/api/trip/tasks', { params: { page } })).data
+export async function fetchTasks(page = 1, actionable = false): Promise<any> {
+  return (await apiClient.get('/api/trip/tasks', { params: { page, actionable } })).data
 }
 
 export async function fetchTask(id: string): Promise<any> {
@@ -271,7 +271,7 @@ export async function reviseHistoryDay(id: number, dayIndex: number, instruction
     }
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
-  throw new Error('等待超时，请在“我的任务”查看改排结果')
+  throw new Error('等待超时，请在“我的行程”的任务状态中查看改排结果')
 }
 
 export async function fetchMyKnowledge(): Promise<any> {

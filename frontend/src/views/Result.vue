@@ -418,7 +418,7 @@ import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, c
 
 const router = useRouter()
 const route = useRoute()
-const returnLabel = computed(() => route.query.from === 'history' ? '返回历史行程' : '返回首页')
+const returnLabel = computed(() => route.query.from === 'history' ? '返回我的行程' : '返回首页')
 const tripPlan = ref<TripPlan | null>(null)
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')

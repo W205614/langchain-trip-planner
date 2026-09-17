@@ -57,7 +57,7 @@ public class AssistantController {
     if(mode.equals("research")){
       String city=body.path("city").asText("");
       Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
-      if(activeTrip==null)throw new ApiException(422,"请从历史行程中发起攻略问答");
+      if(activeTrip==null)throw new ApiException(422,"请从我的行程中发起攻略问答");
       String context="";
       var trip=history.owned(uid,activeTrip);
       if(trip==null)throw new ApiException(404,"行程不存在");
@@ -89,7 +89,7 @@ public class AssistantController {
     if(content.isBlank()||content.length()>500||!"research".equals(mode))
       throw new ApiException(422,"流式接口仅支持攻略问答");
     Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
-    if(activeTrip==null)throw new ApiException(422,"请从历史行程中发起攻略问答");
+    if(activeTrip==null)throw new ApiException(422,"请从我的行程中发起攻略问答");
     var trip=history.owned(uid,activeTrip);
     if(trip==null)throw new ApiException(404,"行程不存在");
     String city=body.path("city").asText(""),context=tripContext(trip);

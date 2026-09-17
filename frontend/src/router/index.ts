@@ -11,7 +11,7 @@ import { isAuthenticated } from '../services/auth'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/tasks', component: () => import('../views/Tasks.vue'), meta: { requiresAuth: true } },
+    { path: '/tasks', redirect: { path: '/history', query: { tab: 'tasks' } }, meta: { requiresAuth: true } },
     { path: '/explore', component: () => import('../views/Explore.vue') },
     { path: '/favorites', redirect: '/explore' },
     { path: '/trips/new', redirect: '/' },

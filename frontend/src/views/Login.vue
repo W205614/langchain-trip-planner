@@ -11,7 +11,7 @@
         <div class="brand-badge">🔐 用户登录</div>
         <h1 class="login-title">{{ isRegister ? '注册账号' : '欢迎回来' }}</h1>
         <p class="login-subtitle">
-          {{ isRegister ? '创建账号后即可查看和管理你的历史行程' : '登录后可查看和管理你的历史行程' }}
+          {{ isRegister ? '创建账号后即可查看和管理你的行程' : '登录后可查看和管理你的行程' }}
         </p>
       </div>
 

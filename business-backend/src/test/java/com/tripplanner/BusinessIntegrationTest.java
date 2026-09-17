@@ -254,6 +254,29 @@ class BusinessIntegrationTest {
     return http.send(b.build(), HttpResponse.BodyHandlers.ofString());
   }
 
+  @Test
+  void actionableTaskListExcludesPersistedResultsAndDrafts() {
+    long uid = userId();
+    for (String status :
+        List.of("queued", "running", "failed", "cancelled", "succeeded", "needs_attention")) {
+      jdbc.update(
+          "INSERT INTO trip_tasks(id,user_id,idempotency_key,fingerprint,request_json,request_id,deadline_at,status)"
+              + " VALUES (?,?,?,?,?,'test',timezone('UTC',now())+interval '5 minutes',?)",
+          UUID.randomUUID().toString(),
+          uid,
+          UUID.randomUUID().toString(),
+          UUID.randomUUID().toString(),
+          "{\"city\":\"北京\"}",
+          status);
+    }
+    assertEquals(4, taskMapper.actionableCount(uid));
+    assertEquals(
+        Set.of("queued", "running", "failed", "cancelled"),
+        taskMapper.actionableList(uid, 0, 20).stream()
+            .map(row -> row.get("status").toString())
+            .collect(java.util.stream.Collectors.toSet()));
+  }
+
   HttpResponse<String> request(String method, String path, String body, String token, Map<String,String> headers) throws Exception {
     var b=HttpRequest.newBuilder(URI.create("http://localhost:"+port+path)).header("Content-Type","application/json");
     if(token!=null)b.header("Authorization","Bearer "+token); headers.forEach(b::header);

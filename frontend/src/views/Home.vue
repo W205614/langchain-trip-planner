@@ -11,10 +11,9 @@
     <div class="top-actions">
       <template v-if="isLoggedIn">
         <span class="user-badge">👤 {{ username }}</span>
-        <a-button class="history-entry" @click="router.push('/tasks')">我的任务</a-button>
         <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
         <a-button class="history-entry" @click="goHistory">
-          ✨ 历史行程 · 问答与修改
+          ✨ 我的行程 · 问答与修改
         </a-button>
         <a-button class="history-entry" @click="goKnowledge">
           📚 投稿攻略
@@ -48,7 +47,7 @@
       <a-alert v-if="capabilities.agent==='unavailable'" type="warning" show-icon class="capability-alert"
         message="Agent 暂不可用，行程创建、景点发现、攻略问答和智能修改暂时无法执行。" />
       <a-alert v-else-if="capabilities.rag==='disabled'||capabilities.rag==='waiting_for_agent'" type="info" show-icon class="capability-alert"
-        message="攻略资料检索暂不可用；行程生成仍可使用，但历史行程问答可能缺少资料来源。" />
+        message="攻略资料检索暂不可用；行程生成仍可使用，但我的行程问答可能缺少资料来源。" />
       <!-- 热门目的地快捷选择 -->
       <div class="hot-cities">
         <span class="hot-label">热门目的地</span>
@@ -512,7 +511,7 @@ const handleSubmit = async () => {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* 历史行程入口按钮 */
+/* 我的行程入口按钮 */
 .history-entry {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.92);

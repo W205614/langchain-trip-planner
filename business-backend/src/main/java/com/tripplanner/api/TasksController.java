@@ -54,11 +54,16 @@ public class TasksController {
   public Object list(
       HttpServletRequest req,
       @RequestParam(defaultValue = "1") int page,
-      @RequestParam(defaultValue = "20") int page_size) {
+      @RequestParam(defaultValue = "20") int page_size,
+      @RequestParam(defaultValue = "false") boolean actionable) {
     if (page < 1 || page_size < 1 || page_size > 50) throw new ApiException(422, "分页参数无效");
     long uid = UsersController.uid(req);
+    int offset = (page - 1) * page_size;
     var rows =
-        mapper.list(uid, (page - 1) * page_size, page_size).stream()
+        (actionable
+                ? mapper.actionableList(uid, offset, page_size)
+                : mapper.list(uid, offset, page_size))
+            .stream()
             .map(
                 row -> {
                   var r = new LinkedHashMap<String, Object>();
@@ -71,7 +76,8 @@ public class TasksController {
                   return r;
                 })
             .toList();
-    return Map.of("total", mapper.count(uid), "data", rows);
+    return Map.of(
+        "total", actionable ? mapper.actionableCount(uid) : mapper.count(uid), "data", rows);
   }
 
   @GetMapping("/tasks/{id}/events")

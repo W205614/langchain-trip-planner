@@ -43,7 +43,7 @@ test('login and task recovery preserve the saved result and quality', async ({ p
   await expect(page.getByText('当前修改尚未保存到服务器，请重新保存或从历史记录加载。')).toBeVisible()
 })
 
-test('task list survives reload and logout revokes the server session', async ({ page, request }) => {
+test('saved draft survives in my trips and logout revokes the server session', async ({ page, request }) => {
   const username = `tasks_${Date.now()}`
   const registration = await request.post('/api/auth/register', { data: { username, password: 'browser123' } })
   const token = (await registration.json()).access_token
@@ -57,11 +57,16 @@ test('task list survives reload and logout revokes the server session', async ({
     transportation: '步行', accommodation: '酒店', preferences: [], free_text_input: '',
     constraints: { must_visit: ['不可满足的测试景点'], daily_minutes: 400 } } })
   expect(created.status()).toBe(202)
-  await page.goto('/tasks')
-  await expect(page.getByText('我的规划任务', { exact: true })).toBeVisible()
-  await expect(page.getByRole('button', { name: '查看结果' })).toBeVisible({ timeout: 30000 })
+  const id = (await created.json()).data.id
+  await expect.poll(async () => {
+    const state = await request.get(`/api/trip/tasks/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+    return (await state.json()).data.status
+  }).toBe('needs_attention')
+  await page.goto('/history')
+  await expect(page.getByText('我的行程', { exact: true })).toBeVisible()
+  await expect(page.getByText('未完成草稿', { exact: true })).toBeVisible()
   await page.reload()
-  await page.getByRole('button', { name: '查看结果' }).click()
+  await page.getByRole('button', { name: '👁️ 查看行程' }).click()
   await expect(page.getByText(/未满足必去景点：不可满足的测试景点/)).toBeVisible()
   await page.reload()
   await expect(page.getByText(/未满足必去景点：不可满足的测试景点/)).toBeVisible()

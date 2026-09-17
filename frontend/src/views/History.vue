@@ -7,9 +7,9 @@
       </a-button>
       <div class="header-title">
         <span class="header-icon">✨</span>
-        <div><h1>我的 AI 行程</h1><p>列表中查看与问攻略，进入具体行程后再按日修改</p></div>
+        <div><h1>我的行程</h1><p>集中查看行程结果、任务状态、攻略问答与修改入口</p></div>
       </div>
-      <div class="header-search">
+      <div v-if="activeTab === 'trips'" class="header-search">
         <a-input
           v-model:value="cityFilter"
           placeholder="按城市筛选"
@@ -22,74 +22,98 @@
       </div>
     </div>
 
-    <!-- 加载中 -->
-    <div v-if="loading" class="loading-wrapper">
-      <a-spin size="large" tip="加载历史记录中..." />
-    </div>
+    <a-tabs v-model:activeKey="activeTab" class="workspace-tabs" centered @change="handleTabChange">
+      <a-tab-pane key="trips" tab="行程记录">
+        <div v-if="loading" class="loading-wrapper">
+          <a-spin size="large" tip="加载行程记录中..." />
+        </div>
 
-    <!-- 列表 -->
-    <div v-else-if="records.length > 0" class="record-list">
-      <a-card
-        v-for="record in records"
-        :key="record.id"
-        class="record-card"
-        :bordered="false"
-      >
-        <div class="record-main">
-          <div class="record-city">
-            <span class="city-name">{{ record.city }}</span>
-            <a-tag>行程 #{{ record.id }}</a-tag>
-            <a-tag color="blue">{{ record.travel_days }} 天</a-tag>
-            <a-tag v-if="record.outcome === 'draft'" color="orange">未完成草稿</a-tag>
-          </div>
-          <div class="record-meta">
-            <span class="meta-item">📅 {{ record.start_date }} ~ {{ record.end_date }}</span>
-            <span class="meta-item">🎯 {{ record.attraction_count }} 个景点</span>
-            <span class="meta-item" v-if="record.budget_total">💰 ¥{{ record.budget_total.toLocaleString() }}</span>
-            <span class="meta-item">🕐 {{ record.created_at }}</span>
-          </div>
-          <div class="record-prefs" v-if="record.preferences && record.preferences.length">
-            <a-tag
-              v-for="p in record.preferences"
-              :key="p"
-              class="pref-tag"
-            >{{ p }}</a-tag>
+        <div v-else-if="records.length > 0" class="record-list">
+          <a-card
+            v-for="record in records"
+            :key="record.id"
+            class="record-card"
+            :bordered="false"
+          >
+            <div class="record-main">
+              <div class="record-city">
+                <span class="city-name">{{ record.city }}</span>
+                <a-tag>行程 #{{ record.id }}</a-tag>
+                <a-tag color="blue">{{ record.travel_days }} 天</a-tag>
+                <a-tag v-if="record.outcome === 'draft'" color="orange">未完成草稿</a-tag>
+              </div>
+              <div class="record-meta">
+                <span class="meta-item">📅 {{ record.start_date }} ~ {{ record.end_date }}</span>
+                <span class="meta-item">🎯 {{ record.attraction_count }} 个景点</span>
+                <span class="meta-item" v-if="record.budget_total">💰 ¥{{ record.budget_total.toLocaleString() }}</span>
+                <span class="meta-item">🕐 {{ record.created_at }}</span>
+              </div>
+              <div class="record-prefs" v-if="record.preferences && record.preferences.length">
+                <a-tag v-for="p in record.preferences" :key="p" class="pref-tag">{{ p }}</a-tag>
+              </div>
+            </div>
+            <div class="record-actions">
+              <a-button @click="openAgent(record)">💬 问攻略</a-button>
+              <a-button v-if="record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
+              <a-button type="primary" @click="viewRecord(record.id)">👁️ 查看行程</a-button>
+              <a-popconfirm title="确定删除这条历史记录吗?" @confirm="removeRecord(record.id)">
+                <a-button danger>🗑️ 删除</a-button>
+              </a-popconfirm>
+            </div>
+          </a-card>
+
+          <div class="pagination-wrapper" v-if="total > pageSize">
+            <a-pagination
+              v-model:current="page"
+              :total="total"
+              :page-size="pageSize"
+              :show-total="(t: number) => `共 ${t} 条行程`"
+              @change="loadRecords"
+            />
           </div>
         </div>
-        <div class="record-actions">
-          <a-button @click="openAgent(record)">💬 问攻略</a-button>
-          <a-button v-if="record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
-          <a-button type="primary" @click="viewRecord(record.id)">
-            👁️ 查看行程
-          </a-button>
-          <a-popconfirm title="确定删除这条历史记录吗?" @confirm="removeRecord(record.id)">
-            <a-button danger>🗑️ 删除</a-button>
-          </a-popconfirm>
+
+        <a-empty v-else class="empty-wrapper">
+          <template #image><div style="font-size: 64px;">🗺️</div></template>
+          <template #description><span>还没有行程记录，快去生成你的第一个旅行计划吧</span></template>
+          <a-button type="primary" @click="goBack">返回首页创建行程</a-button>
+        </a-empty>
+      </a-tab-pane>
+
+      <a-tab-pane key="tasks" tab="任务状态">
+        <div class="task-panel">
+          <a-alert
+            type="info"
+            show-icon
+            message="这里只显示需要操作的任务"
+            description="排队中和生成中的任务可以取消；失败或已取消的任务可以重新提交。成功结果和未完成草稿统一在“行程记录”中查看。"
+          />
+          <div class="task-toolbar">
+            <a-button :loading="taskLoading" @click="loadTasks()">刷新任务状态</a-button>
+          </div>
+          <a-alert v-if="taskError" type="error" :message="taskError" show-icon />
+          <div v-if="taskLoading && !tasks.length" class="loading-wrapper">
+            <a-spin size="large" tip="加载任务状态中..." />
+          </div>
+          <a-list v-else-if="tasks.length" :data-source="tasks" class="task-list">
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <a-list-item-meta :title="item.city" :description="`${item.message || ''} ${item.error_code || ''}`.trim()" />
+                <template #actions>
+                  <a-tag :color="taskColors[item.status] || 'default'">{{ taskLabels[item.status] || item.status }}</a-tag>
+                  <a-button v-if="['queued', 'running'].includes(item.status)" :disabled="taskBusy === item.id" @click="cancelTaskItem(item.id)">取消任务</a-button>
+                  <a-button v-if="['failed', 'cancelled'].includes(item.status)" type="primary" :disabled="taskBusy === item.id" @click="retryTaskItem(item.id)">重新提交</a-button>
+                </template>
+              </a-list-item>
+            </template>
+          </a-list>
+          <a-empty v-else class="task-empty" description="当前没有进行中、失败或已取消的任务" />
+          <div class="pagination-wrapper" v-if="taskTotal > taskPageSize">
+            <a-pagination v-model:current="taskPage" :total="taskTotal" :page-size="taskPageSize" :show-size-changer="false" @change="loadTasks()" />
+          </div>
         </div>
-      </a-card>
-
-      <!-- 分页 -->
-      <div class="pagination-wrapper" v-if="total > pageSize">
-        <a-pagination
-          v-model:current="page"
-          :total="total"
-          :page-size="pageSize"
-          :show-total="(t: number) => `共 ${t} 条记录`"
-          @change="loadRecords"
-        />
-      </div>
-    </div>
-
-    <!-- 空状态 -->
-    <a-empty v-else class="empty-wrapper">
-      <template #image>
-        <div style="font-size: 64px;">🗺️</div>
-      </template>
-      <template #description>
-        <span>还没有历史行程记录，快去生成你的第一个旅行计划吧</span>
-      </template>
-      <a-button type="primary" @click="goBack">返回首页创建行程</a-button>
-    </a-empty>
+      </a-tab-pane>
+    </a-tabs>
 
     <a-modal v-model:open="agentOpen" :footer="null" width="720px" @cancel="resetAgent">
       <template #title>{{ activeRecord?.city }}行程 · 攻略问答</template>
@@ -112,12 +136,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, streamAssistantMessage, reverifyTrip } from '@/services/api'
+import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, streamAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask } from '@/services/api'
 
 const router = useRouter()
+const route = useRoute()
+const activeTab = ref(route.query.tab === 'tasks' ? 'tasks' : 'trips')
 
 const records = ref<any[]>([])
 const total = ref(0)
@@ -135,11 +161,77 @@ const agentError = ref('')
 const agentProgress = ref('')
 const agentSending = ref(false)
 const verifyingId = ref(0)
+const tasks = ref<any[]>([])
+const taskTotal = ref(0)
+const taskPage = ref(1)
+const taskPageSize = 20
+const taskLoading = ref(false)
+const taskError = ref('')
+const taskBusy = ref('')
+const taskKeys = new Map<string, string>()
+const taskLabels: Record<string, string> = { queued: '排队中', running: '生成中', failed: '失败', cancelled: '已取消' }
+const taskColors: Record<string, string> = { queued: 'blue', running: 'processing', failed: 'red', cancelled: 'default' }
 const quickPrompts = ['这份行程有哪些预约事项？', '怎样减少排队和步行？', '有哪些容易忽略的注意事项？']
+let taskTimer: ReturnType<typeof setInterval> | undefined
 
 onMounted(() => {
   loadRecords()
+  if (activeTab.value === 'tasks') loadTasks()
+  taskTimer = setInterval(() => {
+    if (activeTab.value === 'tasks' && tasks.value.some(item => ['queued', 'running'].includes(item.status))) loadTasks()
+  }, 5000)
 })
+
+onUnmounted(() => {
+  if (taskTimer) clearInterval(taskTimer)
+})
+
+const handleTabChange = (key: string) => {
+  activeTab.value = key
+  router.replace({ path: '/history', query: key === 'tasks' ? { tab: 'tasks' } : {} })
+  if (key === 'tasks') loadTasks()
+}
+
+const loadTasks = async () => {
+  if (taskLoading.value) return
+  taskLoading.value = true
+  taskError.value = ''
+  try {
+    const result = await fetchTasks(taskPage.value, true)
+    tasks.value = result.data || []
+    taskTotal.value = result.total || 0
+  } catch (error: any) {
+    taskError.value = error.response?.data?.message || '读取任务状态失败'
+  } finally {
+    taskLoading.value = false
+  }
+}
+
+const cancelTaskItem = async (id: string) => {
+  taskBusy.value = id
+  try {
+    await cancelTask(id)
+    await loadTasks()
+  } catch (error: any) {
+    taskError.value = error.response?.data?.message || '取消失败，请重试'
+  } finally {
+    taskBusy.value = ''
+  }
+}
+
+const retryTaskItem = async (id: string) => {
+  taskBusy.value = id
+  if (!taskKeys.has(id)) taskKeys.set(id, crypto.randomUUID())
+  try {
+    await retryTask(id, taskKeys.get(id)!)
+    taskPage.value = 1
+    await loadTasks()
+  } catch (error: any) {
+    taskError.value = error.response?.data?.message || '重新提交失败，请重试'
+  } finally {
+    taskBusy.value = ''
+  }
+}
 
 const goBack = () => {
   router.push('/')
@@ -311,6 +403,35 @@ const removeRecord = async (id: number) => {
   font-size: 28px;
   color: #fff;
   text-shadow: 0 2px 12px rgba(139, 92, 246, 0.4);
+}
+
+.workspace-tabs {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.task-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.task-list {
+  padding: 4px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow: 0 12px 36px rgba(2, 6, 23, 0.25);
+}
+
+.task-empty {
+  padding: 54px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .header-title p { margin: 4px 0 0; color: #dbeafe; font-size: 13px; }
