@@ -15,6 +15,7 @@ public class HistoryController {
   private final HistoryMapper history;
   private final TaskService tasks;
   private final PlanRules rules;
+  private final TripLedgerService ledger;
   private final TransactionTemplate tx;
   private final JsonMapper json;
 
@@ -22,11 +23,13 @@ public class HistoryController {
       HistoryMapper history,
       TaskService tasks,
       PlanRules rules,
+      TripLedgerService ledger,
       TransactionTemplate tx,
       JsonMapper json) {
     this.history = history;
     this.tasks = tasks;
     this.rules = rules;
+    this.ledger = ledger;
     this.tx = tx;
     this.json = json;
   }
@@ -150,7 +153,8 @@ public class HistoryController {
     var quality = rules.finish(plan, request(row), null, false);
     ((tools.jackson.databind.node.ArrayNode) quality.path("data_gaps"))
         .add("user_edited_plan_not_externally_verified");
-    tx.executeWithoutResult(s -> save(uid, id, version, plan, quality));
+    tx.executeWithoutResult(
+        s -> save(uid, id, version, plan, quality, "user_edit", req.getHeader("X-Request-ID")));
     return Map.of(
         "success",
         true,
@@ -170,7 +174,14 @@ public class HistoryController {
         true);
   }
 
-  private void save(long uid, long id, int version, ObjectNode plan, ObjectNode quality) {
+  private void save(
+      long uid,
+      long id,
+      int version,
+      ObjectNode plan,
+      ObjectNode quality,
+      String changeType,
+      String requestId) {
     if (history.update(
             Map.of(
                 "id",
@@ -186,17 +197,13 @@ public class HistoryController {
         != 1) throw new ApiException(409, "行程版本冲突，请重新加载", "VERSION_CONFLICT");
     history.outbox(
         id, uid, quality.path("outcome").asText("").equals("draft") ? "delete" : "upsert");
+    ledger.capture(uid, id, changeType, requestId);
   }
 
   @DeleteMapping("/{id}")
   public Object delete(HttpServletRequest req, @PathVariable long id) {
     long uid = UsersController.uid(req);
-    tx.executeWithoutResult(
-        s -> {
-          owned(uid, id);
-          history.outbox(id, uid, "delete");
-          history.delete(uid, id);
-        });
+    ledger.delete(uid, id, req.getHeader("X-Request-ID"));
     return Map.of("success", true, "message", "删除成功", "rag_sync_pending", true);
   }
 
@@ -259,9 +266,23 @@ public class HistoryController {
             throw new ApiException(409, "草稿已变更或不是改排草稿", "VERSION_CONFLICT");
           var plan = (ObjectNode) json.readTree(row.get("plan_json").toString());
           long target = parent.path("record_id").asLong(0);
-          save(uid, target, parent.path("version").asInt(0), plan, quality);
+          save(
+              uid,
+              target,
+              parent.path("version").asInt(0),
+              plan,
+              quality,
+              "draft_apply",
+              req.getHeader("X-Request-ID"));
           quality.put("applied_to", target);
-          save(uid, id, version, plan, quality);
+          save(
+              uid,
+              id,
+              version,
+              plan,
+              quality,
+              "draft_apply",
+              req.getHeader("X-Request-ID"));
           return Map.of("success", true, "id", target, "message", "已应用；未满足的要求仍保留为草稿提示");
         });
   }

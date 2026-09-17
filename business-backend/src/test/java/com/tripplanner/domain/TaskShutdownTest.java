@@ -24,6 +24,8 @@ class TaskShutdownTest {
             mock(PlanRules.class),
             mock(AmapGateway.class),
             JsonMapper.builder().build(),
+            mock(TripLedgerService.class),
+            mock(BusinessMetrics.class),
             1,
             300,
             32,

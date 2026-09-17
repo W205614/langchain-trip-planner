@@ -16,13 +16,16 @@ public class KnowledgeService {
   private final KnowledgeMapper documents;
   private final TransactionTemplate tx;
   private final Path uploads;
+  private final BusinessAuditService audit;
 
   public KnowledgeService(
       KnowledgeMapper documents,
       TransactionTemplate tx,
+      BusinessAuditService audit,
       @Value("${UPLOAD_DIR:../backend/data/knowledge_uploads}") String uploads) {
     this.documents = documents;
     this.tx = tx;
+    this.audit = audit;
     this.uploads = Path.of(uploads).toAbsolutePath().normalize();
   }
 
@@ -130,7 +133,7 @@ public class KnowledgeService {
     return b.length >= prefix.length && Arrays.equals(Arrays.copyOf(b, prefix.length), prefix);
   }
 
-  public Object review(long id, long uid, String action, ObjectNode body) {
+  public Object review(long id, long uid, String action, ObjectNode body, String requestId) {
     return tx.execute(
         s -> {
           var row = get(id);
@@ -192,6 +195,14 @@ public class KnowledgeService {
           row.put("next_version", next);
           if (documents.update(row) != 1) throw new ApiException(409, "资料版本冲突");
           if (enqueue) documents.enqueue(id, next, action.equals("approve") ? "parse" : action);
+          audit.success(
+              uid,
+              "knowledge." + action,
+              "knowledge_document",
+              id,
+              next,
+              requestId,
+              Map.of("status", row.get("status").toString()));
           return Map.of("success", true, "data", serialize(get(id)), "message", "资料状态已更新");
         });
   }

@@ -14,6 +14,7 @@
 - 🧭 **确定性质量分类**：Agent 生成候选草稿，Java 使用独立高德 REST 完成 POI、路线、步行、时间和预算校验；区分完整、降级和未完成草稿。
 - 🗺️ **地图与图片**：高德地图展示路线；图片按 POI ID 获取，无独立实拍时仅使用经过校验且明确标注的景区参考图，无可信来源则显示占位提示。
 - ✏️ **行程编辑**：添加、删除、调整景点，局部改排；版本冲突不会静默覆盖已有修改，草稿需要明确确认后应用。
+- 🧾 **版本与审计**：创建、编辑、核验、改排、确认和恢复都会生成不可变版本；关键业务动作保存脱敏审计事件，删除行程会同步撤销分享并解除会话关联。
 - 🧠 **RAG 检索**：Chroma 管理城市攻略和个人历史向量；Java 回查资料所有者、版本、发布状态和草稿状态，不满足可见性要求的资料不进入上下文。
 - 📄 **图文资料审核**：PDF／图片投稿、解析、人工复核、版本绑定发布；解析成功不等于自动公开。
 - 📚 **历史与偏好**：账号登录、历史分页与筛选、用户主动保存和删除偏好；不同账号的数据隔离。
@@ -37,7 +38,7 @@
 
 | 部分 | 技术 | 职责 |
 |---|---|---|
-| Java 业务后端 | Java 21、Spring Boot 4.0.3、Spring Security、MyBatis Starter 4.0.0、Flyway | 用户、业务 API、任务、版本、POI/路线最终核验、资料审核、事务与 outbox |
+| Java 业务后端 | Java 21、Spring Boot 4.0.3、Spring Security、MyBatis Starter 4.0.0、Flyway、Actuator、Micrometer | 用户、业务 API、任务、版本审计、POI/路线最终核验、资料审核、事务与 outbox |
 | Python Agent | Python 3.11、FastAPI、LangChain、LangGraph | 内部执行协议、模型草稿、高德 MCP 候选、检索、解析及向量写入 |
 | 存储 | PostgreSQL 17.6、Chroma、本地持久目录 | 业务数据、向量索引、上传文件及操作账本 |
 | 前端 | Vue 3、TypeScript、Vite、Ant Design Vue、高德 JS API | 交互、SSE、地图、编辑与导出 |
@@ -68,7 +69,7 @@ Python → Java 内部回查：资料可见性、原文件、重建快照与变�
 - **Java 负责业务事实与状态**：鉴权、历史版本、任务生命周期、POI 规范化、路线事实、确定性约束、最终状态和事务提交。
 - **Python 负责 Agent 能力**：返回结构化草稿、可信候选、无网络预检、流式问答、进度、用量和降级信息；不写业务表，也不审批最终业务结果。
 - **只做一次最终审批**：Python 不查询路线；Java 并发预取唯一线路、复用短时缓存后执行一次最终规则校验，避免两端重复规划。
-- **内部接口不对公网开放**：独立服务密钥，固定地址；Nginx 不代理 `/internal/*` 或 `/metrics`，Agent 不发布宿主机端口。
+- **内部接口不对公网开放**：独立服务密钥，固定地址；Nginx 不代理 `/internal/*`、`/metrics` 或 `/actuator/*`，Agent 不发布宿主机端口。
 - **四容器属于一个项目组**：`langchain-trip-planner` 下保留 `frontend / backend / agent / postgres`，不把数据库与业务进程强塞进同一个容器。
 
 ## 📁 项目结构
@@ -135,6 +136,8 @@ docker compose ps
 
 访问 **http://localhost:8080**。Flyway 自动初始化空业务库；不自动接管或 baseline 未知旧库。首次注册账号后可登录；审核管理员通过 `business.env` 的 `BOOTSTRAP_ADMIN_USERNAME` 显式指定已存在账号，重启 Java 生效。
 
+已有 V1–V3 数据的环境升级到 V4 前，必须先停止 `frontend / backend / agent`，使用 `backup_java_deployment.py` 在仓库外生成完整备份，并执行[迁移手册](docs/operations/java-migration.md)中的孤儿数据与非法状态检查。V4 不会自动删除或改绑历史数据；检查不通过时 Flyway 会终止启动。完成数据所有权确认后，再运行 `prepare_java_deployment.py --upgrade-existing` 和上述 Compose 启动命令。`rag_sync_jobs.record_id` 特意不设置外键，以便删除行程后的索引墓碑继续完成。
+
 ### 3. 常用操作
 
 ```powershell
@@ -191,6 +194,10 @@ Agent 通过高德 MCP 获取候选并让模型按日返回结构化草稿；景
 
 Java 使用有界执行池、数据库条件更新和幂等键。最终状态、历史保存和 outbox 同事务提交；保存前校验执行编号、截止时间、状态与原行程版本。断流不自动再次调用模型；重启中的任务标为 `PROCESS_INTERRUPTED`，用户可显式重试。
 
+### 数据完整性、版本与审计
+
+Flyway 在增加外键和状态约束前先检查孤儿数据与非法状态，发现历史脏数据就拒绝迁移，不会静默删除。行程的创建、编辑、核验、Agent 改排、助手确认和旧版恢复都会在业务事务内写入不可变版本；恢复旧版会生成一个新版本，仍需当前 `If-Match`。删除行程会在同一事务撤销公开分享、解除助手会话关联、写入 RAG 删除墓碑并清理含完整计划的版本快照，脱敏审计事件只保留资源、动作、版本、结果和请求 ID。
+
 ### RAG 与资料发布
 
 Java 管理原文件、审核、业务版本和索引作业；Python 使用稳定向量 ID、版本水位和删除墓碑。检索后回查 Java，可见性校验失败时排除受影响资料并降级。重建从 Java 获取一致性快照，在新集合验证后核对变更序号再切换。
@@ -214,7 +221,7 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 |---|---|
 | `/api/auth/*`、`/api/preferences/me` | 登录、注销、身份与偏好 |
 | `/api/trip/tasks*`、`/api/trip/plan*` | 任务、可操作状态筛选、兼容规划入口与 SSE |
-| `/api/history*`、`/api/trips*` | 历史行程、版本化编辑与重新核验；旧手工接口仅保留兼容，不再提供前端入口 |
+| `/api/history*`、`/api/trips*` | 历史行程、乐观锁编辑、重新核验、版本查询与旧版恢复；旧手工接口仅保留兼容，不再提供前端入口 |
 | `/api/favorites*` | 旧收藏兼容接口；不再作为当前产品流程入口 |
 | `/api/trips/{id}/shares`、`/api/shared-trips/{token}` | 不可变只读分享、撤销和复制 |
 | `/api/assistant/conversations*` | 历史行程内的 Agent 问答与改排会话；改排复用持久任务 |
@@ -222,7 +229,7 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 | `/api/map/*`、`/api/poi/*`、`/api/research/*` | 地图、图片与资料研究 |
 | `/health`、`/readyz`、`/api/capabilities` | 存活、业务就绪与 Agent/MCP 分能力状态 |
 
-公开请求由 Java 处理；Python 仅提供 `/internal/v1`。Schema 与样例见 `contracts/internal-v1/`。内部 Prometheus 指标与告警规则位于 `deploy/`，日常四容器不默认启动额外监控栈；本地通知接收器仅用于验证，不是生产告警渠道。
+版本接口为 `GET /api/trips/{id}/versions`、`GET /api/trips/{id}/versions/{version}` 和带当前 `If-Match` 的 `POST /api/trips/{id}/restore`。公开请求由 Java 处理；Python 仅提供 `/internal/v1`。Schema 与样例见 `contracts/internal-v1/`。Java 内部指标由 Actuator/Micrometer 暴露在 `/actuator/prometheus`，Prometheus 只通过容器网络抓取；日常四容器不默认启动额外监控栈，本地通知接收器仅用于验证，不是生产告警渠道。
 
 ## ✅ 自动化验证
 
@@ -242,6 +249,8 @@ python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
 ```
 
 前端目录执行 `npm ci`、`npx playwright install chromium`、`npx playwright test`。验证结束后运行 `docker compose -p trip-validation -f docker-compose.validation.yml down`，不常驻第二套项目。CI 还验证任务中断、取消后迟到及告警恢复。
+
+V4 版本／审计改动的隔离验收基线为：Java 真实 PostgreSQL 测试 54 项、锁定依赖下 Python Agent 测试 205 项、HTTP 业务场景 20 项、Playwright 19 项全部通过；同时通过 Prometheus 规则、数据库恢复及 Agent 断联／迟到结果故障演练。这些结果证明当前固定场景和工程契约，不代表生产 SLA、吞吐或真实用户效果。
 
 旧 Python 业务单测已由 Java 集成测试与公开接口验收承接；Agent 保留模型、MCP、RAG、解析、图片、协议及冻结场景测试。**清理前后测试数不能直接相加或比较为覆盖率。** 历史真实样本、迁移数据核对和当前清理证据见 [验收记录](docs/evidence/java-migration/README.md)。不以离线替身测试声称真实模型效果、实时事实准确率或生产性能。
 

@@ -21,7 +21,9 @@ def client(monkeypatch, tmp_path):
 def test_service_auth_and_public_routes(client):
     assert client.post("/internal/v1/executions", json={}).status_code == 401
     assert client.get("/api/history").status_code == 404
-    assert client.get("/readyz").status_code == 200
+    response = client.get("/readyz", headers={"X-Request-ID": "trace-test"})
+    assert response.status_code == 200
+    assert response.headers["X-Request-ID"] == "trace-test"
 
 
 def test_cancel_unknown_is_idempotent(client):

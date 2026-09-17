@@ -19,4 +19,7 @@ public interface ShareMapper {
 
   @Update("UPDATE trip_shares SET revoked_at=timezone('UTC',now()) WHERE id=#{id} AND owner_id=#{uid} AND record_id=#{record} AND revoked_at IS NULL")
   int revoke(@Param("uid") long uid, @Param("record") long record, @Param("id") long id);
+
+  @Update("UPDATE trip_shares SET revoked_at=timezone('UTC',now()) WHERE owner_id=#{uid} AND record_id=#{record} AND revoked_at IS NULL")
+  int revokeAll(@Param("uid") long uid, @Param("record") long record);
 }

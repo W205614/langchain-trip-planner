@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.*;
 import java.time.Duration;
 import java.util.function.BiConsumer;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
@@ -31,12 +32,19 @@ public class AgentClient {
   }
 
   private HttpRequest request(String path, Object body, Duration timeout) {
-    return HttpRequest.newBuilder(URI.create(base + "/internal/v1" + path))
+    var builder = HttpRequest.newBuilder(URI.create(base + "/internal/v1" + path))
         .timeout(timeout)
         .header("X-Service-Key", key)
         .header("Content-Type", "application/json")
-        .POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body)))
-        .build();
+        .POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body)));
+    String requestId = MDC.get("request_id");
+    if ((requestId == null || requestId.isBlank()) && body instanceof JsonNode node)
+      requestId = node.path("request_id").asText("");
+    if ((requestId == null || requestId.isBlank()) && body instanceof java.util.Map<?, ?> values)
+      requestId = java.util.Objects.toString(values.get("request_id"), "");
+    if (requestId != null && requestId.matches("[A-Za-z0-9_-]{1,64}"))
+      builder.header("X-Request-ID", requestId);
+    return builder.build();
   }
 
   public JsonNode post(String path, Object body) {

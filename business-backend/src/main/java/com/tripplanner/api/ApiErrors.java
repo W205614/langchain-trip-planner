@@ -37,7 +37,8 @@ public class ApiErrors {
     MissingRequestHeaderException.class,
     HttpMessageNotReadableException.class,
     org.springframework.web.bind.MissingServletRequestParameterException.class,
-    org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class
+    org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,
+    jakarta.validation.ConstraintViolationException.class
   })
   ResponseEntity<?> validation(Exception ex) {
     return business(new ApiException(422, "请求参数无效"));

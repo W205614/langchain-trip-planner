@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.UUID;
+import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -23,13 +24,15 @@ public class RequestIdentity extends OncePerRequestFilter {
             : UUID.randomUUID().toString();
     req.setAttribute("request_id", id);
     res.setHeader("X-Request-ID", id);
-    chain.doFilter(
-        new HttpServletRequestWrapper(req) {
-          @Override
-          public String getHeader(String name) {
-            return "X-Request-ID".equalsIgnoreCase(name) ? id : super.getHeader(name);
-          }
-        },
-        res);
+    try (var ignored = MDC.putCloseable("request_id", id)) {
+      chain.doFilter(
+          new HttpServletRequestWrapper(req) {
+            @Override
+            public String getHeader(String name) {
+              return "X-Request-ID".equalsIgnoreCase(name) ? id : super.getHeader(name);
+            }
+          },
+          res);
+    }
   }
 }

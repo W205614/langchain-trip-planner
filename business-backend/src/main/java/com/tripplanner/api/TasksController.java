@@ -1,6 +1,7 @@
 package com.tripplanner.api;
 
 import com.tripplanner.domain.TaskService;
+import com.tripplanner.domain.BusinessTypes;
 import com.tripplanner.persistence.TaskMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -98,14 +99,16 @@ public class TasksController {
             String previous = "";
             while (!closed.get()) {
               var state = service.snapshot(uid, id);
-              String status = state.path("status").asText("");
-              if (Set.of("succeeded", "needs_attention").contains(status)) {
+              var status = BusinessTypes.TaskStatus.fromWire(state.path("status").asText(""));
+              if (status == BusinessTypes.TaskStatus.SUCCEEDED
+                  || status == BusinessTypes.TaskStatus.NEEDS_ATTENTION) {
                 var result = (ObjectNode) state.path("result");
                 result.put("cached", cached);
                 emitter.send(SseEmitter.event().name("complete").data(result));
                 break;
               }
-              if (Set.of("failed", "cancelled").contains(status)) {
+              if (status == BusinessTypes.TaskStatus.FAILED
+                  || status == BusinessTypes.TaskStatus.CANCELLED) {
                 emitter.send(SseEmitter.event().name("error").data(state));
                 break;
               }
@@ -146,13 +149,15 @@ public class TasksController {
     String id = created.path("data").path("id").asText("");
     while (true) {
       var state = service.snapshot(uid, id);
-      String status = state.path("status").asText("");
-      if (Set.of("succeeded", "needs_attention").contains(status)) {
+      var status = BusinessTypes.TaskStatus.fromWire(state.path("status").asText(""));
+      if (status == BusinessTypes.TaskStatus.SUCCEEDED
+          || status == BusinessTypes.TaskStatus.NEEDS_ATTENTION) {
         var result = (ObjectNode) state.path("result");
         result.set("cached", created.path("cached"));
         return result;
       }
-      if (Set.of("failed", "cancelled").contains(status))
+      if (status == BusinessTypes.TaskStatus.FAILED
+          || status == BusinessTypes.TaskStatus.CANCELLED)
         throw new ApiException(
             state.path("error_code").asText("").equals("TASK_TIMEOUT") ? 504 : 500,
             state.path("message").asText(""),

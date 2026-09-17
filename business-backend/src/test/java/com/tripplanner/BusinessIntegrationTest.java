@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 
 import com.tripplanner.agent.AgentClient;
 import com.tripplanner.domain.AmapGateway;
+import com.tripplanner.domain.BusinessMetrics;
+import com.tripplanner.domain.TripLedgerService;
 import com.tripplanner.persistence.*;
 import java.net.URI;
 import java.net.http.*;
@@ -41,6 +43,11 @@ class BusinessIntegrationTest {
   @Autowired JsonMapper json;
   @Autowired com.tripplanner.domain.TaskService tasks;
   @Autowired TaskMapper taskMapper;
+  @Autowired TripVersionMapper tripVersions;
+  @Autowired TripLedgerService ledger;
+  @Autowired ShareMapper shares;
+  @Autowired AssistantMapper conversations;
+  @Autowired BusinessMetrics businessMetrics;
   @MockitoBean AgentClient agent;
   @MockitoBean AmapGateway amap;
   final HttpClient http = HttpClient.newHttpClient();
@@ -226,7 +233,8 @@ class BusinessIntegrationTest {
                 "message",
                 "late")));
     jdbc.update(
-        "UPDATE trip_tasks SET deadline_at=timezone('UTC',now())-interval '1 second' WHERE id=?",
+        "UPDATE trip_tasks SET created_at=timezone('UTC',now())-interval '10 seconds',"
+            + " deadline_at=timezone('UTC',now())-interval '1 second' WHERE id=?",
         id);
     assertEquals(
         0,
@@ -305,7 +313,15 @@ class BusinessIntegrationTest {
     manual.putArray("days").addObject().putArray("poi_ids").add("fixture-beijing-1");
     var created=request("/api/trips",manual.toString(),owner); assertEquals(200,created.statusCode(),created.body());
     long id=json.readTree(created.body()).path("id").asLong();
+    var versions=request("/api/trips/"+id+"/versions",null,owner);
+    assertEquals(200,versions.statusCode(),versions.body());
+    assertEquals(1,json.readTree(versions.body()).path("total").asInt());
+    var restored=request("POST","/api/trips/"+id+"/restore","{\"source_version\":1}",owner,Map.of("If-Match","1"));
+    assertEquals(200,restored.statusCode(),restored.body());
+    assertEquals(2,json.readTree(restored.body()).path("version").asInt());
+    assertEquals(200,request("/api/trips/"+id+"/versions/1",null,owner).statusCode());
     assertEquals(404,request("/api/trips/"+id,null,other).statusCode());
+    assertEquals(404,request("/api/trips/"+id+"/versions",null,other).statusCode());
     var share=request("/api/trips/"+id+"/shares","{\"expires_days\":7}",owner);
     assertEquals(200,share.statusCode(),share.body()); String token=json.readTree(share.body()).path("token").asText();
     assertEquals(200,request("/api/shared-trips/"+token,null,null).statusCode());
@@ -334,6 +350,7 @@ class BusinessIntegrationTest {
 
   @Test
   void historyAndOutboxRollbackTogether() {
+    long uid = userId();
     long before = jdbc.queryForObject("SELECT count(*) FROM trip_records", Long.class);
     long jobs = jdbc.queryForObject("SELECT count(*) FROM rag_sync_jobs", Long.class);
     assertThrows(
@@ -345,7 +362,7 @@ class BusinessIntegrationTest {
                       new HashMap<String, Object>(
                           Map.of(
                               "user_id",
-                              42,
+                              uid,
                               "city",
                               "北京",
                               "start_date",
@@ -366,10 +383,135 @@ class BusinessIntegrationTest {
                               "{}"));
                   row.put("quality_json", "{}");
                   history.insert(row);
-                  history.outbox(((Number) row.get("id")).longValue(), 42, "upsert");
+                  history.outbox(((Number) row.get("id")).longValue(), uid, "upsert");
                   throw new IllegalStateException("injected transaction failure");
                 }));
     assertEquals(before, jdbc.queryForObject("SELECT count(*) FROM trip_records", Long.class));
     assertEquals(jobs, jdbc.queryForObject("SELECT count(*) FROM rag_sync_jobs", Long.class));
+  }
+
+  @Test
+  void immutableVersionsRestoreAsANewVersionAndRemainOwnerScoped() {
+    long uid = userId(), other = userId();
+    var row = new HashMap<String, Object>();
+    row.put("user_id", uid);
+    row.put("city", "北京");
+    row.put("start_date", "2026-10-01");
+    row.put("end_date", "2026-10-01");
+    row.put("travel_days", 1);
+    row.put("transportation", "步行");
+    row.put("accommodation", "经济");
+    row.put("preferences", "[]");
+    row.put("free_text_input", "");
+    row.put("plan_json", "{\"marker\":\"v1\",\"days\":[]}");
+    row.put("quality_json", "{\"outcome\":\"complete\"}");
+    row.put("title", "版本测试");
+    row.put("source", "manual");
+    history.insert(row);
+    long id = ((Number) row.get("id")).longValue();
+    ledger.capture(uid, id, "manual_create", "version-create");
+    assertEquals(
+        1,
+        history.update(
+            Map.of(
+                "id", id,
+                "user_id", uid,
+                "version", 1,
+                "plan_json", "{\"marker\":\"v2\",\"days\":[]}",
+                "quality_json", "{\"outcome\":\"draft\"}")));
+    ledger.capture(uid, id, "user_edit", "version-edit");
+
+    var restored = ledger.restore(uid, id, 2, 1, "version-restore");
+    assertEquals(3, restored.get("version"));
+    assertEquals(3, history.owned(uid, id).get("version"));
+    assertTrue(history.owned(uid, id).get("plan_json").toString().contains("v1"));
+    assertEquals(3, tripVersions.count(uid, id));
+    assertThrows(
+        org.springframework.dao.DataAccessException.class,
+        () ->
+            jdbc.update(
+                "UPDATE trip_record_versions SET title='forbidden' WHERE record_id=? AND record_version=1",
+                id));
+    assertEquals(
+        409,
+        assertThrows(
+                com.tripplanner.api.ApiException.class,
+                () -> ledger.restore(uid, id, 2, 1, "stale"))
+            .status);
+    assertEquals(
+        404,
+        assertThrows(
+                com.tripplanner.api.ApiException.class, () -> ledger.list(other, id, 1, 20))
+            .status);
+  }
+
+  @Test
+  void deletingTripRevokesSharesDetachesConversationAndCommitsTombstone() {
+    long uid = userId();
+    var row = new HashMap<String, Object>();
+    row.put("user_id", uid);
+    row.put("city", "北京");
+    row.put("start_date", "2026-10-01");
+    row.put("end_date", "2026-10-01");
+    row.put("travel_days", 1);
+    row.put("transportation", "步行");
+    row.put("accommodation", "经济");
+    row.put("preferences", "[]");
+    row.put("free_text_input", "");
+    row.put("plan_json", "{\"days\":[]}");
+    row.put("quality_json", "{\"outcome\":\"complete\"}");
+    row.put("title", "删除测试");
+    row.put("source", "manual");
+    history.insert(row);
+    long id = ((Number) row.get("id")).longValue();
+    ledger.capture(uid, id, "manual_create", "delete-create");
+    var share = new HashMap<String, Object>();
+    share.put("record_id", id);
+    share.put("owner_id", uid);
+    share.put("token_hash", "a".repeat(64));
+    share.put("snapshot_json", "{}");
+    share.put("record_version", 1);
+    share.put("expires_at", java.sql.Timestamp.from(java.time.Instant.now().plusSeconds(3600)));
+    shares.insert(share);
+    String conversationId = UUID.randomUUID().toString();
+    conversations.conversation(
+        new HashMap<>(
+            Map.of(
+                "id", conversationId,
+                "user_id", uid,
+                "active_trip_id", id,
+                "title", "删除测试")));
+
+    ledger.delete(uid, id, "delete-request");
+
+    assertNull(history.owned(uid, id));
+    assertNotNull(jdbc.queryForObject("SELECT revoked_at FROM trip_shares WHERE id=?", Object.class, share.get("id")));
+    assertNull(conversations.owned(uid, conversationId).get("active_trip_id"));
+    assertEquals(0, tripVersions.count(uid, id));
+    assertEquals(
+        1L,
+        jdbc.queryForObject(
+            "SELECT count(*) FROM rag_sync_jobs WHERE record_id=? AND operation='delete'",
+            Long.class,
+            id));
+    assertEquals(
+        1L,
+        jdbc.queryForObject(
+            "SELECT count(*) FROM business_audit_events WHERE action='trip.delete' AND resource_id=?",
+            Long.class,
+            Long.toString(id)));
+  }
+
+  @Test
+  void databaseConstraintsAndActuatorMetricsAreEffective() throws Exception {
+    assertThrows(
+        org.springframework.dao.DataIntegrityViolationException.class,
+        () -> jdbc.update("INSERT INTO user_travel_preferences(user_id) VALUES (?)", Long.MAX_VALUE));
+    businessMetrics.refresh();
+    var metrics = request("/actuator/prometheus", null, null);
+    assertEquals(200, metrics.statusCode(), metrics.body());
+    assertTrue(metrics.body().contains("jvm_memory_used_bytes"));
+    assertTrue(metrics.body().contains("trip_oldest_queue_age_seconds"));
+    assertFalse(metrics.body().contains("user_id="));
   }
 }

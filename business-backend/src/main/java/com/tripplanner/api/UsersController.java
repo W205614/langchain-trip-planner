@@ -1,6 +1,7 @@
 package com.tripplanner.api;
 
 import com.tripplanner.persistence.UserMapper;
+import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.security.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -16,11 +17,13 @@ public class UsersController {
   private final UserMapper users;
   private final TokenService tokens;
   private final JsonMapper json;
+  private final BusinessAuditService audit;
 
-  public UsersController(UserMapper users, TokenService tokens, JsonMapper json) {
+  public UsersController(UserMapper users, TokenService tokens, JsonMapper json, BusinessAuditService audit) {
     this.users = users;
     this.tokens = tokens;
     this.json = json;
+    this.audit = audit;
   }
 
   public record Registration(
@@ -79,8 +82,11 @@ public class UsersController {
   }
 
   @PostMapping("/auth/logout")
+  @org.springframework.transaction.annotation.Transactional
   public Object logout(HttpServletRequest req) {
-    users.revoke(uid(req));
+    long uid = uid(req);
+    users.revoke(uid);
+    audit.success(uid, "auth.logout_all", "user", uid, null, req.getHeader("X-Request-ID"));
     return Map.of("success", true, "message", "该账号的所有旧登录凭证已失效");
   }
 

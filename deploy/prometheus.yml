@@ -4,6 +4,7 @@ rule_files:
   - /etc/prometheus/alerts.yml
 scrape_configs:
   - job_name: trip
+    metrics_path: /actuator/prometheus
     static_configs:
       - targets: [backend:9000]
   - job_name: trip-agent

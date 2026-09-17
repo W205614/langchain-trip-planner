@@ -1,6 +1,9 @@
 server:
   port: ${PORT:9000}
   forward-headers-strategy: native
+logging:
+  pattern:
+    correlation: "[request_id=%X{request_id:-}] "
 spring:
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/trip}
@@ -16,6 +19,19 @@ mybatis:
   configuration:
     call-setters-on-nulls: true
     jdbc-type-for-null: NULL
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  metrics:
+    tags:
+      application: trip-business
 trip:
   jwt-secret: ${JWT_SECRET_KEY}
   internal-key: ${INTERNAL_SERVICE_KEY}

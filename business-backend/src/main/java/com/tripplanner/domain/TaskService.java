@@ -12,6 +12,7 @@ import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -29,6 +30,8 @@ public class TaskService {
   private final PlanRules rules;
   private final AmapGateway amap;
   private final JsonMapper json;
+  private final TripLedgerService ledger;
+  private final BusinessMetrics metrics;
   private final ExecutorService pool;
   private final Semaphore slots;
   private final ConcurrentHashMap<String, FutureTask<Void>> active = new ConcurrentHashMap<>();
@@ -46,6 +49,8 @@ public class TaskService {
       PlanRules rules,
       AmapGateway amap,
       JsonMapper json,
+      TripLedgerService ledger,
+      BusinessMetrics metrics,
       @Value("${LLM_REQUEST_MAX_CONCURRENCY:4}") int concurrency,
       @Value("${TRIP_TASK_TIMEOUT_SECONDS:300}") int timeout,
       @Value("${TRIP_TASK_QUEUE_LIMIT:32}") int queueLimit,
@@ -59,6 +64,8 @@ public class TaskService {
     this.rules = rules;
     this.amap = amap;
     this.json = json;
+    this.ledger = ledger;
+    this.metrics = metrics;
     this.timeout = timeout;
     this.queueLimit = queueLimit;
     this.userLimit = userLimit;
@@ -279,6 +286,14 @@ public class TaskService {
   }
 
   private void execute(Map<String, Object> task) {
+    try (var ignored =
+        MDC.putCloseable(
+            "request_id", BusinessAuditService.safeRequestId(task.get("request_id").toString()))) {
+      executeCorrelated(task);
+    }
+  }
+
+  private void executeCorrelated(Map<String, Object> task) {
     String id = task.get("id").toString(), execution = task.get("execution_id").toString();
     long uid = ((Number) task.get("user_id")).longValue();
     var body = (ObjectNode) json.readTree(task.get("request_json").toString());
@@ -499,7 +514,11 @@ public class TaskService {
     boolean draft = quality.path("outcome").asText("").equals("draft");
     if (plan.path("days").valueStream().allMatch(d -> d.path("attractions").isEmpty()))
       throw new ApiException(503, "暂无可信景点", "TRUSTED_POI_UNAVAILABLE");
-    task.put("status", draft ? "needs_attention" : "succeeded");
+    task.put(
+        "status",
+        draft
+            ? BusinessTypes.TaskStatus.NEEDS_ATTENTION.wire()
+            : BusinessTypes.TaskStatus.SUCCEEDED.wire());
     task.put("message", draft ? "Agent 已保存未完成草稿，请查看缺口并调整" : "Agent 行程已生成并保存");
     if (draft && revision != null) quality.set("revision_parent", revision);
     tx.executeWithoutResult(
@@ -524,6 +543,7 @@ public class TaskService {
                         "quality_json",
                         json.writeValueAsString(quality)))
                 != 1) throw new ApiException(409, "行程版本冲突", "VERSION_CONFLICT");
+            ledger.capture(uid, recordId, "agent_revision", task.get("request_id").toString());
           } else {
             var record = new HashMap<String, Object>();
             for (String f :
@@ -540,13 +560,23 @@ public class TaskService {
             record.put("plan_json", json.writeValueAsString(plan));
             record.put("quality_json", json.writeValueAsString(quality));
             record.put("title", body.path("city").asText("") + "旅行计划");
-            record.put("source", revision != null ? "agent_revision" : "agent");
+            record.put(
+                "source",
+                revision != null
+                    ? BusinessTypes.TripSource.ASSISTANT_REVISION.wire()
+                    : BusinessTypes.TripSource.AGENT.wire());
             record.put("last_verified_at", java.sql.Timestamp.from(java.time.Instant.now()));
             history.insert(record);
             recordId = ((Number) record.get("id")).longValue();
+            ledger.capture(
+                uid,
+                recordId,
+                revision != null ? "agent_revision" : "agent_create",
+                task.get("request_id").toString());
           }
           if (!draft) history.outbox(recordId, uid, "upsert");
           tasks.attach(task.get("id").toString(), recordId);
+          metrics.recordPlanOutcomeAfterCommit(draft ? "draft" : "complete");
         });
   }
 }

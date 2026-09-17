@@ -18,13 +18,15 @@ public class TripService {
   private final PlanRules rules;
   private final TransactionTemplate tx;
   private final JsonMapper json;
+  private final TripLedgerService ledger;
 
   public TripService(HistoryMapper history, AmapGateway amap, PlanRules rules,
-      TransactionTemplate tx, JsonMapper json) {
+      TransactionTemplate tx, JsonMapper json, TripLedgerService ledger) {
     this.history = history; this.amap = amap; this.rules = rules; this.tx = tx; this.json = json;
+    this.ledger = ledger;
   }
 
-  public Map<String, Object> createManual(long uid, ObjectNode input) {
+  public Map<String, Object> createManual(long uid, ObjectNode input, String requestId) {
     JsonNode submittedDays = input.path("days").deepCopy();
     String title = input.path("title").asText("").strip();
     if (title.length() > 160) throw new ApiException(422, "行程标题过长");
@@ -71,7 +73,8 @@ public class TripService {
       quality.withArray("data_gaps").add("manual_pois_unverified:" + String.join(",", invalid));
     }
     var record = new HashMap<String, Object>();
-    record.put("user_id", uid); record.put("title", title); record.put("source", "manual");
+    record.put("user_id", uid); record.put("title", title);
+    record.put("source", BusinessTypes.TripSource.MANUAL.wire());
     for (String field : List.of("city","start_date","end_date","travel_days","transportation","accommodation","free_text_input"))
       record.put(field, request.path(field).isNumber() ? request.path(field).asInt() : request.path(field).asText(""));
     record.put("preferences", json.writeValueAsString(request.path("preferences")));
@@ -79,6 +82,7 @@ public class TripService {
     record.put("last_verified_at", new Timestamp(System.currentTimeMillis()));
     tx.executeWithoutResult(s -> {
       history.insert(record);
+      ledger.capture(uid, ((Number) record.get("id")).longValue(), "manual_create", requestId);
       if (!quality.path("outcome").asText("").equals("draft"))
         history.outbox(((Number) record.get("id")).longValue(), uid, "upsert");
     });
@@ -86,7 +90,7 @@ public class TripService {
         "data", plan, "quality", quality, "saved", true);
   }
 
-  public Map<String, Object> reverify(long uid, long id, int version) {
+  public Map<String, Object> reverify(long uid, long id, int version, String requestId) {
     var row = history.owned(uid, id);
     if (row == null) throw new ApiException(404, "行程不存在");
     if (((Number) row.get("version")).intValue() != version) throw new ApiException(409, "行程版本冲突", "VERSION_CONFLICT");
@@ -113,6 +117,7 @@ public class TripService {
         throw new ApiException(409, "行程版本冲突", "VERSION_CONFLICT");
       history.markVerified(uid, id);
       history.outbox(id, uid, quality.path("outcome").asText("").equals("draft") ? "delete" : "upsert");
+      ledger.capture(uid, id, "reverify", requestId);
     });
     return Map.of("success", true, "id", id, "version", version + 1, "data", plan, "quality", quality);
   }

@@ -23,6 +23,7 @@ class AgentClientTest {
           calls.incrementAndGet();
           assertNull(exchange.getRequestHeaders().getFirst("Upgrade"));
           assertEquals("test-key", exchange.getRequestHeaders().getFirst("X-Service-Key"));
+          assertEquals("trace-test", exchange.getRequestHeaders().getFirst("X-Request-ID"));
           byte[] body =
               ": heartbeat\n\nevent: progress\ndata: {\"percent\":10}\n\nevent: result\ndata: {\"execution_id\":\"test\"}\n\n"
                   .getBytes(StandardCharsets.UTF_8);
@@ -37,7 +38,10 @@ class AgentClientTest {
           new AgentClient(
               "http://127.0.0.1:" + server.getAddress().getPort(), "test-key", new JsonMapper());
       var events = new ArrayList<String>();
-      client.generate(Map.of(), Duration.ofSeconds(3), (event, data) -> events.add(event));
+      client.generate(
+          Map.of("request_id", "trace-test"),
+          Duration.ofSeconds(3),
+          (event, data) -> events.add(event));
       assertEquals(List.of("progress", "result"), events);
       assertEquals(1, calls.get());
     } finally {

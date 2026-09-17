@@ -12,4 +12,5 @@ public interface AssistantMapper {
   @Insert("INSERT INTO assistant_messages(conversation_id,user_id,role,content,action_type,action_ref) VALUES(#{conversation_id},#{user_id},#{role},#{content},#{action_type},#{action_ref})") int message(Map<String,Object> row);
   @Select("SELECT id,role,content,action_type,action_ref,created_at FROM assistant_messages WHERE conversation_id=#{id} AND user_id=#{uid} ORDER BY id") List<Map<String,Object>> messages(@Param("uid")long uid,@Param("id")String id);
   @Update("UPDATE assistant_conversations SET updated_at=timezone('UTC',now()),active_trip_id=#{trip} WHERE id=#{id} AND user_id=#{uid}") int touch(@Param("uid")long uid,@Param("id")String id,@Param("trip")Long trip);
+  @Update("UPDATE assistant_conversations SET updated_at=timezone('UTC',now()),active_trip_id=NULL WHERE user_id=#{uid} AND active_trip_id=#{trip}") int detachTrip(@Param("uid")long uid,@Param("trip")long trip);
 }

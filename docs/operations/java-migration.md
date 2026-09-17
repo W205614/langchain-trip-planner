@@ -25,6 +25,26 @@ Java 存活检查不调用模型，就绪检查只验证数据库、迁移和本
 
 Java 重启中的运行任务标为 `PROCESS_INTERRUPTED`，用户显式重试，不自动重新计费生成。单实例 PostgreSQL advisory lock 不等于跨主机故障接管；数据库异常后应检查并重启唯一 Java 实例，不另起第二套 workers。
 
+内部 Prometheus 从 Java 的 `/actuator/prometheus` 抓取 Actuator/Micrometer 指标；Nginx 对公网入口显式拒绝 `/actuator/*`、`/metrics` 和 `/internal/*`。`X-Request-ID` 会进入 Java MDC、任务记录、审计事件和 Java→Agent 请求头，排障时应以该字段关联日志，不把用户 ID、任务 ID或提示词作为指标标签。
+
+## V4 数据完整性升级
+
+`V4__business_integrity_versions_audit.sql` 会增加业务外键、状态约束、行程版本和审计事件。它在修改结构前先检查孤儿用户／资料关系与非法状态；命中时 Flyway 会明确失败，不删除、不改绑任何历史数据。正式升级前必须在恢复克隆中运行，并逐项确认以下查询结果：
+
+```sql
+SELECT r.id,r.user_id FROM trip_records r LEFT JOIN users u ON u.id=r.user_id WHERE u.id IS NULL;
+SELECT t.id,t.user_id,t.record_id FROM trip_tasks t LEFT JOIN users u ON u.id=t.user_id WHERE u.id IS NULL;
+SELECT c.id,c.user_id,c.active_trip_id FROM assistant_conversations c LEFT JOIN users u ON u.id=c.user_id WHERE u.id IS NULL;
+SELECT d.id,d.submitted_by,d.reviewed_by FROM knowledge_documents d
+  LEFT JOIN users submitter ON submitter.id=d.submitted_by
+  LEFT JOIN users reviewer ON reviewer.id=d.reviewed_by
+  WHERE submitter.id IS NULL OR (d.reviewed_by IS NOT NULL AND reviewer.id IS NULL);
+```
+
+本项目历史记录中曾保留“原用户已不存在”的迁移数据，因此不能把 V4 失败误判为程序故障，也不能临时关闭外键。应由数据所有者在备份后明确选择恢复原账号主体、导出并归档这些记录，或依法删除；完成后再重跑迁移。升级成功后，删除行程会事务性撤销分享、解绑会话、写 RAG 删除墓碑并删除含完整计划的版本快照，脱敏审计事件继续保留。
+
+2026-09-17 的正式 V3→V4 升级保留了 18 条历史行程和相关 RAG 作业：为原用户 ID 1、2 建立不可登录的归档主体；4 条终态任务和 2 个会话按新外键的 `ON DELETE SET NULL` 语义解除已删除行程引用；清除 1 条源资料早已不存在的已完成摄取作业；修正 4 条旧时区写入造成的终态任务期限顺序。升级前、修复后迁移前及升级后的完整备份分别位于 `E:\project\trip-planner-backups\pre-v4-20260917-233408`、`repaired-pre-v4-20260917-233810` 和 `post-v4-20260917-234046`。Flyway 最终处于 V4，38 条既有行程均建立基线版本；这些一次性维护动作不可复制到其他数据库，其他环境必须重新检查实际数据并由数据所有者确认处理方式。
+
 ## 当前架构备份和恢复
 
 ```powershell

@@ -99,16 +99,16 @@ public class KnowledgeController {
       @RequestBody ObjectNode body) {
     if (!java.util.Set.of("approve", "reject", "publish").contains(action))
       throw new ApiException(404, "未知操作");
-    return service.review(id, UsersController.uid(req), action, body);
+    return service.review(id, UsersController.uid(req), action, body, req.getHeader("X-Request-ID"));
   }
 
   @PutMapping("/api/knowledge/admin/submissions/{id}/extraction")
   public Object edit(HttpServletRequest req, @PathVariable long id, @RequestBody ObjectNode body) {
-    return service.review(id, UsersController.uid(req), "extraction", body);
+    return service.review(id, UsersController.uid(req), "extraction", body, req.getHeader("X-Request-ID"));
   }
 
   @DeleteMapping("/api/knowledge/admin/submissions/{id}")
   public Object delete(HttpServletRequest req, @PathVariable long id) {
-    return service.review(id, UsersController.uid(req), "delete", json.createObjectNode());
+    return service.review(id, UsersController.uid(req), "delete", json.createObjectNode(), req.getHeader("X-Request-ID"));
   }
 }

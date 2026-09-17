@@ -1,5 +1,8 @@
 package com.tripplanner.api;
 
+import com.tripplanner.domain.BusinessAuditService;
+import com.tripplanner.domain.BusinessTypes;
+import com.tripplanner.domain.TripLedgerService;
 import com.tripplanner.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -16,9 +19,11 @@ import tools.jackson.databind.json.JsonMapper;
 public class SharesController {
   private final ShareMapper shares; private final HistoryMapper history;
   private final TransactionTemplate tx; private final JsonMapper json;
+  private final TripLedgerService ledger; private final BusinessAuditService audit;
   private final SecureRandom random = new SecureRandom();
-  public SharesController(ShareMapper shares, HistoryMapper history, TransactionTemplate tx, JsonMapper json) {
-    this.shares=shares; this.history=history; this.tx=tx; this.json=json;
+  public SharesController(ShareMapper shares, HistoryMapper history, TransactionTemplate tx, JsonMapper json,
+      TripLedgerService ledger, BusinessAuditService audit) {
+    this.shares=shares; this.history=history; this.tx=tx; this.json=json; this.ledger=ledger; this.audit=audit;
   }
 
   @PostMapping("/api/trips/{recordId}/shares")
@@ -39,7 +44,11 @@ public class SharesController {
     var row=new HashMap<String,Object>(); row.put("record_id",recordId); row.put("owner_id",uid);
     row.put("token_hash",hash(token)); row.put("snapshot_json",json.writeValueAsString(snapshot));
     row.put("record_version",record.get("version")); row.put("expires_at",Timestamp.from(Instant.now().plus(days,ChronoUnit.DAYS)));
-    shares.insert(row);
+    tx.executeWithoutResult(s->{
+      shares.insert(row);
+      audit.success(uid,"share.create","trip_share",row.get("id"),((Number)record.get("version")).intValue(),
+          req.getHeader("X-Request-ID"),Map.of("record_id",recordId));
+    });
     return Map.of("success",true,"id",row.get("id"),"token",token,"expires_at",row.get("expires_at"));
   }
 
@@ -51,7 +60,11 @@ public class SharesController {
 
   @DeleteMapping("/api/trips/{recordId}/shares/{shareId}")
   public Object revoke(HttpServletRequest req,@PathVariable long recordId,@PathVariable long shareId){
-    if(shares.revoke(UsersController.uid(req),recordId,shareId)==0) throw new ApiException(404,"分享不存在或已撤销");
+    long uid=UsersController.uid(req);
+    tx.executeWithoutResult(s->{
+      if(shares.revoke(uid,recordId,shareId)==0) throw new ApiException(404,"分享不存在或已撤销");
+      audit.success(uid,"share.revoke","trip_share",shareId,null,req.getHeader("X-Request-ID"),Map.of("record_id",recordId));
+    });
     return Map.of("success",true,"message","分享已撤销");
   }
 
@@ -65,14 +78,19 @@ public class SharesController {
     long uid=UsersController.uid(req); var share=active(token);
     var snapshot=json.readTree(share.get("snapshot_json").toString()); var plan=snapshot.path("plan");
     var record=new HashMap<String,Object>(); record.put("user_id",uid); record.put("title",snapshot.path("title").asText("")+"（副本）");
-    record.put("source","copied");
+    record.put("source",BusinessTypes.TripSource.COPIED.wire());
     for(String field:List.of("city","start_date","end_date","transportation","accommodation")) record.put(field,snapshot.path(field).asText(""));
     record.put("travel_days",snapshot.path("travel_days").asInt(1)); record.put("preferences","[]"); record.put("free_text_input","");
     record.put("plan_json",json.writeValueAsString(plan));
     var quality=json.createObjectNode().put("outcome",snapshot.path("outcome").asText("draft"));
     quality.putArray("data_gaps").add("copied_share_requires_reverification");
     record.put("quality_json",json.writeValueAsString(quality)); record.put("last_verified_at",null);
-    tx.executeWithoutResult(s->{history.insert(record); history.outbox(((Number)record.get("id")).longValue(),uid,"delete");});
+    tx.executeWithoutResult(s->{
+      history.insert(record);
+      long copiedId=((Number)record.get("id")).longValue();
+      history.outbox(copiedId,uid,"delete");
+      ledger.capture(uid,copiedId,"copied_create",req.getHeader("X-Request-ID"));
+    });
     return Map.of("success",true,"id",record.get("id"),"version",1,"message","已复制为待重新核验的独立行程");
   }
 

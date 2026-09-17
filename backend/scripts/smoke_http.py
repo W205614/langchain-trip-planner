@@ -8,6 +8,7 @@ def run(url):
     with httpx.Client(base_url=url, timeout=60) as client:
         assert client.get("/healthz").status_code == 200
         assert client.get("/metrics").status_code == 404
+        assert client.get("/actuator/prometheus").status_code == 404
         assert client.post("/api/rag/rebuild").status_code == 401
         response = client.post("/api/auth/register", json={"username": "smoke_"+uuid.uuid4().hex[:8], "password": "testing123"})
         response.raise_for_status()

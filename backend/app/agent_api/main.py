@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from queue import Queue, Empty
 from typing import Literal
 from uuid import UUID
+from uuid import uuid4
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import StreamingResponse
@@ -19,6 +20,7 @@ from pydantic import BaseModel, Field, ValidationError
 from ..models.schemas import TripRequest, TripPlan, Location, POIInfo
 from ..services.execution import execution_deadline, cancellation_var, trusted_evidence_var, rag_degradation_var
 from ..core.exceptions import BizException, biz_exception_handler
+from ..core.logging import request_id_context
 from ..services.agent_paths import DATA_DIR
 
 
@@ -83,6 +85,20 @@ app = FastAPI(title="Trip Agent Internal API", lifespan=lifespan, docs_url=None,
 app.add_exception_handler(BizException, biz_exception_handler)
 
 
+@app.middleware("http")
+async def correlate_request(request: Request, call_next):
+    incoming = request.headers.get("X-Request-ID", "")
+    request_id = incoming if incoming and len(incoming) <= 64 and incoming.replace("-", "").replace("_", "").isalnum() else str(uuid4())
+    request.state.request_id = request_id
+    token = request_id_context.set(request_id)
+    try:
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request_id
+        return response
+    finally:
+        request_id_context.reset(token)
+
+
 @app.exception_handler(ValidationError)
 async def invalid_capability_input(request, exception):
     from fastapi.responses import JSONResponse
@@ -143,6 +159,7 @@ def execute(body: Execution, request: Request):
         events.put((event, payload), timeout=2)
 
     def work():
+        request_token = request_id_context.set(body.request_id)
         token = cancellation_var.set(cancelled)
         try:
             from ..agents.trip_planner_agent import get_trip_planner_agent
@@ -185,6 +202,7 @@ def execute(body: Execution, request: Request):
             if "notices_token" in locals():
                 rag_degradation_var.reset(notices_token)
             cancellation_var.reset(token)
+            request_id_context.reset(request_token)
             _slots.release()
 
     worker = threading.Thread(target=work, daemon=True, name=f"agent-{identity}")
@@ -279,7 +297,7 @@ def capability(kind: str, body: dict):
 
 
 @app.post("/internal/v1/capabilities/research/stream", dependencies=[Depends(authorize)])
-def research_stream(body: dict):
+def research_stream(body: dict, http_request: Request):
     """检索后直接转发模型分片；用终态 result 覆盖可能存在的半截输出。"""
     from ..models.schemas import TravelResearchRequest
     from ..services.rag_service import get_rag_service
@@ -288,20 +306,40 @@ def research_stream(body: dict):
     rag = get_rag_service()
     if not rag.enabled:
         raise BizException("旅行资料研究未启用或索引需要修复", status_code=503, code="RAG_DISABLED")
+    request_id = getattr(http_request.state, "request_id", "-")
 
     def events():
         from ..core.trip_metrics import observe_agent_stage
+
+        def with_request_context(callback):
+            token = request_id_context.set(request_id)
+            try:
+                return callback()
+            finally:
+                request_id_context.reset(token)
+
         started_at = time.perf_counter()
         try:
             yield "event: progress\ndata: " + json.dumps(
                 {"stage": "research_retrieval", "message": "正在检索当前旅行资料"}, ensure_ascii=False
             ) + "\n\n"
-            evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
+            evidence = with_request_context(
+                lambda: rag.retrieve_research_evidence(request.query, request.city, k=5)
+            )
             observe_agent_stage("research_retrieval", time.perf_counter() - started_at)
             from ..services.research_answer import stream_research_answer
-            for event, payload in stream_research_answer(
-                request.query, request.city, evidence, request.trip_context
-            ):
+            stream = with_request_context(
+                lambda: iter(
+                    stream_research_answer(
+                        request.query, request.city, evidence, request.trip_context
+                    )
+                )
+            )
+            while True:
+                try:
+                    event, payload = with_request_context(lambda: next(stream))
+                except StopIteration:
+                    break
                 yield f"event: {event}\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
         except Exception as exc:
             observe_agent_stage("research_retrieval", time.perf_counter() - started_at, "error")

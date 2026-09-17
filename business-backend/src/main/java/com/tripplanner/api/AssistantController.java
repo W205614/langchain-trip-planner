@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.slf4j.MDC;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tools.jackson.databind.json.JsonMapper;
@@ -20,8 +21,9 @@ public class AssistantController {
   private final AssistantMapper conversations; private final HistoryMapper history;
   private final TaskService tasks; private final AgentClient agent; private final JsonMapper json;
   private final TransactionTemplate tx;
-  public AssistantController(AssistantMapper conversations,HistoryMapper history,TaskService tasks,AgentClient agent,JsonMapper json,TransactionTemplate tx){
-    this.conversations=conversations;this.history=history;this.tasks=tasks;this.agent=agent;this.json=json;this.tx=tx;
+  private final TripLedgerService ledger;
+  public AssistantController(AssistantMapper conversations,HistoryMapper history,TaskService tasks,AgentClient agent,JsonMapper json,TransactionTemplate tx,TripLedgerService ledger){
+    this.conversations=conversations;this.history=history;this.tasks=tasks;this.agent=agent;this.json=json;this.tx=tx;this.ledger=ledger;
   }
 
   @PostMapping public Object create(HttpServletRequest req,@RequestBody(required=false) ObjectNode body){
@@ -100,8 +102,9 @@ public class AssistantController {
     var worker=new AtomicReference<Thread>();
     Runnable cancel=()->{var running=worker.get();if(running!=null)running.interrupt();};
     emitter.onCompletion(cancel); emitter.onTimeout(cancel); emitter.onError(ignored->cancel.run());
+    String requestId=BusinessAuditService.safeRequestId(req.getHeader("X-Request-ID"));
     worker.set(Thread.startVirtualThread(()->{
-      try{
+      try(var ignored=MDC.putCloseable("request_id",requestId)){
         agent.stream("/capabilities/research/stream",Map.of("city",city,"query",content,"trip_context",context),
             Duration.ofSeconds(25),(event,data)->{
               try{
@@ -147,6 +150,7 @@ public class AssistantController {
           "plan_json",json.writeValueAsString(plan),"quality_json",json.writeValueAsString(quality)))!=1)
         throw new ApiException(409,"原行程已变更，请重新生成助手方案","VERSION_CONFLICT");
       history.outbox(target,uid,"draft".equals(validated)?"delete":"upsert");
+      ledger.capture(uid,target,"assistant_confirm",req.getHeader("X-Request-ID"));
     });
     return Map.of("success",true,"id",target,"version",targetVersion+1,"data",plan,"quality",quality,
         "message","已确认并保存助手方案");
