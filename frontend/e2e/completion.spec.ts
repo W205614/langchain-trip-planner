@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('sparse candidates finish as a visible draft and remain visible after refresh', async ({ page, request }) => {
+test('sparse candidates fail without saving an empty day and remain retryable', async ({ page, request }) => {
   const username = `draft_${Date.now()}`
   const registration = await request.post('/api/auth/register', { data: { username, password: 'browser123' } })
   const token = (await registration.json()).access_token
@@ -15,20 +15,23 @@ test('sparse candidates finish as a visible draft and remain visible after refre
   await expect.poll(async () => {
     state = (await (await request.get(`/api/trip/tasks/${id}`, { headers: { Authorization: `Bearer ${token}` } })).json()).data
     return state.status
-  }).toBe('needs_attention')
+  }).toBe('failed')
+  expect(state.error_code).toBe('TRUSTED_POI_UNAVAILABLE')
   await page.goto('/login')
   await page.evaluate(({ token, username }) => {
     sessionStorage.setItem('access_token', token)
     sessionStorage.setItem('user', JSON.stringify({ username }))
   }, { token, username })
-  await page.goto('/history')
+  await page.goto('/history?tab=tasks')
   await expect(page.getByText('稀疏城市', { exact: true })).toBeVisible()
-  await expect(page.getByText('未完成草稿', { exact: true })).toBeVisible()
-  await page.getByRole('button', { name: '👁️ 查看行程' }).first().click()
-  await expect(page.getByText('未完成草稿：以下要求尚未满足，不能视为完整可执行行程。')).toBeVisible()
+  await expect(page.getByText('失败', { exact: true })).toBeVisible()
+  await expect(page.getByText(/TRUSTED_POI_UNAVAILABLE/)).toBeVisible()
+  await expect(page.getByRole('button', { name: '重新提交' })).toBeVisible()
   await page.reload()
-  await expect(page.getByText('未完成草稿：以下要求尚未满足，不能视为完整可执行行程。')).toBeVisible()
-  expect(state.result.quality.outcome).toBe('draft')
+  await expect(page.getByText('稀疏城市', { exact: true })).toBeVisible()
+  await page.getByRole('tab', { name: '行程记录' }).click()
+  await expect(page.getByText('还没有行程记录，快去生成你的第一个旅行计划吧')).toBeVisible()
+  expect(state.result).toBeUndefined()
 })
 
 test('research dependency failure clears stale evidence and is not shown as no-match', async ({ page }) => {
