@@ -38,6 +38,16 @@ class FixtureMap:
                 location=Location(longitude=(118 if city == "路线失败" else 116) + i * 0.001, latitude=39.9)))
         self.details.update({item.id: item for item in result})
         return result
+    def get_poi_detail(self, poi_id):
+        poi = self.details.get(poi_id)
+        if poi is None:
+            code = poi_id.split("-")[1] if poi_id.count("-") >= 2 else "beijing"
+            city = {"beijing":"北京", "shanghai":"上海", "sparse":"稀疏城市", "route":"路线失败",
+                    "weather":"天气失败", "cross":"跨城候选", "partial":"部分失效"}.get(code, "北京")
+            poi = POIInfo(id=poi_id, city=city, name="验证景点", type="风景名胜",
+                          address=f"{city}地址", location=Location(longitude=116.4, latitude=39.9))
+        return {"id": poi.id, "name": poi.name, "type": poi.type, "address": poi.address,
+                "cityname": poi.city, "photos": []}
     def get_weather(self, city):
         if city == "天气失败":
             raise TimeoutError("fixture weather failure")
