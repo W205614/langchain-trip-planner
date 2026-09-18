@@ -26,6 +26,20 @@ def test_service_auth_and_public_routes(client):
     assert response.headers["X-Request-ID"] == "trace-test"
 
 
+def test_lifespan_initializes_application_logging(monkeypatch, tmp_path):
+    calls = []
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setenv("INTERNAL_SERVICE_KEY", "internal-test-key-01234567890123456789")
+    monkeypatch.setenv("BUSINESS_URL", "http://business-test:9000")
+    monkeypatch.setattr(main, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(main, "setup_logging", lambda: calls.append("configured"))
+
+    with TestClient(main.app) as test_client:
+        assert test_client.get("/readyz").status_code == 200
+
+    assert calls == ["configured"]
+
+
 def test_cancel_unknown_is_idempotent(client):
     headers={"X-Service-Key": "internal-test-key-01234567890123456789"}
     for _ in range(2):

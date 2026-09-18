@@ -90,7 +90,7 @@ def test_plan_rejects_one_empty_day_even_when_other_days_have_verified_pois():
     assert exc.value.code == "TRUSTED_POI_UNAVAILABLE"
 
 
-def test_daily_timeout_uses_real_poi_fallback_without_retry(monkeypatch):
+def test_daily_timeout_uses_real_poi_fallback_without_retry(monkeypatch, caplog):
     from langchain_core.runnables import RunnableLambda
 
     planner = object.__new__(MultiAgentTripPlanner)
@@ -104,8 +104,16 @@ def test_daily_timeout_uses_real_poi_fallback_without_retry(monkeypatch):
     monkeypatch.setattr(
         "app.agents.trip_planner_agent.get_llm", lambda **_kwargs: _TimeoutLLM()
     )
+    trace = []
     day = planner._generate_one_day(
-        "测试", 0, "2026-08-01", _request(), {"attraction_pois": [_candidate()]}
+        "测试",
+        0,
+        "2026-08-01",
+        _request(),
+        {
+            "attraction_pois": [_candidate()],
+            "trace_callback": lambda event, payload: trace.append((event, payload)),
+        },
     )
 
     assert day.generation_mode == "fallback"
@@ -115,6 +123,12 @@ def test_daily_timeout_uses_real_poi_fallback_without_retry(monkeypatch):
         city="北京", start_date="2026-08-01", end_date="2026-08-01", days=[day], overall_suggestions="测试"
     )
     assert evaluate_plan(plan, 1).degraded_days == [0]
+    result = next(payload for event, payload in trace if event == "llm_day_result")
+    assert result["day_index"] == 0
+    assert result["outcome"] == "fallback"
+    assert result["reason"] == "timeout"
+    assert result["error_type"] == "TimeoutError"
+    assert "error_type=TimeoutError" in caplog.text
 
 
 def test_streamed_day_response_records_only_first_non_empty_token():

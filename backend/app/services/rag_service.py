@@ -46,6 +46,8 @@ logger = logging.getLogger(__name__)
 
 # 嵌入单次调用批量上限 (text-embedding-3-large 一次最多 2048 条, 这里保守分批)
 _EMBED_BATCH_SIZE = 16
+_QUERY_EMBED_TIMEOUT_SECONDS = 3.0
+_INDEX_EMBED_TIMEOUT_SECONDS = 8.0
 
 # 知识库文件名(英文) → 城市中文名 (与前端请求的城市保持一致, 用于检索过滤)
 _CITY_NAME_MAP = {
@@ -81,13 +83,17 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         cleaned = [t.replace("\n", " ") for t in texts]
         results: List[List[float]] = []
         for i in range(0, len(cleaned), _EMBED_BATCH_SIZE):
-            results.extend(self._embed_bounded(cleaned[i:i + _EMBED_BATCH_SIZE]))
+            results.extend(self._embed_bounded(
+                cleaned[i:i + _EMBED_BATCH_SIZE], _INDEX_EMBED_TIMEOUT_SECONDS
+            ))
         return results
 
     def embed_query(self, text: str) -> List[float]:
-        return self._embed_bounded([text.replace("\n", " ")])[0]
+        return self._embed_bounded(
+            [text.replace("\n", " ")], _QUERY_EMBED_TIMEOUT_SECONDS
+        )[0]
 
-    def _embed_bounded(self, texts):
+    def _embed_bounded(self, texts, timeout_seconds: float):
         """Total timeout, including a provider that keeps sending tiny chunks.
 
         The portal also supports callers inside an ASGI startup event loop. Closing
@@ -96,7 +102,7 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         import asyncio
         import httpx
         from anyio.from_thread import start_blocking_portal
-        seconds = budget()
+        seconds = budget(timeout_seconds)
         async def request():
             async with asyncio.timeout(seconds), httpx.AsyncClient(timeout=seconds, follow_redirects=False) as client:
                 from .call_budget import reserve
@@ -352,10 +358,23 @@ class RagService:
                 ],
                 ids=[f"history-{user_id}-{record_id}"],
             )
-            logger.info(f"🧠 历史行程已写入 RAG 向量库: record_id={record_id}, user_id={user_id}")
+            logger.info(
+                "history_index_succeeded record_id=%s user_id=%s record_version=%s",
+                record_id,
+                user_id,
+                record_version,
+            )
             return True
         except Exception as e:
-            logger.warning(f"⚠️  历史行程入库失败: {e}")
+            logger.warning(
+                "history_index_failed record_id=%s user_id=%s record_version=%s "
+                "error_type=%s error=%r",
+                record_id,
+                user_id,
+                record_version,
+                type(e).__name__,
+                e,
+            )
             return False
 
     @staticmethod
@@ -386,9 +405,20 @@ class RagService:
             with index_lock():
                 self._mutation_version = getattr(self, "_mutation_version", 0) + 1
                 self._history_store.delete(ids=[f"history-{user_id}-{record_id}"])
+            logger.info(
+                "history_index_deleted record_id=%s user_id=%s",
+                record_id,
+                user_id,
+            )
             return True
         except Exception as exc:
-            logger.warning("历史向量删除失败: record_id=%s, error=%s", record_id, exc)
+            logger.warning(
+                "history_index_delete_failed record_id=%s user_id=%s error_type=%s error=%r",
+                record_id,
+                user_id,
+                type(exc).__name__,
+                exc,
+            )
             return False
 
     @serialized

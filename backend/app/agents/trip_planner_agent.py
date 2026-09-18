@@ -199,6 +199,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
 
         每一天只让模型生成选择与文案，真实 POI 事实字段由候选集回填。
         """
+        day_started_at = time.perf_counter()
         try:
             # 每个线程独立构建 (独立 LLM 实例 + bind max_tokens)
             prompt_template = ChatPromptTemplate.from_messages([
@@ -214,6 +215,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             )
 
             day_deadline = time.monotonic() + remaining(day_timeout)
+            last_parse_error_type = ""
             for attempt in range(2):
                 started_at = time.perf_counter()
                 try:
@@ -229,8 +231,28 @@ class MultiAgentTripPlanner(TravelDataNodes):
                     )
                 except Exception as exc:
                     invoke_seconds = time.perf_counter() - started_at
-                    self._emit_trace(state, "stage_duration", stage="per_day_llm_call", seconds=invoke_seconds)
+                    total_seconds = time.perf_counter() - day_started_at
+                    error_type = type(exc).__name__
+                    self._emit_trace(
+                        state,
+                        "stage_duration",
+                        stage="per_day_llm_call",
+                        day_index=day_index,
+                        attempt=attempt + 1,
+                        seconds=invoke_seconds,
+                    )
                     reason = "timeout" if self._is_timeout_error(exc) else "llm_error"
+                    self._emit_trace(
+                        state,
+                        "llm_day_result",
+                        day_index=day_index,
+                        attempt=attempt + 1,
+                        seconds=invoke_seconds,
+                        total_seconds=total_seconds,
+                        outcome="fallback",
+                        reason=reason,
+                        error_type=error_type,
+                    )
                     observe_daily_llm(invoke_seconds, reason)
                     observe_model_call(
                         "trip_day",
@@ -240,14 +262,28 @@ class MultiAgentTripPlanner(TravelDataNodes):
                         output_price_per_million_usd=settings.llm_output_price_per_million_usd,
                     )
                     logger.warning(
-                        "   ⚠️ 第%s天 LLM %s (%.2fs)，使用真实 POI 兜底日",
-                        day_index + 1, reason, invoke_seconds,
+                        "daily_llm_result day=%s attempt=%s outcome=fallback reason=%s "
+                        "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
+                        day_index + 1,
+                        attempt + 1,
+                        reason,
+                        invoke_seconds,
+                        total_seconds,
+                        error_type,
                     )
                     return self._fallback_day(
                         request, day_index, current_date, state, fallback_reason=reason
                     )
                 invoke_seconds = time.perf_counter() - started_at
-                self._emit_trace(state, "stage_duration", stage="per_day_llm_call", seconds=invoke_seconds)
+                total_seconds = time.perf_counter() - day_started_at
+                self._emit_trace(
+                    state,
+                    "stage_duration",
+                    stage="per_day_llm_call",
+                    day_index=day_index,
+                    attempt=attempt + 1,
+                    seconds=invoke_seconds,
+                )
                 observe_daily_llm(invoke_seconds)
                 content = response.content if hasattr(response, "content") else str(response)
                 usage = getattr(response, "usage_metadata", None) or {}
@@ -269,26 +305,87 @@ class MultiAgentTripPlanner(TravelDataNodes):
                     if not day_plan.attractions:
                         raise ValueError("没有可验证的高德 POI 景点")
                     logger.info(
-                        "   第%s天 LLM 调用完成: %.2fs, 第%s次尝试, tokens=%s",
+                        "daily_llm_result day=%s attempt=%s outcome=success "
+                        "elapsed_seconds=%.2f total_seconds=%.2f error_type=none tokens=%s",
                         day_index + 1,
-                        invoke_seconds,
                         attempt + 1,
+                        invoke_seconds,
+                        total_seconds,
                         usage or "未返回",
+                    )
+                    self._emit_trace(
+                        state,
+                        "llm_day_result",
+                        day_index=day_index,
+                        attempt=attempt + 1,
+                        seconds=invoke_seconds,
+                        total_seconds=total_seconds,
+                        outcome="success",
+                        reason="",
+                        error_type="",
                     )
                     return day_plan
                 except Exception as e:
-                    logger.warning("单日解析失败 attempt=%s error_type=%s", attempt + 1, type(e).__name__)
+                    last_parse_error_type = type(e).__name__
+                    logger.warning(
+                        "daily_llm_parse_failed day=%s attempt=%s elapsed_seconds=%.2f "
+                        "total_seconds=%.2f error_type=%s",
+                        day_index + 1,
+                        attempt + 1,
+                        invoke_seconds,
+                        total_seconds,
+                        last_parse_error_type,
+                    )
                     # 自纠错: 把错误反馈给 LLM 重新生成
                     day_query = (
                         f"你上一次输出的 JSON 不符合要求, 错误: {e}\n"
                         f"上一次输出: {content[:1500]}\n"
                         f"请重新输出该天的一个合法 JSON。\n原始需求:\n{day_query}"
                     )
+            total_seconds = time.perf_counter() - day_started_at
+            logger.warning(
+                "daily_llm_result day=%s attempt=2 outcome=fallback reason=invalid_response "
+                "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
+                day_index + 1,
+                invoke_seconds,
+                total_seconds,
+                last_parse_error_type,
+            )
+            self._emit_trace(
+                state,
+                "llm_day_result",
+                day_index=day_index,
+                attempt=2,
+                seconds=invoke_seconds,
+                total_seconds=total_seconds,
+                outcome="fallback",
+                reason="invalid_response",
+                error_type=last_parse_error_type,
+            )
             return self._fallback_day(
                 request, day_index, current_date, state, fallback_reason="invalid_response"
             )
         except Exception as e:
-            logger.warning("单日生成降级 day=%s error_type=%s", day_index + 1, type(e).__name__)
+            total_seconds = time.perf_counter() - day_started_at
+            logger.warning(
+                "daily_llm_result day=%s attempt=0 outcome=fallback reason=llm_error "
+                "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
+                day_index + 1,
+                total_seconds,
+                total_seconds,
+                type(e).__name__,
+            )
+            self._emit_trace(
+                state,
+                "llm_day_result",
+                day_index=day_index,
+                attempt=0,
+                seconds=total_seconds,
+                total_seconds=total_seconds,
+                outcome="fallback",
+                reason="llm_error",
+                error_type=type(e).__name__,
+            )
             return self._fallback_day(
                 request, day_index, current_date, state, fallback_reason="llm_error"
             )

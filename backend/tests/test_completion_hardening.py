@@ -153,8 +153,30 @@ def test_dripping_embedding_response_has_total_deadline(monkeypatch):
             return httpx.Response(200, stream=Drip())
     client = httpx.AsyncClient
     monkeypatch.setattr(httpx, "AsyncClient", lambda **kw: client(transport=Transport(), **kw))
-    monkeypatch.setattr(rag_service, "budget", lambda: 0.08)
+    monkeypatch.setattr(rag_service, "budget", lambda _default=3.0: 0.08)
     embedding = rag_service._OpenAICompatEmbeddings("test", "https://example.invalid/v1", "test")
     with pytest.raises(TimeoutError):
         embedding.embed_query("测试")
     assert closed.is_set()
+
+
+def test_query_and_index_embeddings_have_separate_time_budgets(monkeypatch):
+    from app.services import rag_service
+
+    embedding = rag_service._OpenAICompatEmbeddings(
+        "test", "https://example.invalid/v1", "test"
+    )
+    calls = []
+
+    def bounded(texts, timeout_seconds):
+        calls.append((texts, timeout_seconds))
+        return [[0.1] for _ in texts]
+
+    monkeypatch.setattr(embedding, "_embed_bounded", bounded)
+    embedding.embed_query("在线查询")
+    embedding.embed_documents(["异步索引"])
+
+    assert calls == [
+        (["在线查询"], rag_service._QUERY_EMBED_TIMEOUT_SECONDS),
+        (["异步索引"], rag_service._INDEX_EMBED_TIMEOUT_SECONDS),
+    ]

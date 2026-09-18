@@ -3,6 +3,8 @@ package com.tripplanner.domain;
 import com.tripplanner.agent.AgentClient;
 import com.tripplanner.persistence.*;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -11,6 +13,8 @@ import tools.jackson.databind.json.JsonMapper;
 @Service
 @org.springframework.context.annotation.DependsOn("singleInstance")
 public class OutboxWorker {
+  private static final Logger log = LoggerFactory.getLogger(OutboxWorker.class);
+
   @org.springframework.beans.factory.annotation.Value("${WORKERS_ENABLED:true}")
   private boolean workersEnabled;
 
@@ -84,14 +88,33 @@ public class OutboxWorker {
         agent.post("/index/history", request);
       }
       status(isKnowledge, id, "succeeded", attempts, "", 0);
+      if (attempts > 1)
+        log.info(
+            "outbox_delivery_recovered kind={} job_id={} target_id={} attempts={}",
+            isKnowledge ? "knowledge" : "history",
+            id,
+            targetId(job, isKnowledge),
+            attempts);
     } catch (Exception ex) {
+      String nextStatus = attempts >= 5 ? "failed" : "retry";
+      int retryDelay = Math.min(300, 1 << Math.min(8, attempts - 1));
       status(
           isKnowledge,
           id,
-          attempts >= 5 ? "failed" : "retry",
+          nextStatus,
           attempts,
           "内部能力调用失败；请检查对应服务日志",
-          Math.min(300, 1 << Math.min(8, attempts - 1)));
+          retryDelay);
+      log.warn(
+          "outbox_delivery_failed kind={} job_id={} target_id={} attempt={} status={} "
+              + "retry_delay_seconds={} error_type={}",
+          isKnowledge ? "knowledge" : "history",
+          id,
+          targetId(job, isKnowledge),
+          attempts,
+          nextStatus,
+          retryDelay,
+          ex.getClass().getSimpleName());
       if (isKnowledge && attempts >= 5)
         tx.executeWithoutResult(
             s -> {
@@ -106,6 +129,11 @@ public class OutboxWorker {
               }
             });
     }
+  }
+
+  private static long targetId(Map<String, Object> job, boolean isKnowledge) {
+    Object value = job.get(isKnowledge ? "document_id" : "record_id");
+    return value instanceof Number number ? number.longValue() : 0L;
   }
 
   private void processKnowledge(Map<String, Object> job) throws java.io.IOException {

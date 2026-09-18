@@ -3,6 +3,7 @@
 用 mock 避免真实高德/嵌入网络调用, 并隔离临时 Chroma 目录。
 """
 from unittest.mock import MagicMock, patch
+from types import SimpleNamespace
 
 import pytest
 from langchain_core.documents import Document
@@ -98,6 +99,27 @@ def test_dimension_probe_timeout_does_not_latch_outage(rag, already_degraded):
     if not already_degraded:
         assert rag.enabled
         assert rag._knowledge_store.similarity_search_by_vector(rag._embedding.embed_query("北京"), k=1)
+
+
+def test_history_index_timeout_log_keeps_identity_and_error_type(rag, monkeypatch, caplog):
+    def fail(*_args, **_kwargs):
+        raise TimeoutError()
+
+    monkeypatch.setattr(rag, "_write_documents", fail)
+    request = SimpleNamespace(
+        city="成都",
+        travel_days=4,
+        start_date="2026-09-18",
+        end_date="2026-09-21",
+        transportation="公共交通",
+        accommodation="经济型酒店",
+        preferences=["美食"],
+    )
+    plan = SimpleNamespace(days=[], budget=None)
+
+    assert rag.add_history_plan(49, 7, request, plan, record_version=1) is False
+    assert "history_index_failed record_id=49 user_id=7" in caplog.text
+    assert "error_type=TimeoutError" in caplog.text
 
 
 def test_ensure_collections_consistent_same_dim(rag):
@@ -285,14 +307,16 @@ def test_build_rag_context_can_limit_prompt_chunk_size(rag):
     assert len(context) < 1300
 
 
-def test_delete_history_plan_removes_only_targeted_vector(rag):
+def test_delete_history_plan_removes_only_targeted_vector(rag, caplog):
     """删除历史记录必须调用用户和记录号组成的稳定向量 ID。"""
     store = MagicMock()
     rag._history_store = store
+    caplog.set_level("INFO")
 
     assert rag.delete_history_plan(record_id=42, user_id=7) is True
 
     store.delete.assert_called_once_with(ids=["history-7-42"])
+    assert "history_index_deleted record_id=42 user_id=7" in caplog.text
 
 
 def test_delete_history_plan_returns_false_when_vector_store_fails(rag):

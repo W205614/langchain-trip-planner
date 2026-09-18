@@ -24,7 +24,7 @@ from prometheus_client import Counter, Gauge, Histogram
 from ..models.schemas import TripRequest, TripPlan, Location, POIInfo
 from ..services.execution import execution_deadline, cancellation_var, trusted_evidence_var, rag_degradation_var
 from ..core.exceptions import BizException, biz_exception_handler
-from ..core.logging import request_id_context
+from ..core.logging import request_id_context, setup_logging
 from ..services.agent_paths import DATA_DIR
 
 
@@ -134,6 +134,7 @@ def capacity(kind: str, slots: threading.BoundedSemaphore):
 
 @asynccontextmanager
 async def lifespan(app):
+    setup_logging()
     if os.environ.get("DATABASE_URL"):
         raise RuntimeError("Agent must not receive business database credentials")
     if len(os.environ.get("INTERNAL_SERVICE_KEY", "").encode()) < 32:
