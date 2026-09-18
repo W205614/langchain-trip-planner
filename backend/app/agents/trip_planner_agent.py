@@ -646,11 +646,11 @@ class MultiAgentTripPlanner(TravelDataNodes):
         if evidence is not None:
             evidence.update({p.id: p.model_dump() for p in result.get("attraction_pois", [])})
 
-        # 完全没有可信景点时才终止。候选稀疏导致的空白日必须继续返回，
-        # 由 Java 最终质量分类标记为 needs_attention，而不是丢失已有真实 POI。
-        if not any(day.attractions for day in trip_plan.days):
+        # 每一天都必须至少包含一个可信景点。Java 还会用高德 REST 二次确认；
+        # 若二次确认后无法从候选池补位，整次任务会失败而不是保存空白日。
+        if any(not day.attractions for day in trip_plan.days):
             raise BizException(
-                "暂时无法获取可验证的真实景点，请稍后重试或更换目的地",
+                "至少一天无法获取可验证的真实景点，请调整要求后重试",
                 status_code=503,
                 code="TRUSTED_POI_UNAVAILABLE",
             )

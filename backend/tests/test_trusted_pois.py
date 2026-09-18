@@ -3,7 +3,10 @@
 from unittest.mock import MagicMock, patch
 from threading import Barrier
 
+import pytest
+
 from app.agents.trip_planner_agent import MultiAgentTripPlanner
+from app.core.exceptions import BizException
 from app.models.schemas import Attraction, DayPlan, Location, POIInfo, TripPlan, TripRequest
 from app.services.plan_quality import evaluate_plan
 
@@ -58,6 +61,33 @@ def test_fallback_day_never_invents_attractions_without_candidates():
     planner = object.__new__(MultiAgentTripPlanner)
     day = planner._fallback_day(_request(), 0, "2026-08-01", {"attraction_pois": []})
     assert day.attractions == []
+
+
+def test_plan_rejects_one_empty_day_even_when_other_days_have_verified_pois():
+    planner = object.__new__(MultiAgentTripPlanner)
+    request = TripRequest(
+        city="北京", start_date="2026-08-01", end_date="2026-08-02", travel_days=2,
+        transportation="公共交通", accommodation="经济型酒店",
+    )
+    verified = _day("B000A8UIN9")
+    verified.date = "2026-08-01"
+    empty = DayPlan(
+        date="2026-08-02", day_index=1, description="测试", transportation="公共交通",
+        accommodation="经济型酒店", attractions=[], meals=[],
+    )
+    planner.graph = MagicMock()
+    planner.graph.invoke.return_value = {
+        "trip_plan": TripPlan(
+            city="北京", start_date="2026-08-01", end_date="2026-08-02",
+            days=[verified, empty], overall_suggestions="测试",
+        ),
+        "attraction_pois": [_candidate()],
+    }
+
+    with pytest.raises(BizException) as exc:
+        planner.plan_trip(request)
+
+    assert exc.value.code == "TRUSTED_POI_UNAVAILABLE"
 
 
 def test_daily_timeout_uses_real_poi_fallback_without_retry(monkeypatch):

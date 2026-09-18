@@ -49,13 +49,28 @@ def run(base_url, output, live=False, token=None, max_requests=20):
                     time.sleep(0.2)
             result = state.get("result", {})
             quality = result.get("quality", {})
+            plan_days = result.get("data", {}).get("days", [])
+            empty_days = [
+                index + 1 for index, day in enumerate(plan_days)
+                if not day.get("attractions")
+            ]
+            issue_codes = {item.get("code") for item in quality.get("issues", [])}
+            expected_issue = case.get("expected_issue")
+            invariant_passed = (
+                state["status"] not in {"succeeded", "needs_attention"}
+                or (bool(plan_days) and not empty_days)
+            )
+            expected_issue_passed = expected_issue is None or expected_issue in issue_codes
             persisted = False
             if result.get("id"):
                 history = client.get(f"/api/history/{result['id']}")
                 persisted = history.status_code == 200 and history.json()["data"]["plan"] == result["data"]
             rows.append({"id": case["id"], "status": state["status"],
-                "expected": case["expected"], "contract_passed": state["status"] == case["expected"],
+                "expected": case["expected"],
+                "contract_passed": state["status"] == case["expected"] and invariant_passed and expected_issue_passed,
                 "rule_passed": quality.get("passed"), "degraded_days": quality.get("degraded_days", []),
+                "empty_days": empty_days, "expected_issue": expected_issue,
+                "expected_issue_passed": expected_issue_passed,
                 "persisted": persisted, "seconds": round(time.monotonic()-started, 3),
                 "token_usage": quality.get("usage"),
                 "human_satisfaction": None})

@@ -353,16 +353,31 @@ public class TaskService {
                   plan, data.path("trusted_candidates"), request.get("original_plan"));
               long validationStarted = System.nanoTime();
               long poiStarted = System.nanoTime();
-              var unverified = canonicalizePois(plan, body.path("city").asText(""));
+              var poiResult =
+                  VerifiedPoiPolicy.reconcile(
+                      plan,
+                      data.path("trusted_candidates"),
+                      body,
+                      body.path("city").asText(""),
+                      amap::detail,
+                      json);
+              if (!poiResult.rejected().isEmpty() || !poiResult.replacements().isEmpty())
+                log.info(
+                    "poi_reconciliation task_id={} rejected_count={} replacement_count={} unfilled_slots={}",
+                    id,
+                    poiResult.rejected().size(),
+                    poiResult.replacements().size(),
+                    poiResult.unfilledSlots());
               long poiMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - poiStarted);
               long routeStarted = System.nanoTime();
               var routes = prefetchRoutes(plan, body, id, execution, deadline);
               var quality = rules.finish(plan, body, routes, revision == null);
               long routeMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - routeStarted);
-              if (!unverified.isEmpty()) markUnverified(quality, unverified);
+              markPoiReconciliation(quality, poiResult);
               quality.set("usage", data.path("usage"));
               quality.putObject("timings")
                   .put("java_poi_canonicalization_ms", poiMillis)
+                  .put("java_poi_reconciliation_ms", poiMillis)
                   .put("java_route_and_rules_ms", routeMillis)
                   .put("java_final_validation_ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - validationStarted));
               complete(task, body, plan, quality, revision);
@@ -465,63 +480,39 @@ public class TaskService {
     };
   }
 
-  private List<String> canonicalizePois(ObjectNode plan, String requestedCity) {
-    var invalid = new ArrayList<String>();
-    var cache = new HashMap<String, ObjectNode>();
-    for (var day : plan.path("days")) {
-      if (!day.path("attractions").isArray()) continue;
-      var attractions = (tools.jackson.databind.node.ArrayNode) day.path("attractions");
-      for (int index = attractions.size() - 1; index >= 0; index--) {
-        JsonNode current = attractions.get(index);
-        String poiId = current.path("poi_id").asText("");
-        try {
-          if (poiId.isBlank()) throw new ApiException(422, "POI ID 缺失");
-          ObjectNode canonical = cache.computeIfAbsent(poiId, amap::detail);
-          if (!cityMatches(requestedCity, canonical.path("city").asText(""))
-              || canonical.path("location").path("longitude").asDouble(0) == 0
-              || canonical.path("location").path("latitude").asDouble(0) == 0)
-            throw new ApiException(422, "POI 城市或坐标无效");
-          var normalized = (ObjectNode) current.deepCopy();
-          normalized.put("poi_id", poiId);
-          normalized.put("name", canonical.path("name").asText(""));
-          normalized.put("address", canonical.path("address").asText(""));
-          normalized.set("location", canonical.path("location").deepCopy());
-          normalized.put("opening_hours", canonical.path("opening_hours").asText(""));
-          normalized.put("fact_source", "amap_rest");
-          normalized.remove("rating");
-          normalized.remove("ticket_price");
-          normalized.put("price_source", "unknown");
-          if (canonical.path("photos").isArray() && !canonical.path("photos").isEmpty())
-            normalized.put("image_url", canonical.path("photos").get(0).asText(""));
-          else normalized.remove("image_url");
-          attractions.set(index, normalized);
-        } catch (Exception ex) {
-          invalid.add(poiId.isBlank() ? "missing-poi-id" : poiId);
-          attractions.remove(index);
-        }
-      }
-    }
-    return invalid;
-  }
-
-  private static String cityKey(String city) {
-    return city == null ? "" : city.strip().replaceAll("(特别行政区|自治区|自治州|地区|盟|省|市)$", "");
-  }
-
-  private static boolean cityMatches(String requested, String actual) {
-    String left = cityKey(requested), right = cityKey(actual);
-    return !left.isBlank() && !right.isBlank()
-        && (left.equals(right) || left.contains(right) || right.contains(left));
-  }
-
-  private void markUnverified(ObjectNode quality, List<String> invalid) {
-    quality.put("outcome", "draft");
-    quality.withArray("data_gaps").add("agent_pois_rejected_by_java_rest:" + String.join(",", invalid));
-    quality.withArray("issues").addObject()
-        .put("code", "INVALID_POI").put("scope", "plan")
-        .put("reason", "部分 Agent 候选无法由 Java 高德 REST 重新确认")
-        .put("action", "重新选择可信景点后再确认行程")
-        .put("blocking", true).put("retryable", true);
+  private void markPoiReconciliation(ObjectNode quality, VerifiedPoiPolicy.Result result) {
+    if (result.rejected().isEmpty() && result.replacements().isEmpty()) return;
+    if (!result.rejected().isEmpty())
+      quality
+          .withArray("data_gaps")
+          .add("agent_pois_rejected_by_java_rest:" + String.join(",", result.rejected()));
+    result
+        .replacements()
+        .forEach(
+            replacement ->
+                quality
+                    .withArray("repairs")
+                    .addObject()
+                    .put("day_index", replacement.dayIndex())
+                    .put("removed_poi_id", replacement.removedPoiId())
+                    .put("added_poi_id", replacement.addedPoiId())
+                    .put("reason", "java_rest_verified_replacement"));
+    boolean blocking = !result.fullyRepaired();
+    if (blocking) quality.put("outcome", "draft");
+    quality
+        .withArray("issues")
+        .addObject()
+        .put("code", blocking ? "INVALID_POI" : "INVALID_POI_REPLACED")
+        .put("scope", "plan")
+        .put(
+            "reason",
+            blocking
+                ? "部分 Agent 候选无法由 Java 高德 REST 重新确认，可信候选不足"
+                : "空白或无法复核的 Agent 候选已由 Java 高德 REST 可信候选补位")
+        .put(
+            "action", blocking ? "调整要求后重试，当前行程仍可继续修改" : "可进入具体行程继续调整")
+        .put("blocking", blocking)
+        .put("retryable", blocking);
   }
 
   private void complete(
@@ -531,8 +522,8 @@ public class TaskService {
       ObjectNode quality,
       ObjectNode revision) {
     boolean draft = quality.path("outcome").asText("").equals("draft");
-    if (plan.path("days").valueStream().allMatch(d -> d.path("attractions").isEmpty()))
-      throw new ApiException(503, "暂无可信景点", "TRUSTED_POI_UNAVAILABLE");
+    if (plan.path("days").valueStream().anyMatch(d -> d.path("attractions").isEmpty()))
+      throw new ApiException(503, "至少一天没有可验证景点，已拒绝保存", "TRUSTED_POI_UNAVAILABLE");
     task.put(
         "status",
         draft

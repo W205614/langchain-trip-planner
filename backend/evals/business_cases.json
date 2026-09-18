@@ -67,7 +67,7 @@
       "preferences": [],
       "free_text_input": ""
     },
-    "expected": "needs_attention"
+    "expected": "failed"
   },
   {
     "id": "no-candidates",
@@ -82,6 +82,21 @@
       "free_text_input": ""
     },
     "expected": "failed"
+  },
+  {
+    "id": "java-rest-poi-repair",
+    "request": {
+      "city": "跨城候选",
+      "start_date": "2026-09-11",
+      "end_date": "2026-09-11",
+      "travel_days": 1,
+      "transportation": "公共交通",
+      "accommodation": "经济型酒店",
+      "preferences": [],
+      "free_text_input": ""
+    },
+    "expected": "succeeded",
+    "expected_issue": "INVALID_POI_REPLACED"
   },
   {
     "id": "weather-unavailable",
