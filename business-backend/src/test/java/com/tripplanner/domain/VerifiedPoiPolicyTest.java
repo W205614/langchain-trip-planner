@@ -110,6 +110,7 @@ class VerifiedPoiPolicyTest {
             json);
 
     assertFalse(result.fullyRepaired());
+    assertFalse(result.safeToPersist());
     assertEquals(1, result.unfilledSlots());
     assertTrue(plan.path("days").get(0).path("attractions").isEmpty());
   }
@@ -125,6 +126,7 @@ class VerifiedPoiPolicyTest {
         VerifiedPoiPolicy.reconcile(plan, candidates, request, "北京", this::poi, json);
 
     assertFalse(result.fullyRepaired());
+    assertFalse(result.safeToPersist());
     assertTrue(plan.path("days").get(0).path("attractions").isEmpty());
   }
 
@@ -149,6 +151,37 @@ class VerifiedPoiPolicyTest {
             json);
 
     assertFalse(result.fullyRepaired());
+    assertFalse(result.safeToPersist());
     assertEquals(24, calls.get());
+  }
+
+  @Test
+  void partialReductionIsPersistableWhenEveryDayStillHasAVerifiedPoi() {
+    var plan = json.createObjectNode().put("city", "北京");
+    var day = plan.putArray("days").addObject().put("day_index", 0);
+    var attractions = day.putArray("attractions");
+    for (String id : new String[] {"good", "bad"}) {
+      var attraction = attractions.addObject().put("poi_id", id).put("name", id);
+      attraction.putObject("location").put("longitude", 116.4).put("latitude", 39.9);
+    }
+    var candidates = json.readTree("[{\"id\":\"good\",\"name\":\"good\"},{\"id\":\"bad\",\"name\":\"bad\"}]");
+
+    var result =
+        VerifiedPoiPolicy.reconcile(
+            plan,
+            candidates,
+            request(),
+            "北京",
+            id -> {
+              if (id.equals("bad")) throw new IllegalArgumentException("not found");
+              return poi(id);
+            },
+            json);
+
+    assertFalse(result.fullyRepaired());
+    assertTrue(result.safeToPersist());
+    assertEquals(1, result.unfilledSlots());
+    assertEquals(1, day.path("attractions").size());
+    assertEquals("fallback", day.path("generation_mode").asText());
   }
 }

@@ -13,9 +13,17 @@ final class VerifiedPoiPolicy {
 
   record Replacement(int dayIndex, String removedPoiId, String addedPoiId) {}
 
-  record Result(List<String> rejected, List<Replacement> replacements, int unfilledSlots) {
+  record Result(
+      List<String> rejected,
+      List<Replacement> replacements,
+      int unfilledSlots,
+      boolean hasEmptyDays) {
     boolean fullyRepaired() {
       return unfilledSlots == 0;
+    }
+
+    boolean safeToPersist() {
+      return !hasEmptyDays;
     }
   }
 
@@ -60,6 +68,8 @@ final class VerifiedPoiPolicy {
           rejected.add(rejectedId);
           removed.addFirst(rejectedId);
           attractions.remove(index);
+          day.put("generation_mode", "fallback");
+          day.put("fallback_reason", "java_rest_poi_repair");
         }
       }
       while (removed.size() < targetSize - attractions.size()) removed.addLast("");
@@ -105,7 +115,10 @@ final class VerifiedPoiPolicy {
     }
 
     int unfilled = missingByDay.values().stream().mapToInt(ArrayDeque::size).sum();
-    return new Result(List.copyOf(rejected), List.copyOf(replacements), unfilled);
+    boolean hasEmptyDays =
+        plan.path("days").valueStream().anyMatch(day -> day.path("attractions").isEmpty());
+    return new Result(
+        List.copyOf(rejected), List.copyOf(replacements), unfilled, hasEmptyDays);
   }
 
   private static ObjectNode verified(

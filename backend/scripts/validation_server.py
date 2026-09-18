@@ -28,8 +28,8 @@ class FixtureMap:
     def search_poi(self, keywords, city, *args, **kwargs):
         if city == "无候选":
             return []
-        count = 1 if city == "稀疏城市" else 90
-        default_code = {"北京":"beijing", "上海":"shanghai", "稀疏城市":"sparse", "路线失败":"route", "天气失败":"weather", "跨城候选":"cross"}.get(city, "beijing")
+        count = 1 if city == "稀疏城市" else 3 if city == "部分失效" else 90
+        default_code = {"北京":"beijing", "上海":"shanghai", "稀疏城市":"sparse", "路线失败":"route", "天气失败":"weather", "跨城候选":"cross", "部分失效":"partial"}.get(city, "beijing")
         result = []
         for i in range(count):
             candidate_city = city
@@ -110,7 +110,7 @@ def amap_rest_fixture(path: str, request: Request):
     if path == "v3/place/detail":
         identity = query.get("id", "")
         code = identity.split("-")[1] if identity.count("-") >= 2 else "beijing"
-        city = "上海" if identity == "fixture-cross-1" else {"beijing":"北京", "shanghai":"上海", "sparse":"稀疏城市", "route":"路线失败", "weather":"天气失败", "cross":"跨城候选"}.get(code, "北京")
+        city = "上海" if identity in {"fixture-cross-1", "fixture-partial-1"} else {"beijing":"北京", "shanghai":"上海", "sparse":"稀疏城市", "route":"路线失败", "weather":"天气失败", "cross":"跨城候选", "partial":"部分失效"}.get(code, "北京")
         longitude = 118 if city == "路线失败" else 116.4
         poi = fixture_map.details.get(identity) or POIInfo(id=identity,name="验证景点",type="风景名胜",
             address=f"{city}地址",city=city,location=Location(longitude=longitude,latitude=39.9))

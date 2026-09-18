@@ -497,22 +497,29 @@ public class TaskService {
                     .put("removed_poi_id", replacement.removedPoiId())
                     .put("added_poi_id", replacement.addedPoiId())
                     .put("reason", "java_rest_verified_replacement"));
-    boolean blocking = !result.fullyRepaired();
+    boolean blocking = !result.safeToPersist();
     if (blocking) quality.put("outcome", "draft");
+    else if (quality.path("outcome").asText("").equals("complete")) quality.put("outcome", "degraded");
+    String code =
+        blocking
+            ? "INVALID_POI"
+            : result.fullyRepaired() ? "INVALID_POI_REPLACED" : "INVALID_POI_REDUCED";
     quality
         .withArray("issues")
         .addObject()
-        .put("code", blocking ? "INVALID_POI" : "INVALID_POI_REPLACED")
+        .put("code", code)
         .put("scope", "plan")
         .put(
             "reason",
             blocking
-                ? "部分 Agent 候选无法由 Java 高德 REST 重新确认，可信候选不足"
-                : "空白或无法复核的 Agent 候选已由 Java 高德 REST 可信候选补位")
+                ? "至少一天无法保留 Java 高德 REST 可复核的景点"
+                : result.fullyRepaired()
+                    ? "无法复核的 Agent 候选已由 Java 高德 REST 可信候选补位"
+                    : "部分 Agent 候选无法复核且备用候选不足，已保留每一天的可信景点")
         .put(
-            "action", blocking ? "调整要求后重试，当前行程仍可继续修改" : "可进入具体行程继续调整")
+            "action", blocking ? "调整要求后重试，本次结果未保存" : "当前行程可用，可进入具体行程继续调整")
         .put("blocking", blocking)
-        .put("retryable", blocking);
+        .put("retryable", false);
   }
 
   private void complete(

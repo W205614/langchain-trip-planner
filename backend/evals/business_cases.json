@@ -99,6 +99,21 @@
     "expected_issue": "INVALID_POI_REPLACED"
   },
   {
+    "id": "java-rest-poi-reduction",
+    "request": {
+      "city": "部分失效",
+      "start_date": "2026-09-11",
+      "end_date": "2026-09-11",
+      "travel_days": 1,
+      "transportation": "公共交通",
+      "accommodation": "经济型酒店",
+      "preferences": [],
+      "free_text_input": ""
+    },
+    "expected": "succeeded",
+    "expected_issue": "INVALID_POI_REDUCED"
+  },
+  {
     "id": "weather-unavailable",
     "request": {
       "city": "天气失败",
