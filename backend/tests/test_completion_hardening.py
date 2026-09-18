@@ -42,11 +42,33 @@ def test_fixed_product_boundaries_are_not_counted_as_runtime_outage():
 def test_missing_route_cannot_pass_user_walking_limit():
     body = TripRequest(**(VALID_REQUEST | {"constraints": {"max_inter_stop_walking_km": 1}}))
     plan = make_complete_trip_plan()
-    plan.days[0].attractions.append(plan.days[1].attractions.pop())
+    plan.days[0].attractions.append(
+        plan.days[1].attractions[0].model_copy(update={"poi_id": "third-poi", "name": "颐和园"})
+    )
     report = finalize_plan(plan, body, MagicMock(plan_route_by_locations=MagicMock(side_effect=TimeoutError())))
     assert report["outcome"] == "draft"
-    assert {i["code"] for i in report["issues"]} >= {"WALKING_LIMIT_UNVERIFIED", "TIME_LIMIT_UNVERIFIED"}
+    assert {i["code"] for i in report["issues"]} >= {"WALKING_LIMIT_UNVERIFIED", "ROUTE_UNAVAILABLE"}
     assert report["day_checks"][0]["route_minutes"] is None
+
+
+def test_missing_route_does_not_block_an_otherwise_usable_agent_plan():
+    body = TripRequest(**VALID_REQUEST)
+    plan = make_complete_trip_plan()
+    plan.days[0].attractions.append(
+        plan.days[1].attractions[0].model_copy(update={"poi_id": "third-poi", "name": "颐和园"})
+    )
+
+    report = finalize_plan(
+        plan,
+        body,
+        MagicMock(plan_route_by_locations=MagicMock(side_effect=TimeoutError())),
+    )
+
+    route_issue = next(i for i in report["issues"] if i["code"] == "ROUTE_UNAVAILABLE")
+    assert report["outcome"] == "degraded"
+    assert route_issue["scope"] == "plan"
+    assert route_issue["blocking"] is False
+    assert "TIME_LIMIT_UNVERIFIED" not in {i["code"] for i in report["issues"]}
 
 
 

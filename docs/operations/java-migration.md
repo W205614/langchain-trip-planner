@@ -5,7 +5,7 @@
 ## 配置与数据
 
 - Java 配置：`deploy/runtime/business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
-- Java 地图配置：`deploy/runtime/business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；公开 POI、天气、路线、图片和最终核验都走此通道。
+- Java 地图配置：`deploy/runtime/business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；仅公开 POI／天气／路线、用户主动复核和图片走此通道，Agent 生成不再由 Java 二次核验或改排。
 - Agent 配置：`deploy/runtime/agent.env`；模型、`AMAP_MCP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。
 - PostgreSQL：`langchain-trip-planner_java_business_data` 数据卷。
 - 原文件：`backend/data/knowledge_uploads`，Java 管理。
@@ -81,12 +81,12 @@ python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-2026
 |---|---|---|
 | 登录、注销、偏好、账号隔离 | Java UsersController / Security | Java 测试、`java_api_contract_smoke.py` |
 | 幂等、额度、任务、取消、超时 | Java TaskService + Agent 执行协议 | Java PostgreSQL 测试、HTTP 场景、重启／断流脚本 |
-| 最终约束、预算、草稿分类 | Java PlanRules / TrustedCandidates | Java 原冻结场景、20 个 HTTP 业务场景；Python 纯函数保留离线对照 |
+| 生成约束、预算、路线降级与质量分类 | Python Agent / `finalize_plan`；Java 仅做 `TrustedCandidates` 与协议校验 | pytest、共享协议、HTTP 业务场景 |
 | 历史、编辑、改排、草稿应用 | Java HistoryController | 版本／所有者测试、Playwright |
 | 原文件、审核、发布 | Java KnowledgeService + Agent extraction | `java_knowledge_smoke.py`、Agent 解析故障测试 |
 | 向量同步与重建 | Java outbox + Agent indexing/rebuild | 稳定 ID、版本、墓碑、Java 快照冲突、检索回查 |
-| 传统地图、图片、最终路线 | Java 高德 REST | Java 网关测试、缓存／错误映射、Agent 停机演练 |
-| 模型、Agent 候选、检索与解析 | Python Agent + 高德 MCP | pytest、MCP 协议、RAG／视觉故障用例 |
+| 公开地图、用户主动复核与图片 | Java 高德 REST | Java 网关测试、缓存／错误映射、Agent 停机演练 |
+| 旅游生成、路线、约束、模型、检索与解析 | Python Agent + 高德 MCP | pytest、MCP 协议、RAG／视觉故障用例 |
 | 数据恢复与通知 | 当前 Java 运维脚本 | `java_recovery_drill.py`、`notification_smoke.py` |
 
 清理前的 255 项 Python 测试包含已退役业务代码测试，不能用它与清理后的 Agent 测试数直接比较覆盖率。公开业务合同转移到 Java 和 HTTP 验收，不保留可运行的旧业务后端来维持测试计数。

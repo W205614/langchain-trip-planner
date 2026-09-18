@@ -15,14 +15,17 @@ def classify(plan, request, report):
         for attraction in day.attractions:
             if not valid_attraction(attraction):
                 add("INVALID_POI", f"day:{day.day_index}", "景点身份或坐标无效", "重新选择可信景点")
+    route_missing_days = []
     for day in report.get("day_checks", []):
         if day.get("route_minutes") is None:
-            # The daily limit is part of the persisted request, including its default.
-            add("TIME_LIMIT_UNVERIFIED", f"day:{day['day_index']}", "路线缺失，无法核验每日时间上限",
-                "先重新核验路线；仍失败时再调整景点", retryable=True)
+            route_missing_days.append(day["day_index"] + 1)
         if request.constraints.max_inter_stop_walking_km is not None and day.get("inter_stop_walking_km") is None:
             add("WALKING_LIMIT_UNVERIFIED", f"day:{day['day_index']}", "无法核验指定步行上限",
                 "稍后重试或调整交通要求", retryable=True)
+    if route_missing_days:
+        days = "、".join(f"第{index}天" for index in route_missing_days)
+        add("ROUTE_UNAVAILABLE", "plan", f"{days}部分景点间路线暂不可用，Agent 已保留可继续调整的行程",
+            "可直接查看行程；出发前确认交通，或在具体行程中调整景点", False, True)
     for index in report.get("degraded_days", []):
         add("RULE_FALLBACK", f"day:{index}", "模型未完成，本日使用可信景点规则安排", "核对安排或重新规划", False, True)
     for gap in report.get("data_gaps", []):
@@ -34,7 +37,7 @@ def classify(plan, request, report):
     blocking = any(i["blocking"] for i in issues)
     # Fixed product boundaries (reservation / in-attraction walking) remain visible,
     # but are not counted as a runtime outage on every otherwise complete request.
-    degraded = any(i["code"] in {"RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE"} for i in issues)
+    degraded = any(i["code"] in {"RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE", "ROUTE_UNAVAILABLE"} for i in issues)
     report.update(completion_policy=POLICY, issues=issues,
                   outcome="draft" if blocking else "degraded" if degraded else "complete")
     return report

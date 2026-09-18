@@ -84,7 +84,7 @@
     "expected": "failed"
   },
   {
-    "id": "java-rest-poi-repair",
+    "id": "agent-cross-city-candidates",
     "request": {
       "city": "跨城候选",
       "start_date": "2026-09-11",
@@ -95,11 +95,10 @@
       "preferences": [],
       "free_text_input": ""
     },
-    "expected": "succeeded",
-    "expected_issue": "INVALID_POI_REPLACED"
+    "expected": "succeeded"
   },
   {
-    "id": "java-rest-poi-reduction",
+    "id": "agent-partial-candidates",
     "request": {
       "city": "部分失效",
       "start_date": "2026-09-11",
@@ -110,8 +109,7 @@
       "preferences": [],
       "free_text_input": ""
     },
-    "expected": "succeeded",
-    "expected_issue": "INVALID_POI_REDUCED"
+    "expected": "succeeded"
   },
   {
     "id": "weather-unavailable",
@@ -139,7 +137,8 @@
       "preferences": [],
       "free_text_input": ""
     },
-    "expected": "needs_attention"
+    "expected": "succeeded",
+    "expected_issue": "ROUTE_UNAVAILABLE"
   },
   {
     "id": "invalid-json",

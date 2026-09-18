@@ -30,8 +30,6 @@ public class TaskService {
   private final HistoryMapper history;
   private final TransactionTemplate tx;
   private final AgentClient agent;
-  private final PlanRules rules;
-  private final AmapGateway amap;
   private final JsonMapper json;
   private final TripLedgerService ledger;
   private final BusinessMetrics metrics;
@@ -49,8 +47,6 @@ public class TaskService {
       HistoryMapper history,
       TransactionTemplate tx,
       AgentClient agent,
-      PlanRules rules,
-      AmapGateway amap,
       JsonMapper json,
       TripLedgerService ledger,
       BusinessMetrics metrics,
@@ -64,8 +60,6 @@ public class TaskService {
     this.history = history;
     this.tx = tx;
     this.agent = agent;
-    this.rules = rules;
-    this.amap = amap;
     this.json = json;
     this.ledger = ledger;
     this.metrics = metrics;
@@ -344,42 +338,31 @@ public class TaskService {
               tasks.progress(task);
             }
             if (event.equals("result")) {
+              long validationStarted = System.nanoTime();
               if (data.path("protocol_version").asInt(0) != 1)
                 throw new ApiException(503, "结果协议版本不匹配", "AGENT_PROTOCOL_ERROR");
               if (!execution.equals(data.path("execution_id").asText("")))
                 throw new ApiException(503, "执行结果编号不匹配", "AGENT_PROTOCOL_ERROR");
-              var plan = (ObjectNode) data.path("plan");
+              if (!(data.path("plan") instanceof ObjectNode plan))
+                throw new ApiException(503, "行程结果结构无效", "AGENT_PROTOCOL_ERROR");
+              if (!(data.path("quality") instanceof ObjectNode quality))
+                throw new ApiException(503, "质量结果结构无效", "AGENT_PROTOCOL_ERROR");
+              validateAgentDecision(plan, quality, body);
               TrustedCandidates.verify(
                   plan, data.path("trusted_candidates"), request.get("original_plan"));
-              long validationStarted = System.nanoTime();
-              long poiStarted = System.nanoTime();
-              var poiResult =
-                  VerifiedPoiPolicy.reconcile(
-                      plan,
-                      data.path("trusted_candidates"),
-                      body,
-                      body.path("city").asText(""),
-                      amap::detail,
-                      json);
-              if (!poiResult.rejected().isEmpty() || !poiResult.replacements().isEmpty())
-                log.info(
-                    "poi_reconciliation task_id={} rejected_count={} replacement_count={} unfilled_slots={}",
-                    id,
-                    poiResult.rejected().size(),
-                    poiResult.replacements().size(),
-                    poiResult.unfilledSlots());
-              long poiMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - poiStarted);
-              long routeStarted = System.nanoTime();
-              var routes = prefetchRoutes(plan, body, id, execution, deadline);
-              var quality = rules.finish(plan, body, routes, revision == null);
-              long routeMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - routeStarted);
-              markPoiReconciliation(quality, poiResult);
               quality.set("usage", data.path("usage"));
-              quality.putObject("timings")
-                  .put("java_poi_canonicalization_ms", poiMillis)
-                  .put("java_poi_reconciliation_ms", poiMillis)
-                  .put("java_route_and_rules_ms", routeMillis)
-                  .put("java_final_validation_ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - validationStarted));
+              ObjectNode timings =
+                  quality.path("timings") instanceof ObjectNode existing
+                      ? existing
+                      : quality.putObject("timings");
+              timings.put(
+                  "java_protocol_validation_ms",
+                  TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - validationStarted));
+              log.info(
+                  "agent_plan_accepted task_id={} outcome={} protocol_validation_ms={}",
+                  id,
+                  quality.path("outcome").asText(""),
+                  timings.path("java_protocol_validation_ms").asLong(0));
               complete(task, body, plan, quality, revision);
             }
           });
@@ -409,117 +392,25 @@ public class TaskService {
     }
   }
 
-  private boolean executionActive(String id, String execution, Instant deadline) {
-    var current = tasks.get(id);
-    return !Thread.currentThread().isInterrupted()
-        && Instant.now().isBefore(deadline)
-        && current != null
-        && "running".equals(current.get("status"))
-        && execution.equals(current.get("execution_id"));
-  }
-
-  private record RouteQuery(String key, JsonNode left, JsonNode right, String type, String city) {}
-
-  private static String routeKey(JsonNode left, JsonNode right, String type) {
-    return left.path("longitude").asText("") + "," + left.path("latitude").asText("") + "->"
-        + right.path("longitude").asText("") + "," + right.path("latitude").asText("") + ":" + type;
-  }
-
-  private PlanRules.Routes prefetchRoutes(
-      ObjectNode plan, ObjectNode body, String id, String execution, Instant deadline) {
-    String type = PlanRules.routeType(body.path("transportation").asText(""));
-    String city = plan.path("city").asText("");
-    var unique = new LinkedHashMap<String, RouteQuery>();
-    for (var day : plan.path("days")) {
-      var attractions = day.path("attractions");
-      for (int index = 1; index < attractions.size(); index++) {
-        JsonNode left = attractions.get(index - 1).path("location");
-        JsonNode right = attractions.get(index).path("location");
-        String key = routeKey(left, right, type);
-        unique.putIfAbsent(key, new RouteQuery(key, left.deepCopy(), right.deepCopy(), type, city));
-      }
+  private void validateAgentDecision(ObjectNode plan, ObjectNode quality, ObjectNode request) {
+    String outcome = quality.path("outcome").asText("");
+    if (!Set.of("complete", "degraded", "draft").contains(outcome)
+        || !quality.path("issues").isArray())
+      throw new ApiException(503, "Agent 质量决策无效", "AGENT_PROTOCOL_ERROR");
+    if (!plan.path("city").equals(request.path("city"))
+        || !plan.path("start_date").equals(request.path("start_date"))
+        || !plan.path("end_date").equals(request.path("end_date"))
+        || !plan.path("days").isArray()
+        || plan.path("days").size() != request.path("travel_days").asInt(0))
+      throw new ApiException(503, "Agent 行程与原始请求不一致", "AGENT_PROTOCOL_ERROR");
+    LocalDate start = LocalDate.parse(request.path("start_date").asText(""));
+    for (int index = 0; index < plan.path("days").size(); index++) {
+      JsonNode day = plan.path("days").get(index);
+      if (day.path("day_index").asInt(-1) != index
+          || !start.plusDays(index).toString().equals(day.path("date").asText(""))
+          || !day.path("attractions").isArray())
+        throw new ApiException(503, "Agent 每日行程结构无效", "AGENT_PROTOCOL_ERROR");
     }
-    var facts = new ConcurrentHashMap<String, Optional<JsonNode>>();
-    if (!unique.isEmpty()) {
-      var routePool = Executors.newFixedThreadPool(Math.min(4, unique.size()));
-      try {
-        var calls = unique.values().stream().<Callable<Void>>map(query -> () -> {
-          if (!executionActive(id, execution, deadline))
-            throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
-          try {
-            facts.put(query.key(), Optional.of(amap.routeBetween(
-                query.left(), query.right(), query.type(), query.city())));
-          } catch (Exception ex) {
-            facts.put(query.key(), Optional.empty());
-          }
-          return null;
-        }).toList();
-        long millis = Math.max(1, Duration.between(Instant.now(), deadline).toMillis());
-        routePool.invokeAll(calls, millis, TimeUnit.MILLISECONDS);
-      } catch (InterruptedException ex) {
-        Thread.currentThread().interrupt();
-        throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
-      } finally {
-        routePool.shutdownNow();
-      }
-    }
-    return (left, right, routeType, routeCity) -> {
-      if (!executionActive(id, execution, deadline))
-        throw new ApiException(409, "任务已终结，不再查询路线", "TASK_TIMEOUT");
-      String key = routeKey(left, right, routeType);
-      Optional<JsonNode> prefetched = facts.get(key);
-      if (prefetched != null) return prefetched.orElse(null);
-      try {
-        JsonNode route = amap.routeBetween(left, right, routeType, routeCity);
-        facts.put(key, Optional.of(route));
-        return route;
-      } catch (Exception ex) {
-        facts.put(key, Optional.empty());
-        return null;
-      }
-    };
-  }
-
-  private void markPoiReconciliation(ObjectNode quality, VerifiedPoiPolicy.Result result) {
-    if (result.rejected().isEmpty() && result.replacements().isEmpty()) return;
-    if (!result.rejected().isEmpty())
-      quality
-          .withArray("data_gaps")
-          .add("agent_pois_rejected_by_java_rest:" + String.join(",", result.rejected()));
-    result
-        .replacements()
-        .forEach(
-            replacement ->
-                quality
-                    .withArray("repairs")
-                    .addObject()
-                    .put("day_index", replacement.dayIndex())
-                    .put("removed_poi_id", replacement.removedPoiId())
-                    .put("added_poi_id", replacement.addedPoiId())
-                    .put("reason", "java_rest_verified_replacement"));
-    boolean blocking = !result.safeToPersist();
-    if (blocking) quality.put("outcome", "draft");
-    else if (quality.path("outcome").asText("").equals("complete")) quality.put("outcome", "degraded");
-    String code =
-        blocking
-            ? "INVALID_POI"
-            : result.fullyRepaired() ? "INVALID_POI_REPLACED" : "INVALID_POI_REDUCED";
-    quality
-        .withArray("issues")
-        .addObject()
-        .put("code", code)
-        .put("scope", "plan")
-        .put(
-            "reason",
-            blocking
-                ? "至少一天无法保留 Java 高德 REST 可复核的景点"
-                : result.fullyRepaired()
-                    ? "无法复核的 Agent 候选已由 Java 高德 REST 可信候选补位"
-                    : "部分 Agent 候选无法复核且备用候选不足，已保留每一天的可信景点")
-        .put(
-            "action", blocking ? "调整要求后重试，本次结果未保存" : "当前行程可用，可进入具体行程继续调整")
-        .put("blocking", blocking)
-        .put("retryable", false);
   }
 
   private void complete(

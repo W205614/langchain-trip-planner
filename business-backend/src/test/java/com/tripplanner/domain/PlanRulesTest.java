@@ -33,10 +33,12 @@ class PlanRulesTest {
   }
 
   @Test
-  void missingRouteIsDraftAndExplicitFreeIsNotCharged() {
+  void missingRouteIsNonBlockingDegradationAndExplicitFreeIsNotCharged() {
     var plan = plan();
     var quality = rules.finish(plan, request(), null, false);
-    assertEquals("draft", quality.path("outcome").asText());
+    assertEquals("degraded", quality.path("outcome").asText());
+    assertEquals("ROUTE_UNAVAILABLE", quality.path("issues").get(0).path("code").asText());
+    assertFalse(quality.path("issues").get(0).path("blocking").asBoolean(true));
     assertTrue(quality.path("day_checks").get(0).path("route_minutes").isNull());
     assertEquals(80, plan.path("budget").path("total_attractions").asInt());
     assertEquals(0, plan.path("budget").path("total_hotels").asInt());

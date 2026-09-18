@@ -131,14 +131,25 @@ def test_duplicate_execution_never_calls_planner_twice(client, monkeypatch):
     def plan(*args, **kwargs):
         calls.append(1)
         return SimpleNamespace(enrichment_notices=[], model_dump=lambda: {"days": []})
-    monkeypatch.setattr(trip_planner_agent,"get_trip_planner_agent",lambda: SimpleNamespace(plan_trip=plan))
-    monkeypatch.setattr(planning_constraints,"finalize_plan",lambda *args, **kwargs: {"outcome":"complete","issues":[]})
+    route_planner = object()
+    validation_routes = []
+    monkeypatch.setattr(
+        trip_planner_agent,
+        "get_trip_planner_agent",
+        lambda: SimpleNamespace(plan_trip=plan, amap_service=route_planner),
+    )
+    def finalize(*args, **kwargs):
+        validation_routes.append(args[2])
+        return {"outcome":"complete","issues":[]}
+    monkeypatch.setattr(planning_constraints,"finalize_plan",finalize)
     body={"protocol_version":1,"task_id":str(uuid.uuid4()),"execution_id":str(uuid.uuid4()),"request_id":"duplicate",
         "user_id":1,"deadline_at":(datetime.now(timezone.utc)+timedelta(seconds=20)).isoformat(),
         "request":{"city":"北京","start_date":"2026-10-01","end_date":"2026-10-01","travel_days":1,"transportation":"步行","accommodation":"经济"}}
     headers={"X-Service-Key":"internal-test-key-01234567890123456789"}
     response=client.post("/internal/v1/executions",json=body,headers=headers)
     assert response.status_code==200 and "event: result" in response.text
-    assert '"quality": {"outcome": "complete", "issues": []}' in response.text
+    assert '"outcome": "complete"' in response.text
+    assert '"agent_route_and_constraints_ms"' in response.text
     assert client.post("/internal/v1/executions",json=body,headers=headers).status_code==409
     assert calls==[1]
+    assert validation_routes == [route_planner]

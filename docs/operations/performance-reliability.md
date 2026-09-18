@@ -4,7 +4,7 @@
 
 ## 链路与容量舱壁
 
-请求链路为：浏览器 → Nginx → Java 业务服务 → Python Agent → LLM／高德 MCP；Java 也会直接调用高德 REST 重新确认 POI 与路线事实。
+请求链路为：浏览器 → Nginx → Java 业务服务 → Python Agent → LLM／高德 MCP。旅游生成中的 POI、天气、酒店、路线、约束修复和质量分类都在 Agent 内完成；Java 只校验协议与可信候选并持久化。Java 高德 REST 仅服务公开地图、用户主动复核和图片等非生成入口。
 
 | 层 | 默认保护 | 饱和行为 |
 | --- | --- | --- |
@@ -13,7 +13,7 @@
 | PostgreSQL | Hikari 最多 12、最少空闲 4、取连接最多等 3 秒；SQL 默认 5 秒 | 请求失败，不无限占住 HTTP 线程 |
 | 规划任务 | 4 个 worker；正式默认队列 32、单用户活动任务 4 | `USER_QUEUE_FULL` 或 `TASK_QUEUE_FULL`（429） |
 | Java→Agent | 8 个并发槽 | `AGENT_BUSY`（503） |
-| Java→高德 REST | 8 个并发槽 | `AMAP_BUSY`（503），规划保留明确数据缺口 |
+| Java→高德 REST | 8 个并发槽 | `AMAP_BUSY`（503），仅影响公开地图、主动复核或图片能力 |
 | Python 行程执行 | 4 个槽 | 429，由 Java 记录为 Agent 失败而不是继续堆积 |
 | Python 研究／索引／解析 | 共 4 个独立槽 | 429，不挤占行程执行槽 |
 | Python 高德工具 | 8 个独立槽 | 429，不挤占研究和行程执行槽 |
@@ -24,7 +24,7 @@
 
 - 行程任务正式默认总截止时间 300 秒；截止后 Java 拒绝迟到结果并写入终态。
 - 单日 LLM 默认 45 秒，超时使用已取得的可信 POI 草稿，不重试模型调用。
-- 高德 MCP 默认 20 秒；Java 高德 REST 连接最多 2 秒、单次总计 10 秒；图片下载 8 秒；Agent 普通能力调用 30 秒。
+- 高德 MCP 默认 20 秒并受任务总截止时间约束；Java 高德 REST 连接最多 2 秒、单次总计 10 秒；图片下载 8 秒；Agent 普通能力调用 30 秒。
 - Java 对 Agent 和高德各自统计连续失败。默认连续 5 次失败后熔断 15 秒；熔断期快速返回，期满只放行一个半开探测，成功后恢复。
 - 并发槽满时不等待慢请求释放，只等待最多 50 毫秒后快速失败。系统不会用自动重试放大已经过载的上游。
 - Agent readiness 不访问模型或 Embedding；Java 对 readiness 成功缓存 1 秒、失败缓存 3 秒，避免上游宕机时形成健康探测风暴。
@@ -41,7 +41,7 @@
 3. Java 上游指标：`trip_upstream_call_duration_seconds`、`trip_upstream_rejected_total`、`trip_upstream_circuit_opened_total` 区分 Agent／高德慢、容量满和熔断。
 4. 任务指标与日志：`trip_task_execution_duration_seconds`，以及 `task_execution_started/finished/failed` 给出持久任务总耗时。
 5. Agent 指标：`trip_agent_http_request_seconds`、`trip_agent_http_in_flight`、`trip_agent_capacity_rejected_total`；规划内部继续看既有 `trip_agent_stage_seconds`、模型调用和 RAG 指标。
-6. 每个已保存结果的 `quality.timings` 包含 Java POI 规范化、路线与规则校验耗时；它不包含浏览器和排队时间。
+6. 每个已保存结果的 `quality.timings.agent_route_and_constraints_ms` 是 Agent 路线与约束阶段耗时，`java_protocol_validation_ms` 是 Java 协议校验耗时；它们不包含浏览器和排队时间。
 
 故障时最先出现的信号：任务队列满先返回 `TASK_QUEUE_FULL`；Agent 容量满先记录 `agent_capacity_rejected`；连续上游失败达到阈值时 Java 先记录 `upstream_circuit_open`，随后请求返回 `*_CIRCUIT_OPEN`，最后 Nginx access log记录对应 503 和分层耗时。
 

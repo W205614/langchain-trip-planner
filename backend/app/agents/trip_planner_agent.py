@@ -743,8 +743,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
         if evidence is not None:
             evidence.update({p.id: p.model_dump() for p in result.get("attraction_pois", [])})
 
-        # 每一天都必须至少包含一个可信景点。Java 还会用高德 REST 二次确认；
-        # 若二次确认后无法从候选池补位，整次任务会失败而不是保存空白日。
+        # 每一天都必须至少包含一个由 Agent 高德能力取得的可信景点。
+        # Java 只核对返回景点是否属于本次可信候选，不再二次规划或替换。
         if any(not day.attractions for day in trip_plan.days):
             raise BizException(
                 "至少一天无法获取可验证的真实景点，请调整要求后重试",

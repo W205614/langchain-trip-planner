@@ -277,13 +277,17 @@ def execute(body: Execution, request: Request):
                     plan = planner.revise_trip_day(body.request, body.original_plan, body.day_index,
                         body.instruction, user_id=body.user_id)
                 plan.enrichment_notices = list(dict.fromkeys([*plan.enrichment_notices, *notices]))
-                # Python only performs a network-free draft precheck. Java remains the
-                # final authority for canonical POI facts, route evidence and persistence.
+                # The Agent owns travel generation end to end: trusted POI selection,
+                # route lookup, bounded repair and quality classification. Java validates
+                # the returned protocol and owns task lifecycle and persistence only.
                 from ..services.planning_constraints import finalize_plan
                 precheck_started = time.perf_counter()
                 emit("progress", {"stage":"agent_precheck", "percent":90,
-                    "message":"Agent 草稿已生成，正在执行本地结构检查"})
-                quality = finalize_plan(plan, body.request, None, repair=True)
+                    "message":"Agent 草稿已生成，正在核验路线与行程约束"})
+                quality = finalize_plan(plan, body.request, planner.amap_service, repair=True)
+                quality.setdefault("timings", {})["agent_route_and_constraints_ms"] = round(
+                    (time.perf_counter() - precheck_started) * 1000
+                )
                 from ..core.trip_metrics import observe_agent_stage
                 observe_agent_stage("agent_precheck", time.perf_counter() - precheck_started)
                 emit("result", {"protocol_version":1,"plan": plan.model_dump(),

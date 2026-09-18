@@ -342,8 +342,8 @@ const reverifyRecord = async (record: any) => {
   verifyingId.value = record.id
   try {
     const response = await reverifyTrip(record.id, record.version)
-    const routeMissing = (response.quality?.issues || []).some((issue: any) => issue.code === 'TIME_LIMIT_UNVERIFIED')
-    if (routeMissing) message.warning('仍有路线无法核验，请进入具体行程后使用 AI 重新安排')
+    const routeMissing = (response.quality?.issues || []).some((issue: any) => issue.code === 'ROUTE_UNAVAILABLE')
+    if (routeMissing) message.warning('部分路线仍不可用，行程已保留，可进入具体行程继续调整')
     else message.success('路线已重新核验，时间统计已更新')
     await loadRecords()
   } catch (error: any) {

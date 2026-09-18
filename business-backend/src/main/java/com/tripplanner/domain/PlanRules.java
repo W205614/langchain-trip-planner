@@ -7,7 +7,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.*;
 
-/** Deterministic final authority; route facts are supplied by a bounded external adapter. */
+/** Deterministic checks for user-edited plans and explicit route re-verification. */
 @Service
 public class PlanRules {
   @FunctionalInterface
@@ -464,14 +464,25 @@ public class PlanRules {
               "重新选择可信景点",
               true,
               false);
+    var routeMissingDays = new ArrayList<Integer>();
     for (var day : report.path("day_checks")) {
       String scope = "day:" + day.path("day_index").asInt(0);
       if (day.path("route_minutes").isNull())
-        issue(issues, "TIME_LIMIT_UNVERIFIED", scope, "路线缺失，无法核验每日时间上限", "先重新核验路线；仍失败时再调整景点", true, true);
+        routeMissingDays.add(day.path("day_index").asInt(0) + 1);
       if (request.path("constraints").hasNonNull("max_inter_stop_walking_km")
           && day.path("inter_stop_walking_km").isNull())
         issue(issues, "WALKING_LIMIT_UNVERIFIED", scope, "无法核验指定步行上限", "稍后重试或调整交通要求", true, true);
     }
+    if (!routeMissingDays.isEmpty())
+      issue(
+          issues,
+          "ROUTE_UNAVAILABLE",
+          "plan",
+          routeMissingDays.stream().map(i -> "第" + i + "天").collect(java.util.stream.Collectors.joining("、"))
+              + "部分景点间路线暂不可用，已保留可继续调整的行程",
+          "可直接查看行程；出发前确认交通，或在具体行程中调整景点",
+          false,
+          true);
     report
         .path("degraded_days")
         .forEach(
@@ -515,7 +526,7 @@ public class PlanRules {
             .valueStream()
             .anyMatch(
                 i ->
-                    Set.of("RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE")
+                    Set.of("RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE", "ROUTE_UNAVAILABLE")
                         .contains(i.path("code").asText("")));
     report
         .put("completion_policy", "reliability-v1")

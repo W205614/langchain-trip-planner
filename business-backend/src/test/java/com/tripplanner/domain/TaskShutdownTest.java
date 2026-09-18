@@ -21,8 +21,6 @@ class TaskShutdownTest {
             mock(HistoryMapper.class),
             mock(TransactionTemplate.class),
             mock(AgentClient.class),
-            mock(PlanRules.class),
-            mock(AmapGateway.class),
             JsonMapper.builder().build(),
             mock(TripLedgerService.class),
             mock(BusinessMetrics.class),
@@ -34,6 +32,16 @@ class TaskShutdownTest {
             500);
     ReflectionTestUtils.setField(service, "workersEnabled", true);
     return service;
+  }
+
+  @Test
+  void generatedTripTaskDoesNotOwnMapOrPlanningRules() {
+    assertFalse(
+        java.util.Arrays.stream(TaskService.class.getDeclaredFields())
+            .anyMatch(
+                field ->
+                    field.getType().equals(AmapGateway.class)
+                        || field.getType().equals(PlanRules.class)));
   }
 
   @Test
