@@ -1,6 +1,15 @@
 server:
   port: ${PORT:9000}
   forward-headers-strategy: native
+  tomcat:
+    threads:
+      max: ${SERVER_MAX_THREADS:64}
+      min-spare: ${SERVER_MIN_SPARE_THREADS:8}
+    accept-count: ${SERVER_ACCEPT_COUNT:32}
+    max-connections: ${SERVER_MAX_CONNECTIONS:256}
+    connection-timeout: 5s
+    keep-alive-timeout: 15s
+    max-keep-alive-requests: 100
 logging:
   pattern:
     correlation: "[request_id=%X{request_id:-}] "
@@ -9,6 +18,11 @@ spring:
     url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/trip}
     username: ${POSTGRES_USER:trip}
     password: ${POSTGRES_PASSWORD:}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:12}
+      minimum-idle: ${DB_POOL_MIN_IDLE:4}
+      connection-timeout: 3000
+      validation-timeout: 1000
   flyway:
     baseline-on-migrate: false
   servlet:
@@ -19,6 +33,7 @@ mybatis:
   configuration:
     call-setters-on-nulls: true
     jdbc-type-for-null: NULL
+    default-statement-timeout: 5
 management:
   endpoints:
     web:
@@ -32,6 +47,10 @@ management:
   metrics:
     tags:
       application: trip-business
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        trip.upstream.call.duration: true
 trip:
   jwt-secret: ${JWT_SECRET_KEY}
   internal-key: ${INTERNAL_SERVICE_KEY}

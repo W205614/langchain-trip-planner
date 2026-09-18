@@ -3,6 +3,7 @@ package com.tripplanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.sun.net.httpserver.HttpServer;
+import com.tripplanner.api.ApiException;
 import com.tripplanner.agent.AgentClient;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
@@ -13,6 +14,36 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 class AgentClientTest {
+  @Test
+  void agentCapacityRejectionDoesNotOpenTheDependencyCircuit() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var calls = new AtomicInteger();
+    server.createContext(
+        "/internal/v1/capabilities/research",
+        exchange -> {
+          int call = calls.incrementAndGet();
+          byte[] body = (call <= 6 ? "{\"code\":\"AGENT_CAPACITY_REJECTED\"}" : "{}")
+              .getBytes(StandardCharsets.UTF_8);
+          exchange.sendResponseHeaders(call <= 6 ? 429 : 200, body.length);
+          exchange.getResponseBody().write(body);
+          exchange.close();
+        });
+    server.start();
+    try {
+      var client =
+          new AgentClient(
+              "http://127.0.0.1:" + server.getAddress().getPort(), "test-key", new JsonMapper());
+      for (int i = 0; i < 6; i++) {
+        var error = assertThrows(ApiException.class, () -> client.post("/capabilities/research", Map.of()));
+        assertEquals("AGENT_BUSY", error.code);
+      }
+      assertNotNull(client.post("/capabilities/research", Map.of()));
+      assertEquals(7, calls.get());
+    } finally {
+      server.stop(0);
+    }
+  }
+
   @Test
   void preservesStreamEventsWithoutHttp2UpgradeOrAutomaticRetry() throws Exception {
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);

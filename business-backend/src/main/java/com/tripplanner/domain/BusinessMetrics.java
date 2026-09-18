@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -117,6 +118,12 @@ public class BusinessMetrics {
             }
           });
     else increment.run();
+  }
+
+  public void recordTaskExecution(String outcome, long nanos) {
+    registry
+        .timer("trip.task.execution.duration", "outcome", "success".equals(outcome) ? "success" : "failed")
+        .record(nanos, TimeUnit.NANOSECONDS);
   }
 
   private double age(String query) {

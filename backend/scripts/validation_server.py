@@ -54,7 +54,7 @@ def response(prompt, **kwargs):
     text = prompt.to_messages()[-1].content
     if "fixture:slow" in text:
         import time
-        time.sleep(20)
+        time.sleep(max(0.1, min(60.0, float(os.environ.get("VALIDATION_SLOW_SECONDS", "20")))))
     if "fixture:invalid-json" in text:
         return AIMessage(content="invalid")
     ids = re.findall(r"poi_id=([^\s|]+)", text)

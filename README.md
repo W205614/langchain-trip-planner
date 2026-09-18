@@ -229,7 +229,7 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 | `/api/map/*`、`/api/poi/*`、`/api/research/*` | 地图、图片与资料研究 |
 | `/health`、`/readyz`、`/api/capabilities` | 存活、业务就绪与 Agent/MCP 分能力状态 |
 
-版本接口为 `GET /api/trips/{id}/versions`、`GET /api/trips/{id}/versions/{version}` 和带当前 `If-Match` 的 `POST /api/trips/{id}/restore`。公开请求由 Java 处理；Python 仅提供 `/internal/v1`。Schema 与样例见 `contracts/internal-v1/`。Java 内部指标由 Actuator/Micrometer 暴露在 `/actuator/prometheus`，Prometheus 只通过容器网络抓取；日常四容器不默认启动额外监控栈，本地通知接收器仅用于验证，不是生产告警渠道。
+版本接口为 `GET /api/trips/{id}/versions`、`GET /api/trips/{id}/versions/{version}` 和带当前 `If-Match` 的 `POST /api/trips/{id}/restore`。公开请求由 Java 处理；Python 仅提供 `/internal/v1`。Schema 与样例见 `contracts/internal-v1/`。Java 内部指标由 Actuator/Micrometer 暴露在 `/actuator/prometheus`，Prometheus 只通过容器网络抓取；日常四容器不默认启动额外监控栈，本地通知接收器仅用于验证，不是生产告警渠道。限流、并发舱壁、熔断、分层耗时与受控压测步骤见 [性能与雪崩保护手册](docs/operations/performance-reliability.md)。
 
 ## ✅ 自动化验证
 
@@ -246,6 +246,8 @@ docker compose -p trip-validation -f docker-compose.validation.yml run --rm test
 python backend/scripts/java_api_contract_smoke.py --output evidence/public-api.json
 python backend/scripts/java_knowledge_smoke.py --output evidence/knowledge.json
 python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
+# 离线 QPS 阶梯、慢任务隔离和 Agent／高德故障演练
+python backend/scripts/performance_drill.py --output docs/evidence/performance-current/report.json
 ```
 
 前端目录执行 `npm ci`、`npx playwright install chromium`、`npx playwright test`。验证结束后运行 `docker compose -p trip-validation -f docker-compose.validation.yml down`，不常驻第二套项目。CI 还验证任务中断、取消后迟到及告警恢复。

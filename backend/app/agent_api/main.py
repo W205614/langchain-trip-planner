@@ -3,10 +3,13 @@ import asyncio
 import hashlib
 import hmac
 import json
+import logging
 import os
 import threading
 import time
 from contextlib import asynccontextmanager
+from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from queue import Queue, Empty
 from typing import Literal
@@ -16,12 +19,23 @@ from uuid import uuid4
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, ValidationError
+from prometheus_client import Counter, Gauge, Histogram
 
 from ..models.schemas import TripRequest, TripPlan, Location, POIInfo
 from ..services.execution import execution_deadline, cancellation_var, trusted_evidence_var, rag_degradation_var
 from ..core.exceptions import BizException, biz_exception_handler
 from ..core.logging import request_id_context
 from ..services.agent_paths import DATA_DIR
+
+
+logger = logging.getLogger(__name__)
+
+
+def _bounded_env(name: str, default: int, maximum: int = 256) -> int:
+    try:
+        return max(1, min(maximum, int(os.environ.get(name, default))))
+    except (TypeError, ValueError):
+        return default
 
 
 class Execution(BaseModel):
@@ -53,10 +67,69 @@ def authorize(x_service_key: str = Header(default="")):
         raise HTTPException(401, "Internal service authentication required")
 
 
+@dataclass
+class ExecutionRegistration:
+    fingerprint: str
+    cancelled: threading.Event
+    completed_at: float | None = None
+
+
 _lock = threading.Lock()
-# Completed registrations remain until process exit; capacity exhaustion fails closed.
-_executions: dict[str, tuple[str, threading.Event]] = {}
-_slots = threading.BoundedSemaphore(4)
+_executions: dict[str, ExecutionRegistration] = {}
+_slots = threading.BoundedSemaphore(_bounded_env("AGENT_EXECUTION_MAX_CONCURRENCY", 4, 32))
+_slow_slots = threading.BoundedSemaphore(_bounded_env("AGENT_SLOW_CAPABILITY_MAX_CONCURRENCY", 4, 32))
+_tool_slots = threading.BoundedSemaphore(_bounded_env("AGENT_TOOL_MAX_CONCURRENCY", 8, 64))
+_execution_retention_seconds = _bounded_env("AGENT_EXECUTION_RETENTION_SECONDS", 900, 86400)
+_execution_registry_max = _bounded_env("AGENT_EXECUTION_REGISTRY_MAX", 10000, 100000)
+
+HTTP_REQUESTS = Counter(
+    "trip_agent_http_requests_total", "Agent HTTP requests", ("method", "path", "status")
+)
+HTTP_SECONDS = Histogram(
+    "trip_agent_http_request_seconds", "Agent HTTP latency", ("method", "path")
+)
+HTTP_IN_FLIGHT = Gauge("trip_agent_http_in_flight", "Agent HTTP requests currently running")
+CAPACITY_REJECTED = Counter(
+    "trip_agent_capacity_rejected_total", "Agent work rejected before execution", ("kind",)
+)
+EXECUTION_ACTIVE = Gauge("trip_agent_execution_active", "Agent itinerary executions currently active")
+EXECUTION_REGISTRY = Gauge("trip_agent_execution_registry_size", "Retained execution identities")
+
+
+def _refresh_execution_gauges() -> None:
+    EXECUTION_REGISTRY.set(len(_executions))
+    EXECUTION_ACTIVE.set(sum(item.completed_at is None for item in _executions.values()))
+
+
+def _purge_executions(now: float) -> None:
+    stale = [
+        identity
+        for identity, item in _executions.items()
+        if item.completed_at is not None and now - item.completed_at >= _execution_retention_seconds
+    ]
+    for identity in stale:
+        _executions.pop(identity, None)
+    if len(_executions) >= _execution_registry_max:
+        completed = sorted(
+            (item.completed_at, identity)
+            for identity, item in _executions.items()
+            if item.completed_at is not None
+        )
+        for _, identity in completed[: max(0, len(_executions) - _execution_registry_max + 1)]:
+            _executions.pop(identity, None)
+    _refresh_execution_gauges()
+
+
+@contextmanager
+def capacity(kind: str, slots: threading.BoundedSemaphore):
+    if not slots.acquire(blocking=False):
+        CAPACITY_REJECTED.labels(kind).inc()
+        logger.warning("agent_capacity_rejected kind=%s", kind)
+        raise HTTPException(429, f"Agent {kind} capacity exhausted")
+    try:
+        yield
+    finally:
+        slots.release()
 
 
 @asynccontextmanager
@@ -77,8 +150,8 @@ async def lifespan(app):
             yield
         finally:
             with _lock:
-                for _, cancelled in _executions.values():
-                    cancelled.set()
+                for registration in _executions.values():
+                    registration.cancelled.set()
 
 
 app = FastAPI(title="Trip Agent Internal API", lifespan=lifespan, docs_url=None, redoc_url=None)
@@ -91,11 +164,30 @@ async def correlate_request(request: Request, call_next):
     request_id = incoming if incoming and len(incoming) <= 64 and incoming.replace("-", "").replace("_", "").isalnum() else str(uuid4())
     request.state.request_id = request_id
     token = request_id_context.set(request_id)
+    started = time.perf_counter()
+    status = 500
+    HTTP_IN_FLIGHT.inc()
     try:
         response = await call_next(request)
+        status = response.status_code
         response.headers["X-Request-ID"] = request_id
+        response.headers["Server-Timing"] = f'agent;dur={(time.perf_counter() - started) * 1000:.1f}'
         return response
     finally:
+        route = request.scope.get("route")
+        path = getattr(route, "path", "unmatched")
+        elapsed = time.perf_counter() - started
+        HTTP_IN_FLIGHT.dec()
+        HTTP_REQUESTS.labels(request.method, path, str(status)).inc()
+        HTTP_SECONDS.labels(request.method, path).observe(elapsed)
+        if status >= 400 or elapsed >= 1:
+            logger.warning(
+                "agent_request_complete method=%s path=%s status=%s elapsed_ms=%.1f",
+                request.method,
+                path,
+                status,
+                elapsed * 1000,
+            )
         request_id_context.reset(token)
 
 
@@ -146,11 +238,15 @@ def execute(body: Execution, request: Request):
     fingerprint = hashlib.sha256(body.model_dump_json().encode()).hexdigest()
     cancelled = threading.Event()
     with _lock:
+        _purge_executions(time.monotonic())
         if identity in _executions:
             raise HTTPException(409, "Execution already registered; do not regenerate")
-        if len(_executions) >= 10000 or not _slots.acquire(blocking=False):
+        if len(_executions) >= _execution_registry_max or not _slots.acquire(blocking=False):
+            CAPACITY_REJECTED.labels("execution").inc()
+            logger.warning("agent_capacity_rejected kind=execution registry=%s", len(_executions))
             raise HTTPException(429, "Agent capacity exhausted")
-        _executions[identity] = (fingerprint, cancelled)
+        _executions[identity] = ExecutionRegistration(fingerprint, cancelled)
+        _refresh_execution_gauges()
     events = Queue(maxsize=128)
 
     def emit(event, payload):
@@ -159,9 +255,11 @@ def execute(body: Execution, request: Request):
         events.put((event, payload), timeout=2)
 
     def work():
+        work_started = time.perf_counter()
         request_token = request_id_context.set(body.request_id)
         token = cancellation_var.set(cancelled)
         try:
+            logger.info("agent_execution_started execution_id=%s task_id=%s", identity, body.task_id)
             from ..agents.trip_planner_agent import get_trip_planner_agent
             planner = get_trip_planner_agent()
             def usage(stats, before_call):
@@ -191,6 +289,12 @@ def execute(body: Execution, request: Request):
                     "trusted_candidates": list(evidence.values()), "quality": quality,
                     "usage": dict(stats), "execution_id": identity})
         except Exception as exc:
+            logger.warning(
+                "agent_execution_failed execution_id=%s type=%s elapsed_ms=%.1f",
+                identity,
+                type(exc).__name__,
+                (time.perf_counter() - work_started) * 1000,
+            )
             if not cancelled.is_set():
                 try:
                     emit("error", {"code": "TASK_TIMEOUT" if isinstance(exc, TimeoutError) else getattr(exc, "code", "GENERATION_FAILED")})
@@ -203,12 +307,25 @@ def execute(body: Execution, request: Request):
                 rag_degradation_var.reset(notices_token)
             cancellation_var.reset(token)
             request_id_context.reset(request_token)
+            with _lock:
+                registration = _executions.get(identity)
+                if registration is not None:
+                    registration.completed_at = time.monotonic()
+                _refresh_execution_gauges()
             _slots.release()
+            logger.info(
+                "agent_execution_finished execution_id=%s elapsed_ms=%.1f",
+                identity,
+                (time.perf_counter() - work_started) * 1000,
+            )
 
     worker = threading.Thread(target=work, daemon=True, name=f"agent-{identity}")
     try:
         worker.start()
     except Exception:
+        with _lock:
+            _executions.pop(identity, None)
+            _refresh_execution_gauges()
         _slots.release()
         raise
 
@@ -237,7 +354,7 @@ def cancel(execution_id: UUID):
     with _lock:
         item = _executions.get(str(execution_id))
         if item:
-            item[1].set()
+            item.cancelled.set()
     return {"success": True}
 
 
@@ -253,34 +370,37 @@ def capability(kind: str, body: dict):
         from ..services.eval_budget import policy
         return policy()
     elif kind == "research":
-        request = TravelResearchRequest.model_validate(body)
-        rag = get_rag_service()
-        if not rag.enabled:
-            raise BizException("旅行资料研究未启用或索引需要修复", status_code=503, code="RAG_DISABLED")
-        evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
-        from ..services.research_answer import build_research_answer
-        result = build_research_answer(request.query, request.city, evidence, request.trip_context)
+        with capacity("research", _slow_slots):
+            request = TravelResearchRequest.model_validate(body)
+            rag = get_rag_service()
+            if not rag.enabled:
+                raise BizException("旅行资料研究未启用或索引需要修复", status_code=503, code="RAG_DISABLED")
+            evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
+            from ..services.research_answer import build_research_answer
+            result = build_research_answer(request.query, request.city, evidence, request.trip_context)
     elif kind == "poi-search":
-        request = POISearchRequest.model_validate(body)
-        from ..services.amap_service import get_amap_service
-        result = [poi.model_dump() for poi in get_amap_service().search_poi(
-            request.keywords, request.city, request.citylimit
-        )]
+        with capacity("tool", _tool_slots):
+            request = POISearchRequest.model_validate(body)
+            from ..services.amap_service import get_amap_service
+            result = [poi.model_dump() for poi in get_amap_service().search_poi(
+                request.keywords, request.city, request.citylimit
+            )]
     elif kind == "poi-detail":
-        request = POIDetailRequest.model_validate(body)
-        from ..services.amap_service import get_amap_service
-        raw = get_amap_service().get_poi_detail(request.poi_id)
-        if not raw or raw.get("id") != request.poi_id:
-            raise HTTPException(404, "POI not found")
-        photos = raw.get("photos") or []
-        result = {
-            "id": str(raw.get("id") or ""),
-            "name": str(raw.get("name") or ""),
-            "type": raw.get("type") if isinstance(raw.get("type"), str) else "",
-            "address": raw.get("address") if isinstance(raw.get("address"), str) else "",
-            "city": raw.get("cityname") if isinstance(raw.get("cityname"), str) else "",
-            "photos": [p.get("url") for p in photos if isinstance(p, dict) and p.get("url")],
-        }
+        with capacity("tool", _tool_slots):
+            request = POIDetailRequest.model_validate(body)
+            from ..services.amap_service import get_amap_service
+            raw = get_amap_service().get_poi_detail(request.poi_id)
+            if not raw or raw.get("id") != request.poi_id:
+                raise HTTPException(404, "POI not found")
+            photos = raw.get("photos") or []
+            result = {
+                "id": str(raw.get("id") or ""),
+                "name": str(raw.get("name") or ""),
+                "type": raw.get("type") if isinstance(raw.get("type"), str) else "",
+                "address": raw.get("address") if isinstance(raw.get("address"), str) else "",
+                "city": raw.get("cityname") if isinstance(raw.get("cityname"), str) else "",
+                "photos": [p.get("url") for p in photos if isinstance(p, dict) and p.get("url")],
+            }
     elif kind == "rag-status":
         rag = get_rag_service()
         return {"success": True, "enabled": rag.enabled, "embedding_model": rag._embedding.model if rag.enabled else None}
@@ -320,27 +440,28 @@ def research_stream(body: dict, http_request: Request):
 
         started_at = time.perf_counter()
         try:
-            yield "event: progress\ndata: " + json.dumps(
-                {"stage": "research_retrieval", "message": "正在检索当前旅行资料"}, ensure_ascii=False
-            ) + "\n\n"
-            evidence = with_request_context(
-                lambda: rag.retrieve_research_evidence(request.query, request.city, k=5)
-            )
-            observe_agent_stage("research_retrieval", time.perf_counter() - started_at)
-            from ..services.research_answer import stream_research_answer
-            stream = with_request_context(
-                lambda: iter(
-                    stream_research_answer(
-                        request.query, request.city, evidence, request.trip_context
+            with capacity("research", _slow_slots):
+                yield "event: progress\ndata: " + json.dumps(
+                    {"stage": "research_retrieval", "message": "正在检索当前旅行资料"}, ensure_ascii=False
+                ) + "\n\n"
+                evidence = with_request_context(
+                    lambda: rag.retrieve_research_evidence(request.query, request.city, k=5)
+                )
+                observe_agent_stage("research_retrieval", time.perf_counter() - started_at)
+                from ..services.research_answer import stream_research_answer
+                stream = with_request_context(
+                    lambda: iter(
+                        stream_research_answer(
+                            request.query, request.city, evidence, request.trip_context
+                        )
                     )
                 )
-            )
-            while True:
-                try:
-                    event, payload = with_request_context(lambda: next(stream))
-                except StopIteration:
-                    break
-                yield f"event: {event}\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
+                while True:
+                    try:
+                        event, payload = with_request_context(lambda: next(stream))
+                    except StopIteration:
+                        break
+                    yield f"event: {event}\ndata: {json.dumps(payload, ensure_ascii=False)}\n\n"
         except Exception as exc:
             observe_agent_stage("research_retrieval", time.perf_counter() - started_at, "error")
             payload = {
@@ -354,17 +475,19 @@ def research_stream(body: dict, http_request: Request):
 
 @app.post("/internal/v1/index/{kind}", dependencies=[Depends(authorize)])
 def index(kind: Literal["history", "document", "rebuild"], body: dict):
-    if kind == "rebuild":
-        from .rebuild import rebuild
-        return rebuild()
-    from . import indexing
-    from .contracts import HistoryIndexRequest, DocumentIndexRequest
-    contract = HistoryIndexRequest if kind == "history" else DocumentIndexRequest
-    return getattr(indexing, kind)(contract.model_validate(body).model_dump())
+    with capacity("index", _slow_slots):
+        if kind == "rebuild":
+            from .rebuild import rebuild
+            return rebuild()
+        from . import indexing
+        from .contracts import HistoryIndexRequest, DocumentIndexRequest
+        contract = HistoryIndexRequest if kind == "history" else DocumentIndexRequest
+        return getattr(indexing, kind)(contract.model_validate(body).model_dump())
 
 
 @app.post("/internal/v1/documents/extract", dependencies=[Depends(authorize)])
 def extract_document(body: dict):
-    from .extraction import extract
-    from .contracts import DocumentExtractRequest, DocumentExtractResult
-    return DocumentExtractResult.model_validate(extract(DocumentExtractRequest.model_validate(body).model_dump())).model_dump()
+    with capacity("document", _slow_slots):
+        from .extraction import extract
+        from .contracts import DocumentExtractRequest, DocumentExtractResult
+        return DocumentExtractResult.model_validate(extract(DocumentExtractRequest.model_validate(body).model_dump())).model_dump()

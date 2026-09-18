@@ -2,6 +2,9 @@ package com.tripplanner.domain;
 
 import com.github.benmanes.caffeine.cache.*;
 import com.tripplanner.api.ApiException;
+import com.tripplanner.resilience.UpstreamGuard;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.io.ByteArrayOutputStream;
 import java.net.*;
 import java.net.http.*;
@@ -11,6 +14,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.*;
 import tools.jackson.databind.json.JsonMapper;
@@ -29,8 +33,10 @@ public class AmapGateway {
   private final Cache<String, JsonNode> weatherCache;
   private final Cache<String, JsonNode> detailCache;
   private final Cache<String, JsonNode> routeCache;
+  private final UpstreamGuard guard;
   private final AtomicLong requests = new AtomicLong(), failures = new AtomicLong();
 
+  @Autowired
   public AmapGateway(
       @Value("${trip.amap.base-url}") String baseUrl,
       @Value("${trip.amap.api-key:}") String apiKey,
@@ -40,7 +46,11 @@ public class AmapGateway {
       @Value("${trip.amap.cache-maximum-size:1000}") long maximumSize,
       @Value("${APP_ENV:production}") String environment,
       @Value("${VALIDATION_ALLOW_FIXTURES:no}") String validationFixtures,
-      JsonMapper json) {
+      JsonMapper json,
+      @Value("${AMAP_REQUEST_MAX_CONCURRENCY:8}") int concurrency,
+      @Value("${UPSTREAM_CIRCUIT_FAILURE_THRESHOLD:5}") int failureThreshold,
+      @Value("${UPSTREAM_CIRCUIT_OPEN_SECONDS:15}") int openSeconds,
+      MeterRegistry registry) {
     URI base;
     try {
       base = URI.create(baseUrl);
@@ -58,13 +68,30 @@ public class AmapGateway {
     this.baseUrl = baseUrl.replaceAll("/+$", "");
     this.apiKey = apiKey.strip();
     this.json = json;
-    this.http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5))
+    this.http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2))
         .followRedirects(HttpClient.Redirect.NEVER).build();
     this.poiCache = cache(poiTtl, maximumSize);
     this.weatherCache = cache(weatherTtl, maximumSize);
     this.detailCache = cache(detailTtl, maximumSize);
     // Route facts change more slowly than weather but are kept short-lived to avoid stale travel times.
     this.routeCache = cache(300, maximumSize);
+    this.guard = new UpstreamGuard("amap", concurrency, failureThreshold,
+        Duration.ofSeconds(openSeconds), Duration.ofMillis(50), registry);
+  }
+
+  /** Test-friendly constructor; production uses the injected bounded settings above. */
+  public AmapGateway(
+      String baseUrl,
+      String apiKey,
+      long poiTtl,
+      long weatherTtl,
+      long detailTtl,
+      long maximumSize,
+      String environment,
+      String validationFixtures,
+      JsonMapper json) {
+    this(baseUrl, apiKey, poiTtl, weatherTtl, detailTtl, maximumSize, environment,
+        validationFixtures, json, 8, 5, 15, new SimpleMeterRegistry());
   }
 
   private static Cache<String, JsonNode> cache(long ttl, long size) {
@@ -92,19 +119,22 @@ public class AmapGateway {
           .append(URLEncoder.encode(value.toString(), StandardCharsets.UTF_8));
     });
     try {
-      requests.incrementAndGet();
-      var request = HttpRequest.newBuilder(URI.create(baseUrl + path + "?" + query))
-          .timeout(Duration.ofSeconds(10)).GET().build();
-      var response = http.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-      if (response.statusCode() / 100 != 2) throw new ApiException(503, "地图服务暂不可用", "MAP_UPSTREAM_ERROR");
-      JsonNode data = json.readTree(response.body());
-      if (!"1".equals(data.path("status").asText())) {
-        String info = data.path("info").asText("");
-        throw new ApiException(info.contains("LIMIT") ? 429 : 503,
-            info.contains("LIMIT") ? "地图服务请求过于频繁" : "地图服务暂不可用",
-            info.contains("LIMIT") ? "MAP_RATE_LIMITED" : "MAP_UPSTREAM_ERROR");
-      }
-      return data;
+      return guard.execute(() -> {
+        requests.incrementAndGet();
+        var request = HttpRequest.newBuilder(URI.create(baseUrl + path + "?" + query))
+            .timeout(Duration.ofSeconds(10)).GET().build();
+        var response = http.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        if (response.statusCode() / 100 != 2)
+          throw new ApiException(503, "地图服务暂不可用", "MAP_UPSTREAM_ERROR");
+        JsonNode data = json.readTree(response.body());
+        if (!"1".equals(data.path("status").asText())) {
+          String info = data.path("info").asText("");
+          throw new ApiException(info.contains("LIMIT") ? 429 : 503,
+              info.contains("LIMIT") ? "地图服务请求过于频繁" : "地图服务暂不可用",
+              info.contains("LIMIT") ? "MAP_RATE_LIMITED" : "MAP_UPSTREAM_ERROR");
+        }
+        return data;
+      });
     } catch (ApiException ex) {
       failures.incrementAndGet();
       throw ex;
@@ -324,18 +354,22 @@ public class AmapGateway {
         URI uri = URI.create(raw);
         String host = Objects.toString(uri.getHost(), "").toLowerCase(Locale.ROOT);
         if (!"https".equals(uri.getScheme()) || !(host.endsWith(".amap.com") || host.endsWith(".autonavi.com"))) continue;
-        var response = http.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(8)).GET().build(),
-            HttpResponse.BodyHandlers.ofInputStream());
-        String media = response.headers().firstValue("Content-Type").orElse("").split(";", 2)[0].strip().toLowerCase(Locale.ROOT);
-        if (response.statusCode() / 100 != 2 || !Set.of("image/jpeg", "image/png", "image/webp", "image/gif").contains(media)) continue;
-        try (var input = response.body(); var output = new ByteArrayOutputStream()) {
-          byte[] buffer = new byte[8192]; int read, total = 0;
-          while ((read = input.read(buffer)) >= 0) {
-            total += read; if (total > 5 * 1024 * 1024) throw new ApiException(413, "景点图片过大");
-            output.write(buffer, 0, read);
+        Image downloaded = guard.execute(() -> {
+          var response = http.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(8)).GET().build(),
+              HttpResponse.BodyHandlers.ofInputStream());
+          String media = response.headers().firstValue("Content-Type").orElse("").split(";", 2)[0].strip().toLowerCase(Locale.ROOT);
+          if (response.statusCode() / 100 != 2 || !Set.of("image/jpeg", "image/png", "image/webp", "image/gif").contains(media))
+            throw new ApiException(503, "景点图片暂不可用", "MAP_UPSTREAM_ERROR");
+          try (var input = response.body(); var output = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[8192]; int read, total = 0;
+            while ((read = input.read(buffer)) >= 0) {
+              total += read; if (total > 5 * 1024 * 1024) throw new ApiException(413, "景点图片过大");
+              output.write(buffer, 0, read);
+            }
+            return new Image(output.toByteArray(), media, false);
           }
-          return new Image(output.toByteArray(), media, false);
-        }
+        });
+        return downloaded;
       }
     } catch (Exception ignored) {
     }

@@ -53,3 +53,31 @@ groups:
         for: 0s
         labels:
           severity: warning
+      - alert: TripUpstreamCircuitOpen
+        expr: sum(increase(trip_upstream_circuit_opened_total[5m])) > 0
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Agent 或高德连续失败已触发熔断，当前请求会快速失败"
+      - alert: TripCapacityRejected
+        expr: sum(increase(trip_upstream_rejected_total{reason="capacity"}[5m])) + sum(increase(trip_agent_capacity_rejected_total[5m])) >= 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "慢能力并发槽已满；检查队列、上游耗时与流量来源"
+      - alert: TripServletThreadsHigh
+        expr: max(tomcat_threads_busy_threads) / clamp_min(max(tomcat_threads_config_max_threads), 1) > 0.8
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Java 请求线程使用率持续超过 80%"
+      - alert: TripDatabasePoolWaiting
+        expr: max(hikaricp_connections_pending) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "数据库连接池出现持续等待"

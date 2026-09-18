@@ -28,6 +28,12 @@ services:
       UPLOAD_DIR: /data/uploads
       APP_ENV: validation
       VALIDATION_ALLOW_FIXTURES: "yes"
+      LLM_REQUEST_MAX_CONCURRENCY: 4
+      TRIP_TASK_QUEUE_LIMIT: 12
+      TRIP_USER_ACTIVE_LIMIT: 4
+      TRIP_TASK_TIMEOUT_SECONDS: 30
+      AGENT_REQUEST_MAX_CONCURRENCY: 8
+      AMAP_REQUEST_MAX_CONCURRENCY: 8
     depends_on:
       postgres:
         condition: service_healthy
@@ -56,6 +62,10 @@ services:
       RAG_ENABLED: "false"
       BUSINESS_URL: http://backend:9000
       INTERNAL_SERVICE_KEY: migration-fixture-internal-01234567890123456789
+      AGENT_EXECUTION_MAX_CONCURRENCY: 4
+      AGENT_SLOW_CAPABILITY_MAX_CONCURRENCY: 4
+      AGENT_TOOL_MAX_CONCURRENCY: 8
+      VALIDATION_SLOW_SECONDS: ${VALIDATION_SLOW_SECONDS:-20}
     healthcheck:
       test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz')"]
       interval: 5s

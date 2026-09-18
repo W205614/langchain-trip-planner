@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.MDC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -23,6 +25,7 @@ import tools.jackson.databind.node.ObjectNode;
 @Service
 @org.springframework.context.annotation.DependsOn("singleInstance")
 public class TaskService {
+  private static final Logger log = LoggerFactory.getLogger(TaskService.class);
   private final TaskMapper tasks;
   private final HistoryMapper history;
   private final TransactionTemplate tx;
@@ -298,6 +301,8 @@ public class TaskService {
     long uid = ((Number) task.get("user_id")).longValue();
     var body = (ObjectNode) json.readTree(task.get("request_json").toString());
     var revision = (ObjectNode) body.remove("_revision");
+    long executionStarted = System.nanoTime();
+    log.info("task_execution_started task_id={} execution_id={}", id, execution);
     try {
       Instant deadline =
           ((Timestamp) task.get("deadline_at")).toLocalDateTime().toInstant(ZoneOffset.UTC);
@@ -363,6 +368,12 @@ public class TaskService {
               complete(task, body, plan, quality, revision);
             }
           });
+      metrics.recordTaskExecution("success", System.nanoTime() - executionStarted);
+      log.info(
+          "task_execution_finished task_id={} execution_id={} elapsed_ms={}",
+          id,
+          execution,
+          TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - executionStarted));
     } catch (Exception ex) {
       String code =
           closing
@@ -371,6 +382,14 @@ public class TaskService {
                   ? ae.code
                   : ex instanceof InterruptedException ? "TASK_TIMEOUT" : "AGENT_CONNECTION_LOST";
       tasks.fail(id, execution, code, "规划未完成，请查看任务状态后重试");
+      metrics.recordTaskExecution("failed", System.nanoTime() - executionStarted);
+      log.warn(
+          "task_execution_failed task_id={} execution_id={} code={} type={} elapsed_ms={}",
+          id,
+          execution,
+          code,
+          ex.getClass().getSimpleName(),
+          TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - executionStarted));
       if (ex instanceof InterruptedException) Thread.currentThread().interrupt();
     }
   }
