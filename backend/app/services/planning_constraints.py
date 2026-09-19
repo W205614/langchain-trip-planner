@@ -3,10 +3,11 @@
 Only inter-attraction routes are measured. Meals and buffer are allowances,
 not verified appointments. Missing upstream facts never become zero distances.
 """
+from itertools import permutations
 from math import isfinite
 
 from ..models.schemas import TripPlan, TripRequest
-from .plan_quality import evaluate_plan, recalculate_budget, transport_to_route_type
+from .plan_quality import REQUIRED_MEALS, evaluate_plan, recalculate_budget, transport_to_route_type
 
 POLICY_VERSION = "constraints-v2"
 MEAL_MINUTES = 90
@@ -46,6 +47,9 @@ def refresh_saved_quality(plan, request, previous):
 
 
 def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, repair=True):
+    plan.departure_city = request.departure_city
+    plan.traveler_count = request.traveler_count
+    plan.room_count = request.room_count
     plan.constraints = request.constraints.model_copy(deep=True)
     constraints = request.constraints
     required = {name_key(n) for n in constraints.must_visit}
@@ -53,6 +57,12 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     repairs, violations, day_reports = [], [], []
     gaps = {"opening_hours_unavailable", "reservation_unverified", "in_attraction_walking_unknown",
             "hotel_and_meal_routes_unverified"}
+    if any(
+        REQUIRED_MEALS - {meal.type for meal in day.meals}
+        or any(not meal.poi_id for meal in day.meals)
+        for day in plan.days
+    ):
+        gaps.add("meal_pois_unavailable")
     seen = set()
     route_type = transport_to_route_type(request.transportation)
     cache = {}
@@ -70,29 +80,50 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         day.attractions.remove(attraction)
         repairs.append({"day_index": day.day_index, "removed_poi_id": attraction.poi_id, "reason": reason})
 
+    def route_for(left, right):
+        key = (left.poi_id, right.poi_id, left.location.longitude, left.location.latitude,
+               right.location.longitude, right.location.latitude, route_type)
+        if key not in cache:
+            try:
+                route = route_planner.plan_route_by_locations(left.location, right.location,
+                    route_type=route_type, city=plan.city) if route_planner else {}
+                duration, meters = float(route["duration"]), float(route["distance"])
+                if not all(isfinite(v) and v >= 0 for v in (duration, meters)):
+                    raise ValueError("Invalid route quantities")
+                walk = meters if route_type == "walking" else route.get("walking_distance")
+                if walk is not None:
+                    walk = float(walk)
+                    if not isfinite(walk) or walk < 0:
+                        raise ValueError("Invalid walking distance")
+                cache[key] = (duration / 60, meters, walk, route.get("route_type", route_type))
+            except Exception:
+                cache[key] = None
+        return cache[key]
+
+    def optimize_route_order(day):
+        """Use the real directed route matrix for small daily candidate sets."""
+        if not repair or route_planner is None or not 3 <= len(day.attractions) <= 6:
+            return
+        original = list(day.attractions)
+        best = None
+        for order in permutations(original):
+            routes = [route_for(left, right) for left, right in zip(order, order[1:])]
+            if any(route is None for route in routes):
+                continue
+            cost = (sum(route[0] for route in routes), sum(route[1] for route in routes))
+            if best is None or cost < best[0]:
+                best = (cost, order)
+        if best is not None and [a.poi_id for a in best[1]] != [a.poi_id for a in original]:
+            day.attractions[:] = best[1]
+            repairs.append({"day_index": day.day_index, "reason": "route_matrix_reordered",
+                            "route_minutes": round(best[0][0], 1)})
+
     def measure(day):
         legs = []
         day_routes[day.day_index] = legs
         minutes, walking, distance, complete = 0.0, 0.0, 0.0, True
         for left, right in zip(day.attractions, day.attractions[1:]):
-            key = (left.poi_id, right.poi_id, left.location.longitude, left.location.latitude,
-                   right.location.longitude, right.location.latitude, route_type)
-            if key not in cache:
-                try:
-                    route = route_planner.plan_route_by_locations(left.location, right.location,
-                        route_type=route_type, city=plan.city) if route_planner else {}
-                    duration, meters = float(route["duration"]), float(route["distance"])
-                    if not all(isfinite(v) and v >= 0 for v in (duration, meters)):
-                        raise ValueError("Invalid route quantities")
-                    walk = meters if route_type == "walking" else route.get("walking_distance")
-                    if walk is not None:
-                        walk = float(walk)
-                        if not isfinite(walk) or walk < 0:
-                            raise ValueError("Invalid walking distance")
-                    cache[key] = (duration / 60, meters, walk, route.get("route_type", route_type))
-                except Exception:
-                    cache[key] = None
-            route = cache[key]
+            route = route_for(left, right)
             legs.append({"from": left.name, "to": right.name, "route_type": route[3] if route else route_type,
                          "minutes": round(route[0], 1) if route else None,
                          "distance_km": round(route[1] / 1000, 2) if route else None,
@@ -121,6 +152,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                 if reason:
                     violations.append(f"第{day.day_index + 1}天：{reason} ({attraction.name})")
                 seen.add(attraction.poi_id)
+
+        optimize_route_order(day)
 
         while True:
             route_minutes, walking, distance = measure(day)
@@ -182,6 +215,6 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         route_checked=all(d["route_minutes"] is not None for d in day_reports),
         actual_route_minutes=round(sum(d["route_minutes"] or 0 for d in day_reports)),
         actual_route_distance_km=round(sum(d["route_distance_km"] or 0 for d in day_reports), 2))
-    recalculate_budget(plan, estimate_missing=True)
+    recalculate_budget(plan, estimate_missing=True, budget_limit=request.budget_total)
     from .result_policy import classify
     return classify(plan, request, report)

@@ -11,6 +11,7 @@
     <div class="top-actions">
       <template v-if="isLoggedIn">
         <span class="user-badge">👤 {{ username }}</span>
+        <a-button class="history-entry" @click="router.push('/community')">🌏 行程广场</a-button>
         <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
         <a-button class="history-entry" @click="goHistory">
           ✨ 我的行程 · 问答与修改
@@ -24,11 +25,15 @@
         <a-button v-if="admin" class="history-entry" @click="goKnowledgeAdmin">
           🛡️ 知识审核
         </a-button>
+        <a-button v-if="admin" class="history-entry" @click="router.push('/community/admin')">
+          🧾 行程审核
+        </a-button>
         <a-button class="logout-btn" @click="handleLogout">
           退出
         </a-button>
       </template>
       <template v-else>
+        <a-button class="history-entry" @click="router.push('/community')">🌏 行程广场</a-button>
         <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
         <a-button class="history-entry" @click="goLogin">
           🔐 登录
@@ -131,6 +136,28 @@
                   <span class="days-value">{{ formData.travel_days }}</span>
                   <span class="days-unit">天</span>
                 </div>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="8">
+              <a-form-item name="departure_city" label="出发地（可选）">
+                <a-input v-model:value="formData.departure_city" placeholder="仅在需要考虑跨城出发时填写" size="large" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="5">
+              <a-form-item name="traveler_count" label="同行人数">
+                <a-input-number v-model:value="formData.traveler_count" :min="1" :max="20" style="width:100%" size="large" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="5">
+              <a-form-item name="room_count" label="房间数">
+                <a-input-number v-model:value="formData.room_count" :min="1" :max="Math.min(10, formData.traveler_count)" style="width:100%" size="large" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item name="budget_total" label="整段总预算（元，可选）">
+                <a-input-number v-model:value="formData.budget_total" :min="100" :max="10000000" :step="100" style="width:100%" size="large" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -313,11 +340,15 @@ const planningConstraints = reactive({ must_visit: [] as string[], avoid: [] as 
   max_inter_stop_walking_km: null as number | null })
 const formData = reactive<FormDataType>({
   city: '',
+  departure_city: '',
   start_date: null,
   end_date: null,
   travel_days: 1,
   transportation: '公共交通',
   accommodation: '经济型酒店',
+  traveler_count: 1,
+  room_count: 1,
+  budget_total: null,
   preferences: [],
   free_text_input: ''
 })
@@ -393,6 +424,10 @@ watch([() => formData.start_date, () => formData.end_date], ([start, end]) => {
   }
 })
 
+watch(() => formData.traveler_count, count => {
+  if (formData.room_count > count) formData.room_count = count
+})
+
 const handleSubmit = async () => {
   if (!formData.start_date || !formData.end_date) {
     message.error('请选择日期')
@@ -406,11 +441,15 @@ const handleSubmit = async () => {
   try {
     const requestData: TripFormData = {
       city: formData.city,
+      departure_city: formData.departure_city,
       start_date: formData.start_date.format('YYYY-MM-DD'),
       end_date: formData.end_date.format('YYYY-MM-DD'),
       travel_days: formData.travel_days,
       transportation: formData.transportation,
       accommodation: formData.accommodation,
+      traveler_count: formData.traveler_count,
+      room_count: formData.room_count,
+      budget_total: formData.budget_total,
       preferences: formData.preferences,
       free_text_input: formData.free_text_input,
       constraints: { ...planningConstraints }

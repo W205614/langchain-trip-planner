@@ -171,6 +171,9 @@ class MultiAgentTripPlanner(TravelDataNodes):
 
             trip_plan = TripPlan(
                 city=request.city,
+                departure_city=request.departure_city,
+                traveler_count=request.traveler_count,
+                room_count=request.room_count,
                 start_date=request.start_date,
                 end_date=request.end_date,
                 days=[day for day in days if day is not None],
@@ -483,14 +486,32 @@ class MultiAgentTripPlanner(TravelDataNodes):
                     **({"ticket_price": item.ticket_price} if "ticket_price" in item.model_fields_set else {}),
                 )
             )
+        restaurant_candidates = {
+            poi.id: poi for poi in (state or {}).get("restaurant_pois") or [] if poi.id
+        }
+        meals = []
+        used_restaurants = set()
+        for item in draft.meals:
+            poi = restaurant_candidates.get(item.poi_id)
+            if poi is None or poi.id in used_restaurants:
+                continue
+            used_restaurants.add(poi.id)
+            meals.append(Meal(
+                type=item.type, poi_id=poi.id, name=poi.name, address=poi.address or "",
+                location=poi.location, description=item.description or None,
+                estimated_cost=item.estimated_cost, opening_hours=poi.opening_hours,
+                fact_source="高德 POI",
+            ))
         day = DayPlan(
             date=current_date,
             day_index=day_index,
             description=draft.description or f"第{day_index + 1}天行程",
+            theme=draft.theme or f"{request.city}城市探索",
+            activities=draft.activities,
             transportation=request.transportation,
             accommodation=request.accommodation,
             attractions=attractions,
-            meals=draft.meals,
+            meals=meals,
         )
         MultiAgentTripPlanner._complete_day(day, request, state)
         return day
@@ -531,6 +552,19 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 attraction.visit_duration = max(480, attraction.visit_duration)
             if "ticket_price" in attraction.model_fields_set and attraction.price_source == "unknown":
                 attraction.price_source = "model_estimate"
+        restaurants = (state or {}).get("restaurant_pois") or []
+        existing_meal_types = {meal.type for meal in day.meals}
+        used_restaurant_ids = {meal.poi_id for meal in day.meals if meal.poi_id}
+        available_restaurants = [p for p in restaurants if p.id not in used_restaurant_ids]
+        for meal_type, default_cost in (("breakfast", 30), ("lunch", 60), ("dinner", 90)):
+            if meal_type in existing_meal_types or not available_restaurants:
+                continue
+            poi = available_restaurants.pop(0)
+            day.meals.append(Meal(
+                type=meal_type, poi_id=poi.id, name=poi.name, address=poi.address or "",
+                location=poi.location, estimated_cost=default_cost,
+                opening_hours=poi.opening_hours, fact_source="高德 POI",
+            ))
         hotels = (state or {}).get("hotel_pois") or []
         if day.day_index < request.travel_days - 1 and hotels and not day.hotel:
             hotel = hotels[0]
@@ -572,14 +606,11 @@ class MultiAgentTripPlanner(TravelDataNodes):
             date=current_date,
             day_index=day_index,
             description=f"第{day_index + 1}天行程",
+            theme=f"{request.city}城市探索",
             transportation=request.transportation,
             accommodation=request.accommodation,
             attractions=attractions,
-            meals=[
-                Meal(type="breakfast", name=f"第{day_index + 1}天早餐", description="当地特色早餐", estimated_cost=30),
-                Meal(type="lunch", name=f"第{day_index + 1}天午餐", description="午餐推荐", estimated_cost=50),
-                Meal(type="dinner", name=f"第{day_index + 1}天晚餐", description="晚餐推荐", estimated_cost=80),
-            ],
+            meals=[],
             generation_mode="fallback",
             fallback_reason=fallback_reason,
         )
@@ -609,14 +640,18 @@ class MultiAgentTripPlanner(TravelDataNodes):
         hotel_text = self._pois_to_text(
             (state.get("hotel_pois") or [])[:_MAX_DAILY_HOTEL_CANDIDATES]
         )
+        restaurant_text = self._pois_to_text((state.get("restaurant_pois") or [])[:8])
         weather_text = self._weather_to_text(state.get("weather_info", []))
         base = (
             f"城市: {request.city}\n"
+            f"出发地: {request.departure_city or '未提供'}\n"
+            f"同行人数: {request.traveler_count}人，房间数: {request.room_count}，总预算: {request.budget_total or '未设置'}元\n"
             f"交通方式: {request.transportation}\n"
             f"住宿偏好: {request.accommodation}\n"
             f"旅行偏好: {', '.join(request.preferences) if request.preferences else '无'}\n"
             f"**天气信息:**\n{weather_text or '无'}\n"
-            f"**可选酒店:**\n{hotel_text or '无'}"
+            f"**可选酒店:**\n{hotel_text or '无'}\n"
+            f"**可选餐厅（每餐只能返回其中的 poi_id）:**\n{restaurant_text or '无'}"
         )
         if request.free_text_input:
             # 用户自由输入视为不可信数据: 用显式标记包裹, 避免其中的"指令"被当成系统要求
@@ -686,6 +721,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         graph.add_node("search_attractions", self._search_attractions)
         graph.add_node("get_weather", self._get_weather)
         graph.add_node("search_hotels", self._search_hotels)
+        graph.add_node("search_restaurants", self._search_restaurants)
         graph.add_node("build_rag_context", self._build_rag_context)
         graph.add_node("generate_trip_plan", self._generate_trip_plan)
         graph.add_node("fallback_plan", self._fallback_plan)
@@ -694,9 +730,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
         graph.add_edge(START, "search_attractions")
         graph.add_edge(START, "get_weather")
         graph.add_edge(START, "search_hotels")
+        graph.add_edge(START, "search_restaurants")
         graph.add_edge(START, "build_rag_context")
         graph.add_edge(
-            ["search_attractions", "get_weather", "search_hotels", "build_rag_context"],
+            ["search_attractions", "get_weather", "search_hotels", "search_restaurants", "build_rag_context"],
             "generate_trip_plan",
         )
         # 4. 铺设智能分拣闸门 (条件边: 失败走兜底，成功则结束)
@@ -834,6 +871,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         # 当前日期原有 POI 保留为候选，允许用户只调整顺序、餐饮或文案。
         search_state: GraphState = {"request": request, "user_id": user_id or 0}
         fresh_pois = self._search_attractions(search_state).get("attraction_pois", [])
+        restaurant_pois = self._search_restaurants(search_state).get("restaurant_pois", [])
         other_day_poi_ids = {
             attraction.poi_id
             for index, day in enumerate(trip_plan.days)
@@ -879,6 +917,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             f"{poi.location.longitude},{poi.location.latitude}"
             for index, poi in enumerate(candidates[:_MAX_DAILY_POI_CANDIDATES])
         )
+        restaurant_text = self._pois_to_text(restaurant_pois[:8])
         current_text = "、".join(item.name for item in day.attractions) or "无"
         day_query = (
             f"城市: {request.city}\n交通方式: {request.transportation}\n"
@@ -889,6 +928,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
             f"<change_request>{instruction}</change_request>\n"
             "本天可选景点（只能从中选择，不得编造）：\n"
             f"{candidate_text}\n"
+            "本天可选餐厅（每餐只能返回其中的 poi_id）：\n"
+            f"{restaurant_text or '无'}\n"
             "请输出该天的一个 JSON 对象，安排 2-3 个景点与 breakfast/lunch/dinner。"
         )
         revised_day = self._generate_one_day(
@@ -896,7 +937,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             day_index,
             day.date,
             request,
-            {"attraction_pois": candidates},
+            {"attraction_pois": candidates, "restaurant_pois": restaurant_pois},
         )
         if not revised_day.attractions:
             raise BizException(
@@ -905,7 +946,19 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 code="TRUSTED_POI_UNAVAILABLE",
             )
 
-        revised_day.hotel = day.hotel
+        replace_hotel = (
+            ("酒店" in instruction and any(word in instruction for word in ("更换", "换", "替换", "改")))
+            or ("住宿" in instruction and any(word in instruction for word in ("更换", "换", "替换", "改")))
+        )
+        if replace_hotel:
+            hotels = self._search_hotels(search_state).get("hotel_pois", [])
+            revised_day.hotel = None
+            if hotels:
+                hotel = hotels[0]
+                revised_day.hotel = Hotel(name=hotel.name, address=hotel.address,
+                    location=hotel.location, type=request.accommodation)
+        else:
+            revised_day.hotel = day.hotel
         trip_plan.days[day_index] = revised_day
         from ..services.plan_quality import normalize_day
 
@@ -919,7 +972,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         return {
             "name": "LangGraph 多智能体旅行规划系统",
             "framework": "langgraph",
-            "nodes": ["search_attractions", "get_weather", "search_hotels", "build_rag_context", "generate_trip_plan", "fallback_plan"],
+            "nodes": ["search_attractions", "get_weather", "search_hotels", "search_restaurants", "build_rag_context", "generate_trip_plan", "fallback_plan"],
         }
 
     # ============ 内部工具方法 ============
@@ -1027,7 +1080,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             return trip_plan
 
         from ..services.plan_quality import recalculate_budget
-        recalculate_budget(trip_plan)
+        recalculate_budget(trip_plan, budget_limit=request.budget_total)
         return trip_plan
 
     def _refresh_budget(self, trip_plan: TripPlan, request: TripRequest) -> TripPlan:
@@ -1053,6 +1106,9 @@ class MultiAgentTripPlanner(TravelDataNodes):
 
         return TripPlan(
             city=request.city,
+            departure_city=request.departure_city,
+            traveler_count=request.traveler_count,
+            room_count=request.room_count,
             start_date=request.start_date,
             end_date=request.end_date,
             days=days,

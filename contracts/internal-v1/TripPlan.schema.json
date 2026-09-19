@@ -179,6 +179,32 @@
           },
           "title": "Assumptions",
           "type": "array"
+        },
+        "limit_total": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "用户整段行程预算上限",
+          "title": "Limit Total"
+        },
+        "within_limit": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "估算总额是否在预算内",
+          "title": "Within Limit"
         }
       },
       "title": "Budget",
@@ -201,6 +227,20 @@
           "description": "当日行程描述",
           "title": "Description",
           "type": "string"
+        },
+        "theme": {
+          "default": "",
+          "description": "当日主题",
+          "title": "Theme",
+          "type": "string"
+        },
+        "activities": {
+          "description": "除景点外的当日活动建议",
+          "items": {
+            "type": "string"
+          },
+          "title": "Activities",
+          "type": "array"
         },
         "transportation": {
           "description": "交通方式",
@@ -412,6 +452,24 @@
           "description": "预估费用(元)",
           "title": "Estimated Cost",
           "type": "integer"
+        },
+        "poi_id": {
+          "default": "",
+          "description": "高德餐饮 POI ID；空值表示上游未取得可信餐厅",
+          "title": "Poi Id",
+          "type": "string"
+        },
+        "opening_hours": {
+          "default": "",
+          "description": "餐厅营业时间原始文本",
+          "title": "Opening Hours",
+          "type": "string"
+        },
+        "fact_source": {
+          "default": "",
+          "description": "餐饮信息来源",
+          "title": "Fact Source",
+          "type": "string"
         }
       },
       "required": [
@@ -541,6 +599,26 @@
       "description": "目的地城市",
       "title": "City",
       "type": "string"
+    },
+    "departure_city": {
+      "default": "",
+      "description": "出发地",
+      "title": "Departure City",
+      "type": "string"
+    },
+    "traveler_count": {
+      "default": 1,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Traveler Count",
+      "type": "integer"
+    },
+    "room_count": {
+      "default": 1,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Room Count",
+      "type": "integer"
     },
     "start_date": {
       "description": "开始日期",

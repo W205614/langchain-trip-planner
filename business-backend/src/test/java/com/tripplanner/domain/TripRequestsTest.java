@@ -47,4 +47,17 @@ class TripRequestsTest {
     assertFalse(normalized.has("_revision"));
     assertFalse(normalized.has("user_id"));
   }
+
+  @Test
+  void normalizesPlanningFactsAndRejectsTooManyRooms() {
+    var r = request();
+    r.put("departure_city", "上海").put("traveler_count", 4).put("room_count", 2).put("budget_total", 5000);
+    var normalized = TripRequests.normalize(r);
+    assertEquals("上海", normalized.path("departure_city").asText());
+    assertEquals(4, normalized.path("traveler_count").asInt());
+    assertEquals(5000, normalized.path("budget_total").asInt());
+
+    r.put("room_count", 5);
+    assertThrows(ApiException.class, () -> TripRequests.normalize(r));
+  }
 }

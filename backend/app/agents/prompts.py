@@ -95,6 +95,8 @@ DAY_PLANNER_SYSTEM_PROMPT = """你是专业的行程规划专家。用户会给�
 只输出一个紧凑 JSON 对象, 不要输出任何其他文字。景点的名称、地址、坐标由后端按 poi_id 回填，绝不能重复输出它们。结构如下:
 {{
   "description": "不超过100字的当日行程概述",
+  "theme": "不超过20字的当日主题",
+  "activities": ["夜景散步", "城市摄影"],
   "attractions": [
     {{
       "poi_id": "高德候选 POI ID",
@@ -104,9 +106,9 @@ DAY_PLANNER_SYSTEM_PROMPT = """你是专业的行程规划专家。用户会给�
     }}
   ],
   "meals": [
-    {{"type": "breakfast", "name": "早餐推荐", "estimated_cost": 30}},
-    {{"type": "lunch", "name": "午餐推荐", "estimated_cost": 50}},
-    {{"type": "dinner", "name": "晚餐推荐", "estimated_cost": 80}}
+    {{"type": "breakfast", "poi_id": "餐饮候选 POI ID", "estimated_cost": 30}},
+    {{"type": "lunch", "poi_id": "餐饮候选 POI ID", "estimated_cost": 50}},
+    {{"type": "dinner", "poi_id": "餐饮候选 POI ID", "estimated_cost": 80}}
   ]
 }}
 
@@ -114,7 +116,8 @@ DAY_PLANNER_SYSTEM_PROMPT = """你是专业的行程规划专家。用户会给�
 1. 从「可选景点」中选择 2-3 个, 考虑当天距离与游览时间
 2. 必须包含早中晚三餐(breakfast/lunch/dinner)
 3. 每个景点必须原样返回可选景点中的 poi_id；不得编造、留空或使用其他 ID
-4. 不要输出 name/address/location/date/day_index/transportation/accommodation 等后端已知字段
-5. 只输出这一天, 不要输出其他天
-6. ticket_price仅填写有参考依据的门票估算，免费填0；无法估算时省略该字段，不得用0代替未知。
+4. 每餐只能返回「可选餐厅」中的 poi_id；没有候选时 poi_id 留空，不得编造餐厅名称、地址或坐标
+5. 不要输出 name/address/location/date/day_index/transportation/accommodation 等后端已知字段
+6. 只输出这一天, 不要输出其他天
+7. ticket_price仅填写有参考依据的门票估算，免费填0；无法估算时省略该字段，不得用0代替未知。
 """

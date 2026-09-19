@@ -263,6 +263,35 @@ def test_retrieve_embeds_shared_query_once(rag):
     assert len(results) == 2
 
 
+def test_hybrid_retrieval_uses_keywords_to_rescue_exact_local_fact(rag):
+    """专名/营业规则即使向量排序不理想，也应能被关键词通道召回。"""
+    rag._knowledge_store.add_documents([
+        Document(page_content="洪崖洞夜景适合傍晚游览", metadata={
+            "city": "重庆", "source": "chongqing.md", "chunk_id": "cq-1",
+        }),
+        Document(page_content="李子坝观景平台开放时间为每日08:00至22:00", metadata={
+            "city": "重庆", "source": "official.pdf", "chunk_id": "cq-2",
+        }),
+    ])
+    # 固定假向量无法表达查询差异，精确事实应由关键词检索补进结果。
+    results = rag.retrieve("李子坝开放时间", city="重庆", k=1)
+
+    assert len(results) == 1
+    assert "李子坝观景平台开放时间" in results[0]
+
+
+def test_public_retrieval_falls_back_to_keywords_when_embedding_fails(rag):
+    rag._knowledge_store.add_documents([
+        Document(page_content="磁器口古镇周末客流较大", metadata={
+            "city": "重庆", "source": "guide.md", "chunk_id": "cq-3",
+        })
+    ])
+    with patch.object(rag._embedding, "embed_query", side_effect=TimeoutError):
+        results = rag.retrieve("磁器口客流", city="重庆", k=2)
+
+    assert any("磁器口古镇周末客流较大" in item for item in results)
+
+
 def test_research_evidence_uses_only_public_city_knowledge(rag):
     """研究入口只查询公共 collection，不读取个人历史向量。"""
     embedding = MagicMock()

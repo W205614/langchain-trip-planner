@@ -29,7 +29,11 @@ def classify(plan, request, report):
     for index in report.get("degraded_days", []):
         add("RULE_FALLBACK", f"day:{index}", "模型未完成，本日使用可信景点规则安排", "核对安排或重新规划", False, True)
     for gap in report.get("data_gaps", []):
-        add("DATA_UNVERIFIED", "plan", gap, "出行前向官方来源确认", False)
+        if gap == "meal_pois_unavailable":
+            add("MEAL_POI_UNAVAILABLE", "plan", "暂未获取到可信餐饮候选，未编造餐厅",
+                "可稍后重试餐饮推荐或自行补充餐厅", False, True)
+        else:
+            add("DATA_UNVERIFIED", "plan", gap, "出行前向官方来源确认", False)
     if plan.weather_notice:
         add("WEATHER_UNAVAILABLE", "plan", plan.weather_notice, "出行前查询天气", False, True)
     for notice in plan.enrichment_notices:
@@ -37,7 +41,13 @@ def classify(plan, request, report):
     blocking = any(i["blocking"] for i in issues)
     # Fixed product boundaries (reservation / in-attraction walking) remain visible,
     # but are not counted as a runtime outage on every otherwise complete request.
-    degraded = any(i["code"] in {"RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE", "ROUTE_UNAVAILABLE"} for i in issues)
+    degraded = any(
+        i["code"] in {
+            "RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE",
+            "ROUTE_UNAVAILABLE", "MEAL_POI_UNAVAILABLE",
+        }
+        for i in issues
+    )
     report.update(completion_policy=POLICY, issues=issues,
                   outcome="draft" if blocking else "degraded" if degraded else "complete")
     return report

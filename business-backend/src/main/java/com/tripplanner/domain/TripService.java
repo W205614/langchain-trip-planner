@@ -75,8 +75,9 @@ public class TripService {
     var record = new HashMap<String, Object>();
     record.put("user_id", uid); record.put("title", title);
     record.put("source", BusinessTypes.TripSource.MANUAL.wire());
-    for (String field : List.of("city","start_date","end_date","travel_days","transportation","accommodation","free_text_input"))
+    for (String field : List.of("departure_city","city","start_date","end_date","travel_days","transportation","accommodation","traveler_count","room_count","free_text_input"))
       record.put(field, request.path(field).isNumber() ? request.path(field).asInt() : request.path(field).asText(""));
+    record.put("budget_total", request.path("budget_total").isNull() ? null : request.path("budget_total").asInt());
     record.put("preferences", json.writeValueAsString(request.path("preferences")));
     record.put("plan_json", json.writeValueAsString(plan)); record.put("quality_json", json.writeValueAsString(quality));
     record.put("last_verified_at", new Timestamp(System.currentTimeMillis()));
@@ -124,7 +125,7 @@ public class TripService {
 
   private ObjectNode request(Map<String,Object> row, ObjectNode plan) {
     var body = json.createObjectNode();
-    for (String field : List.of("city","start_date","end_date","travel_days","transportation","accommodation","free_text_input"))
+    for (String field : List.of("departure_city","city","start_date","end_date","travel_days","transportation","accommodation","traveler_count","room_count","budget_total","free_text_input"))
       body.set(field, json.valueToTree(row.get(field)));
     body.set("preferences", json.readTree(row.get("preferences").toString()));
     body.set("constraints", plan.path("constraints").isObject() ? plan.path("constraints").deepCopy() : json.createObjectNode());

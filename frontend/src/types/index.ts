@@ -39,6 +39,9 @@ export interface Meal {
   location?: Location
   description?: string
   estimated_cost?: number
+  poi_id?: string
+  opening_hours?: string
+  fact_source?: string
 }
 
 export interface Hotel {
@@ -61,12 +64,16 @@ export interface Budget {
   total_meals: number
   total_transportation: number
   total: number
+  limit_total?: number | null
+  within_limit?: boolean | null
 }
 
 export interface DayPlan {
   date: string
   day_index: number
   description: string
+  theme?: string
+  activities?: string[]
   transportation: string
   accommodation: string
   hotel?: Hotel
@@ -104,11 +111,15 @@ export interface TripFormData {
     max_inter_stop_walking_km: number | null
   }
   city: string
+  departure_city: string
   start_date: string
   end_date: string
   travel_days: number
   transportation: string
   accommodation: string
+  traveler_count: number
+  room_count: number
+  budget_total: number | null
   preferences: string[]
   free_text_input: string
 }

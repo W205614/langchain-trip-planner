@@ -6,12 +6,16 @@
   "user_id": 3,
   "deadline_at": "2030-10-01T12:00:00Z",
   "request": {
+    "departure_city": "",
     "city": "北京",
     "start_date": "2026-10-01",
     "end_date": "2026-10-01",
     "travel_days": 1,
     "transportation": "公共交通",
     "accommodation": "经济型酒店",
+    "traveler_count": 1,
+    "room_count": 1,
+    "budget_total": null,
     "preferences": [],
     "free_text_input": "",
     "constraints": {"must_visit": [], "avoid": [], "daily_minutes": 600, "max_inter_stop_walking_km": null}

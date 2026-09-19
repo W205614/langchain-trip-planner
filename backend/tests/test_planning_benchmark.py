@@ -14,7 +14,9 @@ class _FakePlanner:
         trace_callback("stage_duration", {"stage": "rag_context", "seconds": 0.04})
         attraction = SimpleNamespace(poi_id="B0001", visit_duration=60)
         meals = [
-            SimpleNamespace(type="breakfast"), SimpleNamespace(type="lunch"), SimpleNamespace(type="dinner"),
+            SimpleNamespace(type="breakfast", poi_id="meal-1"),
+            SimpleNamespace(type="lunch", poi_id="meal-2"),
+            SimpleNamespace(type="dinner", poi_id="meal-3"),
         ]
         day = SimpleNamespace(attractions=[attraction], meals=meals, day_index=1, generation_mode="llm")
         return SimpleNamespace(days=[day])

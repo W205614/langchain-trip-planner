@@ -45,6 +45,51 @@ def test_spatial_groups_reduce_fixture_cross_city_travel():
     assert sum(abs(g[0].location.longitude - g[-1].location.longitude) for g in groups) < 0.03
 
 
+def test_route_matrix_reorders_small_day_using_actual_directed_costs():
+    request, plan, _ = fixture({"days": [["A", "B", "C"]]})
+
+    class DirectedRoutes:
+        def plan_route_by_locations(self, left, right, **_kwargs):
+            names = {116.00: "A", 116.01: "B", 116.02: "C"}
+            pair = (names[round(left.longitude, 2)], names[round(right.longitude, 2)])
+            seconds = {("B", "C"): 60, ("C", "A"): 60}.get(pair, 6000)
+            return {"duration": seconds, "distance": seconds * 10}
+
+    report = finalize_plan(plan, request, DirectedRoutes())
+
+    assert [item.poi_id for item in plan.days[0].attractions] == ["B", "C", "A"]
+    assert any(item["reason"] == "route_matrix_reordered" for item in report["repairs"])
+
+
+def test_budget_scales_per_person_costs_and_checks_user_limit():
+    request, plan, routes = fixture({"days": [["A"]]})
+    request.traveler_count = 2
+    request.room_count = 1
+    request.budget_total = 100
+    plan.days[0].attractions[0].ticket_price = 10
+    for meal in plan.days[0].meals:
+        meal.estimated_cost = 20
+
+    finalize_plan(plan, request, routes)
+
+    assert plan.budget.total_attractions == 20
+    assert plan.budget.total_meals == 120
+    assert plan.budget.limit_total == 100
+    assert plan.budget.within_limit is False
+
+
+def test_no_restaurant_candidates_is_a_non_blocking_data_gap():
+    request, plan, routes = fixture({"days": [["A"]]})
+    plan.days[0].meals = []
+
+    report = finalize_plan(plan, request, routes)
+
+    assert report["passed"] is True
+    assert report["outcome"] == "degraded"
+    assert "meal_pois_unavailable" in report["data_gaps"]
+    assert not any(issue["blocking"] for issue in report["issues"])
+
+
 def test_benchmark_gate():
     report = run()
     assert report["current_passed"] == report["total"]

@@ -383,6 +383,13 @@ def capability(kind: str, body: dict):
             evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
             from ..services.research_answer import build_research_answer
             result = build_research_answer(request.query, request.city, evidence, request.trip_context)
+    elif kind == "assistant-intent":
+        from ..services.assistant_intent import classify_assistant_intent
+        content = str(body.get("content") or "").strip()
+        travel_days = body.get("travel_days", 0)
+        if len(content) < 2 or len(content) > 500 or not isinstance(travel_days, int) or not 1 <= travel_days <= 30:
+            raise HTTPException(422, "Invalid assistant intent request")
+        result = classify_assistant_intent(content, travel_days)
     elif kind == "poi-search":
         with capacity("tool", _tool_slots):
             request = POISearchRequest.model_validate(body)

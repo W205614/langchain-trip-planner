@@ -50,6 +50,9 @@ public class PlanRules {
   public ObjectNode finish(ObjectNode plan, ObjectNode request, Routes routes, boolean repair) {
     var constraints = request.path("constraints");
     plan.set("constraints", constraints.deepCopy());
+    plan.put("departure_city", request.path("departure_city").asText(""));
+    plan.put("traveler_count", request.path("traveler_count").asInt(1));
+    plan.put("room_count", request.path("room_count").asInt(1));
     String city = plan.path("city").asText(""),
         type = routeType(request.path("transportation").asText(""));
     var required = new HashSet<String>();
@@ -84,6 +87,15 @@ public class PlanRules {
                 "reservation_unverified",
                 "in_attraction_walking_unknown",
                 "hotel_and_meal_routes_unverified"));
+    if (days.stream()
+        .anyMatch(
+            d -> {
+              var mealTypes = new HashSet<String>();
+              list(d.path("meals")).forEach(m -> mealTypes.add(m.path("type").asText("")));
+              return !mealTypes.containsAll(Set.of("breakfast", "lunch", "dinner"))
+                  || list(d.path("meals")).stream()
+                      .anyMatch(m -> m.path("poi_id").asText("").isEmpty());
+            })) gaps.add("meal_pois_unavailable");
     Map<String, JsonNode> cache = new HashMap<>();
     int count = 0;
     double straight = 0, actualDistance = 0, actualMinutes = 0;
@@ -265,10 +277,6 @@ public class PlanRules {
       day.set("attractions", json.valueToTree(attrs));
       count += attrs.size();
       if (attrs.isEmpty()) warnings.add("第 " + (index + 1) + " 天没有可验证的景点");
-      var missing = new TreeSet<>(Set.of("breakfast", "lunch", "dinner"));
-      day.path("meals").forEach(m -> missing.remove(m.path("type").asText("")));
-      if (!missing.isEmpty())
-        warnings.add("第 " + (index + 1) + " 天缺少餐饮安排：" + String.join(",", missing));
       int visit =
           attrs.stream().mapToInt(a -> Math.max(0, a.path("visit_duration").asInt(0))).sum();
       if (visit > 480) warnings.add("第 " + (index + 1) + " 天游览时长 " + visit + " 分钟，超过 480 分钟");
@@ -329,7 +337,7 @@ public class PlanRules {
     result.set("repairs", repairs);
     result.set("data_gaps", json.valueToTree(gaps));
     result.set("degraded_days", degraded);
-    budget(plan);
+    budget(plan, request);
     classify(plan, request, result);
     return result;
   }
@@ -354,7 +362,7 @@ public class PlanRules {
                     + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2)));
   }
 
-  private void budget(ObjectNode plan) {
+  private void budget(ObjectNode plan, ObjectNode request) {
     var days = list(plan.path("days"));
     var attrs = days.stream().flatMap(d -> list(d.path("attractions")).stream()).toList();
     var meals = days.stream().flatMap(d -> list(d.path("meals")).stream()).toList();
@@ -370,9 +378,10 @@ public class PlanRules {
     if (meals.stream().anyMatch(a -> !a.has("estimated_cost"))) unknown.add("meal_prices");
     if (hotels.size() < Math.max(0, days.size() - 1)
         || hotels.stream().anyMatch(h -> !h.has("estimated_cost"))) unknown.add("hotel_prices");
-    int tickets = attrs.stream().mapToInt(a -> a.path("ticket_price").asInt(0)).sum(),
-        meal = meals.stream().mapToInt(m -> m.path("estimated_cost").asInt(0)).sum(),
-        hotel = hotels.stream().mapToInt(h -> h.path("estimated_cost").asInt(0)).sum();
+    int travelers = request.path("traveler_count").asInt(1), rooms = request.path("room_count").asInt(1);
+    int tickets = attrs.stream().mapToInt(a -> a.path("ticket_price").asInt(0)).sum() * travelers,
+        meal = meals.stream().mapToInt(m -> m.path("estimated_cost").asInt(0)).sum() * travelers,
+        hotel = hotels.stream().mapToInt(h -> h.path("estimated_cost").asInt(0)).sum() * rooms;
     long missing =
         attrs.stream()
             .filter(
@@ -381,7 +390,7 @@ public class PlanRules {
                         && a.path("price_source").asText("unknown").equals("unknown"))
             .count();
     var assumptions = json.createArrayNode();
-    tickets += 80 * (int) missing;
+    tickets += 80 * (int) missing * travelers;
     if (missing > 0) {
       unknown.add("attraction_prices");
       assumptions.add(missing + "个景点缺少票价，暂按80元/人/景点预留；不代表实际售价或收费。");
@@ -392,10 +401,10 @@ public class PlanRules {
     if (nights > 0) {
       String preference = days.isEmpty() ? "" : days.getFirst().path("accommodation").asText("");
       int nightly = preference.matches(".*(豪华|五星).*") ? 600 : preference.contains("舒适") ? 350 : 250;
-      hotel += nights * nightly;
+      hotel += nights * nightly * rooms;
       unknown.add("hotel_prices");
       assumptions.add(
-          "住宿按" + (days.size() - 1) + "晚、1间房计算，缺少报价的" + nights + "晚按" + nightly + "元/晚预留。");
+          "住宿按" + (days.size() - 1) + "晚、" + rooms + "间房计算，缺少报价的" + nights + "晚按" + nightly + "元/房晚预留。");
     }
     int transport =
         days.stream()
@@ -403,20 +412,27 @@ public class PlanRules {
                 d ->
                     switch (routeType(d.path("transportation").asText(""))) {
                       case "walking" -> 0;
-                      case "driving" -> 100;
-                      default -> 30;
+                      case "driving" -> 100 * Math.max(1, (travelers + 3) / 4);
+                      default -> 30 * travelers;
                     })
             .sum();
     assumptions.add("市内交通按步行0元、公共交通30元/人/天、自驾100元/车/天预留；不含往返目的地的大交通。");
-    assumptions.add("门票与餐饮按1人计算，所有金额仅作预算预留，出行前确认价格。");
+    assumptions.add("门票与餐饮按" + travelers + "人、住宿按" + rooms + "间房计算，所有金额仅作预算预留，出行前确认价格。");
+    int total = tickets + meal + hotel + transport;
     var budget =
         plan.putObject("budget")
             .put("total_attractions", tickets)
             .put("total_meals", meal)
             .put("total_hotels", hotel)
             .put("total_transportation", transport)
-            .put("total", tickets + meal + hotel + transport)
+            .put("total", total)
             .put("estimated", true);
+    if (request.path("budget_total").isNull()) {
+      budget.putNull("limit_total").putNull("within_limit");
+    } else {
+      int limit = request.path("budget_total").asInt();
+      budget.put("limit_total", limit).put("within_limit", total <= limit);
+    }
     budget.set("unknown_items", json.valueToTree(unknown));
     budget.set("assumptions", assumptions);
   }
@@ -498,8 +514,19 @@ public class PlanRules {
     report
         .path("data_gaps")
         .forEach(
-            g ->
-                issue(issues, "DATA_UNVERIFIED", "plan", g.asText(""), "出行前向官方来源确认", false, false));
+            g -> {
+              if (g.asText("").equals("meal_pois_unavailable"))
+                issue(
+                    issues,
+                    "MEAL_POI_UNAVAILABLE",
+                    "plan",
+                    "暂未获取到可信餐饮候选，未编造餐厅",
+                    "可稍后重试餐饮推荐或自行补充餐厅",
+                    false,
+                    true);
+              else
+                issue(issues, "DATA_UNVERIFIED", "plan", g.asText(""), "出行前向官方来源确认", false, false);
+            });
     if (!plan.path("weather_notice").asText("").isEmpty())
       issue(
           issues,
@@ -526,7 +553,12 @@ public class PlanRules {
             .valueStream()
             .anyMatch(
                 i ->
-                    Set.of("RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE", "ROUTE_UNAVAILABLE")
+                    Set.of(
+                            "RULE_FALLBACK",
+                            "RAG_UNAVAILABLE",
+                            "WEATHER_UNAVAILABLE",
+                            "ROUTE_UNAVAILABLE",
+                            "MEAL_POI_UNAVAILABLE")
                         .contains(i.path("code").asText("")));
     report
         .put("completion_policy", "reliability-v1")

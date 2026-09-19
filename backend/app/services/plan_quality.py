@@ -18,7 +18,7 @@ MAX_VISIT_MINUTES_PER_DAY = 480
 MAX_ROUTE_MINUTES_PER_DAY = 120
 
 
-def recalculate_budget(plan: TripPlan, *, estimate_missing: bool = False) -> None:
+def recalculate_budget(plan: TripPlan, *, estimate_missing: bool = False, budget_limit: int | None = None) -> None:
     """Recompute after repair; zero remains zero and absent prices are explicit."""
     from ..models.schemas import Budget
     attractions = [a for day in plan.days for a in day.attractions]
@@ -33,13 +33,15 @@ def recalculate_budget(plan: TripPlan, *, estimate_missing: bool = False) -> Non
     if len(hotels) < max(0, len(plan.days) - 1) or any("estimated_cost" not in h.model_fields_set for h in hotels):
         unknown.append("hotel_prices")
     unknown.append("transportation_prices")
-    values = dict(total_attractions=sum(a.ticket_price for a in attractions),
-                  total_meals=sum(m.estimated_cost for m in meals),
-                  total_hotels=sum(h.estimated_cost for h in hotels), total_transportation=0)
+    travelers = max(1, plan.traveler_count)
+    rooms = max(1, plan.room_count)
+    values = dict(total_attractions=sum(a.ticket_price for a in attractions) * travelers,
+                  total_meals=sum(m.estimated_cost for m in meals) * travelers,
+                  total_hotels=sum(h.estimated_cost for h in hotels) * rooms, total_transportation=0)
     assumptions = []
     if estimate_missing or (plan.budget and plan.budget.assumptions):
         missing_tickets = sum(a.ticket_price == 0 and a.price_source == "unknown" for a in attractions)
-        values["total_attractions"] += 80 * missing_tickets
+        values["total_attractions"] += 80 * missing_tickets * travelers
         if missing_tickets:
             assumptions.append(f"{missing_tickets}个景点缺少票价，暂按80元/人/景点预留；不代表实际售价或收费。")
             unknown.append("attraction_prices")
@@ -47,15 +49,18 @@ def recalculate_budget(plan: TripPlan, *, estimate_missing: bool = False) -> Non
         if missing_nights:
             accommodation = plan.days[0].accommodation if plan.days else ""
             nightly = 600 if any(s in accommodation for s in ("豪华", "五星")) else 350 if "舒适" in accommodation else 250
-            values["total_hotels"] += missing_nights * nightly
-            assumptions.append(f"住宿按{len(plan.days) - 1}晚、1间房计算，缺少报价的{missing_nights}晚按{nightly}元/晚预留。")
+            values["total_hotels"] += missing_nights * nightly * rooms
+            assumptions.append(f"住宿按{len(plan.days) - 1}晚、{rooms}间房计算，缺少报价的{missing_nights}晚按{nightly}元/房晚预留。")
             unknown.append("hotel_prices")
         values["total_transportation"] = sum(0 if transport_to_route_type(d.transportation) == "walking" else
-            100 if transport_to_route_type(d.transportation) == "driving" else 30 for d in plan.days)
+            100 * max(1, (travelers + 3) // 4) if transport_to_route_type(d.transportation) == "driving"
+            else 30 * travelers for d in plan.days)
         assumptions.append("市内交通按步行0元、公共交通30元/人/天、自驾100元/车/天预留；不含往返目的地的大交通。")
-        assumptions.append("门票与餐饮按1人计算，所有金额仅作预算预留，出行前确认价格。")
-    plan.budget = Budget(**values, total=sum(values.values()), estimated=True,
-                         unknown_items=sorted(set(unknown)), assumptions=assumptions)
+        assumptions.append(f"门票与餐饮按{travelers}人、住宿按{rooms}间房计算，所有金额仅作预算预留，出行前确认价格。")
+    total = sum(values.values())
+    plan.budget = Budget(**values, total=total, estimated=True,
+                         unknown_items=sorted(set(unknown)), assumptions=assumptions,
+                         limit_total=budget_limit, within_limit=None if budget_limit is None else total <= budget_limit)
 
 
 class RoutePlanner(Protocol):
@@ -129,6 +134,7 @@ def normalize_day(day: DayPlan) -> int:
 def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
     """返回面向 API 与监控的质量报告，不将告警伪装成模型事实。"""
     warnings: list[str] = []
+    data_gaps = ["opening_hours_unavailable"]
     if len(plan.days) != expected_days:
         warnings.append(f"行程天数为 {len(plan.days)}，与请求的 {expected_days} 天不一致")
 
@@ -140,8 +146,11 @@ def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
             warnings.append(f"第 {index} 天没有可验证的景点")
         meal_types = {meal.type for meal in day.meals}
         missing_meals = REQUIRED_MEALS - meal_types
-        if missing_meals:
-            warnings.append(f"第 {index} 天缺少餐饮安排：{','.join(sorted(missing_meals))}")
+        # 餐饮只能来自可信 POI。上游无候选时宁可暴露数据缺口，也不能为了让
+        # 质量门禁通过而编造餐厅；这不会破坏景点路线本身的可执行性。
+        if missing_meals or any(not getattr(meal, "poi_id", "") for meal in day.meals):
+            if "meal_pois_unavailable" not in data_gaps:
+                data_gaps.append("meal_pois_unavailable")
         visit_minutes = sum(max(0, item.visit_duration) for item in day.attractions)
         if visit_minutes > MAX_VISIT_MINUTES_PER_DAY:
             warnings.append(f"第 {index} 天游览时长 {visit_minutes} 分钟，超过 {MAX_VISIT_MINUTES_PER_DAY} 分钟")
@@ -159,7 +168,7 @@ def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
         attractions_checked=attraction_count,
         estimated_intra_day_distance_km=round(total_distance, 2),
         # 当前高德 POI 查询未提供足够稳定的营业/预约事实，不能假装已校验。
-        data_gaps=["opening_hours_unavailable"],
+        data_gaps=data_gaps,
         degraded_days=[
             day.day_index for day in plan.days
             if getattr(day, "generation_mode", "llm") == "fallback"

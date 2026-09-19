@@ -10,9 +10,9 @@ public interface HistoryMapper {
 
   @Insert(
       """
-INSERT INTO trip_records(user_id,city,start_date,end_date,travel_days,transportation,accommodation,
-preferences,free_text_input,plan_json,quality_json,title,source,last_verified_at) VALUES(#{user_id},#{city},#{start_date},#{end_date},
-#{travel_days},#{transportation},#{accommodation},#{preferences},#{free_text_input},#{plan_json},#{quality_json},
+INSERT INTO trip_records(user_id,departure_city,city,start_date,end_date,travel_days,transportation,accommodation,
+traveler_count,room_count,budget_total,preferences,free_text_input,plan_json,quality_json,title,source,last_verified_at) VALUES(#{user_id},COALESCE(#{departure_city},''),#{city},#{start_date},#{end_date},
+#{travel_days},#{transportation},#{accommodation},COALESCE(#{traveler_count},1),COALESCE(#{room_count},1),#{budget_total},#{preferences},#{free_text_input},#{plan_json},#{quality_json},
 COALESCE(#{title},''),COALESCE(#{source},'agent'),#{last_verified_at})
 """)
   @Options(useGeneratedKeys = true, keyProperty = "id")

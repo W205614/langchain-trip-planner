@@ -54,8 +54,29 @@ public class AssistantController {
   public Object message(HttpServletRequest req,@PathVariable String id,@RequestHeader(value="Idempotency-Key",required=false)String key,@RequestBody ObjectNode body){
     long uid=UsersController.uid(req); var conversation=owned(uid,id);
     String content=body.path("content").asText("").strip(),mode=body.path("mode").asText("");
-    if(content.isBlank()||content.length()>500||!Set.of("research","revise").contains(mode)) throw new ApiException(422,"Agent 操作无效");
+    if(content.isBlank()||content.length()>500||!Set.of("research","revise","auto").contains(mode)) throw new ApiException(422,"Agent 操作无效");
     save(id,uid,"user",content,"","");
+    if(mode.equals("auto")){
+      Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
+      if(activeTrip==null)throw new ApiException(422,"请从我的行程中发起对话");
+      var active=history.owned(uid,activeTrip); if(active==null)throw new ApiException(404,"行程不存在");
+      if(body.path("city").asText("").isBlank()) body=((ObjectNode)body.deepCopy()).put("city",active.get("city").toString());
+      var classified=agent.post("/capabilities/assistant-intent",Map.of(
+          "content",content,"travel_days",((Number)active.get("travel_days")).intValue())).path("data");
+      if(classified.path("missing_slots").size()>0){
+        String reply=classified.path("reply").asText("请补充要调整的日期");
+        save(id,uid,"assistant",reply,"clarification","");
+        return Map.of("success",true,"status","needs_clarification","message",reply,"intent",classified);
+      }
+      if("read_only".equals(classified.path("operation").asText())) mode="research";
+      else {
+        mode="revise";
+        body=body.deepCopy().put("record_id",activeTrip)
+            .put("version",((Number)active.get("version")).intValue())
+            .put("day_index",classified.path("target_day").asInt(-1));
+        body.set("intent",classified.deepCopy());
+      }
+    }
     if(mode.equals("research")){
       String city=body.path("city").asText("");
       Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
@@ -79,6 +100,7 @@ public class AssistantController {
     if(body.path("version").asInt(-1)<0||body.path("day_index").asInt(-1)<0) throw new ApiException(422,"改排版本或日期无效");
     request=request(row); revision.put("record_id",recordId)
         .put("version",body.path("version").asInt(0)).put("day_index",body.path("day_index").asInt(-1)).put("instruction",content);
+    if(body.path("intent").isObject()) revision.set("intent",body.path("intent").deepCopy());
     ObjectNode created=tasks.submit(uid,request,key==null?UUID.randomUUID().toString():key,req.getHeader("X-Request-ID"),revision);
     String taskId=created.path("data").path("id").asText(""); save(id,uid,"system_event","已创建智能规划任务","trip_task",taskId);
     conversations.touch(uid,id,activeTrip); return Map.of("success",true,"status","accepted","task_id",taskId);
@@ -165,7 +187,7 @@ public class AssistantController {
     conversations.message(new HashMap<>(Map.of("conversation_id",id,"user_id",uid,"role",role,"content",content,"action_type",action,"action_ref",ref)));
   }
   private ObjectNode request(Map<String,Object> row){
-    var body=json.createObjectNode(); for(String f:List.of("city","start_date","end_date","travel_days","transportation","accommodation","free_text_input"))body.set(f,json.valueToTree(row.get(f)));
+    var body=json.createObjectNode(); for(String f:List.of("departure_city","city","start_date","end_date","travel_days","transportation","accommodation","traveler_count","room_count","budget_total","free_text_input"))body.set(f,json.valueToTree(row.get(f)));
     body.set("preferences",json.readTree(row.get("preferences").toString())); body.set("constraints",json.readTree(row.get("plan_json").toString()).path("constraints"));
     return TripRequests.normalize(body);
   }

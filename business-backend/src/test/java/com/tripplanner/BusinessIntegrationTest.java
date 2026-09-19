@@ -326,10 +326,22 @@ class BusinessIntegrationTest {
     assertEquals(200,share.statusCode(),share.body()); String token=json.readTree(share.body()).path("token").asText();
     assertEquals(200,request("/api/shared-trips/"+token,null,null).statusCode());
     assertEquals(200,request("/api/shared-trips/"+token+"/copy","{}",other).statusCode());
+    var submitted=request("/api/community/cards",json.writeValueAsString(Map.of(
+        "record_id",id,"title","审核快照")),owner);
+    assertEquals(200,submitted.statusCode(),submitted.body());
+    long cardId=json.readTree(submitted.body()).path("id").asLong();
+    assertEquals(409,request("/api/community/cards",json.writeValueAsString(Map.of(
+        "record_id",id,"title","重复版本")),owner).statusCode());
+    assertEquals(404,request("/api/community/cards/"+cardId,null,null).statusCode());
+    jdbc.update("UPDATE community_trip_cards SET status='published',published_at=timezone('UTC',now()) WHERE id=?",cardId);
+    assertEquals(200,request("/api/community/cards/"+cardId,null,null).statusCode());
+    assertEquals(200,request("/api/community/cards/"+cardId+"/copy","{}",other).statusCode());
     long shareId=json.readTree(share.body()).path("id").asLong();
     assertEquals(404,request("DELETE","/api/trips/"+id+"/shares/"+shareId,null,other,Map.of()).statusCode());
     assertEquals(200,request("DELETE","/api/trips/"+id+"/shares/"+shareId,null,owner,Map.of()).statusCode());
     assertEquals(404,request("/api/shared-trips/"+token,null,null).statusCode());
+    jdbc.update("DELETE FROM trip_records WHERE id=?",id);
+    assertNull(jdbc.queryForObject("SELECT record_id FROM community_trip_cards WHERE id=?",Object.class,cardId));
   }
 
   @Test

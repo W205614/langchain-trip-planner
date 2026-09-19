@@ -13,6 +13,8 @@ const router = createRouter({
   routes: [
     { path: '/tasks', redirect: { path: '/history', query: { tab: 'tasks' } }, meta: { requiresAuth: true } },
     { path: '/explore', component: () => import('../views/Explore.vue') },
+    { path: '/community', component: () => import('../views/Community.vue') },
+    { path: '/community/admin', component: () => import('../views/CommunityAdmin.vue'), meta: { requiresAuth: true } },
     { path: '/favorites', redirect: '/explore' },
     { path: '/trips/new', redirect: '/' },
     { path: '/assistant', redirect: '/history' },

@@ -124,13 +124,15 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/shared-trips/**")
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/community/cards", "/api/community/cards/*")
+                    .permitAll()
                     .requestMatchers(
                         "/api/map/**", "/api/poi/**", "/api/rag/status", "/api/trip/health")
                     .permitAll()
                     .requestMatchers("/internal/**")
                     .hasRole("SERVICE")
                     .requestMatchers(
-                        "/api/knowledge/admin/**", "/api/rag/**", "/api/trip/eval-policy")
+                        "/api/knowledge/admin/**", "/api/community/admin/**", "/api/rag/**", "/api/trip/eval-policy")
                     .hasRole("ADMIN")
                     .anyRequest()
                     .authenticated())

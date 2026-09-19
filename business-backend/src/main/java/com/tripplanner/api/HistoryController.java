@@ -45,11 +45,15 @@ public class HistoryController {
     for (String f :
         List.of(
             "city",
+            "departure_city",
             "start_date",
             "end_date",
             "travel_days",
             "transportation",
             "accommodation",
+            "traveler_count",
+            "room_count",
+            "budget_total",
             "free_text_input")) body.set(f, json.valueToTree(row.get(f)));
     body.set("preferences", json.readTree(row.get("preferences").toString()));
     body.set("constraints", json.readTree(row.get("plan_json").toString()).path("constraints"));
@@ -75,11 +79,15 @@ public class HistoryController {
                           "id",
                           "version",
                           "city",
+                          "departure_city",
                           "start_date",
                           "end_date",
                           "travel_days",
                           "transportation",
                           "accommodation",
+                          "traveler_count",
+                          "room_count",
+                          "budget_total",
                           "title",
                           "source",
                           "updated_at",
@@ -92,6 +100,7 @@ public class HistoryController {
                       json.readTree(row.get("quality_json").toString())
                           .path("outcome")
                           .asText("unassessed"));
+                  result.put("budget_limit", row.get("budget_total"));
                   result.put("budget_total", plan.path("budget").path("total").asInt(0));
                   result.put(
                       "attraction_count",

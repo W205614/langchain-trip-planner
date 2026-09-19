@@ -17,17 +17,30 @@ public final class TripRequests {
     body.retain(
         Set.of(
             "city",
+            "departure_city",
             "start_date",
             "end_date",
             "travel_days",
             "transportation",
             "accommodation",
+            "traveler_count",
+            "room_count",
+            "budget_total",
             "preferences",
             "constraints",
             "free_text_input"));
     text(body, "city", 0, 32);
+    if (!body.hasNonNull("departure_city")) body.put("departure_city", "");
+    text(body, "departure_city", 0, 32);
     text(body, "transportation", 0, 32);
     text(body, "accommodation", 0, 64);
+    if (!body.has("traveler_count")) body.put("traveler_count", 1);
+    if (!body.has("room_count")) body.put("room_count", 1);
+    int travelers = integer(body, "traveler_count", 1, 20);
+    int rooms = integer(body, "room_count", 1, 10);
+    if (rooms > travelers) throw new ApiException(422, "房间数不能大于同行人数");
+    if (!body.has("budget_total")) body.putNull("budget_total");
+    if (!body.path("budget_total").isNull()) integer(body, "budget_total", 100, 10_000_000);
     try {
       String start = body.path("start_date").asText(""), end = body.path("end_date").asText("");
       if (!start.matches("\\d{4}-\\d{2}-\\d{2}") || !end.matches("\\d{4}-\\d{2}-\\d{2}"))

@@ -30,7 +30,7 @@ def test_normalize_day_removes_duplicates_and_overpacked_attractions():
     assert [item.name for item in day.attractions] == ["景点 A"]
 
 
-def test_evaluate_plan_reports_missing_meals():
+def test_evaluate_plan_treats_missing_trusted_meals_as_non_blocking_data_gap():
     plan = TripPlan(
         city="北京", start_date="2026-08-01", end_date="2026-08-01",
         days=[DayPlan(
@@ -41,9 +41,10 @@ def test_evaluate_plan_reports_missing_meals():
         overall_suggestions="测试",
     )
     quality = evaluate_plan(plan, expected_days=1)
-    assert quality.passed is False
-    assert "dinner" in quality.warnings[0]
-    assert quality.score < 100
+    assert quality.passed is True
+    assert quality.warnings == []
+    assert "meal_pois_unavailable" in quality.data_gaps
+    assert quality.score == 100
 
 
 class _RoutePlanner:

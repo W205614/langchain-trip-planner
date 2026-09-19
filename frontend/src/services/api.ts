@@ -316,6 +316,26 @@ export async function copySharedTrip(token: string): Promise<any> {
   return (await apiClient.post(`/api/shared-trips/${encodeURIComponent(token)}/copy`)).data
 }
 
+export async function fetchCommunityCards(page = 1, pageSize = 12): Promise<any> {
+  return (await apiClient.get('/api/community/cards', { params: { page, pageSize } })).data
+}
+
+export async function submitCommunityCard(recordId: number, title = ''): Promise<any> {
+  return (await apiClient.post('/api/community/cards', { record_id: recordId, title })).data
+}
+
+export async function copyCommunityCard(id: number): Promise<any> {
+  return (await apiClient.post(`/api/community/cards/${id}/copy`)).data
+}
+
+export async function fetchCommunityReviewQueue(status = 'pending'): Promise<any> {
+  return (await apiClient.get('/api/community/admin/cards', { params: { status } })).data
+}
+
+export async function reviewCommunityCard(id: number, decision: 'approve' | 'reject', note = ''): Promise<any> {
+  return (await apiClient.post(`/api/community/admin/cards/${id}/review`, { decision, note })).data
+}
+
 export async function createAssistantConversation(payload: any = {}): Promise<any> {
   return (await apiClient.post('/api/assistant/conversations', payload)).data
 }

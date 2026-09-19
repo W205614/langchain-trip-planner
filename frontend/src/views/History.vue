@@ -46,6 +46,7 @@
                 <span class="meta-item">📅 {{ record.start_date }} ~ {{ record.end_date }}</span>
                 <span class="meta-item">🎯 {{ record.attraction_count }} 个景点</span>
                 <span class="meta-item" v-if="record.budget_total">💰 ¥{{ record.budget_total.toLocaleString() }}</span>
+                <span class="meta-item" v-if="record.budget_limit">预算上限 ¥{{ record.budget_limit.toLocaleString() }}</span>
                 <span class="meta-item">🕐 {{ record.created_at }}</span>
               </div>
               <div class="record-prefs" v-if="record.preferences && record.preferences.length">
@@ -54,6 +55,7 @@
             </div>
             <div class="record-actions">
               <a-button @click="openAgent(record)">💬 问攻略</a-button>
+              <a-button v-if="record.outcome !== 'draft'" :loading="publishingId===record.id" @click="publishRecord(record)">🌏 投稿广场</a-button>
               <a-button v-if="record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
               <a-button type="primary" @click="viewRecord(record.id)">👁️ 查看行程</a-button>
               <a-popconfirm title="确定删除这条历史记录吗?" @confirm="removeRecord(record.id)">
@@ -139,7 +141,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, streamAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask } from '@/services/api'
+import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask, submitCommunityCard } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -161,6 +163,7 @@ const agentError = ref('')
 const agentProgress = ref('')
 const agentSending = ref(false)
 const verifyingId = ref(0)
+const publishingId = ref(0)
 const tasks = ref<any[]>([])
 const taskTotal = ref(0)
 const taskPage = ref(1)
@@ -315,21 +318,17 @@ const sendToAgent = async () => {
   agentReply.value = ''
   agentSources.value = []
   try {
-    const payload = { mode: 'research', content: agentInput.value.trim(), city: activeRecord.value.city }
-    const result = await streamAssistantMessage(conversationId.value, payload, (event, data) => {
-      if (event === 'progress') agentProgress.value = data.message || '正在检索资料'
-      if (event === 'token') {
-        agentProgress.value = '正在生成回答'
-        agentReply.value += data.delta || ''
-      }
-      if (event === 'result') {
-        agentReply.value = data.answer || agentReply.value || 'Agent 已处理'
-        agentSources.value = data.sources || []
-        agentProgress.value = ''
-      }
+    agentProgress.value = '正在识别意图并处理'
+    const result = await sendAssistantMessage(conversationId.value, {
+      mode: 'auto', content: agentInput.value.trim(), city: activeRecord.value.city
     })
-    agentReply.value = result.answer || agentReply.value || 'Agent 已处理'
-    agentSources.value = result.sources || []
+    if (result.status === 'accepted') {
+      agentReply.value = `已创建局部改排任务 ${result.task_id}。方案完成后请到“任务”页查看并确认。`
+      await loadTasks()
+    } else {
+      agentReply.value = result.message || result.data?.answer || 'Agent 已处理'
+      agentSources.value = result.data?.sources || []
+    }
   } catch (error: any) {
     agentError.value = error?.response?.data?.message || error?.response?.data?.detail || 'Agent 暂不可用，请稍后重试'
   } finally {
@@ -350,6 +349,18 @@ const reverifyRecord = async (record: any) => {
     message.error(error?.response?.data?.message || '路线重新核验失败')
   } finally {
     verifyingId.value = 0
+  }
+}
+
+const publishRecord = async (record: any) => {
+  publishingId.value = record.id
+  try {
+    await submitCommunityCard(record.id, `${record.city}${record.travel_days}日行程`)
+    message.success('已提交审核，通过后会出现在行程广场')
+  } catch (error: any) {
+    message.error(error.response?.data?.message || error.response?.data?.detail || '投稿失败')
+  } finally {
+    publishingId.value = 0
   }
 }
 

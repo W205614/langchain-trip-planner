@@ -167,3 +167,21 @@ class TravelDataNodes:
             return {"hotel_pois": []}
         finally:
             self._emit_trace(state, "stage_duration", stage="hotel_search", seconds=time.perf_counter() - started_at)
+
+    def _search_restaurants(self, state: GraphState) -> dict:
+        """查询可信餐饮候选；模型只能选择 POI ID，不能自行编造餐厅事实。"""
+        request = state["request"]
+        self._emit_progress(state, "search_restaurants", 50, "正在搜索真实餐厅")
+        started_at = time.perf_counter()
+        try:
+            food_tags = [p for p in request.preferences if any(k in p for k in ("美食", "小吃", "火锅", "餐"))]
+            keyword = food_tags[0] if food_tags else "当地美食 餐厅"
+            restaurants = self.amap_service.search_poi(keyword, request.city)
+            restaurant_types = ("餐饮", "餐厅", "小吃", "火锅", "咖啡", "快餐", "甜品")
+            restaurants = [p for p in restaurants if any(t in (p.type or "") for t in restaurant_types)]
+            return {"restaurant_pois": list({p.id: p for p in restaurants if p.id}.values())[:12]}
+        except Exception as exc:
+            logger.warning("餐饮候选查询失败: %s", type(exc).__name__)
+            return {"restaurant_pois": []}
+        finally:
+            self._emit_trace(state, "stage_duration", stage="restaurant_search", seconds=time.perf_counter() - started_at)

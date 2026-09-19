@@ -19,6 +19,7 @@ backend/logs/
 frontend/dist/
 frontend/.vite/
 .pytest-tmp/
+.pytest-runtime-tmp/
 backend/.pytest_cache/
 __pycache__/
 *.py[cod]

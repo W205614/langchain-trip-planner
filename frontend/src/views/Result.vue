@@ -147,6 +147,8 @@
                 </div>
               </div>
               <p v-for="note in tripPlan.budget.assumptions || []" :key="note" class="budget-note">{{ note }}</p>
+              <a-alert v-if="tripPlan.budget.limit_total" :type="tripPlan.budget.within_limit ? 'success' : 'warning'" show-icon
+                :message="tripPlan.budget.within_limit ? `预算内，距离上限还剩 ¥${formatMoney(tripPlan.budget.limit_total - tripPlan.budget.total)}` : `预计超出预算 ¥${formatMoney(tripPlan.budget.total - tripPlan.budget.limit_total)}`" />
               <div class="budget-total">
                 <span class="total-label">预估总费用</span>
                 <span class="total-value">¥{{ formatMoney(tripPlan.budget.total) }}</span>
@@ -189,6 +191,10 @@
 
               <!-- 行程基本信息 -->
               <div class="day-info">
+                <div class="info-row" v-if="day.theme">
+                  <span class="label">🎨 当日主题:</span>
+                  <span class="value">{{ day.theme }}</span>
+                </div>
                 <div class="info-row">
                   <span class="label">📝 行程描述:</span>
                   <span class="value">{{ day.description }}</span>
@@ -202,6 +208,7 @@
                   <span class="value">{{ day.accommodation }}</span>
                 </div>
               </div>
+              <a-space v-if="day.activities?.length" wrap><a-tag v-for="activity in day.activities" :key="activity" color="purple">{{ activity }}</a-tag></a-space>
 
               <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" class="route-card" title="景点间交通（高德路线参考）">
                 <p v-for="leg in quality.day_checks.find((c: any) => c.day_index === day.day_index).routes" :key="leg.from + leg.to">
@@ -316,6 +323,8 @@
                 >
                   {{ meal.name }}
                   <span v-if="meal.description"> - {{ meal.description }}</span>
+                  <div v-if="meal.address">📍 {{ meal.address }}</div>
+                  <div>{{ meal.opening_hours ? `营业时间：${meal.opening_hours}（出行前确认）` : '营业时间暂无可靠数据' }}</div>
                 </a-descriptions-item>
               </a-descriptions>
             </a-collapse-panel>

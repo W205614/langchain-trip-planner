@@ -28,7 +28,9 @@ class PlanRulesTest {
 {"date":"2026-10-01","day_index":0,"transportation":"步行","accommodation":"经济型酒店","attractions":[
 {"poi_id":"a","name":"故宫","location":{"longitude":116.4,"latitude":39.9},"visit_duration":120,"ticket_price":0,"price_source":"explicit_free"},
 {"poi_id":"b","name":"天坛","location":{"longitude":116.4,"latitude":39.8},"visit_duration":120,"ticket_price":0,"price_source":"unknown"}],
-"meals":[{"type":"breakfast","estimated_cost":20},{"type":"lunch","estimated_cost":30},{"type":"dinner","estimated_cost":30}]}]}
+"meals":[{"type":"breakfast","name":"早餐店","poi_id":"meal-breakfast","estimated_cost":20},
+{"type":"lunch","name":"午餐店","poi_id":"meal-lunch","estimated_cost":30},
+{"type":"dinner","name":"晚餐店","poi_id":"meal-dinner","estimated_cost":30}]}]}
 """);
   }
 
@@ -83,5 +85,33 @@ class PlanRulesTest {
     assertEquals("single_stop", check.path("walking_status").asText());
     assertTrue(check.path("inter_stop_walking_km").isNull());
     assertEquals(0, check.path("routes").size());
+  }
+
+  @Test
+  void budgetScalesPerPersonAndReportsLimit() {
+    var request = request();
+    request.put("traveler_count", 2).put("room_count", 1).put("budget_total", 200);
+    var plan = plan();
+
+    rules.finish(plan, request, null, false);
+
+    assertEquals(160, plan.path("budget").path("total_attractions").asInt());
+    assertEquals(160, plan.path("budget").path("total_meals").asInt());
+    assertEquals(200, plan.path("budget").path("limit_total").asInt());
+    assertFalse(plan.path("budget").path("within_limit").asBoolean());
+  }
+
+  @Test
+  void noRestaurantCandidatesIsANonBlockingDataGap() {
+    var plan = plan();
+    ((tools.jackson.databind.node.ArrayNode) plan.path("days").get(0).path("meals")).removeAll();
+
+    var quality = rules.finish(plan, request(), null, false);
+
+    assertEquals("degraded", quality.path("outcome").asText());
+    assertTrue(
+        quality.path("data_gaps").valueStream()
+            .anyMatch(gap -> gap.asText().equals("meal_pois_unavailable")));
+    assertTrue(quality.path("issues").valueStream().noneMatch(i -> i.path("blocking").asBoolean()));
   }
 }

@@ -42,6 +42,8 @@ def rebuild(rag=None):
         for row in snapshot["records"]:
             plan=TripPlan.model_validate_json(row["plan_json"])
             request=TripRequest(**{k:row[k] for k in ("city","start_date","end_date","travel_days","transportation","accommodation")},
+                departure_city=row.get("departure_city", ""), traveler_count=row.get("traveler_count", 1),
+                room_count=row.get("room_count", 1), budget_total=row.get("budget_total"),
                 preferences=json.loads(row["preferences"]),constraints=plan.constraints)
             history.append(Document(page_content=rag._plan_to_text(request,plan),metadata={"record_id":row["id"],"user_id":row["user_id"],"record_version":row["version"],"city":row["city"]}))
             ids.append(f"history-{row['user_id']}-{row['id']}")

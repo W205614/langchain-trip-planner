@@ -24,6 +24,8 @@ def history(body):
             row = body["record"]
             plan = TripPlan.model_validate_json(row["plan_json"])
             request = TripRequest(**{k: row[k] for k in ("city", "start_date", "end_date", "travel_days", "transportation", "accommodation")},
+                departure_city=row.get("departure_city", ""), traveler_count=row.get("traveler_count", 1),
+                room_count=row.get("room_count", 1), budget_total=row.get("budget_total"),
                 preferences=json.loads(row["preferences"]), free_text_input=row.get("free_text_input", ""), constraints=plan.constraints)
             ok = rag.add_history_plan(record_id, user_id, request, plan, record_version=int(row["version"]))
         if not ok:

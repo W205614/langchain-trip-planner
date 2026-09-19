@@ -17,6 +17,8 @@
 
 import logging
 import json
+import math
+from collections import Counter
 from functools import wraps
 import os
 import re
@@ -480,6 +482,91 @@ class RagService:
             logger.warning("公共图文知识删除失败: document_id=%s, error=%s", document_id, exc)
             return False
 
+    @staticmethod
+    def _lexical_terms(text: str) -> List[str]:
+        """为中文本地知识生成轻量检索词，不引入额外分词服务。"""
+        normalized = (text or "").lower()
+        terms = re.findall(r"[a-z0-9]+", normalized)
+        for run in re.findall(r"[\u4e00-\u9fff]+", normalized):
+            terms.extend(run)
+            terms.extend(run[index:index + 2] for index in range(max(0, len(run) - 1)))
+        return [term for term in terms if term]
+
+    def _lexical_public_search(self, query: str, city: str, k: int) -> List[Document]:
+        """对指定城市已入库文档做 BM25 风格的本地关键词召回。"""
+        with observe_rag_operation("knowledge_lexical_search"):
+            stored = self._knowledge_store.get(
+                where={"city": city}, include=["documents", "metadatas"]
+            )
+        if not isinstance(stored, dict):
+            return []
+        contents = stored.get("documents") or []
+        metadatas = stored.get("metadatas") or []
+        rows = [
+            (content, metadatas[index] if index < len(metadatas) and metadatas[index] else {})
+            for index, content in enumerate(contents)
+            if content
+        ]
+        query_terms = self._lexical_terms(f"{city} {query}")
+        if not rows or not query_terms:
+            return []
+
+        tokenized = [self._lexical_terms(content) for content, _ in rows]
+        document_frequency = Counter(
+            term for terms in tokenized for term in set(terms)
+        )
+        average_length = sum(len(terms) for terms in tokenized) / max(1, len(tokenized))
+        scored = []
+        for row_index, terms in enumerate(tokenized):
+            frequencies = Counter(terms)
+            length_norm = 1.0 - 0.75 + 0.75 * len(terms) / max(1.0, average_length)
+            score = 0.0
+            for term in query_terms:
+                frequency = frequencies.get(term, 0)
+                if not frequency:
+                    continue
+                inverse_frequency = math.log(
+                    1.0 + (len(rows) - document_frequency[term] + 0.5)
+                    / (document_frequency[term] + 0.5)
+                )
+                score += inverse_frequency * (frequency * 2.5) / (frequency + 1.5 * length_norm)
+            if score > 0:
+                content, metadata = rows[row_index]
+                scored.append((score, Document(page_content=content, metadata=metadata)))
+        scored.sort(key=lambda item: item[0], reverse=True)
+        return [document for _, document in scored[:k]]
+
+    @staticmethod
+    def _rrf_documents(*rankings: List[Document], limit: int) -> List[Document]:
+        """用 Reciprocal Rank Fusion 合并向量与关键词排序并稳定去重。"""
+        scores = Counter()
+        documents = {}
+        for ranking_index, ranking in enumerate(rankings):
+            # 词面命中略高于单路向量首位，避免两路平票时丢失专名或营业规则。
+            weight = 1.2 if ranking_index == 1 else 1.0
+            for rank, document in enumerate(ranking, start=1):
+                metadata = document.metadata or {}
+                identity = (
+                    metadata.get("chunk_id"), metadata.get("document_id"),
+                    metadata.get("source"), metadata.get("page"), document.page_content,
+                )
+                scores[identity] += weight / (60 + rank)
+                documents.setdefault(identity, document)
+        ordered = sorted(scores, key=lambda identity: scores[identity], reverse=True)
+        return [documents[identity] for identity in ordered[:limit]]
+
+    def _hybrid_public_search(
+        self, query: str, city: str, k: int, query_embedding: Optional[List[float]] = None
+    ) -> List[Document]:
+        vector_documents: List[Document] = []
+        lexical_documents = self._lexical_public_search(query, city, max(k * 2, k))
+        if query_embedding is not None:
+            with observe_rag_operation("knowledge_vector_search"):
+                vector_documents = self._knowledge_store.similarity_search_by_vector(
+                    query_embedding, k=max(k * 2, k), filter={"city": city}
+                )
+        return self._rrf_documents(vector_documents, lexical_documents, limit=k)
+
     @serialized
     def retrieve(
         self, query: str, city: Optional[str] = None, k: int = 3, user_id: Optional[int] = None
@@ -493,14 +580,17 @@ class RagService:
             self._refresh_store("_history_store", _HISTORY_COLLECTION)
             # 城市知识与个人历史使用同一查询文本；只做一次远程嵌入，再在本地 Chroma
             # 对两个集合检索，避免一次规划产生两次相同的 embedding HTTP 请求。
-            with observe_rag_operation("query_embedding"):
-                query_embedding = self._embedding.embed_query(query)
+            query_embedding = None
+            try:
+                with observe_rag_operation("query_embedding"):
+                    query_embedding = self._embedding.embed_query(query)
+            except Exception as exc:
+                logger.warning("查询向量生成失败，降级到关键词检索: %s", type(exc).__name__)
+                from .execution import note_rag_degradation
+                note_rag_degradation()
             # 1. 城市知识库 (限定城市, 相关性最高)
             if city:
-                with observe_rag_operation("knowledge_vector_search"):
-                    docs = self._knowledge_store.similarity_search_by_vector(
-                        query_embedding, k=k, filter={"city": city}
-                    )
+                docs = self._hybrid_public_search(query, city, k, query_embedding)
                 for doc in self._visible_documents(docs):
                     source = doc.metadata.get("source", "未知来源")
                     page = doc.metadata.get("page")
@@ -510,7 +600,7 @@ class RagService:
                         source_label = f"{source_label} / 来源等级:{tier}"
                     results.append(f"[知识库-{doc.metadata.get('city')} / {source_label}] {doc.page_content}")
             # 2. 历史行程（仅限当前用户；旧版无 user_id 的向量不会被命中）
-            if user_id is not None:
+            if user_id is not None and query_embedding is not None:
                 with observe_rag_operation("history_vector_search"):
                     docs = self._history_store.similarity_search_by_vector(
                         query_embedding, k=2, filter={"user_id": user_id}
@@ -546,12 +636,15 @@ class RagService:
         try:
             self.ensure_city_index(city)
             self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
-            with observe_rag_operation("research_query_embedding"):
-                embedding = self._embedding.embed_query(f"{city} {query}")
-            with observe_rag_operation("research_vector_search"):
-                docs = self._knowledge_store.similarity_search_by_vector(
-                    embedding, k=max(1, min(k, 8)), filter={"city": city}
-                )
+            embedding = None
+            try:
+                with observe_rag_operation("research_query_embedding"):
+                    embedding = self._embedding.embed_query(f"{city} {query}")
+            except Exception as exc:
+                logger.warning("研究查询向量生成失败，降级到关键词检索: %s", type(exc).__name__)
+            docs = self._hybrid_public_search(
+                query, city, max(1, min(k, 8)), embedding
+            )
             return [
                 {
                     "content": document.page_content,

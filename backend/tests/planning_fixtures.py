@@ -45,7 +45,8 @@ def make_complete_trip_plan():
     plan = make_fake_trip_plan()
     plan.days[1].attractions = [plan.days[0].attractions[0].model_copy(update={"poi_id": "second-poi", "name": "天安门广场"})]
     for day in plan.days:
-        day.meals = [Meal(type=t, name=t) for t in ("breakfast", "lunch", "dinner")]
+        day.meals = [Meal(type=t, name=t, poi_id=f"trusted-{day.day_index}-{t}")
+                     for t in ("breakfast", "lunch", "dinner")]
     return plan
 
 VALID_REQUEST = {

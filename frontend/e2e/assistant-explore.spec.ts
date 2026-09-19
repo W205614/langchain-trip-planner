@@ -10,13 +10,12 @@ test('history record opens contextual Agent Q&A with a direct sourced answer', a
     expect(route.request().postDataJSON()).toMatchObject({ active_trip_id: 41 })
     return route.fulfill({ json: { success: true, id: 'conversation-1' } })
   })
-  await page.route('**/api/assistant/conversations/conversation-1/messages/stream', async route => {
-    expect(route.request().postDataJSON()).toMatchObject({ mode: 'research', city: '北京' })
-    return route.fulfill({ contentType: 'text/event-stream', body:
-      'event: progress\ndata: {"message":"正在检索当前旅行资料"}\n\n' +
-      'event: token\ndata: {"delta":"故宫建议提前预约，并预留半天参观。[1]"}\n\n' +
-      'event: result\ndata: {"answer":"故宫建议提前预约，并预留半天参观。[1]","sources":[{"index":1,"source":"北京旅行资料"}]}\n\n'
-    })
+  await page.route('**/api/assistant/conversations/conversation-1/messages', async route => {
+    expect(route.request().postDataJSON()).toMatchObject({ mode: 'auto', city: '北京' })
+    return route.fulfill({ json: { success: true, status: 'completed', data: {
+      answer: '故宫建议提前预约，并预留半天参观。[1]',
+      sources: [{ index: 1, source: '北京旅行资料' }]
+    } } })
   })
 
   await page.goto('/history')

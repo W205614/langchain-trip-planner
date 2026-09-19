@@ -457,12 +457,16 @@ public class TaskService {
             for (String f :
                 List.of(
                     "city",
+                    "departure_city",
                     "start_date",
                     "end_date",
                     "transportation",
                     "accommodation",
                     "free_text_input")) record.put(f, body.path(f).asText(""));
             record.put("travel_days", body.path("travel_days").asInt(0));
+            record.put("traveler_count", body.path("traveler_count").asInt(1));
+            record.put("room_count", body.path("room_count").asInt(1));
+            record.put("budget_total", body.path("budget_total").isNull() ? null : body.path("budget_total").asInt());
             record.put("preferences", json.writeValueAsString(body.path("preferences")));
             record.put("user_id", uid);
             record.put("plan_json", json.writeValueAsString(plan));

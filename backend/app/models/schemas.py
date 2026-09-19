@@ -42,12 +42,16 @@ class PlanningConstraints(BaseModel):
 
 class TripRequest(BaseModel):
     """旅行规划请求"""
+    departure_city: str = Field(default="", max_length=32, description="出发地；仅用于跨城提示，不参与市内路线计算")
     city: str = Field(..., max_length=32, description="目的地城市", json_schema_extra={"example": "北京"})
     start_date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$", description="开始日期 YYYY-MM-DD", json_schema_extra={"example": "2025-06-01"})
     end_date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$", description="结束日期 YYYY-MM-DD", json_schema_extra={"example": "2025-06-03"})
     travel_days: int = Field(..., description="旅行天数", ge=1, le=30, json_schema_extra={"example": 3})
     transportation: str = Field(..., max_length=32, description="交通方式", json_schema_extra={"example": "公共交通"})
     accommodation: str = Field(..., max_length=64, description="住宿偏好", json_schema_extra={"example": "经济型酒店"})
+    traveler_count: int = Field(default=1, ge=1, le=20, description="同行总人数")
+    room_count: int = Field(default=1, ge=1, le=10, description="住宿房间数")
+    budget_total: Optional[int] = Field(default=None, ge=100, le=10_000_000, description="整段行程总预算（元）")
     preferences: List[Annotated[str, Field(max_length=64)]] = Field(default_factory=list, max_length=12, description="旅行偏好标签")
     constraints: PlanningConstraints = Field(default_factory=PlanningConstraints)
     free_text_input: Optional[str] = Field(
@@ -59,11 +63,15 @@ class TripRequest(BaseModel):
         json_schema_extra={
             "example": {
                 "city": "北京",
+                "departure_city": "上海",
                 "start_date": "2025-06-01",
                 "end_date": "2025-06-03",
                 "travel_days": 3,
                 "transportation": "公共交通",
                 "accommodation": "经济型酒店",
+                "traveler_count": 2,
+                "room_count": 1,
+                "budget_total": 5000,
                 "preferences": ["历史文化", "美食"],
                 "free_text_input": "希望多安排一些博物馆"
             }
@@ -82,6 +90,8 @@ class TripRequest(BaseModel):
             raise ValueError("结束日期不能早于开始日期")
         if (end - start).days + 1 != self.travel_days:
             raise ValueError("travel_days 必须与开始和结束日期（含首尾）一致")
+        if self.room_count > self.traveler_count:
+            raise ValueError("room_count 不能大于 traveler_count")
         return self
 
 
@@ -178,13 +188,26 @@ class Meal(BaseModel):
     location: Optional[Location] = Field(default=None, description="经纬度坐标")
     description: Optional[str] = Field(default=None, description="描述")
     estimated_cost: int = Field(default=0, description="预估费用(元)")
+    poi_id: str = Field(default="", description="高德餐饮 POI ID；空值表示上游未取得可信餐厅")
+    opening_hours: str = Field(default="", description="餐厅营业时间原始文本")
+    fact_source: str = Field(default="", description="餐饮信息来源")
+
+
+class MealDraft(BaseModel):
+    """LLM 只选择可信餐饮候选，不生成餐厅事实。"""
+    type: Literal["breakfast", "lunch", "dinner", "snack"]
+    poi_id: str = Field(default="", max_length=64)
+    description: str = Field(default="", max_length=160)
+    estimated_cost: int = Field(default=0, ge=0, le=100_000)
 
 
 class DayPlanDraft(BaseModel):
     """单日 LLM 轻量输出，解析后再构造完整 DayPlan。"""
     description: str = Field(default="", max_length=300, description="当日概述")
+    theme: str = Field(default="", max_length=80, description="当日主题")
+    activities: List[Annotated[str, Field(max_length=120)]] = Field(default_factory=list, max_length=8)
     attractions: List[AttractionDraft] = Field(default_factory=list, description="景点草稿")
-    meals: List[Meal] = Field(default_factory=list, description="餐食安排")
+    meals: List[MealDraft] = Field(default_factory=list, description="餐食候选选择")
 
 
 class Hotel(BaseModel):
@@ -204,6 +227,8 @@ class DayPlan(BaseModel):
     date: str = Field(..., description="日期 YYYY-MM-DD")
     day_index: int = Field(..., description="第几天(从0开始)")
     description: str = Field(..., description="当日行程描述")
+    theme: str = Field(default="", description="当日主题")
+    activities: List[str] = Field(default_factory=list, description="除景点外的当日活动建议")
     transportation: str = Field(..., description="交通方式")
     accommodation: str = Field(..., description="住宿")
     hotel: Optional[Hotel] = Field(default=None, description="推荐酒店")
@@ -250,11 +275,16 @@ class Budget(BaseModel):
     estimated: bool = True
     unknown_items: List[str] = Field(default_factory=list)
     assumptions: List[str] = Field(default_factory=list)
+    limit_total: Optional[int] = Field(default=None, description="用户整段行程预算上限")
+    within_limit: Optional[bool] = Field(default=None, description="估算总额是否在预算内")
 
 
 class TripPlan(BaseModel):
     """旅行计划"""
     city: str = Field(..., description="目的地城市")
+    departure_city: str = Field(default="", description="出发地")
+    traveler_count: int = Field(default=1, ge=1, le=20)
+    room_count: int = Field(default=1, ge=1, le=10)
     start_date: str = Field(..., description="开始日期")
     end_date: str = Field(..., description="结束日期")
     days: List[DayPlan] = Field(..., description="每日行程")
