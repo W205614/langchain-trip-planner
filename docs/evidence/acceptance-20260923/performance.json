@@ -1,0 +1,257 @@
+{
+  "generated_at": "2026-09-23T14:44:51.617298+00:00",
+  "mode": "isolated_offline_fixture",
+  "boundary": "single-host offline fixture; not production SLA, real provider QPS, or model latency",
+  "read_ramp": [
+    {
+      "requests": 1375,
+      "qps": 274.8,
+      "p50_seconds": 0.0035,
+      "p95_seconds": 0.0045,
+      "p99_seconds": 0.0063,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1375
+      },
+      "concurrency": 1,
+      "duration_seconds": 5.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 4099,
+      "qps": 818.91,
+      "p50_seconds": 0.0093,
+      "p95_seconds": 0.0156,
+      "p99_seconds": 0.0208,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 4099
+      },
+      "concurrency": 8,
+      "duration_seconds": 5.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 2724,
+      "qps": 540.19,
+      "p50_seconds": 0.049,
+      "p95_seconds": 0.135,
+      "p99_seconds": 0.1892,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 2724
+      },
+      "concurrency": 32,
+      "duration_seconds": 5.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 2874,
+      "qps": 563.51,
+      "p50_seconds": 0.0867,
+      "p95_seconds": 0.2801,
+      "p99_seconds": 0.3991,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 2874
+      },
+      "concurrency": 64,
+      "duration_seconds": 5.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 2514,
+      "qps": 482.09,
+      "p50_seconds": 0.2016,
+      "p95_seconds": 0.616,
+      "p99_seconds": 0.9483,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 2514
+      },
+      "concurrency": 128,
+      "duration_seconds": 5.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 1712,
+      "qps": 281.29,
+      "p50_seconds": 0.6286,
+      "p95_seconds": 2.1081,
+      "p99_seconds": 2.9837,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1712
+      },
+      "concurrency": 256,
+      "duration_seconds": 5.0,
+      "path": "/api/history?page=1&page_size=10"
+    }
+  ],
+  "slow_tasks": {
+    "submitted": 24,
+    "submission_statuses": {
+      "202": 12,
+      "429": 12
+    },
+    "submission_codes": {
+      "TASK_QUEUE_FULL": 12
+    },
+    "accepted": 12,
+    "terminal": {
+      "succeeded": 12
+    },
+    "poll_errors": {},
+    "still_pending_after_45s": 0,
+    "elapsed_seconds": 10.736,
+    "health_during_slow_work": {
+      "requests": 2095,
+      "qps": 522.47,
+      "p50_seconds": 0.014,
+      "p95_seconds": 0.0268,
+      "p99_seconds": 0.0338,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 2095
+      },
+      "concurrency": 8,
+      "duration_seconds": 4,
+      "path": "/healthz"
+    },
+    "history_during_slow_work": {
+      "requests": 1951,
+      "qps": 486.68,
+      "p50_seconds": 0.0145,
+      "p95_seconds": 0.0299,
+      "p99_seconds": 0.0377,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1951
+      },
+      "concurrency": 8,
+      "duration_seconds": 4,
+      "path": "/api/history?page=1&page_size=10"
+    }
+  },
+  "faults": {
+    "agent_down": {
+      "requests": 16,
+      "qps": 191.81,
+      "p50_seconds": 0.0509,
+      "p95_seconds": 0.0685,
+      "p99_seconds": 0.0685,
+      "error_rate": 1.0,
+      "statuses": {
+        "503": 16
+      },
+      "codes": {
+        "AGENT_UNAVAILABLE": 16
+      },
+      "backend_health": 200
+    },
+    "amap_down_first_wave": {
+      "requests": 20,
+      "qps": 15.16,
+      "p50_seconds": 0.0637,
+      "p95_seconds": 1.3159,
+      "p99_seconds": 1.3175,
+      "error_rate": 1.0,
+      "statuses": {
+        "503": 20
+      },
+      "codes": {
+        "AMAP_BUSY": 12,
+        "MAP_UNAVAILABLE": 8
+      }
+    },
+    "amap_down_circuit_wave": {
+      "requests": 20,
+      "qps": 344.2,
+      "p50_seconds": 0.0363,
+      "p95_seconds": 0.0504,
+      "p99_seconds": 0.0533,
+      "error_rate": 1.0,
+      "statuses": {
+        "503": 20
+      },
+      "codes": {
+        "AMAP_CIRCUIT_OPEN": 20
+      }
+    },
+    "amap_half_open_recovery": {
+      "status": 200,
+      "code": ""
+    }
+  },
+  "first_saturation": "history concurrency=256",
+  "docker_snapshot": [
+    {
+      "name": "trip-validation-agent-1",
+      "cpu": "7.89%",
+      "memory": "111.3MiB / 15.22GiB",
+      "pids": "6",
+      "network": "33kB / 81.6kB",
+      "block_io": "0B / 147kB"
+    },
+    {
+      "name": "trip-validation-prometheus-1",
+      "cpu": "0.21%",
+      "memory": "32.54MiB / 15.22GiB",
+      "pids": "17",
+      "network": "15.1MB / 190kB",
+      "block_io": "111MB / 827kB"
+    },
+    {
+      "name": "trip-validation-alertmanager-1",
+      "cpu": "0.15%",
+      "memory": "15.45MiB / 15.22GiB",
+      "pids": "14",
+      "network": "15.2kB / 11.5kB",
+      "block_io": "32.2MB / 0B"
+    },
+    {
+      "name": "trip-validation-notification-receiver-1",
+      "cpu": "0.01%",
+      "memory": "10.29MiB / 15.22GiB",
+      "pids": "1",
+      "network": "33.3kB / 27.1kB",
+      "block_io": "0B / 0B"
+    },
+    {
+      "name": "trip-validation-frontend-1",
+      "cpu": "0.00%",
+      "memory": "13.87MiB / 15.22GiB",
+      "pids": "13",
+      "network": "125MB / 177MB",
+      "block_io": "0B / 8.19kB"
+    },
+    {
+      "name": "trip-validation-backend-1",
+      "cpu": "0.79%",
+      "memory": "484.6MiB / 15.22GiB",
+      "pids": "72",
+      "network": "58.6MB / 56.1MB",
+      "block_io": "0B / 209kB"
+    },
+    {
+      "name": "trip-validation-postgres-1",
+      "cpu": "3.65%",
+      "memory": "77.51MiB / 15.22GiB",
+      "pids": "17",
+      "network": "30.2MB / 43.9MB",
+      "block_io": "18.7MB / 55.8MB"
+    },
+    {
+      "name": "trip-validation-amap-fixture-1",
+      "cpu": "7.73%",
+      "memory": "108.4MiB / 15.22GiB",
+      "pids": "6",
+      "network": "872B / 126B",
+      "block_io": "0B / 0B"
+    }
+  ],
+  "relevant_logs": [
+    "backend-1       | 2026-09-23T14:43:34.472Z  INFO 1 --- [io-9000-exec-19] [request_id=0d0936e55984861efdcb88fa4de59e7d] c.tripplanner.resilience.UpstreamGuard   : upstream_circuit_recovered upstream=agent",
+    "backend-1       | 2026-09-23T14:44:31.129Z  WARN 1 --- [nio-9000-exec-3] [request_id=f01741acb14737fc5e82221c576db2d0] c.tripplanner.resilience.UpstreamGuard   : upstream_circuit_open upstream=amap reason=ConnectException open_ms=15000"
+  ]
+}

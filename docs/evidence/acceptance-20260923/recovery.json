@@ -1,0 +1,21 @@
+{
+  "mode": "isolated_java_postgres_restore",
+  "tables_verified": 7,
+  "row_digests": {
+    "users": "101:be736cf5331ade48710ce5f5011f2a07",
+    "trip_records": "90:1f1ba06ee39352f649c37f7930df4e0c",
+    "trip_tasks": "127:2dac14652aaa60172f2a417744f45085",
+    "rag_sync_jobs": "63:92f56e0822f5248c0e9fea685a9d32c5",
+    "knowledge_documents": "4:23a486fef319f34ddcf996771aee45ff",
+    "knowledge_ingest_jobs": "3:d76d25229f8a2ed45a08664f76ac488e",
+    "user_travel_preferences": "0:d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "uploads_verified": 3,
+  "restored_java_ready": true,
+  "source_data_touched": false,
+  "archive_sha256": "7d3815364398e500c5933737e91684ecd1d8710256e1f877c16d7e09000cef67",
+  "truncated_archive_checksum_rejected": true,
+  "external_provider_calls": 0,
+  "source_services_healthy": true,
+  "public_fixture_ready": true
+}

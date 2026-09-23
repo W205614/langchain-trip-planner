@@ -55,6 +55,14 @@ public class RequestLimits implements WebMvcConfigurer, HandlerInterceptor {
     else if (path.startsWith("/api/map/") || path.startsWith("/api/poi/")) limit = 30;
     else if (req.getMethod().equals("POST") && path.equals("/api/favorites")) limit = 30;
     else if (req.getMethod().equals("POST") && path.equals("/api/trips")) limit = 10;
+    else if (req.getMethod().equals("POST") && path.matches("/api/trips/[0-9]+/checks")) {
+      limit = 12;
+      window = 3_600_000;
+    }
+    else if (req.getMethod().equals("POST") && path.matches("/api/trips/[0-9]+/members")) {
+      limit = 30;
+      window = 3_600_000;
+    }
     else if (req.getMethod().equals("POST") && path.startsWith("/api/assistant/conversations")) limit = 10;
     else if (path.equals("/api/rag/rebuild")) {
       limit = 2;
@@ -70,7 +78,8 @@ public class RequestLimits implements WebMvcConfigurer, HandlerInterceptor {
         req.getUserPrincipal() == null
             ? "ip:" + req.getRemoteAddr()
             : "user:" + req.getUserPrincipal().getName();
-    String key = caller + ":" + path.replaceAll("/[0-9a-fA-F-]{8,}/", "/{id}/");
+    String key = caller + ":" + path.replaceAll("/[0-9]+(?=/|$)", "/{id}")
+        .replaceAll("/[0-9a-fA-F-]{8,}/", "/{id}/");
     if (windows.size() >= 10000 && !windows.containsKey(key))
       throw new ApiException(429, "限流容量已满，请稍后重试", "REQUEST_RATE_LIMITED");
     var bucket = windows.computeIfAbsent(key, ignored -> new Window());

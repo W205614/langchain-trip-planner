@@ -14,6 +14,7 @@
 - 🧭 **Agent 质量分类**：Agent 使用高德 MCP 完成可信 POI 选择、路线查询、步行／时间约束修复和预算计算；路线暂不可用时保存可调整的降级行程，不再由 Java 二次规划。
 - 🗺️ **地图与图片**：高德地图展示路线；图片按 POI ID 获取，无独立实拍时仅使用经过校验且明确标注的景区参考图，无可信来源则显示占位提示。
 - ✏️ **行程编辑**：添加、删除、调整景点，局部改排；版本冲突不会静默覆盖已有修改，草稿需要明确确认后应用。
+- 📋 **行程执行工作台**：按日行前核验并记录有时效的风险；管理预订事项和实际费用，受邀同行人接受后按权限查看或调整已有景点顺序；站内通知提醒临行、风险和 Token 用量。详见 [行程执行工作台](docs/operations/trip-operations.md)。
 - 🧾 **版本与审计**：创建、编辑、核验、改排、确认和恢复都会生成不可变版本；关键业务动作保存脱敏审计事件，删除行程会同步撤销分享并解除会话关联。
 - 🧠 **RAG 检索**：公开城市知识使用本地关键词与 Chroma 向量的混合召回；个人历史仍按用户隔离检索。Java 回查资料所有者、版本、发布状态和草稿状态，不满足可见性要求的资料不进入上下文。
 - 📄 **图文资料审核**：PDF／图片投稿、解析、人工复核、版本绑定发布；解析成功不等于自动公开。
@@ -137,7 +138,7 @@ docker compose ps
 
 访问 **http://localhost:8080**。Flyway 自动初始化空业务库；不自动接管或 baseline 未知旧库。首次注册账号后可登录；审核管理员通过 `business.env` 的 `BOOTSTRAP_ADMIN_USERNAME` 显式指定已存在账号，重启 Java 生效。
 
-已有 V1–V3 数据的环境升级到 V4 前，必须先停止 `frontend / backend / agent`，使用 `backup_java_deployment.py` 在仓库外生成完整备份，并执行[迁移手册](docs/operations/java-migration.md)中的孤儿数据与非法状态检查。V4 不会自动删除或改绑历史数据；检查不通过时 Flyway 会终止启动。V5 增加规划人数/预算事实和社区快照表。完成数据所有权确认后，再运行 `prepare_java_deployment.py --upgrade-existing` 和上述 Compose 启动命令。`rag_sync_jobs.record_id` 特意不设置外键，以便删除行程后的索引墓碑继续完成。
+已有 V1–V3 数据的环境升级到 V4 前，必须先停止 `frontend / backend / agent`，使用 `backup_java_deployment.py` 在仓库外生成完整备份，并执行[迁移手册](docs/operations/java-migration.md)中的孤儿数据与非法状态检查。V4 不会自动删除或改绑历史数据；检查不通过时 Flyway 会终止启动。V5 增加规划人数/预算事实和社区快照表；V6–V8 增加行前核验、预订与支出、同行成员、站内通知、用量提醒，以及按日期核验所需索引。完成数据所有权确认后，再运行 `prepare_java_deployment.py --upgrade-existing` 和上述 Compose 启动命令。`rag_sync_jobs.record_id` 特意不设置外键，以便删除行程后的索引墓碑继续完成。
 
 ### 3. 常用操作
 
@@ -226,6 +227,10 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 | `/api/history*`、`/api/trips*` | 历史行程、乐观锁编辑、重新核验、版本查询与旧版恢复；旧手工接口仅保留兼容，不再提供前端入口 |
 | `/api/favorites*` | 旧收藏兼容接口；不再作为当前产品流程入口 |
 | `/api/trips/{id}/shares`、`/api/shared-trips/{token}` | 不可变只读分享、撤销和复制 |
+| `/api/trips/{id}/checks*`、`/api/trips/{id}/workspace` | 行前核验、版本与权限绑定的执行工作台 |
+| `/api/trips/{id}/members*`、`/api/trips/invitations` | 同行邀请、接受、按权限改序；变更角色需重新接受 |
+| `/api/trips/{id}/commitments*`、`/api/trips/{id}/expenses*` | 预订事项与实际费用账本，不执行预订或付款 |
+| `/api/notifications*`、`/api/usage/*` | 站内通知与 Token 用量提醒 |
 | `/api/community/cards*`、`/api/community/admin/cards*` | 社区行程投稿、公开浏览、复制与管理员审核 |
 | `/api/assistant/conversations*` | 历史行程内的 Agent 问答与改排会话；改排复用持久任务 |
 | `/api/knowledge/*` | 投稿、复核、发布及作业状态 |
@@ -237,25 +242,29 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 ## ✅ 自动化验证
 
 ```powershell
-# Java：真实 PostgreSQL 集成测试需配置独立 TEST_DATABASE_URL，禁止使用日常业务库
-cd business-backend
-./mvnw.cmd test
-```
-
-```powershell
 # 仓库根目录：临时隔离验证，不加载日常密钥或数据目录
+$env:VALIDATION_SLOW_SECONDS='3'
 docker compose -p trip-validation -f docker-compose.validation.yml up -d --build --wait postgres backend agent frontend
+$env:TEST_DATABASE_URL='jdbc:postgresql://localhost:15432/trip'
+$env:TEST_DATABASE_PASSWORD='migration-fixture-only'
+Push-Location business-backend
+.\mvnw.cmd test
+Pop-Location
 docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
 python backend/scripts/java_api_contract_smoke.py --output evidence/public-api.json
 python backend/scripts/java_knowledge_smoke.py --output evidence/knowledge.json
 python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
 # 离线 QPS 阶梯、慢任务隔离和 Agent／高德故障演练
-python backend/scripts/performance_drill.py --output docs/evidence/performance-current/report.json
+python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20260923/performance.json --stage-seconds 5 --max-read-concurrency 256
+# 持续读请求（只对 validation fixture）
+python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20260923/read-soak-128.json --read-soak-concurrency 128 --read-soak-seconds 30
 ```
 
 前端目录执行 `npm ci`、`npx playwright install chromium`、`npx playwright test`。验证结束后运行 `docker compose -p trip-validation -f docker-compose.validation.yml down`，不常驻第二套项目。CI 还验证任务中断、取消后迟到及告警恢复。
 
-V4 版本／审计改动的隔离验收基线为：Java 真实 PostgreSQL 测试 54 项、锁定依赖下 Python Agent 测试 205 项、HTTP 业务场景 20 项、Playwright 19 项全部通过；同时通过 Prometheus 规则、数据库恢复及 Agent 断联／迟到结果故障演练。这些结果证明当前固定场景和工程契约，不代表生产 SLA、吞吐或真实用户效果。
+2026-09-23 本地验收：Java 隔离 PostgreSQL 测试 76/76、Python Agent 224/224、离线规划场景 22/22、公开 API 20/20、Playwright 20/20；数据库恢复、告警和跨服务故障演练通过。正式环境在有界额度下完成北京 1 日、上海 2 日及指定日期改排，均保存为带缺口的 `degraded` 结果。详见[验收与容量记录](docs/evidence/acceptance-20260923/report.md)。这些结果证明固定场景和工程契约，不代表生产 SLA、真实旅行事实准确率或模型并发容量。
+
+离线历史读接口在本机 128 并发持续 30 秒时 14,778 次均返回 200、P95 626ms；256 并发 5 秒时 P95 达 2.108 秒，触及本轮停止阈值。24 个慢任务中 12 个按验证栈容量入队并成功，另 12 个以 `TASK_QUEUE_FULL` 明确拒绝。读请求 QPS 与真实模型生成吞吐不能互换。
 
 旧 Python 业务单测已由 Java 集成测试与公开接口验收承接；Agent 保留模型、MCP、RAG、解析、图片、协议及冻结场景测试。**清理前后测试数不能直接相加或比较为覆盖率。** 历史真实样本、迁移数据核对和当前清理证据见 [验收记录](docs/evidence/java-migration/README.md)。不以离线替身测试声称真实模型效果、实时事实准确率或生产性能。
 

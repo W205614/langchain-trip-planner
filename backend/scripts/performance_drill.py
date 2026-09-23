@@ -182,11 +182,16 @@ def slow_task_scenario(client: httpx.Client, total: int = 24) -> dict:
     )
 
     terminal: Counter[str] = Counter()
+    poll_errors: Counter[str] = Counter()
     deadline = time.monotonic() + 45
     pending = dict(task_ids)
     while pending and time.monotonic() < deadline:
         for identity, token in list(pending.items()):
-            response = client.get(f"/api/trip/tasks/{identity}", headers=auth(token))
+            try:
+                response = client.get(f"/api/trip/tasks/{identity}", headers=auth(token))
+            except httpx.TransportError as exc:
+                poll_errors[type(exc).__name__] += 1
+                continue
             if response.status_code == 200:
                 status = response.json()["data"]["status"]
                 if status in TERMINAL:
@@ -201,6 +206,7 @@ def slow_task_scenario(client: httpx.Client, total: int = 24) -> dict:
         "submission_codes": dict(Counter(code for _, code, _ in submitted if code)),
         "accepted": len(task_ids),
         "terminal": dict(terminal),
+        "poll_errors": dict(poll_errors),
         "still_pending_after_45s": len(pending),
         "elapsed_seconds": round(time.monotonic() - started, 3),
         "health_during_slow_work": health,
@@ -210,7 +216,8 @@ def slow_task_scenario(client: httpx.Client, total: int = 24) -> dict:
 
 def compose(command: list[str], check: bool = True) -> subprocess.CompletedProcess:
     base = ["docker", "compose", "-p", "trip-validation", "-f", "docker-compose.validation.yml"]
-    return subprocess.run(base + command, check=check, capture_output=True, text=True)
+    return subprocess.run(base + command, check=check, capture_output=True, text=True,
+                          encoding="utf-8", errors="replace")
 
 
 def wait_service(service: str) -> None:
@@ -281,6 +288,8 @@ def docker_snapshot() -> list[dict[str, str]]:
         check=True,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     rows = []
     for line in result.stdout.splitlines():
@@ -335,17 +344,19 @@ def markdown(report: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def run(base_url: str, output: Path, duration: float) -> dict:
-    marker = httpx.get(base_url + "/api/validation/fixture", timeout=5)
+def run(base_url: str, output: Path, duration: float, max_read_concurrency: int = 64) -> dict:
+    marker = httpx.get(base_url + "/api/validation/fixture", timeout=5, trust_env=False)
     if marker.status_code != 200 or marker.json().get("offline_fixture") is not True:
         raise SystemExit("Performance drill refuses non-validation targets")
     since = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    limits = httpx.Limits(max_connections=256, max_keepalive_connections=128)
-    with httpx.Client(base_url=base_url, timeout=35, limits=limits) as client:
+    limits = httpx.Limits(max_connections=256, max_keepalive_connections=256)
+    with httpx.Client(base_url=base_url, timeout=35, limits=limits, trust_env=False) as client:
         token = register(client, "read")
         ramp = []
         first_saturation = None
-        for concurrency in (1, 8, 32, 64):
+        for concurrency in (1, 8, 32, 64, 128, 256):
+            if concurrency > max_read_concurrency:
+                break
             stage = request_stage(
                 client,
                 "GET",
@@ -379,11 +390,36 @@ def run(base_url: str, output: Path, duration: float) -> dict:
     return report
 
 
+def read_soak(base_url: str, output: Path, concurrency: int, duration: float) -> dict:
+    marker = httpx.get(base_url + "/api/validation/fixture", timeout=5, trust_env=False)
+    if marker.status_code != 200 or marker.json().get("offline_fixture") is not True:
+        raise SystemExit("Read soak refuses non-validation targets")
+    limits = httpx.Limits(max_connections=256, max_keepalive_connections=256)
+    with httpx.Client(base_url=base_url, timeout=35, limits=limits, trust_env=False) as client:
+        token = register(client, "soak")
+        result = request_stage(client, "GET", "/api/history?page=1&page_size=10",
+                               concurrency, duration, headers=auth(token))
+    report = {"generated_at": datetime.now(timezone.utc).isoformat(),
+              "mode": "isolated_offline_read_soak", "stage": result,
+              "boundary": "single-host validation fixture; not production or model capacity"}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    return report
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:18080")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--stage-seconds", type=float, default=3)
+    parser.add_argument("--max-read-concurrency", type=int, choices=(32, 64, 128, 256), default=64)
+    parser.add_argument("--read-soak-concurrency", type=int, choices=(64, 128, 256))
+    parser.add_argument("--read-soak-seconds", type=float, default=30)
     args = parser.parse_args()
-    result = run(args.base_url, args.output, max(1, min(args.stage_seconds, 10)))
+    if args.read_soak_concurrency:
+        result = read_soak(args.base_url, args.output, args.read_soak_concurrency,
+                           max(5, min(args.read_soak_seconds, 60)))
+        print(json.dumps(result["stage"], ensure_ascii=False))
+        raise SystemExit(0)
+    result = run(args.base_url, args.output, max(1, min(args.stage_seconds, 10)), args.max_read_concurrency)
     print(json.dumps({"first_saturation": result["first_saturation"]}, ensure_ascii=False))

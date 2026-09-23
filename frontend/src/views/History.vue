@@ -9,6 +9,7 @@
         <span class="header-icon">✨</span>
         <div><h1>我的行程</h1><p>集中查看行程结果、任务状态、攻略问答与修改入口</p></div>
       </div>
+      <a-button @click="$router.push('/inbox')">同行邀请 · 通知 · 用量</a-button>
       <div v-if="activeTab === 'trips'" class="header-search">
         <a-input
           v-model:value="cityFilter"
@@ -54,6 +55,7 @@
               </div>
             </div>
             <div class="record-actions">
+              <a-button @click="$router.push(`/trips/${record.id}/operations`)">📋 行程执行</a-button>
               <a-button @click="openAgent(record)">💬 问攻略</a-button>
               <a-button v-if="record.outcome !== 'draft'" :loading="publishingId===record.id" @click="publishRecord(record)">🌏 投稿广场</a-button>
               <a-button v-if="record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>

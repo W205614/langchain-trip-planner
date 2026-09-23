@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-09-23T14:46:39.332251+00:00",
+  "mode": "isolated_offline_read_soak",
+  "stage": {
+    "requests": 14778,
+    "qps": 486.82,
+    "p50_seconds": 0.2044,
+    "p95_seconds": 0.6259,
+    "p99_seconds": 0.9616,
+    "error_rate": 0.0,
+    "statuses": {
+      "200": 14778
+    },
+    "concurrency": 128,
+    "duration_seconds": 30.0,
+    "path": "/api/history?page=1&page_size=10"
+  },
+  "boundary": "single-host validation fixture; not production or model capacity"
+}

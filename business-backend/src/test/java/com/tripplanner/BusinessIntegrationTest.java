@@ -480,7 +480,8 @@ class BusinessIntegrationTest {
     var share = new HashMap<String, Object>();
     share.put("record_id", id);
     share.put("owner_id", uid);
-    share.put("token_hash", "a".repeat(64));
+    share.put("token_hash", UUID.randomUUID().toString().replace("-", "")
+        + UUID.randomUUID().toString().replace("-", ""));
     share.put("snapshot_json", "{}");
     share.put("record_version", 1);
     share.put("expires_at", java.sql.Timestamp.from(java.time.Instant.now().plusSeconds(3600)));

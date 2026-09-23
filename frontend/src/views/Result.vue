@@ -18,6 +18,7 @@
           ❌ 取消编辑
         </a-button>
         <a-button v-if="!editMode && historyRecordId" @click="shareTrip">🔗 分享</a-button>
+        <a-button v-if="!editMode && historyRecordId" @click="$router.push(`/trips/${historyRecordId}/operations`)">📋 行程执行</a-button>
 
         <!-- 导出按钮 -->
         <a-dropdown v-if="!editMode" :disabled="exportBusy">

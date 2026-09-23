@@ -404,6 +404,37 @@ export async function confirmAssistantProposal(conversationId: string, recordId:
 
 export default apiClient
 
+// 行程执行工作台：所有变更均由 Java 校验当前账号与行程版本。
+export const tripOperations = {
+  workspace: async (id: number) => (await apiClient.get(`/api/trips/${id}/workspace`)).data.data,
+  check: async (id: number, version: number, dayIndex: number) => (await apiClient.post(`/api/trips/${id}/checks`, {}, { params: { day_index: dayIndex }, headers: { 'If-Match': version } })).data,
+  latestCheck: async (id: number, dayIndex: number) => (await apiClient.get(`/api/trips/${id}/checks/latest`, { params: { day_index: dayIndex } })).data.data,
+  acknowledge: async (id: number, riskId: number, version: number) => (await apiClient.post(`/api/trips/${id}/risks/${riskId}/acknowledge`, {}, { headers: { 'If-Match': version } })).data,
+  reorder: async (id: number, version: number, dayIndex: number, poiIds: string[], description: string) =>
+    (await apiClient.put(`/api/trips/${id}/workspace/day-order`, { day_index: dayIndex, poi_ids: poiIds, description }, { headers: { 'If-Match': version } })).data,
+  commitments: async (id: number) => (await apiClient.get(`/api/trips/${id}/commitments`)).data.data,
+  addCommitment: async (id: number, body: any) =>
+    (await apiClient.post(`/api/trips/${id}/commitments`, body, { headers: { 'Idempotency-Key': crypto.randomUUID() } })).data,
+  updateCommitment: async (id: number, itemId: number, version: number, body: any) =>
+    (await apiClient.put(`/api/trips/${id}/commitments/${itemId}`, body, { headers: { 'If-Match': version } })).data,
+  expenses: async (id: number) => (await apiClient.get(`/api/trips/${id}/expenses`)).data,
+  addExpense: async (id: number, body: any) =>
+    (await apiClient.post(`/api/trips/${id}/expenses`, body, { headers: { 'Idempotency-Key': crypto.randomUUID() } })).data,
+  voidExpense: async (id: number, expenseId: number, reason: string) =>
+    (await apiClient.post(`/api/trips/${id}/expenses/${expenseId}/void`, { reason })).data,
+  members: async (id: number) => (await apiClient.get(`/api/trips/${id}/members`)).data.data,
+  invite: async (id: number, username: string, role: 'viewer' | 'editor') =>
+    (await apiClient.post(`/api/trips/${id}/members`, { username, role })).data,
+  removeMember: async (id: number, userId: number) => (await apiClient.delete(`/api/trips/${id}/members/${userId}`)).data,
+  decline: async (id: number) => (await apiClient.delete(`/api/trips/${id}/members/me`)).data,
+  invitations: async () => (await apiClient.get('/api/trips/invitations')).data.data,
+  accept: async (id: number) => (await apiClient.post(`/api/trips/${id}/members/accept`)).data,
+  notifications: async () => (await apiClient.get('/api/notifications')).data.data,
+  readNotification: async (id: number) => (await apiClient.post(`/api/notifications/${id}/read`)).data,
+  usage: async () => (await apiClient.get('/api/usage/summary')).data.data,
+  usagePolicy: async (limit: number) => (await apiClient.put('/api/usage/policy', { monthly_token_warning_limit: limit })).data.data,
+}
+
 export function storeTripResult(response: TripPlanResponse): void {
   sessionStorage.removeItem('tripUnsaved')
   sessionStorage.setItem('tripPlan', JSON.stringify(response.data))

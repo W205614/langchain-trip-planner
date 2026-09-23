@@ -1,0 +1,27 @@
+{
+  "mode": "java_public_api_offline",
+  "passed": 20,
+  "checks": [
+    "anonymous_history_rejected",
+    "invalid_token_rejected",
+    "weak_password_rejected",
+    "registration",
+    "duplicate_username_rejected",
+    "wrong_password_rejected",
+    "unknown_account_rejected",
+    "login",
+    "identity",
+    "empty_owner_history",
+    "preferences_opt_in",
+    "preferences_save",
+    "preferences_read",
+    "preferences_owner_isolation",
+    "preferences_delete",
+    "preferences_deleted",
+    "admin_rebuild_rejected",
+    "invalid_photo_rejected_before_provider",
+    "logout",
+    "revoked_token_rejected"
+  ],
+  "external_provider_calls": 0
+}

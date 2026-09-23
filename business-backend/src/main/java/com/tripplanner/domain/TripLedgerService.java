@@ -36,11 +36,15 @@ public class TripLedgerService {
   }
 
   public void capture(long userId, long recordId, String changeType, String requestId) {
-    if (versions.capture(userId, recordId, changeType, BusinessAuditService.safeRequestId(requestId)) != 1)
+    captureOnBehalf(userId, userId, recordId, changeType, requestId);
+  }
+
+  public void captureOnBehalf(long ownerId, long actorId, long recordId, String changeType, String requestId) {
+    if (versions.capture(ownerId, recordId, changeType, BusinessAuditService.safeRequestId(requestId)) != 1)
       throw new IllegalStateException("Trip version capture lost its source record");
-    var row = history.owned(userId, recordId);
+    var row = history.owned(ownerId, recordId);
     int version = ((Number) row.get("version")).intValue();
-    audit.success(userId, "trip." + changeType, "trip", recordId, version, requestId);
+    audit.success(actorId, "trip." + changeType, "trip", recordId, version, requestId);
   }
 
   public Map<String, Object> list(long userId, long recordId, int page, int pageSize) {

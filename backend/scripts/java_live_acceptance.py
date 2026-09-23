@@ -20,8 +20,16 @@ from jose import jwt
 ROOT=Path(__file__).resolve().parents[2]
 LIMITS={"text":12,"vision":1,"embedding":50,"amap":100}
 
+def budget_ledger():
+    configured=dotenv_values(ROOT/"deploy/runtime/agent.env").get("ACCEPTANCE_BUDGET_FILE") or ""
+    prefix="/app/runtime/acceptance-budget"
+    if not (configured.startswith(prefix) and configured.endswith(".sqlite3") and
+            "/" not in configured[len("/app/runtime/"):]):
+        raise RuntimeError("Live acceptance requires a named persistent budget ledger")
+    return ROOT/"backend/data/agent-runtime"/Path(configured).name,configured
+
 def counts():
-    ledger=ROOT/"backend/data/agent-runtime/acceptance-budget.sqlite3"
+    ledger,_=budget_ledger()
     if not ledger.exists():return {kind:0 for kind in LIMITS}
     with sqlite3.connect("file:"+ledger.as_posix()+"?mode=ro",uri=True) as db:
         used=dict(db.execute("SELECT kind,used FROM calls"))
@@ -29,11 +37,11 @@ def counts():
     return {k:used.get(k,0) for k in LIMITS}
 
 def run(args):
-    configured=dotenv_values(ROOT/"deploy/runtime/agent.env").get("ACCEPTANCE_BUDGET_FILE")
+    _,configured=budget_ledger()
     runtime=subprocess.check_output(["docker","compose","exec","-T","agent","python","-c",
         "import os; print(os.environ.get('ACCEPTANCE_BUDGET_FILE',''))"],cwd=ROOT,text=True).strip()
-    if configured!="/app/runtime/acceptance-budget.sqlite3" or runtime!=configured:
-        raise RuntimeError("Live acceptance requires the original persistent budget enabled in config and running Agent")
+    if runtime!=configured:
+        raise RuntimeError("Live acceptance requires the configured persistent budget in the running Agent")
     private=args.private.resolve()
     if private==ROOT or ROOT in private.parents:raise ValueError("Private state must be outside Git")
     private.mkdir(parents=True,exist_ok=True)
