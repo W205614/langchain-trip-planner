@@ -26,7 +26,7 @@ import tools.jackson.databind.json.JsonMapper;
     "trip.internal-key=integration-internal-only-01234567890123456789",
     "spring.datasource.url=${TEST_DATABASE_URL}",
     "spring.datasource.username=trip",
-    "spring.datasource.password=${TEST_DATABASE_PASSWORD:migration-fixture-only}",
+    "spring.datasource.password=${TEST_DATABASE_PASSWORD:isolated-test-only}",
     "WORKERS_ENABLED=false"
 })
 @EnabledIfEnvironmentVariable(named="TEST_DATABASE_URL",matches=".+")
