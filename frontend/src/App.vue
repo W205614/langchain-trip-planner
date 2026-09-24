@@ -12,6 +12,13 @@
 </script>
 
 <style>
+:root {
+  --trip-text-on-dark: #f5f7ff;
+  --trip-muted-on-dark: #d5def2;
+  --trip-text-on-light: #202b40;
+  --trip-muted-on-light: #58677d;
+}
+
 #app {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC',
     'Microsoft YaHei', 'Noto Sans SC', sans-serif;
@@ -21,6 +28,11 @@
   z-index: 1;
   min-height: 100vh;
 }
+
+#app .ant-empty-description { color: var(--trip-muted-on-light); }
+#app .ant-input::placeholder,
+#app .ant-input-number-input::placeholder { color: #667085; }
+#app .ant-select-selection-placeholder { color: #667085; }
 
 body {
   margin: 0;

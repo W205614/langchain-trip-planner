@@ -74,4 +74,8 @@ onMounted(load)
 
 <style scoped>
 .community-page{min-height:100vh;padding:36px 24px 70px}.shell{max-width:1240px;margin:auto}.hero{display:grid;grid-template-columns:150px 1fr 170px;align-items:center;gap:22px;border-radius:26px;padding:30px 36px}.hero h1{margin:4px 0 8px;color:#111827;font-size:36px}.hero p{margin:0;color:#596579}.eyebrow{color:#6757d9;font-size:12px;font-weight:800;letter-spacing:.14em}.alert,.grid{margin-top:22px}.loading,.empty{padding:100px 0;color:#fff}.card{height:100%;padding:24px;border-radius:22px;box-sizing:border-box}.card-top{display:flex;justify-content:space-between;color:#667085;font-size:12px}.card h2{font-size:22px;color:#101828;margin:14px 0 6px}.author{color:#667085}.facts{display:flex;flex-direction:column;gap:6px;color:#344054;margin:16px 0}.days{min-height:106px;margin:0 0 18px;padding:12px;background:#f6f7ff;border-radius:12px}.days div{display:grid;grid-template-columns:60px 1fr;gap:8px;margin:5px 0;color:#475467}.days span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pager{text-align:center;margin-top:28px;padding:12px;background:rgba(255,255,255,.9);border-radius:12px}@media(max-width:760px){.community-page{padding:14px}.hero{grid-template-columns:1fr;padding:24px}.hero h1{font-size:30px}}
+.loading { color: var(--trip-text-on-dark); }
+.loading :deep(.ant-spin-text) { color: var(--trip-text-on-dark); }
+.empty { margin-top: 22px; padding: 76px 20px; border-radius: 20px; background: rgba(255,255,255,.96); box-shadow: 0 18px 46px rgba(2,6,23,.28); }
+.empty :deep(.ant-empty-description) { color: var(--trip-text-on-light); font-size: 16px; }
 </style>

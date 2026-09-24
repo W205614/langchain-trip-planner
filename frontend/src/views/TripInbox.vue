@@ -3,9 +3,9 @@
     <a-space class="heading"><a-button @click="router.push('/history')">← 我的行程</a-button><h1>同行邀请、通知与用量</h1></a-space>
     <a-alert v-if="error" type="error" :message="error" show-icon />
     <a-card title="同行邀请" class="section">
-      <a-list :data-source="invitations" bordered>
+      <a-list :data-source="invitations" :locale="{ emptyText: '暂无同行邀请' }" bordered>
         <template #renderItem="{ item }">
-          <a-list-item><a-list-item-meta :title="`${item.city} · ${item.title || '行程'}`" :description="`${item.start_date} 至 ${item.end_date} · ${item.role} · ${item.status}`" />
+          <a-list-item><a-list-item-meta :title="`${item.city} · ${item.title || '行程'}`" :description="`${item.start_date} 至 ${item.end_date} · ${roleLabel(item.role)} · ${statusLabel(item.status)}`" />
             <template #actions>
               <a-button v-if="item.status === 'pending'" type="primary" @click="accept(item.trip_id)">接受</a-button>
               <a-button v-if="item.status === 'pending'" danger @click="decline(item.trip_id)">拒绝</a-button>
@@ -16,7 +16,7 @@
       </a-list>
     </a-card>
     <a-card title="站内通知" class="section">
-      <a-list :data-source="notifications" bordered>
+      <a-list :data-source="notifications" :locale="{ emptyText: '暂无站内通知' }" bordered>
         <template #renderItem="{ item }">
           <a-list-item><a-list-item-meta :title="item.title" :description="`${item.message} · ${item.created_at}`" />
             <template #actions><a-button v-if="item.trip_id" @click="router.push(`/trips/${item.trip_id}/operations`)">查看行程</a-button>
@@ -27,7 +27,7 @@
     </a-card>
     <a-card title="本月 AI 行程任务用量" class="section">
       <a-alert type="info" show-icon message="阈值只用于站内提醒，不会中断任务。费用只有在运维明确配置模型单价且上游返回用量时才显示估算。" />
-      <a-descriptions v-if="usage" bordered :column="2" class="section">
+      <a-descriptions v-if="usage" bordered :column="{ xs: 1, sm: 2 }" class="section">
         <a-descriptions-item label="任务数">{{ usage.tasks }}</a-descriptions-item>
         <a-descriptions-item label="模型调用数">{{ usage.calls }}</a-descriptions-item>
         <a-descriptions-item label="输入 Token">{{ usage.input_tokens }}</a-descriptions-item>
@@ -35,7 +35,7 @@
         <a-descriptions-item label="缺失用量的任务">{{ usage.missing_usage }}</a-descriptions-item>
         <a-descriptions-item label="估算费用">{{ usage.estimated_cost_usd == null ? '未配置单价' : `$${usage.estimated_cost_usd}` }}</a-descriptions-item>
       </a-descriptions>
-      <a-space class="section"><span>每月 Token 提醒阈值</span><a-input-number v-model:value="limit" :min="1000" :max="1000000000" :step="1000" /><a-button @click="saveLimit">保存</a-button></a-space>
+      <a-space class="section threshold-form" wrap><span>每月 Token 提醒阈值</span><a-input-number v-model:value="limit" :min="1000" :max="1000000000" :step="1000" /><a-button @click="saveLimit">保存</a-button></a-space>
       <p>{{ usage?.cost_note }}</p>
     </a-card>
   </main>
@@ -53,6 +53,8 @@ const invitations = ref<any[]>([])
 const notifications = ref<any[]>([])
 const usage = ref<any>(null)
 const limit = ref<number>(100000)
+const roleLabel = (role: string) => ({ viewer: '查看者', editor: '编辑者' } as Record<string, string>)[role] || role
+const statusLabel = (status: string) => ({ pending: '待接受', accepted: '已接受', declined: '已拒绝' } as Record<string, string>)[status] || status
 function explain(e: any) { error.value = e?.response?.data?.detail || e?.message || '操作失败'; message.error(error.value) }
 async function load() {
   try {
@@ -70,9 +72,11 @@ onMounted(load)
 </script>
 
 <style scoped>
-.trip-inbox { max-width: 1000px; margin: 24px auto; padding: 0 20px 40px; }
-.heading { margin-bottom: 18px; }
-.heading h1 { margin: 0; font-size: 22px; }
+.trip-inbox { max-width: 1000px; margin: 24px auto; padding: 0 20px 40px; color: var(--trip-text-on-dark); }
+.heading { display: flex; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+.heading h1 { margin: 0; color: var(--trip-text-on-dark); font-size: 24px; }
 .section { margin-top: 20px; }
-p { color: #666; margin-top: 12px; }
+.threshold-form { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px !important; }
+.trip-inbox :deep(.ant-card) { color: var(--trip-text-on-light); }
+p { color: var(--trip-muted-on-light); margin-top: 12px; }
 </style>

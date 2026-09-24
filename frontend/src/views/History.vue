@@ -389,6 +389,7 @@ const removeRecord = async (id: number) => {
   min-height: 100vh;
   background: transparent;
   padding: 40px 20px;
+  color: var(--trip-text-on-dark);
 }
 
 .page-header {
@@ -421,7 +422,16 @@ const removeRecord = async (id: number) => {
 .workspace-tabs {
   max-width: 900px;
   margin: 0 auto;
+  padding: 8px 26px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 46px rgba(2, 6, 23, 0.28);
+  color: var(--trip-text-on-light);
 }
+
+.workspace-tabs :deep(.ant-tabs-tab-btn) { color: #40506a; font-weight: 600; }
+.workspace-tabs :deep(.ant-tabs-tab-active .ant-tabs-tab-btn) { color: #5146c4; }
 
 .task-panel {
   display: flex;
@@ -535,7 +545,13 @@ const removeRecord = async (id: number) => {
 }
 
 .empty-wrapper {
-  padding: 80px 0;
+  padding: 78px 20px;
+}
+
+.empty-wrapper :deep(.ant-empty-description) {
+  color: var(--trip-text-on-light);
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .agent-panel { display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
@@ -555,6 +571,7 @@ const removeRecord = async (id: number) => {
 
 @media (max-width: 720px) {
   .page-header { align-items: flex-start; flex-direction: column; }
+  .workspace-tabs { padding: 4px 16px 22px; }
   .record-actions { justify-content: flex-start; flex-wrap: wrap; }
   .agent-submit { align-items: stretch; flex-direction: column; }
 }

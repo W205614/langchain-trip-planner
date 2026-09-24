@@ -7,7 +7,7 @@
       <a-button class="back-button" size="large" @click="goBack">
         ← {{ returnLabel }}
       </a-button>
-      <a-space size="middle">
+      <a-space v-if="tripPlan" size="middle">
         <a-button v-if="!editMode" @click="toggleEditMode" type="default">
           ✏️ 编辑行程
         </a-button>
@@ -209,7 +209,7 @@
                   <span class="value">{{ day.accommodation }}</span>
                 </div>
               </div>
-              <a-space v-if="day.activities?.length" wrap><a-tag v-for="activity in day.activities" :key="activity" color="purple">{{ activity }}</a-tag></a-space>
+              <a-space v-if="day.activities?.length" wrap class="activity-tags"><a-tag v-for="activity in day.activities" :key="activity" color="purple">{{ activity }}</a-tag></a-space>
 
               <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" class="route-card" title="景点间交通（高德路线参考）">
                 <p v-for="leg in quality.day_checks.find((c: any) => c.day_index === day.day_index).routes" :key="leg.from + leg.to">
@@ -373,12 +373,12 @@
       </div>
     </div>
 
-    <a-empty v-else description="没有找到旅行计划数据">
+    <a-empty v-else class="result-empty" description="没有找到旅行计划数据">
       <template #image>
         <div style="font-size: 80px;">🗺️</div>
       </template>
       <template #description>
-        <span style="color: #999;">暂无旅行计划数据,请先创建行程</span>
+        <span>暂无旅行计划数据，请先创建行程</span>
       </template>
       <a-button type="primary" @click="goBack">返回首页创建行程</a-button>
     </a-empty>
@@ -1121,6 +1121,9 @@ const exportAsPDF = async () => {
 </script>
 
 <style scoped>
+.result-empty { max-width: 900px; margin: 0 auto; padding: 76px 20px; border-radius: 20px; background: rgba(255,255,255,.96); box-shadow: 0 18px 46px rgba(2,6,23,.28); }
+.result-empty :deep(.ant-empty-description) { color: var(--trip-text-on-light); font-size: 16px; }
+.activity-tags { display: flex; flex-wrap: wrap; margin-bottom: 18px !important; }
 .result-container {
   min-height: 100vh;
   background: transparent;
