@@ -40,6 +40,12 @@ public class HistoryController {
     return row;
   }
 
+  private void requireRegularTrip(Map<String, Object> row) {
+    if (!json.readTree(row.get("quality_json").toString())
+        .path("assistant_proposal_status").asText("").isBlank())
+      throw new ApiException(409, "助手方案只能确认或放弃，不能作为原行程直接修改");
+  }
+
   private ObjectNode request(Map<String, Object> row) {
     var body = json.createObjectNode();
     for (String f :
@@ -95,11 +101,9 @@ public class HistoryController {
                           "created_at")) result.put(f, row.get(f));
                   result.put("preferences", json.readTree(row.get("preferences").toString()));
                   var plan = json.readTree(row.get("plan_json").toString());
-                  result.put(
-                      "outcome",
-                      json.readTree(row.get("quality_json").toString())
-                          .path("outcome")
-                          .asText("unassessed"));
+                  var quality = json.readTree(row.get("quality_json").toString());
+                  result.put("outcome", quality.path("outcome").asText("unassessed"));
+                  result.put("assistant_proposal_status", quality.path("assistant_proposal_status").asText(""));
                   result.put("budget_limit", row.get("budget_total"));
                   result.put("budget_total", plan.path("budget").path("total").asInt(0));
                   result.put(
@@ -142,6 +146,7 @@ public class HistoryController {
       @RequestBody ObjectNode plan) {
     long uid = UsersController.uid(req);
     var row = owned(uid, id);
+    requireRegularTrip(row);
     if (version < 1) throw new ApiException(422, "版本无效");
     if (!plan.path("days").isArray()) throw new ApiException(422, "行程结构无效");
     var original = json.readTree(row.get("plan_json").toString());
@@ -212,6 +217,10 @@ public class HistoryController {
   @DeleteMapping("/{id}")
   public Object delete(HttpServletRequest req, @PathVariable long id) {
     long uid = UsersController.uid(req);
+    var row = owned(uid,id);
+    if("pending".equals(json.readTree(row.get("quality_json").toString())
+        .path("assistant_proposal_status").asText("")))
+      throw new ApiException(409,"请先确认或放弃助手方案");
     ledger.delete(uid, id, req.getHeader("X-Request-ID"));
     return Map.of("success", true, "message", "删除成功", "rag_sync_pending", true);
   }
@@ -226,11 +235,13 @@ public class HistoryController {
       @RequestBody ObjectNode revision) {
     long uid = UsersController.uid(req);
     var row = owned(uid, id);
+    requireRegularTrip(row);
     var body = request(row);
     TripRequests.integer(revision, "day_index", 0, body.path("travel_days").asInt(0) - 1);
     TripRequests.text(revision, "instruction", 2, 500);
     if (version < 1) throw new ApiException(422, "版本无效");
     revision = revision.deepCopy().put("record_id", id).put("version", version);
+    revision.remove("assistant_conversation_id");
     return tasks.submit(uid, body, key, req.getHeader("X-Request-ID"), revision);
   }
 
@@ -269,6 +280,7 @@ public class HistoryController {
     return tx.execute(
         s -> {
           var row = owned(uid, id);
+          requireRegularTrip(row);
           var quality = (ObjectNode) json.readTree(row.get("quality_json").toString());
           var parent = quality.remove("revision_parent");
           if (parent == null || ((Number) row.get("version")).intValue() != version)

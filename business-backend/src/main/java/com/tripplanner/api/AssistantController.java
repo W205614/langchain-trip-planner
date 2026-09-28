@@ -21,9 +21,9 @@ public class AssistantController {
   private final AssistantMapper conversations; private final HistoryMapper history;
   private final TaskService tasks; private final AgentClient agent; private final JsonMapper json;
   private final TransactionTemplate tx;
-  private final TripLedgerService ledger;
-  public AssistantController(AssistantMapper conversations,HistoryMapper history,TaskService tasks,AgentClient agent,JsonMapper json,TransactionTemplate tx,TripLedgerService ledger){
-    this.conversations=conversations;this.history=history;this.tasks=tasks;this.agent=agent;this.json=json;this.tx=tx;this.ledger=ledger;
+  private final TripLedgerService ledger; private final BusinessMetrics metrics;
+  public AssistantController(AssistantMapper conversations,HistoryMapper history,TaskService tasks,AgentClient agent,JsonMapper json,TransactionTemplate tx,TripLedgerService ledger,BusinessMetrics metrics){
+    this.conversations=conversations;this.history=history;this.tasks=tasks;this.agent=agent;this.json=json;this.tx=tx;this.ledger=ledger;this.metrics=metrics;
   }
 
   @PostMapping public Object create(HttpServletRequest req,@RequestBody(required=false) ObjectNode body){
@@ -31,7 +31,7 @@ public class AssistantController {
     String title=body==null?"旅行助手":body.path("title").asText("旅行助手").strip();
     if(title.isBlank()||title.length()>160) throw new ApiException(422,"会话标题无效");
     Long trip=body!=null&&body.path("active_trip_id").canConvertToLong()?body.path("active_trip_id").asLong():null;
-    if(trip!=null&&history.owned(uid,trip)==null) throw new ApiException(404,"行程不存在");
+    if(trip!=null)regularTrip(uid,trip);
     if(trip!=null){
       var existing=conversations.latestForTrip(uid,trip);
       if(existing!=null){
@@ -59,7 +59,7 @@ public class AssistantController {
     if(mode.equals("auto")){
       Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
       if(activeTrip==null)throw new ApiException(422,"请从我的行程中发起对话");
-      var active=history.owned(uid,activeTrip); if(active==null)throw new ApiException(404,"行程不存在");
+      var active=regularTrip(uid,activeTrip);
       if(body.path("city").asText("").isBlank()) body=((ObjectNode)body.deepCopy()).put("city",active.get("city").toString());
       var classified=agent.post("/capabilities/assistant-intent",Map.of(
           "content",content,"travel_days",((Number)active.get("travel_days")).intValue())).path("data");
@@ -95,11 +95,18 @@ public class AssistantController {
     ObjectNode request;
     ObjectNode revision=json.createObjectNode();
     Long activeTrip=null;
-    long recordId=body.path("record_id").asLong(0); var row=history.owned(uid,recordId);
-    if(row==null) throw new ApiException(404,"行程不存在"); activeTrip=recordId;
-    if(body.path("version").asInt(-1)<0||body.path("day_index").asInt(-1)<0) throw new ApiException(422,"改排版本或日期无效");
-    request=request(row); revision.put("record_id",recordId)
-        .put("version",body.path("version").asInt(0)).put("day_index",body.path("day_index").asInt(-1)).put("instruction",content);
+    long recordId=body.path("record_id").asLong(0); var row=regularTrip(uid,recordId);
+    if(!(conversation.get("active_trip_id") instanceof Number boundTrip)||boundTrip.longValue()!=recordId)
+      throw new ApiException(409,"会话与原行程不匹配");
+    activeTrip=recordId;
+    int currentVersion=((Number)row.get("version")).intValue();
+    int dayIndex=body.path("day_index").asInt(-1);
+    if(dayIndex<0||dayIndex>=((Number)row.get("travel_days")).intValue())
+      throw new ApiException(422,"改排日期无效");
+    if(body.has("version")&&body.path("version").asInt(0)!=currentVersion)
+      throw new ApiException(409,"原行程版本已变化，请重新加载","VERSION_CONFLICT");
+    request=request(row); revision.put("assistant_conversation_id",id).put("record_id",recordId)
+        .put("version",currentVersion).put("day_index",dayIndex).put("instruction",content);
     if(body.path("intent").isObject()) revision.set("intent",body.path("intent").deepCopy());
     ObjectNode created=tasks.submit(uid,request,key==null?UUID.randomUUID().toString():key,req.getHeader("X-Request-ID"),revision);
     String taskId=created.path("data").path("id").asText(""); save(id,uid,"system_event","已创建智能规划任务","trip_task",taskId);
@@ -151,31 +158,80 @@ public class AssistantController {
   @PostMapping("/{id}/proposals/{recordId}/confirm")
   public Object confirm(HttpServletRequest req,@PathVariable String id,@PathVariable long recordId,
       @RequestHeader("If-Match") int version){
-    long uid=UsersController.uid(req); owned(uid,id); var proposal=history.owned(uid,recordId);
-    if(proposal==null)throw new ApiException(404,"助手方案不存在");
+    long uid=UsersController.uid(req);
+    var proposal=pendingProposal(uid,id,recordId,version);
     var quality=(ObjectNode)json.readTree(proposal.get("quality_json").toString());
-    if(!quality.path("assistant_confirmation_required").asBoolean(false)
-        ||!id.equals(quality.path("assistant_conversation_id").asText("")))
-      throw new ApiException(409,"该记录不是此会话的待确认方案");
-    if(((Number)proposal.get("version")).intValue()!=version)throw new ApiException(409,"助手方案版本冲突","VERSION_CONFLICT");
     var plan=(ObjectNode)json.readTree(proposal.get("plan_json").toString());
     String validated=quality.path("validated_outcome").asText("draft");
-    quality.put("outcome",validated); quality.remove("validated_outcome");
-    quality.remove("assistant_confirmation_required"); quality.remove("assistant_conversation_id");
-    if(quality.path("issues") instanceof tools.jackson.databind.node.ArrayNode issues)
-      for(int i=issues.size()-1;i>=0;i--)if("ASSISTANT_CONFIRMATION_REQUIRED".equals(issues.get(i).path("code").asText()))issues.remove(i);
-    var parent=quality.remove("revision_parent");
-    long target=parent!=null&&parent.path("record_id").asLong(0)>0?parent.path("record_id").asLong():recordId;
-    int targetVersion=target==recordId?version:parent.path("version").asInt(0);
+    if(!Set.of("complete","degraded","draft").contains(validated))
+      throw new ApiException(409,"助手方案质量状态无效");
+    var parent=quality.path("revision_parent");
+    long target=parent.path("record_id").asLong(0);
+    int targetVersion=parent.path("version").asInt(0);
+    if(target<=0||target==recordId||targetVersion<1)throw new ApiException(409,"助手方案缺少原行程版本");
+    var appliedQuality=quality.deepCopy();
+    appliedQuality.put("outcome",validated);
+    for(String field:List.of("validated_outcome","assistant_confirmation_required","assistant_conversation_id",
+        "assistant_proposal_status","revision_parent"))appliedQuality.remove(field);
+    var resolvedQuality=quality.deepCopy();
+    resolvedQuality.put("assistant_confirmation_required",false).put("assistant_proposal_status","confirmed")
+        .put("applied_to",target);
+    resolvedQuality.remove("revision_parent");
     tx.executeWithoutResult(s->{
+      if(history.update(Map.of("id",recordId,"user_id",uid,"version",version,
+          "plan_json",json.writeValueAsString(plan),"quality_json",json.writeValueAsString(resolvedQuality)))!=1)
+        throw new ApiException(409,"助手方案版本冲突","VERSION_CONFLICT");
       if(history.update(Map.of("id",target,"user_id",uid,"version",targetVersion,
-          "plan_json",json.writeValueAsString(plan),"quality_json",json.writeValueAsString(quality)))!=1)
+          "plan_json",json.writeValueAsString(plan),"quality_json",json.writeValueAsString(appliedQuality)))!=1)
         throw new ApiException(409,"原行程已变更，请重新生成助手方案","VERSION_CONFLICT");
       history.outbox(target,uid,"draft".equals(validated)?"delete":"upsert");
       ledger.capture(uid,target,"assistant_confirm",req.getHeader("X-Request-ID"));
+      ledger.capture(uid,recordId,"assistant_proposal_confirm",req.getHeader("X-Request-ID"));
+      metrics.recordAssistantProposalAfterCommit("confirmed");
+      metrics.recordPlanOutcomeAfterCommit(validated);
     });
-    return Map.of("success",true,"id",target,"version",targetVersion+1,"data",plan,"quality",quality,
+    return Map.of("success",true,"id",target,"version",targetVersion+1,"data",plan,"quality",appliedQuality,
         "message","已确认并保存助手方案");
+  }
+
+  @PostMapping("/{id}/proposals/{recordId}/discard")
+  public Object discard(HttpServletRequest req,@PathVariable String id,@PathVariable long recordId,
+      @RequestHeader("If-Match") int version){
+    long uid=UsersController.uid(req);
+    var proposal=pendingProposal(uid,id,recordId,version);
+    var quality=(ObjectNode)json.readTree(proposal.get("quality_json").toString());
+    quality.put("assistant_confirmation_required",false).put("assistant_proposal_status","discarded");
+    quality.remove("revision_parent");
+    tx.executeWithoutResult(s->{
+      if(history.update(Map.of("id",recordId,"user_id",uid,"version",version,
+          "plan_json",proposal.get("plan_json"),"quality_json",json.writeValueAsString(quality)))!=1)
+        throw new ApiException(409,"助手方案版本冲突","VERSION_CONFLICT");
+      ledger.capture(uid,recordId,"assistant_proposal_discard",req.getHeader("X-Request-ID"));
+      metrics.recordAssistantProposalAfterCommit("discarded");
+    });
+    return Map.of("success",true,"id",recordId,"version",version+1,"quality",quality,"message","已放弃方案，原行程未改变");
+  }
+
+  private Map<String,Object> pendingProposal(long uid,String id,long recordId,int version){
+    owned(uid,id);
+    var proposal=history.owned(uid,recordId);
+    if(proposal==null)throw new ApiException(404,"助手方案不存在");
+    var quality=json.readTree(proposal.get("quality_json").toString());
+    if(!quality.path("assistant_confirmation_required").asBoolean(false)
+        ||!"pending".equals(quality.path("assistant_proposal_status").asText(""))
+        ||!id.equals(quality.path("assistant_conversation_id").asText("")))
+      throw new ApiException(409,"该记录不是此会话的待确认方案");
+    if(((Number)proposal.get("version")).intValue()!=version)
+      throw new ApiException(409,"助手方案版本冲突","VERSION_CONFLICT");
+    return proposal;
+  }
+
+  private Map<String,Object> regularTrip(long uid,long recordId){
+    var record=history.owned(uid,recordId);
+    if(record==null)throw new ApiException(404,"行程不存在");
+    if(!json.readTree(record.get("quality_json").toString()).path("assistant_proposal_status").asText("").isBlank())
+      throw new ApiException(409,"助手方案需先确认或放弃");
+    return record;
   }
 
   private Map<String,Object> owned(long uid,String id){

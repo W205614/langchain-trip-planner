@@ -31,6 +31,8 @@ public class SharesController {
       @RequestBody(required=false) tools.jackson.databind.node.ObjectNode body) {
     long uid=UsersController.uid(req); var record=history.owned(uid,recordId);
     if(record==null) throw new ApiException(404,"行程不存在");
+    if(!json.readTree(record.get("quality_json").toString()).path("assistant_proposal_status").asText("").isBlank())
+      throw new ApiException(409,"助手方案不能直接分享，请先确认原行程");
     int days=body==null?7:body.path("expires_days").asInt(7);
     if(days<1||days>90) throw new ApiException(422,"分享有效期必须为1到90天");
     byte[] raw=new byte[32]; random.nextBytes(raw);

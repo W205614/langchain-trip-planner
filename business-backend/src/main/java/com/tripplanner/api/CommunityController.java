@@ -44,6 +44,8 @@ public class CommunityController {
     long recordId = body.path("record_id").asLong(0);
     var record = history.owned(uid, recordId);
     if (record == null) throw new ApiException(404, "行程不存在");
+    if (!json.readTree(record.get("quality_json").toString()).path("assistant_proposal_status").asText("").isBlank())
+      throw new ApiException(409, "助手方案不能直接投稿，请先确认原行程");
     String title = body.path("title").asText(Objects.toString(record.get("title"), "")).strip();
     if (title.isEmpty()) title = Objects.toString(record.get("city"), "旅行") + "行程";
     if (title.length() > 160) throw new ApiException(422, "标题不能超过160个字符");

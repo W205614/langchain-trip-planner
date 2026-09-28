@@ -1,0 +1,82 @@
+{
+  "mode": "offline_fixture_http",
+  "passed": true,
+  "original_task_status": "succeeded",
+  "proposal_task_status": "needs_attention",
+  "quality_outcome": "degraded",
+  "rules_passed": true,
+  "issues": [
+    {
+      "code": "DATA_UNVERIFIED",
+      "scope": "plan",
+      "reason": "hotel_and_meal_routes_unverified",
+      "action": "出行前向官方来源确认",
+      "blocking": false,
+      "retryable": false
+    },
+    {
+      "code": "DATA_UNVERIFIED",
+      "scope": "plan",
+      "reason": "in_attraction_walking_unknown",
+      "action": "出行前向官方来源确认",
+      "blocking": false,
+      "retryable": false
+    },
+    {
+      "code": "MEAL_POI_UNAVAILABLE",
+      "scope": "plan",
+      "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+      "action": "可稍后重试餐饮推荐或自行补充餐厅",
+      "blocking": false,
+      "retryable": true
+    },
+    {
+      "code": "DATA_UNVERIFIED",
+      "scope": "plan",
+      "reason": "opening_hours_unavailable",
+      "action": "出行前向官方来源确认",
+      "blocking": false,
+      "retryable": false
+    },
+    {
+      "code": "DATA_UNVERIFIED",
+      "scope": "plan",
+      "reason": "reservation_unverified",
+      "action": "出行前向官方来源确认",
+      "blocking": false,
+      "retryable": false
+    },
+    {
+      "code": "RAG_UNAVAILABLE",
+      "scope": "plan",
+      "reason": "部分攻略资料暂无可靠匹配，请以官方信息为准",
+      "action": "可继续查看行程，攻略资料请稍后查询",
+      "blocking": false,
+      "retryable": true
+    },
+    {
+      "code": "RAG_UNAVAILABLE",
+      "scope": "plan",
+      "reason": "资料检索或可见性校验暂不可用，受影响资料已排除",
+      "action": "可继续查看行程，攻略资料请稍后查询",
+      "blocking": false,
+      "retryable": true
+    }
+  ],
+  "data_gaps": [
+    "hotel_and_meal_routes_unverified",
+    "in_attraction_walking_unknown",
+    "meal_pois_unavailable",
+    "opening_hours_unavailable",
+    "reservation_unverified"
+  ],
+  "poi_count": 3,
+  "model_usage": {
+    "calls": 1,
+    "input_tokens": 100,
+    "output_tokens": 100
+  },
+  "user_confirmation": "fixture_confirmed",
+  "original_version_delta": 1,
+  "boundary": "Isolated fixture, not real model or map quality or real user confirmation"
+}

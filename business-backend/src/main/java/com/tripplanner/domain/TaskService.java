@@ -419,6 +419,19 @@ public class TaskService {
       ObjectNode plan,
       ObjectNode quality,
       ObjectNode revision) {
+    boolean assistantProposal =
+        revision != null && !revision.path("assistant_conversation_id").asText("").isBlank();
+    if (assistantProposal) {
+      String validatedOutcome = quality.path("outcome").asText("");
+      quality.put("validated_outcome", validatedOutcome);
+      quality.put("outcome", "draft");
+      quality.put("assistant_confirmation_required", true);
+      quality.put("assistant_proposal_status", "pending");
+      quality.put("assistant_conversation_id", revision.path("assistant_conversation_id").asText());
+      quality.putObject("revision_parent")
+          .put("record_id", revision.path("record_id").asLong(0))
+          .put("version", revision.path("version").asInt(0));
+    }
     boolean draft = quality.path("outcome").asText("").equals("draft");
     if (plan.path("days").valueStream().anyMatch(d -> d.path("attractions").isEmpty()))
       throw new ApiException(503, "至少一天没有可验证景点，已拒绝保存", "TRUSTED_POI_UNAVAILABLE");
@@ -427,8 +440,12 @@ public class TaskService {
         draft
             ? BusinessTypes.TaskStatus.NEEDS_ATTENTION.wire()
             : BusinessTypes.TaskStatus.SUCCEEDED.wire());
-    task.put("message", draft ? "Agent 已保存未完成草稿，请查看缺口并调整" : "Agent 行程已生成并保存");
-    if (draft && revision != null) quality.set("revision_parent", revision);
+    task.put(
+        "message",
+        assistantProposal
+            ? "Agent 改排方案待确认，原行程尚未更新"
+            : draft ? "Agent 已保存未完成草稿，请查看缺口并调整" : "Agent 行程已生成并保存");
+    if (draft && revision != null && !assistantProposal) quality.set("revision_parent", revision);
     tx.executeWithoutResult(
         status -> {
           if (tasks.finish(task) != 1) {
@@ -471,7 +488,7 @@ public class TaskService {
             record.put("user_id", uid);
             record.put("plan_json", json.writeValueAsString(plan));
             record.put("quality_json", json.writeValueAsString(quality));
-            record.put("title", body.path("city").asText("") + "旅行计划");
+            record.put("title", body.path("city").asText("") + (assistantProposal ? "改排方案" : "旅行计划"));
             record.put(
                 "source",
                 revision != null
@@ -483,12 +500,13 @@ public class TaskService {
             ledger.capture(
                 uid,
                 recordId,
-                revision != null ? "agent_revision" : "agent_create",
+                assistantProposal ? "assistant_proposal" : revision != null ? "agent_revision" : "agent_create",
                 task.get("request_id").toString());
           }
           if (!draft) history.outbox(recordId, uid, "upsert");
           tasks.attach(task.get("id").toString(), recordId);
-          metrics.recordPlanOutcomeAfterCommit(draft ? "draft" : "complete");
+          if (assistantProposal) metrics.recordAssistantProposalAfterCommit("created");
+          else metrics.recordPlanOutcomeAfterCommit(draft ? "draft" : "complete");
         });
   }
 }

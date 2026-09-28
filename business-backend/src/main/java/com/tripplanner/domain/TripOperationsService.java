@@ -55,31 +55,38 @@ public class TripOperationsService {
     return found;
   }
 
+  private Map<String,Object> regular(Map<String,Object> found) {
+    if(!json.readTree(found.get("quality_json").toString()).path("assistant_proposal_status").asText("").isBlank())
+      throw new ApiException(409,"助手方案不能作为执行行程，请先确认原行程");
+    return found;
+  }
+
   private Map<String,Object> access(long actor,long id,boolean edit) {
     var found=trip(id);
     long owner=((Number)found.get("user_id")).longValue();
-    if(owner==actor) return found;
+    if(owner==actor) return regular(found);
     var member=row("SELECT role,status FROM trip_members WHERE trip_id=? AND user_id=?",id,actor);
     if(member==null || !"accepted".equals(member.get("status")) ||
         (edit && !"editor".equals(member.get("role"))))
       throw new ApiException(404,"行程不存在或无权访问");
-    return found;
+    return regular(found);
   }
 
   private Map<String,Object> owned(long actor,long id) {
     var found=trip(id);
     if(((Number)found.get("user_id")).longValue()!=actor)
       throw new ApiException(404,"行程不存在或无权访问");
-    return found;
+    return regular(found);
   }
 
   /** Keeps an accepted editor row locked until the business write commits. */
   private void writeAccessLocked(long actor,long id) {
     var found=trip(id);
-    if(((Number)found.get("user_id")).longValue()==actor) return;
+    if(((Number)found.get("user_id")).longValue()==actor) {regular(found);return;}
     var member=row("SELECT role,status FROM trip_members WHERE trip_id=? AND user_id=? FOR SHARE",id,actor);
     if(member==null || !"accepted".equals(member.get("status")) || !"editor".equals(member.get("role")))
       throw new ApiException(404,"行程不存在或无权访问");
+    regular(found);
   }
 
   private void version(Map<String,Object> trip,int expected) {

@@ -142,6 +142,8 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/smoke_http.py --base-url http://frontend
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/business_benchmark.py --base-url http://frontend --output /tmp/business.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/business.json evidence/business.json
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/assistant_proposal_acceptance.py --base-url http://frontend --output /tmp/assistant-proposal.json
+          docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/assistant-proposal.json evidence/assistant-proposal.json
 
       - uses: actions/setup-node@v4
         with:

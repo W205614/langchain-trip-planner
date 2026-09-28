@@ -402,6 +402,11 @@ export async function confirmAssistantProposal(conversationId: string, recordId:
     { headers: { 'If-Match': String(version) } })).data
 }
 
+export async function discardAssistantProposal(conversationId: string, recordId: number, version: number): Promise<any> {
+  return (await apiClient.post(`/api/assistant/conversations/${conversationId}/proposals/${recordId}/discard`, {},
+    { headers: { 'If-Match': String(version) } })).data
+}
+
 export default apiClient
 
 // 行程执行工作台：所有变更均由 Java 校验当前账号与行程版本。

@@ -41,7 +41,10 @@
                 <span class="city-name">{{ record.city }}</span>
                 <a-tag>行程 #{{ record.id }}</a-tag>
                 <a-tag color="blue">{{ record.travel_days }} 天</a-tag>
-                <a-tag v-if="record.outcome === 'draft'" color="orange">未完成草稿</a-tag>
+                <a-tag v-if="record.assistant_proposal_status === 'pending'" color="purple">助手方案待确认</a-tag>
+                <a-tag v-else-if="record.assistant_proposal_status === 'confirmed'" color="green">助手方案已确认</a-tag>
+                <a-tag v-else-if="record.assistant_proposal_status === 'discarded'">助手方案已放弃</a-tag>
+                <a-tag v-else-if="record.outcome === 'draft'" color="orange">未完成草稿</a-tag>
               </div>
               <div class="record-meta">
                 <span class="meta-item">📅 {{ record.start_date }} ~ {{ record.end_date }}</span>
@@ -55,12 +58,12 @@
               </div>
             </div>
             <div class="record-actions">
-              <a-button @click="$router.push(`/trips/${record.id}/operations`)">📋 行程执行</a-button>
-              <a-button @click="openAgent(record)">💬 问攻略</a-button>
-              <a-button v-if="record.outcome !== 'draft'" :loading="publishingId===record.id" @click="publishRecord(record)">🌏 投稿广场</a-button>
-              <a-button v-if="record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
+              <a-button v-if="!record.assistant_proposal_status" @click="$router.push(`/trips/${record.id}/operations`)">📋 行程执行</a-button>
+              <a-button v-if="!record.assistant_proposal_status" @click="openAgent(record)">💬 问攻略</a-button>
+              <a-button v-if="!record.assistant_proposal_status && record.outcome !== 'draft'" :loading="publishingId===record.id" @click="publishRecord(record)">🌏 投稿广场</a-button>
+              <a-button v-if="!record.assistant_proposal_status && record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
               <a-button type="primary" @click="viewRecord(record.id)">👁️ 查看行程</a-button>
-              <a-popconfirm title="确定删除这条历史记录吗?" @confirm="removeRecord(record.id)">
+              <a-popconfirm v-if="record.assistant_proposal_status !== 'pending'" title="确定删除这条历史记录吗?" @confirm="removeRecord(record.id)">
                 <a-button danger>🗑️ 删除</a-button>
               </a-popconfirm>
             </div>

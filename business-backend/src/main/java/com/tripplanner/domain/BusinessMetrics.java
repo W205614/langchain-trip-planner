@@ -108,7 +108,17 @@ public class BusinessMetrics {
 
   public void recordPlanOutcomeAfterCommit(String outcome) {
     Runnable increment =
-        () -> registry.counter("trip.plan.total", "outcome", "draft".equals(outcome) ? "draft" : "complete").increment();
+        () -> registry.counter("trip.plan.total", "outcome", Set.of("draft", "degraded").contains(outcome) ? outcome : "complete").increment();
+    afterCommit(increment);
+  }
+
+  public void recordAssistantProposalAfterCommit(String action) {
+    if (!Set.of("created", "confirmed", "discarded").contains(action))
+      throw new IllegalArgumentException("Unknown assistant proposal action");
+    afterCommit(() -> registry.counter("trip.assistant.proposal.total", "action", action).increment());
+  }
+
+  private void afterCommit(Runnable increment) {
     if (TransactionSynchronizationManager.isSynchronizationActive())
       TransactionSynchronizationManager.registerSynchronization(
           new TransactionSynchronization() {

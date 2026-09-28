@@ -8,17 +8,17 @@
         ← {{ returnLabel }}
       </a-button>
       <a-space v-if="tripPlan" size="middle">
-        <a-button v-if="!editMode" @click="toggleEditMode" type="default">
+        <a-button v-if="!editMode && !quality.assistant_proposal_status" @click="toggleEditMode" type="default">
           ✏️ 编辑行程
         </a-button>
-        <a-button v-else @click="saveChanges" type="primary">
+        <a-button v-else-if="editMode" @click="saveChanges" type="primary">
           💾 保存修改
         </a-button>
         <a-button v-if="editMode" @click="cancelEdit" type="default">
           ❌ 取消编辑
         </a-button>
-        <a-button v-if="!editMode && historyRecordId" @click="shareTrip">🔗 分享</a-button>
-        <a-button v-if="!editMode && historyRecordId" @click="$router.push(`/trips/${historyRecordId}/operations`)">📋 行程执行</a-button>
+        <a-button v-if="!editMode && historyRecordId && !quality.assistant_proposal_status" @click="shareTrip">🔗 分享</a-button>
+        <a-button v-if="!editMode && historyRecordId && !quality.assistant_proposal_status" @click="$router.push(`/trips/${historyRecordId}/operations`)">📋 行程执行</a-button>
 
         <!-- 导出按钮 -->
         <a-dropdown v-if="!editMode" :disabled="exportBusy">
@@ -72,12 +72,21 @@
       <div class="main-content">
         <div class="result-notices">
           <a-alert v-if="editMode || editNotice || unsaved" type="info" show-icon message="编辑期间预算为上次保存值；保存到服务器后重新计算预算和规则，路线信息仍需确认。" />
-          <a-alert v-if="quality.outcome === 'draft'" type="warning" show-icon message="未完成草稿：以下要求尚未满足，不能视为完整可执行行程。" />
+          <a-alert v-if="quality.assistant_proposal_status === 'pending'" type="info" show-icon
+            :message="`待确认的助手改排方案；原行程 #${quality.revision_parent?.record_id} 尚未更新。`"
+            :description="proposalQualityMessage" />
+          <a-alert v-else-if="quality.assistant_proposal_status === 'confirmed'" type="success" show-icon
+            :message="`方案已确认，原行程 #${quality.applied_to} 已更新。`" />
+          <a-alert v-else-if="quality.assistant_proposal_status === 'discarded'" type="info" show-icon message="方案已放弃，原行程未改变。" />
+          <a-alert v-else-if="quality.outcome === 'draft'" type="warning" show-icon message="未完成草稿：以下要求尚未满足，不能视为完整可执行行程。" />
           <a-alert v-for="notice in tripPlan.enrichment_notices || []" :key="notice" type="info" :message="notice" />
           <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
           <a-alert v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`"
             type="error" show-icon :message="issue.reason" :description="issue.action" />
-          <a-button v-if="quality.assistant_confirmation_required" type="primary" @click="confirmAssistant">确认保存此助手方案</a-button>
+          <a-space v-if="quality.assistant_confirmation_required">
+            <a-button type="primary" :loading="proposalBusy" @click="confirmAssistant">确认应用到原行程</a-button>
+            <a-button :disabled="proposalBusy" @click="discardAssistant">放弃方案</a-button>
+          </a-space>
           <a-button v-else-if="quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
@@ -181,7 +190,7 @@
                   <a-space>
                     <span class="day-date">{{ day.date }}</span>
                     <a-button
-                      v-if="historyRecordId && !editMode"
+                      v-if="historyRecordId && !editMode && !quality.assistant_proposal_status"
                       size="small"
                       type="dashed"
                       @click.stop="openRevision(day.day_index)"
@@ -424,7 +433,7 @@ import AttractionPicker from '@/components/trip/AttractionPicker.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import type { TripPlan, POIInfo } from '@/types'
-import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal } from '@/services/api'
+import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal, discardAssistantProposal } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -432,14 +441,34 @@ const returnLabel = computed(() => route.query.from === 'history' ? '返回我�
 const tripPlan = ref<TripPlan | null>(null)
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
+const proposalBusy = ref(false)
 async function confirmAssistant() {
-  if (!historyRecordId.value || !quality.value.assistant_conversation_id) return
+  if (!historyRecordId.value || !quality.value.assistant_conversation_id || proposalBusy.value) return
+  proposalBusy.value = true
   try {
     const response = await confirmAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value, recordVersion.value)
-    historyRecordId.value = response.id; recordVersion.value = response.version; quality.value = response.quality
+    historyRecordId.value = response.id; recordVersion.value = response.version; quality.value = response.quality; tripPlan.value = response.data
     sessionStorage.setItem('tripPlanId', String(response.id)); sessionStorage.setItem('tripPlanVersion', String(response.version))
-    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); message.success(response.message)
-  } catch (e: any) { message.error(e.response?.data?.message || '确认失败，请重新打开方案') }
+    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); sessionStorage.setItem('tripPlan', JSON.stringify(response.data)); message.success(response.message)
+  } catch (e: any) {
+    if (e.response?.status === 409) { message.error('方案或原行程版本已变化，请返回我的行程重新查看'); await router.push('/history') }
+    else message.error(e.response?.data?.message || '确认失败，请重新打开方案')
+  } finally { proposalBusy.value = false }
+}
+async function discardAssistant() {
+  if (!historyRecordId.value || !quality.value.assistant_conversation_id || proposalBusy.value) return
+  proposalBusy.value = true
+  try {
+    const response = await discardAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value, recordVersion.value)
+    recordVersion.value = response.version; quality.value = response.quality
+    sessionStorage.setItem('tripPlanVersion', String(response.version))
+    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality))
+    message.success(response.message)
+    await router.push('/history')
+  } catch (e: any) {
+    if (e.response?.status === 409) { message.error('方案版本已变化，请重新打开行程记录'); await router.push('/history') }
+    else message.error(e.response?.data?.message || '放弃方案失败')
+  } finally { proposalBusy.value = false }
 }
 async function applyRevisionDraft() {
   try {
@@ -450,6 +479,11 @@ async function applyRevisionDraft() {
   } catch (e: any) { message.error(e.response?.data?.message || e.response?.data?.detail || '应用失败，请重新打开原行程确认版本') }
 }
 const quality = ref(JSON.parse(sessionStorage.getItem('tripQuality') || '{}'))
+const proposalQualityMessage = computed(() => ({
+  complete: '已通过现有质量检查；开放与预约信息仍需出行前核实。',
+  degraded: '规划使用了降级结果，请先检查页面上的原因与缺口。',
+  draft: '仍有未满足的要求，请先查看问题说明。'
+}[quality.value.validated_outcome as 'complete' | 'degraded' | 'draft'] || '请检查方案及质量说明。'))
 const factGapMessage = computed(() => {
   const gaps: string[] = quality.value.data_gaps || []
   const notes = ['预约要求及余票请通过景区官方渠道确认']
