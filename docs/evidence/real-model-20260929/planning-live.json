@@ -1,0 +1,169 @@
+{
+  "mode": "planning_live",
+  "scope": "直接调用 Agent；包含高德数据节点、RAG、逐日 LLM 与本地质量修复，不包含 HTTP/SSE 传输、鉴权、历史持久化和路线 API 二次校验。",
+  "request": {
+    "departure_city": "",
+    "city": "北京",
+    "start_date": "2026-10-15",
+    "end_date": "2026-10-15",
+    "travel_days": 1,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "traveler_count": 1,
+    "room_count": 1,
+    "budget_total": null,
+    "preferences": [
+      "历史文化"
+    ],
+    "constraints": {
+      "must_visit": [],
+      "avoid": [],
+      "daily_minutes": 600,
+      "max_inter_stop_walking_km": null
+    },
+    "free_text_input": ""
+  },
+  "runs": 1,
+  "generated_at": "2026-09-29T03:11:12.335633+00:00",
+  "outcomes": {
+    "success": 1,
+    "error": 0,
+    "success_rate": 1.0
+  },
+  "quality": {
+    "days_match_rate": 1.0,
+    "trusted_poi_rate": 1.0,
+    "fallback_day_rate": 0.0,
+    "deterministic_score_mean": 100.0,
+    "deterministic_pass_rate": 1.0
+  },
+  "timings": {
+    "plan_total": {
+      "samples": 1,
+      "mean_seconds": 22.896700610999687,
+      "p50_seconds": 22.896700610999687,
+      "p95_seconds": 22.896700610999687,
+      "max_seconds": 22.896700610999687
+    },
+    "first_progress": {
+      "samples": 1,
+      "mean_seconds": 0.004708987999947567,
+      "p50_seconds": 0.004708987999947567,
+      "p95_seconds": 0.004708987999947567,
+      "max_seconds": 0.004708987999947567
+    },
+    "first_llm_token_from_plan_start": {
+      "samples": 1,
+      "mean_seconds": 21.294819836999523,
+      "p50_seconds": 21.294819836999523,
+      "p95_seconds": 21.294819836999523,
+      "max_seconds": 21.294819836999523
+    },
+    "per_day_llm_ttft": {
+      "samples": 1,
+      "mean_seconds": 8.661652910000157,
+      "p50_seconds": 8.661652910000157,
+      "p95_seconds": 8.661652910000157,
+      "max_seconds": 8.661652910000157
+    },
+    "attraction_search": {
+      "samples": 1,
+      "mean_seconds": 10.800605823999831,
+      "p50_seconds": 10.800605823999831,
+      "p95_seconds": 10.800605823999831,
+      "max_seconds": 10.800605823999831
+    },
+    "hotel_search": {
+      "samples": 1,
+      "mean_seconds": 12.195233505000033,
+      "p50_seconds": 12.195233505000033,
+      "p95_seconds": 12.195233505000033,
+      "max_seconds": 12.195233505000033
+    },
+    "per_day_llm_call": {
+      "samples": 1,
+      "mean_seconds": 10.261405227000068,
+      "p50_seconds": 10.261405227000068,
+      "p95_seconds": 10.261405227000068,
+      "max_seconds": 10.261405227000068
+    },
+    "plan_enrichment": {
+      "samples": 1,
+      "mean_seconds": 5.1376000556047074e-05,
+      "p50_seconds": 5.1376000556047074e-05,
+      "p95_seconds": 5.1376000556047074e-05,
+      "max_seconds": 5.1376000556047074e-05
+    },
+    "plan_generation": {
+      "samples": 1,
+      "mean_seconds": 10.292040004000228,
+      "p50_seconds": 10.292040004000228,
+      "p95_seconds": 10.292040004000228,
+      "max_seconds": 10.292040004000228
+    },
+    "rag_context": {
+      "samples": 1,
+      "mean_seconds": 0.02508689600017533,
+      "p50_seconds": 0.02508689600017533,
+      "p95_seconds": 0.02508689600017533,
+      "max_seconds": 0.02508689600017533
+    },
+    "restaurant_search": {
+      "samples": 1,
+      "mean_seconds": 12.589652925999872,
+      "p50_seconds": 12.589652925999872,
+      "p95_seconds": 12.589652925999872,
+      "max_seconds": 12.589652925999872
+    },
+    "weather_query": {
+      "samples": 1,
+      "mean_seconds": 0.802288148000116,
+      "p50_seconds": 0.802288148000116,
+      "p95_seconds": 0.802288148000116,
+      "max_seconds": 0.802288148000116
+    }
+  },
+  "model_usage": {
+    "model_calls": 1.0,
+    "input_tokens": 1398.0,
+    "output_tokens": 2064.0,
+    "estimated_cost_usd": 0.0
+  },
+  "amap_fact_cache": {
+    "weather_misses": 1,
+    "weather_hits": 0,
+    "poi_misses": 33,
+    "poi_hits": 0
+  },
+  "details": [
+    {
+      "run": 1,
+      "outcome": "success",
+      "quality": {
+        "days_match": true,
+        "trusted_poi": true,
+        "days": 1,
+        "attractions": 3,
+        "fallback_days": 0,
+        "deterministic_score": 100,
+        "deterministic_passed": true,
+        "deterministic_warning_count": 0
+      },
+      "plan_total_seconds": 22.896700610999687,
+      "first_progress_seconds": 0.004708987999947567,
+      "first_llm_token_from_plan_start_seconds": 21.294819836999523,
+      "amap_fact_cache": {
+        "weather_misses": 1,
+        "weather_hits": 0,
+        "poi_misses": 33,
+        "poi_hits": 0
+      }
+    }
+  ],
+  "limitations": [
+    "这是低频功能评测，不能用作并发压测或线上 SLA。",
+    "estimated_cost_usd 仅在部署环境配置模型单价且供应商返回 usage 时有效。",
+    "first_progress 是工作流阶段事件；first_llm_token_from_plan_start 才是从规划开始到首个模型 token。",
+    "确定性质量分校验天数、餐饮、时长与可信 POI 等规则，不等同于主观行程满意度或最终问答事实正确率。"
+  ]
+}
