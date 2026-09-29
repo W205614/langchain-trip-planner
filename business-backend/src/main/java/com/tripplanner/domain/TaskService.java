@@ -295,11 +295,11 @@ public class TaskService {
     long uid = ((Number) task.get("user_id")).longValue();
     var body = (ObjectNode) json.readTree(task.get("request_json").toString());
     var revision = (ObjectNode) body.remove("_revision");
+    Instant deadline =
+        ((Timestamp) task.get("deadline_at")).toLocalDateTime().toInstant(ZoneOffset.UTC);
     long executionStarted = System.nanoTime();
     log.info("task_execution_started task_id={} execution_id={}", id, execution);
     try {
-      Instant deadline =
-          ((Timestamp) task.get("deadline_at")).toLocalDateTime().toInstant(ZoneOffset.UTC);
       var request =
           json.createObjectNode()
               .put("protocol_version", 1)
@@ -378,7 +378,9 @@ public class TaskService {
               ? "PROCESS_INTERRUPTED"
               : ex instanceof ApiException ae
                   ? ae.code
-                  : ex instanceof InterruptedException ? "TASK_TIMEOUT" : "AGENT_CONNECTION_LOST";
+                  : ex instanceof InterruptedException || !Instant.now().isBefore(deadline)
+                      ? "TASK_TIMEOUT"
+                      : "AGENT_CONNECTION_LOST";
       tasks.fail(id, execution, code, "规划未完成，请查看任务状态后重试");
       metrics.recordTaskExecution("failed", System.nanoTime() - executionStarted);
       log.warn(

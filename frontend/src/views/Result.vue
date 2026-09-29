@@ -1412,6 +1412,19 @@ const exportAsPDF = async () => {
   flex: 1;
 }
 
+@media (max-width: 1200px) {
+  .top-info-section {
+    flex-direction: column;
+  }
+
+  .left-info,
+  .right-map {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 /* 行程概览卡片 */
 .overview-card {
   height: fit-content;
@@ -1712,6 +1725,14 @@ const exportAsPDF = async () => {
   .page-header {
     flex-direction: column;
     gap: 16px;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .side-nav {
+    width: 100%;
   }
 }
 </style>

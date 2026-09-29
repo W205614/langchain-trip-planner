@@ -13,6 +13,9 @@ import java.net.URI;
 import java.net.http.*;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,8 @@ import tools.jackson.databind.node.ObjectNode;
       "spring.datasource.url=${TEST_DATABASE_URL}",
       "spring.datasource.username=trip",
       "spring.datasource.password=${TEST_DATABASE_PASSWORD:isolated-test-only}",
+      "APP_ENV=validation",
+      "VALIDATION_ALLOW_FIXTURES=yes",
       "WORKERS_ENABLED=false"
     })
 @EnabledIfEnvironmentVariable(named = "TEST_DATABASE_URL", matches = ".+")
@@ -222,6 +227,46 @@ class AssistantProposalIntegrationTest {
     assertTrue(history.owned(uid, original).get("plan_json").toString().contains("原安排"));
     assertEquals(200, request("POST", "/api/assistant/conversations/" + conversation
         + "/proposals/" + stale + "/discard", owner, "{}", "1").statusCode());
+  }
+
+  @Test
+  void simultaneousConfirmAndDiscardHaveExactlyOneWinner() throws Exception {
+    String username = "proposal_race_" + UUID.randomUUID().toString().substring(0, 12);
+    String owner = token(username);
+    long uid = jdbc.queryForObject("SELECT id FROM users WHERE username=?", Long.class, username);
+    long original = original(uid);
+    String conversation = conversation(owner, original);
+    long proposal = proposal(owner, conversation, "complete", true);
+    String base = "/api/assistant/conversations/" + conversation + "/proposals/" + proposal;
+    var start = new CountDownLatch(1);
+    try (var pool = Executors.newFixedThreadPool(16)) {
+      var calls = new java.util.ArrayList<java.util.concurrent.Future<HttpResponse<String>>>();
+      for (int i = 0; i < 16; i++) {
+        String action = i % 2 == 0 ? "confirm" : "discard";
+        calls.add(pool.submit(() -> {
+          start.await();
+          return request("POST", base + "/" + action, owner, "{}", "1");
+        }));
+      }
+      start.countDown();
+      int confirmed = 0, discarded = 0, conflicts = 0;
+      for (int i = 0; i < calls.size(); i++) {
+        var response = calls.get(i).get(30, TimeUnit.SECONDS);
+        if (response.statusCode() == 409) conflicts++;
+        else if (response.statusCode() == 200 && i % 2 == 0) confirmed++;
+        else if (response.statusCode() == 200) discarded++;
+        else fail("Unexpected race response: " + response.statusCode() + " " + response.body());
+      }
+      assertEquals(1, confirmed + discarded);
+      assertEquals(15, conflicts);
+      var proposalQuality = json.readTree(history.owned(uid, proposal).get("quality_json").toString());
+      assertEquals(2, history.owned(uid, proposal).get("version"));
+      assertEquals(confirmed == 1 ? "confirmed" : "discarded",
+          proposalQuality.path("assistant_proposal_status").asText());
+      assertEquals(confirmed == 1 ? 2 : 1, history.owned(uid, original).get("version"));
+      assertEquals(confirmed == 1 ? 1L : 0L,
+          jdbc.queryForObject("SELECT count(*) FROM rag_sync_jobs WHERE record_id=?", Long.class, original));
+    }
   }
 
   @Test

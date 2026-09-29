@@ -27,7 +27,7 @@
       <a-empty v-if="searched&&!loading&&!results.length" class="explore-empty" description="没有找到可信景点，请尝试更具体的名称" />
 
       <a-row :gutter="[20, 20]" class="poi-grid">
-        <a-col v-for="poi in results" :key="poi.id" :xs="24" :md="12" :xl="8">
+        <a-col v-for="poi in visibleResults" :key="poi.id" :xs="24" :md="12" :xl="8">
           <article class="poi-card">
             <div class="poi-image-wrap">
               <img :src="photoUrl(poi)" :alt="`${poi.name}参考图片`" class="poi-image" loading="lazy" />
@@ -45,12 +45,14 @@
           </article>
         </a-col>
       </a-row>
+      <a-pagination v-if="results.length > pageSize" v-model:current="page" :total="results.length"
+        :page-size="pageSize" class="poi-pager" />
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { searchAttractionPOIs } from '@/services/map'
 import type { POIInfo } from '@/types'
@@ -60,6 +62,9 @@ const city = ref('北京')
 const keyword = ref('景点')
 const category = ref('')
 const results = ref<POIInfo[]>([])
+const page = ref(1)
+const pageSize = 12
+const visibleResults = computed(() => results.value.slice((page.value - 1) * pageSize, page.value * pageSize))
 const loading = ref(false)
 const searched = ref(false)
 const error = ref('')
@@ -78,9 +83,11 @@ async function search() {
   error.value = ''
   try {
     results.value = await searchAttractionPOIs(city.value.trim(), `${keyword.value.trim()} ${category.value}`.trim())
+    page.value = 1
     searched.value = true
   } catch (e: any) {
     results.value = []
+    page.value = 1
     searched.value = true
     error.value = e?.response?.data?.message || '景点搜索暂不可用，请稍后重试'
   } finally { loading.value = false }
@@ -92,5 +99,6 @@ search()
 <style scoped>
 .explore-page{min-height:100vh;padding:32px 24px 64px;color:#172033}.explore-shell{max-width:1240px;margin:auto}.page-header{display:grid;grid-template-columns:150px 1fr 150px;align-items:start;gap:24px;padding:34px 38px;background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(240,245,255,.94));border:1px solid rgba(255,255,255,.7);border-radius:28px 28px 0 0}.title-block{text-align:center}.eyebrow{display:block;color:#5b5bd6;font-size:12px;font-weight:800;letter-spacing:.16em;margin-bottom:8px}.title-block h1{font-size:38px;line-height:1.2;margin:0;color:#101828}.title-block p{margin:12px 0 0;color:#52606d}.agent-badge{justify-self:end;margin-top:4px}.search-panel{display:grid;grid-template-columns:180px 190px 1fr;gap:14px;padding:22px 38px 28px;background:rgba(255,255,255,.94);box-shadow:0 24px 54px rgba(7,10,31,.28);border-radius:0 0 28px 28px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:13px;font-weight:700;color:#475467}.field :deep(.ant-select),.field :deep(.ant-input-group-wrapper){width:100%}.field :deep(.ant-input),.field :deep(.ant-select-selector),.field :deep(.ant-input-search-button){height:42px}.status-alert{margin:20px 0}.result-summary{display:flex;justify-content:space-between;color:#dbeafe;font-size:14px;margin:24px 4px 12px}.poi-grid{margin-top:10px}.poi-card{display:flex;flex-direction:column;height:100%;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.75);border-radius:20px;box-shadow:0 15px 35px rgba(3,7,30,.24);transition:transform .25s ease,box-shadow .25s ease}.poi-card:hover{transform:translateY(-5px);box-shadow:0 22px 45px rgba(3,7,30,.34)}.poi-image-wrap{position:relative;height:190px;background:#e8eef8;overflow:hidden;flex:0 0 auto}.poi-image{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}.poi-card:hover .poi-image{transform:scale(1.035)}.image-note{position:absolute;left:14px;bottom:12px;padding:5px 10px;border-radius:999px;background:rgba(15,23,42,.76);color:#fff;font-size:12px;backdrop-filter:blur(8px)}.poi-body{padding:20px 20px 18px;flex:1}.poi-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.poi-title-row h2{margin:0;color:#101828;font-size:22px;line-height:1.35}.poi-id{font-size:11px;color:#98a2b3;white-space:nowrap;margin-top:5px}.type-tags{min-height:28px;margin:12px 0 14px}.poi-fact{display:grid;grid-template-columns:22px 1fr;gap:5px;margin:10px 0;color:#344054;line-height:1.6}@media(max-width:760px){.explore-page{padding:12px}.page-header{grid-template-columns:1fr;padding:24px}.title-block{text-align:left}.title-block h1{font-size:30px}.agent-badge{justify-self:start}.search-panel{grid-template-columns:1fr;padding:20px 24px}.result-summary{align-items:flex-start;flex-direction:column;gap:6px}}
 .explore-empty { margin-top: 22px; padding: 68px 20px; border-radius: 18px; background: rgba(255,255,255,.96); box-shadow: 0 18px 46px rgba(2,6,23,.28); }
+.poi-pager { display: flex; justify-content: center; margin: 28px auto 0; padding: 12px; background: rgba(255,255,255,.94); border-radius: 12px; }
 .explore-empty :deep(.ant-empty-description) { color: var(--trip-text-on-light); font-size: 16px; }
 </style>

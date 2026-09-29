@@ -4,7 +4,7 @@
     <a-table :data-source="rows" :loading="loading" row-key="id" :pagination="false">
       <a-table-column title="投稿" data-index="id" />
       <a-table-column title="标题"><template #default="{record}"><b>{{ record.title }}</b><div>{{ record.city }} · {{ record.author }} · v{{ record.record_version }}</div></template></a-table-column>
-      <a-table-column title="提交时间" data-index="created_at" />
+      <a-table-column title="提交时间"><template #default="{record}">{{ formatDateTime(record.created_at) }}</template></a-table-column>
       <a-table-column title="操作"><template #default="{record}"><a-space><a-button type="primary" @click="review(record.id,'approve')">通过</a-button><a-button danger @click="review(record.id,'reject')">拒绝</a-button></a-space></template></a-table-column>
       <template #expandedRowRender="{record}">
         <div class="snapshot-facts">{{ record.snapshot.start_date }} ~ {{ record.snapshot.end_date }} · {{ record.snapshot.travel_days }} 天 · {{ record.snapshot.transportation }}</div>
@@ -23,6 +23,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { fetchCommunityReviewQueue, reviewCommunityCard } from '@/services/api'
+import { formatDateTime } from '@/utils/datetime'
 const router=useRouter(); const rows=ref<any[]>([]); const loading=ref(false)
 async function load(){loading.value=true;try{const result=await fetchCommunityReviewQueue();rows.value=result.data||[]}catch(e:any){message.error(e.response?.data?.detail||'读取审核队列失败')}finally{loading.value=false}}
 async function review(id:number,decision:'approve'|'reject'){try{await reviewCommunityCard(id,decision);message.success(decision==='approve'?'已发布':'已拒绝');await load()}catch(e:any){message.error(e.response?.data?.detail||'审核失败')}}

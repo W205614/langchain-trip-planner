@@ -51,7 +51,7 @@
                 <span class="meta-item">🎯 {{ record.attraction_count }} 个景点</span>
                 <span class="meta-item" v-if="record.budget_total">💰 ¥{{ record.budget_total.toLocaleString() }}</span>
                 <span class="meta-item" v-if="record.budget_limit">预算上限 ¥{{ record.budget_limit.toLocaleString() }}</span>
-                <span class="meta-item">🕐 {{ record.created_at }}</span>
+                <span class="meta-item">🕐 {{ formatDateTime(record.created_at) }}</span>
               </div>
               <div class="record-prefs" v-if="record.preferences && record.preferences.length">
                 <a-tag v-for="p in record.preferences" :key="p" class="pref-tag">{{ p }}</a-tag>
@@ -146,6 +146,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { formatDateTime } from '@/utils/datetime'
 import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask, submitCommunityCard } from '@/services/api'
 
 const router = useRouter()

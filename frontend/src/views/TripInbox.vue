@@ -18,7 +18,7 @@
     <a-card title="站内通知" class="section">
       <a-list :data-source="notifications" :locale="{ emptyText: '暂无站内通知' }" bordered>
         <template #renderItem="{ item }">
-          <a-list-item><a-list-item-meta :title="item.title" :description="`${item.message} · ${item.created_at}`" />
+          <a-list-item><a-list-item-meta :title="item.title" :description="`${item.message} · ${formatDateTime(item.created_at)}`" />
             <template #actions><a-button v-if="item.trip_id" @click="router.push(`/trips/${item.trip_id}/operations`)">查看行程</a-button>
               <a-button v-if="!item.read_at" @click="markRead(item.id)">标记已读</a-button></template>
           </a-list-item>
@@ -46,6 +46,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { tripOperations } from '@/services/api'
+import { formatDateTime } from '@/utils/datetime'
 
 const router = useRouter()
 const error = ref('')

@@ -77,6 +77,22 @@ test('explore formats provider categories and renders a same-origin reference im
   await expect(page.getByAltText('故宫博物院参考图片')).toHaveAttribute('src', /poi_id=B0001/)
 })
 
+test('explore pages large POI result sets instead of rendering every card', async ({ page }) => {
+  const places = Array.from({ length: 30 }, (_, index) => ({
+    id: `fixture-${index}`, name: `验证景点${index}`, type: '风景名胜',
+    address: `地址${index}`, location: { longitude: 116.4, latitude: 39.9 }, photos: []
+  }))
+  await page.route('**/api/map/poi**', route => route.fulfill({ json: { success: true, data: places } }))
+  await page.route('**/api/poi/photo/image**', route => route.fulfill({ status: 404 }))
+
+  await page.goto('/explore')
+  await expect(page.locator('.poi-card')).toHaveCount(12)
+  await page.locator('.ant-pagination-item-2').click()
+  await expect(page.locator('.poi-card')).toHaveCount(12)
+  await expect(page.getByRole('heading', { name: '验证景点12' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '验证景点0', exact: true })).toHaveCount(0)
+})
+
 test('draft history can reverify routes without asking for an id', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
   let verified = false

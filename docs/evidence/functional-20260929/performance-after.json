@@ -1,0 +1,239 @@
+{
+  "generated_at": "2026-09-29T02:28:39.665236+00:00",
+  "mode": "isolated_offline_fixture",
+  "boundary": "single-host offline fixture; not production SLA, real provider QPS, or model latency",
+  "read_ramp": [
+    {
+      "requests": 408,
+      "qps": 135.86,
+      "p50_seconds": 0.0069,
+      "p95_seconds": 0.01,
+      "p99_seconds": 0.011,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 408
+      },
+      "concurrency": 1,
+      "duration_seconds": 3.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 1920,
+      "qps": 637.95,
+      "p50_seconds": 0.0121,
+      "p95_seconds": 0.0186,
+      "p99_seconds": 0.0228,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1920
+      },
+      "concurrency": 8,
+      "duration_seconds": 3.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 1207,
+      "qps": 394.99,
+      "p50_seconds": 0.0639,
+      "p95_seconds": 0.1947,
+      "p99_seconds": 0.2829,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1207
+      },
+      "concurrency": 32,
+      "duration_seconds": 3.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 1275,
+      "qps": 409.65,
+      "p50_seconds": 0.1191,
+      "p95_seconds": 0.3814,
+      "p99_seconds": 0.5512,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1275
+      },
+      "concurrency": 64,
+      "duration_seconds": 3.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 1254,
+      "qps": 387.7,
+      "p50_seconds": 0.2354,
+      "p95_seconds": 0.8096,
+      "p99_seconds": 1.2427,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1254
+      },
+      "concurrency": 128,
+      "duration_seconds": 3.0,
+      "path": "/api/history?page=1&page_size=10"
+    },
+    {
+      "requests": 1458,
+      "qps": 414.61,
+      "p50_seconds": 0.4404,
+      "p95_seconds": 1.3886,
+      "p99_seconds": 2.0217,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1458
+      },
+      "concurrency": 256,
+      "duration_seconds": 3.0,
+      "path": "/api/history?page=1&page_size=10"
+    }
+  ],
+  "slow_tasks": {
+    "submitted": 24,
+    "submission_statuses": {
+      "429": 12,
+      "202": 12
+    },
+    "submission_codes": {
+      "TASK_QUEUE_FULL": 12
+    },
+    "accepted": 12,
+    "terminal": {
+      "succeeded": 4,
+      "failed": 8
+    },
+    "poll_errors": {},
+    "still_pending_after_45s": 0,
+    "elapsed_seconds": 30.358,
+    "health_during_slow_work": {
+      "requests": 1692,
+      "qps": 421.72,
+      "p50_seconds": 0.0172,
+      "p95_seconds": 0.0331,
+      "p99_seconds": 0.0418,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 1692
+      },
+      "concurrency": 8,
+      "duration_seconds": 4,
+      "path": "/healthz"
+    },
+    "history_during_slow_work": {
+      "requests": 2573,
+      "qps": 641.36,
+      "p50_seconds": 0.0111,
+      "p95_seconds": 0.0245,
+      "p99_seconds": 0.0324,
+      "error_rate": 0.0,
+      "statuses": {
+        "200": 2573
+      },
+      "concurrency": 8,
+      "duration_seconds": 4,
+      "path": "/api/history?page=1&page_size=10"
+    }
+  },
+  "faults": {
+    "agent_down": {
+      "requests": 16,
+      "qps": 19.31,
+      "p50_seconds": 0.8118,
+      "p95_seconds": 0.8268,
+      "p99_seconds": 0.8268,
+      "error_rate": 1.0,
+      "statuses": {
+        "503": 16
+      },
+      "codes": {
+        "AGENT_UNAVAILABLE": 16
+      },
+      "backend_health": 200
+    },
+    "amap_down_first_wave": {
+      "requests": 20,
+      "qps": 14.83,
+      "p50_seconds": 0.0612,
+      "p95_seconds": 1.3446,
+      "p99_seconds": 1.3458,
+      "error_rate": 1.0,
+      "statuses": {
+        "503": 20
+      },
+      "codes": {
+        "AMAP_BUSY": 12,
+        "MAP_UNAVAILABLE": 8
+      }
+    },
+    "amap_down_circuit_wave": {
+      "requests": 20,
+      "qps": 307.75,
+      "p50_seconds": 0.0335,
+      "p95_seconds": 0.0508,
+      "p99_seconds": 0.0542,
+      "error_rate": 1.0,
+      "statuses": {
+        "503": 20
+      },
+      "codes": {
+        "AMAP_CIRCUIT_OPEN": 20
+      }
+    },
+    "amap_half_open_recovery": {
+      "status": 200,
+      "code": ""
+    }
+  },
+  "first_saturation": "Java durable task queue",
+  "docker_snapshot": [
+    {
+      "name": "trip-validation-backend-1",
+      "cpu": "3.54%",
+      "memory": "426MiB / 15.22GiB",
+      "pids": "79",
+      "network": "16.6MB / 14.8MB",
+      "block_io": "0B / 77.8kB"
+    },
+    {
+      "name": "trip-validation-frontend-1",
+      "cpu": "0.00%",
+      "memory": "12.87MiB / 15.22GiB",
+      "pids": "13",
+      "network": "28MB / 44.8MB",
+      "block_io": "0B / 8.19kB"
+    },
+    {
+      "name": "trip-validation-postgres-1",
+      "cpu": "3.38%",
+      "memory": "75.35MiB / 15.22GiB",
+      "pids": "17",
+      "network": "14MB / 15.1MB",
+      "block_io": "41.7MB / 29.7MB"
+    },
+    {
+      "name": "trip-validation-agent-1",
+      "cpu": "7.24%",
+      "memory": "110.4MiB / 15.22GiB",
+      "pids": "6",
+      "network": "1.04kB / 126B",
+      "block_io": "0B / 0B"
+    },
+    {
+      "name": "trip-validation-amap-fixture-1",
+      "cpu": "7.26%",
+      "memory": "108.4MiB / 15.22GiB",
+      "pids": "6",
+      "network": "1.86kB / 927B",
+      "block_io": "0B / 0B"
+    }
+  ],
+  "relevant_logs": [
+    "backend-1       | 2026-09-29T02:28:03.635Z  WARN 1 --- [pool-2-thread-2] [request_id=06ab20a0c29d65c341bcf5745c77abf1] com.tripplanner.domain.TaskService       : task_execution_failed task_id=3fe77a05-5910-4479-969e-9b30aae3f295 execution_id=3a859bb5-21ee-4c54-88c1-ad0a7c35a111 code=TASK_TIMEOUT type=IOException elapsed_ms=9414",
+    "backend-1       | 2026-09-29T02:28:03.635Z  WARN 1 --- [pool-2-thread-4] [request_id=aac06bfc27a74faabb43d5895ee94c3b] com.tripplanner.domain.TaskService       : task_execution_failed task_id=6c9640a1-00dc-4a7f-b603-5ec6358bb13e execution_id=4fb78127-c350-49ed-9c51-cf064649d880 code=TASK_TIMEOUT type=IOException elapsed_ms=8908",
+    "backend-1       | 2026-09-29T02:28:03.670Z  WARN 1 --- [pool-2-thread-1] [request_id=6972f7f17a458e70b99e34a3fafda882] com.tripplanner.domain.TaskService       : task_execution_failed task_id=259de8fe-11fe-4636-b657-efe169a33d59 execution_id=e7e8a5b5-6b28-4603-a3ad-40050899cc8f code=TASK_TIMEOUT type=IOException elapsed_ms=9707",
+    "backend-1       | 2026-09-29T02:28:03.680Z  WARN 1 --- [pool-2-thread-3] [request_id=43963c6f6ed4ff2f498b8dfb285fc32d] com.tripplanner.domain.TaskService       : task_execution_failed task_id=7c045aeb-b73b-4926-af2b-741b835cd1b1 execution_id=97eb9dd7-2004-45ea-837c-86fc0e49febd code=TASK_TIMEOUT type=IOException elapsed_ms=9206",
+    "backend-1       | 2026-09-29T02:28:10.220Z  WARN 1 --- [io-9000-exec-15] [request_id=53e0efd7740ea49023f062f8b03b20e8] c.tripplanner.resilience.UpstreamGuard   : upstream_circuit_open upstream=agent reason=HttpConnectTimeoutException open_ms=15000",
+    "backend-1       | 2026-09-29T02:28:19.157Z  WARN 1 --- [io-9000-exec-15] [request_id=8c8447eb7f576e44b2979a83800e58bc] c.tripplanner.resilience.UpstreamGuard   : upstream_circuit_open upstream=amap reason=ConnectException open_ms=15000",
+    "backend-1       | 2026-09-29T02:28:39.656Z  INFO 1 --- [io-9000-exec-24] [request_id=e496d901b4320f37f3afe20ce4ff5a0f] c.tripplanner.resilience.UpstreamGuard   : upstream_circuit_recovered upstream=amap"
+  ]
+}

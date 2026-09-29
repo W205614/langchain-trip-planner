@@ -1,0 +1,418 @@
+{
+  "mode": "offline_fixture_http",
+  "cases": [
+    {
+      "id": "one-day",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.259,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "three-days",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.237,
+      "token_usage": {
+        "calls": 3,
+        "input_tokens": 300,
+        "output_tokens": 300
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "seven-days",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.241,
+      "token_usage": {
+        "calls": 7,
+        "input_tokens": 700,
+        "output_tokens": 700
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "thirty-days",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.654,
+      "token_usage": {
+        "calls": 30,
+        "input_tokens": 3000,
+        "output_tokens": 3000
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "sparse-city",
+      "status": "failed",
+      "expected": "failed",
+      "contract_passed": true,
+      "rule_passed": null,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": false,
+      "seconds": 0.228,
+      "token_usage": null,
+      "human_satisfaction": null
+    },
+    {
+      "id": "no-candidates",
+      "status": "failed",
+      "expected": "failed",
+      "contract_passed": true,
+      "rule_passed": null,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": false,
+      "seconds": 0.429,
+      "token_usage": null,
+      "human_satisfaction": null
+    },
+    {
+      "id": "agent-cross-city-candidates",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.233,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "agent-partial-candidates",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.231,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "weather-unavailable",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.232,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "route-unavailable",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": "ROUTE_UNAVAILABLE",
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.231,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "invalid-json",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [
+        0
+      ],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.23,
+      "token_usage": {
+        "calls": 2,
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "unknown-poi",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [
+        0
+      ],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.229,
+      "token_usage": {
+        "calls": 2,
+        "input_tokens": 200,
+        "output_tokens": 200
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "family",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.232,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "museums",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.23,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "food",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.436,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "walking",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.231,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "driving",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.236,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "conflicting-preferences",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.239,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "injection",
+      "status": "succeeded",
+      "expected": "succeeded",
+      "contract_passed": true,
+      "rule_passed": true,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": true,
+      "seconds": 0.234,
+      "token_usage": {
+        "calls": 1,
+        "input_tokens": 100,
+        "output_tokens": 100
+      },
+      "human_satisfaction": null
+    },
+    {
+      "id": "date-mismatch",
+      "status": "validation_error",
+      "expected": "validation_error",
+      "contract_passed": true,
+      "rule_passed": null,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": false,
+      "seconds": 0.007,
+      "token_usage": null,
+      "human_satisfaction": null
+    },
+    {
+      "id": "invalid-date",
+      "status": "validation_error",
+      "expected": "validation_error",
+      "contract_passed": true,
+      "rule_passed": null,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": false,
+      "seconds": 0.007,
+      "token_usage": null,
+      "human_satisfaction": null
+    },
+    {
+      "id": "long-input",
+      "status": "validation_error",
+      "expected": "validation_error",
+      "contract_passed": true,
+      "rule_passed": null,
+      "degraded_days": [],
+      "empty_days": [],
+      "expected_issue": null,
+      "expected_issue_passed": true,
+      "persisted": false,
+      "seconds": 0.006,
+      "token_usage": null,
+      "human_satisfaction": null
+    }
+  ],
+  "contract_passed": 22,
+  "total": 22,
+  "boundary": "HTTP/auth/task/database/quality contracts; fixture timing is not real model latency or SLA",
+  "summary": {
+    "successful_generations": 17,
+    "draft_generations": 0,
+    "rule_pass_rate": 1.0,
+    "degraded_rate": 0.11764705882352941,
+    "persistence_rate": 1.0,
+    "mean_seconds_all_cases": 0.24054545454545453
+  }
+}

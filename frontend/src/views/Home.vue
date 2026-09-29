@@ -526,6 +526,29 @@ const handleSubmit = async () => {
   gap: 10px;
 }
 
+@media (max-width: 768px) {
+  .home-container {
+    padding-top: 20px;
+  }
+
+  .top-actions {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .top-actions .ant-btn {
+    height: auto;
+    min-height: 32px;
+    white-space: normal;
+  }
+}
+
 .user-badge {
   padding: 6px 16px;
   border-radius: 20px;

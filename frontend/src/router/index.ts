@@ -71,4 +71,18 @@ router.beforeEach((to) => {
   return true
 })
 
+// A rebuilt frontend replaces hashed lazy chunks. An already-open tab may still
+// request an old chunk when the user visits another page; reload that route once
+// so it receives the new asset manifest while preserving its query string.
+const chunkReloadKey = 'chunkReloadAttempt'
+router.onError((error, to) => {
+  if (!/failed to fetch dynamically imported module|importing a module script failed|error loading dynamically imported module/i.test(String(error))) return
+  if (sessionStorage.getItem(chunkReloadKey) === to.fullPath) return
+  sessionStorage.setItem(chunkReloadKey, to.fullPath)
+  window.location.assign(to.fullPath)
+})
+router.afterEach((_to, _from, failure) => {
+  if (!failure) sessionStorage.removeItem(chunkReloadKey)
+})
+
 export default router

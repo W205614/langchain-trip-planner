@@ -17,7 +17,7 @@
           <article class="card glass-card">
             <div class="card-top"><a-tag color="purple">{{ card.city }}</a-tag><span>版本 {{ card.record_version }}</span></div>
             <h2>{{ card.title }}</h2>
-            <p class="author">由 {{ card.author }} 分享 · {{ card.published_at }}</p>
+            <p class="author">由 {{ card.author }} 分享 · {{ formatDateTime(card.published_at) }}</p>
             <div class="facts">
               <span>📅 {{ card.snapshot.start_date }} ~ {{ card.snapshot.end_date }}</span>
               <span>🗓️ {{ card.snapshot.travel_days }} 天</span>
@@ -43,6 +43,7 @@ import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { copyCommunityCard, fetchCommunityCards } from '@/services/api'
 import { isAuthenticated } from '@/services/auth'
+import { formatDateTime } from '@/utils/datetime'
 
 const router = useRouter()
 const loggedIn = isAuthenticated()

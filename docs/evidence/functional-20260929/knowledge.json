@@ -1,0 +1,10 @@
+{
+  "mode": "java_http_offline_parser_index_fixtures",
+  "admin_required": true,
+  "original_file_equal": true,
+  "parser_waited_for_human_review": true,
+  "stale_publish_rejected": true,
+  "published_current_version": true,
+  "deleted_preview_hidden": true,
+  "paid_calls": 0
+}
