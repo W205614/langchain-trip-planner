@@ -28,7 +28,7 @@
             </div>
             <div class="check-actions">
               <a-button v-if="trip.role === 'owner'" type="primary" :loading="busy" @click="runCheck">核验当天信息</a-button>
-              <a-button v-if="trip.role === 'owner'" @click="openPlan">打开行程并按日改排</a-button>
+              <a-button @click="openPlan">{{ trip.role === 'owner' ? '打开行程并按日改排' : '查看完整行程' }}</a-button>
               <a-button @click="loadCheck">刷新结果</a-button>
             </div>
           </section>
@@ -245,6 +245,10 @@ function resetOrder() {
   orderDescription.value = day?.description || ''
 }
 function openPlan() {
+  if (trip.value.role !== 'owner') {
+    router.push(`/trips/${id}/plan`)
+    return
+  }
   sessionStorage.setItem('tripPlan', JSON.stringify(trip.value.plan))
   sessionStorage.setItem('tripPlanId', String(id))
   sessionStorage.setItem('tripPlanVersion', String(trip.value.version))

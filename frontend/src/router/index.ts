@@ -18,6 +18,7 @@ const router = createRouter({
     { path: '/favorites', redirect: '/explore' },
     { path: '/trips/new', redirect: '/' },
     { path: '/trips/:id/operations', component: () => import('../views/TripWorkspace.vue'), meta: { requiresAuth: true } },
+    { path: '/trips/:id/plan', component: Result, meta: { requiresAuth: true } },
     { path: '/inbox', component: () => import('../views/TripInbox.vue'), meta: { requiresAuth: true } },
     { path: '/assistant', redirect: '/history' },
     { path: '/shared/:token', component: () => import('../views/SharedTrip.vue') },

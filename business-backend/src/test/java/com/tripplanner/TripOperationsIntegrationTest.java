@@ -94,8 +94,13 @@ class TripOperationsIntegrationTest {
     String viewerName=db.queryForObject("SELECT username FROM users WHERE id=?",String.class,viewer);
     operations.invite(owner,id,json.createObjectNode().put("username",viewerName).put("role","viewer"),"test");
     operations.accept(viewer,id,"test");
-    assertEquals("viewer",((Map<?,?>)((Map<?,?>)operations.workspace(viewer,id)).get("data")).get("role"));
-    assertEquals("editor",((Map<?,?>)((Map<?,?>)operations.workspace(editor,id)).get("data")).get("role"));
+    var viewerWorkspace=(Map<?,?>)((Map<?,?>)operations.workspace(viewer,id)).get("data");
+    var editorWorkspace=(Map<?,?>)((Map<?,?>)operations.workspace(editor,id)).get("data");
+    assertEquals("viewer",viewerWorkspace.get("role"));
+    assertEquals("editor",editorWorkspace.get("role"));
+    assertEquals("北京",((com.fasterxml.jackson.databind.JsonNode)viewerWorkspace.get("plan")).path("city").asText());
+    assertEquals(2,((com.fasterxml.jackson.databind.JsonNode)viewerWorkspace.get("plan")).path("days").get(0).path("attractions").size());
+    assertEquals(viewerWorkspace.get("plan"),editorWorkspace.get("plan"));
     var order=json.createObjectNode().put("day_index",0).put("description","同行人调整的主题");
     order.putArray("poi_ids").add("B456").add("A123");
     assertEquals(404,assertThrows(ApiException.class,()->operations.reorder(stranger,id,1,order,"test")).status);

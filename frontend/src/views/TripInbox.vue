@@ -9,7 +9,8 @@
             <template #actions>
               <a-button v-if="item.status === 'pending'" type="primary" @click="accept(item.trip_id)">接受</a-button>
               <a-button v-if="item.status === 'pending'" danger @click="decline(item.trip_id)">拒绝</a-button>
-              <a-button v-if="item.status === 'accepted'" @click="router.push(`/trips/${item.trip_id}/operations`)">打开行程</a-button>
+              <a-button v-if="item.status === 'accepted'" type="primary" @click="router.push(`/trips/${item.trip_id}/plan`)">查看完整行程</a-button>
+              <a-button v-if="item.status === 'accepted'" @click="router.push(`/trips/${item.trip_id}/operations`)">执行工作台</a-button>
             </template>
           </a-list-item>
         </template>
@@ -19,7 +20,7 @@
       <a-list :data-source="notifications" :locale="{ emptyText: '暂无站内通知' }" bordered>
         <template #renderItem="{ item }">
           <a-list-item><a-list-item-meta :title="item.title" :description="`${item.message} · ${formatDateTime(item.created_at)}`" />
-            <template #actions><a-button v-if="item.trip_id" @click="router.push(`/trips/${item.trip_id}/operations`)">查看行程</a-button>
+            <template #actions><a-button v-if="item.trip_id" @click="router.push(`/trips/${item.trip_id}/plan`)">查看行程</a-button>
               <a-button v-if="!item.read_at" @click="markRead(item.id)">标记已读</a-button></template>
           </a-list-item>
         </template>

@@ -8,7 +8,7 @@
         ← {{ returnLabel }}
       </a-button>
       <a-space v-if="tripPlan" size="middle">
-        <a-button v-if="!editMode && !quality.assistant_proposal_status" @click="toggleEditMode" type="default">
+        <a-button v-if="!readOnlyPlan && !editMode && !quality.assistant_proposal_status" @click="toggleEditMode" type="default">
           ✏️ 编辑行程
         </a-button>
         <a-button v-else-if="editMode" @click="saveChanges" type="primary">
@@ -17,7 +17,7 @@
         <a-button v-if="editMode" @click="cancelEdit" type="default">
           ❌ 取消编辑
         </a-button>
-        <a-button v-if="!editMode && historyRecordId && !quality.assistant_proposal_status" @click="shareTrip">🔗 分享</a-button>
+        <a-button v-if="!readOnlyPlan && !editMode && historyRecordId && !quality.assistant_proposal_status" @click="shareTrip">🔗 分享</a-button>
         <a-button v-if="!editMode && historyRecordId && !quality.assistant_proposal_status" @click="$router.push(`/trips/${historyRecordId}/operations`)">📋 行程执行</a-button>
 
         <!-- 导出按钮 -->
@@ -83,11 +83,11 @@
           <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
           <a-alert v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`"
             type="error" show-icon :message="issue.reason" :description="issue.action" />
-          <a-space v-if="quality.assistant_confirmation_required">
+          <a-space v-if="!readOnlyPlan && quality.assistant_confirmation_required">
             <a-button type="primary" :loading="proposalBusy" @click="confirmAssistant">确认应用到原行程</a-button>
             <a-button :disabled="proposalBusy" @click="discardAssistant">放弃方案</a-button>
           </a-space>
-          <a-button v-else-if="quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
+          <a-button v-else-if="!readOnlyPlan && quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
             :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
@@ -190,7 +190,7 @@
                   <a-space>
                     <span class="day-date">{{ day.date }}</span>
                     <a-button
-                      v-if="historyRecordId && !editMode && !quality.assistant_proposal_status"
+                      v-if="!readOnlyPlan && historyRecordId && !editMode && !quality.assistant_proposal_status"
                       size="small"
                       type="dashed"
                       @click.stop="openRevision(day.day_index)"
@@ -382,14 +382,14 @@
       </div>
     </div>
 
-    <a-empty v-else class="result-empty" description="没有找到旅行计划数据">
+    <a-empty v-else-if="!planLoading" class="result-empty" :description="planError || '没有找到旅行计划数据'">
       <template #image>
         <div style="font-size: 80px;">🗺️</div>
       </template>
       <template #description>
-        <span>暂无旅行计划数据，请先创建行程</span>
+        <span>{{ planError || '暂无旅行计划数据，请先创建行程' }}</span>
       </template>
-      <a-button type="primary" @click="goBack">返回首页创建行程</a-button>
+      <a-button type="primary" @click="goBack">{{ returnLabel }}</a-button>
     </a-empty>
 
     <a-modal
@@ -433,12 +433,15 @@ import AttractionPicker from '@/components/trip/AttractionPicker.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import type { TripPlan, POIInfo } from '@/types'
-import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal, discardAssistantProposal } from '@/services/api'
+import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal, discardAssistantProposal, tripOperations } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
-const returnLabel = computed(() => route.query.from === 'history' ? '返回我的行程' : '返回首页')
+const readOnlyPlan = computed(() => Boolean(route.params.id))
+const returnLabel = computed(() => readOnlyPlan.value ? '返回执行工作台' : route.query.from === 'history' ? '返回我的行程' : '返回首页')
 const tripPlan = ref<TripPlan | null>(null)
+const planLoading = ref(readOnlyPlan.value)
+const planError = ref('')
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
 const proposalBusy = ref(false)
@@ -574,6 +577,26 @@ const routeTotalMessage = (dayIndex: number): string => {
 }
 
 onMounted(async () => {
+  if (readOnlyPlan.value) {
+    try {
+      const id = Number(route.params.id)
+      if (!Number.isSafeInteger(id) || id <= 0) throw new Error('行程编号无效')
+      const workspace = await tripOperations.workspace(id)
+      tripPlan.value = workspace.plan
+      quality.value = workspace.quality || {}
+      recordVersion.value = workspace.version
+      historyRecordId.value = id
+      await loadAttractionPhotos()
+      await nextTick()
+      initMap()
+    } catch (e: any) {
+      tripPlan.value = null
+      planError.value = e?.response?.data?.detail || e?.response?.data?.message || e?.message || '行程不存在或无权访问'
+    } finally {
+      planLoading.value = false
+    }
+    return
+  }
   const data = sessionStorage.getItem('tripPlan')
   if (data) {
     tripPlan.value = JSON.parse(data)
@@ -600,7 +623,7 @@ onMounted(async () => {
 })
 
 const goBack = () => {
-  router.push(route.query.from === 'history' ? '/history' : '/')
+  router.push(readOnlyPlan.value ? `/trips/${route.params.id}/operations` : route.query.from === 'history' ? '/history' : '/')
 }
 
 // 滚动到指定区域
@@ -620,6 +643,7 @@ const scrollToSection = ({ key }: { key: string }) => {
 
 // 切换编辑模式
 const toggleEditMode = () => {
+  if (readOnlyPlan.value) return
   editMode.value = true
   originalQuality.value = JSON.parse(JSON.stringify(quality.value))
   // 保存原始数据用于取消编辑
