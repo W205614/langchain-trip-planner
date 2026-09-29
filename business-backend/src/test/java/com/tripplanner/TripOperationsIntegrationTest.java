@@ -98,8 +98,8 @@ class TripOperationsIntegrationTest {
     var editorWorkspace=(Map<?,?>)((Map<?,?>)operations.workspace(editor,id)).get("data");
     assertEquals("viewer",viewerWorkspace.get("role"));
     assertEquals("editor",editorWorkspace.get("role"));
-    assertEquals("北京",((com.fasterxml.jackson.databind.JsonNode)viewerWorkspace.get("plan")).path("city").asText());
-    assertEquals(2,((com.fasterxml.jackson.databind.JsonNode)viewerWorkspace.get("plan")).path("days").get(0).path("attractions").size());
+    assertEquals("北京",((tools.jackson.databind.JsonNode)viewerWorkspace.get("plan")).path("city").asText());
+    assertEquals(2,((tools.jackson.databind.JsonNode)viewerWorkspace.get("plan")).path("days").get(0).path("attractions").size());
     assertEquals(viewerWorkspace.get("plan"),editorWorkspace.get("plan"));
     var order=json.createObjectNode().put("day_index",0).put("description","同行人调整的主题");
     order.putArray("poi_ids").add("B456").add("A123");
