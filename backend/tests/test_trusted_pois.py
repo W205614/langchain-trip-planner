@@ -5,9 +5,9 @@ from threading import Barrier
 
 import pytest
 
-from app.agents.trip_planner_agent import MultiAgentTripPlanner
+from app.agents.trip_planner_agent import MultiAgentTripPlanner, _restaurant_open_for_meal
 from app.core.exceptions import BizException
-from app.models.schemas import Attraction, DayPlan, Location, POIInfo, TripPlan, TripRequest
+from app.models.schemas import Attraction, DayPlan, DayPlanDraft, Location, POIInfo, TripPlan, TripRequest
 from app.services.plan_quality import evaluate_plan
 
 
@@ -55,6 +55,29 @@ def test_unknown_poi_id_is_removed():
         day, {"attraction_pois": [_candidate()]}
     )
     assert day.attractions == []
+
+
+def test_known_late_opening_restaurant_is_not_presented_as_breakfast():
+    restaurant = POIInfo(
+        id="late", name="午晚餐厅", address="北京", type="餐饮",
+        location=Location(longitude=116.4, latitude=39.9),
+        opening_hours="周一至周日 11:00-14:00,16:00-20:30",
+    )
+    draft = DayPlanDraft.model_validate({
+        "description": "测试", "theme": "测试", "attractions": [{"poi_id": "B000A8UIN9", "visit_duration": 120}],
+        "meals": [{"type": "breakfast", "poi_id": "late", "estimated_cost": 30}],
+    })
+    day = MultiAgentTripPlanner._build_day_plan_from_draft(
+        draft, 0, "2026-08-01", _request(),
+        {"attraction_pois": [_candidate()], "restaurant_pois": [restaurant]},
+    )
+    assert not any(meal.type == "breakfast" for meal in day.meals)
+    assert any(meal.type == "lunch" and meal.poi_id == "late" for meal in day.meals)
+    assert _restaurant_open_for_meal(restaurant.opening_hours, "breakfast") is False
+    assert _restaurant_open_for_meal(restaurant.opening_hours, "dinner") is True
+    assert "meal_pois_unavailable" in evaluate_plan(
+        TripPlan(city="北京", start_date="2026-08-01", end_date="2026-08-01", days=[day], overall_suggestions="测试"), 1
+    ).data_gaps
 
 
 def test_fallback_day_never_invents_attractions_without_candidates():

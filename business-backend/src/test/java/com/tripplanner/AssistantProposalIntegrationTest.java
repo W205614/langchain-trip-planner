@@ -163,6 +163,7 @@ class AssistantProposalIntegrationTest {
     assertTrue(history.owned(uid, original).get("plan_json").toString().contains("原安排"));
     var pending = json.readTree(history.owned(uid, proposal).get("quality_json").toString());
     assertEquals("pending", pending.path("assistant_proposal_status").asText());
+    assertEquals(2L, history.count(uid, ""));
     assertEquals("degraded", pending.path("validated_outcome").asText());
     assertEquals("route_duration_unavailable", pending.path("data_gaps").get(0).asText());
     assertTrue(pending.path("rules_passed").asBoolean());
@@ -199,6 +200,8 @@ class AssistantProposalIntegrationTest {
     assertTrue(history.owned(uid, original).get("plan_json").toString().contains("新安排"));
     assertEquals("confirmed", json.readTree(history.owned(uid, proposal).get("quality_json").toString())
         .path("assistant_proposal_status").asText());
+    assertEquals(1L, history.count(uid, ""));
+    assertEquals(original, ((Number) history.list(uid, "", 0, 10).get(0).get("id")).longValue());
     assertEquals(1L, jdbc.queryForObject("SELECT count(*) FROM rag_sync_jobs WHERE record_id=?", Long.class, original));
     assertEquals(409, request("POST", url, owner, "{}", "1").statusCode());
     assertEquals(2, history.owned(uid, original).get("version"));
@@ -215,6 +218,7 @@ class AssistantProposalIntegrationTest {
     String discardUrl = "/api/assistant/conversations/" + conversation + "/proposals/" + discarded + "/discard";
     assertEquals(200, request("POST", discardUrl, owner, "{}", "1").statusCode());
     assertEquals(409, request("POST", discardUrl, owner, "{}", "1").statusCode());
+    assertEquals(1L, history.count(uid, ""));
     assertEquals(1, history.owned(uid, original).get("version"));
     assertTrue(history.owned(uid, original).get("plan_json").toString().contains("原安排"));
 

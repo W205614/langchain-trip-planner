@@ -39,6 +39,27 @@ _MAX_DAILY_HOTEL_CANDIDATES = 2
 _DAY_RAG_TOP_K = 2
 _DAY_RAG_MAX_CHUNK_CHARS = 600
 
+
+def _restaurant_open_for_meal(opening_hours: str | None, meal_type: str) -> bool:
+    """Reject a known incompatible time range; unknown hours remain unverified."""
+    if not opening_hours:
+        return True
+    ranges = re.findall(r"(\d{1,2}):(\d{2})\s*[-~–—至]\s*(\d{1,2}):(\d{2})", opening_hours)
+    if not ranges:
+        return True
+    meal_windows = {"breakfast": (6 * 60, 10 * 60), "lunch": (11 * 60, 14 * 60), "dinner": (17 * 60, 21 * 60)}
+    if meal_type not in meal_windows:
+        return True
+    start, end = meal_windows[meal_type]
+    for sh, sm, eh, em in ranges:
+        opened = int(sh) * 60 + int(sm)
+        closed = int(eh) * 60 + int(em)
+        if closed <= opened:
+            closed += 24 * 60
+        if max(opened, start) < min(closed, end):
+            return True
+    return False
+
 from .prompts import PLANNER_SYSTEM_PROMPT, DAY_PLANNER_SYSTEM_PROMPT
 from .state import GraphState
 from .data_nodes import TravelDataNodes
@@ -493,7 +514,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         used_restaurants = set()
         for item in draft.meals:
             poi = restaurant_candidates.get(item.poi_id)
-            if poi is None or poi.id in used_restaurants:
+            if poi is None or poi.id in used_restaurants or not _restaurant_open_for_meal(poi.opening_hours, item.type):
                 continue
             used_restaurants.add(poi.id)
             meals.append(Meal(
@@ -557,9 +578,12 @@ class MultiAgentTripPlanner(TravelDataNodes):
         used_restaurant_ids = {meal.poi_id for meal in day.meals if meal.poi_id}
         available_restaurants = [p for p in restaurants if p.id not in used_restaurant_ids]
         for meal_type, default_cost in (("breakfast", 30), ("lunch", 60), ("dinner", 90)):
-            if meal_type in existing_meal_types or not available_restaurants:
+            if meal_type in existing_meal_types:
                 continue
-            poi = available_restaurants.pop(0)
+            poi = next((p for p in available_restaurants if _restaurant_open_for_meal(p.opening_hours, meal_type)), None)
+            if poi is None:
+                continue
+            available_restaurants.remove(poi)
             day.meals.append(Meal(
                 type=meal_type, poi_id=poi.id, name=poi.name, address=poi.address or "",
                 location=poi.location, estimated_cost=default_cost,
@@ -1061,7 +1085,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         lines = []
         for i, poi in enumerate(pois, 1):
             coord = f"{poi.location.longitude},{poi.location.latitude}" if poi.location else ""
-            lines.append(f"{i}. {poi.name} | 地址: {poi.address} | 坐标: {coord}")
+            lines.append(f"{i}. poi_id={poi.id} | {poi.name} | 地址: {poi.address} | 坐标: {coord} | 营业: {poi.opening_hours or '未提供'}")
         return "\n".join(lines)
 
     @staticmethod

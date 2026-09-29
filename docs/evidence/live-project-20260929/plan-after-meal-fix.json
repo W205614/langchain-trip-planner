@@ -1,0 +1,40 @@
+{
+  "mode": "live_project_http",
+  "generated_at": "2026-09-29T03:44:43.369447+00:00",
+  "stage": "plan",
+  "base_url": "http://127.0.0.1:8380",
+  "passed": true,
+  "scope": "HTTP client -> Nginx -> Java -> real Python Agent and AMap; no fixture route",
+  "plan_task": {
+    "id": "4fabd344-f7c2-4496-a097-a8179ff78f04",
+    "status": "succeeded",
+    "error_code": "",
+    "usage": {
+      "calls": 1,
+      "input_tokens": 1504,
+      "output_tokens": 867
+    }
+  },
+  "plan": {
+    "record_id": 3,
+    "version": 1,
+    "quality_outcome": "degraded",
+    "rules_passed": true,
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "in_attraction_walking_unknown",
+      "meal_pois_unavailable",
+      "opening_hours_travel_date_unverified",
+      "reservation_unverified",
+      "route_duration_unavailable_fallback_to_straight_line"
+    ],
+    "attraction_names": [
+      "故宫博物院",
+      "中国国家博物馆"
+    ],
+    "breakfast_count": 0,
+    "known_late_breakfasts": [],
+    "must_visit_present": true,
+    "avoided_absent": true
+  }
+}

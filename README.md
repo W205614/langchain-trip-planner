@@ -10,6 +10,7 @@
 
 - 🤖 **多日旅行规划**：LangGraph 并行获取景点、餐饮、天气、酒店和 RAG 上下文，再按日生成主题、活动与游览安排；景点和餐厅只接受可信 POI 候选。
 - 🧭 **Agent 统一入口**：首页创建新行程；历史记录内直接进行攻略问答和单日改排；景点发现由 Agent 调用高德 MCP，不再提供独立助手、收藏转手工行程两套入口。
+- ✅ **改排先预览再确认**：助手改排先保存独立提案，原行程和索引保持不变；用户可以确认或放弃。确认时 Java 校验用户、会话和原版本并只写入一次，版本变化提示重新加载。
 - ⚡ **任务与流式进度**：Java 持久化排队、进度和结果；支持 SSE、刷新恢复、幂等提交、取消、超时与中断状态；需要操作的任务集中显示在“我的行程”。
 - 🧭 **Agent 质量分类**：Agent 使用高德 MCP 完成可信 POI 选择、路线查询、步行／时间约束修复和预算计算；路线暂不可用时保存可调整的降级行程，不再由 Java 二次规划。
 - 🗺️ **地图与图片**：高德地图展示路线；图片按 POI ID 获取，无独立实拍时仅使用经过校验且明确标注的景区参考图，无可信来源则显示占位提示。
@@ -56,7 +57,7 @@ Python 依赖锁定在 `backend/requirements.lock`，Maven Wrapper 版本为 3.9
 浏览器 / Vue
     │ 同源公开 API、SSE
     ▼
-Nginx :8080 → Java 业务后端
+Nginx :8380（可用 APP_PORT 调整）→ Java 业务后端
                  ├── PostgreSQL：用户、任务、行程、资料、outbox
                  ├── 高德 REST：公开地图能力、用户主动复核与安全图片代理
                  ├── 安全图片代理：下载并校验 Agent/MCP 返回的图片
@@ -74,7 +75,7 @@ Python → Java 内部回查：资料可见性、原文件、重建快照与变�
 - **Python 负责完整旅游生成**：返回结构化计划和可信候选，并在 Agent 内完成路线查询、约束修复、预算与质量分类；不写业务表，也不处理用户权限。
 - **只规划一次**：Java 不再重查 POI、替换景点或重新计算路线，只验证执行编号、请求一致性、可信候选和质量协议后持久化。
 - **内部接口不对公网开放**：独立服务密钥，固定地址；Nginx 不代理 `/internal/*`、`/metrics` 或 `/actuator/*`，Agent 不发布宿主机端口。
-- **四容器属于一个项目组**：`langchain-trip-planner` 下保留 `frontend / backend / agent / postgres`，不把数据库与业务进程强塞进同一个容器。
+- **四容器属于一个项目组**：同一 Compose 项目下保留 `frontend / backend / agent / postgres`，不把数据库与业务进程强塞进同一个容器。
 
 ## 📁 项目结构
 
@@ -138,7 +139,14 @@ docker compose up -d --build --wait
 docker compose ps
 ```
 
-访问 **http://localhost:8080**。Flyway 自动初始化空业务库；不自动接管或 baseline 未知旧库。首次注册账号后可登录；审核管理员通过 `business.env` 的 `BOOTSTRAP_ADMIN_USERNAME` 显式指定已存在账号，重启 Java 生效。
+要使用隔离的生产配置，可统一指定项目名，后续 `ps`、`logs` 和重建命令也使用同一 `-p` 与 `-f`：
+
+```powershell
+docker compose -p langchain-trip-planner-live -f docker-compose.production.yml up -d --build --wait
+docker compose -p langchain-trip-planner-live -f docker-compose.production.yml ps
+```
+
+访问 **http://localhost:8380**（可通过 `APP_PORT` 调整）。与 DeepResearch 共用 8380 时，先停止当前占用该端口的前端容器，再启动另一个项目的前端。Flyway 自动初始化空业务库；不自动接管或 baseline 未知旧库。首次注册账号后可登录；审核管理员通过 `business.env` 的 `BOOTSTRAP_ADMIN_USERNAME` 显式指定已存在账号，重启 Java 生效。
 
 已有 V1–V3 数据的环境升级到 V4 前，必须先停止 `frontend / backend / agent`，使用 `backup_java_deployment.py` 在仓库外生成完整备份，并执行[迁移手册](docs/operations/java-migration.md)中的孤儿数据与非法状态检查。V4 不会自动删除或改绑历史数据；检查不通过时 Flyway 会终止启动。V5 增加规划人数/预算事实和社区快照表；V6–V8 增加行前核验、预订与支出、同行成员、站内通知、用量提醒，以及按日期核验所需索引。完成数据所有权确认后，再运行 `prepare_java_deployment.py --upgrade-existing` 和上述 Compose 启动命令。`rag_sync_jobs.record_id` 特意不设置外键，以便删除行程后的索引墓碑继续完成。
 
@@ -172,7 +180,7 @@ docker compose up -d --wait
 2. 在“景点发现”中查看 Agent 通过高德 MCP 获取的真实 POI 与对应图片。
 3. 先看结果分类与缺口：`needs_attention` 是未完成草稿，不是完整成功。
 4. 在地图和每日卡片中查看行程；按需手工编辑。
-5. 从历史记录用自然语言问攻略或调整某一天；缺少目标日期时会先追问，局部改排仍复用持久任务和版本检查。
+5. 从历史记录用自然语言问攻略或调整某一天；缺少目标日期时会先追问。改排完成后在“待确认方案”预览，再选择确认或放弃；确认前原行程不变，版本冲突后重新加载。
 6. 可将完整行程投稿到广场，经管理员审核后公开；其他用户复制后先得到待重新核验草稿。
 7. 投稿 PDF／图片后，由管理员解析、核对原文、保存复核版本，再发布。
 
@@ -182,7 +190,9 @@ docker compose up -d --wait
 
 Agent 通过高德 MCP 获取候选并让模型按日返回结构化草稿；景点、餐饮、天气、酒店和 RAG 上下文并行准备，多日模型调用按配置并发。随后 Agent 对每天 3–6 个景点使用真实有向路线矩阵比较顺序、修复可确定的时间／步行约束并给出最终质量分类；Java 只校验协议、请求一致性和可信候选后按版本原子保存。
 
-“我的行程”中的对话先做有界意图识别和目标日期补全：资料问题只读回答，修改请求只生成指定日期的持久改排任务；同一行程复用最近会话。任务状态只展示排队中、生成中、失败和已取消，成功结果与未完成草稿统一进入行程记录。
+“我的行程”中的对话先做有界意图识别和目标日期补全：资料问题只读回答，修改请求只生成指定日期的持久改排任务；同一行程复用最近会话。改排结果先保存为与原行程绑定的待确认提案，确认或放弃均校验用户、会话和版本；普通“应用草稿”接口不能绕过这一步。处理后的提案不再作为独立行程出现在历史列表。
+
+餐厅候选同时提供 POI ID 和营业时间。生成后会剔除与早餐、午餐或晚餐时段明显冲突的候选；缺少可用餐厅时保留 `meal_pois_unavailable` 缺口，不把晚开门的餐厅标成早餐。营业时间仍需按出行日期向商家核实，酒店与餐饮接驳路线也未纳入景点间路线校验。
 
 ### 链路延迟与超时
 
@@ -234,7 +244,7 @@ Java 管理原文件、审核、业务版本和索引作业；Python 使用稳�
 | `/api/trips/{id}/commitments*`、`/api/trips/{id}/expenses*` | 预订事项与实际费用账本，不执行预订或付款 |
 | `/api/notifications*`、`/api/usage/*` | 站内通知与 Token 用量提醒 |
 | `/api/community/cards*`、`/api/community/admin/cards*` | 社区行程投稿、公开浏览、复制与管理员审核 |
-| `/api/assistant/conversations*` | 历史行程内的 Agent 问答与改排会话；改排复用持久任务 |
+| `/api/assistant/conversations*` | 历史行程内的 Agent 问答、改排会话、提案确认与放弃；改排复用持久任务 |
 | `/api/knowledge/*` | 投稿、复核、发布及作业状态 |
 | `/api/map/*`、`/api/poi/*`、`/api/research/*` | 地图、图片与资料研究 |
 | `/health`、`/readyz`、`/api/capabilities` | 存活、业务就绪与 Agent/MCP 分能力状态 |
@@ -269,6 +279,8 @@ python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20
 离线历史读接口在本机 128 并发持续 30 秒时 14,778 次均返回 200、P95 626ms；256 并发 5 秒时 P95 达 2.108 秒，触及本轮停止阈值。24 个慢任务中 12 个按验证栈容量入队并成功，另 12 个以 `TASK_QUEUE_FULL` 明确拒绝。读请求 QPS 与真实模型生成吞吐不能互换。
 
 旧 Python 业务单测已由 Java 集成测试与公开接口验收承接；Agent 保留模型、MCP、RAG、解析、图片、协议及冻结场景测试。**清理前后测试数不能直接相加或比较为覆盖率。** 历史真实样本、迁移数据核对和当前清理证据见 [验收记录](docs/evidence/java-migration/README.md)。不以离线替身测试声称真实模型效果、实时事实准确率或生产性能。
+
+2026-09-29 在隔离数据卷的四容器生产配置上，以真实文本模型和高德 MCP 走通公开 HTTP 的单日生成、持久化、助手单日改排提案、确认一次与重复确认冲突。修复后另跑一份真实生成，已不再将 11:00 才营业的餐厅标为早餐；该样本缺少可信早餐，结果如实为 `degraded` 并标记 `meal_pois_unavailable`。Java 75/75、Python 225/225、隔离验证栈 Playwright 26/26；这些自动化测试主要使用替身，真实样本只有上述有限请求，不能据此保证所有功能无误或推断并发模型容量。具体请求、质量缺口与运行限制见[本轮真实链路报告](docs/evidence/live-project-20260929/report.md)。
 
 ## 💾 备份、恢复与清理
 

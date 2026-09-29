@@ -22,7 +22,7 @@ COPY data/knowledge ./data/knowledge
 
 # 3. 非 root 用户运行；显式挂载的数据目录仍可按授权权限读写。
 RUN (id -u appuser >/dev/null 2>&1 || useradd -m appuser) \
-    && mkdir -p logs data \
+    && mkdir -p logs data/chroma runtime \
     && chown -R appuser:appuser /app
 USER appuser
 

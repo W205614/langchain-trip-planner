@@ -1,0 +1,56 @@
+{
+  "mode": "live_project_http",
+  "generated_at": "2026-09-29T03:30:33.600149+00:00",
+  "stage": "proposal",
+  "base_url": "http://127.0.0.1:8380",
+  "passed": true,
+  "scope": "HTTP client -> Nginx -> Java -> real Python Agent and AMap; no fixture route",
+  "plan_task": {
+    "id": "57944284-ebf5-4f79-9257-67a0ca7fbea4",
+    "status": "succeeded",
+    "error_code": "",
+    "usage": {
+      "calls": 1,
+      "input_tokens": 1452,
+      "output_tokens": 1699
+    }
+  },
+  "plan": {
+    "record_id": 1,
+    "version": 1,
+    "quality_outcome": "degraded",
+    "rules_passed": true,
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "in_attraction_walking_unknown",
+      "opening_hours_travel_date_unverified",
+      "reservation_unverified"
+    ],
+    "attraction_names": [
+      "故宫博物院",
+      "北京鲁迅博物馆",
+      "妙应寺白塔"
+    ],
+    "must_visit_present": true,
+    "avoided_absent": true
+  },
+  "proposal_task": {
+    "id": "1dff90ee-d9ef-4aec-8972-960866e3baf5",
+    "status": "needs_attention",
+    "error_code": "",
+    "usage": {
+      "calls": 1,
+      "input_tokens": 1260,
+      "output_tokens": 1688
+    }
+  },
+  "proposal": {
+    "record_id": 2,
+    "validated_outcome": "degraded",
+    "pending_before_confirm": true,
+    "original_unchanged_before_confirm": true,
+    "confirmed_once": true,
+    "repeat_conflict": true,
+    "original_version_after": 2
+  }
+}

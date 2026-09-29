@@ -7,6 +7,7 @@ import argparse
 from datetime import date, datetime, timedelta, timezone
 import io
 import json
+import os
 from pathlib import Path
 import secrets
 import sqlite3
@@ -54,7 +55,8 @@ def run(args):
             "document":state.get("document_report"),"user_original_login":"separate account-holder check; see acceptance report",
             "counting":"durable pre-send reservations; failed attempts count; each category capped independently"}
         report_path.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
-    with httpx.Client(base_url="http://127.0.0.1:8080",timeout=35) as client:
+    port = os.getenv("APP_PORT") or dotenv_values(ROOT / ".env").get("APP_PORT") or "8380"
+    with httpx.Client(base_url=f"http://127.0.0.1:{port}",timeout=35) as client:
         assert client.get("/healthz").status_code==200
         if "token" not in state:
             state.setdefault("username","live_java_"+uuid4().hex[:8]);state.setdefault("password",secrets.token_urlsafe(24));save()

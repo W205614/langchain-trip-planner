@@ -37,7 +37,8 @@ COALESCE(#{title},''),COALESCE(#{source},'agent'),#{last_verified_at})
 
   @Select(
       "SELECT * FROM trip_records WHERE user_id=#{uid} AND (#{city}='' OR position(#{city} in"
-          + " city)>0) ORDER BY created_at DESC,id DESC LIMIT #{limit} OFFSET #{offset}")
+          + " city)>0) AND COALESCE(quality_json::jsonb->>'assistant_proposal_status','')"
+          + " NOT IN ('confirmed','discarded') ORDER BY created_at DESC,id DESC LIMIT #{limit} OFFSET #{offset}")
   List<Map<String, Object>> list(
       @Param("uid") long uid,
       @Param("city") String city,
@@ -46,6 +47,7 @@ COALESCE(#{title},''),COALESCE(#{source},'agent'),#{last_verified_at})
 
   @Select(
       "SELECT count(*) FROM trip_records WHERE user_id=#{uid} AND (#{city}='' OR position(#{city}"
-          + " in city)>0)")
+          + " in city)>0) AND COALESCE(quality_json::jsonb->>'assistant_proposal_status','')"
+          + " NOT IN ('confirmed','discarded')")
   long count(@Param("uid") long uid, @Param("city") String city);
 }
