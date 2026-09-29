@@ -48,7 +48,7 @@ logger = logging.getLogger(__name__)
 
 # 嵌入单次调用批量上限 (text-embedding-3-large 一次最多 2048 条, 这里保守分批)
 _EMBED_BATCH_SIZE = 16
-_QUERY_EMBED_TIMEOUT_SECONDS = 3.0
+_QUERY_EMBED_TIMEOUT_SECONDS = 5.0
 _INDEX_EMBED_TIMEOUT_SECONDS = 8.0
 
 # 知识库文件名(英文) → 城市中文名 (与前端请求的城市保持一致, 用于检索过滤)
@@ -578,6 +578,15 @@ class RagService:
         try:
             self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
             self._refresh_store("_history_store", _HISTORY_COLLECTION)
+            # 没有已索引资料时，空结果是正常状态；无需调用远程嵌入或报告故障。
+            has_city_docs = bool(city and self._knowledge_store.get(
+                where={"city": city}, limit=1, include=[]
+            )["ids"])
+            has_history_docs = bool(user_id is not None and self._history_store.get(
+                where={"user_id": user_id}, limit=1, include=[]
+            )["ids"])
+            if not has_city_docs and not has_history_docs:
+                return []
             # 城市知识与个人历史使用同一查询文本；只做一次远程嵌入，再在本地 Chroma
             # 对两个集合检索，避免一次规划产生两次相同的 embedding HTTP 请求。
             query_embedding = None
@@ -587,7 +596,7 @@ class RagService:
             except Exception as exc:
                 logger.warning("查询向量生成失败，降级到关键词检索: %s", type(exc).__name__)
                 from .execution import note_rag_degradation
-                note_rag_degradation()
+                note_rag_degradation("embedding_fallback")
             # 1. 城市知识库 (限定城市, 相关性最高)
             if city:
                 docs = self._hybrid_public_search(query, city, k, query_embedding)
@@ -801,20 +810,25 @@ class RagService:
 
     @serialized
     def get_attraction_rag_texts(
-        self, names: List[str], city: str, max_chars: int = 320, poi_ids: Optional[dict] = None
+        self, names: List[str], city: str, max_chars: int = 320, poi_ids: Optional[dict] = None,
+        *, raise_on_error: bool = False,
     ) -> dict[str, str]:
         """批量获取景点详情。
 
         先把所有景点查询一次性向量化，再用向量在 Chroma 中本地检索，避免 N 个景点
         串行发 N 次 embedding 请求而阻塞行程接口返回。
         """
-        if not self.enabled:
-            return {}
-        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         unique_names = list(dict.fromkeys(name for name in names if name))
         if not unique_names:
             return {}
+        if not self.enabled:
+            if raise_on_error:
+                raise RuntimeError("RAG unavailable")
+            return {}
+        self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
         try:
+            if not self._knowledge_store.get(where={"city": city}, limit=1, include=[])["ids"]:
+                return {}
             queries = [f"{city} {name} 门票 开放时间 交通 避坑 打卡" for name in unique_names]
             with observe_rag_operation("attraction_detail_embedding"):
                 embeddings = self._embedding.embed_documents(queries)
@@ -839,6 +853,8 @@ class RagService:
             return details
         except Exception as e:
             logger.warning(f"⚠️  知识库景点详情批量检索失败: {e}")
+            if raise_on_error:
+                raise
             return {}
 
 

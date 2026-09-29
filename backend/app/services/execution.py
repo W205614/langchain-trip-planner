@@ -12,10 +12,14 @@ trusted_evidence_var = ContextVar("trip_trusted_evidence", default=None)
 rag_degradation_var = ContextVar("trip_rag_degradation", default=None)
 
 
-def note_rag_degradation():
+def note_rag_degradation(reason="retrieval_or_visibility"):
     notices = rag_degradation_var.get()
     if notices is not None:
-        message = "资料检索或可见性校验暂不可用，受影响资料已排除"
+        message = (
+            "向量检索暂不可用，已改用关键词检索；攻略资料可能不完整"
+            if reason == "embedding_fallback"
+            else "资料检索或可见性校验暂不可用，受影响资料已排除"
+        )
         if message not in notices:
             notices.append(message)
 _stats_lock = Lock()

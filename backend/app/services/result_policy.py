@@ -37,7 +37,10 @@ def classify(plan, request, report):
     if plan.weather_notice:
         add("WEATHER_UNAVAILABLE", "plan", plan.weather_notice, "出行前查询天气", False, True)
     for notice in plan.enrichment_notices:
-        add("RAG_UNAVAILABLE", "plan", notice, "可继续查看行程，攻略资料请稍后查询", False, True)
+        if notice == "部分攻略资料暂无可靠匹配，请以官方信息为准":
+            add("RAG_NO_MATCH", "plan", notice, "可继续查看行程；以官方信息为准", False)
+        else:
+            add("RAG_UNAVAILABLE", "plan", notice, "可继续查看行程，攻略资料请稍后查询", False, True)
     blocking = any(i["blocking"] for i in issues)
     # Fixed product boundaries (reservation / in-attraction walking) remain visible,
     # but are not counted as a runtime outage on every otherwise complete request.

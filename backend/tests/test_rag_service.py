@@ -281,15 +281,53 @@ def test_hybrid_retrieval_uses_keywords_to_rescue_exact_local_fact(rag):
 
 
 def test_public_retrieval_falls_back_to_keywords_when_embedding_fails(rag):
+    from app.services.execution import rag_degradation_var
+
     rag._knowledge_store.add_documents([
         Document(page_content="磁器口古镇周末客流较大", metadata={
             "city": "重庆", "source": "guide.md", "chunk_id": "cq-3",
         })
     ])
-    with patch.object(rag._embedding, "embed_query", side_effect=TimeoutError):
-        results = rag.retrieve("磁器口客流", city="重庆", k=2)
+    notices = []
+    token = rag_degradation_var.set(notices)
+    try:
+        with patch.object(rag._embedding, "embed_query", side_effect=TimeoutError):
+            results = rag.retrieve("磁器口客流", city="重庆", k=2)
+    finally:
+        rag_degradation_var.reset(token)
 
     assert any("磁器口古镇周末客流较大" in item for item in results)
+    assert notices == ["向量检索暂不可用，已改用关键词检索；攻略资料可能不完整"]
+
+
+def test_city_without_indexed_evidence_is_a_normal_empty_result(rag):
+    from app.services.execution import rag_degradation_var
+
+    notices = []
+    token = rag_degradation_var.set(notices)
+    try:
+        with patch.object(rag._embedding, "embed_query") as embed:
+            assert rag.retrieve("三天旅游", city="尚无资料城市") == []
+            embed.assert_not_called()
+    finally:
+        rag_degradation_var.reset(token)
+    assert notices == []
+
+
+def test_attraction_enrichment_can_distinguish_timeout_from_no_match(rag):
+    with patch.object(rag._embedding, "embed_documents") as embed:
+        assert rag.get_attraction_rag_texts(["故宫"], "尚无资料城市", raise_on_error=True) == {}
+        embed.assert_not_called()
+
+    rag._knowledge_store.add_documents([
+        Document(page_content="故宫开放信息", metadata={
+            "city": "北京", "source": "guide.md", "chunk_id": "bj-1",
+        })
+    ])
+    with patch.object(rag._embedding, "embed_documents", side_effect=TimeoutError):
+        assert rag.get_attraction_rag_texts(["故宫"], "北京") == {}
+        with pytest.raises(TimeoutError):
+            rag.get_attraction_rag_texts(["故宫"], "北京", raise_on_error=True)
 
 
 def test_research_evidence_uses_only_public_city_knowledge(rag):

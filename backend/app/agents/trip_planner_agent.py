@@ -848,7 +848,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 attr.name for day in trip_plan.days for attr in day.attractions
             ]
             details = rag.get_attraction_rag_texts(attraction_names, trip_plan.city,
-                poi_ids={a.name: a.poi_id for day in trip_plan.days for a in day.attractions})
+                poi_ids={a.name: a.poi_id for day in trip_plan.days for a in day.attractions},
+                raise_on_error=True)
             if len(details) < len(set(attraction_names)):
                 trip_plan.enrichment_notices.append("部分攻略资料暂无可靠匹配，请以官方信息为准")
             for day in trip_plan.days:
