@@ -2,8 +2,9 @@ import axios from 'axios'
 import type { TripFormData, TripPlanResponse } from '@/types'
 import { getToken, clearAuth } from './auth'
 
-// Docker/Nginx 生产演示使用同源代理；Vite 开发仍直连本机后端，保持原有联调体验。
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:9000' : '')
+// 正式构建始终使用同源 Nginx 代理，避免开发 .env 中的 localhost:9000 混入镜像。
+// Vite 开发环境仍可通过 VITE_API_BASE_URL 直连本机后端。
+const API_BASE_URL = import.meta.env.DEV ? (import.meta.env.VITE_API_BASE_URL || 'http://localhost:9000') : ''
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

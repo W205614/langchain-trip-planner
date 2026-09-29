@@ -1,5 +1,17 @@
 import { expect, test } from '@playwright/test'
 
+test('production login uses the same-origin API proxy', async ({ page }) => {
+  await page.route('**/api/auth/login', route => route.fulfill({ status: 401, json: { detail: '测试凭据无效' } }))
+  await page.goto('/login')
+  await page.getByPlaceholder('用户名').fill('codex_login_probe')
+  await page.getByPlaceholder('密码').fill('invalid-password')
+  const requestPromise = page.waitForRequest(request => request.method() === 'POST' && request.url().endsWith('/api/auth/login'))
+  await page.getByRole('button', { name: '登 录' }).click()
+  const request = await requestPromise
+  expect(new URL(request.url()).origin).toBe(new URL(page.url()).origin)
+  await expect(page.getByText('测试凭据无效')).toBeVisible()
+})
+
 test('an old lazy chunk recovers to the requested page after a frontend rebuild', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
   const plan = {

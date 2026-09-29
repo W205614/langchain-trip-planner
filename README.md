@@ -148,6 +148,8 @@ docker compose -p langchain-trip-planner-live -f docker-compose.production.yml p
 
 访问 **http://localhost:8380**（可通过 `APP_PORT` 调整）。与 DeepResearch 共用 8380 时，先停止当前占用该端口的前端容器，再启动另一个项目的前端。Flyway 自动初始化空业务库；不自动接管或 baseline 未知旧库。首次注册账号后可登录；审核管理员通过 `business.env` 的 `BOOTSTRAP_ADMIN_USERNAME` 显式指定已存在账号，重启 Java 生效。
 
+正式前端固定通过同源 `/api/` 访问 Java；`frontend/.env` 中的直连地址只用于 Vite 开发。更新前已打开的浏览器页面需刷新，以加载新构建的脚本。
+
 已有 V1–V3 数据的环境升级到 V4 前，必须先停止 `frontend / backend / agent`，使用 `backup_java_deployment.py` 在仓库外生成完整备份，并执行[迁移手册](docs/operations/java-migration.md)中的孤儿数据与非法状态检查。V4 不会自动删除或改绑历史数据；检查不通过时 Flyway 会终止启动。V5 增加规划人数/预算事实和社区快照表；V6–V8 增加行前核验、预订与支出、同行成员、站内通知、用量提醒，以及按日期核验所需索引。完成数据所有权确认后，再运行 `prepare_java_deployment.py --upgrade-existing` 和上述 Compose 启动命令。`rag_sync_jobs.record_id` 特意不设置外键，以便删除行程后的索引墓碑继续完成。
 
 ### 3. 常用操作
