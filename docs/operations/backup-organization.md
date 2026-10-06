@@ -1,6 +1,8 @@
 # 本机备份归档与清理
 
-2026-10-06 对仓库外的 `E:\project\trip-planner-backups` 完成盘点和历史归档。归档已生成并验证，原目录清理待执行；完成状态以本机 `cleanup-completed.json` 为准。备份、详细文件索引和清理脚本均留在本机，不提交 Git。
+2026-10-06 完成备份盘点、历史归档，并按用户要求将原 `E:\project\trip-planner-backups` 整体迁移到项目内的 `E:\project\langchain-trip-planner\backups`。迁移前后 1017 个文件的 SHA-256 一致，外部旧目录已不存在。项目 `.gitignore` 中的 `/backups/` 忽略全部备份、详细文件索引和清理脚本，这些内容只留在本机，不提交 Git。
+
+历史归档已生成并验证，内部重复文件清理待执行；重复清理完成状态以本机 `backups/cleanup-completed.json` 为准。目录迁移与内部清理是两个独立步骤。
 
 ## 保留与合并
 
@@ -18,9 +20,9 @@
 本机目录中的 `README.md` 和 `cleanup-verified-backups.ps1` 给出核对与清理入口：
 
 ```powershell
-& 'E:\project\trip-planner-backups\cleanup-verified-backups.ps1' -VerifyOnly
-& 'E:\project\trip-planner-backups\cleanup-verified-backups.ps1' -WhatIf
-& 'E:\project\trip-planner-backups\cleanup-verified-backups.ps1'
+& 'E:\project\langchain-trip-planner\backups\cleanup-verified-backups.ps1' -VerifyOnly
+& 'E:\project\langchain-trip-planner\backups\cleanup-verified-backups.ps1' -WhatIf
+& 'E:\project\langchain-trip-planner\backups\cleanup-verified-backups.ps1'
 ```
 
 脚本先检查固定归档 SHA-256 和原文件哈希，拒绝新增未盘点文件、变更文件及链接，再仅清理明确列出的直接子路径。最近完整备份、ZIP、文件索引、说明和脚本保留。未完成全部清理不会写入完成记录。
@@ -29,8 +31,10 @@
 
 ## 读取历史恢复点
 
-历史记录中的本机路径是迁移当时的位置。清理后，相同目录名和源码 ZIP 可在历史归档内找到。先解压到全新的仓库外目录，选择完整快照，再按[运行手册](java-migration.md)恢复到独立数据库和文件目录。旧 Python 迁移数据只供历史核对，不能直接导入当前 Java 数据库。
+历史记录中的外部路径是迁移当时的位置；当前同名目录位于项目的 `backups/` 下。内部清理后，相同目录名和源码 ZIP 可在该目录的历史归档内找到。先解压到全新的仓库外目录，选择完整快照，再按[运行手册](java-migration.md)恢复到独立数据库和文件目录。旧 Python 迁移数据只供历史核对，不能直接导入当前 Java 数据库。
 
-两个恢复副本的重复展开数据不再独立保存；如需重建，从归档内 `post-java-20260915-1331/agent-and-uploads.tar.gz` 提取到新目录。`post-java-restored-20260915-1333/restore-report.json` 在 ZIP 内保留原路径；这是历史报告，不证明旧克隆容器或数据库现在仍存在。
+内部清理完成后，两个恢复副本的重复展开数据不再独立保存；如需重建，从归档内 `post-java-20260915-1331/agent-and-uploads.tar.gz` 提取到新目录。`post-java-restored-20260915-1333/restore-report.json` 在 ZIP 内保留原路径；这是历史报告，不证明旧克隆容器或数据库现在仍存在。
+
+现有 `backup_java_deployment.py` 仍要求将新备份输出到仓库外的新目录；本次只调整已有备份的存放位置。新备份完成校验后可再移入本机 `backups/`。恢复工具读取该目录中的 Java/Flyway 快照时，恢复输出仍须放在新的仓库外目录。
 
 历史镜像标识和配置不保证当前机器仍具备镜像或兼容网络。正式回切仍需先备份当前数据，并核对恢复环境。数据库、运行配置、账号记录和未脱敏日志含敏感信息，GitHub 仅保存这份操作说明。

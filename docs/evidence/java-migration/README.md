@@ -58,7 +58,7 @@
 
 ## 数据与回滚位置（本机，不提交备份内容）
 
-下列路径记录迁移时的位置。2026-10-06 历史材料已合并归档并校验，原目录清理待执行；清理完成后从历史 ZIP 解压到独立目录读取快照，重复恢复副本从原 tar.gz 重建。当前存放与恢复方法见[备份归档说明](../../operations/backup-organization.md)。
+下列路径记录迁移时的位置。2026-10-06 已将外部备份目录整体移入项目的 `backups/`，文件哈希一致，外部旧目录已不存在。历史材料已合并归档并校验，内部重复文件清理待执行；清理完成后从历史 ZIP 解压到独立目录读取快照，重复恢复副本从原 tar.gz 重建。当前存放与恢复方法见[备份归档说明](../../operations/backup-organization.md)。
 
 - 迁移前最终备份：`E:\project\trip-planner-backups\final-pre-java-20260915-1310`。
 - 最初恢复验证备份：`E:\project\trip-planner-backups\pre-java-business-20260915-1210`。

@@ -288,7 +288,7 @@ python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20
 
 PostgreSQL 数据卷、`backend/data/knowledge_uploads`、`backend/data/chroma`、`backend/data/agent-runtime` 和私有配置需成套备份。恢复到独立库／目录核对，不直接覆盖日常环境。
 
-详见 [当前运行手册](docs/operations/java-migration.md)与[本机备份归档说明](docs/operations/backup-organization.md)。旧业务代码和历史部署脚本不再留在工作树；清理前源码提交为 `6c72a24`，本机另有仓库外源码备份。容器清理仅针对本项目辅助实例，不使用全局 prune，不删除其他项目容器或持久卷。
+详见 [当前运行手册](docs/operations/java-migration.md)与[本机备份归档说明](docs/operations/backup-organization.md)。本机已有备份已收进项目的 `backups/`，该目录由 Git 忽略，数据库与私有配置不上传 GitHub。旧业务代码和历史部署脚本不再留在工作树；清理前源码提交为 `6c72a24`，旧源码 ZIP 保留在本机历史归档中。容器清理仅针对本项目辅助实例，不使用全局 prune，不删除其他项目容器或持久卷。
 
 镜像清理在准确提交的 CI 通过后执行：只删除经项目标签／名称核对且不再使用的本项目镜像或验证标签。当前明确只维护 Java＋Agent 架构，旧 Python 架构回滚镜像已按用户决定删除；保留当前运行镜像、数据备份和历史源码，不删除其他项目镜像或共享基础镜像，不使用全局 image prune。
 

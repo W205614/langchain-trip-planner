@@ -4,6 +4,7 @@
 *.iml
 
 # Secrets and local runtime state
+/backups/
 .env
 **/.env
 **/.env.docker
