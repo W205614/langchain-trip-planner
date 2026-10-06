@@ -60,6 +60,8 @@ python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-2026
 
 ## 迁移历史与旧版本回滚
 
+下述本机路径是迁移时的原始位置。2026-10-06 已将历史材料合并到 `E:\project\trip-planner-backups\history-20260910-20260919.zip` 并校验；原目录清理待执行。清理后先解压到新的独立目录，再读取对应快照；重复恢复副本按原 tar.gz 重建。详见[备份归档说明](backup-organization.md)。
+
 原始数据为 9 用户、2 偏好、25 行程、4 任务、21 历史同步作业、2 资料、5 资料作业。18 行程原属已不存在的用户 1，经用户确认原样保留；其余 7 条按原所有者验收。没有重分配孤立记录或补造账号。
 
 - 迁移前最终备份：`E:\project\trip-planner-backups\final-pre-java-20260915-1310`。
