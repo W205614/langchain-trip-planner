@@ -1,4 +1,4 @@
-"""Failure-oriented regression tests using isolated SQL and real temporary Chroma."""
+"""Failure-oriented regression tests using real temporary Chroma."""
 import asyncio
 import json
 import time
@@ -11,26 +11,7 @@ from app.core.exceptions import BizException
 from app.models.schemas import TripRequest
 from app.agents.trip_planner_agent import MultiAgentTripPlanner
 from planning_fixtures import VALID_REQUEST, make_fake_trip_plan, make_complete_trip_plan
-from test_rag_service import rag, published_document
-
-
-
-
-
-
-def test_probe_timeout_keeps_existing_vectors(rag, monkeypatch):
-    from langchain_core.documents import Document
-    rag._knowledge_store.add_documents([Document(page_content="retained")])
-    with monkeypatch.context() as probe:
-        probe.setattr(rag._embedding, "embed_query", MagicMock(side_effect=TimeoutError()))
-        rag._ensure_collections_consistent()
-    assert rag._knowledge_store._collection.count() == 1
-    # A transient probe failure must not latch an outage until process restart.
-    assert rag.enabled
-    recovered = rag._knowledge_store.similarity_search_by_vector(
-        rag._embedding.embed_query("retained"), k=1,
-    )
-    assert [doc.page_content for doc in recovered] == ["retained"]
+from rag_fixtures import published_document, _published
 
 
 def test_rebuild_failure_keeps_active_generation(rag, monkeypatch):
@@ -42,16 +23,6 @@ def test_rebuild_failure_keeps_active_generation(rag, monkeypatch):
     assert rag.build_knowledge_index()["success"] is False
     assert rag._knowledge_store is old
     assert old._collection.count() == 1
-
-
-
-
-
-
-
-
-
-
 
 
 def test_slow_continuous_stream_is_cancelled_at_total_deadline():
@@ -72,22 +43,13 @@ def test_slow_continuous_stream_is_cancelled_at_total_deadline():
     assert closed == [True]
 
 
-
-
 def test_rejected_publication_is_filtered_even_before_vector_cleanup(rag):
     from langchain_core.documents import Document
-    from test_rag_service import _published
     published_document(987)
     doc = Document(page_content="private now", metadata={"source_type": "multimodal", "document_id": 987})
     assert rag._visible_documents([doc]) == [doc]
     _published[987]["status"] = "deleted"
     assert rag._visible_documents([doc]) == []
-
-
-
-
-
-
 
 
 def test_live_evaluation_gate_limits_calls_and_requires_prices(monkeypatch):

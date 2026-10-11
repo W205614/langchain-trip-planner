@@ -127,14 +127,23 @@ jobs:
         run: docker compose --env-file backend/.env config --quiet
 
       - name: Build images
-        run: docker compose -p langchain-trip-planner --env-file backend/.env build
+        run: |
+          docker compose -p langchain-trip-planner --env-file backend/.env build
+          docker tag langchain-trip-planner-backend:latest trip-validation-backend:latest
+          docker tag langchain-trip-planner-agent:latest trip-validation-agent:latest
+          docker tag langchain-trip-planner-agent:latest trip-validation-amap-fixture:latest
+          docker tag langchain-trip-planner-frontend:latest trip-validation-frontend:latest
 
       - name: Start isolated validation stack
         run: |
-          docker compose -p trip-validation -f docker-compose.validation.yml up -d --build --wait postgres backend agent frontend
+          docker compose -p trip-validation -f docker-compose.validation.yml up -d --no-build --wait postgres backend agent frontend
 
-      - name: Agent container regression and layout checks
-        run: docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
+      - name: Agent image packaging and runtime contracts
+        run: |
+          docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests \
+            python -m pytest -q -p no:cacheprovider --basetemp=/tmp/pytest \
+            tests/test_agent_layout.py tests/test_agent_import_boundary.py tests/test_internal_contracts.py \
+            tests/test_agent_internal.py tests/test_deployment_config.py
 
       - name: Nginx contracts and business scenarios
         run: |

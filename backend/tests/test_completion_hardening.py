@@ -13,14 +13,7 @@ from app.services.knowledge_chunks import entity_excerpt, complete_excerpt, sect
 from app.services.attraction_names import valid_attraction, resolve_name
 from app.services.planning_constraints import finalize_plan
 from app.services.rag_runtime import index_lock, deadline, slots, operation
-from test_rag_service import rag
 from planning_fixtures import VALID_REQUEST, make_fake_trip_plan, make_complete_trip_plan
-
-
-
-
-
-
 
 
 def test_rule_fallback_can_finish_when_constraints_hold():
@@ -71,8 +64,6 @@ def test_missing_route_does_not_block_an_otherwise_usable_agent_plan():
     assert "TIME_LIMIT_UNVERIFIED" not in {i["code"] for i in report["issues"]}
 
 
-
-
 @pytest.mark.parametrize("body", ["### 天坛\n门票60元", "故宫附近的天坛门票60元", "### 故宫售票处\n无需预约"])
 def test_same_city_wrong_entity_never_enriches_attraction(body):
     assert entity_excerpt(Document(page_content=body, metadata={}), "故宫", "北京", 320) == ""
@@ -108,10 +99,6 @@ def test_cross_city_candidate_is_rejected_when_upstream_reports_city():
     p = SimpleNamespace(id="poi", name="博物馆", type="", city="上海市", location=Location(longitude=121, latitude=31))
     assert not valid_attraction(p, "北京")
     assert valid_attraction(p, "上海")
-
-
-
-
 
 
 def test_slow_embedding_does_not_hold_index_lock(rag):

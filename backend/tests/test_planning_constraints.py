@@ -1,7 +1,7 @@
 import json
 import pytest
 from pydantic import ValidationError
-from app.evals.constraint_benchmark import CASES, fixture, outcome, run
+from app.evals.constraint_benchmark import CASES, fixture, outcome
 from app.models.schemas import PlanningConstraints
 from app.services.planning_constraints import finalize_plan
 
@@ -88,9 +88,3 @@ def test_no_restaurant_candidates_is_a_non_blocking_data_gap():
     assert report["outcome"] == "degraded"
     assert "meal_pois_unavailable" in report["data_gaps"]
     assert not any(issue["blocking"] for issue in report["issues"])
-
-
-def test_benchmark_gate():
-    report = run()
-    assert report["current_passed"] == report["total"]
-    assert report["current_passed"] > report["baseline_passed"]

@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-11",
+  "base_commit": "5baebadafe64d9a38697d76a4c2918eb8eddb5da",
+  "python": {
+    "before_passed": 228,
+    "after_passed": 224,
+    "runtime": "Python 3.11 project dependencies"
+  },
+  "java": {
+    "tests": 75,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "agent_image_contracts": {
+    "passed": 18
+  },
+  "agent_image_sources": {
+    "files": 46,
+    "equal": true
+  },
+  "constraints": {
+    "passed": 12,
+    "total": 12
+  },
+  "business": {
+    "passed": 22,
+    "total": 22
+  },
+  "public_api": {
+    "passed": 20
+  },
+  "browser": {
+    "passed": 31
+  },
+  "offline_acceptance": {
+    "nginx": {
+      "exit_code": 0,
+      "seconds": 1.78
+    },
+    "business": {
+      "exit_code": 0,
+      "seconds": 6.08
+    },
+    "assistant": {
+      "exit_code": 0,
+      "seconds": 1.96
+    },
+    "public-api": {
+      "exit_code": 0,
+      "seconds": 4.31
+    },
+    "knowledge": {
+      "exit_code": 0,
+      "seconds": 3.86
+    }
+  },
+  "fault_acceptance": {
+    "recovery": {
+      "exit_code": 0,
+      "seconds": 34.07
+    },
+    "lifecycle": {
+      "exit_code": 0,
+      "seconds": 9.81
+    },
+    "cross-service-faults": {
+      "exit_code": 0,
+      "seconds": 35.93
+    },
+    "alert-rules": {
+      "exit_code": 0,
+      "seconds": 0.76
+    },
+    "notifications": {
+      "exit_code": 0,
+      "seconds": 103.58
+    }
+  },
+  "restore": {
+    "isolated_fixture_tables_verified": 7,
+    "uploads_verified": 9,
+    "truncated_archive_rejected": true,
+    "original_database_tables_verified": 23,
+    "original_database_rows_verified": 519,
+    "backup_restore_equal": true,
+    "rebuild_data_equal": true
+  },
+  "live": {
+    "generations": 1,
+    "single_day_revisions": 1,
+    "plan_passed": true,
+    "proposal_passed": true,
+    "quality_outcome": "degraded",
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "in_attraction_walking_unknown",
+      "meal_pois_unavailable",
+      "opening_hours_travel_date_unverified",
+      "reservation_unverified"
+    ],
+    "confirmed_once": true,
+    "repeat_confirmation_conflict": true,
+    "agent_call_budget": {
+      "embedding": 8,
+      "amap": 73,
+      "text": 2
+    },
+    "browser": {
+      "passed": true,
+      "real_login": true,
+      "persisted_plan_visible": true,
+      "uncertainty_visible": true,
+      "external_photo_and_map_loading_blocked": true
+    }
+  },
+  "cleanup": {
+    "old_tags_removed": 7,
+    "old_or_intermediate_images_removed": 9,
+    "validation_containers_removed": 8,
+    "restore_container_removed": 1,
+    "temporary_databases_removed": 2,
+    "rollback_archives_verified": true,
+    "global_prune_used": false
+  },
+  "final_runtime": {
+    "final_project_containers": 4,
+    "other_containers_preserved": 42,
+    "original_volumes_preserved": 217,
+    "recent_error_lines": 0
+  },
+  "boundary": "Fixed offline cases and two bounded live operations; not factual accuracy, performance gain or production SLA."
+}

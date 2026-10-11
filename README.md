@@ -276,6 +276,10 @@ python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20
 
 前端目录执行 `npm ci`、`npx playwright install chromium`、`npx playwright test`。验证结束后运行 `docker compose -p trip-validation -f docker-compose.validation.yml down`，不常驻第二套项目。CI 还验证任务中断、取消后迟到及告警恢复。
 
+CI 中 Python 作业运行完整 Agent 回归及冻结约束报告；Docker 作业只补充镜像布局、导入边界、内部协议、内部接口和部署配置检查，再运行真实容器的 HTTP、浏览器、恢复及故障验收。应用镜像各构建一次，验证栈复用这些镜像，不重复构建或再次跑完整 Python 回归。共享 RAG 夹具由 `tests/conftest.py` 注册，测试文件不再相互导入。
+
+2026-10-11 小步整理与重建验收：删除无调用点的旧 Agent 方法、未接入应用的异常处理器、只核对场景名称的测试，并合并重复 RAG 超时断言。Python 从 228 项整理为 224 项，全量通过；Java 隔离 PostgreSQL 75/75、镜像契约 18/18、冻结约束 12/12、业务场景 22/22、公开 API 20/20、Playwright 31/31；恢复、任务中断、取消后迟到和告警恢复均通过。真实北京单日生成与单日改排完成，确认一次及重复确认冲突通过；结果仍为带资料缺口的 `degraded`。本轮未拆分 Java／Vue 大文件或改变公开协议，测试数量变化不代表覆盖率或性能变化。详见[整理与容器交付记录](docs/evidence/refactor-20261011/report.md)。
+
 2026-09-23 本地验收：Java 隔离 PostgreSQL 测试 76/76、Python Agent 224/224、离线规划场景 22/22、公开 API 20/20、Playwright 20/20；数据库恢复、告警和跨服务故障演练通过。正式环境在有界额度下完成北京 1 日、上海 2 日及指定日期改排，均保存为带缺口的 `degraded` 结果。详见[验收与容量记录](docs/evidence/acceptance-20260923/report.md)。这些结果证明固定场景和工程契约，不代表生产 SLA、真实旅行事实准确率或模型并发容量。
 
 离线历史读接口在本机 128 并发持续 30 秒时 14,778 次均返回 200、P95 626ms；256 并发 5 秒时 P95 达 2.108 秒，触及本轮停止阈值。24 个慢任务中 12 个按验证栈容量入队并成功，另 12 个以 `TASK_QUEUE_FULL` 明确拒绝。读请求 QPS 与真实模型生成吞吐不能互换。
@@ -290,7 +294,7 @@ PostgreSQL 数据卷、`backend/data/knowledge_uploads`、`backend/data/chroma`�
 
 详见 [当前运行手册](docs/operations/java-migration.md)与[本机备份归档说明](docs/operations/backup-organization.md)。本机已有备份已收进项目的 `backups/`，该目录由 Git 忽略，数据库与私有配置不上传 GitHub。旧业务代码和历史部署脚本不再留在工作树；清理前源码提交为 `6c72a24`，旧源码 ZIP 保留在本机历史归档中。容器清理仅针对本项目辅助实例，不使用全局 prune，不删除其他项目容器或持久卷。
 
-镜像清理在准确提交的 CI 通过后执行：只删除经项目标签／名称核对且不再使用的本项目镜像或验证标签。当前明确只维护 Java＋Agent 架构，旧 Python 架构回滚镜像已按用户决定删除；保留当前运行镜像、数据备份和历史源码，不删除其他项目镜像或共享基础镜像，不使用全局 image prune。
+镜像清理先核对项目归属与全机容器引用，并保存可恢复的本机归档；重建及本地验收通过后，只删除不再使用的本项目旧镜像或验证标签，最终交付还须等待准确提交的 CI 通过。2026-10-11 清理后保留四个健康容器、三个应用镜像及共享 PostgreSQL 镜像，清理七个旧标签和九个旧版／中间镜像；原数据挂载、42 个其他项目容器和原有 217 个数据卷保留。旧应用镜像归档和完整数据备份位于 Git 忽略的 `backups/`，不使用全局 prune，也不删除其他项目镜像或共享基础镜像。
 
 ## ❓ 常见问题与局限
 

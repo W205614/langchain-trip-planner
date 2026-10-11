@@ -38,5 +38,4 @@ os.environ["JWT_SECRET_KEY"] = "test-secret-only-01234567890123456789"
 os.environ["APP_ENV"] = "development"
 os.environ["RAG_ENABLED"] = "false"
 
-import pytest
-from fastapi.testclient import TestClient
+from rag_fixtures import rag
