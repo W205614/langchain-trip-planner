@@ -1,311 +1,145 @@
-# 🧭 AI 旅行规划 Agent：Java 业务后端 + Python Agent
+# AI 旅行规划助手
 
-[![CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml/badge.svg)](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml)
+基于 **Vue 3、Spring Boot 和 LangGraph** 的国内旅行规划应用。填写出发地、目的地、日期、人数、预算与偏好，生成可以查看、编辑和导出的逐日行程。
 
-基于 **Spring Boot、LangGraph 和 Vue 3** 的国内旅行规划应用。输入出发地、目的地、日期、人数、房间数、预算与偏好，获取可查看、编辑和导出的逐日行程；规划任务可恢复，资料和社区行程经过人工复核后才会公开。
+它把景点查询、路线安排、预算整理和出行记录集中到一个应用中，帮助你从“到处查攻略”走到“有一份可以继续调整的旅行计划”。
 
-**业务状态交给 Java，旅游生成与检索交给 Python Agent。** PostgreSQL 是业务唯一事实源，Python Agent 不包含业务 ORM、用户鉴权或公开业务路由；但景点选择、路线查询、约束修复和生成结果质量分类由 Agent 一次完成。项目定位是可验证的单机应用，不是高可用平台，也不把静态攻略或模型输出当作实时旅行事实。
+[快速部署](#快速部署) · [第一次使用](#第一次使用) · [界面预览](#界面预览) · [常见问题](#常见问题)
 
-## ✨ 功能特点
+## 能帮你做什么
 
-- 🤖 **多日旅行规划**：LangGraph 并行获取景点、餐饮、天气、酒店和 RAG 上下文，再按日生成主题、活动与游览安排；景点和餐厅只接受可信 POI 候选。
-- 🧭 **Agent 统一入口**：首页创建新行程；历史记录内直接进行攻略问答和单日改排；景点发现由 Agent 调用高德 MCP，不再提供独立助手、收藏转手工行程两套入口。
-- ✅ **改排先预览再确认**：助手改排先保存独立提案，原行程和索引保持不变；用户可以确认或放弃。确认时 Java 校验用户、会话和原版本并只写入一次，版本变化提示重新加载。
-- ⚡ **任务与流式进度**：Java 持久化排队、进度和结果；支持 SSE、刷新恢复、幂等提交、取消、超时与中断状态；需要操作的任务集中显示在“我的行程”。
-- 🧭 **Agent 质量分类**：Agent 使用高德 MCP 完成可信 POI 选择、路线查询、步行／时间约束修复和预算计算；路线暂不可用时保存可调整的降级行程，不再由 Java 二次规划。
-- 🗺️ **地图与图片**：高德地图展示路线；图片按 POI ID 获取，无独立实拍时仅使用经过校验且明确标注的景区参考图，无可信来源则显示占位提示。
-- ✏️ **行程编辑**：添加、删除、调整景点，局部改排；版本冲突不会静默覆盖已有修改，草稿需要明确确认后应用。
-- 📋 **同行协作与执行工作台**：受邀同行人接受后可从邀请页查看完整的只读行程；工作台支持按日行前核验、预订事项和实际费用，编辑者可按权限调整已有景点顺序；站内通知提醒临行、风险和 Token 用量。详见 [行程执行工作台](docs/operations/trip-operations.md)。
-- 🧾 **版本与审计**：创建、编辑、核验、改排、确认和恢复都会生成不可变版本；关键业务动作保存脱敏审计事件，删除行程会同步撤销分享并解除会话关联。
-- 🧠 **RAG 检索**：公开城市知识使用本地关键词与 Chroma 向量的混合召回；个人历史仍按用户隔离检索。Java 回查资料所有者、版本、发布状态和草稿状态，不满足可见性要求的资料不进入上下文。
-- 📄 **图文资料审核**：PDF／图片投稿、解析、人工复核、版本绑定发布；解析成功不等于自动公开。
-- 📚 **历史与偏好**：账号登录、历史分页与筛选、用户主动保存和删除偏好；不同账号的数据隔离。
-- 🔎 **资料研究**：公开城市资料检索返回来源、页码和来源等级，不读取他人的私人历史。
-- 🌏 **社区行程**：个人行程按版本提交不可变快照，管理员审核后进入广场；他人复制时生成待重新核验的独立草稿。
-- 📤 **三种导出**：PNG、PDF 和离线 HTML；导出包含全部日期，离线 HTML 可展开／收起。
-- 🛡️ **可靠性验证**：事务、幂等竞争、版本冲突、断流、取消后迟到、恢复、发布和告警都有对应测试入口。
+| 需求 | 对应功能 |
+|---|---|
+| 不知道每天怎么玩，景点是否顺路 | 根据偏好生成多日行程，结合高德景点与路线数据，展示每日安排、地图和预算 |
+| 计划变了，不想全部重做 | 手工编辑景点，或用自然语言改排某一天；智能改排先预览，确认后才更新原行程 |
+| 生成过程较长，担心刷新丢失 | 查看任务进度，在“我的行程”恢复查看；支持取消和显式重试 |
+| 攻略、历史行程分散 | 保存与筛选历史、查询攻略；可选接入知识检索，PDF／图片资料经过人工复核后发布 |
+| 同行人需要一起看、一起准备 | 分享行程，记录行前核验、预订事项和实际费用；社区行程审核后公开 |
+| 出门后想随时查看 | 导出 PNG、PDF 或离线 HTML |
 
-## 📸 界面预览
+行程会提示路线、资料或约束缺口。天气、营业时间、票价与预约信息仍需在出发前核实；预算是规划参考，不是商家报价。
 
-以下为功能界面示例，具体布局以当前页面为准。
+## 界面预览
+
+以下为仓库已有的功能截图，具体布局和字段以当前运行页面为准。
+
+**填写旅行需求**
 
 ![旅行需求表单](docs/screenshots/home.png)
 
-![每日行程与地图](docs/screenshots/result.png)
+**查看每日安排、预算与地图**
 
-![行程详情](docs/screenshots/result1.png)
+![行程概览与地图](docs/screenshots/result.png)
 
-![我的行程管理](docs/screenshots/history.png)
+<details>
+<summary>展开查看行程详情与历史记录</summary>
 
-工作台、行程记录和通知页按深浅背景分别设置文字颜色；行程记录、景点发现、社区及结果页的空状态使用浅色面板。同行邀请、预订和费用表单与下方列表保留间距，避免控件重叠。页面样式以当前运行版本为准，以上截图仅作功能示例。
+![每日行程详情](docs/screenshots/result1.png)
 
-## 🏗️ 技术栈
+![历史行程管理](docs/screenshots/history.png)
 
-| 部分 | 技术 | 职责 |
-|---|---|---|
-| Java 业务后端 | Java 21、Spring Boot 4.0.3、Spring Security、MyBatis Starter 4.0.0、Flyway、Actuator、Micrometer | 用户、业务 API、任务、协议校验、版本审计、资料审核、事务与 outbox |
-| Python Agent | Python 3.11、FastAPI、LangChain、LangGraph | 旅游生成、高德 MCP 景点／天气／酒店／路线、约束修复、质量分类、检索、解析及向量写入 |
-| 存储 | PostgreSQL 17.6、Chroma、本地持久目录 | 业务数据、向量索引、上传文件及操作账本 |
-| 前端 | Vue 3、TypeScript、Vite、Ant Design Vue、高德 JS API | 交互、SSE、地图、编辑与导出 |
-| 部署与验证 | Docker Compose、Nginx、JUnit、pytest、Playwright、GitHub Actions | 单机部署、自动化回归与恢复演练 |
+</details>
 
-Python 依赖锁定在 `backend/requirements.lock`，Maven Wrapper 版本为 3.9.9。模型名称和端点由配置决定；兼容协议不代表每个供应商都支持相同参数或返回格式。
+## 快速部署
 
-## 🏛️ 架构分层
+下面使用 Docker 在本机启动。命令以 **Windows PowerShell** 为例，均在项目根目录执行；已有部署升级请先看[运行与迁移手册](docs/operations/java-migration.md)，不要覆盖原配置。
 
-```text
-浏览器 / Vue
-    │ 同源公开 API、SSE
-    ▼
-Nginx :8380（可用 APP_PORT 调整）→ Java 业务后端
-                 ├── PostgreSQL：用户、任务、行程、资料、outbox
-                 ├── 高德 REST：公开地图能力、用户主动复核与安全图片代理
-                 ├── 安全图片代理：下载并校验 Agent/MCP 返回的图片
-                 ├── 上传目录：原文件与资料版本
-                 └── /internal/v1 → Python Agent
-                                      ├── LangGraph → 文本模型
-                                      ├── 高德 MCP：景点、天气、酒店、路线与图片
-                                      ├── PDF / 图片解析 → 视觉模型
-                                      └── RAG / embedding → Chroma
+### 1. 准备环境并下载项目
 
-Python → Java 内部回查：资料可见性、原文件、重建快照与变更序号
-```
+需要安装并启动 **Docker Desktop**（包含 Docker Compose），另外准备 **Git、Python 3.11+ 与 pip**。Python 仅用于生成部署配置；Java、Node.js 和应用依赖由镜像构建，无需在本机单独安装。
 
-- **Java 负责业务状态**：鉴权、历史版本、任务生命周期、幂等、协议与可信候选一致性校验、最终状态和事务提交。
-- **Python 负责完整旅游生成**：返回结构化计划和可信候选，并在 Agent 内完成路线查询、约束修复、预算与质量分类；不写业务表，也不处理用户权限。
-- **只规划一次**：Java 不再重查 POI、替换景点或重新计算路线，只验证执行编号、请求一致性、可信候选和质量协议后持久化。
-- **内部接口不对公网开放**：独立服务密钥，固定地址；Nginx 不代理 `/internal/*`、`/metrics` 或 `/actuator/*`，Agent 不发布宿主机端口。
-- **四容器属于一个项目组**：同一 Compose 项目下保留 `frontend / backend / agent / postgres`，不把数据库与业务进程强塞进同一个容器。
-
-## 📁 项目结构
-
-```text
-langchain-trip-planner/
-├── business-backend/              # 当前 Java 业务后端
-│   ├── src/main/java/com/tripplanner/
-│   │   ├── api/                   # 公开业务与内部回查接口
-│   │   ├── domain/                # 任务、规则、审核、outbox
-│   │   ├── persistence/           # MyBatis
-│   │   └── security/              # 用户鉴权与令牌
-│   └── src/main/resources/db/migration/ # Flyway
-├── backend/                       # 当前 Python Agent，保留目录名以避免搬动数据
-│   ├── app/agent_api/             # 唯一 HTTP 服务入口 /internal/v1
-│   ├── app/agents/                # LangGraph 生成工作流
-│   ├── app/services/              # 地图、图片、模型、RAG 和纯数据辅助函数
-│   ├── app/evals/                 # 离线评测与冻结规则对照
-│   ├── tests/                     # Agent 能力与故障测试
-│   ├── scripts/                   # 当前部署、备份、恢复与接口验收
-│   └── data/                      # 原文件、Chroma、操作账本；运行数据不提交
-├── frontend/                      # Vue 页面与 Playwright
-├── contracts/internal-v1/          # 共享 JSON Schema 和测试样例
-├── deploy/                        # 配置模板、告警规则；runtime 私有配置不提交
-├── docs/                          # 截图、运行手册与当前架构证据
-└── docker-compose*.yml            # 日常、生产与临时隔离验证配置
-```
-
-已删除旧 Python 业务 API、SQLAlchemy 业务模型、Alembic、用户 JWT、业务调度和旧部署脚本。仍保留的纯规划辅助函数和冻结场景用于生成及规则对照，不代表 Python 有第二套在线业务后端。历史源码可从 Git 提交 `6c72a24` 恢复。
-
-## 🚀 快速开始
-
-### 前提条件
-
-- Docker Desktop / Docker Engine 与 Docker Compose。
-- 高德 Web 服务 Key，以及前端使用的高德 Web JS Key。
-- 一个可用的文本模型端点；需要检索或图文解析时，再配置 embedding／视觉能力。
-- 在宿主机执行配置和运维脚本时，需要 Python 与 `python-dotenv`；本地开发额外需要 Java 21、Node.js 20+。
-
-### 1. 准备配置（仅首次部署）
+还需要可用的文本模型 API、高德 Web 服务 Key，以及用于浏览器地图的高德 Web 端（JS API）Key。构建需要联网下载镜像与依赖，生成行程需要访问模型服务和高德 MCP，相关调用可能产生费用。
 
 ```powershell
+git clone https://github.com/W205614/langchain-trip-planner.git
+cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
 python -m pip install python-dotenv
 ```
 
-编辑 `backend/.env`：Java 使用 `AMAP_REST_API_KEY`，Agent 使用 `AMAP_MCP_API_KEY`，按需要填写 `LLM_*`、`EMBEDDING_*`、`VISION_*`；编辑 `frontend/.env` 的 `VITE_AMAP_WEB_JS_KEY`。开发环境可让两个服务端 Key 取同一值，但部署文件和指标仍按通道分开。
+### 2. 填写必要配置
+
+用文本编辑器打开以下两个文件，将示例占位值替换为自己的配置：
+
+| 文件 | 配置项 | 填写内容 |
+|---|---|---|
+| `backend/.env` | `LLM_MODEL_ID` | 模型供应商提供的文本模型名称 |
+| `backend/.env` | `LLM_API_KEY` | 对应的模型 API Key |
+| `backend/.env` | `LLM_BASE_URL` | 供应商提供的 OpenAI 兼容 API 基础地址 |
+| `backend/.env` | `AMAP_REST_API_KEY` | 高德 Web 服务 Key，供 Java 使用 |
+| `backend/.env` | `AMAP_MCP_API_KEY` | 高德 MCP 使用的 Web 服务 Key；开发时可与上一项相同 |
+| `frontend/.env` | `VITE_AMAP_WEB_JS_KEY` | 高德 Web 端（JS API）Key，用于显示地图 |
+
+`LLM_BASE_URL` 按供应商的接口说明填写，通常包含 `/v1`，不要填成完整的 `/chat/completions` 请求地址。前端地图 Key 与服务端 Web 服务 Key 类型不同，不能混用；模型 Key 只放在后端配置。
+
+**首次只体验行程规划时，将 `backend/.env` 中的 `RAG_ENABLED` 改为 `false`**，其余未列出的配置可先保留模板值。以后需要知识检索，再配置供应商支持的 `EMBEDDING_MODEL`、`EMBEDDING_BASE_URL`、`EMBEDDING_API_KEY` 并开启 RAG；图文资料解析还需要相应的 `VISION_*` 配置。文本模型服务不一定同时支持嵌入和视觉模型。
+
+### 3. 生成配置并启动
 
 ```powershell
 python backend/scripts/prepare_java_deployment.py
-```
-
-已有 `deploy/runtime` 的旧部署升级时使用 `python backend/scripts/prepare_java_deployment.py --upgrade-existing`；它保留数据库、JWT 和内部服务密钥，只补齐当前 Java REST / Python MCP 边界配置。
-
-脚本生成 `deploy/runtime/postgres.env`、`business.env` 和 `agent.env`。新部署 JWT Key 留空时生成随机值；已有账户迁移必须保留原 Key。脚本拒绝覆盖已有目录，**已有日常环境不要重新生成配置**。
-
-### 2. 构建并启动
-
-```powershell
 docker compose up -d --build --wait
 docker compose ps
 ```
 
-要使用隔离的生产配置，可统一指定项目名，后续 `ps`、`logs` 和重建命令也使用同一 `-p` 与 `-f`：
+配置脚本会生成私有的 `deploy/runtime/postgres.env`、`business.env` 和 `agent.env`，自动创建数据库密码、JWT 与内部服务密钥。**只在首次部署执行，不要删除已有目录后重新生成，也不要提交这些私有文件。** 数据库表由 Flyway 在启动时自动初始化。
+
+首次构建需下载依赖，耗时取决于网络与机器。`docker compose ps` 中应看到 `frontend`、`backend`、`agent`、`postgres` 四个服务，启动完成后健康状态应为 `healthy`；容器健康不代表外部 API Key 已验证可用。
+
+打开 **[http://localhost:8380](http://localhost:8380)**，注册自己的账号并登录即可使用，无默认账号密码。默认仅允许本机访问。
+
+如果 8380 已被占用，可先在项目根目录新建 `.env`，写入 `APP_PORT=8381`，再执行启动命令，之后访问 `http://localhost:8381`。
+
+## 第一次使用
+
+1. 注册并登录后，在首页填写出发地、目的地、未来的出行日期、人数、房间数、总预算和偏好。建议先从一个城市、一天行程开始熟悉流程。
+2. 提交规划后查看进度；离开页面或刷新后，可以从“我的行程”继续查看任务与结果。
+3. 打开结果，先查看质量提示和未满足事项，再浏览每日景点、地图与预算。`degraded` 表示存在缺口，`needs_attention` 表示尚未完成的草稿，需要继续调整。
+4. 按需手工编辑，或在行程对话中提出“把第 1 天改成以博物馆为主”等请求。智能改排完成后，先预览待确认方案，再确认或放弃。
+5. 调整满意后导出 PNG、PDF 或离线 HTML；需要同行协作时，再进入行程工作台整理核验、预订与费用。
+
+## 常用操作与配置更新
+
+以下命令仍在项目根目录执行：
 
 ```powershell
-docker compose -p langchain-trip-planner-live -f docker-compose.production.yml up -d --build --wait
-docker compose -p langchain-trip-planner-live -f docker-compose.production.yml ps
-```
+# 查看启动问题与最近日志
+docker compose logs --tail 100 backend agent frontend
 
-访问 **http://localhost:8380**（可通过 `APP_PORT` 调整）。与 DeepResearch 共用 8380 时，先停止当前占用该端口的前端容器，再启动另一个项目的前端。Flyway 自动初始化空业务库；不自动接管或 baseline 未知旧库。首次注册账号后可登录；审核管理员通过 `business.env` 的 `BOOTSTRAP_ADMIN_USERNAME` 显式指定已存在账号，重启 Java 生效。
-
-正式前端固定通过同源 `/api/` 访问 Java；`frontend/.env` 中的直连地址只用于 Vite 开发。更新前已打开的浏览器页面需刷新，以加载新构建的脚本。
-
-已有 V1–V3 数据的环境升级到 V4 前，必须先停止 `frontend / backend / agent`，使用 `backup_java_deployment.py` 在仓库外生成完整备份，并执行[迁移手册](docs/operations/java-migration.md)中的孤儿数据与非法状态检查。V4 不会自动删除或改绑历史数据；检查不通过时 Flyway 会终止启动。V5 增加规划人数/预算事实和社区快照表；V6–V8 增加行前核验、预订与支出、同行成员、站内通知、用量提醒，以及按日期核验所需索引。完成数据所有权确认后，再运行 `prepare_java_deployment.py --upgrade-existing` 和上述 Compose 启动命令。`rag_sync_jobs.record_id` 特意不设置外键，以便删除行程后的索引墓碑继续完成。
-
-### 3. 常用操作
-
-```powershell
-docker compose logs --tail 100 backend agent
-docker compose restart backend
+# 暂停服务，保留数据
 docker compose stop
+
+# 再次启动
 docker compose up -d --wait
 ```
 
-不要用 `down -v`、清理卷或删除 `backend/data` 来解决启动问题。修改模型或前端 Key 后，需要重启相应服务或重新构建前端。
+首次生成配置后，Compose 实际读取的是 `deploy/runtime/*.env`，后续修改 `backend/.env` 不会自动同步到运行配置：
 
-## ⚙️ 配置说明
-
-| 配置文件 | 关键项目 | 边界 |
+| 修改内容 | 修改位置 | 生效命令 |
 |---|---|---|
-| `deploy/runtime/business.env` | `JWT_SECRET_KEY`、`JDBC_DATABASE_URL`、`AMAP_REST_API_KEY`、`WORKERS_ENABLED`、`TRIP_*` | Java 独占业务数据库、用户鉴权和高德 REST |
-| `deploy/runtime/agent.env` | `LLM_*`、`AMAP_MCP_API_KEY`、`EMBEDDING_*`、`VISION_*`、`RAG_ENABLED` | 只包含 AI 能力配置，不传业务库凭据 |
-| 两个服务 | `INTERNAL_SERVICE_KEY`、`AGENT_URL` / `BUSINESS_URL` | 固定服务地址，独立内部密钥 |
-| 前端构建配置 | `VITE_AMAP_WEB_JS_KEY` 等 | 仅前端地图配置；不放服务端模型 Key |
+| 文本模型、RAG、视觉配置 | `deploy/runtime/agent.env` | `docker compose up -d --force-recreate agent` |
+| Java 服务端高德 Key | `deploy/runtime/business.env` 的 `AMAP_REST_API_KEY` | `docker compose up -d --force-recreate backend` |
+| Agent 高德 Key | `deploy/runtime/agent.env` 的 `AMAP_API_KEY`（脚本从 `AMAP_MCP_API_KEY` 转入） | `docker compose up -d --force-recreate agent` |
+| 前端地图 Key | `frontend/.env` 的 `VITE_AMAP_WEB_JS_KEY` | `docker compose up -d --build frontend`，完成后刷新浏览器 |
 
-日常新配置默认启用 Java workers，预算验收模式默认关闭。受控验收通过持久 `ACCEPTANCE_BUDGET_FILE` 分类别限制实际调用；其开启、上限与停止规则必须单独确认。不要删除账本来重置额度。
+`docker compose restart` 不会重新载入修改后的环境文件，应使用表中的重建容器命令。不要使用 `down -v` 或删除 `backend/data` 来排查问题；数据库卷、上传文件、索引及私有配置需要成套备份，详见[运行手册](docs/operations/java-migration.md)。
 
-**现有 Chroma 的模型和向量维度必须一致。** 更换 embedding 模型不能仅改环境变量；需备份后执行受控重建，失败保留旧集合，不直接删除索引。
+## 常见问题
 
-## 📝 使用指南
+- **页面打不开或启动失败？** 先确认 Docker Desktop 正在运行、已生成 `deploy/runtime`，再查看 `docker compose ps` 和日志。端口冲突可按上文修改 `APP_PORT`；若首次构建失败，先检查镜像和依赖下载网络。
+- **能登录，但无法生成行程？** 检查 Agent 的运行配置中模型名称、API 地址、Key 是否匹配，以及高德 MCP 是否可访问。`AGENT_UNAVAILABLE` 表示 Agent 不可用；登录和历史查看仍可使用。
+- **地图不显示或景点没图片？** 核对前端 JS API Key 的类型与高德控制台的安全配置、域名限制，修改 Key 后重新构建前端。某些景点没有可信图片时会显示占位提示。
+- **为什么有资料缺口或降级结果？** 可能是路线、餐饮、天气或知识资料不足；未启用 RAG 时也可能缺少攻略上下文。请查看具体提示，调整或补充核验，不要把草稿当作完整方案。
+- **需要资料审核管理员？** 先注册账号，再在 `deploy/runtime/business.env` 添加 `BOOTSTRAP_ADMIN_USERNAME=已注册的用户名`，执行 `docker compose up -d --force-recreate backend`。
+- **可以直接部署到公网吗？** 本指南面向本机单实例使用；公网部署还需配置 HTTPS、访问入口和备份策略。当前不提供多实例高可用部署。
 
-1. 在首页填写出发地、目的地、日期、人数、房间数、总预算、偏好及约束，提交给 Agent 后查看持久任务进度。
-2. 在“景点发现”中查看 Agent 通过高德 MCP 获取的真实 POI 与对应图片。
-3. 先看结果分类与缺口：`needs_attention` 是未完成草稿，不是完整成功。
-4. 在地图和每日卡片中查看行程；按需手工编辑。
-5. 从历史记录用自然语言问攻略或调整某一天；缺少目标日期时会先追问。改排完成后在“待确认方案”预览，再选择确认或放弃；确认前原行程不变，版本冲突后重新加载。
-6. 可将完整行程投稿到广场，经管理员审核后公开；其他用户复制后先得到待重新核验草稿。
-7. 投稿 PDF／图片后，由管理员解析、核对原文、保存复核版本，再发布。
+## 技术栈与进一步阅读
 
-## 🔧 核心实现
+前端使用 Vue 3、TypeScript 与高德 JS API；Java / Spring Boot 负责用户、行程、任务与审核，Python / LangGraph 负责模型生成、高德 MCP 和检索；PostgreSQL 保存业务数据，Chroma 保存向量索引。Docker Compose 默认启动四个服务，仅前端发布本机端口。
 
-### LangGraph 生成
-
-Agent 通过高德 MCP 获取候选并让模型按日返回结构化草稿；景点、餐饮、天气、酒店和 RAG 上下文并行准备，多日模型调用按配置并发。随后 Agent 对每天 3–6 个景点使用真实有向路线矩阵比较顺序、修复可确定的时间／步行约束并给出最终质量分类；Java 只校验协议、请求一致性和可信候选后按版本原子保存。
-
-“我的行程”中的对话先做有界意图识别和目标日期补全：资料问题只读回答，修改请求只生成指定日期的持久改排任务；同一行程复用最近会话。改排结果先保存为与原行程绑定的待确认提案，确认或放弃均校验用户、会话和版本；普通“应用草稿”接口不能绕过这一步。处理后的提案不再作为独立行程出现在历史列表。
-
-餐厅候选同时提供 POI ID 和营业时间。生成后会剔除与早餐、午餐或晚餐时段明显冲突的候选；缺少可用餐厅时保留 `meal_pois_unavailable` 缺口，不把晚开门的餐厅标成早餐。营业时间仍需按出行日期向商家核实，酒店与餐饮接驳路线也未纳入景点间路线校验。
-
-### 链路延迟与超时
-
-- Agent 使用 `trip_agent_stage_seconds{stage,outcome}` 记录 RAG、候选收集、模型生成和问答等阶段耗时，区分成功与降级，便于定位真正的等待点。
-- 攻略问答的模型超时由 `LLM_RESEARCH_TIMEOUT` 控制，默认 15 秒；Java 到 Agent 的流式调用和浏览器请求还有各自的外层超时，客户端断开时会取消本次转发任务。
-- 候选查询采用有界并发；路线由 Agent 在任务总截止时间内查询并纳入质量报告。上游不返回路线时明确标记 `ROUTE_UNAVAILABLE`，保存可继续调整的降级行程，不把未知耗时伪装成零。
-- 单元测试和替身测试只证明并发、超时与降级路径可控；真实延迟和吞吐需在部署环境分别测量冷启动、热缓存及不同旅行天数的 P50/P95，不在文档中预设提升比例。
-
-### Python 停机边界
-
-前端只依赖 Java 就绪；Java `/readyz` 只检查数据库和本地必要配置。Python 停止时，登录、历史、分享和导出仍可使用；行程创建、景点发现、攻略问答和智能改排明确返回 `AGENT_UNAVAILABLE`，不会伪装成传统流程继续执行。`/api/capabilities` 分别报告 MCP 地图、Agent、RAG 和视觉能力。
-
-### 任务可靠性
-
-Java 使用有界执行池、数据库条件更新和幂等键。最终状态、历史保存和 outbox 同事务提交；保存前校验执行编号、截止时间、状态与原行程版本。断流不自动再次调用模型；重启中的任务标为 `PROCESS_INTERRUPTED`，用户可显式重试。
-
-### 数据完整性、版本与审计
-
-Flyway 在增加外键和状态约束前先检查孤儿数据与非法状态，发现历史脏数据就拒绝迁移，不会静默删除。行程的创建、编辑、核验、Agent 改排、助手确认和旧版恢复都会在业务事务内写入不可变版本；恢复旧版会生成一个新版本，仍需当前 `If-Match`。删除行程会在同一事务撤销公开分享、解除助手会话关联、写入 RAG 删除墓碑并清理含完整计划的版本快照，脱敏审计事件只保留资源、动作、版本、结果和请求 ID。
-
-### RAG 与资料发布
-
-Java 管理原文件、审核、业务版本和索引作业；Python 使用稳定向量 ID、版本水位和删除墓碑。公开城市知识用关键词与向量双路召回后做 RRF 融合；个人历史不进入公开研究入口。城市尚无索引或景点攻略没有可靠匹配属于资料缺口，不会被误报为检索故障。查询向量失败时退到关键词检索，并提示攻略资料可能不完整；检索或 Java 可见性回查实际失败时排除受影响资料并降级。重建从 Java 获取一致性快照，在新集合验证后核对变更序号再切换。
-
-### 图片与导出
-
-优先真实 POI 的最多三张候选图片。无图时，仅接受同城、3 公里内、名称前缀匹配且唯一的景区候选，并标注“景区参考图（非该具体点位实拍）”。图片校验格式、像素和大小，拒绝私网代理与远程 SVG；失败短缓存，占位图不做浏览器长缓存。卡片统一 8:5 铺满，普通照片适度裁切，参考图标注完整保留。
-
-## 🛡️ 安全与数据边界
-
-- 用户令牌、注销撤销、所有者校验、管理员审核均由 Java 负责。
-- 原文件内部读取只接受资料 ID 与版本，不接受任意文件路径。
-- 编辑后的开放时间、价格和路线不能自动变成“已外部核实”。
-- 未知路线不等于零距离，缺失票价不等于免费；预算预留和假设会单独显示。
-- 服务重启、取消和超时无法保证已发出的外部请求不计费。
-- 单 Java／单 Agent／单机持久目录是明确边界；不支持水平扩容或跨主机自动故障接管。
-
-## 📚 API 与监控
-
-| 公开入口 | 用途 |
-|---|---|
-| `/api/auth/*`、`/api/preferences/me` | 登录、注销、身份与偏好 |
-| `/api/trip/tasks*`、`/api/trip/plan*` | 任务、可操作状态筛选、兼容规划入口与 SSE |
-| `/api/history*`、`/api/trips*` | 历史行程、乐观锁编辑、重新核验、版本查询与旧版恢复；旧手工接口仅保留兼容，不再提供前端入口 |
-| `/api/favorites*` | 旧收藏兼容接口；不再作为当前产品流程入口 |
-| `/api/trips/{id}/shares`、`/api/shared-trips/{token}` | 不可变只读分享、撤销和复制 |
-| `/api/trips/{id}/checks*`、`/api/trips/{id}/workspace` | 行前核验、版本与权限绑定的执行工作台 |
-| `/api/trips/{id}/members*`、`/api/trips/invitations` | 同行邀请、接受、按权限改序；变更角色需重新接受 |
-| `/api/trips/{id}/commitments*`、`/api/trips/{id}/expenses*` | 预订事项与实际费用账本，不执行预订或付款 |
-| `/api/notifications*`、`/api/usage/*` | 站内通知与 Token 用量提醒 |
-| `/api/community/cards*`、`/api/community/admin/cards*` | 社区行程投稿、公开浏览、复制与管理员审核 |
-| `/api/assistant/conversations*` | 历史行程内的 Agent 问答、改排会话、提案确认与放弃；改排复用持久任务 |
-| `/api/knowledge/*` | 投稿、复核、发布及作业状态 |
-| `/api/map/*`、`/api/poi/*`、`/api/research/*` | 地图、图片与资料研究 |
-| `/health`、`/readyz`、`/api/capabilities` | 存活、业务就绪与 Agent/MCP 分能力状态 |
-
-版本接口为 `GET /api/trips/{id}/versions`、`GET /api/trips/{id}/versions/{version}` 和带当前 `If-Match` 的 `POST /api/trips/{id}/restore`。公开请求由 Java 处理；Python 仅提供 `/internal/v1`。Schema 与样例见 `contracts/internal-v1/`。Java 内部指标由 Actuator/Micrometer 暴露在 `/actuator/prometheus`，Prometheus 只通过容器网络抓取；日常四容器不默认启动额外监控栈，本地通知接收器仅用于验证，不是生产告警渠道。限流、并发舱壁、熔断、分层耗时与受控压测步骤见 [性能与雪崩保护手册](docs/operations/performance-reliability.md)。
-
-## ✅ 自动化验证
-
-```powershell
-# 仓库根目录：临时隔离验证，不加载日常密钥或数据目录
-$env:VALIDATION_SLOW_SECONDS='3'
-docker compose -p trip-validation -f docker-compose.validation.yml up -d --build --wait postgres backend agent frontend
-$env:TEST_DATABASE_URL='jdbc:postgresql://localhost:15432/trip'
-$env:TEST_DATABASE_PASSWORD='migration-fixture-only'
-Push-Location business-backend
-.\mvnw.cmd test
-Pop-Location
-docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
-python backend/scripts/java_api_contract_smoke.py --output evidence/public-api.json
-python backend/scripts/java_knowledge_smoke.py --output evidence/knowledge.json
-python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
-# 离线 QPS 阶梯、慢任务隔离和 Agent／高德故障演练
-python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20260923/performance.json --stage-seconds 5 --max-read-concurrency 256
-# 持续读请求（只对 validation fixture）
-python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20260923/read-soak-128.json --read-soak-concurrency 128 --read-soak-seconds 30
-```
-
-前端目录执行 `npm ci`、`npx playwright install chromium`、`npx playwright test`。验证结束后运行 `docker compose -p trip-validation -f docker-compose.validation.yml down`，不常驻第二套项目。CI 还验证任务中断、取消后迟到及告警恢复。
-
-CI 中 Python 作业运行完整 Agent 回归及冻结约束报告；Docker 作业只补充镜像布局、导入边界、内部协议、内部接口和部署配置检查，再运行真实容器的 HTTP、浏览器、恢复及故障验收。应用镜像各构建一次，验证栈复用这些镜像，不重复构建或再次跑完整 Python 回归。共享 RAG 夹具由 `tests/conftest.py` 注册，测试文件不再相互导入。
-
-2026-10-11 小步整理与重建验收：删除无调用点的旧 Agent 方法、未接入应用的异常处理器、只核对场景名称的测试，并合并重复 RAG 超时断言。Python 从 228 项整理为 224 项，全量通过；Java 隔离 PostgreSQL 75/75、镜像契约 18/18、冻结约束 12/12、业务场景 22/22、公开 API 20/20、Playwright 31/31；恢复、任务中断、取消后迟到和告警恢复均通过。真实北京单日生成与单日改排完成，确认一次及重复确认冲突通过；结果仍为带资料缺口的 `degraded`。本轮未拆分 Java／Vue 大文件或改变公开协议，测试数量变化不代表覆盖率或性能变化。详见[整理与容器交付记录](docs/evidence/refactor-20261011/report.md)。
-
-2026-09-23 本地验收：Java 隔离 PostgreSQL 测试 76/76、Python Agent 224/224、离线规划场景 22/22、公开 API 20/20、Playwright 20/20；数据库恢复、告警和跨服务故障演练通过。正式环境在有界额度下完成北京 1 日、上海 2 日及指定日期改排，均保存为带缺口的 `degraded` 结果。详见[验收与容量记录](docs/evidence/acceptance-20260923/report.md)。这些结果证明固定场景和工程契约，不代表生产 SLA、真实旅行事实准确率或模型并发容量。
-
-离线历史读接口在本机 128 并发持续 30 秒时 14,778 次均返回 200、P95 626ms；256 并发 5 秒时 P95 达 2.108 秒，触及本轮停止阈值。24 个慢任务中 12 个按验证栈容量入队并成功，另 12 个以 `TASK_QUEUE_FULL` 明确拒绝。读请求 QPS 与真实模型生成吞吐不能互换。
-
-旧 Python 业务单测已由 Java 集成测试与公开接口验收承接；Agent 保留模型、MCP、RAG、解析、图片、协议及冻结场景测试。**清理前后测试数不能直接相加或比较为覆盖率。** 历史真实样本、迁移数据核对和当前清理证据见 [验收记录](docs/evidence/java-migration/README.md)。不以离线替身测试声称真实模型效果、实时事实准确率或生产性能。
-
-2026-09-29 在隔离数据卷的四容器生产配置上，以真实文本模型和高德 MCP 走通公开 HTTP 的单日生成、持久化、助手单日改排提案、确认一次与重复确认冲突。修复后另跑一份真实生成，已不再将 11:00 才营业的餐厅标为早餐；该样本缺少可信早餐，结果如实为 `degraded` 并标记 `meal_pois_unavailable`。Java 75/75、Python 225/225、隔离验证栈 Playwright 26/26；这些自动化测试主要使用替身，真实样本只有上述有限请求，不能据此保证所有功能无误或推断并发模型容量。具体请求、质量缺口与运行限制见[本轮真实链路报告](docs/evidence/live-project-20260929/report.md)。
-
-## 💾 备份、恢复与清理
-
-PostgreSQL 数据卷、`backend/data/knowledge_uploads`、`backend/data/chroma`、`backend/data/agent-runtime` 和私有配置需成套备份。恢复到独立库／目录核对，不直接覆盖日常环境。
-
-详见 [当前运行手册](docs/operations/java-migration.md)与[本机备份归档说明](docs/operations/backup-organization.md)。本机已有备份已收进项目的 `backups/`，该目录由 Git 忽略，数据库与私有配置不上传 GitHub。旧业务代码和历史部署脚本不再留在工作树；清理前源码提交为 `6c72a24`，旧源码 ZIP 保留在本机历史归档中。容器清理仅针对本项目辅助实例，不使用全局 prune，不删除其他项目容器或持久卷。
-
-镜像清理先核对项目归属与全机容器引用，并保存可恢复的本机归档；重建及本地验收通过后，只删除不再使用的本项目旧镜像或验证标签，最终交付还须等待准确提交的 CI 通过。2026-10-11 清理后保留四个健康容器、三个应用镜像及共享 PostgreSQL 镜像，清理七个旧标签和九个旧版／中间镜像；原数据挂载、42 个其他项目容器和原有 217 个数据卷保留。旧应用镜像归档和完整数据备份位于 Git 忽略的 `backups/`，不使用全局 prune，也不删除其他项目镜像或共享基础镜像。
-
-## ❓ 常见问题与局限
-
-- **为什么还有 Python？** Python Agent 承担 MCP、模型、检索、解析、索引以及完整旅游生成；Java 承担公开地图入口、用户主动复核和业务状态，不再二次规划 Agent 结果。
-- **为什么结果是草稿？** 候选、路线或约束未满足时诚实保留缺口，不把内容填满就算成功。
-- **为什么某个景点无图？** 上游不保证每个点位有可用实拍；不会用无关图片冒充。
-- **为什么首次检索较慢？** 可能需要创建城市索引和调用 embedding；更换模型还涉及维度兼容，不能直接清库。
-- **地图不显示？** 核对前端 Web JS Key、安全配置和域名白名单，区分前端 Key 与后端 Web 服务 Key。
-- **天气、预约、票价可靠吗？** 都有时间与来源边界；出发前仍需向官方确认。
-- **能否直接扩容？** 当前仅支持单机单实例；多实例调度、跨主机锁和高可用需另行设计。
-
-## 🤝 开发约定
-
-修改协议时同步 Schema 和样例；修改业务能力时补 Java／公开接口测试；修改 Agent 时保留离线和故障用例。真实模型与地图验收需先确认预算，不把私有配置、用户数据、备份或未脱敏日志提交 Git。
+- [运行、升级与备份恢复](docs/operations/java-migration.md)
+- [同行协作、预订与费用工作台](docs/operations/trip-operations.md)
+- [高德 MCP 接入说明](docs/amap-mcp.md)
+- [性能与可靠性说明](docs/operations/performance-reliability.md)
+- [历史验收与交付记录](docs/evidence/java-migration/README.md)
