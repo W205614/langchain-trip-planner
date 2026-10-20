@@ -142,7 +142,10 @@ public class PlanningInputService {
   public static ObjectNode stableIds(ObjectNode plan) {
     var used=new HashSet<String>();
     for(var d:plan.path("days"))if(d instanceof ObjectNode day){
-      for(String field:List.of("city","theme"))defaultText(day,field,"");defaultText(day,"generation_mode","llm");
+      // Legacy single-city plans used an absent/empty day city for their root city.
+      // Only hydrate that declared default; explicit cities remain protected by scope checks.
+      if(!day.has("city")||day.path("city").isString()&&day.path("city").asText().isEmpty())day.put("city",plan.path("city").asText(""));
+      defaultText(day,"theme","");defaultText(day,"generation_mode","llm");
       for(String field:List.of("timeline","activities","attractions","meals"))if(!day.has(field))day.putArray(field);
       if(!day.has("feasibility"))day.putObject("feasibility");if(!day.has("schedule_stale"))day.put("schedule_stale",false);
       for(String field:List.of("hotel","fallback_reason"))if(!day.has(field))day.putNull(field);

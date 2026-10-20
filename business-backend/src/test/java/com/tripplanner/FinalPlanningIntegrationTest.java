@@ -54,6 +54,24 @@ class FinalPlanningIntegrationTest {
     assertThrows(ApiException.class,()->tx.executeWithoutResult(s->planning.protect(uid,id2,edited,timeScope,true)));
     tx.executeWithoutResult(s->planning.protect(uid,id2,plan(),scope(0),true));
   }
+  @Test void legacyEmptyDayCityMayInheritRootButExplicitCitiesAndDatesRemainImmutable(){
+    long uid=user(),id=trip(uid);var legacy=plan();
+    ((ObjectNode)legacy.path("days").get(0)).remove("city");
+    ((ObjectNode)legacy.path("days").get(1)).put("city","");
+    db.update("UPDATE trip_records SET plan_json=? WHERE id=?",json.writeValueAsString(legacy),id);
+    var hydrated=legacy.deepCopy();
+    for(var day:hydrated.path("days"))((ObjectNode)day).put("city","北京");
+    tx.executeWithoutResult(s->planning.protect(uid,id,hydrated,scope(0),true));
+    for(int index:List.of(0,1)){
+      var crossCity=hydrated.deepCopy();((ObjectNode)crossCity.path("days").get(index)).put("city","上海");
+      assertEquals("REVISION_SCOPE_VIOLATION",assertThrows(ApiException.class,()->tx.executeWithoutResult(s->planning.protect(uid,id,crossCity,scope(0),true))).code);
+    }
+    var shiftedDate=hydrated.deepCopy();((ObjectNode)shiftedDate.path("days").get(0)).put("date","2026-11-03");
+    assertEquals("REVISION_SCOPE_VIOLATION",assertThrows(ApiException.class,()->tx.executeWithoutResult(s->planning.protect(uid,id,shiftedDate,scope(0),true))).code);
+    ((ObjectNode)legacy.path("days").get(0)).put("city","上海");
+    db.update("UPDATE trip_records SET plan_json=? WHERE id=?",json.writeValueAsString(legacy),id);
+    assertEquals("REVISION_SCOPE_VIOLATION",assertThrows(ApiException.class,()->tx.executeWithoutResult(s->planning.protect(uid,id,hydrated,scope(0),true))).code);
+  }
   @Test void durableBudgetRejectsThirteenthConcurrentSendAndDuplicateReservation()throws Exception{
     String run="test:"+UUID.randomUUID();var latch=new CountDownLatch(1);
     try(var pool=Executors.newFixedThreadPool(8)){var fs=new ArrayList<Future<Boolean>>();for(int i=0;i<16;i++)fs.add(pool.submit(()->{latch.await();try{governance.reserve(json.createObjectNode().put("kind","text").put("run_id",run).put("request_key",UUID.randomUUID().toString()));return true;}catch(ApiException ex){assertEquals(429,ex.status);return false;}}));latch.countDown();int sent=0;for(var f:fs)if(f.get(15,TimeUnit.SECONDS))sent++;assertEquals(12,sent);}

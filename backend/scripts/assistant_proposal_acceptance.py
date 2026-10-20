@@ -56,6 +56,10 @@ def run(base_url: str, pause_before_confirm: int = 0) -> dict:
         created = client.post("/api/assistant/conversations", json={"active_trip_id": original_id})
         created.raise_for_status()
         conversation_id = created.json()["id"]
+        planning_response = client.get(f"/api/trips/{original_id}/planning-input")
+        planning_response.raise_for_status()
+        planning = planning_response.json()["data"]
+        assert planning["trip_version"] == before["version"]
         message = client.post(f"/api/assistant/conversations/{conversation_id}/messages",
                               json={"content": "调整第1天，少走路", "mode": "auto"},
                               headers={"Idempotency-Key": str(uuid.uuid4())})
@@ -69,7 +73,10 @@ def run(base_url: str, pause_before_confirm: int = 0) -> dict:
         assert quality["assistant_proposal_status"] == "pending"
         assert quality["assistant_confirmation_required"] is True
         assert quality["validated_outcome"] in {"complete", "degraded", "draft"}
-        assert quality["revision_parent"] == {"record_id": original_id, "version": before["version"]}
+        assert quality["revision_parent"] == {
+            "record_id": original_id, "version": before["version"],
+            "planning_revision": planning["planning_revision"],
+        }
         assert all(day["attractions"] for day in proposal["plan"]["days"])
         assert record(client, original_id)["plan"] == before["plan"]
         assert record(client, original_id)["version"] == before["version"]
