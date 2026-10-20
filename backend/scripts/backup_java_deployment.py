@@ -4,7 +4,7 @@ from datetime import datetime,timezone
 import json
 from pathlib import Path
 import subprocess
-from deployment_assets import services, docker, digest, database_summary
+from deployment_assets import services, docker, digest, database_summary, database_columns
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
@@ -31,6 +31,7 @@ def backup(output, project="langchain-trip-planner", archive_images=False):
                         "-Fc", "--no-owner"], stdout=stream, stderr=subprocess.PIPE, check=True)
     summary = database_summary(postgres["Id"], database, user)
     (output / "database-summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (output / "database-columns.json").write_text(json.dumps(database_columns(postgres["Id"],database,user),indent=2),encoding="utf-8")
     mounts = {}
     for name, service, destination in (("knowledge_uploads", "backend", "/data/uploads"),
                                       ("chroma", "agent", "/app/data/chroma"),

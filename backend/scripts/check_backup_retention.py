@@ -14,7 +14,13 @@ def inspect(root, keep=7):
         try:
             manifest = json.loads((folder / "manifest.json").read_text())
             hashes = manifest["sha256"]
-            if not {"database.dump", "application-data.tar.gz"} <= hashes.keys():
+            if manifest.get("schema") == "Java/Flyway-v2":
+                required = {"database.dump", "database-summary.json", "knowledge_uploads.tar", "chroma.tar", "agent-runtime.tar"}
+            elif manifest.get("schema") == "Java/Flyway":
+                required = {"database.dump", "agent-and-uploads.tar.gz"}
+            else:
+                required = {"database.dump", "application-data.tar.gz"}
+            if not required <= hashes.keys():
                 raise ValueError("Incomplete manifest")
             for name, expected in hashes.items():
                 item = (folder / name).resolve(strict=True)

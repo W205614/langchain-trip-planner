@@ -46,13 +46,22 @@ def sql(container, database, query, user="trip"):
     return docker("exec", container, "psql", "-U", user, "-d", database, "-At", "-v", "ON_ERROR_STOP=1", "-c", query).decode().strip()
 
 
-def database_summary(container, database, user="trip"):
-    tables = sql(container, database, "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename", user).splitlines()
+def database_columns(container, database, user="trip"):
+    value = sql(container, database, "SELECT json_object_agg(table_name,columns) FROM (SELECT table_name,json_agg(column_name ORDER BY ordinal_position) AS columns FROM information_schema.columns WHERE table_schema='public' GROUP BY table_name) s", user)
+    return json.loads(value)
+
+
+def database_summary(container, database, user="trip", columns=None):
+    tables = sorted(columns) if columns else sql(container, database, "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename", user).splitlines()
     result = {}
     for table in tables:
         quoted = '"' + table.replace('"', '""') + '"'
         # Order whole row representations, including tables without an id column.
-        query = f"SELECT count(*) || ':' || md5(COALESCE(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),'')) FROM {quoted} t"
+        source = quoted
+        if columns:
+            names = ','.join('"'+column.replace('"','""')+'"' for column in columns[table])
+            source = f"(SELECT {names} FROM {quoted})"
+        query = f"SELECT count(*) || ':' || md5(COALESCE(string_agg(row_to_json(t)::text,'' ORDER BY row_to_json(t)::text),'')) FROM {source} t"
         result[table] = sql(container, database, query, user)
     return result
 
