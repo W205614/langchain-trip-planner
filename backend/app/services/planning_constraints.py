@@ -78,9 +78,10 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     avoided_ids = {matched.poi_id for name in constraints.avoid
                    if (matched := resolve_name(name, attractions, plan.city)) is not None}
     schedules = None
+    schedule_routes = {}
     if enhanced:
         from .time_planner import plan_time_windows
-        schedules = plan_time_windows(plan, request, route_planner, allowed_days)
+        schedules = plan_time_windows(plan, request, route_planner, allowed_days, schedule_routes)
 
     def remove(day, attraction, reason):
         day.attractions.remove(attraction)
@@ -91,6 +92,15 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         key = (left.poi_id, right.poi_id, left.location.longitude, left.location.latitude,
                right.location.longitude, right.location.latitude, route_type, city)
         if key not in cache:
+            if enhanced:
+                evidence=schedule_routes.get((left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,route_type))
+                # The solver has already obtained this directed route. Its
+                # persisted snapshot carries duration, not distance: do not send
+                # another paid lookup merely for the legacy quality summary.
+                cache[key]=(evidence[0],None,None,route_type) if evidence and evidence[1] else None
+                if cache[key] is not None:
+                    gaps.add("route_distance_and_walking_unverified")
+                return cache[key]
             try:
                 route = route_planner.plan_route_by_locations(left.location, right.location,
                     route_type=route_type, city=city) if route_planner else {}
@@ -133,21 +143,21 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             route = route_for(left, right, day.city or plan.city)
             legs.append({"from": left.name, "to": right.name, "route_type": route[3] if route else route_type,
                          "minutes": round(route[0], 1) if route else None,
-                         "distance_km": round(route[1] / 1000, 2) if route else None,
+                         "distance_km": round(route[1] / 1000, 2) if route and route[1] is not None else None,
                          "walking_km": round(route[2] / 1000, 2) if route and route[2] is not None else None})
             if route is None:
                 complete = False
                 gaps.add("route_duration_unavailable_fallback_to_straight_line")
                 continue
             minutes += route[0]
-            distance += route[1]
+            distance = None if route[1] is None else distance+route[1] if distance is not None else None
             if route[2] is None:
                 walking = None
             elif walking is not None:
                 walking += route[2]
         if not complete:
             return None, None, None
-        return minutes, None if walking is None else walking / 1000, distance / 1000
+        return minutes, None if walking is None else walking / 1000, None if distance is None else distance / 1000
 
     for day in plan.days:
         day_repair = repair and day.day_index in allowed_days and not enhanced
@@ -227,6 +237,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     if enhanced:
         from .time_planner import RULE_VERSION, confirmed
         report["schedule_checks"] = schedules
+        report["unmet_meals"]=[{"day_index":schedule["day_index"],**meal} for schedule in schedules for meal in schedule.get("unmet_meals",[])]
         report["time_policy_version"] = RULE_VERSION
         statuses = {s["status"] for s in schedules}
         report["feasibility_status"] = next((s for s in ("infeasible", "not_found", "unverified") if s in statuses), "feasible")

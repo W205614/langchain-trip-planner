@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v3-hotel-nights"
+RULE_VERSION = "time-windows-v4-meal-candidates"
 FACT_TTLS = {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600}
 
 
@@ -212,6 +212,8 @@ def _route(left, right, planner, city, route_type, cache, unknown):
             cache[key] = (30, False)
     if not cache[key][1]:
         unknown.add("route_duration_estimated_30_minutes")
+        if key in cache.get("_restored_unverified",set()):
+            unknown.add("route_failure_not_retried_on_resume")
     return cache[key]
 
 
@@ -236,6 +238,9 @@ def _nodes(day, inputs, low, high, zone, unknown):
             intervals=intervals, location=attraction.location, source=valid[0].get("source", "") if len(valid) == 1 else "", evidence_refs=[attraction.poi_id],
             optional=attraction.optional, priority=attraction.priority))
     defaults = {"breakfast": ("08:00", "10:00", 30), "lunch": ("11:30", "14:00", 60), "dinner": ("17:30", "21:00", 60)}
+    explicit_meal_types={window.get("type") for window in inputs.meal_windows}
+    for meal_type in explicit_meal_types-{meal.type for meal in day.meals}:
+        conflicts.append(f"required_meal_candidate_missing:{meal_type}")
     for meal in day.meals:
         default = defaults.get(meal.type, ("08:00", "21:00", 30))
         window = next((w for w in inputs.meal_windows if w.get("type") == meal.type), {})
@@ -251,7 +256,9 @@ def _nodes(day, inputs, low, high, zone, unknown):
         else:
             unknown.add(f"meal_opening_{'conflict' if len(facts)>1 else 'unverified'}:{meal.activity_id}")
         nodes.append(dict(activity_id=meal.activity_id, title=meal.name, kind="meal", duration=duration,
-            intervals=intervals,optional=meal_end<=low or meal_start>=high,priority=100,
+            # AI restaurant selections are candidates, not user reservations.
+            # Explicit meal windows and the protected IDs below remain hard.
+            intervals=intervals,optional=meal.type not in explicit_meal_types,priority=10,
             location=meal.location, source=meal.fact_source, evidence_refs=[meal.poi_id] if meal.poi_id else []))
         if not meal.poi_id or not meal.location:
             unknown.add(f"meal_location_unknown:{meal.activity_id}")
@@ -501,6 +508,11 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     previous, cursor = 0, low
     omitted = forced_omissions + [node["activity_id"] for i,node in enumerate(nodes) if not solver.value(presence[i])]
     report["omitted_activity_ids"] = omitted
+    report["unmet_meals"]=[{"activity_id":meal.activity_id,"type":meal.type,"title":meal.name,
+        "reason":"restaurant_candidate_does_not_fit_time_and_routes","action":"该餐厅未安排，需就近用餐并重新核验"}
+        for meal in day.meals if meal.activity_id in omitted]
+    unknown.update(f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"])
+    report["unknown"]=sorted(unknown)
     for _ in nodes:
         following = next(right for (left, right), literal in literals.items() if left == previous and solver.value(literal))
         if following == 0:
@@ -528,7 +540,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     return timeline, report, order
 
 
-def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, allowed_days=None):
+def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, allowed_days=None, route_evidence=None):
     from .durable_execution import input_hash, read_checkpoint, save_checkpoint
     started = time.monotonic()
     limit = max(1, min(120, float(os.getenv("PLANNER_TOTAL_SECONDS", "30"))))
@@ -538,8 +550,10 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
     saved_routes = read_checkpoint("routes",digest)
     if saved_routes:
         for row in saved_routes.get("routes",[]):
-            if row["verified"]:
-                cache[tuple(row["key"])] = (row["minutes"],True)
+            key=tuple(row["key"])
+            cache[key] = (row["minutes"],bool(row["verified"]))
+            if not row["verified"]:
+                cache.setdefault("_restored_unverified",set()).add(key)
     allowed_days = set(range(len(plan.days))) if allowed_days is None else allowed_days
     for day in plan.days:
         if day.day_index not in allowed_days:
@@ -589,7 +603,10 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
             sum(len(d.feasibility.get("omitted_activity_ids",[])) for d in days),
             sum(len(d.feasibility.get("unknown",[])) for d in days),
             sum(d.feasibility.get("route_minutes",10000) for d in days))
-    if request.planning_input.revision_scope is None and len(allowed_days) == len(plan.days):
+    # A resumed route stage reuses the paid matrix for the already selected
+    # days. Optional cross-day exchanges would ask for new matrix edges; leave
+    # that improvement to a fresh planning request rather than repeat spending.
+    if not saved_routes and request.planning_input.revision_scope is None and len(allowed_days) == len(plan.days):
         for _ in range(2):
             improved = False
             for index in range(len(plan.days)-1):
@@ -625,4 +642,6 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                 break
     reports = [{"day_index":d.day_index,**d.feasibility} for d in plan.days if d.day_index in allowed_days]
     plan.planning_input = request.planning_input.model_copy(deep=True)
+    if route_evidence is not None:
+        route_evidence.update({key:value for key,value in cache.items() if isinstance(key,tuple)})
     return reports

@@ -86,11 +86,24 @@ def read_checkpoint(stage, digest):
     for row in reversed(rows):
         try:
             expiry = datetime.fromisoformat(row["expires_at"].replace("Z", "+00:00"))
-            if row.get("stage") == stage and row.get("input_hash") == digest and row.get("compatibility") == compatibility() and expiry > now:
+            if row.get("stage") == stage and row.get("input_hash") == digest and checkpoint_compatible(stage,row.get("compatibility"),compatibility()) and expiry > now:
                 return row.get("payload")
         except (KeyError, ValueError, TypeError):
             continue
     return None
+
+
+def checkpoint_compatible(stage, saved, current):
+    if saved == current:
+        return True
+    # v4 changes only restaurant presence in the time solver. Provider facts and
+    # generated drafts from v3 retain the same models, prompts, schema and input
+    # hashes; reusing them must not trigger another paid generation. A solved
+    # schedule is deliberately excluded and has to run under the new rules.
+    unaffected = stage in {"draft","routes"} or stage.startswith(("day_draft:","attractions:","hotels:","restaurants:","weather:"))
+    return bool(unaffected and isinstance(saved,dict) and saved.get("rules")=="time-windows-v3-hotel-nights"
+        and current.get("rules")=="time-windows-v4-meal-candidates"
+        and {key:value for key,value in saved.items() if key!="rules"}=={key:value for key,value in current.items() if key!="rules"})
 
 
 def save_checkpoint(stage, digest, payload, ttl=1800):
