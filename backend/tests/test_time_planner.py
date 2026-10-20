@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from app.evals.constraint_benchmark import fixture
-from app.models.planning import PlanningInput
+from app.models.planning import PlanningInput, RevisionScope
 from app.services.time_planner import (ensure_activity_ids, fact_current, solve_day,
     plan_time_windows, protect_revision)
 from app.services.planning_constraints import finalize_plan
@@ -137,6 +137,26 @@ def test_partial_scope_keeps_other_content_and_existing_times():
     updated=next(row for row in plan.days[0].timeline if row["activity_id"]==preserved.activity_id)
     assert (updated["start_at"],updated["end_at"])==(fixed_time["start_at"],fixed_time["end_at"])
     assert plan.planning_input.locks==original.planning_input.locks
+
+
+def test_partial_scope_with_meals_does_not_order_afternoon_booking_before_breakfast():
+    from app.models.schemas import Meal
+    request,plan=scenario()
+    request.planning_input.day_start="09:00"
+    day=plan.days[0]
+    day.meals=[Meal(type=kind,name=kind,poi_id=kind,activity_id=kind,location={"longitude":116.02+i*.001,"latitude":39.9}) for i,kind in enumerate(("breakfast","lunch","dinner"))]
+    request.planning_input.commitments=[{"id":"afternoon","day_index":0,"activity_id":day.attractions[1].activity_id,"status":"confirmed",
+        "start_at":f"{day.date}T15:00:00+08:00","end_at":f"{day.date}T16:00:00+08:00"}]
+    plan_time_windows(plan,request,Routes())
+    assert plan.days[0].timeline
+    original=plan.model_copy(deep=True)
+    request.planning_input.revision_scope=RevisionScope(day_indices=[0],activity_ids=[day.attractions[0].activity_id])
+    allowed=protect_revision(plan,original,request,0)
+    plan_time_windows(plan,request,Routes(),allowed)
+    assert plan.days[0].feasibility["status"] in {"feasible","unverified"}
+    old={row["activity_id"]:(row["start_at"],row["end_at"]) for row in original.days[0].timeline if row["kind"] in {"meal","attraction"}}
+    new={row["activity_id"]:(row["start_at"],row["end_at"]) for row in plan.days[0].timeline if row["kind"] in {"meal","attraction"}}
+    assert all(new[key]==old[key] for key in ("breakfast","lunch","dinner",original.days[0].attractions[1].activity_id))
 
 
 def test_appointment_does_not_override_a_closed_opening_window():

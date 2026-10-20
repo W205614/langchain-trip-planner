@@ -402,7 +402,10 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None):
     # Preserve relative order of immutable content. Explicit time locks above
     # additionally preserve arrival and finish times when a prior timeline exists.
     protected = set(inputs.completed_activity_ids) | {l.get("activity_id") for l in effective_locks(inputs)}
-    fixed_indices = [i for i, n in enumerate(nodes) if n["activity_id"] in protected]
+    # The content lists are grouped by kind, not chronological: attractions are
+    # constructed before breakfast/lunch/dinner. Only attraction relative order
+    # is a content invariant; meals and commitments already have time windows.
+    fixed_indices = [i for i, n in enumerate(nodes) if n["kind"] == "attraction" and n["activity_id"] in protected]
     for left, right in zip(fixed_indices, fixed_indices[1:]):
         model.add(starts[right] >= starts[left] + nodes[left]["duration"])
     # Only optional visits carry omission penalties; hard constraints remain
