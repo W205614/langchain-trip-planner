@@ -339,6 +339,31 @@ def test_batch_attraction_details_embeds_once(rag):
     assert "天坛" not in details
 
 
+def test_entity_gate_continues_after_wrong_first_candidate(rag):
+    rag._embedding = MagicMock()
+    rag._embedding.embed_documents.return_value = [[.1]]
+    rag._knowledge_store = MagicMock()
+    rag._knowledge_store.similarity_search_by_vector.return_value = [
+        Document(page_content="### 天坛\n天坛开放时间08:00",metadata={"city":"北京","entity_name":"天坛"}),
+        Document(page_content="### 故宫\n故宫需预约",metadata={"city":"北京","entity_name":"故宫"}),
+    ]
+    details=rag.get_attraction_rag_texts(["故宫"],"北京")
+    assert "故宫需预约" in details["故宫"]
+    assert "天坛" not in details["故宫"]
+
+
+def test_lexical_statistics_reused_and_invalidated_on_mutation(rag):
+    rag._knowledge_store = MagicMock()
+    rag._knowledge_store.get.return_value={"documents":["故宫预约"],"metadatas":[{"city":"北京"}]}
+    assert rag._lexical_public_search("故宫","北京",2)
+    assert rag._lexical_public_search("预约","北京",2)
+    assert rag._knowledge_store.get.call_count==1
+    rag._mutation_version=getattr(rag,"_mutation_version",0)+1
+    rag._knowledge_store.get.return_value={"documents":["天坛参观"],"metadatas":[{"city":"北京"}]}
+    assert not rag._lexical_public_search("故宫","北京",2)
+    assert rag._knowledge_store.get.call_count==2
+
+
 def test_readiness_reconnects_a_stale_chroma_collection_handle(rag, monkeypatch):
     stale = MagicMock()
     stale._collection.count.side_effect = RuntimeError("collection does not exist")

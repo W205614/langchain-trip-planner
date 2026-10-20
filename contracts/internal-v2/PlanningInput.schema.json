@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "CitySegment": {
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "maxLength": 32,
+          "minLength": 1,
+          "title": "City",
+          "type": "string"
+        },
+        "start_day": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "Start Day",
+          "type": "integer"
+        },
+        "end_day": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "End Day",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "city",
+        "start_day",
+        "end_day"
+      ],
+      "title": "CitySegment",
+      "type": "object"
+    },
+    "DayWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "day_index": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "Day Index",
+          "type": "integer"
+        },
+        "start": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "day_index",
+        "start",
+        "end"
+      ],
+      "title": "DayWindow",
+      "type": "object"
+    },
+    "RevisionScope": {
+      "additionalProperties": false,
+      "properties": {
+        "day_indices": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 30,
+          "title": "Day Indices",
+          "type": "array"
+        },
+        "activity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 300,
+          "title": "Activity Ids",
+          "type": "array"
+        },
+        "start_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start At"
+        },
+        "end_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End At"
+        }
+      },
+      "title": "RevisionScope",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "timezone": {
+      "default": "Asia/Shanghai",
+      "title": "Timezone",
+      "type": "string"
+    },
+    "day_start": {
+      "default": "09:00",
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "Day Start",
+      "type": "string"
+    },
+    "day_end": {
+      "default": "20:00",
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "Day End",
+      "type": "string"
+    },
+    "day_windows": {
+      "items": {
+        "$ref": "#/$defs/DayWindow"
+      },
+      "maxItems": 30,
+      "title": "Day Windows",
+      "type": "array"
+    },
+    "city_segments": {
+      "items": {
+        "$ref": "#/$defs/CitySegment"
+      },
+      "maxItems": 30,
+      "title": "City Segments",
+      "type": "array"
+    },
+    "commitments": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 300,
+      "title": "Commitments",
+      "type": "array"
+    },
+    "hotel_stays": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 30,
+      "title": "Hotel Stays",
+      "type": "array"
+    },
+    "meal_windows": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 8,
+      "title": "Meal Windows",
+      "type": "array"
+    },
+    "opening_windows": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 500,
+      "title": "Opening Windows",
+      "type": "array"
+    },
+    "locks": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 300,
+      "title": "Locks",
+      "type": "array"
+    },
+    "completed_activity_ids": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 300,
+      "title": "Completed Activity Ids",
+      "type": "array"
+    },
+    "arrival_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Arrival At"
+    },
+    "departure_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Departure At"
+    },
+    "budget_mode": {
+      "default": "estimate",
+      "enum": [
+        "estimate",
+        "confirmed"
+      ],
+      "title": "Budget Mode",
+      "type": "string"
+    },
+    "budget_cents": {
+      "anyOf": [
+        {
+          "maximum": 1000000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Budget Cents"
+    },
+    "revision_scope": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RevisionScope"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "title": "PlanningInput",
+  "type": "object"
+}

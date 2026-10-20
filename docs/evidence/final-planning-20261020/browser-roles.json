@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "mode": "real_backend_browser_roles",
+  "tested_at_utc": "2026-10-20T08:42:45.1996323Z",
+  "playwright_tests_passed": 1,
+  "elapsed_seconds": 21.0,
+  "fixture_marker_verified": true,
+  "business_api_mocked": false,
+  "external_map_sdk": "blocked",
+  "boundary": "Real accounts, Java authorization and PostgreSQL persistence; offline map/model providers. This is not live-provider quality or production capacity evidence.",
+  "frontend_image_revision_label": "033e948",
+  "source_alignment": "Validation image built from the working tree; final delivery commit alignment is verified separately.",
+  "roles": [
+    "owner",
+    "editor",
+    "viewer",
+    "pending",
+    "revoked"
+  ],
+  "checks": [
+    "owner saves planning input through actual API",
+    "owner locks a scheduled activity time and marks completion",
+    "editor sees manual reorder controls but no owner planning or verification controls",
+    "viewer has no ledger write controls or AI/lock actions",
+    "pending member cannot read private itinerary",
+    "revoked member loses visible itinerary on focus and cached plan is cleared",
+    "reload shows explicit access-denied empty state",
+    "public screenshots contain only synthetic fixture travel content and generic denial state"
+  ],
+  "screenshots": [
+    "browser-owner-timeline.png",
+    "browser-revoked-access.png"
+  ]
+}

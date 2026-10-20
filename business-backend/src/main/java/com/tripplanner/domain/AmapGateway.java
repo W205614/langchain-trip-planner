@@ -25,6 +25,7 @@ import tools.jackson.databind.node.*;
 public class AmapGateway {
   public record Image(byte[] body, String mediaType, boolean placeholder) {}
 
+  @Autowired private ExecutionGovernanceService governance;
   private final String baseUrl;
   private final String apiKey;
   private final JsonMapper json;
@@ -120,6 +121,7 @@ public class AmapGateway {
     });
     try {
       return guard.execute(() -> {
+        if(governance!=null)governance.reserveAmap();
         requests.incrementAndGet();
         var request = HttpRequest.newBuilder(URI.create(baseUrl + path + "?" + query))
             .timeout(Duration.ofSeconds(10)).GET().build();
@@ -355,6 +357,7 @@ public class AmapGateway {
         String host = Objects.toString(uri.getHost(), "").toLowerCase(Locale.ROOT);
         if (!"https".equals(uri.getScheme()) || !(host.endsWith(".amap.com") || host.endsWith(".autonavi.com"))) continue;
         Image downloaded = guard.execute(() -> {
+          if(governance!=null)governance.reserveAmap();
           var response = http.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(8)).GET().build(),
               HttpResponse.BodyHandlers.ofInputStream());
           String media = response.headers().firstValue("Content-Type").orElse("").split(";", 2)[0].strip().toLowerCase(Locale.ROOT);

@@ -38,6 +38,9 @@ public class TaskService {
   private final ConcurrentHashMap<String, FutureTask<Void>> active = new ConcurrentHashMap<>();
   private final int timeout, queueLimit, userLimit, userDaily, globalDaily;
   private volatile boolean closing;
+  @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
+  @org.springframework.beans.factory.annotation.Autowired private ExecutionGovernanceService governance;
+  @org.springframework.beans.factory.annotation.Autowired private SingleInstance singleInstance;
 
   @Value("${WORKERS_ENABLED:true}")
   private boolean workersEnabled;
@@ -92,9 +95,29 @@ public class TaskService {
 
   public synchronized ObjectNode submit(
       long uid, ObjectNode input, String key, String requestId, ObjectNode revision) {
+    return submit(uid,input,key,requestId,revision,null);
+  }
+
+  private ObjectNode submit(
+      long uid, ObjectNode input, String key, String requestId, ObjectNode revision,String resumeParent) {
     if (closing) throw new ApiException(503, "服务正在停止，请稍后重试", "PROCESS_INTERRUPTED");
     ObjectNode body = TripRequests.normalize(input);
-    if (revision != null) body.set("_revision", revision);
+    if (revision != null) {
+      revision=revision.deepCopy();
+      var parent=planning.row(uid,revision.path("record_id").asLong(),false);
+      if(((Number)parent.get("version")).intValue()!=revision.path("version").asInt())throw new ApiException(409,"行程已变化","VERSION_CONFLICT");
+      int current=((Number)parent.get("planning_revision")).intValue();
+      if(revision.has("planning_revision")&&revision.path("planning_revision").asInt()!=current)throw new ApiException(409,"规划输入已变化","PLANNING_INPUT_CONFLICT");
+      revision.put("planning_revision",current);
+      body.set("planning_input",planning.input(parent));
+      var scope=revision.path("revision_scope");
+      if(!scope.isObject()){var fallback=revision.putObject("revision_scope");fallback.putArray("day_indices").add(revision.path("day_index").asInt());scope=fallback;}
+      var originalActivities=PlanningInputService.activities(PlanningInputService.stableIds((ObjectNode)json.readTree(parent.get("plan_json").toString())));
+      for(var activity:scope.path("activity_ids"))if(!originalActivities.containsKey(activity.asText()))throw new ApiException(422,"修改范围活动不存在");
+      ((ObjectNode)body.path("planning_input")).set("revision_scope",scope.deepCopy());
+      body.set("planning_input",PlanningInputService.normalize(body.path("planning_input"),body.path("travel_days").asInt()));
+      body.set("_revision", revision);
+    }
     String idempotency = key == null ? UUID.randomUUID().toString() : key;
     if (idempotency.isEmpty() || idempotency.length() > 128)
       throw new ApiException(422, "Idempotency-Key 长度必须为 1–128");
@@ -111,6 +134,8 @@ public class TaskService {
     }
     var existing = tasks.byKey(uid, idempotency);
     if (existing != null) {
+      if(resumeParent!=null&&!resumeParent.equals(existing.get("resumed_from")))
+        throw new ApiException(409,"该幂等键已用于其他任务，请使用新的恢复幂等键","RESUME_KEY_CONFLICT");
       if (!fingerprint.equals(existing.get("fingerprint"))
           && !canonical(json.readTree(existing.get("request_json").toString()))
               .equals(canonical(body))) throw new ApiException(409, "同一幂等键不能用于不同请求");
@@ -124,8 +149,7 @@ public class TaskService {
       throw new ApiException(429, "今日规划任务额度已用完（UTC日界）", "DAILY_TASK_LIMIT");
     if (tasks.active() >= queueLimit) throw new ApiException(429, "规划队列已满", "TASK_QUEUE_FULL");
     String id = UUID.randomUUID().toString();
-    tasks.insert(
-        Map.of(
+    var taskData=Map.<String,Object>of(
             "id",
             id,
             "user_id",
@@ -139,7 +163,12 @@ public class TaskService {
             "request_id",
             requestId == null ? "" : requestId.substring(0, Math.min(64, requestId.length())),
             "deadline_at",
-            Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(timeout))));
+            Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(timeout)));
+    if(resumeParent==null) tasks.insert(taskData);
+    else tx.executeWithoutResult(s->{
+      tasks.insert(taskData);
+      governance.linkResume(id,resumeParent);
+    });
     return response(uid, id, false);
   }
 
@@ -174,7 +203,7 @@ public class TaskService {
   public ObjectNode snapshot(long uid, String id) {
     var row = owned(uid, id);
     var state = json.createObjectNode();
-    for (String field : List.of("id", "status", "stage", "percent", "message", "error_code"))
+    for (String field : List.of("id", "status", "stage", "percent", "message", "error_code", "resumed_from", "execution_id"))
       state.set(field, json.valueToTree(row.get(field)));
     state.set("usage", json.readTree(row.get("usage_json").toString()));
     state.put(
@@ -235,9 +264,17 @@ public class TaskService {
     return submit(uid, body, key, requestId, revision);
   }
 
+  public synchronized ObjectNode resume(long uid,String id,String key,String requestId) {
+    var row=owned(uid,id);
+    if(!Set.of("failed","cancelled","needs_attention").contains(row.get("status")))throw new ApiException(409,"只有中断或未完成任务可恢复");
+    var body=(ObjectNode)json.readTree(row.get("request_json").toString());
+    var revision=(ObjectNode)body.remove("_revision");
+    return submit(uid,body,key,requestId,revision,id);
+  }
+
   @Scheduled(fixedDelay = 250)
   public synchronized void tick() {
-    if (!workersEnabled || closing) return;
+    if (!workersEnabled || closing || !singleInstance.owned()) return;
     tasks.expire();
     active.forEach(
         (id, future) -> {
@@ -302,19 +339,21 @@ public class TaskService {
     try {
       var request =
           json.createObjectNode()
-              .put("protocol_version", 1)
+              .put("protocol_version", body.has("planning_input") ? 2 : 1)
               .put("task_id", id)
               .put("execution_id", execution)
               .put("user_id", uid)
               .put("request_id", task.get("request_id").toString())
               .put("deadline_at", deadline.toString());
       request.set("request", body);
+      if(body.has("_resume_from")) { request.set("resume_from",body.remove("_resume_from")); }
       if (revision != null && revision.path("record_id").asLong(0) > 0) {
         var parent = history.owned(uid, revision.path("record_id").asLong(0));
         if (parent == null
             || ((Number) parent.get("version")).intValue() != revision.path("version").asInt(0))
           throw new ApiException(409, "行程已变更", "VERSION_CONFLICT");
-        request.set("original_plan", json.readTree(parent.get("plan_json").toString()));
+        planning.checkRevision(uid,revision.path("record_id").asLong(),revision.path("planning_revision").asInt());
+        request.set("original_plan", PlanningInputService.stableIds((ObjectNode)json.readTree(parent.get("plan_json").toString())));
         request.set("original_version", revision.path("version"));
         request.set("day_index", revision.path("day_index"));
         request.set("instruction", revision.path("instruction"));
@@ -323,7 +362,7 @@ public class TaskService {
           request,
           Duration.between(Instant.now(), deadline),
           (event, data) -> {
-            if (!"running".equals(tasks.get(id).get("status")) || Instant.now().isAfter(deadline))
+            if ((workersEnabled&&!singleInstance.owned()) || !"running".equals(tasks.get(id).get("status")) || Instant.now().isAfter(deadline))
               throw new ApiException(409, "任务已终结", "TASK_TIMEOUT");
             if (event.equals("error"))
               throw new ApiException(503, "规划未完成", data.path("code").asText("GENERATION_FAILED"));
@@ -339,7 +378,7 @@ public class TaskService {
             }
             if (event.equals("result")) {
               long validationStarted = System.nanoTime();
-              if (data.path("protocol_version").asInt(0) != 1)
+              if (data.path("protocol_version").asInt(0) != request.path("protocol_version").asInt())
                 throw new ApiException(503, "结果协议版本不匹配", "AGENT_PROTOCOL_ERROR");
               if (!execution.equals(data.path("execution_id").asText("")))
                 throw new ApiException(503, "执行结果编号不匹配", "AGENT_PROTOCOL_ERROR");
@@ -377,7 +416,7 @@ public class TaskService {
           closing
               ? "PROCESS_INTERRUPTED"
               : ex instanceof ApiException ae
-                  ? ae.code
+                  ? (ae.code.isBlank()?"INVALID_AGENT_RESULT":ae.code)
                   : ex instanceof InterruptedException || !Instant.now().isBefore(deadline)
                       ? "TASK_TIMEOUT"
                       : "AGENT_CONNECTION_LOST";
@@ -421,6 +460,8 @@ public class TaskService {
       ObjectNode plan,
       ObjectNode quality,
       ObjectNode revision) {
+    PlanningInputService.stableIds(plan);
+    if(body.has("planning_input"))quality.set("planning_dependencies",planning.dependencies(plan,body.path("planning_input")));
     boolean assistantProposal =
         revision != null && !revision.path("assistant_conversation_id").asText("").isBlank();
     if (assistantProposal) {
@@ -432,10 +473,12 @@ public class TaskService {
       quality.put("assistant_conversation_id", revision.path("assistant_conversation_id").asText());
       quality.putObject("revision_parent")
           .put("record_id", revision.path("record_id").asLong(0))
-          .put("version", revision.path("version").asInt(0));
+          .put("version", revision.path("version").asInt(0))
+          .put("planning_revision",revision.path("planning_revision").asInt(1));
+      quality.set("revision_scope",revision.path("revision_scope"));
     }
     boolean draft = quality.path("outcome").asText("").equals("draft");
-    if (plan.path("days").valueStream().anyMatch(d -> d.path("attractions").isEmpty()))
+    if (plan.path("days").valueStream().anyMatch(d -> d.path("attractions").isEmpty() && (!body.has("planning_input")||d.path("timeline").valueStream().noneMatch(e->Set.of("attraction","meal","commitment").contains(e.path("kind").asText())))))
       throw new ApiException(503, "至少一天没有可验证景点，已拒绝保存", "TRUSTED_POI_UNAVAILABLE");
     task.put(
         "status",
@@ -455,6 +498,10 @@ public class TaskService {
             return;
           }
           long uid = ((Number) task.get("user_id")).longValue(), recordId;
+          if(revision!=null){
+            planning.checkRevision(uid,revision.path("record_id").asLong(),revision.path("planning_revision").asInt());
+            planning.protect(uid,revision.path("record_id").asLong(),plan,revision.path("revision_scope"),true);
+          }
           if (revision != null && !draft) {
             recordId = revision.path("record_id").asLong(0);
             if (history.update(
@@ -499,6 +546,7 @@ public class TaskService {
             record.put("last_verified_at", java.sql.Timestamp.from(java.time.Instant.now()));
             history.insert(record);
             recordId = ((Number) record.get("id")).longValue();
+            if(body.has("planning_input"))planning.saveInput(recordId,body.path("planning_input"));
             ledger.capture(
                 uid,
                 recordId,
@@ -508,7 +556,7 @@ public class TaskService {
           if (!draft) history.outbox(recordId, uid, "upsert");
           tasks.attach(task.get("id").toString(), recordId);
           if (assistantProposal) metrics.recordAssistantProposalAfterCommit("created");
-          else metrics.recordPlanOutcomeAfterCommit(draft ? "draft" : "complete");
+          else metrics.recordPlanOutcomeAfterCommit(quality.path("outcome").asText("draft"));
         });
   }
 }

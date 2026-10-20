@@ -1,13 +1,13 @@
 <template>
   <div class="result-container">
-    <AttractionPicker v-if="tripPlan" :open="pickerDay !== null" :city="tripPlan.city"
+    <AttractionPicker v-if="tripPlan" :open="pickerDay !== null" :city="(pickerDay !== null && tripPlan.days[pickerDay]?.city) || tripPlan.city"
       :used-ids="usedPoiIds" @close="pickerDay = null" @select="addAttraction" />
     <!-- 页面头部 -->
     <div class="page-header">
       <a-button class="back-button" size="large" @click="goBack">
         ← {{ returnLabel }}
       </a-button>
-      <a-space v-if="tripPlan" size="middle">
+      <a-space v-if="tripPlan && !planLoading" size="middle">
         <a-button v-if="!readOnlyPlan && !editMode && !quality.assistant_proposal_status" @click="toggleEditMode" type="default">
           ✏️ 编辑行程
         </a-button>
@@ -42,7 +42,7 @@
       </a-space>
     </div>
 
-    <div v-if="tripPlan" class="content-wrapper">
+    <div v-if="tripPlan && !planLoading" class="content-wrapper">
       <!-- 侧边导航 -->
       <div class="side-nav">
         <a-affix :offset-top="80">
@@ -78,13 +78,29 @@
           <a-alert v-else-if="quality.assistant_proposal_status === 'confirmed'" type="success" show-icon
             :message="`方案已确认，原行程 #${quality.applied_to} 已更新。`" />
           <a-alert v-else-if="quality.assistant_proposal_status === 'discarded'" type="info" show-icon message="方案已放弃，原行程未改变。" />
+          <section v-if="quality.assistant_proposal_status === 'pending'" class="proposal-review" data-testid="proposal-diff">
+            <h3>本次改排的变化与确认条件</h3>
+            <a-alert v-if="proposalDetailsError" type="warning" :message="proposalDetailsError" />
+            <template v-if="proposalDetails">
+              <a-alert v-if="proposalDetails.stale" type="error" :message="proposalDetails.invalidation_reason || '依赖已变化，请重新生成提案。'" />
+              <p v-if="proposalDetails.diff?.summary">{{ proposalDetails.diff.summary }}</p>
+              <p v-if="proposalDetails.diff?.cost_delta_cents != null">费用估算变化：{{ proposalDetails.diff.cost_delta_cents >= 0 ? '+' : '' }}¥{{ (proposalDetails.diff.cost_delta_cents / 100).toFixed(2) }}（未知费用仍单列）</p>
+              <ul v-if="proposalChanges.length"><li v-for="(change, i) in proposalChanges" :key="i">{{ change }}</li></ul>
+              <p v-else>没有活动增删记录；请核对每日时间和路线变化。</p>
+              <p v-if="proposalDetails.dependencies?.planning_revision != null">基于规划输入修订 {{ proposalDetails.dependencies.planning_revision }}</p>
+              <p v-if="proposalDetails.dependencies?.version != null || proposalDetails.dependencies?.trip_version != null">基于原行程版本 {{ proposalDetails.dependencies.trip_version ?? proposalDetails.dependencies.version }}</p>
+              <p v-if="proposalDetails.revision_scope?.day_indices?.length">允许修改第 {{ proposalDetails.revision_scope.day_indices.map((d: number) => d + 1).join('、') }} 天</p>
+              <p v-for="note in proposalDetails.diff?.unresolved || []" :key="note">待解决：{{ note }}</p>
+            </template>
+            <a-button size="small" :loading="proposalBusy" @click="loadProposalDetails">刷新提案依赖</a-button>
+          </section>
           <a-alert v-else-if="quality.outcome === 'draft'" type="warning" show-icon message="未完成草稿：以下要求尚未满足，不能视为完整可执行行程。" />
           <a-alert v-for="notice in tripPlan.enrichment_notices || []" :key="notice" type="info" :message="notice" />
           <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
           <a-alert v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`"
             type="error" show-icon :message="issue.reason" :description="issue.action" />
           <a-space v-if="!readOnlyPlan && quality.assistant_confirmation_required">
-            <a-button type="primary" :loading="proposalBusy" @click="confirmAssistant">确认应用到原行程</a-button>
+            <a-button type="primary" :loading="proposalBusy" :disabled="proposalDetails?.stale || !!proposalDetailsError" @click="confirmAssistant">确认应用到原行程</a-button>
             <a-button :disabled="proposalBusy" @click="discardAssistant">放弃方案</a-button>
           </a-space>
           <a-button v-else-if="!readOnlyPlan && quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
@@ -98,6 +114,12 @@
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
           <a-alert v-if="quality.data_gaps?.length" type="info" show-icon
             :message="factGapMessage" />
+          <a-alert v-if="needsTransportArrivalBuffer" data-testid="transport-predeparture-warning" type="warning" show-icon
+            message="跨城交通到站提前量待核实" description="尚未核实进站、安检和检票所需提前量；请按班次要求提前到站并调整出发时间或住宿。" />
+          <section v-if="quality.unmet_meals?.length" data-testid="unmet-meals" aria-label="未安排的餐饮候选">
+            <a-alert v-for="(meal, index) in quality.unmet_meals" :key="meal.activity_id || `${meal.day_index}-${meal.type}-${index}`" type="warning" show-icon
+              :message="unmetMealTitle(meal)" :description="unmetMealDescription(meal)" />
+          </section>
           <a-alert v-for="warning in (quality.warnings || []).filter((w: string) => !(quality.issues || []).some((i: any) => i.blocking && i.reason === w))" :key="warning" type="warning" :message="warning" />
         </div>
         <!-- 顶部信息区:左侧概览+预算,右侧地图 -->
@@ -219,6 +241,7 @@
                 </div>
               </div>
               <a-space v-if="day.activities?.length" wrap class="activity-tags"><a-tag v-for="activity in day.activities" :key="activity" color="purple">{{ activity }}</a-tag></a-space>
+              <ActivityTimeline :day="day" :planning="planningInput || tripPlan.planning_input" :editable="!readOnlyPlan && !!planningInput && !editMode && !quality.assistant_proposal_status" :busy="activityBusy" @locate="locateActivity" @state="changeActivityState" />
 
               <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" class="route-card" title="景点间交通（高德路线参考）">
                 <p v-for="leg in quality.day_checks.find((c: any) => c.day_index === day.day_index).routes" :key="leg.from + leg.to">
@@ -267,7 +290,7 @@
                       <!-- 景点图片 -->
                       <div class="attraction-image-wrapper">
                         <img
-                          :src="getAttractionImage(item.name, index)"
+                          :src="getAttractionImage(item, index, day.city || tripPlan.city)"
                           :alt="item.name"
                           class="attraction-image"
                           loading="lazy"
@@ -394,17 +417,18 @@
 
     <a-modal
       v-model:open="revisionOpen"
-      title="重新安排当天行程"
+      title="生成受限改排提案"
       :confirm-loading="revisionLoading"
-      ok-text="仅重新安排这一天"
+      ok-text="生成差异提案"
       @ok="submitRevision"
     >
       <a-alert
         type="info"
         show-icon
-        message="只会调用一次规划模型并修改当前日期；其余日期保持不变。"
+        message="在明确的范围内调整，保留锁定与已完成安排。确认提案后才会更新原行程。"
         style="margin-bottom: 16px"
       />
+      <RevisionScopeEditor v-if="tripPlan && revisionDayIndex !== null" ref="scopeEditor" :plan="tripPlan" :day-index="revisionDayIndex" @change="revisionScope = $event" />
       <a-textarea
         v-model:value="revisionInstruction"
         :rows="4"
@@ -424,27 +448,75 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useTripMap } from '@/composables/useTripMap'
 import AttractionPicker from '@/components/trip/AttractionPicker.vue'
+import ActivityTimeline from '@/components/trip/ActivityTimeline.vue'
+import RevisionScopeEditor from '@/components/trip/RevisionScopeEditor.vue'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import type { TripPlan, POIInfo } from '@/types'
-import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal, discardAssistantProposal, tripOperations } from '@/services/api'
+import type { TripPlan, POIInfo, PlanningInput, RevisionScope, TimelineItem, Attraction } from '@/types'
+import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal, discardAssistantProposal, tripOperations, tripPlanning, fetchAssistantProposal, clearTripCache } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
 const readOnlyPlan = computed(() => Boolean(route.params.id))
 const returnLabel = computed(() => readOnlyPlan.value ? '返回执行工作台' : route.query.from === 'history' ? '返回我的行程' : '返回首页')
 const tripPlan = ref<TripPlan | null>(null)
-const planLoading = ref(readOnlyPlan.value)
+const planLoading = ref(true)
 const planError = ref('')
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
 const proposalBusy = ref(false)
+const planningInput = ref<PlanningInput>()
+const planningRevision = ref(0)
+const activityBusy = ref(false)
+const proposalDetails = ref<any>(null)
+const proposalDetailsError = ref('')
+const scopeEditor = ref<InstanceType<typeof RevisionScopeEditor>>()
+const revisionScope = ref<RevisionScope>({ day_indices: [], activity_ids: [] })
+const describeChange = (value: any) => typeof value === 'string' ? value : value.title || value.name || value.activity_id || value.id || '活动安排变化'
+const proposalChanges = computed(() => {
+  const diff = proposalDetails.value?.diff
+  if (!diff) return []
+  if (Array.isArray(diff)) return diff.map(describeChange)
+  const values: string[] = []
+  for (const [key, label] of Object.entries({ added: '新增', removed: '移除', moved: '移动', changed: '调整', preserved: '保留' })) for (const item of diff[key] || []) values.push(`${label}：${describeChange(item)}`)
+  for (const item of diff.modified || []) { const before = item.before || {}, after = item.after || {}; const details: string[] = []; if (before.name !== after.name) details.push(`${before.name || '原活动'} → ${after.name || '新活动'}`); if (before.visit_duration !== after.visit_duration) details.push(`游览 ${before.visit_duration ?? '未知'} → ${after.visit_duration ?? '未知'} 分钟`); if (before.start_at !== after.start_at) details.push(`开始时间 ${before.start_at || '待定'} → ${after.start_at || '待定'}`); values.push(`调整：${describeChange(after)}${details.length ? `（${details.join('；')}）` : '（内容或顺序变化）'}`) }
+  for (const day of diff.days || []) values.push(`第 ${Number(day.day_index) + 1} 天：${day.summary || '安排已调整'}`)
+  return values
+})
+async function loadProposalDetails() {
+  if (!historyRecordId.value || !quality.value.assistant_conversation_id || quality.value.assistant_proposal_status !== 'pending') { proposalDetails.value = null; return }
+  try { proposalDetails.value = await fetchAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value); proposalDetailsError.value = '' }
+  catch (e: any) { proposalDetails.value = null; proposalDetailsError.value = e?.response?.data?.message || '提案依赖读取失败，请刷新后确认。'; revokeAccess(e) }
+}
+async function loadPlanningInput() {
+  if (readOnlyPlan.value || !historyRecordId.value || quality.value.assistant_proposal_status || !sessionStorage.getItem('access_token')) return
+  try { const data = await tripPlanning.get(historyRecordId.value); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; recordVersion.value = data.trip_version }
+  catch (e: any) { planningInput.value = undefined; revokeAccess(e) }
+}
+function revokeAccess(e: any) { if ([401, 403, 404].includes(e?.response?.status)) { clearTripCache(historyRecordId.value); tripPlan.value = null; planningInput.value = undefined; proposalDetails.value = null; planError.value = '行程不存在或访问权限已变化，请返回后重新打开。' } }
+async function changeActivityState(activityId: string, state: { locked?: boolean; completed?: boolean; lock_mode?: string }) {
+  if (!planningInput.value || activityBusy.value) return
+  activityBusy.value = true
+  try { const data = await tripPlanning.activityState(historyRecordId.value, activityId, planningRevision.value, recordVersion.value, state); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; recordVersion.value = data.trip_version; if (data.plan) { tripPlan.value = data.plan; sessionStorage.setItem('tripPlan', JSON.stringify(data.plan)) }; sessionStorage.setItem('tripPlanVersion', String(data.trip_version)); message.success('活动状态已保存，旧提案将重新校验') }
+  catch (e: any) { revokeAccess(e); message.error(e?.response?.status === 409 ? '行程或约束已变化，请重新加载后操作。' : e?.response?.data?.message || '活动状态保存失败') }
+  finally { activityBusy.value = false }
+}
+function locateActivity(item: TimelineItem) { if (!item.location) return; focusLocation(item.location, item.title); document.getElementById('map')?.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
+async function refreshAccess() {
+  if (document.visibilityState !== 'visible' || !historyRecordId.value) return
+  try {
+    if (readOnlyPlan.value) { const workspace = await tripOperations.workspace(historyRecordId.value); tripPlan.value = workspace.plan; quality.value = workspace.quality || {}; recordVersion.value = workspace.version }
+    else { await fetchHistoryDetail(historyRecordId.value); await Promise.all([loadPlanningInput(), loadProposalDetails()]) }
+  } catch (e: any) { revokeAccess(e) }
+}
+onMounted(() => { window.addEventListener('focus', refreshAccess); document.addEventListener('visibilitychange', refreshAccess) })
+onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); document.removeEventListener('visibilitychange', refreshAccess) })
 async function confirmAssistant() {
   if (!historyRecordId.value || !quality.value.assistant_conversation_id || proposalBusy.value) return
   proposalBusy.value = true
@@ -453,6 +525,8 @@ async function confirmAssistant() {
     historyRecordId.value = response.id; recordVersion.value = response.version; quality.value = response.quality; tripPlan.value = response.data
     sessionStorage.setItem('tripPlanId', String(response.id)); sessionStorage.setItem('tripPlanVersion', String(response.version))
     sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); sessionStorage.setItem('tripPlan', JSON.stringify(response.data)); message.success(response.message)
+    proposalDetails.value = null
+    await loadPlanningInput()
   } catch (e: any) {
     if (e.response?.status === 409) { message.error('方案或原行程版本已变化，请返回我的行程重新查看'); await router.push('/history') }
     else message.error(e.response?.data?.message || '确认失败，请重新打开方案')
@@ -492,9 +566,32 @@ const factGapMessage = computed(() => {
   const notes = ['预约要求及余票请通过景区官方渠道确认']
   notes.push(gaps.includes('opening_hours_unavailable') ? '部分景点暂无开放时间数据' : '开放时间为查询参考，出行日请再次确认')
   if (gaps.includes('route_duration_unavailable_fallback_to_straight_line')) notes.push('部分景点间路线查询失败，详见每日交通')
+  if (gaps.some(gap => gap.startsWith('meal_candidate_unassigned:'))) notes.push('部分餐饮候选未能安排，用餐仍有缺口，请就近用餐并重新核验')
   notes.push('酒店、餐厅接驳及景区内部步行未计入路线核实')
   return notes.join('；') + '。'
 })
+const needsTransportArrivalBuffer = computed(() => {
+  if ((quality.value.data_gaps || []).some((gap: string) => gap.startsWith('transport_predeparture_buffer_unverified:'))) return true
+  const input = planningInput.value || tripPlan.value?.planning_input
+  if (!input) return false
+  const cities = new Set([...(input.city_segments || []).map(segment => segment.city.trim()), ...(tripPlan.value?.days || []).map(day => day.city?.trim())].filter(Boolean))
+  // The current planning contract has no validated station/security/check-in
+  // buffer. A saved legacy plan must not imply that reaching a station exactly
+  // at the service start time is sufficient, even when its quality predates gaps.
+  return (input.commitments || []).some(commitment => {
+    if (!['transport', 'train', 'flight'].includes(String(commitment.category)) || (commitment.status != null && commitment.status !== 'confirmed')) return false
+    const origin = commitment.origin_city?.trim(), destination = commitment.destination_city?.trim()
+    return origin && destination ? origin !== destination : cities.size > 1
+  })
+})
+function unmetMealTitle(meal: { day_index: number; type: string; title?: string }) {
+  const date = tripPlan.value?.days.find(day => day.day_index === meal.day_index)?.date
+  return `第 ${meal.day_index + 1} 天${date ? `（${date}）` : ''} · ${getMealLabel(meal.type)} · ${meal.title || '餐饮候选'}：未安排`
+}
+function unmetMealDescription(meal: { reason?: string; action?: string }) {
+  const reason = meal.reason === 'restaurant_candidate_does_not_fit_time_and_routes' ? '该餐厅无法同时满足用餐时间与接驳路线。' : meal.reason && /[\u3400-\u9fff]/.test(meal.reason) ? meal.reason : '餐饮候选无法纳入当前安排。'
+  return `${reason} ${meal.action || '该餐厅未安排，需就近用餐并重新核验'}`
+}
 const acceptVersion = (response: any) => {
   recordVersion.value = response.version
   quality.value = response.quality || {}
@@ -542,7 +639,7 @@ const revisionOpen = ref(false)
 const revisionLoading = ref(false)
 const revisionDayIndex = ref<number | null>(null)
 const revisionInstruction = ref('')
-const { initMap } = useTripMap(tripPlan)
+const { initMap, focusLocation } = useTripMap(tripPlan)
 
 // 统计所有景点数量
 const totalAttractions = computed(() => {
@@ -586,11 +683,13 @@ onMounted(async () => {
       quality.value = workspace.quality || {}
       recordVersion.value = workspace.version
       historyRecordId.value = id
+      planLoading.value = false
       await loadAttractionPhotos()
       await nextTick()
       initMap()
     } catch (e: any) {
       tripPlan.value = null
+      clearTripCache(Number(route.params.id))
       planError.value = e?.response?.data?.detail || e?.response?.data?.message || e?.message || '行程不存在或无权访问'
     } finally {
       planLoading.value = false
@@ -602,24 +701,27 @@ onMounted(async () => {
     tripPlan.value = JSON.parse(data)
     // 历史打开时记录 id (供编辑保存写回数据库); 新规划则为 0
     historyRecordId.value = Number(sessionStorage.getItem('tripPlanId') || '0')
-    if (historyRecordId.value && !unsaved.value && quality.value.policy_version !== 'constraints-v2' && sessionStorage.getItem('access_token')) {
+    if (historyRecordId.value && sessionStorage.getItem('access_token')) {
       try {
         const response = await fetchHistoryDetail(historyRecordId.value)
         if (response.success && response.data) {
-          tripPlan.value = response.data.plan
-          acceptVersion(response.data)
-          sessionStorage.setItem('tripPlan', JSON.stringify(tripPlan.value))
+          if (!unsaved.value) { tripPlan.value = response.data.plan; acceptVersion(response.data); sessionStorage.setItem('tripPlan', JSON.stringify(tripPlan.value)) }
         }
-      } catch {
+      } catch (e: any) {
+        revokeAccess(e)
+        if (!tripPlan.value) { planLoading.value = false; return }
         message.warning('暂时无法刷新行程检查，当前显示上次保存结果')
       }
     }
+    await Promise.all([loadPlanningInput(), loadProposalDetails()])
+    planLoading.value = false
     // 加载景点图片
     await loadAttractionPhotos()
     // 等待DOM渲染完成后初始化地图
     await nextTick()
     initMap()
   }
+  planLoading.value = false
 })
 
 const goBack = () => {
@@ -702,11 +804,14 @@ const cancelEdit = () => {
 const openRevision = (dayIndex: number) => {
   revisionDayIndex.value = dayIndex
   revisionInstruction.value = ''
+  revisionScope.value = { day_indices: [dayIndex], activity_ids: [] }
   revisionOpen.value = true
 }
 
 const submitRevision = async () => {
   if (!historyRecordId.value || revisionDayIndex.value === null || !tripPlan.value) return
+  const scopeError = scopeEditor.value?.validate()
+  if (scopeError) { message.warning(scopeError); return }
   const instruction = revisionInstruction.value.trim()
   if (instruction.length < 2) {
     message.warning('请填写具体的改排要求')
@@ -714,14 +819,15 @@ const submitRevision = async () => {
   }
   revisionLoading.value = true
   try {
-    const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction, recordVersion.value)
+    const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction, recordVersion.value, revisionScope.value, planningRevision.value)
     if (response.id) { historyRecordId.value = response.id; sessionStorage.setItem("tripPlanId", String(response.id)) }
     if (!response.success || !response.data) throw new Error(response.message || '改排失败')
     acceptVersion(response)
     tripPlan.value = response.data
+    await loadProposalDetails()
     sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
     revisionOpen.value = false
-    message.success(response.message || '当天行程已重新安排')
+    message.success(response.message || '改排提案已生成，请预览并确认')
     await nextTick()
     await loadAttractionPhotos()
     initMap()
@@ -783,16 +889,17 @@ const loadAttractionPhotos = async () => {
   tripPlan.value.days.forEach(day => {
     day.attractions.forEach(attraction => {
       // Invalidate placeholders cached by the first Java proxy; real photos still keep their normal TTL.
-      attractionPhotos.value[attraction.name] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}&poi_id=${encodeURIComponent(attraction.poi_id || "")}&city=${encodeURIComponent(tripPlan.value!.city)}&v=java-photo-v3`
+      attractionPhotos.value[photoKey(attraction, day.city || tripPlan.value!.city)] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}&poi_id=${encodeURIComponent(attraction.poi_id || "")}&city=${encodeURIComponent(day.city || tripPlan.value!.city)}&v=java-photo-v3`
     })
   })
 }
 
 // 获取景点图片
-const getAttractionImage = (name: string, index: number): string => {
+const photoKey = (attraction: Attraction, city: string) => `${city}:${attraction.poi_id || attraction.name}`
+const getAttractionImage = (attraction: Attraction, index: number, city: string): string => {
   // 如果已加载真实图片,返回真实图片
-  if (attractionPhotos.value[name]) {
-    return attractionPhotos.value[name]
+  if (attractionPhotos.value[photoKey(attraction, city)]) {
+    return attractionPhotos.value[photoKey(attraction, city)]
   }
 
   // 返回一个纯色占位图(避免跨域问题)
@@ -969,6 +1076,8 @@ const prepareExportContainer = (element: HTMLElement): HTMLElement => {
     panel.style.height = 'auto'
     panel.style.visibility = 'visible'
   })
+  exportContainer.querySelectorAll('.timeline button.title').forEach(control => { const title = document.createElement('strong'); title.className = control.className; title.textContent = control.textContent; control.replaceWith(title) })
+  exportContainer.querySelectorAll('.timeline details').forEach(details => details.setAttribute('open', ''))
   exportContainer.querySelectorAll('button, .ant-collapse-expand-icon').forEach(control => control.remove())
   exportContainer.querySelectorAll('img').forEach(image => {
     image.loading = 'eager'

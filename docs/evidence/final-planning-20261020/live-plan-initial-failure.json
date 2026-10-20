@@ -1,0 +1,37 @@
+{
+  "mode": "live_providers_http",
+  "run_id": "final-20261020-050d19bce4",
+  "stage": "plan",
+  "passed": false,
+  "started_at": "2026-10-20T09:30:04.919625+00:00",
+  "limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "before": {
+    "text": 0,
+    "embedding": 0,
+    "amap": 0
+  },
+  "checks": [
+    "existing acceptance counters respect fixed caps",
+    "no fixture route",
+    "budget remains before generation",
+    "task produces persisted usable result",
+    "two days persisted"
+  ],
+  "boundary": "Independent live-provider sample; cross-city transport is a hypothetical user-confirmed input, not a real booking. No SLA or generalization claim.",
+  "task": {
+    "id": "9767bf72-78a3-4d58-a0d7-c03853e392d4",
+    "status": "needs_attention",
+    "error_code": ""
+  },
+  "error": "AssertionError: no blocking draft",
+  "after": {
+    "text": 2,
+    "embedding": 5,
+    "amap": 150
+  },
+  "finished_at": "2026-10-20T09:31:20.179483+00:00"
+}

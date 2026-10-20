@@ -20,7 +20,8 @@ public class SingleInstance {
   }
 
   @PostConstruct
-  void acquire() throws Exception {
+  synchronized void acquire() throws Exception {
+    if(lease!=null){try{lease.close();}finally{lease=null;}}
     if (!enabled) return;
     lease = source.getConnection();
     try (var statement = lease.createStatement();
@@ -34,11 +35,16 @@ public class SingleInstance {
     }
   }
 
+  public synchronized boolean owned() {
+    if(!enabled)return false;
+    try {return lease!=null&&!lease.isClosed()&&lease.isValid(1);}catch(Exception ex){return false;}
+  }
+
   @PreDestroy
-  void release() throws Exception {
+  synchronized void release() throws Exception {
     if (lease != null) {
-      try (var statement = lease.createStatement()) {
-        statement.execute("SELECT pg_advisory_unlock(842491570021)");
+      try {
+        if(!lease.isClosed()&&lease.isValid(1))try(var statement=lease.createStatement()){statement.execute("SELECT pg_advisory_unlock(842491570021)");}
       } finally {
         lease.close();
       }

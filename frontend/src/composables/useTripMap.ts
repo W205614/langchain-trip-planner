@@ -20,7 +20,7 @@ export function useTripMap(plan: Ref<TripPlan | null>) {
     plan.value.days.forEach((day, dayIndex) => {
       const path: number[][] = []
       day.attractions.forEach((attraction, index) => {
-        const { longitude, latitude } = attraction.location
+        const { longitude, latitude } = attraction.location || {}
         if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) return
         const position = [longitude, latitude]
         path.push(position)
@@ -54,7 +54,16 @@ export function useTripMap(plan: Ref<TripPlan | null>) {
     return pending
   }
 
+  function focusLocation(location: { longitude: number; latitude: number }, title: string) {
+    if (!Number.isFinite(location?.longitude) || !Number.isFinite(location?.latitude)) return
+    if (map && sdk) {
+      const position = [location.longitude, location.latitude]
+      map.setZoomAndCenter(15, position)
+      new sdk.InfoWindow({ content: `<div><strong>${escape(title)}</strong></div>` }).open(map, position)
+    }
+  }
+
   watch(plan, redraw, { deep: true, flush: 'post' })
   onBeforeUnmount(() => { disposed = true; map?.destroy(); map = null })
-  return { initMap }
+  return { initMap, focusLocation }
 }

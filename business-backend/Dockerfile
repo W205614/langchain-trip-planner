@@ -12,4 +12,7 @@ RUN groupadd --system trip && useradd --system --gid trip trip && mkdir -p /data
 COPY --from=build /build/target/business-backend-1.0.0-SNAPSHOT.jar /app/app.jar
 USER trip
 EXPOSE 9000
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.source="https://github.com/W205614/langchain-trip-planner"
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

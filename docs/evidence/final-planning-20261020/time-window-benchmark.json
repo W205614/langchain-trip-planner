@@ -1,0 +1,91 @@
+{
+  "mode": "frozen_time_windows_v1",
+  "passed": true,
+  "cases": [
+    {
+      "name": "time_windows_change_shortest_order",
+      "passed": true,
+      "status": "feasible",
+      "solver_status": "OPTIMAL",
+      "seconds": 1.0035,
+      "fixture_route_queries": 12,
+      "unknown": [],
+      "conflicts": []
+    },
+    {
+      "name": "missing_routes_stay_unverified",
+      "passed": true,
+      "status": "unverified",
+      "solver_status": "OPTIMAL",
+      "seconds": 0.0039,
+      "fixture_route_queries": 12,
+      "unknown": [
+        "route_duration_estimated_30_minutes"
+      ],
+      "conflicts": []
+    },
+    {
+      "name": "expired_opening_stays_unverified",
+      "passed": true,
+      "status": "unverified",
+      "solver_status": "OPTIMAL",
+      "seconds": 0.0052,
+      "fixture_route_queries": 12,
+      "unknown": [
+        "opening_unknown_or_stale:poi:0:A",
+        "opening_unknown_or_stale:poi:0:B",
+        "opening_unknown_or_stale:poi:0:C"
+      ],
+      "conflicts": []
+    },
+    {
+      "name": "closed_mandatory_visit",
+      "passed": true,
+      "status": "infeasible",
+      "solver_status": "INVALID_WINDOWS",
+      "seconds": 0.0002,
+      "fixture_route_queries": 0,
+      "unknown": [],
+      "conflicts": [
+        "no_time_window:poi:0:B"
+      ]
+    },
+    {
+      "name": "closed_optional_visit",
+      "passed": true,
+      "status": "feasible",
+      "solver_status": "OPTIMAL",
+      "seconds": 0.003,
+      "fixture_route_queries": 6,
+      "unknown": [],
+      "conflicts": []
+    },
+    {
+      "name": "arrival_after_daily_end",
+      "passed": true,
+      "status": "infeasible",
+      "solver_status": "INVALID_WINDOWS",
+      "seconds": 0.0005,
+      "fixture_route_queries": 0,
+      "unknown": [],
+      "conflicts": [
+        "no_time_window:poi:0:A",
+        "no_time_window:poi:0:B",
+        "no_time_window:poi:0:C"
+      ]
+    }
+  ],
+  "baseline": {
+    "method": "shortest directed travel over same candidates",
+    "order": [
+      "A",
+      "B",
+      "C"
+    ],
+    "opening_window_violations": [
+      "B"
+    ]
+  },
+  "real_provider_calls": 0,
+  "boundary": "Six synthetic development scenarios, not live itinerary accuracy or production SLA."
+}

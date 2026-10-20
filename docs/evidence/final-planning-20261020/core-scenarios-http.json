@@ -1,0 +1,285 @@
+{
+  "mode": "offline_core_scenarios_http",
+  "passed": true,
+  "provider_calls": 0,
+  "checks": [
+    {
+      "name": "overlapping city segments rejected",
+      "passed": true,
+      "http_status": 422
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "normal cross-city generation succeeds",
+      "passed": true
+    },
+    {
+      "name": "normal cross-city plan has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "city segmentation preserved",
+      "passed": true
+    },
+    {
+      "name": "cross-city POIs belong to each city",
+      "passed": true
+    },
+    {
+      "name": "arrival bounds local visits",
+      "passed": true
+    },
+    {
+      "name": "confirmed transport retained in timeline",
+      "passed": true
+    },
+    {
+      "name": "previous-night origin hotel connection is explicitly scheduled",
+      "passed": true
+    },
+    {
+      "name": "unknown facts are not certified complete",
+      "passed": true
+    },
+    {
+      "name": "owner records a confirmed appointment",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "ledger yuan input persists as integer cents",
+      "passed": true
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "revision is a separate pending proposal",
+      "passed": true
+    },
+    {
+      "name": "normal revision has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "preview has no write-through",
+      "passed": true
+    },
+    {
+      "name": "new appointment time controls rescheduling",
+      "passed": true
+    },
+    {
+      "name": "full-day revision leaves other cities and dates unchanged",
+      "passed": true
+    },
+    {
+      "name": "owner confirms previewed proposal",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "repeat confirmation conflicts",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "appointment confirmation advances one version",
+      "passed": true
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "revision is a separate pending proposal",
+      "passed": true
+    },
+    {
+      "name": "normal revision has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "preview has no write-through",
+      "passed": true
+    },
+    {
+      "name": "partial scope actually replaces selected activity",
+      "passed": true
+    },
+    {
+      "name": "partial scope preserves all other activity content",
+      "passed": true
+    },
+    {
+      "name": "partial scope preserves other activity and meal times",
+      "passed": true
+    },
+    {
+      "name": "partial scope preserves non-target dates exactly",
+      "passed": true
+    },
+    {
+      "name": "owner confirms previewed proposal",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "repeat confirmation conflicts",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "partial confirmation advances one version",
+      "passed": true
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "revision is a separate pending proposal",
+      "passed": true
+    },
+    {
+      "name": "normal revision has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "preview has no write-through",
+      "passed": true
+    },
+    {
+      "name": "owner changes dependency after preview",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "stale planning dependency blocks old proposal",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "stale confirmation does not change trip version",
+      "passed": true
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "revision is a separate pending proposal",
+      "passed": true
+    },
+    {
+      "name": "normal revision has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "preview has no write-through",
+      "passed": true
+    },
+    {
+      "name": "multi-day authorization preserves excluded middle day exactly",
+      "passed": true
+    },
+    {
+      "name": "authorized day 0 actually changes its selected activities",
+      "passed": true
+    },
+    {
+      "name": "authorized day 2 actually changes its selected activities",
+      "passed": true
+    },
+    {
+      "name": "multi-day revision preserves confirmed appointment time",
+      "passed": true
+    },
+    {
+      "name": "owner confirms previewed proposal",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "repeat confirmation conflicts",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "multi-day confirmation advances one version",
+      "passed": true
+    },
+    {
+      "name": "remaining-day scenario has an executed prefix and a mutable visit",
+      "passed": true
+    },
+    {
+      "name": "owner marks first activity completed and time-locked",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "revision is a separate pending proposal",
+      "passed": true
+    },
+    {
+      "name": "normal revision has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "preview has no write-through",
+      "passed": true
+    },
+    {
+      "name": "remaining-day scope preserves executed and earlier activity content",
+      "passed": true
+    },
+    {
+      "name": "remaining-day scope preserves executed and earlier activity times",
+      "passed": true
+    },
+    {
+      "name": "remaining-day activities stay inside the authorized time range",
+      "passed": true
+    },
+    {
+      "name": "remaining-day scope actually replaces a future visit",
+      "passed": true
+    },
+    {
+      "name": "remaining-day scope preserves other dates exactly",
+      "passed": true
+    },
+    {
+      "name": "remaining-day scope preserves later confirmed booking",
+      "passed": true
+    },
+    {
+      "name": "owner confirms previewed proposal",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "repeat confirmation conflicts",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "remaining-day confirmation advances one version",
+      "passed": true
+    }
+  ],
+  "started_at": "2026-10-20T09:07:38.769942+00:00",
+  "boundary": "Real Java/Python/PostgreSQL HTTP; model and map are offline provider fixtures. No live quality or capacity claim.",
+  "trip_id": 167,
+  "checks_passed": 65,
+  "finished_at": "2026-10-20T09:07:44.014822+00:00"
+}

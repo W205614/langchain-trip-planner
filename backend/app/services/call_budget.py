@@ -7,7 +7,7 @@ import os
 import sqlite3
 from pathlib import Path
 
-LIMITS = {"text": 12, "vision": 1, "embedding": 50, "amap": 100}
+LIMITS = {"text": 12, "vision": 1, "embedding": 40, "amap": 400}
 
 
 class CallBudgetExceeded(RuntimeError):
@@ -17,6 +17,8 @@ class CallBudgetExceeded(RuntimeError):
 def reserve(kind: str) -> None:
     if kind not in LIMITS:
         raise ValueError("Unknown outbound call category")
+    from .durable_execution import reserve_outbound
+    reserve_outbound(kind)
     filename = os.environ.get("ACCEPTANCE_BUDGET_FILE")
     if not filename:
         return

@@ -13,6 +13,15 @@ import tools.jackson.databind.json.JsonMapper;
 
 class OutboxWorkerTest {
   @Test
+  void lostSchedulerOwnershipStopsPollingAndDeliveries() {
+    var jobs=mock(OutboxMapper.class);var agent=mock(AgentClient.class);
+    var worker=new OutboxWorker(jobs,mock(HistoryMapper.class),mock(KnowledgeMapper.class),agent,
+        mock(TransactionTemplate.class),JsonMapper.builder().build(),mock(KnowledgeService.class));
+    var lease=mock(SingleInstance.class);when(lease.owned()).thenReturn(false);
+    ReflectionTestUtils.setField(worker,"singleInstance",lease);ReflectionTestUtils.setField(worker,"workersEnabled",true);
+    worker.tick();verifyNoInteractions(jobs,agent);
+  }
+  @Test
   void failedPublishRetryNeverReparsesImage() {
     var jobs = mock(OutboxMapper.class);
     when(jobs.nextHistory()).thenReturn(null);
@@ -34,6 +43,7 @@ class OutboxWorkerTest {
             mock(TransactionTemplate.class),
             JsonMapper.builder().build(),
             mock(KnowledgeService.class));
+    var lease=mock(SingleInstance.class);when(lease.owned()).thenReturn(true);ReflectionTestUtils.setField(worker,"singleInstance",lease);
     ReflectionTestUtils.setField(worker, "workersEnabled", true);
     worker.tick();
     verify(agent).post(eq("/index/document"), any());
@@ -60,6 +70,7 @@ class OutboxWorkerTest {
             mock(TransactionTemplate.class),
             JsonMapper.builder().build(),
             mock(KnowledgeService.class));
+    var lease=mock(SingleInstance.class);when(lease.owned()).thenReturn(true);ReflectionTestUtils.setField(worker,"singleInstance",lease);
     ReflectionTestUtils.setField(worker, "workersEnabled", true);
     worker.tick();
     verify(agent).available();
@@ -76,6 +87,7 @@ class OutboxWorkerTest {
     when(agent.available()).thenReturn(false);
     var worker = new OutboxWorker(jobs, mock(HistoryMapper.class), mock(KnowledgeMapper.class),
         agent, mock(TransactionTemplate.class), JsonMapper.builder().build(), mock(KnowledgeService.class));
+    var lease=mock(SingleInstance.class);when(lease.owned()).thenReturn(true);ReflectionTestUtils.setField(worker,"singleInstance",lease);
     ReflectionTestUtils.setField(worker, "workersEnabled", true);
     worker.tick();
     verify(agent).available();

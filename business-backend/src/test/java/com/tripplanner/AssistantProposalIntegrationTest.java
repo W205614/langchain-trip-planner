@@ -104,6 +104,37 @@ class AssistantProposalIntegrationTest {
         """, Long.class, uid, json.writeValueAsString(plan("原安排")));
   }
 
+  @Test
+  void legacyTwoDayProposalAcceptsOnlyDefaultHydrationOnUntouchedDay()throws Exception{
+    String username="legacy_"+UUID.randomUUID().toString().substring(0,12);String token=token(username);
+    long uid=jdbc.queryForObject("SELECT id FROM users WHERE username=?",Long.class,username);
+    var original=plan("原安排");original.put("end_date","2026-10-02");
+    var day2=((ObjectNode)original.path("days").get(0)).deepCopy().put("day_index",1).put("date","2026-10-02").put("description","第二天原安排");
+    ((ObjectNode)day2.path("attractions").get(0)).put("poi_id","fixture-poi-2");original.withArray("days").add(day2);
+    long record=jdbc.queryForObject("INSERT INTO trip_records(user_id,city,start_date,end_date,travel_days,transportation,accommodation,preferences,free_text_input,plan_json,quality_json) VALUES(?,'北京','2026-10-01','2026-10-02',2,'步行','经济','[]','',?,'{\"outcome\":\"complete\"}') RETURNING id",Long.class,uid,json.writeValueAsString(original));
+    String conversation=conversation(token,record);
+    doAnswer(inv->{ObjectNode execution=inv.getArgument(0);@SuppressWarnings("unchecked") BiConsumer<String,JsonNode> consumer=inv.getArgument(2);
+      var updated=(ObjectNode)execution.path("original_plan").deepCopy();((ObjectNode)updated.path("days").get(0)).put("description","新安排");
+      // Pydantic fills these declared optional defaults when parsing historical JSON.
+      for(var raw:updated.path("days")){var day=(ObjectNode)raw;day.put("theme","").put("generation_mode","llm").putNull("fallback_reason").putNull("hotel");day.putArray("activities");day.putArray("meals");
+        for(var item:day.path("attractions")){var a=(ObjectNode)item;a.put("category","景点").putNull("rating").putArray("photos");a.putNull("image_url").put("ticket_price",0).put("price_source","unknown").put("opening_hours","").put("fact_source","");a.putArray("requested_names");}}
+      var result=json.createObjectNode().put("protocol_version",2).put("execution_id",execution.path("execution_id").asText());result.set("plan",updated);
+      result.putObject("quality").put("outcome","degraded").putArray("issues");result.putArray("trusted_candidates");result.putObject("usage");consumer.accept("result",result);return null;
+    }).when(agent).generate(any(),any(),any());
+    var response=request("POST","/api/assistant/conversations/"+conversation+"/messages",token,"{\"mode\":\"revise\",\"content\":\"只调整第一天\",\"record_id\":"+record+",\"version\":1,\"day_index\":0}",null);
+    assertEquals(202,response.statusCode(),response.body());String task=json.readTree(response.body()).path("task_id").asText();
+    jdbc.update("UPDATE trip_tasks SET status='running',execution_id=? WHERE id=?",UUID.randomUUID().toString(),task);
+    ReflectionTestUtils.invokeMethod(tasks,"executeCorrelated",taskMapper.get(task));var state=taskMapper.get(task);
+    assertEquals("needs_attention",state.get("status"),state.toString());
+    assertEquals(original,json.readTree(history.owned(uid,record).get("plan_json").toString()));
+    long proposed=((Number)state.get("record_id")).longValue();var confirmed=request("POST","/api/assistant/conversations/"+conversation+"/proposals/"+proposed+"/confirm",token,null,"1");
+    assertEquals(200,confirmed.statusCode(),confirmed.body());var applied=json.readTree(history.owned(uid,record).get("plan_json").toString());
+    assertEquals("新安排",applied.path("days").get(0).path("description").asText());
+    var untouched=applied.path("days").get(1);assertEquals("第二天原安排",untouched.path("description").asText());assertEquals(day2.path("attractions").get(0).path("poi_id"),untouched.path("attractions").get(0).path("poi_id"));
+    assertEquals(day2.path("attractions").get(0).path("location"),untouched.path("attractions").get(0).path("location"));
+    assertEquals(2,((Number)history.owned(uid,record).get("version")).intValue());
+  }
+
   private String conversation(String token, long original) throws Exception {
     var response = request("POST", "/api/assistant/conversations", token,
         "{\"active_trip_id\":" + original + "}", null);
@@ -121,7 +152,7 @@ class AssistantProposalIntegrationTest {
       ObjectNode execution = invocation.getArgument(0);
       @SuppressWarnings("unchecked")
       BiConsumer<String, JsonNode> consumer = invocation.getArgument(2);
-      var result = json.createObjectNode().put("protocol_version", 1)
+      var result = json.createObjectNode().put("protocol_version", execution.path("protocol_version").asInt())
           .put("execution_id", execution.path("execution_id").asText());
       var updated = plan("新安排");
       if (!trusted) ((ObjectNode)updated.path("days").get(0).path("attractions").get(0))
@@ -298,7 +329,7 @@ class AssistantProposalIntegrationTest {
     doAnswer(invocation -> {
       ObjectNode execution = invocation.getArgument(0);
       @SuppressWarnings("unchecked") BiConsumer<String, JsonNode> consumer = invocation.getArgument(2);
-      var result = json.createObjectNode().put("protocol_version", 1)
+      var result = json.createObjectNode().put("protocol_version", execution.path("protocol_version").asInt())
           .put("execution_id", execution.path("execution_id").asText());
       result.set("plan", plan("手工改排结果"));
       result.set("quality", json.createObjectNode().put("outcome", "complete")

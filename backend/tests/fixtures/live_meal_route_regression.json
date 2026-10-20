@@ -1,0 +1,1314 @@
+{
+  "source": "Controlled live acceptance first two-day sample, 2026-10-20. Public POIs only; offline regression, not general quality proof.",
+  "request": {
+    "city": "北京",
+    "start_date": "2026-10-30",
+    "end_date": "2026-10-31",
+    "travel_days": 2,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "planning_input": {
+      "timezone": "Asia/Shanghai",
+      "day_start": "09:00",
+      "day_end": "20:00",
+      "budget_mode": "estimate",
+      "budget_cents": 200000
+    },
+    "free_text_input": "每天选择三个可信景点；资料不足明确标注，不要编造营业时间或票价。"
+  },
+  "plan": {
+    "city": "北京",
+    "days": [
+      {
+        "city": "",
+        "date": "2026-10-30",
+        "hotel": {
+          "name": "驿小栈青年酒店(北京朝阳高铁站青年路地铁站店)",
+          "type": "经济型酒店",
+          "rating": "",
+          "address": "青年路西里3号院1号楼2层",
+          "distance": "",
+          "location": {
+            "latitude": 39.932325,
+            "longitude": 116.513757
+          },
+          "price_range": "",
+          "estimated_cost": 0
+        },
+        "meals": [
+          {
+            "name": "全聚德(前门店)",
+            "type": "lunch",
+            "poi_id": "B000A81B55",
+            "address": "前门大街30号",
+            "location": {
+              "latitude": 39.89663,
+              "longitude": 116.398244
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 11:00-14:30,16:30-21:00",
+            "estimated_cost": 120
+          },
+          {
+            "name": "宫宴",
+            "type": "dinner",
+            "poi_id": "B0G035GU1E",
+            "address": "北京城区前门大街50号",
+            "location": {
+              "latitude": 39.895745,
+              "longitude": 116.398311
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 10:00-14:00,17:00-21:00",
+            "estimated_cost": 180
+          },
+          {
+            "name": "紫光园·烤鸭·北京菜(常营店)",
+            "type": "breakfast",
+            "poi_id": "B000A82T8Y",
+            "address": "北京城区常营中路民族家园综合楼13号",
+            "location": {
+              "latitude": 39.928665,
+              "longitude": 116.587741
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 06:00-10:00,10:30-21:30",
+            "estimated_cost": 30
+          }
+        ],
+        "theme": "中轴历史与城市记忆",
+        "timeline": [],
+        "day_index": 0,
+        "activities": [
+          "博物馆参观",
+          "古城门打卡",
+          "地下城探访"
+        ],
+        "attractions": [
+          {
+            "name": "国家自然博物馆",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/75fe64b469bd6b88564a9644a9a471ca"
+            ],
+            "poi_id": "B000A7CRPA",
+            "rating": null,
+            "address": "天桥南大街126号",
+            "category": "景点",
+            "location": {
+              "latitude": 39.883183,
+              "longitude": 116.399833
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "上午参观自然类博物馆，建议提前预约并预留充足时间；开放时间及票价以官方公告为准。",
+            "fact_source": "高德 POI",
+            "price_source": "model_estimate",
+            "ticket_price": 0,
+            "opening_hours": "9月1日至12月31日 周二 09:00-17:00开放,最晚进入16:30；周三至周日 09:00-17:00开放,最晚进入16:30；周一 全天不开放；7月6日至8月31日 周一,周三至周日 09:00-17:00,18:00-21:00开放；周二 全天不开放；1月1日至7月5日 周二 09:00-17:00开放,最晚进入16:30；周三至周日 09:00-17:00开放,最晚进入16:30；周一 全天不开放；元旦节,清明节,劳动节,端午节,中秋节,国庆节 09:00-17:00开放,最晚进入16:30",
+            "visit_duration": 150,
+            "requested_names": []
+          },
+          {
+            "name": "北京地下城(北京人民防空历史文化馆)",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/366cca41bb1eab3c0000009111140439?type=pic"
+            ],
+            "poi_id": "B0MDDHMX4B",
+            "rating": null,
+            "address": "前门东区西兴隆街",
+            "category": "景点",
+            "location": {
+              "latitude": 39.897824,
+              "longitude": 116.408911
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "午后探访人防历史文化馆，了解城市地下空间历史；开放时间请提前核实。 ",
+            "fact_source": "高德 POI",
+            "price_source": "unknown",
+            "ticket_price": 0,
+            "opening_hours": "周二至周日 09:00-17:00(16:00停止入馆)",
+            "visit_duration": 90,
+            "requested_names": []
+          },
+          {
+            "name": "正阳门箭楼",
+            "photos": [
+              "https://aos-comment.amap.com/B0FFG6VF81/comment/DA78968C_0D8E_49B9_BE8C_471A2E557A21_L0_001_1770_2002_1772540780701_64357495.jpg"
+            ],
+            "poi_id": "B0FFG6VF81",
+            "rating": null,
+            "address": "前门大街2号前门商业区A2地块",
+            "category": "景点",
+            "location": {
+              "latitude": 39.899368,
+              "longitude": 116.39791
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "傍晚外观古城门并周边散步，适合拍照；登楼开放情况请以现场公告为准。",
+            "fact_source": "高德 POI",
+            "price_source": "unknown",
+            "ticket_price": 0,
+            "opening_hours": "周一 全天关闭(法定节假日除外),周二至周日 09:00-17:00",
+            "visit_duration": 60,
+            "requested_names": []
+          }
+        ],
+        "description": "首日以中轴线及周边历史文化为主，公共交通串联博物馆、地下城与古城门，节奏适中；开放时间及票价请以官方公告为准。",
+        "feasibility": {},
+        "accommodation": "经济型酒店",
+        "transportation": "公共交通",
+        "fallback_reason": null,
+        "generation_mode": "llm"
+      },
+      {
+        "city": "",
+        "date": "2026-10-31",
+        "hotel": null,
+        "meals": [
+          {
+            "name": "四季民福烤鸭店(西单华威约饭街店)",
+            "type": "lunch",
+            "poi_id": "B0FFME0OOQ",
+            "address": "西单北大街130号华威大厦8层39号",
+            "location": {
+              "latitude": 39.911511,
+              "longitude": 116.374576
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周四 10:30-21:30；周五至周日 10:30-22:30",
+            "estimated_cost": 120
+          },
+          {
+            "name": "潇湘阁(枫蓝国际购物中心店)",
+            "type": "dinner",
+            "poi_id": "B0I3SSUU1F",
+            "address": "北京城区枫蓝国际购物中心2层萨莉亚旁边",
+            "location": {
+              "latitude": 39.952804,
+              "longitude": 116.356341
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 10:30-21:30",
+            "estimated_cost": 80
+          },
+          {
+            "name": "紫光园·烤鸭·北京菜(常营店)",
+            "type": "breakfast",
+            "poi_id": "B000A82T8Y",
+            "address": "北京城区常营中路民族家园综合楼13号",
+            "location": {
+              "latitude": 39.928665,
+              "longitude": 116.587741
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 06:00-10:00,10:30-21:30",
+            "estimated_cost": 30
+          }
+        ],
+        "theme": "紫禁城与阜成门人文漫步",
+        "timeline": [],
+        "day_index": 1,
+        "activities": [
+          "皇家宫殿参观",
+          "古塔胡同漫步",
+          "近代文学展馆"
+        ],
+        "attractions": [
+          {
+            "name": "故宫博物院",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/2f968490d105bb2741e17f90b85c6b79"
+            ],
+            "poi_id": "B000A8UIN8",
+            "rating": null,
+            "address": "景山前街4号",
+            "category": "景点",
+            "location": {
+              "latitude": 39.917839,
+              "longitude": 116.397029
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "建议开门时段入内，沿中轴线由南向北游览三大殿、乾清宫至御花园，需提前实名预约，租讲解器更易理解。",
+            "fact_source": "高德 POI",
+            "price_source": "model_estimate",
+            "ticket_price": 60,
+            "opening_hours": "旺季4月1日至10月31日 周二至周日 08:30-17:00 16:00停止检票，淡季11月1日至3月31日 周二至周日 08:30-16:30 15:30停止检票，周一全天关闭，节假日营业时间以官方通知为准",
+            "visit_duration": 240,
+            "requested_names": []
+          },
+          {
+            "name": "妙应寺白塔",
+            "photos": [
+              "https://aos-comment.amap.com/B000A7H0F3/headerImg/8f2e4cdc8da36608701d974c0dff68a9_2048_2048_80.jpg"
+            ],
+            "poi_id": "B000A7H0F3",
+            "rating": null,
+            "address": "阜成门内大街171号",
+            "category": "景点",
+            "location": {
+              "latitude": 39.925652,
+              "longitude": 116.363323
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "午后光线柔和，绕白塔一周拍摄最佳，周边胡同安静，可顺路看看白塔寺街区小店。",
+            "fact_source": "高德 POI",
+            "price_source": "model_estimate",
+            "ticket_price": 20,
+            "opening_hours": "周一 全天关闭；周二至周日 09:00-17:00 最晚进入16:30；国家法定节假日、其它重要活动开放时间将另行通知，具体营业时间以当天开放情况为准。",
+            "visit_duration": 60,
+            "requested_names": []
+          },
+          {
+            "name": "北京鲁迅博物馆",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/a128d0ca6e36c51d0000002906652365?type=pic"
+            ],
+            "poi_id": "B000A3BE77",
+            "rating": null,
+            "address": "阜城门内宫门口二条19号(阜成门地铁站B东北口步行260米)",
+            "category": "景点",
+            "location": {
+              "latitude": 39.925693,
+              "longitude": 116.358742
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "免费参观，重点看鲁迅旧居与生平展，院落不大，安静适合慢慢看，注意周一闭馆安排。",
+            "fact_source": "高德 POI",
+            "price_source": "unknown",
+            "ticket_price": 0,
+            "opening_hours": "周二至周日 09:00-17:00开放 最晚进入16:30 周一 全天不开放(法定节假日除外)；法定节假日 09:00-17:00开放 最晚进入16:30；具体开放时间以官方通知为准",
+            "visit_duration": 60,
+            "requested_names": []
+          }
+        ],
+        "description": "上午深度游览故宫中轴线与养心殿区域，午后转至阜成门一带看白塔、逛鲁迅博物馆，晚餐在西直门附近吃湘菜，全天以公共交通串联，历史人文气息浓厚。",
+        "feasibility": {},
+        "accommodation": "经济型酒店",
+        "transportation": "公共交通",
+        "fallback_reason": null,
+        "generation_mode": "llm"
+      }
+    ],
+    "budget": {
+      "total": 640,
+      "estimated": true,
+      "assumptions": [],
+      "limit_total": null,
+      "total_meals": 560,
+      "total_hotels": 0,
+      "within_limit": null,
+      "unknown_items": [
+        "attraction_prices",
+        "hotel_prices",
+        "transportation_prices"
+      ],
+      "total_attractions": 80,
+      "total_transportation": 0
+    },
+    "end_date": "2026-10-31",
+    "room_count": 1,
+    "start_date": "2026-10-30",
+    "constraints": {
+      "avoid": [],
+      "must_visit": [],
+      "daily_minutes": 600,
+      "max_inter_stop_walking_km": null
+    },
+    "weather_info": [],
+    "departure_city": "",
+    "planning_input": {
+      "locks": [],
+      "day_end": "20:00",
+      "timezone": "Asia/Shanghai",
+      "day_start": "09:00",
+      "arrival_at": null,
+      "budget_mode": "estimate",
+      "commitments": [],
+      "day_windows": [],
+      "hotel_stays": [],
+      "budget_cents": null,
+      "departure_at": null,
+      "meal_windows": [],
+      "city_segments": [],
+      "revision_scope": null,
+      "opening_windows": [],
+      "completed_activity_ids": []
+    },
+    "traveler_count": 1,
+    "weather_notice": "高德天气接口仅提供近期 4 天预报；本次行程仍有 2 天暂无可靠预报。",
+    "enrichment_notices": [
+      "攻略资料增强暂不可用，已保留真实景点安排"
+    ],
+    "overall_suggestions": "这是为您规划的北京2日游行程"
+  },
+  "routes": [
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 69,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 63,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 66,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.398311,
+        39.895745,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 39,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 70,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 31,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 24,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 24,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.398311,
+        39.895745,
+        "北京",
+        "transit"
+      ],
+      "minutes": 25,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 76,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 33,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 17,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 14,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.398311,
+        39.895745,
+        "北京",
+        "transit"
+      ],
+      "minutes": 45,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 72,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 62,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 25,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 17,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 6,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.398311,
+        39.895745,
+        "北京",
+        "transit"
+      ],
+      "minutes": 7,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 24,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 14,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 6,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.398311,
+        39.895745,
+        "北京",
+        "transit"
+      ],
+      "minutes": 2,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 73,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398311,
+        39.895745,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 69,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398311,
+        39.895745,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 26,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398311,
+        39.895745,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 14,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398311,
+        39.895745,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 7,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398311,
+        39.895745,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 2,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398311,
+        39.895745,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 75,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 37,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 75,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 72,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 68,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.398311,
+        39.895745,
+        "北京",
+        "transit"
+      ],
+      "minutes": 73,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.397029,
+        39.917839,
+        "北京",
+        "transit"
+      ],
+      "minutes": 93,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.363323,
+        39.925652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 66,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.358742,
+        39.925693,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 65,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.356341,
+        39.952804,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.397029,
+        39.917839,
+        116.363323,
+        39.925652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 56,
+      "verified": true
+    },
+    {
+      "key": [
+        116.397029,
+        39.917839,
+        116.358742,
+        39.925693,
+        "北京",
+        "transit"
+      ],
+      "minutes": 55,
+      "verified": true
+    },
+    {
+      "key": [
+        116.397029,
+        39.917839,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 57,
+      "verified": true
+    },
+    {
+      "key": [
+        116.397029,
+        39.917839,
+        116.356341,
+        39.952804,
+        "北京",
+        "transit"
+      ],
+      "minutes": 82,
+      "verified": true
+    },
+    {
+      "key": [
+        116.397029,
+        39.917839,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 91,
+      "verified": true
+    },
+    {
+      "key": [
+        116.363323,
+        39.925652,
+        116.397029,
+        39.917839,
+        "北京",
+        "transit"
+      ],
+      "minutes": 77,
+      "verified": true
+    },
+    {
+      "key": [
+        116.363323,
+        39.925652,
+        116.358742,
+        39.925693,
+        "北京",
+        "transit"
+      ],
+      "minutes": 11,
+      "verified": true
+    },
+    {
+      "key": [
+        116.363323,
+        39.925652,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 38,
+      "verified": true
+    },
+    {
+      "key": [
+        116.363323,
+        39.925652,
+        116.356341,
+        39.952804,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.363323,
+        39.925652,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.358742,
+        39.925693,
+        116.397029,
+        39.917839,
+        "北京",
+        "transit"
+      ],
+      "minutes": 66,
+      "verified": true
+    },
+    {
+      "key": [
+        116.358742,
+        39.925693,
+        116.363323,
+        39.925652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 11,
+      "verified": true
+    },
+    {
+      "key": [
+        116.358742,
+        39.925693,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 35,
+      "verified": true
+    },
+    {
+      "key": [
+        116.358742,
+        39.925693,
+        116.356341,
+        39.952804,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.358742,
+        39.925693,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.397029,
+        39.917839,
+        "北京",
+        "transit"
+      ],
+      "minutes": 59,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.363323,
+        39.925652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 37,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.358742,
+        39.925693,
+        "北京",
+        "transit"
+      ],
+      "minutes": 37,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.356341,
+        39.952804,
+        "北京",
+        "transit"
+      ],
+      "minutes": 45,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.356341,
+        39.952804,
+        116.397029,
+        39.917839,
+        "北京",
+        "transit"
+      ],
+      "minutes": 85,
+      "verified": true
+    },
+    {
+      "key": [
+        116.356341,
+        39.952804,
+        116.363323,
+        39.925652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 47,
+      "verified": true
+    },
+    {
+      "key": [
+        116.356341,
+        39.952804,
+        116.358742,
+        39.925693,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.356341,
+        39.952804,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 45,
+      "verified": true
+    },
+    {
+      "key": [
+        116.356341,
+        39.952804,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 84,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.397029,
+        39.917839,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.363323,
+        39.925652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.358742,
+        39.925693,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.356341,
+        39.952804,
+        "北京",
+        "transit"
+      ],
+      "minutes": 30,
+      "verified": false
+    }
+  ],
+  "draft_input_hash": "693f373a5e09f2848b434513684e3aa62ab1b43ba615cd2edeebbcf2cdd80277",
+  "routes_input_hash": "e2e27088ea201f54059dc11add2739b4856a9bea56c7d0c8f8980c7bf5453fd0",
+  "compatibility": {
+    "model": "deepseek-v4-flash",
+    "rules": "time-windows-v3-hotel-nights",
+    "prompt": "f9f60798f7ddd06665fb5a34b9c1d3d98a977c2d246dbfe3fe65a1f7a3e937cd",
+    "schema": "planning-v1",
+    "protocol": 2,
+    "max_tokens": 1800,
+    "temperature": 0.7,
+    "embedding_model": "text-embedding-3-large"
+  }
+}

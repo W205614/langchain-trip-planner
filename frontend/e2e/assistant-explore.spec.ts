@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+test.beforeEach(async ({ page }) => { await page.route('**/api/trips/*/planning-input', route => route.fulfill({ status: 503, json: { message: '旧行程兼容测试' } })) })
 
 test('history record opens contextual Agent Q&A with a direct sourced answer', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))

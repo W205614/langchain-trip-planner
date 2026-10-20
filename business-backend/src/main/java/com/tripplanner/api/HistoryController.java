@@ -12,6 +12,7 @@ import tools.jackson.databind.node.ObjectNode;
 @RestController
 @RequestMapping("/api/history")
 public class HistoryController {
+  @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
   private final HistoryMapper history;
   private final TaskService tasks;
   private final PlanRules rules;
@@ -164,7 +165,9 @@ public class HistoryController {
                     ? saved.path("requested_names")
                     : json.createArrayNode());
       }
+    PlanningInputService.stableIds(plan);
     var quality = rules.finish(plan, request(row), null, false);
+    planning.invalidateManualSchedule(original,plan,quality,null);
     ((tools.jackson.databind.node.ArrayNode) quality.path("data_gaps"))
         .add("user_edited_plan_not_externally_verified");
     tx.executeWithoutResult(
@@ -196,6 +199,7 @@ public class HistoryController {
       ObjectNode quality,
       String changeType,
       String requestId) {
+    planning.protect(uid,id,plan,json.createObjectNode(),false);
     if (history.update(
             Map.of(
                 "id",
@@ -287,6 +291,9 @@ public class HistoryController {
             throw new ApiException(409, "草稿已变更或不是改排草稿", "VERSION_CONFLICT");
           var plan = (ObjectNode) json.readTree(row.get("plan_json").toString());
           long target = parent.path("record_id").asLong(0);
+          if(parent.has("planning_revision"))planning.checkRevision(uid,target,parent.path("planning_revision").asInt());
+          planning.validateDependencies(quality);
+          if(parent.path("revision_scope").isObject())planning.protect(uid,target,plan,parent.path("revision_scope"),true);
           save(
               uid,
               target,

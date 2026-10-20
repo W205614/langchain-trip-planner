@@ -123,12 +123,23 @@ class MultiAgentTripPlanner(TravelDataNodes):
             # 景点按天均分, 每天只从自己的子集选, 保证并行时不重复
             all_pois = state.get("attraction_pois", [])
             subsets = self._split_pois_for_days(all_pois, request.travel_days)
+            # Geographic allocation is subordinate to date-specific reservations.
+            for commitment in request.planning_input.commitments:
+                index = commitment.get("day_index")
+                if not isinstance(index, int) or not 0 <= index < len(subsets) or commitment.get("status") in {"cancelled", "canceled"}:
+                    continue
+                reserved = next((p for p in all_pois if p.id == commitment.get("poi_id")), None)
+                if reserved:
+                    for subset in subsets:
+                        subset[:] = [p for p in subset if p.id != reserved.id]
+                    subsets[index].insert(0, reserved)
 
             def _make_query(i: int) -> str:
                 current_date = (start + timedelta(days=i)).strftime("%Y-%m-%d")
                 required = {n.casefold() for n in request.constraints.must_visit}
+                fixed = {c.get("poi_id") for c in request.planning_input.commitments if c.get("day_index") == i}
                 sub = sorted(subsets[i] if i < len(subsets) else [],
-                             key=lambda p: not (p.name.casefold() in required or p.requested_names))[:_MAX_DAILY_POI_CANDIDATES]
+                             key=lambda p: not (p.id in fixed or p.name.casefold() in required or p.requested_names))[:_MAX_DAILY_POI_CANDIDATES]
                 sub_text = "\n".join(
                     f"{j + 1}. poi_id={p.id} | {p.name} | {p.address or ''} | "
                     f"{p.location.longitude},{p.location.latitude}"
@@ -212,6 +223,19 @@ class MultiAgentTripPlanner(TravelDataNodes):
             self._emit_trace(state, "stage_duration", stage="plan_generation", seconds=time.perf_counter() - started_at)
 
     def _generate_one_day(
+        self, day_query, day_index, current_date, request, state=None,
+    ):
+        from ..services.durable_execution import input_hash, read_checkpoint, save_checkpoint
+        digest = input_hash(request, instruction=f"{day_query}\ninclude_last_night={request._include_last_night}", day_index=day_index)
+        stage = f"day_draft:{current_date}"
+        cached = read_checkpoint(stage, digest)
+        if cached:
+            return DayPlan.model_validate(cached["day"])
+        day = self._generate_one_day_uncached(day_query, day_index, current_date, request, state)
+        save_checkpoint(stage, digest, {"day":day.model_dump(mode="json")})
+        return day
+
+    def _generate_one_day_uncached(
         self,
         day_query: str,
         day_index: int,
@@ -590,7 +614,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 opening_hours=poi.opening_hours, fact_source="高德 POI",
             ))
         hotels = (state or {}).get("hotel_pois") or []
-        if day.day_index < request.travel_days - 1 and hotels and not day.hotel:
+        needs_night = day.day_index < request.travel_days - 1 or request._include_last_night
+        if not needs_night:
+            day.hotel = None
+        elif hotels and not day.hotel:
             hotel = hotels[0]
             day.hotel = Hotel(name=hotel.name, address=hotel.address, location=hotel.location,
                               type=request.accommodation)
@@ -786,6 +813,38 @@ class MultiAgentTripPlanner(TravelDataNodes):
         Returns:
             旅行计划
         """
+        from ..services.time_planner import city_for_day
+        cities = [city_for_day(request, i) for i in range(request.travel_days)]
+        if any(city != request.city for city in cities):
+            parts, offset = [], 0
+            while offset < request.travel_days:
+                end = offset + 1
+                while end < request.travel_days and cities[end] == cities[offset]:
+                    end += 1
+                from ..models.planning import PlanningInput
+                local = request.model_copy(deep=True)
+                local.city, local.start_date, local.end_date, local.travel_days = cities[offset], (datetime.fromisoformat(request.start_date)+timedelta(days=offset)).date().isoformat(), (datetime.fromisoformat(request.start_date)+timedelta(days=end-1)).date().isoformat(), end-offset
+                local.planning_input = request.planning_input.model_copy(deep=True)
+                local.planning_input.city_segments = []
+                # A city's final day is not necessarily the trip's final day.
+                # Reuse its existing hotel candidates for the intervening night.
+                local._include_last_night = end < request.travel_days or request._include_last_night
+                local.planning_input.commitments = [{**c,"day_index":c["day_index"]-offset} for c in request.planning_input.commitments if isinstance(c.get("day_index"),int) and offset <= c["day_index"] < end]
+                local.planning_input.day_windows = [w.model_copy(update={"day_index":w.day_index-offset}) for w in request.planning_input.day_windows if offset <= w.day_index < end]
+                part = self.plan_trip(local, user_id, progress_callback, trace_callback)
+                for day in part.days:
+                    day.day_index += offset
+                    day.city = cities[offset]
+                parts.append(part)
+                offset = end
+            result = parts[0].model_copy(deep=True)
+            result.city, result.start_date, result.end_date = request.city, request.start_date, request.end_date
+            result.days = [day for part in parts for day in part.days]
+            result.weather_info = [weather for part in parts for weather in part.weather_info]
+            result.enrichment_notices = list(dict.fromkeys(notice for part in parts for notice in part.enrichment_notices))
+            result.planning_input = request.planning_input.model_copy(deep=True)
+            return self._ensure_budget(result, request)
+
         logger.info(f"\n{'='*60}")
         logger.info(f"🚀 开始 LangGraph 工作流规划旅行...")
         logger.info(f"目的地: {request.city} | 日期: {request.start_date} 至 {request.end_date} | {request.travel_days}天")

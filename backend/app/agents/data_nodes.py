@@ -12,11 +12,13 @@ from typing import List
 from ..models.schemas import TripRequest, WeatherInfo
 from .state import GraphState
 from ..services.attraction_names import valid_attraction
+from ..services.durable_execution import checkpoint_node
 
 logger = logging.getLogger(__name__)
 
 
 class TravelDataNodes:
+    @checkpoint_node("attractions")
     def _search_attractions(self, state: GraphState) -> dict:
         """节点1: 搜索景点 (服务直调, 不走LLM)
 
@@ -44,7 +46,7 @@ class TravelDataNodes:
             # A narrow preference query can return fewer POIs than the requested
             # number of days. Broaden through Agent-owned MCP searches before
             # splitting candidates, so a later day is not silently left empty.
-            desired = min(16, max(request.travel_days, request.travel_days * 2))
+            desired = min(120, max(request.travel_days, request.travel_days * 2))
             fallback_keywords = [k for k in ("景点", "博物馆", "公园") if k != keywords]
             if len({p.id for p in pois}) < desired and fallback_keywords:
                 with ThreadPoolExecutor(max_workers=min(3, len(fallback_keywords))) as executor:
@@ -121,6 +123,7 @@ class TravelDataNodes:
         finally:
             self._emit_trace(state, "stage_duration", stage="attraction_search", seconds=time.perf_counter() - started_at)
 
+    @checkpoint_node("weather", ttl=3600)
     def _get_weather(self, state: GraphState) -> dict:
         """节点2: 查询天气 (服务直调, 不走LLM)"""
         request = state["request"]
@@ -152,6 +155,7 @@ class TravelDataNodes:
             return relevant, f"高德天气接口仅提供近期 4 天预报；本次行程仍有 {missing_days} 天暂无可靠预报。"
         return relevant, ""
 
+    @checkpoint_node("hotels")
     def _search_hotels(self, state: GraphState) -> dict:
         """节点3: 搜索酒店 (服务直调, 不走LLM)"""
         request = state["request"]
@@ -168,6 +172,7 @@ class TravelDataNodes:
         finally:
             self._emit_trace(state, "stage_duration", stage="hotel_search", seconds=time.perf_counter() - started_at)
 
+    @checkpoint_node("restaurants")
     def _search_restaurants(self, state: GraphState) -> dict:
         """查询可信餐饮候选；模型只能选择 POI ID，不能自行编造餐厅事实。"""
         request = state["request"]

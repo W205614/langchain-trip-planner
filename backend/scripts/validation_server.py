@@ -30,12 +30,18 @@ class FixtureMap:
             return []
         count = 1 if city == "稀疏城市" else 3 if city == "部分失效" else 90
         default_code = {"北京":"beijing", "上海":"shanghai", "稀疏城市":"sparse", "路线失败":"route", "天气失败":"weather", "跨城候选":"cross", "部分失效":"partial"}.get(city, "beijing")
+        is_meal=any(token in keywords for token in ("餐","美食","小吃","火锅","咖啡"))
+        is_hotel=not is_meal and any(token in keywords for token in ("酒店","住宿","宾馆","经济型","豪华","民宿"))
+        kind="restaurant" if is_meal else "hotel" if is_hotel else "attraction"
+        kind_suffix=f"-{kind}" if kind!="attraction" else ""
+        base_longitude,base_latitude = (121.47,31.23) if city=="上海" else (118,39.9) if city=="路线失败" else (116.4,39.9)
         result = []
         for i in range(count):
             candidate_city = city
             city_code = default_code
-            result.append(POIInfo(id=f"fixture-{city_code}-{i}", city=candidate_city, name=f"验证景点{i}", type="风景名胜", address=f"{candidate_city}地址{i}",
-                location=Location(longitude=(118 if city == "路线失败" else 116) + i * 0.001, latitude=39.9)))
+            result.append(POIInfo(id=f"fixture-{city_code}{kind_suffix}-{i}", city=candidate_city,
+                name=f"验证{'餐厅' if is_meal else '酒店' if is_hotel else '景点'}{i}",type="餐饮服务" if is_meal else "住宿服务" if is_hotel else "风景名胜",address=f"{candidate_city}地址{i}",
+                location=Location(longitude=base_longitude+i*.0001,latitude=base_latitude),opening_hours="07:00-23:00"))
         self.details.update({item.id: item for item in result})
         return result
     def get_poi_detail(self, poi_id):
@@ -53,9 +59,9 @@ class FixtureMap:
             raise TimeoutError("fixture weather failure")
         return [WeatherInfo(date="2026-09-11", day_weather="晴", day_temp=25)]
     def plan_route_by_locations(self, left, right, **kwargs):
-        if left.longitude >= 118:
+        if 118 <= left.longitude < 119:
             raise TimeoutError("fixture route failure")
-        return {"distance": 600, "duration": 600}
+        return {"distance": 600, "duration": 600, "walking_distance":200}
     def get_poi_photo_by_name(self, name):
         return None
 
@@ -67,14 +73,24 @@ def response(prompt, **kwargs):
         time.sleep(max(0.1, min(60.0, float(os.environ.get("VALIDATION_SLOW_SECONDS", "20")))))
     if "fixture:invalid-json" in text:
         return AIMessage(content="invalid")
-    ids = re.findall(r"poi_id=([^\s|]+)", text)
+    # The real prompt includes hotel and restaurant IDs before the per-day POI
+    # whitelist. Parsing the entire prompt made later days select day0 hotels.
+    # Select from the explicit scoped section, preserving production validation.
+    section=re.search(r"本天可选景点[^\n]*\n(.*?)(?=\n请生成|\n本天可选餐厅|\n请输出|$)",text,re.S)
+    if not section:
+        raise ValueError("Offline day fixture requires an explicit attraction whitelist")
+    ids=list(dict.fromkeys(re.findall(r"poi_id=([^\s|]+)",section.group(1))))
+    restaurant_section=re.search(r"(?:可选餐厅|本天可选餐厅)[^\n]*\n(.*?)(?=\n\*\*|\n用户结构化|\n本天可选景点|\n请输出|$)",text,re.S)
+    restaurant_ids=list(dict.fromkeys(re.findall(r"poi_id=([^\s|]+)",restaurant_section.group(1)))) if restaurant_section else []
     if "fixture:unknown-poi" in text:
         ids = ["not-in-candidates"]
+    if "fixture:replace" in text and len(ids)>=4:
+        ids=[ids[0],ids[3],ids[2]]
     draft = {"description": "离线验证行程", "attractions": [
         {"poi_id": item, "name": "模型篡改名称", "address": "模型错误地址",
          "location": {"longitude": 0, "latitude": 0}, "visit_duration": 60,
-         "description": "fixture", "ticket_price": 9999} for item in ids[:3]],
-        "meals": [{"type": kind, "name": kind, "estimated_cost": 20} for kind in ("breakfast", "lunch", "dinner")]}
+         "description": "fixture", "ticket_price": 0} for item in ids[:3]],
+        "meals": [{"type": kind, "poi_id":restaurant_ids[index%len(restaurant_ids)] if restaurant_ids else "", "estimated_cost": 20} for index,kind in enumerate(("breakfast", "lunch", "dinner"))]}
     return AIMessage(content=json.dumps(draft), usage_metadata={"input_tokens": 100, "output_tokens": 100, "total_tokens": 200})
 
 
@@ -137,5 +153,6 @@ def amap_rest_fixture(path: str, request: Request):
             "transits":[{"distance":"600","duration":"600","walking_distance":"200"}]}}
     return {"status":"0","info":"UNKNOWN_FIXTURE_PATH"}
 
-import uvicorn
-uvicorn.run(app, host="0.0.0.0", port=9000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=9000)

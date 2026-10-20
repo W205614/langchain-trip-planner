@@ -13,6 +13,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Service
 @org.springframework.context.annotation.DependsOn("singleInstance")
 public class OutboxWorker {
+  @org.springframework.beans.factory.annotation.Autowired private SingleInstance singleInstance;
   private static final Logger log = LoggerFactory.getLogger(OutboxWorker.class);
 
   @org.springframework.beans.factory.annotation.Value("${WORKERS_ENABLED:true}")
@@ -45,6 +46,7 @@ public class OutboxWorker {
 
   @Scheduled(fixedDelay = 1000, scheduler = "outboxScheduler")
   public synchronized void tick() {
+    if(!singleInstance.owned())return;
     if (!workersEnabled) return;
     var h = jobs.nextHistory();
     var k = jobs.nextKnowledge();

@@ -93,7 +93,7 @@
             type="info"
             show-icon
             message="这里只显示需要操作的任务"
-            description="排队中和生成中的任务可以取消；失败或已取消的任务可以重新提交。成功结果和未完成草稿统一在“行程记录”中查看。"
+            description="排队中和生成中的任务可以取消；中断任务可检查有效阶段后恢复。重新提交会新建任务，恢复可能需要重新查询过期信息。"
           />
           <div class="task-toolbar">
             <a-button :loading="taskLoading" @click="loadTasks()">刷新任务状态</a-button>
@@ -110,6 +110,7 @@
                   <a-tag :color="taskColors[item.status] || 'default'">{{ taskLabels[item.status] || item.status }}</a-tag>
                   <a-button v-if="['queued', 'running'].includes(item.status)" :disabled="taskBusy === item.id" @click="cancelTaskItem(item.id)">取消任务</a-button>
                   <a-button v-if="['failed', 'cancelled'].includes(item.status)" type="primary" :disabled="taskBusy === item.id" @click="retryTaskItem(item.id)">重新提交</a-button>
+                  <a-button v-if="['failed', 'cancelled', 'needs_attention'].includes(item.status)" :disabled="taskBusy === item.id" @click="resumeTaskItem(item.id)">恢复有效阶段</a-button>
                 </template>
               </a-list-item>
             </template>
@@ -147,7 +148,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { formatDateTime } from '@/utils/datetime'
-import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask, submitCommunityCard } from '@/services/api'
+import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask, resumeTask, submitCommunityCard } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -240,6 +241,14 @@ const retryTaskItem = async (id: string) => {
   } finally {
     taskBusy.value = ''
   }
+}
+const resumeTaskItem = async (id: string) => {
+  taskBusy.value = id
+  const key = `resume:${id}`
+  if (!taskKeys.has(key)) taskKeys.set(key, crypto.randomUUID())
+  try { await resumeTask(id, taskKeys.get(key)!); taskPage.value = 1; taskError.value = ''; await loadTasks(); message.success('已创建关联执行，将校验可复用阶段') }
+  catch (error: any) { taskError.value = error.response?.data?.message || '恢复失败，当前阶段可能不兼容，请查看任务说明。' }
+  finally { taskBusy.value = '' }
 }
 
 const goBack = () => {

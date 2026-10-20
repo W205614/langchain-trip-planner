@@ -1,0 +1,17 @@
+{
+  "task": "3f826202-734f-41b5-a6ef-7a9ca1ce47f6",
+  "status": "succeeded",
+  "error_code": "",
+  "before": [
+    "amap:150",
+    "embedding:5",
+    "text:2"
+  ],
+  "after": [
+    "amap:150",
+    "embedding:5",
+    "text:2"
+  ],
+  "zero_additional_paid_reservations": true,
+  "result_id": 72
+}

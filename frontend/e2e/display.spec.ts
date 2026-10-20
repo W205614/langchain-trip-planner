@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+test.beforeEach(async ({ page }) => { await page.route('**/api/trips/*/planning-input', route => route.fulfill({ status: 503, json: { message: '旧行程兼容测试' } })) })
 
 test('result retains required-name mapping, cost assumptions and precise photo identity', async ({ page }) => {
   const attraction = { poi_id: 'B0KDJ78DYD', name: '上海迪士尼乐园', requested_names: ['上海迪士尼公园'],
@@ -51,6 +52,17 @@ test('a one-attraction day is not displayed as zero walking distance', async ({ 
   await expect(page.getByText(/景点间步行 0\.0 公里/)).toHaveCount(0)
 })
 
+test('cross-city activities with the same name keep separate photo identities', async ({ page }) => {
+  const plan = { city: '杭州', start_date: '2026-11-01', end_date: '2026-11-02', overall_suggestions: '已确认跨城交通', weather_info: [], days: ['杭州', '上海'].map((city, index) => ({ city, day_index: index, date: `2026-11-0${index + 1}`, description: city, transportation: '公共交通', accommodation: '酒店', meals: [], attractions: [{ activity_id: `a${index}`, poi_id: `P${index}`, name: '博物馆', address: city, location: { longitude: 120 + index, latitude: 30 }, visit_duration: 120, description: city }] })) }
+  await page.addInitScript(plan => sessionStorage.setItem('tripPlan', JSON.stringify(plan)), plan)
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" />' }))
+  await page.goto('/result')
+  const images = page.locator('img[alt="博物馆"]')
+  await expect(images).toHaveCount(2)
+  await expect(images.nth(0)).toHaveAttribute('src', /poi_id=P0&city=%E6%9D%AD%E5%B7%9E/)
+  await expect(images.nth(1)).toHaveAttribute('src', /poi_id=P1&city=%E4%B8%8A%E6%B5%B7/)
+})
+
 for (const unsaved of [false, true]) {
   test(`legacy saved checks refresh without overwriting unsaved edits: ${unsaved}`, async ({ page }) => {
     const plan = { city: '北京', start_date: '2026-09-14', end_date: '2026-09-14', overall_suggestions: '',
@@ -74,7 +86,7 @@ for (const unsaved of [false, true]) {
     await page.goto('/result')
     if (unsaved) {
       await expect(page.getByText('未满足必去景点：北京故宫博物馆',{exact:true})).toBeVisible()
-      expect(reads).toBe(0)
+      expect(reads).toBe(1) // Refresh access rights without replacing unsaved content.
     } else {
       await expect(page.getByText(/自驾路线不含停车后步行/)).toBeVisible()
       await expect(page.getByText('未满足必去景点：北京故宫博物馆',{exact:true})).toHaveCount(0)

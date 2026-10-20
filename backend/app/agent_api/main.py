@@ -52,6 +52,10 @@ class Execution(BaseModel):
     instruction: str = Field(default="", max_length=500)
 
 
+class ExecutionV2(Execution):
+    protocol_version: Literal[2] = 2
+
+
 class ExecutionResult(BaseModel):
     protocol_version: Literal[1] = 1
     execution_id: UUID
@@ -59,6 +63,10 @@ class ExecutionResult(BaseModel):
     trusted_candidates: list[POIInfo] = Field(max_length=5000)
     quality: dict
     usage: dict[str, int]
+
+
+class ExecutionResultV2(ExecutionResult):
+    protocol_version: Literal[2] = 2
 
 
 def authorize(x_service_key: str = Header(default="")):
@@ -227,6 +235,18 @@ def ready():
 
 @app.post("/internal/v1/executions", dependencies=[Depends(authorize)])
 def execute(body: Execution, request: Request):
+    return _execute(body, request)
+
+
+@app.post("/internal/v2/executions", dependencies=[Depends(authorize)])
+def execute_v2(body: ExecutionV2, request: Request):
+    return _execute(body, request)
+
+
+def _execute(body: Execution | ExecutionV2, request: Request):
+    expected_protocol = 2 if "/v2/" in request.url.path else 1
+    if body.protocol_version != expected_protocol:
+        raise HTTPException(422, "Execution protocol does not match endpoint")
     deadline = body.deadline_at
     if deadline.tzinfo is None:
         raise HTTPException(422, "deadline_at requires timezone")
@@ -259,6 +279,9 @@ def execute(body: Execution, request: Request):
         work_started = time.perf_counter()
         request_token = request_id_context.set(body.request_id)
         token = cancellation_var.set(cancelled)
+        from ..services.durable_execution import execution_id_var, journal_cache_var, new_journal_cache, read_checkpoint, save_checkpoint, input_hash
+        durable_token = execution_id_var.set(identity if body.protocol_version == 2 else None)
+        journal_token = journal_cache_var.set(new_journal_cache() if body.protocol_version == 2 else None)
         try:
             logger.info("agent_execution_started execution_id=%s task_id=%s", identity, body.task_id)
             from ..agents.trip_planner_agent import get_trip_planner_agent
@@ -270,12 +293,24 @@ def execute(body: Execution, request: Request):
             notices = []
             notices_token = rag_degradation_var.set(notices)
             with execution_deadline(deadline, usage) as stats:
-                if body.original_plan is None:
+                digest = input_hash(body.request, body.original_plan, body.instruction, body.day_index)
+                cached = read_checkpoint("draft", digest) if body.protocol_version == 2 else None
+                if cached:
+                    plan = TripPlan.model_validate(cached["plan"])
+                    evidence.update(cached.get("trusted_candidates", {}))
+                    emit("progress", {"stage":"resume_draft", "percent":85, "message":"已恢复仍有效的规划草稿，重新核验约束"})
+                elif body.original_plan is None:
                     plan = planner.plan_trip(body.request, user_id=body.user_id,
                         progress_callback=lambda stage, percent, message: emit("progress", dict(stage=stage, percent=percent, message=message)))
                 else:
-                    plan = planner.revise_trip_day(body.request, body.original_plan, body.day_index,
-                        body.instruction, user_id=body.user_id)
+                    from ..services.time_planner import scope_days, city_for_day
+                    plan = body.original_plan.model_copy(deep=True)
+                    for day_index in sorted(scope_days(body.request, body.day_index)):
+                        scoped_request = body.request.model_copy(update={"city":city_for_day(body.request, day_index)})
+                        plan = planner.revise_trip_day(scoped_request, plan, day_index,
+                            body.instruction, user_id=body.user_id)
+                if body.protocol_version == 2 and not cached:
+                    save_checkpoint("draft", digest, {"plan":plan.model_dump(mode="json"),"trusted_candidates":evidence})
                 plan.enrichment_notices = list(dict.fromkeys([*plan.enrichment_notices, *notices]))
                 # The Agent owns travel generation end to end: trusted POI selection,
                 # route lookup, bounded repair and quality classification. Java validates
@@ -284,13 +319,24 @@ def execute(body: Execution, request: Request):
                 precheck_started = time.perf_counter()
                 emit("progress", {"stage":"agent_precheck", "percent":90,
                     "message":"Agent 草稿已生成，正在核验路线与行程约束"})
-                quality = finalize_plan(plan, body.request, planner.amap_service, repair=True)
+                allowed_days = None
+                if body.original_plan is not None:
+                    from ..services.time_planner import protect_revision
+                    allowed_days = protect_revision(plan, body.original_plan, body.request, body.day_index)
+                quality = finalize_plan(plan, body.request, planner.amap_service, repair=True,
+                    allowed_days=allowed_days, enhanced=body.protocol_version == 2)
+                if body.protocol_version == 2:
+                    save_checkpoint("schedule", digest, {"plan":plan.model_dump(mode="json"), "quality":quality, "trusted_candidates":evidence})
                 quality.setdefault("timings", {})["agent_route_and_constraints_ms"] = round(
                     (time.perf_counter() - precheck_started) * 1000
                 )
                 from ..core.trip_metrics import observe_agent_stage
                 observe_agent_stage("agent_precheck", time.perf_counter() - precheck_started)
-                emit("result", {"protocol_version":1,"plan": plan.model_dump(),
+                # Preserve absence of legacy optional fields in untouched days.
+                # Assignments made by a real replan remain in model_fields_set;
+                # Java normalizes identity/default metadata before comparison.
+                result_plan = plan.model_dump(mode="json",exclude_unset=body.original_plan is not None) if body.protocol_version == 2 else plan.model_dump()
+                emit("result", {"protocol_version":body.protocol_version,"plan": result_plan,
                     "trusted_candidates": list(evidence.values()), "quality": quality,
                     "usage": dict(stats), "execution_id": identity})
         except Exception as exc:
@@ -311,6 +357,8 @@ def execute(body: Execution, request: Request):
             if "notices_token" in locals():
                 rag_degradation_var.reset(notices_token)
             cancellation_var.reset(token)
+            execution_id_var.reset(durable_token)
+            journal_cache_var.reset(journal_token)
             request_id_context.reset(request_token)
             with _lock:
                 registration = _executions.get(identity)
@@ -355,6 +403,7 @@ def execute(body: Execution, request: Request):
 
 
 @app.post("/internal/v1/executions/{execution_id}/cancel", dependencies=[Depends(authorize)])
+@app.post("/internal/v2/executions/{execution_id}/cancel", dependencies=[Depends(authorize)])
 def cancel(execution_id: UUID):
     with _lock:
         item = _executions.get(str(execution_id))

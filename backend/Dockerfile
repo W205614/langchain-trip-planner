@@ -10,7 +10,11 @@ WORKDIR /app
 COPY requirements.txt .
 COPY requirements.lock .
 # 公网镜像源偶发慢速读取时重试；仍不在最终镜像保留 pip 缓存。
-RUN --mount=type=cache,target=/root/.cache/pip pip install --retries 5 --timeout 120 -r requirements.txt && pip check
+RUN --mount=type=cache,target=/root/.cache/pip \
+    for attempt in 1 2 3; do \
+      pip install --retries 5 --timeout 120 -r requirements.txt && pip check && exit 0; \
+      if [ "$attempt" -lt 3 ]; then sleep 2; fi; \
+    done; exit 1
 
 # 2. 复制应用代码
 COPY app ./app
@@ -27,6 +31,11 @@ RUN (id -u appuser >/dev/null 2>&1 || useradd -m appuser) \
 USER appuser
 
 EXPOSE 9000
+
+# Release metadata must not invalidate the locked dependency installation layer.
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.source="https://github.com/W205614/langchain-trip-planner"
 
 # Internal capabilities only. Java/Flyway owns business tables and task scheduling.
 CMD ["uvicorn", "app.agent_api.main:app", "--host", "0.0.0.0", "--port", "9000", "--workers", "1"]

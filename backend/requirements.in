@@ -33,3 +33,6 @@ langchain-text-splitters>=0.3.0
 
 # 测试
 pytest>=8.0.0
+
+# Bounded deterministic time-window and directed-path scheduling (Python 3.11).
+ortools==9.15.6755

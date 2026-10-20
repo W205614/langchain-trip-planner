@@ -217,6 +217,11 @@
           </a-row>
         </div>
 
+        <div class="form-section">
+          <div class="section-header"><span class="section-title">时间、预约与跨城安排</span></div>
+          <PlanningInputEditor ref="planningEditor" v-model="planningInput" :days="formData.travel_days" :start-date="formData.start_date?.format('YYYY-MM-DD')" />
+        </div>
+
         <!-- 第三步:额外要求 -->
         <div class="form-section">
           <div class="section-header">
@@ -304,7 +309,8 @@ import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { fetchCapabilities, fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences, logout } from '@/services/api'
 import { isAuthenticated, getUsername, isAdmin } from '@/services/auth'
-import type { TripFormData } from '@/types'
+import type { TripFormData, PlanningInput } from '@/types'
+import PlanningInputEditor from '@/components/trip/PlanningInputEditor.vue'
 import type { Dayjs } from 'dayjs'
 
 const router = useRouter()
@@ -338,6 +344,8 @@ type FormDataType = Omit<TripFormData, 'start_date' | 'end_date'> & {
 
 const planningConstraints = reactive({ must_visit: [] as string[], avoid: [] as string[], daily_minutes: 600,
   max_inter_stop_walking_km: null as number | null })
+const planningInput = ref<PlanningInput>()
+const planningEditor = ref<InstanceType<typeof PlanningInputEditor>>()
 const formData = reactive<FormDataType>({
   city: '',
   departure_city: '',
@@ -429,6 +437,8 @@ watch(() => formData.traveler_count, count => {
 })
 
 const handleSubmit = async () => {
+  const planningError = planningEditor.value?.validate()
+  if (planningError) { message.warning(planningError); return }
   if (!formData.start_date || !formData.end_date) {
     message.error('请选择日期')
     return
@@ -449,10 +459,11 @@ const handleSubmit = async () => {
       accommodation: formData.accommodation,
       traveler_count: formData.traveler_count,
       room_count: formData.room_count,
-      budget_total: formData.budget_total,
+      budget_total: planningInput.value?.budget_cents == null ? formData.budget_total : planningInput.value.budget_cents / 100,
       preferences: formData.preferences,
       free_text_input: formData.free_text_input,
-      constraints: { ...planningConstraints }
+      constraints: { ...planningConstraints },
+      planning_input: planningInput.value ? { ...planningInput.value, budget_cents: planningInput.value.budget_cents ?? (formData.budget_total == null ? null : Math.round(formData.budget_total * 100)) } : undefined
     }
 
     const response = await generateTripPlanStream(requestData, (progress) => {

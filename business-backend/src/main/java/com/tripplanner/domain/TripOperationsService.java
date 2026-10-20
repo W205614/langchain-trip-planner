@@ -21,6 +21,8 @@ import tools.jackson.databind.node.ObjectNode;
 /** Execution-time facts and collaboration remain business data owned by Java. */
 @Service
 public class TripOperationsService {
+  @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
+  @org.springframework.beans.factory.annotation.Autowired private SingleInstance singleInstance;
   private final JdbcTemplate db;
   private final TransactionTemplate tx;
   private final HistoryMapper history;
@@ -290,7 +292,8 @@ public class TripOperationsService {
     var result=new LinkedHashMap<String,Object>();
     for(String f:List.of("id","city","start_date","end_date","travel_days","version","title","budget_total"))
       result.put(f,trip.get(f));
-    result.put("plan",json.readTree(trip.get("plan_json").toString()));
+    result.put("plan",PlanningInputService.stableIds((ObjectNode)json.readTree(trip.get("plan_json").toString())));
+    result.put("planning_revision",trip.get("planning_revision"));
     result.put("quality",json.readTree(trip.get("quality_json").toString()));
     result.put("viewer_id",actor);
     if(((Number)trip.get("user_id")).longValue()==actor) result.put("role","owner");
@@ -331,10 +334,15 @@ public class TripOperationsService {
     request.set("preferences",json.readTree(found.get("preferences").toString()));
     request.set("constraints",plan.path("constraints").isObject()?plan.path("constraints").deepCopy():json.createObjectNode());
     ObjectNode quality=rules.finish(plan,TripRequests.normalize(request),null,false);
+    var before=json.readTree(found.get("plan_json").toString());
+    var updatedDays=(ArrayNode)plan.path("days");
+    for(int i=0;i<updatedDays.size();i++)if(i!=dayIndex)updatedDays.set(i,before.path("days").get(i).deepCopy());
+    planning.invalidateManualSchedule(before,plan,quality,Set.of(dayIndex));
     quality.withArray("data_gaps").add("shared_reorder_route_unverified");
     long owner=((Number)found.get("user_id")).longValue();
     return tx.execute(s -> {
       writeAccessLocked(actor,id);
+      planning.protect(owner,id,plan,json.createObjectNode(),false);
       if(history.update(Map.of("id",id,"user_id",owner,"version",expected,
           "plan_json",json.writeValueAsString(plan),"quality_json",json.writeValueAsString(quality)))!=1)
         throw new ApiException(409,"行程版本冲突，请重新加载","VERSION_CONFLICT");
@@ -406,9 +414,11 @@ public class TripOperationsService {
 
   public Object commitments(long actor,long id) {
     access(actor,id,false);
-    return Map.of("success",true,"data",db.queryForList(
-        "SELECT id,day_index,category,title,status,amount_cents,note,version,created_by,created_at,updated_at " +
-        "FROM trip_commitments WHERE trip_id=? ORDER BY day_index,id",id));
+    var entries=db.queryForList(
+        "SELECT id,day_index,category,title,status,amount_cents,note,version,created_by,created_at,updated_at,activity_id,poi_id,location_json AS location,start_at,end_at,details_json " +
+        "FROM trip_commitments WHERE trip_id=? ORDER BY day_index,id",id);
+    for(var entry:entries){for(String f:List.of("location","details_json"))if(entry.get(f)!=null)entry.put(f,json.readTree(entry.get(f).toString()));for(String f:List.of("start_at","end_at"))if(entry.get(f) instanceof Timestamp t)entry.put(f,t.toInstant().toString());}
+    return Map.of("success",true,"data",entries);
   }
 
   public Object addCommitment(long actor,long id,ObjectNode body,String requestKey,String requestId) {
@@ -427,7 +437,7 @@ public class TripOperationsService {
           id,day,category,title,status,amount,note,actor,key,fp);
       var saved=row("SELECT id,fingerprint FROM trip_commitments WHERE trip_id=? AND request_key=?",id,key);
       if(!fp.equals(saved.get("fingerprint"))) throw new ApiException(409,"幂等键已用于不同内容");
-      if(inserted==1) audit.success(actor,"trip.commitment_add","trip_commitment",saved.get("id"),null,requestId);
+      if(inserted==1) {requirePlanningDetailOwner(actor,id,body);saveCommitmentDetails(id,((Number)saved.get("id")).longValue(),body);audit.success(actor,"trip.commitment_add","trip_commitment",saved.get("id"),null,requestId);}
       return Map.of("success",true,"id",saved.get("id"));
     });
   }
@@ -443,9 +453,38 @@ public class TripOperationsService {
           "updated_at=timezone('UTC',now()) WHERE id=? AND trip_id=? AND version=?",
           status,amount,note,commitment,id,expected);
       if(changed!=1) throw new ApiException(409,"预订事项版本冲突","VERSION_CONFLICT");
+      requirePlanningDetailOwner(actor,id,body);saveCommitmentDetails(id,commitment,body);
       audit.success(actor,"trip.commitment_update","trip_commitment",commitment,expected+1,requestId);
       return Map.of("success",true,"version",expected+1);
     });
+  }
+
+  private void requirePlanningDetailOwner(long actor,long id,ObjectNode body) {
+    for(String f:List.of("activity_id","poi_id","start_at","end_at","location","origin_location","destination_location","origin_city","destination_city","origin_name","destination_name","service_number","time_mode","duration_minutes"))if(body.has(f)){owned(actor,id);return;}
+  }
+  private void saveCommitmentDetails(long trip,long id,ObjectNode body) {
+    var saved=row("SELECT * FROM trip_commitments WHERE id=? AND trip_id=?",id,trip);
+    var merged=json.createObjectNode();
+    for(String f:List.of("activity_id","poi_id","start_at","end_at"))if(saved.get(f)!=null)merged.put(f,saved.get(f) instanceof Timestamp t?t.toInstant().toString():saved.get(f).toString());
+    if(saved.get("location_json")!=null)merged.set("location",json.readTree(saved.get("location_json").toString()));
+    var details=(ObjectNode)json.readTree(saved.get("details_json").toString());
+    for(String f:List.of("activity_id","poi_id","start_at","end_at","location"))if(body.has(f))merged.set(f,body.path(f));
+    for(String f:List.of("origin_location","destination_location","origin_city","destination_city","origin_name","destination_name","service_number","time_mode","duration_minutes"))if(body.has(f))details.set(f,body.path(f));
+    java.time.OffsetDateTime start=null,end=null;
+    try {
+      if(merged.hasNonNull("start_at")&&!merged.path("start_at").asText().isBlank())start=java.time.OffsetDateTime.parse(merged.path("start_at").asText());
+      if(merged.hasNonNull("end_at")&&!merged.path("end_at").asText().isBlank())end=java.time.OffsetDateTime.parse(merged.path("end_at").asText());
+      if((start==null)!=(end==null)||start!=null&&!end.isAfter(start))throw new IllegalArgumentException();
+    }catch(Exception ex){throw new ApiException(422,"预约日期时间须包含时区且结束晚于开始");}
+    if(merged.path("activity_id").asText("").length()>160||merged.path("poi_id").asText("").length()>64)throw new ApiException(422,"地点或活动编号过长");
+    for(String field:List.of("location","origin_location","destination_location")) {
+      var loc=field.equals("location")?merged.path(field):details.path(field);
+      if(!loc.isMissingNode()&&!loc.isNull()&&(!loc.path("longitude").isNumber()||!loc.path("latitude").isNumber()||Math.abs(loc.path("longitude").asDouble())>180||Math.abs(loc.path("latitude").asDouble())>90))throw new ApiException(422,"地点坐标无效");
+    }
+    if(!Set.of("fixed","entry_window").contains(details.path("time_mode").asText("fixed")))throw new ApiException(422,"预约时间模式无效");
+    if(details.has("duration_minutes")&&(!details.path("duration_minutes").isIntegralNumber()||details.path("duration_minutes").asInt()<1||details.path("duration_minutes").asInt()>1440))throw new ApiException(422,"活动时长无效");
+    if(json.writeValueAsString(details).length()>4000)throw new ApiException(422,"交通信息过长");
+    db.update("UPDATE trip_commitments SET activity_id=?,poi_id=?,location_json=?::jsonb,start_at=?,end_at=?,details_json=?::jsonb WHERE id=? AND trip_id=?",merged.path("activity_id").asText(""),merged.path("poi_id").asText(""),merged.hasNonNull("location")?json.writeValueAsString(merged.path("location")):null,start,end,json.writeValueAsString(details),id,trip);
   }
 
   public Object expenses(long actor,long id) {
@@ -558,6 +597,7 @@ public class TripOperationsService {
   }
 
   @Scheduled(fixedDelayString="${TRIP_USAGE_SCAN_MILLIS:900000}")
+  public void scheduledUsageWarnings(){if(singleInstance.owned())usageWarnings();}
   public void usageWarnings() {
     for(var p:db.queryForList("SELECT p.user_id,p.monthly_token_warning_limit FROM trip_usage_policies p " +
         "JOIN trip_tasks t ON t.user_id=p.user_id AND t.created_at>=date_trunc('month',timezone('UTC',now())) " +
@@ -572,6 +612,7 @@ public class TripOperationsService {
   }
 
   @Scheduled(fixedDelayString="${TRIP_REMINDER_SCAN_MILLIS:3600000}")
+  public void scheduledDepartureReminders(){if(singleInstance.owned())departureReminders();}
   public void departureReminders() {
     String tomorrow=LocalDate.now(ZoneId.of(reminderZone)).plusDays(1).toString();
     for(var trip:db.queryForList("SELECT id,user_id,city,start_date FROM trip_records WHERE start_date=?",tomorrow)) {

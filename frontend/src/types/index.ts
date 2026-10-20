@@ -16,6 +16,7 @@ export interface POIInfo {
 }
 
 export interface Attraction {
+  activity_id?: string
   poi_id?: string
   opening_hours?: string
   fact_source?: string
@@ -33,6 +34,7 @@ export interface Attraction {
 }
 
 export interface Meal {
+  activity_id?: string
   type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
   name: string
   address?: string
@@ -45,6 +47,7 @@ export interface Meal {
 }
 
 export interface Hotel {
+  activity_id?: string
   name: string
   address: string
   location?: Location
@@ -69,6 +72,9 @@ export interface Budget {
 }
 
 export interface DayPlan {
+  city?: string
+  timeline?: TimelineItem[]
+  feasibility?: { status: 'feasible' | 'unverified' | 'not_found' | 'infeasible'; solver_status?: string; unknown?: string[]; conflicts?: string[]; omitted_activity_ids?: string[] }
   date: string
   day_index: number
   description: string
@@ -92,6 +98,7 @@ export interface WeatherInfo {
 }
 
 export interface TripPlan {
+  planning_input?: PlanningInput
   enrichment_notices?: string[]
   city: string
   start_date: string
@@ -104,6 +111,7 @@ export interface TripPlan {
 }
 
 export interface TripFormData {
+  planning_input?: PlanningInput
   constraints?: {
     must_visit: string[]
     avoid: string[]
@@ -122,6 +130,68 @@ export interface TripFormData {
   budget_total: number | null
   preferences: string[]
   free_text_input: string
+}
+
+export interface RevisionScope {
+  day_indices: number[]
+  activity_ids: string[]
+  start_at?: string | null
+  end_at?: string | null
+}
+
+export interface PlanningCommitment {
+  time_mode?: 'fixed' | 'entry_window'
+  duration_minutes?: number
+  id: string | number
+  version: number
+  activity_id?: string
+  day_index: number
+  category: string
+  status: string
+  title: string
+  poi_id?: string
+  location?: Location | null
+  origin_location?: Location | null
+  destination_location?: Location | null
+  origin_name?: string
+  destination_name?: string
+  origin_city?: string
+  destination_city?: string
+  start_at?: string | null
+  end_at?: string | null
+  amount_cents?: number | null
+}
+
+export interface PlanningInput {
+  timezone: string
+  day_start: string
+  day_end: string
+  day_windows: { day_index: number; start: string; end: string }[]
+  city_segments: { city: string; start_day: number; end_day: number }[]
+  commitments: PlanningCommitment[]
+  hotel_stays: { day_index: number; name: string; poi_id?: string; location?: Location | null }[]
+  meal_windows: { type: string; start: string; end: string; duration_minutes: number }[]
+  opening_windows: { poi_id: string; date: string; windows: { start: string; end: string }[]; last_entry?: string | null; closed: boolean; source: string; observed_at?: string; expires_at?: string; confirmed: boolean }[]
+  locks: { activity_id: string; mode: 'content' | 'time'; start_at?: string | null; end_at?: string | null }[]
+  completed_activity_ids: string[]
+  arrival_at?: string | null
+  departure_at?: string | null
+  budget_mode: 'estimate' | 'confirmed'
+  budget_cents?: number | null
+  revision_scope?: RevisionScope
+}
+
+export interface TimelineItem {
+  activity_id?: string
+  title: string
+  kind: string
+  start_at?: string | null
+  end_at?: string | null
+  status: 'confirmed' | 'estimated' | 'unverified'
+  source?: string
+  evidence_refs?: (string | { source?: string; id?: string })[]
+  notes?: string[]
+  location?: Location
 }
 
 export interface TripPlanResponse {

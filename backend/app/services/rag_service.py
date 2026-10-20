@@ -494,28 +494,28 @@ class RagService:
 
     def _lexical_public_search(self, query: str, city: str, k: int) -> List[Document]:
         """对指定城市已入库文档做 BM25 风格的本地关键词召回。"""
-        with observe_rag_operation("knowledge_lexical_search"):
-            stored = self._knowledge_store.get(
-                where={"city": city}, include=["documents", "metadatas"]
-            )
-        if not isinstance(stored, dict):
-            return []
-        contents = stored.get("documents") or []
-        metadatas = stored.get("metadatas") or []
-        rows = [
-            (content, metadatas[index] if index < len(metadatas) and metadatas[index] else {})
-            for index, content in enumerate(contents)
-            if content
-        ]
+        # Writes increment mutation_version; generation swaps replace the store.
+        # Cache tokenization/statistics only. Callers must still revalidate each
+        # result's publication/version visibility through Java on every request.
+        version = (id(self._knowledge_store), getattr(self, "_mutation_version", 0))
+        if getattr(self, "_lexical_cache_version", None) != version:
+            self._lexical_cache_version, self._lexical_cache = version, {}
+        if city not in self._lexical_cache:
+            with observe_rag_operation("knowledge_lexical_search"):
+                stored = self._knowledge_store.get(where={"city": city}, include=["documents", "metadatas"])
+            if not isinstance(stored, dict):
+                return []
+            contents, metadatas = stored.get("documents") or [], stored.get("metadatas") or []
+            rows = [(content, metadatas[index] if index < len(metadatas) and metadatas[index] else {}) for index,content in enumerate(contents) if content]
+            tokenized = [self._lexical_terms(content) for content,_ in rows]
+            document_frequency = Counter(term for terms in tokenized for term in set(terms))
+            average_length = sum(len(terms) for terms in tokenized) / max(1,len(tokenized))
+            self._lexical_cache[city] = (rows, tokenized, document_frequency, average_length)
+        rows, tokenized, document_frequency, average_length = self._lexical_cache[city]
         query_terms = self._lexical_terms(f"{city} {query}")
         if not rows or not query_terms:
             return []
 
-        tokenized = [self._lexical_terms(content) for content, _ in rows]
-        document_frequency = Counter(
-            term for terms in tokenized for term in set(terms)
-        )
-        average_length = sum(len(terms) for terms in tokenized) / max(1, len(tokenized))
         scored = []
         for row_index, terms in enumerate(tokenized):
             frequencies = Counter(terms)
@@ -834,20 +834,25 @@ class RagService:
                 embeddings = self._embedding.embed_documents(queries)
             details: dict[str, str] = {}
             for name, embedding in zip(unique_names, embeddings):
-                docs = self._knowledge_store.similarity_search_by_vector(
-                    embedding, k=1, filter={"city": city}
-                )
+                identity = (poi_ids or {}).get(name)
+                narrowed = self._knowledge_store.similarity_search_by_vector(embedding, k=5,
+                    filter={"$and":[{"city":city},{"poi_id":identity}]} if identity else {"$and":[{"city":city},{"entity_name":name}]})
+                docs = narrowed or self._knowledge_store.similarity_search_by_vector(embedding, k=5, filter={"city":city})
                 docs = self._visible_documents(docs)
                 if not docs:
                     continue
-                detail = entity_excerpt(docs[0], name, city, max_chars, (poi_ids or {}).get(name))
-                if not detail:
+                detail, matched = "", None
+                for doc in docs:
+                    detail = entity_excerpt(doc, name, city, max_chars, identity)
+                    if detail:
+                        matched = doc
+                        break
                     EVENTS.labels("entity_rejected").inc()
                 if detail:
-                    if docs[0].metadata.get("source_type") == "multimodal":
-                        source = docs[0].metadata.get("source", "公共攻略")
-                        page = docs[0].metadata.get("page")
-                        tier = docs[0].metadata.get("source_tier", "community")
+                    if matched.metadata.get("source_type") == "multimodal":
+                        source = matched.metadata.get("source", "公共攻略")
+                        page = matched.metadata.get("page")
+                        tier = matched.metadata.get("source_tier", "community")
                         detail = f"[知识来源: {source}{f' 第{page}页' if page else ''} / 来源等级:{tier}]\n{detail}"
                     details[name] = detail
             return details

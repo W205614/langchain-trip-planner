@@ -1,5 +1,8 @@
 name: CI
 
+env:
+  BUILD_REVISION: ${{ github.sha }}
+
 on:
   push:
     branches: [main]
@@ -72,12 +75,13 @@ jobs:
         run: |
           pytest -v --tb=short
           python -m app.evals.constraint_benchmark --output ../evidence/constraints.json
+          python scripts/time_window_benchmark.py --output ../evidence/time-windows.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: constraint-evaluation
-          path: evidence/constraints.json
+          path: evidence/*.json
 
   # ===== 前端: 类型检查 + 构建 =====
   frontend-build:
@@ -143,7 +147,7 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests \
             python -m pytest -q -p no:cacheprovider --basetemp=/tmp/pytest \
             tests/test_agent_layout.py tests/test_agent_import_boundary.py tests/test_internal_contracts.py \
-            tests/test_agent_internal.py tests/test_deployment_config.py
+            tests/test_agent_internal.py tests/test_deployment_config.py tests/test_protocol_v2_schema.py
 
       - name: Nginx contracts and business scenarios
         run: |
@@ -153,6 +157,10 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/business.json evidence/business.json
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/assistant_proposal_acceptance.py --base-url http://frontend --output /tmp/assistant-proposal.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/assistant-proposal.json evidence/assistant-proposal.json
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_acceptance.py --base-url http://frontend --output /tmp/final-planning-roles.json
+          docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-planning-roles.json evidence/final-planning-roles.json
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_scenarios.py --base-url http://frontend --output /tmp/final-scenarios.json
+          docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios.json evidence/final-scenarios.json
 
       - uses: actions/setup-node@v4
         with:
@@ -186,6 +194,7 @@ jobs:
           python backend/scripts/lifecycle_smoke.py
           cp docs/evidence/lifecycle-offline.json evidence/lifecycle.json
           python backend/scripts/java_fault_smoke.py --output evidence/cross-service-faults.json
+          INTERNAL_SERVICE_KEY=migration-fixture-internal-01234567890123456789 python backend/scripts/final_fault_acceptance.py --backend-container trip-validation-backend-1 --output evidence/final-faults.json
 
       - name: Preserve isolated failure diagnostics
         if: failure()
@@ -206,4 +215,4 @@ jobs:
 
       - name: Remove validation resources
         if: always()
-        run: docker compose -p trip-validation -f docker-compose.validation.yml down -v
+        run: docker compose -p trip-validation -f docker-compose.validation.yml down --remove-orphans
