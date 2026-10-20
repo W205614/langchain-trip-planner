@@ -13,6 +13,7 @@ import tarfile
 import time
 from uuid import uuid4
 from dotenv import dotenv_values
+from deployment_assets import validate_manifest, extract_safe, docker, database_summary
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
@@ -23,6 +24,8 @@ def restore(backup,output):
     if output==ROOT or ROOT in output.parents or output==backup or backup in output.parents:
         raise ValueError("Restore files into a fresh directory outside repository and backup")
     manifest=json.loads((backup/"manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("schema")=="Java/Flyway-v2":
+        return restore_v2(backup,output)
     if manifest.get("schema")!="Java/Flyway":raise ValueError("Not a Java backup")
     for name,digest in manifest["sha256"].items():
         file=(backup/name).resolve()
@@ -57,6 +60,53 @@ def restore(backup,output):
         "restored_java_ready":True,"production_configuration_changed":False}
     (output/"restore-report.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
     print(json.dumps(report))
+
+
+def restore_v2(backup,output):
+    manifest=validate_manifest(backup)
+    output.mkdir(parents=True,exist_ok=False)
+    for name, mount in manifest["mounts"].items():
+        extract_safe(backup/mount["archive"],output/name)
+    suffix=uuid4().hex[:12]
+    postgres="trip-final-restore-pg-"+suffix
+    backend="trip-final-restore-backend-"+suffix
+    network="trip-final-restore-"+suffix
+    label="codex.task=trip-planner-final"
+    docker("network","create","--label",label,network)
+    docker("run","-d","--name",postgres,"--label",label,"--network",network,
+           "-e","POSTGRES_USER=trip","-e","POSTGRES_PASSWORD=restore-isolated-only",
+           "-e","POSTGRES_DB=trip_restore",manifest["images"]["postgres"])
+    for _ in range(120):
+        ready=subprocess.run(["docker","exec",postgres,"pg_isready","-U","trip"],capture_output=True)
+        if ready.returncode==0:break
+        time.sleep(.5)
+    else:raise RuntimeError("Isolated PostgreSQL did not become ready")
+    with (backup/"database.dump").open("rb") as stream:
+        subprocess.run(["docker","exec","-i",postgres,"pg_restore","-U","trip","-d","trip_restore",
+                        "--no-owner","--no-acl","--exit-on-error"],stdin=stream,capture_output=True,check=True)
+    expected=json.loads((backup/"database-summary.json").read_text(encoding="utf-8"))
+    actual=database_summary(postgres,"trip_restore")
+    if expected!=actual:raise RuntimeError("Restored table contents differ; artifacts retained")
+    environment=dict(os.environ)
+    values=dict(value.split("=",1) for value in json.loads((backup/"runtime/backend.json").read_text()) if "=" in value)
+    values.update(JDBC_DATABASE_URL=f"jdbc:postgresql://{postgres}:5432/trip_restore",POSTGRES_USER="trip",
+                  POSTGRES_PASSWORD="restore-isolated-only",WORKERS_ENABLED="false",UPLOAD_DIR="/data/uploads")
+    environment.update(values)
+    args=["docker","run","-d","--name",backend,"--label",label,"--network",network,
+          "-v",str(output/"knowledge_uploads")+":/data/uploads:ro"]
+    args.extend(value for key in values for value in ("-e",key))
+    subprocess.run(args+[manifest["images"]["backend"]],env=environment,capture_output=True,check=True)
+    for _ in range(120):
+        ready=subprocess.run(["docker","exec",backend,"curl","-fsS","http://localhost:9000/readyz"],capture_output=True)
+        if ready.returncode==0:break
+        time.sleep(.5)
+    else:raise RuntimeError("Restored backend not ready; diagnostics retained")
+    report={"checksums_verified":True,"tables_verified":len(expected),"rows_verified":sum(int(v.split(':')[0]) for v in expected.values()),
+            "restored_java_ready":True,"production_configuration_changed":False,
+            "containers":[postgres,backend],"network":network,"files":str(output),"mount_archives":list(manifest["mounts"])}
+    (output/"restore-report.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
+    print(json.dumps(report))
+    return report
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser();parser.add_argument("--backup",required=True,type=Path);parser.add_argument("--output",required=True,type=Path)
