@@ -240,7 +240,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     if enhanced:
         from .time_planner import RULE_VERSION, confirmed
         report["schedule_checks"] = schedules
-        report["unmet_meals"]=[{"day_index":schedule["day_index"],**meal} for schedule in schedules for meal in schedule.get("unmet_meals",[])]
+        report["unmet_meals"]=[{"day_index":day.day_index,**meal} for day in plan.days for meal in day.feasibility.get("unmet_meals",[])]
+        report["data_gaps"]=sorted(set(report["data_gaps"])|{f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"]})
         report["time_policy_version"] = RULE_VERSION
         statuses = {s["status"] for s in schedules}
         report["feasibility_status"] = next((s for s in ("infeasible", "not_found", "unverified") if s in statuses), "feasible")

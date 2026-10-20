@@ -1,0 +1,1369 @@
+{
+  "source": "Controlled cross-city acceptance sample, 2026-10-20. Public POIs only; alternate route results must be injected offline and are not live evidence.",
+  "request": {
+    "city": "北京",
+    "start_date": "2026-10-30",
+    "end_date": "2026-10-31",
+    "travel_days": 2,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "planning_input": {
+      "timezone": "Asia/Shanghai",
+      "day_start": "09:00",
+      "day_end": "20:00",
+      "budget_mode": "estimate",
+      "budget_cents": 200000,
+      "day_windows": [
+        {
+          "day_index": 1,
+          "start": "07:00",
+          "end": "20:00"
+        }
+      ],
+      "city_segments": [
+        {
+          "city": "北京",
+          "start_day": 0,
+          "end_day": 0
+        },
+        {
+          "city": "上海",
+          "start_day": 1,
+          "end_day": 1
+        }
+      ],
+      "commitments": [
+        {
+          "id": "sample-train",
+          "activity_id": "commitment:sample-train",
+          "day_index": 1,
+          "category": "transport",
+          "status": "confirmed",
+          "title": "用户输入的示例跨城交通（非真实票务）",
+          "time_mode": "fixed",
+          "origin_city": "北京",
+          "destination_city": "上海",
+          "origin_location": {
+            "longitude": 116.3785,
+            "latitude": 39.8652
+          },
+          "destination_location": {
+            "longitude": 121.3271,
+            "latitude": 31.2009
+          },
+          "start_at": "2026-10-31T08:00:00+08:00",
+          "end_at": "2026-10-31T12:30:00+08:00",
+          "amount_cents": 55000
+        }
+      ]
+    },
+    "free_text_input": "每天选择三个可信景点；资料不足明确标注，不要编造营业时间或票价。"
+  },
+  "plan": {
+    "city": "北京",
+    "days": [
+      {
+        "city": "北京",
+        "date": "2026-10-30",
+        "hotel": {
+          "name": "驿小栈青年酒店(北京朝阳高铁站青年路地铁站店)",
+          "type": "经济型酒店",
+          "rating": "",
+          "address": "青年路西里3号院1号楼2层",
+          "distance": "",
+          "location": {
+            "latitude": 39.932325,
+            "longitude": 116.513757
+          },
+          "price_range": "",
+          "estimated_cost": 0
+        },
+        "meals": [
+          {
+            "name": "全聚德(前门店)",
+            "type": "lunch",
+            "poi_id": "B000A81B55",
+            "address": "前门大街30号",
+            "location": {
+              "latitude": 39.89663,
+              "longitude": 116.398244
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 11:00-14:30,16:30-21:00",
+            "estimated_cost": 120
+          },
+          {
+            "name": "四季民福烤鸭店(西单华威约饭街店)",
+            "type": "dinner",
+            "poi_id": "B0FFME0OOQ",
+            "address": "西单北大街130号华威大厦8层39号",
+            "location": {
+              "latitude": 39.911511,
+              "longitude": 116.374576
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周四 10:30-21:30；周五至周日 10:30-22:30",
+            "estimated_cost": 100
+          },
+          {
+            "name": "紫光园·烤鸭·北京菜(常营店)",
+            "type": "breakfast",
+            "poi_id": "B000A82T8Y",
+            "address": "北京城区常营中路民族家园综合楼13号",
+            "location": {
+              "latitude": 39.928665,
+              "longitude": 116.587741
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 06:00-10:00,10:30-21:30",
+            "estimated_cost": 30
+          }
+        ],
+        "theme": "前门中轴寻古与博物馆之旅",
+        "timeline": [],
+        "day_index": 0,
+        "activities": [
+          "历史建筑参观",
+          "胡同街区漫步",
+          "博物馆研学",
+          "京味美食"
+        ],
+        "attractions": [
+          {
+            "name": "正阳门箭楼",
+            "photos": [
+              "https://aos-comment.amap.com/B0FFG6VF81/comment/DA78968C_0D8E_49B9_BE8C_471A2E557A21_L0_001_1770_2002_1772540780701_64357495.jpg"
+            ],
+            "poi_id": "B0FFG6VF81",
+            "rating": null,
+            "address": "前门大街2号前门商业区A2地块",
+            "category": "景点",
+            "location": {
+              "latitude": 39.899368,
+              "longitude": 116.39791
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "上午登箭楼看中轴线与前门大街全景，建议提前查询开放与预约信息，楼内展陈可了解城门与防御历史。",
+            "fact_source": "高德 POI",
+            "price_source": "unknown",
+            "ticket_price": 0,
+            "opening_hours": "周一 全天关闭(法定节假日除外),周二至周日 09:00-17:00",
+            "visit_duration": 90,
+            "requested_names": []
+          },
+          {
+            "name": "北京地下城(北京人民防空历史文化馆)",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/366cca41bb1eab3c0000009111140439?type=pic"
+            ],
+            "poi_id": "B0MDDHMX4B",
+            "rating": null,
+            "address": "前门东区西兴隆街",
+            "category": "景点",
+            "location": {
+              "latitude": 39.897824,
+              "longitude": 116.408911
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "从箭楼步行可达，跟随展陈了解人防历史与地下空间构造，室内参观，注意开放时段与讲解场次。",
+            "fact_source": "高德 POI",
+            "price_source": "unknown",
+            "ticket_price": 0,
+            "opening_hours": "周二至周日 09:00-17:00(16:00停止入馆)",
+            "visit_duration": 90,
+            "requested_names": []
+          },
+          {
+            "name": "国家自然博物馆",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/75fe64b469bd6b88564a9644a9a471ca"
+            ],
+            "poi_id": "B000A7CRPA",
+            "rating": null,
+            "address": "天桥南大街126号",
+            "category": "景点",
+            "location": {
+              "latitude": 39.883183,
+              "longitude": 116.399833
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "下午参观古生物、动物与人演化展厅，场馆免费但需提前预约，周末人多建议错峰入场。",
+            "fact_source": "高德 POI",
+            "price_source": "unknown",
+            "ticket_price": 0,
+            "opening_hours": "9月1日至12月31日 周二 09:00-17:00开放,最晚进入16:30；周三至周日 09:00-17:00开放,最晚进入16:30；周一 全天不开放；7月6日至8月31日 周一,周三至周日 09:00-17:00,18:00-21:00开放；周二 全天不开放；1月1日至7月5日 周二 09:00-17:00开放,最晚进入16:30；周三至周日 09:00-17:00开放,最晚进入16:30；周一 全天不开放；元旦节,清明节,劳动节,端午节,中秋节,国庆节 09:00-17:00开放,最晚进入16:30",
+            "visit_duration": 150,
+            "requested_names": []
+          }
+        ],
+        "description": "上午从正阳门箭楼开始，沿前门老街步行至北京地下城了解防空历史，午后前往国家自然博物馆看古生物与动物陈列，晚间到西单用餐，全程地铁公交可达，步行强度适中。",
+        "feasibility": {},
+        "accommodation": "经济型酒店",
+        "transportation": "公共交通",
+        "fallback_reason": null,
+        "generation_mode": "llm"
+      },
+      {
+        "city": "上海",
+        "date": "2026-10-31",
+        "hotel": null,
+        "meals": [
+          {
+            "name": "味香斋(雁荡路店)",
+            "type": "breakfast",
+            "poi_id": "B00154YR8Z",
+            "address": "雁荡路14号(近淮海中路)",
+            "location": {
+              "latitude": 31.220846,
+              "longitude": 121.469876
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 06:15-21:00",
+            "estimated_cost": 25
+          },
+          {
+            "name": "点都德(环宇荟店)",
+            "type": "lunch",
+            "poi_id": "B0FFJBZBG2",
+            "address": "黄陂南路838弄环宇荟B1层B125-1-3、B153-1-2单元",
+            "location": {
+              "latitude": 31.211743,
+              "longitude": 121.476574
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 09:00-21:30 最晚点餐21:30",
+            "estimated_cost": 80
+          },
+          {
+            "name": "外滩家宴·上海菜(外滩·南京路店)",
+            "type": "dinner",
+            "poi_id": "B0L61MLNIB",
+            "address": "外滩街道九江路80号二楼202(九江路招商银行、中国建设银行隔壁)",
+            "location": {
+              "latitude": 31.237636,
+              "longitude": 121.488547
+            },
+            "activity_id": "",
+            "description": null,
+            "fact_source": "高德 POI",
+            "opening_hours": "周一至周日 10:30-22:00 2026-09-25至2026-09-27 10:30-23:00；2026-10-01至2026-10-07 10:30-23:00",
+            "estimated_cost": 120
+          }
+        ],
+        "theme": "南翔古镇古迹寻访",
+        "timeline": [],
+        "day_index": 1,
+        "activities": [
+          "古镇漫步",
+          "古塔寻访",
+          "历史建筑摄影"
+        ],
+        "attractions": [
+          {
+            "name": "南翔古镇",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/d8731962d14c3877b83e895023053c5b"
+            ],
+            "poi_id": "B00155LZBN",
+            "rating": null,
+            "address": "解放街206号",
+            "category": "景点",
+            "location": {
+              "latitude": 31.291233,
+              "longitude": 121.308228
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "沿老街慢行，看双塔与古桥，白墙黑瓦的江南街巷适合慢逛，可安排上午人少时段细看店铺与老建筑。",
+            "fact_source": "高德 POI",
+            "price_source": "model_estimate",
+            "ticket_price": 0,
+            "opening_hours": "周一至周日 00:00-24:00",
+            "visit_duration": 150,
+            "requested_names": []
+          },
+          {
+            "name": "南翔寺砖塔",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/fb2cf88e4477d8d753d527d76526fcdd"
+            ],
+            "poi_id": "B0FFHDQHCS",
+            "rating": null,
+            "address": "人民街与解放街交叉口东北50米",
+            "category": "景点",
+            "location": {
+              "latitude": 31.291011,
+              "longitude": 121.308106
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "位于老街路口的仿古砖塔，是南翔古镇标志性景观，拍照打卡约半小时即可，注意来往车辆。",
+            "fact_source": "高德 POI",
+            "price_source": "model_estimate",
+            "ticket_price": 0,
+            "opening_hours": "周一至周日 00:00-24:00",
+            "visit_duration": 30,
+            "requested_names": []
+          },
+          {
+            "name": "南翔寺山门遗迹",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/8d0d1824bea7a20c6a358d91c6f13108"
+            ],
+            "poi_id": "B00156R4R6",
+            "rating": null,
+            "address": "解放街206号南翔古镇",
+            "category": "景点",
+            "location": {
+              "latitude": 31.290991,
+              "longitude": 121.30799
+            },
+            "optional": true,
+            "priority": 50,
+            "image_url": null,
+            "activity_id": "",
+            "description": "南翔寺留存的山门遗迹，与砖塔相距很近，可顺路观看，了解古寺历史沿革，勿攀爬文物。",
+            "fact_source": "高德 POI",
+            "price_source": "model_estimate",
+            "ticket_price": 0,
+            "opening_hours": "周一至周日 00:00-24:00",
+            "visit_duration": 30,
+            "requested_names": []
+          }
+        ],
+        "description": "从市区乘地铁前往嘉定南翔，一天串联南翔古镇老街与两处南翔寺古迹，感受千年古镇的历史脉络，傍晚返回市区外滩一带用晚餐，交通以地铁11号线为主。",
+        "feasibility": {},
+        "accommodation": "经济型酒店",
+        "transportation": "公共交通",
+        "fallback_reason": null,
+        "generation_mode": "llm"
+      }
+    ],
+    "budget": {
+      "total": 250,
+      "estimated": true,
+      "assumptions": [],
+      "limit_total": null,
+      "total_meals": 250,
+      "total_hotels": 0,
+      "within_limit": null,
+      "unknown_items": [
+        "attraction_prices",
+        "transportation_prices"
+      ],
+      "total_attractions": 0,
+      "total_transportation": 0
+    },
+    "end_date": "2026-10-31",
+    "room_count": 1,
+    "start_date": "2026-10-30",
+    "constraints": {
+      "avoid": [],
+      "must_visit": [],
+      "daily_minutes": 600,
+      "max_inter_stop_walking_km": null
+    },
+    "weather_info": [],
+    "departure_city": "",
+    "planning_input": {
+      "locks": [],
+      "day_end": "20:00",
+      "timezone": "Asia/Shanghai",
+      "day_start": "09:00",
+      "arrival_at": null,
+      "budget_mode": "estimate",
+      "commitments": [
+        {
+          "id": "sample-train",
+          "title": "用户输入的示例跨城交通（非真实票务）",
+          "end_at": "2026-10-31T12:30:00+08:00",
+          "status": "confirmed",
+          "category": "transport",
+          "start_at": "2026-10-31T08:00:00+08:00",
+          "day_index": 1,
+          "time_mode": "fixed",
+          "activity_id": "commitment:sample-train",
+          "origin_city": "北京",
+          "amount_cents": 55000,
+          "origin_location": {
+            "latitude": 39.8652,
+            "longitude": 116.3785
+          },
+          "destination_city": "上海",
+          "destination_location": {
+            "latitude": 31.2009,
+            "longitude": 121.3271
+          }
+        }
+      ],
+      "day_windows": [
+        {
+          "end": "20:00",
+          "start": "07:00",
+          "day_index": 1
+        }
+      ],
+      "hotel_stays": [],
+      "budget_cents": 200000,
+      "departure_at": null,
+      "meal_windows": [],
+      "city_segments": [
+        {
+          "city": "北京",
+          "end_day": 0,
+          "start_day": 0
+        },
+        {
+          "city": "上海",
+          "end_day": 1,
+          "start_day": 1
+        }
+      ],
+      "revision_scope": null,
+      "opening_windows": [],
+      "completed_activity_ids": []
+    },
+    "traveler_count": 1,
+    "weather_notice": "高德天气接口仅提供近期 4 天预报；本次行程仍有 1 天暂无可靠预报。",
+    "enrichment_notices": [
+      "部分攻略资料暂无可靠匹配，请以官方信息为准"
+    ],
+    "overall_suggestions": "这是为您规划的北京1日游行程"
+  },
+  "routes": [
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 63,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 69,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 66,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 65,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 38,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 62,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 17,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 25,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 6,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 32,
+      "verified": true
+    },
+    {
+      "key": [
+        116.39791,
+        39.899368,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 17,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 34,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 14,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 43,
+      "verified": true
+    },
+    {
+      "key": [
+        116.408911,
+        39.897824,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 72,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 70,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 24,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 31,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 24,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 40,
+      "verified": true
+    },
+    {
+      "key": [
+        116.399833,
+        39.883183,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 76,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 67,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 6,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 14,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 24,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 32,
+      "verified": true
+    },
+    {
+      "key": [
+        116.398244,
+        39.89663,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 73,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 65,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 36,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 44,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 45,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 42,
+      "verified": true
+    },
+    {
+      "key": [
+        116.374576,
+        39.911511,
+        116.587741,
+        39.928665,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.513757,
+        39.932325,
+        "北京",
+        "transit"
+      ],
+      "minutes": 39,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.39791,
+        39.899368,
+        "北京",
+        "transit"
+      ],
+      "minutes": 68,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.408911,
+        39.897824,
+        "北京",
+        "transit"
+      ],
+      "minutes": 72,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.399833,
+        39.883183,
+        "北京",
+        "transit"
+      ],
+      "minutes": 75,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.398244,
+        39.89663,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.587741,
+        39.928665,
+        116.374576,
+        39.911511,
+        "北京",
+        "transit"
+      ],
+      "minutes": 71,
+      "verified": true
+    },
+    {
+      "key": [
+        116.513757,
+        39.932325,
+        116.3785,
+        39.8652,
+        "北京",
+        "transit"
+      ],
+      "minutes": 62,
+      "verified": true
+    }
+  ],
+  "hotel_checkpoints": [
+    {
+      "stage": "hotels:943146e282e7cda2",
+      "input_hash": "943146e282e7cda20c8784a52319c2de8d4b7cda81e14ece67efece05a129a5f",
+      "payload": {
+        "hotel_pois": [
+          {
+            "id": "B0FFHIHZMO",
+            "tel": null,
+            "city": "",
+            "name": "永晖宾馆",
+            "type": "住宿服务;宾馆酒店;三星级宾馆",
+            "photos": [
+              "https://aos-comment.amap.com/B0FFHIHZMO/comment/6b2f0dcb39cd3bf99796a92305dce86a_2048_2048_80.jpg"
+            ],
+            "address": "南团公路3361号",
+            "location": {
+              "latitude": 30.962331,
+              "longitude": 121.746101
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B00155QMEX",
+            "tel": null,
+            "city": "",
+            "name": "上海蔓俪宾馆",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/87eb72aa2f8c127b512c9453fe7d50d3"
+            ],
+            "address": "康沈路1548号2楼",
+            "location": {
+              "latitude": 31.118494,
+              "longitude": 121.575204
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B00155ATSE",
+            "tel": null,
+            "city": "",
+            "name": "上海南苑旅馆",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/fd7510059c54ad23aeb9f64d6b6ecb76"
+            ],
+            "address": "群裕路103号",
+            "location": {
+              "latitude": 31.372876,
+              "longitude": 121.251652
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B00155I5M8",
+            "tel": null,
+            "city": "",
+            "name": "上海茂兴旅馆",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/4365a5f2bf47228401ccc42e6eb33617"
+            ],
+            "address": "高桥镇草高支路685号(港城路地铁站2号口步行270米)",
+            "location": {
+              "latitude": 31.351371,
+              "longitude": 121.574375
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B00155QFOK",
+            "tel": null,
+            "city": "",
+            "name": "金鹰招待所(上海崇明店)",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/2d176ae0120f3de6c044d6d398055b4e"
+            ],
+            "address": "城桥镇南门港街108号",
+            "location": {
+              "latitude": 31.618297,
+              "longitude": 121.397999
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B00156G7ZN",
+            "tel": null,
+            "city": "",
+            "name": "怡风精选酒店(海湾大学城店)",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/4a613ca39b388c83112207f410a9b544"
+            ],
+            "address": "海湾旅游区奉炮公路378弄86号(近上海师范大学附属奉贤实验小学)",
+            "location": {
+              "latitude": 30.836008,
+              "longitude": 121.524107
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B001576TGH",
+            "tel": null,
+            "city": "",
+            "name": "上海玉琴旅馆(塘西街店)",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/9079f4c5c832568d4973410e7011da9d"
+            ],
+            "address": "塘西街219弄8号",
+            "location": {
+              "latitude": 31.415776,
+              "longitude": 121.343112
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B001557U45",
+            "tel": null,
+            "city": "",
+            "name": "上海顺达旅馆",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/41a348afc3109435d6aafb8fcfb01c6e"
+            ],
+            "address": "联营路103号",
+            "location": {
+              "latitude": 31.017034,
+              "longitude": 121.311377
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B00155IAED",
+            "tel": null,
+            "city": "",
+            "name": "万友旅馆(上海南站北广场店)",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/109b79fd6dc830a6923af8aeab3c28e7"
+            ],
+            "address": "柳州路92号(上海南站地铁站8号口步行280米)",
+            "location": {
+              "latitude": 31.158117,
+              "longitude": 121.427988
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0FFG1IR2T",
+            "tel": null,
+            "city": "",
+            "name": "鑫帝时尚宾馆",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/ae1064182e0559620074f85284d4afc8"
+            ],
+            "address": "曹行支路14号",
+            "location": {
+              "latitude": 31.091981,
+              "longitude": 121.437946
+            },
+            "opening_hours": "",
+            "requested_names": []
+          }
+        ]
+      },
+      "compatibility": {
+        "model": "deepseek-v4-flash",
+        "rules": "time-windows-v4-meal-candidates",
+        "prompt": "f9f60798f7ddd06665fb5a34b9c1d3d98a977c2d246dbfe3fe65a1f7a3e937cd",
+        "schema": "planning-v1",
+        "protocol": 2,
+        "max_tokens": 1800,
+        "temperature": 0.7,
+        "embedding_model": "text-embedding-3-large"
+      },
+      "expires_at": "2026-10-20T10:18:10.349217+00:00"
+    },
+    {
+      "stage": "hotels:e3fc0a756db79f16",
+      "input_hash": "e3fc0a756db79f16def9ff9f52ebde174945b788eb0936f9ddc3d7f01ea07996",
+      "payload": {
+        "hotel_pois": [
+          {
+            "id": "B0LKJX43IL",
+            "tel": null,
+            "city": "",
+            "name": "驿小栈青年酒店(北京朝阳高铁站青年路地铁站店)",
+            "type": "住宿服务;住宿服务相关;住宿服务相关",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/d3e12a1d0dea22e10000003278286245?type=pic"
+            ],
+            "address": "青年路西里3号院1号楼2层",
+            "location": {
+              "latitude": 39.932325,
+              "longitude": 116.513757
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0L04SXNTP",
+            "tel": null,
+            "city": "",
+            "name": "北京艺栈青年酒店(燕莎亮马桥地铁站店)",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/ab282aa27762e7bc9284a2314f8883ff"
+            ],
+            "address": "新源南路甲3号佳亿广场F4层",
+            "location": {
+              "latitude": 39.950448,
+              "longitude": 116.458589
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0HKCZ7R0Q",
+            "tel": null,
+            "city": "",
+            "name": "静宇阁(大兴机场店)",
+            "type": "住宿服务;住宿服务相关;住宿服务相关",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/4edc0be86577e17bc86cfb7661c86fc6"
+            ],
+            "address": "礼贤镇东郏河村西三条13号",
+            "location": {
+              "latitude": 39.549935,
+              "longitude": 116.375139
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0FFGH21I9",
+            "tel": null,
+            "city": "",
+            "name": "北京东方银河宾馆",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/90c4bd4dfd7bbbc349e79e4792ec9e8b"
+            ],
+            "address": "南大街10号",
+            "location": {
+              "latitude": 40.312117,
+              "longitude": 116.634234
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0LAZBPVEI",
+            "tel": null,
+            "city": "",
+            "name": "才佰商务青年酒店(北京天坛医院白盆窑地铁站店)",
+            "type": "住宿服务;住宿服务相关;住宿服务相关",
+            "photos": [
+              "https://aos-comment.amap.com/comment/20260320-c95f104a6a1df5146c9fab97-4sEJrIO9Tco7SJcIkQJew4.jpg"
+            ],
+            "address": "樊羊路69号院2号楼116号(白盆窑地铁站A口步行150米)",
+            "location": {
+              "latitude": 39.820242,
+              "longitude": 116.312676
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B000A7WZAL",
+            "tel": null,
+            "city": "",
+            "name": "北京绿谷金乡酒店式公寓",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/6bcd8b2f9a6a4a899db0af09c576d81c"
+            ],
+            "address": "北京关光明西里小区282排11号",
+            "location": {
+              "latitude": 40.147502,
+              "longitude": 117.111979
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0L0SSJLPG",
+            "tel": null,
+            "city": "",
+            "name": "wohkoon者行孙精选酒店(北京朝阳路十里堡店)",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/7e65cce8617f239b78d3f9bf946c4de0"
+            ],
+            "address": "朝阳路十里堡3号",
+            "location": {
+              "latitude": 39.915465,
+              "longitude": 116.500872
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0HRT655BL",
+            "tel": null,
+            "city": "",
+            "name": "北京金龙越鑫宾馆",
+            "type": "住宿服务;宾馆酒店;宾馆酒店|住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "http://store.is.autonavi.com/showpic/3ccf4cf5f1e9010c31bedc77b82a4ecb"
+            ],
+            "address": "太平中街",
+            "location": {
+              "latitude": 40.141985,
+              "longitude": 117.124333
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B000A8X9KW",
+            "tel": null,
+            "city": "",
+            "name": "北京兴海旅馆",
+            "type": "住宿服务;旅馆招待所;旅馆招待所",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/24e0c8b9842fc84d4f56e570c2307094"
+            ],
+            "address": "太平中街67号",
+            "location": {
+              "latitude": 40.141867,
+              "longitude": 117.12412
+            },
+            "opening_hours": "",
+            "requested_names": []
+          },
+          {
+            "id": "B0L115LJEW",
+            "tel": null,
+            "city": "",
+            "name": "康悦汤泉酒店(北京望京SOHO店)",
+            "type": "住宿服务;宾馆酒店;宾馆酒店",
+            "photos": [
+              "https://store.is.autonavi.com/showpic/d1bd774dcbbe813192c712b19aebe6c4"
+            ],
+            "address": "望京园602号楼2层201室",
+            "location": {
+              "latitude": 39.990334,
+              "longitude": 116.478162
+            },
+            "opening_hours": "",
+            "requested_names": []
+          }
+        ]
+      },
+      "compatibility": {
+        "model": "deepseek-v4-flash",
+        "rules": "time-windows-v4-meal-candidates",
+        "prompt": "f9f60798f7ddd06665fb5a34b9c1d3d98a977c2d246dbfe3fe65a1f7a3e937cd",
+        "schema": "planning-v1",
+        "protocol": 2,
+        "max_tokens": 1800,
+        "temperature": 0.7,
+        "embedding_model": "text-embedding-3-large"
+      },
+      "expires_at": "2026-10-20T10:17:50.902285+00:00"
+    }
+  ],
+  "draft_input_hash": "9e11c2cc4c173380f46916dff2718b09ff73a92b2b4e209ead3c44f8ed1da793",
+  "routes_input_hash": "c15e982a53bc31b4eb6b44aee38885c5a2ff25fb086995867fdd2afb8f46883b",
+  "compatibility": {
+    "model": "deepseek-v4-flash",
+    "rules": "time-windows-v4-meal-candidates",
+    "prompt": "f9f60798f7ddd06665fb5a34b9c1d3d98a977c2d246dbfe3fe65a1f7a3e937cd",
+    "schema": "planning-v1",
+    "protocol": 2,
+    "max_tokens": 1800,
+    "temperature": 0.7,
+    "embedding_model": "text-embedding-3-large"
+  }
+}

@@ -5,7 +5,7 @@ An infeasibility result is only about this
 finite candidate model; incomplete travel/opening facts produce unverified plans.
 """
 from datetime import datetime, timedelta, timezone
-from math import ceil, isfinite
+from math import ceil, isfinite, cos, radians
 import os
 import time
 import json
@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v4-meal-candidates"
+RULE_VERSION = "time-windows-v5-hotel-departure"
 FACT_TTLS = {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600}
 
 
@@ -329,6 +329,89 @@ def _hotel_anchor(inputs, request, index, day=None):
     return None, city_for_day(request,index)
 
 
+def _hotel_candidate_request(request,index):
+    """Project the same city request used by the existing candidate search."""
+    cities=[city_for_day(request,i) for i in range(request.travel_days)]
+    if all(city==request.city for city in cities):
+        return request
+    start=end=index
+    while start and cities[start-1]==cities[index]: start-=1
+    while end+1<len(cities) and cities[end+1]==cities[index]: end+=1
+    local=request.model_copy(deep=True)
+    local.city=cities[index]
+    local.start_date=(datetime.fromisoformat(request.start_date)+timedelta(days=start)).date().isoformat()
+    local.end_date=(datetime.fromisoformat(request.start_date)+timedelta(days=end)).date().isoformat()
+    local.travel_days=end-start+1
+    local.planning_input.city_segments=[]
+    local._include_last_night=end+1<request.travel_days
+    local.planning_input.commitments=[{**c,"day_index":c["day_index"]-start} for c in request.planning_input.commitments if isinstance(c.get("day_index"),int) and start<=c["day_index"]<=end]
+    local.planning_input.day_windows=[w.model_copy(update={"day_index":w.day_index-start}) for w in request.planning_input.day_windows if start<=w.day_index<=end]
+    return local
+
+
+def _fit_recommended_hotels(plan,request,planner,cache,allowed_days):
+    """Only mutable recommendations may adapt to tomorrow's fixed departure."""
+    from .durable_execution import input_hash,read_checkpoint
+    from .plan_quality import transport_to_route_type
+    from ..models.schemas import Hotel
+    inputs=request.planning_input
+    options={}
+    for arrival_day in plan.days:
+        if arrival_day.day_index not in allowed_days or not arrival_day.day_index:
+            continue
+        night=next((day for day in plan.days if day.day_index==arrival_day.day_index-1),None)
+        if night is None:
+            continue
+        origin_city=city_for_day(request,night.day_index)
+        window=next((w for w in inputs.day_windows if w.day_index==arrival_day.day_index),None)
+        earliest=_minutes(window.start if window else inputs.day_start)
+        for trip in inputs.commitments:
+            if not confirmed(trip) or trip.get("category") not in {"transport","train","flight"} or trip.get("origin_city")!=origin_city or trip.get("destination_city")!=city_for_day(request,arrival_day.day_index) or trip.get("origin_city")==trip.get("destination_city"):
+                continue
+            try:
+                departure=_local_minute(trip["start_at"],arrival_day,ZoneInfo(inputs.timezone))
+            except (KeyError,TypeError,ValueError):
+                continue
+            if not earliest<=departure<1440:
+                continue  # A hotel cannot repair a departure outside the hard window.
+            station=_location(trip.get("origin_location") or trip.get("location"))
+            current,current_city=_hotel_anchor(inputs,request,night.day_index,night)
+            if not station or not current or current_city!=origin_city:
+                continue
+            unknown=set()
+            duration,known=_route(current,station,planner,origin_city,transport_to_route_type(request.transportation),cache,unknown)
+            if not known or duration<=departure-earliest:
+                continue
+            leave=(datetime.fromisoformat(trip["start_at"])-timedelta(minutes=duration)).isoformat()
+            options[arrival_day.day_index]=[
+                {"action":"allow_earlier_departure","start_at":leave,"message":"当前住宿接驳超出最早出发边界；需用户明确允许更早出发"},
+                {"action":"choose_other_hotel","message":"选择并重新核验能赶上固定班次的前晚住宿；未自动放宽约束"}]
+            protected_ids=set(inputs.completed_activity_ids)|{str(lock.get("activity_id","")) for lock in effective_locks(inputs)}
+            fixed=(any(h.get("day_index")==night.day_index for h in inputs.hotel_stays)
+                or any(identity==f"hotel:{night.day_index}" or identity.startswith(f"hotel:{night.day_index}:") for identity in protected_ids)
+                or any(confirmed(c) and c.get("category") in {"hotel","accommodation"} and c.get("day_index")==night.day_index for c in inputs.commitments))
+            if fixed or night.day_index not in allowed_days:
+                continue
+            local=_hotel_candidate_request(request,night.day_index)
+            digest=input_hash(local)
+            saved=read_checkpoint("hotels:"+digest[:16],digest)
+            if not saved:
+                continue
+            candidates=[row for row in saved.get("hotel_pois",[]) if row.get("id") and _location(row.get("location")) and _location(row.get("location"))!=current]
+            distance=lambda row:((row["location"]["longitude"]-station.longitude)*cos(radians(station.latitude)))**2+(row["location"]["latitude"]-station.latitude)**2
+            for candidate in sorted(candidates,key=lambda row:(distance(row),row["id"]))[:3]:
+                access,verified=_route(_location(candidate["location"]),station,planner,origin_city,transport_to_route_type(request.transportation),cache,set())
+                if not verified or access>departure-earliest:
+                    continue
+                old_name=night.hotel.name if night.hotel else ""
+                night.hotel=Hotel(name=candidate["name"],address=candidate.get("address") or "",location=candidate["location"],type=request.accommodation)
+                night.__pydantic_extra__["hotel_selection"]={"candidate_poi_id":candidate["id"],"previous_name":old_name,
+                    "source":"trusted_hotel_candidates","status":"recommended_not_booked","reason":"next_day_fixed_departure","access_minutes":access}
+                options.pop(arrival_day.day_index,None)
+                break
+    return options
+
+
 def solve_day(day, request, route_planner=None, cache=None, seconds=None, previous_day=None):
     from ortools.sat.python import cp_model
     from .plan_quality import transport_to_route_type
@@ -555,6 +638,7 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
             if not row["verified"]:
                 cache.setdefault("_restored_unverified",set()).add(key)
     allowed_days = set(range(len(plan.days))) if allowed_days is None else allowed_days
+    hotel_options=_fit_recommended_hotels(plan,request,route_planner,cache,allowed_days)
     for day in plan.days:
         if day.day_index not in allowed_days:
             continue
@@ -581,6 +665,8 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
             previous_day=next((d for d in plan.days if d.day_index==day.day_index-1),None)
             timeline, report, order = solve_day(day, request, route_planner, cache, min(2, limit-(time.monotonic()-started)),previous_day)
             day.timeline, day.feasibility = timeline, report
+            if day.day_index in hotel_options:
+                day.feasibility["resolution_options"]=hotel_options[day.day_index]
             if timeline and report["status"] in {"feasible","unverified"}:
                 day.__pydantic_extra__["schedule_stale"] = False
             if order:

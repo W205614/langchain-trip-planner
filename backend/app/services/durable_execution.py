@@ -96,13 +96,18 @@ def read_checkpoint(stage, digest):
 def checkpoint_compatible(stage, saved, current):
     if saved == current:
         return True
-    # v4 changes only restaurant presence in the time solver. Provider facts and
-    # generated drafts from v3 retain the same models, prompts, schema and input
+    if not isinstance(saved,dict) or not isinstance(current,dict):
+        return False
+    # v4/v5 change only restaurant/hotel choices in the deterministic solver.
+    # Provider facts and drafts retain the same models, prompts, schema and input
     # hashes; reusing them must not trigger another paid generation. A solved
     # schedule is deliberately excluded and has to run under the new rules.
     unaffected = stage in {"draft","routes"} or stage.startswith(("day_draft:","attractions:","hotels:","restaurants:","weather:"))
-    return bool(unaffected and isinstance(saved,dict) and saved.get("rules")=="time-windows-v3-hotel-nights"
-        and current.get("rules")=="time-windows-v4-meal-candidates"
+    allowed_upgrade=(saved.get("rules"),current.get("rules")) in {
+        ("time-windows-v3-hotel-nights","time-windows-v4-meal-candidates"),
+        ("time-windows-v3-hotel-nights","time-windows-v5-hotel-departure"),
+        ("time-windows-v4-meal-candidates","time-windows-v5-hotel-departure")}
+    return bool(unaffected and isinstance(saved,dict) and allowed_upgrade
         and {key:value for key,value in saved.items() if key!="rules"}=={key:value for key,value in current.items() if key!="rules"})
 
 
