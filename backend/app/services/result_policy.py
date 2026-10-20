@@ -51,6 +51,8 @@ def classify(plan, request, report):
         }
         for i in issues
     )
+    if report.get("time_policy_version") and report.get("feasibility_status") == "unverified":
+        degraded = True
     report.update(completion_policy=POLICY, issues=issues,
                   outcome="draft" if blocking else "degraded" if degraded else "complete")
     return report

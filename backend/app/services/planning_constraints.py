@@ -46,12 +46,14 @@ def refresh_saved_quality(plan, request, previous):
     return report
 
 
-def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, repair=True):
+def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, repair=True, allowed_days=None, enhanced=False):
     plan.departure_city = request.departure_city
     plan.traveler_count = request.traveler_count
     plan.room_count = request.room_count
     plan.constraints = request.constraints.model_copy(deep=True)
     constraints = request.constraints
+    allowed_days = set(range(len(plan.days))) if allowed_days is None else set(allowed_days)
+    protected_ids = set(request.planning_input.completed_activity_ids) | {lock.get("activity_id") for lock in request.planning_input.locks}
     required = {name_key(n) for n in constraints.must_visit}
     avoided = {name_key(n) for n in constraints.avoid}
     repairs, violations, day_reports = [], [], []
@@ -71,22 +73,27 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     attractions = [a for day in plan.days for a in day.attractions]
     for name in constraints.must_visit:
         matched = resolve_name(name, attractions, plan.city)
-        if matched:
+        if matched and any(matched is a for d in plan.days if d.day_index in allowed_days for a in d.attractions):
             matched.requested_names = list(dict.fromkeys([*matched.requested_names, name]))
     avoided_ids = {matched.poi_id for name in constraints.avoid
                    if (matched := resolve_name(name, attractions, plan.city)) is not None}
+    schedules = None
+    if enhanced:
+        from .time_planner import plan_time_windows
+        schedules = plan_time_windows(plan, request, route_planner, allowed_days)
 
     def remove(day, attraction, reason):
         day.attractions.remove(attraction)
         repairs.append({"day_index": day.day_index, "removed_poi_id": attraction.poi_id, "reason": reason})
 
-    def route_for(left, right):
+    def route_for(left, right, city=None):
+        city = city or plan.city
         key = (left.poi_id, right.poi_id, left.location.longitude, left.location.latitude,
-               right.location.longitude, right.location.latitude, route_type)
+               right.location.longitude, right.location.latitude, route_type, city)
         if key not in cache:
             try:
                 route = route_planner.plan_route_by_locations(left.location, right.location,
-                    route_type=route_type, city=plan.city) if route_planner else {}
+                    route_type=route_type, city=city) if route_planner else {}
                 duration, meters = float(route["duration"]), float(route["distance"])
                 if not all(isfinite(v) and v >= 0 for v in (duration, meters)):
                     raise ValueError("Invalid route quantities")
@@ -102,12 +109,12 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
 
     def optimize_route_order(day):
         """Use the real directed route matrix for small daily candidate sets."""
-        if not repair or route_planner is None or not 3 <= len(day.attractions) <= 6:
+        if not repair or enhanced or day.day_index not in allowed_days or protected_ids or route_planner is None or not 3 <= len(day.attractions) <= 6:
             return
         original = list(day.attractions)
         best = None
         for order in permutations(original):
-            routes = [route_for(left, right) for left, right in zip(order, order[1:])]
+            routes = [route_for(left, right, day.city or plan.city) for left, right in zip(order, order[1:])]
             if any(route is None for route in routes):
                 continue
             cost = (sum(route[0] for route in routes), sum(route[1] for route in routes))
@@ -123,7 +130,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         day_routes[day.day_index] = legs
         minutes, walking, distance, complete = 0.0, 0.0, 0.0, True
         for left, right in zip(day.attractions, day.attractions[1:]):
-            route = route_for(left, right)
+            route = route_for(left, right, day.city or plan.city)
             legs.append({"from": left.name, "to": right.name, "route_type": route[3] if route else route_type,
                          "minutes": round(route[0], 1) if route else None,
                          "distance_km": round(route[1] / 1000, 2) if route else None,
@@ -143,10 +150,11 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         return minutes, None if walking is None else walking / 1000, distance / 1000
 
     for day in plan.days:
+        day_repair = repair and day.day_index in allowed_days and not enhanced
         for attraction in list(day.attractions):
             reason = "excluded_attraction" if name_key(attraction.name) in avoided or attraction.poi_id in avoided_ids else (
                 "duplicate_poi" if attraction.poi_id in seen else None)
-            if reason and repair:
+            if reason and day_repair and attraction.activity_id not in protected_ids:
                 remove(day, attraction, reason)
             else:
                 if reason:
@@ -160,13 +168,13 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             visit = sum(max(0, a.visit_duration) for a in day.attractions)
             known_minutes = visit + MEAL_MINUTES + BUFFER_MINUTES
             total = None if route_minutes is None else known_minutes + route_minutes
-            over_time = (total if total is not None else known_minutes) > constraints.daily_minutes
+            over_time = not enhanced and (total if total is not None else known_minutes) > constraints.daily_minutes
             over_walk = (walking is not None and constraints.max_inter_stop_walking_km is not None
                          and walking > constraints.max_inter_stop_walking_km)
-            over_route = route_minutes is not None and route_minutes > 120
+            over_route = not enhanced and route_minutes is not None and route_minutes > 120
             removable = [a for a in day.attractions if not (
-                {name_key(a.name), *(name_key(n) for n in a.requested_names)} & required)]
-            if repair and (over_time or over_walk or over_route) and len(day.attractions) > 1 and removable:
+                {name_key(a.name), *(name_key(n) for n in a.requested_names)} & required) and a.activity_id not in protected_ids]
+            if day_repair and (over_time or over_walk or over_route) and len(day.attractions) > 1 and removable:
                 remove(day, removable[-1], "daily_time_exceeded" if over_time else (
                     "walking_limit_exceeded" if over_walk else "route_duration_exceeded"))
                 continue
@@ -216,5 +224,38 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         actual_route_minutes=round(sum(d["route_minutes"] or 0 for d in day_reports)),
         actual_route_distance_km=round(sum(d["route_distance_km"] or 0 for d in day_reports), 2))
     recalculate_budget(plan, estimate_missing=True, budget_limit=request.budget_total)
+    if enhanced:
+        from .time_planner import RULE_VERSION, confirmed
+        report["schedule_checks"] = schedules
+        report["time_policy_version"] = RULE_VERSION
+        statuses = {s["status"] for s in schedules}
+        report["feasibility_status"] = next((s for s in ("infeasible", "not_found", "unverified") if s in statuses), "feasible")
+        report["facts_complete"] = bool(schedules) and all(not s["unknown"] for s in schedules)
+        report["data_gaps"] = sorted(set(report["data_gaps"]) | {gap for s in schedules for gap in s["unknown"]})
+        report["facts_complete"] = report["facts_complete"] and not report["data_gaps"]
+        report["fact_status"] = "conflict" if any("conflict" in gap for gap in report["data_gaps"]) else "complete" if report["facts_complete"] else "unknown"
+        for schedule in schedules:
+            repairs.extend({"day_index":schedule["day_index"],"removed_activity_id":identity,"reason":"optional_activity_omitted_by_time_constraints"} for identity in schedule["omitted_activity_ids"])
+            for conflict in schedule["conflicts"]:
+                report["warnings"].append(f"第{schedule['day_index']+1}天：{conflict}")
+        report["passed"] = report["rules_passed"] = not report["warnings"]
+        if report["warnings"] and report["feasibility_status"] == "feasible":
+            report["feasibility_status"] = "not_found"
+        confirmed_amount = sum(int(c.get("amount_cents") or 0) for c in request.planning_input.commitments if confirmed(c))
+        unknown_costs = [str(c.get("id", "unknown")) for c in request.planning_input.commitments if confirmed(c) and c.get("amount_cents") is None]
+        estimates = {a.activity_id:a.ticket_price*100*request.traveler_count for day in plan.days for a in day.attractions}
+        estimates.update({a.activity_id:a.estimated_cost*100*request.traveler_count for day in plan.days for a in day.meals})
+        replaced = sum(estimates.get(c.get("activity_id"),0) for c in request.planning_input.commitments if c.get("amount_cents") is not None and confirmed(c))
+        estimated = max(0,(plan.budget.total*100 if plan.budget else 0)-replaced)
+        report["cost_summary"] = {"confirmed_cents":confirmed_amount, "estimated_cents":estimated, "known_total_cents":confirmed_amount+estimated,
+            "unknown_items":list(dict.fromkeys([*(plan.budget.unknown_items if plan.budget else []), *unknown_costs])), "limit_cents":request.planning_input.budget_cents}
+        if request.planning_input.budget_mode == "confirmed" and estimated:
+            report["cost_summary"]["unknown_items"].append("estimated_costs_not_confirmed")
+        limit = request.planning_input.budget_cents
+        report["cost_summary"]["within_limit"] = False if limit is not None and confirmed_amount+estimated > limit else (
+            None if report["cost_summary"]["unknown_items"] or limit is None else True)
+        if report["cost_summary"]["within_limit"] is None and plan.budget:
+            plan.budget.within_limit = None
+        report["score"] = max(0,100-15*len(report["warnings"]))
     from .result_policy import classify
     return classify(plan, request, report)

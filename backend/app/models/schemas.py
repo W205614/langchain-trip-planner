@@ -3,6 +3,7 @@
 from typing import Annotated, Any, List, Literal, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from datetime import date
+from .planning import PlanningInput
 
 
 # ============ 请求模型 ============
@@ -54,6 +55,7 @@ class TripRequest(BaseModel):
     budget_total: Optional[int] = Field(default=None, ge=100, le=10_000_000, description="整段行程总预算（元）")
     preferences: List[Annotated[str, Field(max_length=64)]] = Field(default_factory=list, max_length=12, description="旅行偏好标签")
     constraints: PlanningConstraints = Field(default_factory=PlanningConstraints)
+    planning_input: PlanningInput = Field(default_factory=PlanningInput)
     free_text_input: Optional[str] = Field(
         default="", max_length=500,
         description="额外要求", json_schema_extra={"example": "希望多安排一些博物馆"},
@@ -92,6 +94,10 @@ class TripRequest(BaseModel):
             raise ValueError("travel_days 必须与开始和结束日期（含首尾）一致")
         if self.room_count > self.traveler_count:
             raise ValueError("room_count 不能大于 traveler_count")
+        if any(s.end_day >= self.travel_days for s in self.planning_input.city_segments):
+            raise ValueError("City segment exceeds travel dates")
+        if any(w.day_index >= self.travel_days for w in self.planning_input.day_windows):
+            raise ValueError("Daily window exceeds travel dates")
         return self
 
 
@@ -154,6 +160,10 @@ class Location(BaseModel):
 class Attraction(BaseModel):
     """景点信息"""
     name: str = Field(..., description="景点名称")
+    activity_id: str = ""
+    optional: bool = True
+    priority: int = Field(default=50, ge=1, le=100)
+    model_config = ConfigDict(extra="allow")
     address: str = Field(..., description="地址")
     location: Location = Field(..., description="经纬度坐标")
     visit_duration: int = Field(..., description="建议游览时间(分钟)")
@@ -183,6 +193,8 @@ class AttractionDraft(BaseModel):
 class Meal(BaseModel):
     """餐饮信息"""
     type: str = Field(..., description="餐饮类型: breakfast/lunch/dinner/snack")
+    activity_id: str = ""
+    model_config = ConfigDict(extra="allow")
     name: str = Field(..., description="餐饮名称")
     address: Optional[str] = Field(default=None, description="地址")
     location: Optional[Location] = Field(default=None, description="经纬度坐标")
@@ -223,6 +235,10 @@ class Hotel(BaseModel):
 
 
 class DayPlan(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    city: str = ""
+    timeline: list[dict] = Field(default_factory=list)
+    feasibility: dict = Field(default_factory=dict)
     """单日行程"""
     date: str = Field(..., description="日期 YYYY-MM-DD")
     day_index: int = Field(..., description="第几天(从0开始)")
@@ -280,6 +296,8 @@ class Budget(BaseModel):
 
 
 class TripPlan(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    planning_input: PlanningInput = Field(default_factory=PlanningInput)
     """旅行计划"""
     city: str = Field(..., description="目的地城市")
     departure_city: str = Field(default="", description="出发地")
