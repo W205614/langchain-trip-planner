@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { TripFormData, TripPlanResponse } from '@/types'
+import type { TripFormData, TripPlanResponse, PlanningInput, RevisionScope } from '@/types'
 import { getToken, clearAuth } from './auth'
 
 // 正式构建始终使用同源 Nginx 代理，避免开发 .env 中的 localhost:9000 混入镜像。
@@ -245,8 +245,8 @@ export async function researchTravel(city: string, query: string): Promise<any> 
 }
 
 /** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
-export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string, version: number): Promise<any> {
-  const fingerprint = JSON.stringify({ id, dayIndex, instruction, version })
+export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string, version: number, scope?: RevisionScope, planningRevision?: number): Promise<any> {
+  const fingerprint = JSON.stringify({ id, dayIndex, instruction, version, scope, planningRevision })
   let pending = JSON.parse(sessionStorage.getItem('pendingRevision') || 'null')
   if (!pending || pending.fingerprint !== fingerprint) {
     pending = { fingerprint, key: crypto.randomUUID(), id: null }
@@ -254,7 +254,7 @@ export async function reviseHistoryDay(id: number, dayIndex: number, instruction
   }
   if (!pending.id) {
     const created = await apiClient.post(`/api/history/${id}/revise-task`, {
-      day_index: dayIndex, instruction
+      day_index: dayIndex, instruction, revision_scope: scope, planning_revision: planningRevision
     }, { headers: { 'If-Match': String(version), 'Idempotency-Key': pending.key } })
     pending.id = created.data.data.id
     sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
@@ -406,6 +406,27 @@ export async function confirmAssistantProposal(conversationId: string, recordId:
 export async function discardAssistantProposal(conversationId: string, recordId: number, version: number): Promise<any> {
   return (await apiClient.post(`/api/assistant/conversations/${conversationId}/proposals/${recordId}/discard`, {},
     { headers: { 'If-Match': String(version) } })).data
+}
+
+export async function fetchAssistantProposal(conversationId: string, recordId: number): Promise<any> {
+  return (await apiClient.get(`/api/assistant/conversations/${conversationId}/proposals/${recordId}`)).data.data
+}
+
+export const tripPlanning = {
+  get: async (id: number) => (await apiClient.get(`/api/trips/${id}/planning-input`)).data.data,
+  save: async (id: number, planningInput: PlanningInput, revision: number, tripVersion: number) =>
+    (await apiClient.put(`/api/trips/${id}/planning-input`, { planning_input: planningInput, planning_revision: revision }, { headers: { 'If-Match': String(tripVersion) } })).data.data,
+  activityState: async (id: number, activityId: string, revision: number, tripVersion: number, state: { locked?: boolean; completed?: boolean; lock_mode?: string }) =>
+    (await apiClient.post(`/api/trips/${id}/activities/${encodeURIComponent(activityId)}/state`, { ...state, planning_revision: revision }, { headers: { 'If-Match': String(tripVersion) } })).data.data,
+}
+
+export async function resumeTask(id: string, key: string): Promise<any> {
+  return (await apiClient.post(`/api/tasks/${encodeURIComponent(id)}/resume`, {}, { headers: { 'Idempotency-Key': key } })).data
+}
+
+export function clearTripCache(id?: number): void {
+  if (id != null && Number(sessionStorage.getItem('tripPlanId')) !== id) return
+  for (const key of ['tripPlan', 'tripPlanId', 'tripPlanVersion', 'tripQuality', 'tripUnsaved', 'pendingRevision']) sessionStorage.removeItem(key)
 }
 
 export default apiClient

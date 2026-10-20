@@ -15,6 +15,12 @@
     <a-alert v-if="error" class="error-alert" type="error" :message="error" show-icon closable @close="error = ''" />
     <a-spin :spinning="loading" class="workspace-spin">
       <a-tabs v-if="trip" v-model:activeKey="tab" class="workspace-panel">
+        <a-tab-pane v-if="trip.role === 'owner'" key="planning" tab="时间与约束">
+          <div class="section-intro"><h2>时间与固定安排</h2><p>修改规划输入会使旧提案需要重新校验；保存不会自动改动当前行程。</p></div>
+          <PlanningInputEditor v-if="planningInput" ref="planningEditor" v-model="planningInput" :days="trip.travel_days" :start-date="trip.plan?.start_date" :activities="planningActivities" :commitments-read-only="true" />
+          <a-alert v-if="planningError" type="error" :message="planningError" show-icon />
+          <a-space class="toolbar"><a-button data-testid="planning-save" type="primary" :loading="busy" :disabled="!planningInput" @click="savePlanning">保存时间与约束</a-button><a-button :disabled="busy" @click="loadPlanning">重新加载</a-button><a-tag>输入修订 {{ planningRevision }}</a-tag></a-space>
+        </a-tab-pane>
         <a-tab-pane key="check" tab="行前核验">
           <div class="section-intro">
             <h2>行前核验</h2>
@@ -83,11 +89,13 @@
               <a-input-number v-model:value="commitmentForm.amount" :min="0" :max="10000000" :precision="2" placeholder="金额（可留空）" />
               <a-button :loading="busy" @click="addCommitment">添加待确认事项</a-button>
             </a-space>
+            <a-collapse v-if="trip.role === 'owner'" ghost><a-collapse-panel key="details" header="设置本事项的固定时间与地点（可选）"><CommitmentDetailsEditor :model-value="commitmentForm" :activities="planningActivities" @update:model-value="Object.assign(commitmentForm, $event)" /></a-collapse-panel></a-collapse>
             <a-list :data-source="commitments" :locale="{ emptyText: '还没有预订事项' }" bordered>
               <template #renderItem="{ item }">
                 <a-list-item>
                   <a-list-item-meta :title="`第 ${item.day_index + 1} 天 · ${item.title}`" :description="`${label(item.category)} · ${item.amount_cents == null ? '金额未知' : '¥' + yuan(item.amount_cents)} · ${commitmentStatusLabel(item.status)}`" />
                   <template #actions>
+                    <a-button v-if="trip.role === 'owner' && item.status !== 'cancelled'" @click="openCommitmentEditor(item)">编辑时间与位置</a-button>
                     <a-button v-if="canEdit && item.status === 'planned'" @click="setCommitment(item, 'confirmed')">确认</a-button>
                     <a-button v-if="canEdit && item.status !== 'cancelled'" danger @click="setCommitment(item, 'cancelled')">取消</a-button>
                   </template>
@@ -148,14 +156,21 @@
         </a-tab-pane>
       </a-tabs>
     </a-spin>
+    <a-modal v-model:open="commitmentEditOpen" title="编辑固定事项" :confirm-loading="busy" @ok="saveCommitmentDetails">
+      <CommitmentDetailsEditor v-if="commitmentEdit" v-model="commitmentEdit" :activities="planningActivities" />
+      <p>保存会推进规划输入修订；旧提案需要重新校验。当前行程不会自动改排。</p>
+    </a-modal>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
-import { tripOperations } from '@/services/api'
+import { tripOperations, tripPlanning, clearTripCache } from '@/services/api'
+import PlanningInputEditor from '@/components/trip/PlanningInputEditor.vue'
+import CommitmentDetailsEditor from '@/components/trip/CommitmentDetailsEditor.vue'
+import type { PlanningInput } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -165,6 +180,11 @@ const busy = ref(false)
 const error = ref('')
 const tab = ref('check')
 const trip = ref<any>(null)
+const planningInput = ref<PlanningInput>()
+const planningRevision = ref(0)
+const planningError = ref('')
+const planningEditor = ref<InstanceType<typeof PlanningInputEditor>>()
+const planningActivities = computed(() => (trip.value?.plan?.days || []).flatMap((d: any) => (d.attractions || []).filter((a: any) => a.activity_id).map((a: any) => ({ id: a.activity_id, name: `第 ${d.day_index + 1} 天 · ${a.name}` }))))
 const check = ref<any>(null)
 const checkDay = ref(0)
 const commitments = ref<any[]>([])
@@ -176,6 +196,8 @@ const orderDay = ref(0)
 const orderItems = ref<any[]>([])
 const orderDescription = ref('')
 const commitmentForm = reactive<any>({ day_index: 0, category: 'ticket', title: '', status: 'planned', amount: null, note: '' })
+const commitmentEditOpen = ref(false)
+const commitmentEdit = ref<any>(null)
 const expenseForm = reactive<any>({ day_index: 0, category: 'ticket', amount: null, note: '', commitment_id: null })
 const categories = [
   { value: 'ticket', label: '门票' }, { value: 'lodging', label: '住宿' },
@@ -196,29 +218,55 @@ const commitmentStatusLabel = (status: string) => ({ planned: '待确认', confi
 const memberRoleLabel = (role: string) => ({ viewer: '查看者', editor: '编辑者' } as Record<string, string>)[role] || role
 const memberStatusLabel = (status: string) => ({ pending: '待接受', accepted: '已接受', declined: '已拒绝' } as Record<string, string>)[status] || status
 const yuan = (value: number | null | undefined) => ((value || 0) / 100).toFixed(2)
-const explain = (e: any) => { error.value = e?.response?.data?.detail || e?.message || '操作失败'; message.error(error.value) }
+const explain = (e: any) => { if ([401, 403, 404].includes(e?.response?.status)) { trip.value = null; check.value = null; commitments.value = []; expenseResult.value = null; members.value = []; planningInput.value = undefined; clearTripCache(id) }; error.value = e?.response?.data?.detail || e?.response?.data?.message || e?.message || '操作失败'; message.error(error.value) }
 
 async function load() {
   loading.value = true
   try {
     trip.value = await tripOperations.workspace(id)
-    await Promise.all([loadCheck(), loadMoney(), loadMembers()])
+    await Promise.all([loadCheck(), loadMoney(), loadMembers(), loadPlanning()])
     resetOrder()
   } catch (e) { explain(e) } finally { loading.value = false }
 }
 async function loadCheck() { try { check.value = await tripOperations.latestCheck(id, checkDay.value) } catch (e) { explain(e) } }
 async function loadMoney() { try { [commitments.value, expenseResult.value] = await Promise.all([tripOperations.commitments(id), tripOperations.expenses(id)]) } catch (e) { explain(e) } }
 async function loadMembers() { if (trip.value?.role === 'owner') try { members.value = await tripOperations.members(id) } catch (e) { explain(e) } }
+async function loadPlanning() {
+  if (trip.value?.role !== 'owner') { planningInput.value = undefined; return }
+  try { const data = await tripPlanning.get(id); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; trip.value.version = data.trip_version; planningError.value = '' }
+  catch (e: any) { planningInput.value = undefined; planningError.value = e?.response?.data?.message || '规划输入加载失败，请重试'; if ([401, 403, 404].includes(e?.response?.status)) explain(e) }
+}
+async function savePlanning() {
+  const validation = planningEditor.value?.validate()
+  if (validation) { message.warning(validation); return }
+  if (!planningInput.value || !trip.value || busy.value) return
+  busy.value = true
+  try { const data = await tripPlanning.save(id, planningInput.value, planningRevision.value, trip.value.version); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; trip.value.version = data.trip_version; planningError.value = ''; clearTripCache(id); message.success('规划输入已保存；当前行程未自动改排') }
+  catch (e: any) { planningError.value = e?.response?.status === 409 ? '行程或输入已变化，请重新加载后检查并保存。' : e?.response?.data?.message || '保存失败'; if ([401, 403, 404].includes(e?.response?.status)) explain(e) }
+  finally { busy.value = false }
+}
 async function runCheck() { busy.value = true; try { await tripOperations.check(id, trip.value.version, checkDay.value); await loadCheck(); message.success('核验结果已保存') } catch (e) { explain(e) } finally { busy.value = false } }
 async function acknowledge(riskId: number) { try { await tripOperations.acknowledge(id, riskId, trip.value.version); await loadCheck() } catch (e) { explain(e) } }
 async function addCommitment() {
   busy.value = true
-  try { await tripOperations.addCommitment(id, { ...commitmentForm }); commitmentForm.title = ''; commitmentForm.amount = null; await loadMoney(); message.success('事项已记录') }
+  try { await tripOperations.addCommitment(id, { ...commitmentForm }); for (const key of Object.keys(commitmentForm)) delete commitmentForm[key]; Object.assign(commitmentForm, { day_index: 0, category: 'ticket', title: '', status: 'planned', amount: null, note: '' }); await loadMoney(); await loadPlanning(); message.success('事项已记录') }
   catch (e) { explain(e) } finally { busy.value = false }
 }
 async function setCommitment(item: any, status: string) {
-  try { await tripOperations.updateCommitment(id, item.id, item.version, { status, amount: item.amount_cents == null ? null : yuan(item.amount_cents), note: item.note }); await loadMoney() }
+    try { await tripOperations.updateCommitment(id, item.id, item.version, { status, amount: item.amount_cents == null ? null : yuan(item.amount_cents), note: item.note }); await loadMoney(); await loadPlanning() }
   catch (e) { explain(e) }
+}
+function openCommitmentEditor(item: any) {
+  let details = item.details_json || {}
+  if (typeof details === 'string') { try { details = JSON.parse(details) } catch { details = {} } }
+  commitmentEdit.value = { ...details, ...item, amount: item.amount_cents == null ? null : yuan(item.amount_cents) }
+  commitmentEditOpen.value = true
+}
+async function saveCommitmentDetails() {
+  if (!commitmentEdit.value || busy.value) return
+  busy.value = true
+  try { const item = commitmentEdit.value; await tripOperations.updateCommitment(id, item.id, item.version, item); commitmentEditOpen.value = false; await loadMoney(); await loadPlanning(); clearTripCache(id); message.success('固定事项已更新') }
+  catch (e) { explain(e) } finally { busy.value = false }
 }
 async function addExpense() {
   busy.value = true
@@ -262,7 +310,9 @@ async function saveOrder() {
   try { await tripOperations.reorder(id, trip.value.version, orderDay.value, orderItems.value.map(a => a.poi_id), orderDescription.value); await load(); message.success('已保存；路线仍需重新核验') }
   catch (e) { explain(e) } finally { busy.value = false }
 }
-onMounted(load)
+function refreshAccess() { if (document.visibilityState === 'visible') void load() }
+onMounted(() => { void load(); window.addEventListener('focus', refreshAccess); document.addEventListener('visibilitychange', refreshAccess) })
+onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); document.removeEventListener('visibilitychange', refreshAccess) })
 </script>
 
 <style scoped>

@@ -8,8 +8,11 @@ const plan = {
       location: { longitude: 116.4, latitude: 39.9 }, visit_duration: 180, photos: [] }], meals: [] }]
 }
 
-function seed(page: Page) {
-  return page.addInitScript(({ plan }) => {
+async function seed(page: Page) {
+  await page.route('**/api/history/71', route => route.fulfill({ json: { success: true, data: { plan, version: 1, quality: { policy_version: 'constraints-v2', outcome: 'draft', validated_outcome: 'degraded', assistant_confirmation_required: true, assistant_proposal_status: 'pending', assistant_conversation_id: 'conversation-1', revision_parent: { record_id: 41, version: 3 }, issues: [] } } } }))
+  await page.route('**/api/assistant/conversations/conversation-1/proposals/71', route => route.fulfill({ json: { success: true, data: { diff: { added: [], removed: [] }, dependencies: { version: 3 }, stale: false } } }))
+  await page.route('**/api/trips/*/planning-input', route => route.fulfill({ status: 503, json: { message: '旧方案兼容测试不加载新规划输入' } }))
+  await page.addInitScript(({ plan }) => {
     sessionStorage.setItem('access_token', 'fixture-browser-token')
     sessionStorage.setItem('tripPlan', JSON.stringify(plan))
     sessionStorage.setItem('tripPlanId', '71')
@@ -45,7 +48,7 @@ test('pending assistant revision is previewed and confirmed with its proposal ve
 test('pending assistant revision can be discarded and returns to refreshed history', async ({ page }) => {
   await seed(page)
   await page.route('**/api/poi/photo/image**', route => route.fulfill({ status: 404 }))
-  await page.route('**/api/history**', route => route.fulfill({ json: { success: true, data: [], total: 0 } }))
+  await page.route('**/api/history**', route => /\/api\/history\/71(?:\?|$)/.test(route.request().url()) ? route.fallback() : route.fulfill({ json: { success: true, data: [], total: 0 } }))
   let discarded = false
   await page.route('**/api/assistant/conversations/conversation-1/proposals/71/discard', route => {
     expect(route.request().headers()['if-match']).toBe('1')

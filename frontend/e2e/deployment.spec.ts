@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+test.beforeEach(async ({ page }) => { await page.route('**/api/trips/*/planning-input', route => route.fulfill({ status: 503, json: { message: '旧行程兼容测试' } })) })
 
 test('production login uses the same-origin API proxy', async ({ page }) => {
   await page.route('**/api/auth/login', route => route.fulfill({ status: 401, json: { detail: '测试凭据无效' } }))
