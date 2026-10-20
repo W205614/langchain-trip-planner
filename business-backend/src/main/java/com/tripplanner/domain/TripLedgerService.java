@@ -10,6 +10,7 @@ import tools.jackson.databind.json.JsonMapper;
 /** Immutable trip versions plus deletion/restore lifecycle owned by Java. */
 @Service
 public class TripLedgerService {
+  @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
   private final HistoryMapper history;
   private final TripVersionMapper versions;
   private final ShareMapper shares;
@@ -79,12 +80,14 @@ public class TripLedgerService {
             throw new ApiException(409, "行程版本冲突，请重新加载", "VERSION_CONFLICT");
           var source = versions.owned(userId, recordId, sourceVersion);
           if (source == null) throw new ApiException(404, "行程版本不存在");
+          var restored=PlanningInputService.stableIds((tools.jackson.databind.node.ObjectNode)json.readTree(source.get("plan_json").toString()));
+          planning.protect(userId,recordId,restored,json.createObjectNode(),false);
           if (history.update(
                   Map.of(
                       "id", recordId,
                       "user_id", userId,
                       "version", currentVersion,
-                      "plan_json", source.get("plan_json"),
+                      "plan_json", json.writeValueAsString(restored),
                       "quality_json", source.get("quality_json")))
               != 1) throw new ApiException(409, "行程版本冲突，请重新加载", "VERSION_CONFLICT");
           var quality = json.readTree(source.get("quality_json").toString());

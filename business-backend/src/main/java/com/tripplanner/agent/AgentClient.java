@@ -62,7 +62,7 @@ public class AgentClient {
   }
 
   private HttpRequest request(String path, Object body, Duration timeout) {
-    var builder = HttpRequest.newBuilder(URI.create(base + "/internal/v1" + path))
+    var builder = HttpRequest.newBuilder(URI.create(base + (path.startsWith("/v2/") ? "/internal" : "/internal/v1") + path))
         .timeout(timeout)
         .header("X-Service-Key", key)
         .header("Content-Type", "application/json")
@@ -144,7 +144,7 @@ public class AgentClient {
 
   public void generate(Object body, Duration timeout, BiConsumer<String, JsonNode> consumer)
       throws IOException, InterruptedException {
-    stream("/executions", body, timeout, consumer);
+    stream(body instanceof JsonNode n && n.path("protocol_version").asInt(1)==2 ? "/v2/executions" : "/executions", body, timeout, consumer);
   }
 
   /** Forward a bounded internal SSE capability without buffering the full response. */

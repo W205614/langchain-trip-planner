@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class HealthController {
+  @org.springframework.beans.factory.annotation.Autowired(required=false) private com.tripplanner.domain.SingleInstance singleInstance;
+  @org.springframework.beans.factory.annotation.Value("${WORKERS_ENABLED:true}") private boolean workersEnabled;
   private final JdbcTemplate jdbc;
 
   public HealthController(JdbcTemplate jdbc) {
@@ -19,6 +21,7 @@ public class HealthController {
 
   @GetMapping("/readyz")
   public Object ready() {
+    if(workersEnabled&&singleInstance!=null&&!singleInstance.owned())throw new ApiException(503,"调度器所有权已丢失，请恢复服务","SCHEDULER_OWNERSHIP_LOST");
     try {
       jdbc.queryForObject("SELECT revision FROM evidence_revision WHERE id=1", Long.class);
       return health();

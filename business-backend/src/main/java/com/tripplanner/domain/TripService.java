@@ -13,6 +13,7 @@ import tools.jackson.databind.node.*;
 
 @Service
 public class TripService {
+  @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
   private final HistoryMapper history;
   private final AmapGateway amap;
   private final PlanRules rules;
@@ -82,7 +83,10 @@ public class TripService {
     record.put("plan_json", json.writeValueAsString(plan)); record.put("quality_json", json.writeValueAsString(quality));
     record.put("last_verified_at", new Timestamp(System.currentTimeMillis()));
     tx.executeWithoutResult(s -> {
+      PlanningInputService.stableIds(plan);
+      record.put("plan_json",json.writeValueAsString(plan));
       history.insert(record);
+      if(request.has("planning_input"))planning.saveInput(((Number)record.get("id")).longValue(),request.path("planning_input"));
       ledger.capture(uid, ((Number) record.get("id")).longValue(), "manual_create", requestId);
       if (!quality.path("outcome").asText("").equals("draft"))
         history.outbox(((Number) record.get("id")).longValue(), uid, "upsert");
@@ -96,6 +100,7 @@ public class TripService {
     if (row == null) throw new ApiException(404, "行程不存在");
     if (((Number) row.get("version")).intValue() != version) throw new ApiException(409, "行程版本冲突", "VERSION_CONFLICT");
     ObjectNode plan = (ObjectNode) json.readTree(row.get("plan_json").toString());
+    var original=plan.deepCopy();
     ObjectNode request = request(row, plan);
     var invalid = new ArrayList<String>();
     plan.path("days").forEach(day -> {
@@ -112,7 +117,9 @@ public class TripService {
     });
     ObjectNode quality = rules.finish(plan, request, (left,right,type,city) -> amap.routeBetween(left,right,type,city), false);
     if (!invalid.isEmpty()) { quality.put("outcome", "draft"); quality.withArray("data_gaps").add("pois_unverified:" + String.join(",", invalid)); }
+    planning.invalidateManualSchedule(original,plan,quality,null);
     tx.executeWithoutResult(s -> {
+      planning.protect(uid,id,plan,json.createObjectNode(),false);
       if (history.update(Map.of("id", id, "user_id", uid, "version", version,
           "plan_json", json.writeValueAsString(plan), "quality_json", json.writeValueAsString(quality))) != 1)
         throw new ApiException(409, "行程版本冲突", "VERSION_CONFLICT");

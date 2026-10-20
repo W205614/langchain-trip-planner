@@ -18,6 +18,7 @@ import tools.jackson.databind.node.ObjectNode;
 @RestController
 @RequestMapping("/api/assistant/conversations")
 public class AssistantController {
+  @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
   private final AssistantMapper conversations; private final HistoryMapper history;
   private final TaskService tasks; private final AgentClient agent; private final JsonMapper json;
   private final TransactionTemplate tx;
@@ -108,6 +109,7 @@ public class AssistantController {
     request=request(row); revision.put("assistant_conversation_id",id).put("record_id",recordId)
         .put("version",currentVersion).put("day_index",dayIndex).put("instruction",content);
     if(body.path("intent").isObject()) revision.set("intent",body.path("intent").deepCopy());
+    for(String field:List.of("planning_revision","revision_scope"))if(body.has(field))revision.set(field,body.path(field).deepCopy());
     ObjectNode created=tasks.submit(uid,request,key==null?UUID.randomUUID().toString():key,req.getHeader("X-Request-ID"),revision);
     String taskId=created.path("data").path("id").asText(""); save(id,uid,"system_event","已创建智能规划任务","trip_task",taskId);
     conversations.touch(uid,id,activeTrip); return Map.of("success",true,"status","accepted","task_id",taskId);
@@ -155,6 +157,24 @@ public class AssistantController {
     return emitter;
   }
 
+  @GetMapping("/{id}/proposals/{recordId}")
+  public Object proposal(HttpServletRequest req,@PathVariable String id,@PathVariable long recordId){
+    long uid=UsersController.uid(req);owned(uid,id);
+    var proposal=history.owned(uid,recordId);if(proposal==null)throw new ApiException(404,"提案不存在");
+    var quality=json.readTree(proposal.get("quality_json").toString());
+    if(!id.equals(quality.path("assistant_conversation_id").asText()))throw new ApiException(404,"提案不存在");
+    var parent=quality.path("revision_parent");var base=history.owned(uid,parent.path("record_id").asLong());
+    var reasons=new ArrayList<String>();
+    if(!"pending".equals(quality.path("assistant_proposal_status").asText()))reasons.add("PROPOSAL_NOT_PENDING");
+    if(base==null)reasons.add("PARENT_MISSING");else{
+      if(((Number)base.get("version")).intValue()!=parent.path("version").asInt())reasons.add("VERSION_CONFLICT");
+      if(parent.has("planning_revision")&&((Number)base.get("planning_revision")).intValue()!=parent.path("planning_revision").asInt())reasons.add("PLANNING_INPUT_CONFLICT");
+    }
+    try{planning.validateDependencies(quality);}catch(ApiException ex){reasons.add(ex.code);}
+    var diff=base==null?json.createObjectNode():planning.differences(PlanningInputService.stableIds((ObjectNode)json.readTree(base.get("plan_json").toString())),PlanningInputService.stableIds((ObjectNode)json.readTree(proposal.get("plan_json").toString())));
+    return Map.of("success",true,"data",Map.of("diff",diff,"dependencies",parent,"stale",!reasons.isEmpty(),"invalidation_reason",String.join(",",reasons),"quality",quality,"revision_scope",quality.path("revision_scope")));
+  }
+
   @PostMapping("/{id}/proposals/{recordId}/confirm")
   public Object confirm(HttpServletRequest req,@PathVariable String id,@PathVariable long recordId,
       @RequestHeader("If-Match") int version){
@@ -178,6 +198,11 @@ public class AssistantController {
         .put("applied_to",target);
     resolvedQuality.remove("revision_parent");
     tx.executeWithoutResult(s->{
+      planning.validateDependencies(quality);
+      if(parent.has("planning_revision"))planning.checkRevision(uid,target,parent.path("planning_revision").asInt());
+      var scope=quality.path("revision_scope");
+      if(scope.isObject())planning.protect(uid,target,plan,scope,true);
+      else planning.protect(uid,target,plan,json.createObjectNode(),false);
       if(history.update(Map.of("id",recordId,"user_id",uid,"version",version,
           "plan_json",json.writeValueAsString(plan),"quality_json",json.writeValueAsString(resolvedQuality)))!=1)
         throw new ApiException(409,"助手方案版本冲突","VERSION_CONFLICT");

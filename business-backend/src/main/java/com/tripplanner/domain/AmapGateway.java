@@ -25,6 +25,7 @@ import tools.jackson.databind.node.*;
 public class AmapGateway {
   public record Image(byte[] body, String mediaType, boolean placeholder) {}
 
+  @Autowired(required=false) private ExecutionGovernanceService governance;
   private final String baseUrl;
   private final String apiKey;
   private final JsonMapper json;
@@ -120,6 +121,7 @@ public class AmapGateway {
     });
     try {
       return guard.execute(() -> {
+        if(governance!=null)governance.reserveAmap();
         requests.incrementAndGet();
         var request = HttpRequest.newBuilder(URI.create(baseUrl + path + "?" + query))
             .timeout(Duration.ofSeconds(10)).GET().build();

@@ -28,7 +28,7 @@ public final class TripRequests {
             "budget_total",
             "preferences",
             "constraints",
-            "free_text_input"));
+            "free_text_input", "planning_input"));
     text(body, "city", 0, 32);
     if (!body.hasNonNull("departure_city")) body.put("departure_city", "");
     text(body, "departure_city", 0, 32);
@@ -75,6 +75,7 @@ public final class TripRequests {
             || !Double.isFinite(walk.asDouble())
             || walk.asDouble() <= 0
             || walk.asDouble() > 30)) throw new ApiException(422, "步行限制无效");
+    if(body.has("planning_input")) body.set("planning_input",PlanningInputService.normalize(body.path("planning_input"),body.path("travel_days").asInt()));
     return body;
   }
 
