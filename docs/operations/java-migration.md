@@ -49,12 +49,12 @@ SELECT d.id,d.submitted_by,d.reviewed_by FROM knowledge_documents d
 
 ```powershell
 docker compose stop frontend backend agent
-python backend/scripts/backup_java_deployment.py --output E:\backups\trip-java-20260915
+python backend/scripts/backup_java_deployment.py --output E:\backups\trip-java-YYYYMMDD-HHMM --archive-images
 docker compose up -d --wait backend agent frontend
-python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-20260915 --output E:\backups\trip-java-restored
+python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-YYYYMMDD-HHMM --output E:\backups\trip-java-restored-YYYYMMDD-HHMM
 ```
 
-备份包含业务库、上传、Chroma、账本、配置和镜像标识，包含敏感信息，放在仓库外并限制访问。恢复工具校验哈希、拒绝不安全归档成员，在独立数据库和目录启动禁用 workers 的克隆并保留结果供核对；不会覆盖日常配置或删除现有数据。
+备份包含业务库、上传、Chroma、账本、有效私有配置及镜像标识，`--archive-images` 同时归档镜像。Java/Flyway-v2 从实际容器读取持久挂载和 Compose 文件，不按默认卷名猜测；输出限全新仓库外目录或已忽略的 `backups/` 目录。恢复工具校验哈希、拒绝不安全归档成员，在独立网络、数据库和目录启动禁用 workers 的克隆，核对原表内容并保留结果；不会覆盖日常配置或删除现有数据。可用 `--candidate-image` 验证候选迁移后原业务列及历史迁移记录不变，见[详细运维说明](final-planning.md)。私有备份必须限制访问，不提交 GitHub。
 
 正式回切必须安排维护窗口，先备份当前数据，再核对数据库、上传、Chroma 和账本的一致性。源数据库凭据改变时，单独调整恢复用配置副本，不改原备份。跨机器恢复需先准备对应镜像和私有网络。
 

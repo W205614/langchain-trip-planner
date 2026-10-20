@@ -140,7 +140,7 @@ docker compose up -d --wait
 
 ## 技术栈与进一步阅读
 
-前端使用 Vue 3、TypeScript 与高德 JS API；Java / Spring Boot 负责用户、行程、任务与审核，Python / LangGraph 负责模型生成、高德 MCP 和检索；PostgreSQL 保存业务数据，Chroma 保存向量索引。Docker Compose 默认启动四个服务，仅前端发布本机端口。
+前端使用 Vue 3、TypeScript 与高德 JS API；Java / Spring Boot 负责用户、行程、任务与审核，Python / LangGraph 负责候选生成、高德 MCP 和检索，OR-Tools 负责有界时间窗口求解；PostgreSQL 保存业务数据，Chroma 保存向量索引。Docker Compose 默认启动四个服务，仅前端发布本机端口。
 
 - [运行、升级与备份恢复](docs/operations/java-migration.md)
 - [时间规划、受限改排与恢复运维](docs/operations/final-planning.md)
