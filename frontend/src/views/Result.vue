@@ -114,6 +114,8 @@
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
           <a-alert v-if="quality.data_gaps?.length" type="info" show-icon
             :message="factGapMessage" />
+          <a-alert v-if="needsTransportArrivalBuffer" data-testid="transport-predeparture-warning" type="warning" show-icon
+            message="跨城交通到站提前量待核实" description="尚未核实进站、安检和检票所需提前量；请按班次要求提前到站并调整出发时间或住宿。" />
           <section v-if="quality.unmet_meals?.length" data-testid="unmet-meals" aria-label="未安排的餐饮候选">
             <a-alert v-for="(meal, index) in quality.unmet_meals" :key="meal.activity_id || `${meal.day_index}-${meal.type}-${index}`" type="warning" show-icon
               :message="unmetMealTitle(meal)" :description="unmetMealDescription(meal)" />
@@ -567,6 +569,20 @@ const factGapMessage = computed(() => {
   if (gaps.some(gap => gap.startsWith('meal_candidate_unassigned:'))) notes.push('部分餐饮候选未能安排，用餐仍有缺口，请就近用餐并重新核验')
   notes.push('酒店、餐厅接驳及景区内部步行未计入路线核实')
   return notes.join('；') + '。'
+})
+const needsTransportArrivalBuffer = computed(() => {
+  if ((quality.value.data_gaps || []).some((gap: string) => gap.startsWith('transport_predeparture_buffer_unverified:'))) return true
+  const input = planningInput.value || tripPlan.value?.planning_input
+  if (!input) return false
+  const cities = new Set([...(input.city_segments || []).map(segment => segment.city.trim()), ...(tripPlan.value?.days || []).map(day => day.city?.trim())].filter(Boolean))
+  // The current planning contract has no validated station/security/check-in
+  // buffer. A saved legacy plan must not imply that reaching a station exactly
+  // at the service start time is sufficient, even when its quality predates gaps.
+  return (input.commitments || []).some(commitment => {
+    if (!['transport', 'train', 'flight'].includes(String(commitment.category)) || (commitment.status != null && commitment.status !== 'confirmed')) return false
+    const origin = commitment.origin_city?.trim(), destination = commitment.destination_city?.trim()
+    return origin && destination ? origin !== destination : cities.size > 1
+  })
 })
 function unmetMealTitle(meal: { day_index: number; type: string; title?: string }) {
   const date = tripPlan.value?.days.find(day => day.day_index === meal.day_index)?.date

@@ -18,6 +18,20 @@ test('omitted restaurant candidate remains an explicit dated meal gap', async ({
   await expect(page.getByText('restaurant_candidate_does_not_fit_time_and_routes', { exact: true })).toHaveCount(0)
 })
 
+for (const [category, status] of [['transport', 'confirmed'], ['train', null], ['flight', undefined]] as const) {
+test(`legacy ${category} cross-city service still warns about unmodeled station arrival buffer`, async ({ page }) => {
+  const code = 'transport_predeparture_buffer_unverified:confirmed-train'
+  const sample = { ...plan, planning_input: { ...planning, commitments: [{ id: 'confirmed-train', version: 1, day_index: 0, category, status, title: 'G123', origin_city: '杭州', destination_city: '上海', start_at: '2026-11-01T08:00:00+08:00', end_at: '2026-11-01T09:00:00+08:00' }] }, days: [{ ...plan.days[0], feasibility: { status: 'unverified', unknown: [code] } }] }
+  await page.addInitScript(sample => { sessionStorage.setItem('tripPlan', JSON.stringify(sample)); sessionStorage.setItem('tripQuality', '{}') }, sample)
+  await page.route('https://webapi.amap.com/**', route => route.abort())
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+  await page.goto('/result')
+  await expect(page.getByTestId('transport-predeparture-warning')).toContainText('尚未核实进站、安检和检票所需提前量；请按班次要求提前到站并调整出发时间或住宿。')
+  await expect(page.locator('.timeline')).toContainText('G123：尚未核实进站、安检和检票所需提前量；请按班次要求提前到站并调整出发时间或住宿。')
+  await expect(page.getByText(code, { exact: true })).toHaveCount(0)
+})
+}
+
 test('owner saves structured daily windows and reviews a version conflict', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
   await page.route('**/api/trips/42/workspace', route => route.fulfill({ json: { data: { id: 42, version: 3, role: 'owner', city: '北京', travel_days: 1, plan } } }))

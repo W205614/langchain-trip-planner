@@ -45,6 +45,7 @@ function issueText(issue: string) {
     commitment_time_unknown: '固定事项缺少明确起止时间，请补充后重新校验。', invalid_commitment: '固定事项时间无效，请检查起止时间与日期。',
     locked_duration_changed: '活动时长与锁定时段冲突，请检查锁定事项。', invalid_time_lock: '锁定时段无效，请重新确认起止时间。', no_time_window: '没有可用时间窗口，请检查营业、预约与每日时间边界。',
     cross_city_confirmed_transport_missing: '跨城行程缺少已确认的交通衔接，请补充班次、起终点和到离时间。', protected_activity_excluded: '当前约束无法保留锁定或已完成活动，请调整允许修改的范围。',
+    transport_predeparture_buffer_unverified: '尚未核实进站、安检和检票所需提前量；请按班次要求提前到站并调整出发时间或住宿。',
     daily_candidate_limit_exceeded: '当天候选超过计算预算，请减少可选活动或分步规划。', hotel_endpoint_unknown: '住宿位置未知，酒店与活动间的接驳时间尚未核实。',
     candidate_time_model_has_no_solution: '当前候选与已知时间约束无法同时满足，请调整可选活动或时间条件。', solver_budget_exhausted: '本次计算预算已用尽，尚未找到满足条件的方案。',
     'Resume to continue scheduling remaining days': '本次计算预算已用尽，可恢复任务继续安排剩余日期。',
