@@ -1,9 +1,6 @@
 # 后端服务镜像: Python 3.11 精简版
 ARG PYTHON_BASE=python:3.11-slim
 FROM ${PYTHON_BASE}
-ARG VCS_REF=unknown
-LABEL org.opencontainers.image.revision=$VCS_REF \
-      org.opencontainers.image.source="https://github.com/W205614/langchain-trip-planner"
 USER root
 
 # 设置工作目录
@@ -34,6 +31,11 @@ RUN (id -u appuser >/dev/null 2>&1 || useradd -m appuser) \
 USER appuser
 
 EXPOSE 9000
+
+# Release metadata must not invalidate the locked dependency installation layer.
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.source="https://github.com/W205614/langchain-trip-planner"
 
 # Internal capabilities only. Java/Flyway owns business tables and task scheduling.
 CMD ["uvicorn", "app.agent_api.main:app", "--host", "0.0.0.0", "--port", "9000", "--workers", "1"]
