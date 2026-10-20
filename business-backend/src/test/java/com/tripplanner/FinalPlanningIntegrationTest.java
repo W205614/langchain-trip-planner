@@ -128,6 +128,14 @@ class FinalPlanningIntegrationTest {
     var duplicate=((ObjectNode)p.path("days").get(0).path("attractions").get(0)).deepCopy();((ObjectNode)p.path("days").get(0)).withArray("attractions").add(duplicate);
     assertEquals("DUPLICATE_ACTIVITY_ID",assertThrows(ApiException.class,()->PlanningInputService.stableIds(p)).code);
   }
+  @Test void retainedActivityCannotMovePastAuthorizedNewTimeBoundary(){
+    long uid=user(),id=trip(uid);var changed=plan();var scope=scope(0).put("start_at","2026-11-01T09:00:00+08:00").put("end_at","2026-11-01T12:00:00+08:00");
+    var entry=(ObjectNode)changed.path("days").get(0).path("timeline").get(0);
+    entry.put("start_at","2026-11-01T11:30:00+08:00").put("end_at","2026-11-01T12:30:00+08:00");
+    assertEquals("REVISION_SCOPE_VIOLATION",assertThrows(ApiException.class,()->tx.executeWithoutResult(s->planning.protect(uid,id,changed,scope,true))).code);
+    entry.put("start_at","2026-11-01T11:00:00+08:00").put("end_at","2026-11-01T12:00:00+08:00");
+    tx.executeWithoutResult(s->planning.protect(uid,id,changed,scope,true));
+  }
   @Test void publicPlanningInputRejectsMalformedNestedDataWithoutChangingRevision()throws Exception{
     long uid=user(),id=trip(uid);String token=tokens.issue(Map.of("id",uid,"token_version",0));
     var cases=List.of(

@@ -216,7 +216,7 @@ public class PlanningInputService {
         else if(!a.getValue().equals(changed.get(aid))||!Objects.equals(oldDays.get(aid),newDays.get(aid))||!Objects.equals(oldTimes.get(aid),newTimes.get(aid)))throw boundary();
       }
     }
-    for(var entry:changed.entrySet())if(!old.containsKey(entry.getKey())) {
+    for(var entry:changed.entrySet())if(!old.containsKey(entry.getKey())||allowed.contains(entry.getKey())) {
       if(!days.contains(newDays.get(entry.getKey())))throw boundary();
       if(start!=null||end!=null){var t=newTimes.get(entry.getKey());if(t==null)throw boundary();var begin=parseDate(t.path("start_at").asText(),input.path("timezone").asText());var finish=parseDate(t.path("end_at").asText(),input.path("timezone").asText());if(start!=null&&begin.isBefore(start)||end!=null&&finish.isAfter(end))throw boundary();}
     }
