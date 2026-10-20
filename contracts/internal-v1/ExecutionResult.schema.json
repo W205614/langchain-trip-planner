@@ -2,12 +2,30 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "Attraction": {
+      "additionalProperties": true,
       "description": "景点信息",
       "properties": {
         "name": {
           "description": "景点名称",
           "title": "Name",
           "type": "string"
+        },
+        "activity_id": {
+          "default": "",
+          "title": "Activity Id",
+          "type": "string"
+        },
+        "optional": {
+          "default": true,
+          "title": "Optional",
+          "type": "boolean"
+        },
+        "priority": {
+          "default": 50,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Priority",
+          "type": "integer"
         },
         "address": {
           "description": "地址",
@@ -210,9 +228,57 @@
       "title": "Budget",
       "type": "object"
     },
-    "DayPlan": {
-      "description": "单日行程",
+    "CitySegment": {
+      "additionalProperties": false,
       "properties": {
+        "city": {
+          "maxLength": 32,
+          "minLength": 1,
+          "title": "City",
+          "type": "string"
+        },
+        "start_day": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "Start Day",
+          "type": "integer"
+        },
+        "end_day": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "End Day",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "city",
+        "start_day",
+        "end_day"
+      ],
+      "title": "CitySegment",
+      "type": "object"
+    },
+    "DayPlan": {
+      "additionalProperties": true,
+      "properties": {
+        "city": {
+          "default": "",
+          "title": "City",
+          "type": "string"
+        },
+        "timeline": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Timeline",
+          "type": "array"
+        },
+        "feasibility": {
+          "additionalProperties": true,
+          "title": "Feasibility",
+          "type": "object"
+        },
         "date": {
           "description": "日期 YYYY-MM-DD",
           "title": "Date",
@@ -312,6 +378,34 @@
       "title": "DayPlan",
       "type": "object"
     },
+    "DayWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "day_index": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "Day Index",
+          "type": "integer"
+        },
+        "start": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "day_index",
+        "start",
+        "end"
+      ],
+      "title": "DayWindow",
+      "type": "object"
+    },
     "Hotel": {
       "description": "酒店信息",
       "properties": {
@@ -397,11 +491,17 @@
       "type": "object"
     },
     "Meal": {
+      "additionalProperties": true,
       "description": "餐饮信息",
       "properties": {
         "type": {
           "description": "餐饮类型: breakfast/lunch/dinner/snack",
           "title": "Type",
+          "type": "string"
+        },
+        "activity_id": {
+          "default": "",
+          "title": "Activity Id",
           "type": "string"
         },
         "name": {
@@ -603,9 +703,214 @@
       "title": "PlanningConstraints",
       "type": "object"
     },
-    "TripPlan": {
-      "description": "旅行计划",
+    "PlanningInput": {
+      "additionalProperties": false,
       "properties": {
+        "timezone": {
+          "default": "Asia/Shanghai",
+          "title": "Timezone",
+          "type": "string"
+        },
+        "day_start": {
+          "default": "09:00",
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Day Start",
+          "type": "string"
+        },
+        "day_end": {
+          "default": "20:00",
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Day End",
+          "type": "string"
+        },
+        "day_windows": {
+          "items": {
+            "$ref": "#/$defs/DayWindow"
+          },
+          "maxItems": 30,
+          "title": "Day Windows",
+          "type": "array"
+        },
+        "city_segments": {
+          "items": {
+            "$ref": "#/$defs/CitySegment"
+          },
+          "maxItems": 30,
+          "title": "City Segments",
+          "type": "array"
+        },
+        "commitments": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 300,
+          "title": "Commitments",
+          "type": "array"
+        },
+        "hotel_stays": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 30,
+          "title": "Hotel Stays",
+          "type": "array"
+        },
+        "meal_windows": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 8,
+          "title": "Meal Windows",
+          "type": "array"
+        },
+        "opening_windows": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 500,
+          "title": "Opening Windows",
+          "type": "array"
+        },
+        "locks": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 300,
+          "title": "Locks",
+          "type": "array"
+        },
+        "completed_activity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 300,
+          "title": "Completed Activity Ids",
+          "type": "array"
+        },
+        "arrival_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arrival At"
+        },
+        "departure_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Departure At"
+        },
+        "budget_mode": {
+          "default": "estimate",
+          "enum": [
+            "estimate",
+            "confirmed"
+          ],
+          "title": "Budget Mode",
+          "type": "string"
+        },
+        "budget_cents": {
+          "anyOf": [
+            {
+              "maximum": 1000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Budget Cents"
+        },
+        "revision_scope": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RevisionScope"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "PlanningInput",
+      "type": "object"
+    },
+    "RevisionScope": {
+      "additionalProperties": false,
+      "properties": {
+        "day_indices": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 30,
+          "title": "Day Indices",
+          "type": "array"
+        },
+        "activity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 300,
+          "title": "Activity Ids",
+          "type": "array"
+        },
+        "start_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start At"
+        },
+        "end_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End At"
+        }
+      },
+      "title": "RevisionScope",
+      "type": "object"
+    },
+    "TripPlan": {
+      "additionalProperties": true,
+      "properties": {
+        "planning_input": {
+          "$ref": "#/$defs/PlanningInput"
+        },
         "city": {
           "description": "目的地城市",
           "title": "City",

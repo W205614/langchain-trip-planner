@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "day_index": {
+      "maximum": 29,
+      "minimum": 0,
+      "title": "Day Index",
+      "type": "integer"
+    },
+    "start": {
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "Start",
+      "type": "string"
+    },
+    "end": {
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "End",
+      "type": "string"
+    }
+  },
+  "required": [
+    "day_index",
+    "start",
+    "end"
+  ],
+  "title": "DayWindow",
+  "type": "object"
+}
