@@ -1,6 +1,9 @@
 # 后端服务镜像: Python 3.11 精简版
 ARG PYTHON_BASE=python:3.11-slim
 FROM ${PYTHON_BASE}
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.source="https://github.com/W205614/langchain-trip-planner"
 USER root
 
 # 设置工作目录
@@ -10,7 +13,11 @@ WORKDIR /app
 COPY requirements.txt .
 COPY requirements.lock .
 # 公网镜像源偶发慢速读取时重试；仍不在最终镜像保留 pip 缓存。
-RUN --mount=type=cache,target=/root/.cache/pip pip install --retries 5 --timeout 120 -r requirements.txt && pip check
+RUN --mount=type=cache,target=/root/.cache/pip \
+    for attempt in 1 2 3; do \
+      pip install --retries 5 --timeout 120 -r requirements.txt && pip check && exit 0; \
+      if [ "$attempt" -lt 3 ]; then sleep 2; fi; \
+    done; exit 1
 
 # 2. 复制应用代码
 COPY app ./app

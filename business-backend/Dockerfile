@@ -7,6 +7,9 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn -s /tmp/maven-settings.xml -B -ntp -DskipTests package
 
 FROM eclipse-temurin:21-jre
+ARG VCS_REF=unknown
+LABEL org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.source="https://github.com/W205614/langchain-trip-planner"
 WORKDIR /app
 RUN groupadd --system trip && useradd --system --gid trip trip && mkdir -p /data/uploads && chown -R trip:trip /data
 COPY --from=build /build/target/business-backend-1.0.0-SNAPSHOT.jar /app/app.jar

@@ -15,7 +15,10 @@ services:
       - migration_database:/var/lib/postgresql/data
     ports: ["127.0.0.1:15432:5432"]
   backend:
-    build: ./business-backend
+    build:
+      context: ./business-backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     environment:
       JDBC_DATABASE_URL: jdbc:postgresql://postgres:5432/trip
       POSTGRES_USER: trip
@@ -48,7 +51,10 @@ services:
     volumes:
       - migration_uploads:/data/uploads
   agent:
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     command: [python, scripts/validation_server.py]
     environment:
       APP_ENV: validation
@@ -61,6 +67,7 @@ services:
       LLM_MODEL_ID: fixture
       RAG_ENABLED: "false"
       BUSINESS_URL: http://backend:9000
+      OUTBOUND_LEDGER_REQUIRED: "true"
       INTERNAL_SERVICE_KEY: migration-fixture-internal-01234567890123456789
       AGENT_EXECUTION_MAX_CONCURRENCY: 4
       AGENT_SLOW_CAPABILITY_MAX_CONCURRENCY: 4
@@ -72,7 +79,10 @@ services:
       timeout: 3s
       retries: 20
   amap-fixture:
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     command: [python, scripts/validation_server.py]
     environment:
       APP_ENV: validation
@@ -88,7 +98,10 @@ services:
       timeout: 3s
       retries: 20
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     ports: ["127.0.0.1:18080:80"]
     depends_on: [backend]
 volumes:

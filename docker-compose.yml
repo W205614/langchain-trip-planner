@@ -12,7 +12,10 @@ services:
     restart: unless-stopped
 
   backend:
-    build: ./business-backend
+    build:
+      context: ./business-backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     env_file: ./deploy/runtime/business.env
     volumes: ["./backend/data/knowledge_uploads:/data/uploads"]
     expose: ["9000"]
@@ -27,12 +30,16 @@ services:
     restart: unless-stopped
 
   agent:
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     env_file: ./deploy/runtime/agent.env
     command: [uvicorn, app.agent_api.main:app, --host, 0.0.0.0, --port, "9000", --workers, "1"]
     environment:
       DATA_DIR: /app/runtime
       CHROMA_DIR: /app/data/chroma
+      OUTBOUND_LEDGER_REQUIRED: "true"
     volumes:
       - ./backend/data/chroma:/app/data/chroma
       - ./backend/data/agent-runtime:/app/runtime
@@ -47,6 +54,8 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     ports:
       - "127.0.0.1:${APP_PORT:-8380}:80"
     depends_on:
