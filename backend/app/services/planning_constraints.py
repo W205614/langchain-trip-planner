@@ -224,6 +224,9 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         gaps.add("opening_hours_travel_date_unverified")
     if all(d["route_minutes"] is not None for d in day_reports):
         gaps.discard("route_duration_unavailable_fallback_to_straight_line")
+    def total_if_known(field, decimals=0):
+        values=[day[field] for day in day_reports]
+        return round(sum(values),decimals) if values and all(value is not None for value in values) else None
     report["warnings"] += violations
     report.update(policy_version=POLICY_VERSION, passed=not report["warnings"],
         rules_passed=not report["warnings"], facts_complete=False,
@@ -231,8 +234,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         score=max(0, 100 - 15 * len(report["warnings"])), repairs=repairs,
         data_gaps=sorted(gaps), day_checks=day_reports,
         route_checked=all(d["route_minutes"] is not None for d in day_reports),
-        actual_route_minutes=round(sum(d["route_minutes"] or 0 for d in day_reports)),
-        actual_route_distance_km=round(sum(d["route_distance_km"] or 0 for d in day_reports), 2))
+        actual_route_minutes=total_if_known("route_minutes"),
+        actual_route_distance_km=total_if_known("route_distance_km",2))
     recalculate_budget(plan, estimate_missing=True, budget_limit=request.budget_total)
     if enhanced:
         from .time_planner import RULE_VERSION, confirmed

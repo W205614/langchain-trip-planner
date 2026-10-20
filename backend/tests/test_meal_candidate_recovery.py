@@ -28,6 +28,8 @@ def test_saved_live_draft_and_paid_routes_recover_without_any_provider_send(monk
     quality=finalize_plan(plan,request,provider,enhanced=True)
     assert provider.calls==0
     assert quality['outcome']=='degraded' and quality['facts_complete'] is False
+    assert all(day['route_distance_km'] is None and day['inter_stop_walking_km'] is None for day in quality['day_checks'])
+    assert quality['actual_route_distance_km'] is None
     assert [set(a.poi_id for a in day.attractions) for day in plan.days]==original_ids
     assert all(day.timeline and day.feasibility['status']=='unverified' for day in plan.days)
     assert len(quality['unmet_meals'])==5
@@ -129,3 +131,18 @@ def test_actual_v2_resume_uses_original_hashes_without_any_outbound_reservation(
     assert response.status_code==200 and 'resume_draft' in response.text and 'event: result' in response.text
     assert '"outcome":"degraded"' in response.text or '"outcome": "degraded"' in response.text
     assert sends==[]
+
+
+def test_route_totals_do_not_hide_a_missing_day_as_zero():
+    request,plan=scenario([['A','B'],['C','D']])
+    unknown_pair=(plan.days[1].attractions[0].location,plan.days[1].attractions[1].location)
+    class PartialRoutes(Routes):
+        def plan_route_by_locations(self,left,right,**kwargs):
+            return {} if (left,right)==unknown_pair else {'duration':600,'distance':1000,'walking_distance':200}
+    quality=finalize_plan(plan,request,PartialRoutes(),repair=False)
+    assert quality['day_checks'][0]['route_minutes']==10
+    assert quality['day_checks'][1]['route_minutes'] is None
+    assert quality['day_checks'][1]['inter_stop_walking_km'] is None
+    assert quality['actual_route_minutes'] is None and quality['actual_route_distance_km'] is None
+    known=finalize_plan(plan,request,Routes(),repair=False)
+    assert known['actual_route_minutes']==20 and known['actual_route_distance_km']==2

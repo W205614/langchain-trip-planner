@@ -114,6 +114,10 @@
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
           <a-alert v-if="quality.data_gaps?.length" type="info" show-icon
             :message="factGapMessage" />
+          <section v-if="quality.unmet_meals?.length" data-testid="unmet-meals" aria-label="未安排的餐饮候选">
+            <a-alert v-for="(meal, index) in quality.unmet_meals" :key="meal.activity_id || `${meal.day_index}-${meal.type}-${index}`" type="warning" show-icon
+              :message="unmetMealTitle(meal)" :description="unmetMealDescription(meal)" />
+          </section>
           <a-alert v-for="warning in (quality.warnings || []).filter((w: string) => !(quality.issues || []).some((i: any) => i.blocking && i.reason === w))" :key="warning" type="warning" :message="warning" />
         </div>
         <!-- 顶部信息区:左侧概览+预算,右侧地图 -->
@@ -560,9 +564,18 @@ const factGapMessage = computed(() => {
   const notes = ['预约要求及余票请通过景区官方渠道确认']
   notes.push(gaps.includes('opening_hours_unavailable') ? '部分景点暂无开放时间数据' : '开放时间为查询参考，出行日请再次确认')
   if (gaps.includes('route_duration_unavailable_fallback_to_straight_line')) notes.push('部分景点间路线查询失败，详见每日交通')
+  if (gaps.some(gap => gap.startsWith('meal_candidate_unassigned:'))) notes.push('部分餐饮候选未能安排，用餐仍有缺口，请就近用餐并重新核验')
   notes.push('酒店、餐厅接驳及景区内部步行未计入路线核实')
   return notes.join('；') + '。'
 })
+function unmetMealTitle(meal: { day_index: number; type: string; title?: string }) {
+  const date = tripPlan.value?.days.find(day => day.day_index === meal.day_index)?.date
+  return `第 ${meal.day_index + 1} 天${date ? `（${date}）` : ''} · ${getMealLabel(meal.type)} · ${meal.title || '餐饮候选'}：未安排`
+}
+function unmetMealDescription(meal: { reason?: string; action?: string }) {
+  const reason = meal.reason === 'restaurant_candidate_does_not_fit_time_and_routes' ? '该餐厅无法同时满足用餐时间与接驳路线。' : meal.reason && /[\u3400-\u9fff]/.test(meal.reason) ? meal.reason : '餐饮候选无法纳入当前安排。'
+  return `${reason} ${meal.action || '该餐厅未安排，需就近用餐并重新核验'}`
+}
 const acceptVersion = (response: any) => {
   recordVersion.value = response.version
   quality.value = response.quality || {}

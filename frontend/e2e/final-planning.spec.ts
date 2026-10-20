@@ -3,6 +3,21 @@ import { expect, test } from '@playwright/test'
 const planning = { timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate' }
 const plan = { city: '北京', start_date: '2026-11-01', end_date: '2026-11-01', weather_info: [], overall_suggestions: '核对预约', days: [{ day_index: 0, date: '2026-11-01', attractions: [{ activity_id: 'activity-1', poi_id: 'P1', name: '故宫', address: '北京', description: '游览', visit_duration: 120, location: { longitude: 116.4, latitude: 39.9 } }], meals: [], transportation: '公共交通', accommodation: '酒店', description: '按预约游览', timeline: [{ activity_id: 'activity-1', title: '故宫', kind: 'attraction', status: 'estimated', start_at: '2026-11-01T09:00:00+08:00', end_at: '2026-11-01T11:00:00+08:00', notes: ['营业信息待核实'] }], feasibility: { status: 'unverified', unknown: ['opening_unknown_or_stale:activity-1'] } }] }
 
+test('omitted restaurant candidate remains an explicit dated meal gap', async ({ page }) => {
+  const code = 'meal_candidate_unassigned:lunch:omitted-lunch'
+  const sample = { ...plan, days: [{ ...plan.days[0], feasibility: { status: 'unverified', unknown: [code] } }] }
+  await page.addInitScript(({ sample, code }) => { sessionStorage.setItem('tripPlan', JSON.stringify(sample)); sessionStorage.setItem('tripQuality', JSON.stringify({ data_gaps: [code], unmet_meals: [{ day_index: 0, activity_id: 'omitted-lunch', type: 'lunch', title: '远郊餐厅', reason: 'restaurant_candidate_does_not_fit_time_and_routes', action: '该餐厅未安排，需就近用餐并重新核验' }] })) }, { sample, code })
+  await page.route('https://webapi.amap.com/**', route => route.abort())
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+  await page.goto('/result')
+  const gap = page.getByTestId('unmet-meals')
+  await expect(gap.getByText('第 1 天（2026-11-01） · 午餐 · 远郊餐厅：未安排')).toBeVisible()
+  await expect(gap.getByText('该餐厅无法同时满足用餐时间与接驳路线。 该餐厅未安排，需就近用餐并重新核验')).toBeVisible()
+  await expect(page.getByText('午餐候选未安排，需就近用餐并重新核验。')).toBeVisible()
+  await expect(page.getByText(code, { exact: true })).toHaveCount(0)
+  await expect(page.getByText('restaurant_candidate_does_not_fit_time_and_routes', { exact: true })).toHaveCount(0)
+})
+
 test('owner saves structured daily windows and reviews a version conflict', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
   await page.route('**/api/trips/42/workspace', route => route.fulfill({ json: { data: { id: 42, version: 3, role: 'owner', city: '北京', travel_days: 1, plan } } }))

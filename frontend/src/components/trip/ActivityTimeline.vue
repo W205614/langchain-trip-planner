@@ -36,6 +36,7 @@ const feasibilityColor = computed(() => props.day.feasibility?.status === 'feasi
 function issueText(issue: string) {
   if (/[\u3400-\u9fff]/.test(issue)) return issue
   const separator = issue.indexOf(':'), code = separator < 0 ? issue : issue.slice(0, separator), id = separator < 0 ? '' : issue.slice(separator + 1)
+  if (code === 'meal_candidate_unassigned') { const meal = ({ breakfast: '早餐', lunch: '午餐', dinner: '晚餐', snack: '小吃' } as Record<string, string>)[id.split(':')[0]] || '餐饮'; return `${meal}候选未安排，需就近用餐并重新核验。` }
   const title = props.day.timeline?.find(item => item.activity_id === id)?.title || props.planning?.commitments?.find(item => String(item.id) === id)?.title
   const labels: Record<string, string> = {
     opening_unknown_or_stale: '景点营业信息未知或已过期，请核对出行日期的开放与最后入场时间。', opening_conflict: '景点营业信息存在冲突，请根据官方来源核对。',
