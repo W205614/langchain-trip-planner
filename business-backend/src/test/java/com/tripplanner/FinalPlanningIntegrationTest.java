@@ -73,6 +73,64 @@ class FinalPlanningIntegrationTest {
     assertNotEquals(task,child);assertEquals("failed",db.queryForObject("SELECT status FROM trip_tasks WHERE id=?",String.class,task));assertEquals(task,db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?",String.class,child));
     assertEquals("unknown",db.queryForObject("SELECT column_default FROM information_schema.columns WHERE table_name='outbound_reservations' AND column_name='outcome'",String.class).replace("'","").replace("::character varying",""));
   }
+  @Test void resumeCannotReclassifyExistingOrdinaryTaskButReusesItsOwnRecoveryKey(){
+    when(agent.available()).thenReturn(true);long uid=user(),trip=trip(uid);
+    var request=(ObjectNode)json.readTree("{\"city\":\"北京\",\"start_date\":\"2026-11-01\",\"end_date\":\"2026-11-02\",\"travel_days\":2,\"transportation\":\"步行\",\"accommodation\":\"经济\",\"planning_input\":{}}");
+    String normalKey="normal:"+UUID.randomUUID();String normal=tasks.submit(uid,request,normalKey,"test",null).path("data").path("id").asText();
+    db.update("UPDATE trip_tasks SET status='succeeded',record_id=? WHERE id=?",trip,normal);
+    String parent=tasks.submit(uid,request,"parent:"+UUID.randomUUID(),"test",null).path("data").path("id").asText();
+    db.update("UPDATE trip_tasks SET status='failed',error_code='PROCESS_INTERRUPTED' WHERE id=?",parent);
+    var conflict=assertThrows(ApiException.class,()->tasks.resume(uid,parent,normalKey,"test"));
+    assertEquals(409,conflict.status);assertEquals("RESUME_KEY_CONFLICT",conflict.code);
+    assertNull(db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?",String.class,normal));
+    assertEquals("succeeded",db.queryForObject("SELECT status FROM trip_tasks WHERE id=?",String.class,normal));
+    String recoveryKey="recovery:"+UUID.randomUUID();String child=tasks.resume(uid,parent,recoveryKey,"test").path("data").path("id").asText();
+    assertNotEquals(normal,child);assertNotEquals(parent,child);
+    assertEquals(child,tasks.resume(uid,parent,recoveryKey,"test").path("data").path("id").asText());
+    assertEquals(parent,db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?",String.class,child));
+    assertEquals("failed",db.queryForObject("SELECT status FROM trip_tasks WHERE id=?",String.class,parent));
+  }
+  @Test void resumeCreationAndAncestryAreAtomicWithoutNetworkInTransaction(){
+    when(agent.available()).thenAnswer(invocation->{
+      assertFalse(org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive());
+      return true;
+    });
+    long uid=user();var request=(ObjectNode)json.readTree("{\"city\":\"北京\",\"start_date\":\"2026-11-01\",\"end_date\":\"2026-11-02\",\"travel_days\":2,\"transportation\":\"步行\",\"accommodation\":\"经济\",\"planning_input\":{}}");
+    String parent=tasks.submit(uid,request,"parent:"+UUID.randomUUID(),"test",null).path("data").path("id").asText();
+    db.update("UPDATE trip_tasks SET status='failed',error_code='PROCESS_INTERRUPTED' WHERE id=?",parent);
+    String key="atomic:"+UUID.randomUUID();var failedLink=mock(ExecutionGovernanceService.class);
+    doAnswer(invocation->{
+      assertTrue(org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive());
+      throw new ApiException(409,"injected ancestry failure");
+    }).when(failedLink).linkResume(anyString(),eq(parent));
+    org.springframework.test.util.ReflectionTestUtils.setField(tasks,"governance",failedLink);
+    try{
+      assertThrows(ApiException.class,()->tasks.resume(uid,parent,key,"test"));
+      assertEquals(0,db.queryForObject("SELECT count(*) FROM trip_tasks WHERE user_id=? AND idempotency_key=?",Integer.class,uid,key));
+    }finally{org.springframework.test.util.ReflectionTestUtils.setField(tasks,"governance",governance);}
+    var child=tasks.resume(uid,parent,key,"test").path("data");
+    assertEquals(parent,child.path("resumed_from").asText());
+  }
+  @Test void secondResumeReusesGrandparentStagesAndPrefersNearestDuplicate(){
+    when(agent.available()).thenReturn(true);long uid=user();
+    var request=(ObjectNode)json.readTree("{\"city\":\"北京\",\"start_date\":\"2026-11-01\",\"end_date\":\"2026-11-02\",\"travel_days\":2,\"transportation\":\"步行\",\"accommodation\":\"经济\",\"planning_input\":{}}");
+    String root=tasks.submit(uid,request,"root:"+UUID.randomUUID(),"test",null).path("data").path("id").asText(),rootExec=UUID.randomUUID().toString();
+    db.update("UPDATE trip_tasks SET status='running',execution_id=? WHERE id=?",rootExec,root);
+    var checkpoint=json.createObjectNode().put("stage","retrieval").put("input_hash","a".repeat(64)).put("expires_at",Instant.now().plusSeconds(300).toString());
+    checkpoint.putObject("payload").put("origin","grandparent");checkpoint.putObject("compatibility").put("protocol",2);
+    governance.save(rootExec,checkpoint);checkpoint.put("stage","candidates");governance.save(rootExec,checkpoint);
+    db.update("UPDATE trip_tasks SET status='failed' WHERE id=?",root);
+    String child=tasks.resume(uid,root,"child:"+UUID.randomUUID(),"test").path("data").path("id").asText(),childExec=UUID.randomUUID().toString();
+    db.update("UPDATE trip_tasks SET status='running',execution_id=? WHERE id=?",childExec,child);
+    ((ObjectNode)checkpoint.path("payload")).put("origin","parent");governance.save(childExec,checkpoint);
+    db.update("UPDATE trip_tasks SET status='failed' WHERE id=?",child);
+    String grandchild=tasks.resume(uid,child,"grandchild:"+UUID.randomUUID(),"test").path("data").path("id").asText(),newExec=UUID.randomUUID().toString();
+    db.update("UPDATE trip_tasks SET status='running',execution_id=? WHERE id=?",newExec,grandchild);
+    var stages=json.valueToTree(governance.get(newExec)).path("checkpoints");assertEquals(2,stages.size());
+    for(var stage:stages)assertEquals(stage.path("stage").asText().equals("retrieval")?"grandparent":"parent",stage.path("payload").path("origin").asText());
+    db.update("UPDATE execution_checkpoints SET expires_at=now()-interval '1 second' WHERE task_id=? AND stage='retrieval'",root);
+    assertEquals(1,json.valueToTree(governance.get(newExec)).path("checkpoints").size());
+  }
   @Test void inlineCommitmentsBecomeEditableLedgerAndExpiredFactCannotConfirm(){
     long uid=user(),id=trip(uid);var in=input();
     in.withArray("commitments").addObject().put("id","user-booking").put("day_index",0).put("category","ticket").put("title","预约").put("status","confirmed").put("start_at","2026-11-01T10:00:00+08:00").put("end_at","2026-11-01T11:00:00+08:00");

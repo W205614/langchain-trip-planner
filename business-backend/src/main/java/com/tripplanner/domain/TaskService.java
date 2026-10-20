@@ -95,6 +95,11 @@ public class TaskService {
 
   public synchronized ObjectNode submit(
       long uid, ObjectNode input, String key, String requestId, ObjectNode revision) {
+    return submit(uid,input,key,requestId,revision,null);
+  }
+
+  private ObjectNode submit(
+      long uid, ObjectNode input, String key, String requestId, ObjectNode revision,String resumeParent) {
     if (closing) throw new ApiException(503, "服务正在停止，请稍后重试", "PROCESS_INTERRUPTED");
     ObjectNode body = TripRequests.normalize(input);
     if (revision != null) {
@@ -129,6 +134,8 @@ public class TaskService {
     }
     var existing = tasks.byKey(uid, idempotency);
     if (existing != null) {
+      if(resumeParent!=null&&!resumeParent.equals(existing.get("resumed_from")))
+        throw new ApiException(409,"该幂等键已用于其他任务，请使用新的恢复幂等键","RESUME_KEY_CONFLICT");
       if (!fingerprint.equals(existing.get("fingerprint"))
           && !canonical(json.readTree(existing.get("request_json").toString()))
               .equals(canonical(body))) throw new ApiException(409, "同一幂等键不能用于不同请求");
@@ -142,8 +149,7 @@ public class TaskService {
       throw new ApiException(429, "今日规划任务额度已用完（UTC日界）", "DAILY_TASK_LIMIT");
     if (tasks.active() >= queueLimit) throw new ApiException(429, "规划队列已满", "TASK_QUEUE_FULL");
     String id = UUID.randomUUID().toString();
-    tasks.insert(
-        Map.of(
+    var taskData=Map.<String,Object>of(
             "id",
             id,
             "user_id",
@@ -157,7 +163,12 @@ public class TaskService {
             "request_id",
             requestId == null ? "" : requestId.substring(0, Math.min(64, requestId.length())),
             "deadline_at",
-            Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(timeout))));
+            Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(timeout)));
+    if(resumeParent==null) tasks.insert(taskData);
+    else tx.executeWithoutResult(s->{
+      tasks.insert(taskData);
+      governance.linkResume(id,resumeParent);
+    });
     return response(uid, id, false);
   }
 
@@ -258,11 +269,7 @@ public class TaskService {
     if(!Set.of("failed","cancelled","needs_attention").contains(row.get("status")))throw new ApiException(409,"只有中断或未完成任务可恢复");
     var body=(ObjectNode)json.readTree(row.get("request_json").toString());
     var revision=(ObjectNode)body.remove("_revision");
-    var response=submit(uid,body,key,requestId,revision);
-    String child=response.path("data").path("id").asText();
-    if(child.equals(id))throw new ApiException(409,"恢复必须使用新的幂等键");
-    governance.linkResume(child,id);
-    return response;
+    return submit(uid,body,key,requestId,revision,id);
   }
 
   @Scheduled(fixedDelay = 250)

@@ -34,8 +34,21 @@ public class ExecutionGovernanceService {
     if(!expires.isAfter(Instant.now()))throw new ApiException(422,"快照已过期");
     db.update("INSERT INTO execution_checkpoints(task_id,execution_id,stage,input_hash,payload,compatibility,expires_at) VALUES(?,?,?,?,?::jsonb,?::jsonb,?) ON CONFLICT(task_id,stage) DO UPDATE SET execution_id=excluded.execution_id,input_hash=excluded.input_hash,payload=excluded.payload,compatibility=excluded.compatibility,expires_at=excluded.expires_at,created_at=now()",task.get("id"),execution,stage,hash,json.writeValueAsString(body.path("payload")),json.writeValueAsString(body.path("compatibility")),Timestamp.from(expires));
     return Map.of("success",true);});}
-  public Object get(String execution){var task=running(execution,false);String source=Objects.toString(task.get("resumed_from"),task.get("id").toString());
-    var items=new ArrayList<ObjectNode>();for(var row:db.queryForList("SELECT * FROM execution_checkpoints WHERE task_id IN (?,?) AND expires_at>now() ORDER BY created_at",source,task.get("id"))){var n=json.createObjectNode();for(String f:List.of("stage","input_hash"))n.put(f,row.get(f).toString());n.set("payload",json.readTree(row.get("payload").toString()));n.set("compatibility",json.readTree(row.get("compatibility").toString()));n.put("expires_at",((Timestamp)row.get("expires_at")).toInstant().toString());items.add(n);}return Map.of("checkpoints",items);}
+  public Object get(String execution){var task=running(execution,false);
+    String query="""
+WITH RECURSIVE ancestry AS (
+ SELECT id,resumed_from,user_id,0 AS depth,ARRAY[id::text] AS seen FROM trip_tasks WHERE id=?
+ UNION ALL
+ SELECT p.id,p.resumed_from,p.user_id,a.depth+1,a.seen||p.id::text
+ FROM trip_tasks p JOIN ancestry a ON p.id=a.resumed_from AND p.user_id=a.user_id
+ WHERE a.depth<63 AND NOT p.id=ANY(a.seen)
+)
+SELECT DISTINCT ON(c.stage,c.input_hash,c.compatibility) c.*
+FROM ancestry a JOIN execution_checkpoints c ON c.task_id=a.id
+WHERE c.expires_at>now()
+ORDER BY c.stage,c.input_hash,c.compatibility,a.depth,c.created_at DESC LIMIT 256
+""";
+    var items=new ArrayList<ObjectNode>();for(var row:db.queryForList(query,task.get("id"))){var n=json.createObjectNode();for(String f:List.of("stage","input_hash"))n.put(f,row.get(f).toString());n.set("payload",json.readTree(row.get("payload").toString()));n.set("compatibility",json.readTree(row.get("compatibility").toString()));n.put("expires_at",((Timestamp)row.get("expires_at")).toInstant().toString());items.add(n);}return Map.of("checkpoints",items);}
   public Object reserve(ObjectNode body){
     String kind=body.path("kind").asText("");if(!Set.of("text","embedding","amap").contains(kind))throw new ApiException(422,"调用类型无效");
     String key=body.path("request_key").asText("");if(!key.matches("[A-Za-z0-9_:/.-]{1,160}"))throw new ApiException(422,"调用编号无效");
