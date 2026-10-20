@@ -24,7 +24,7 @@ Java 持久化任务、当前执行、期限、阶段快照和调用预留。Pyt
 
 恢复接口 `POST /api/tasks/{id}/resume`（兼容 `/api/trip/tasks/{id}/resume`）要求幂等键，保留原终态任务并新建关联执行。只有输入哈希、模型／规则／提示版本及事实有效性兼容的阶段会复用。无法确认是否收到外部响应时不承诺费用恰好一次。
 
-Java 高德请求及 Python 模型／Embedding／地图调用均先向 Java 预留，SDK 重试也受覆盖。`OUTBOUND_LEDGER_REQUIRED=true` 用于部署；账本不可用时停止付费调用。默认日常文本／嵌入／地图上限分别 1000／5000／10000，配置见 `ExecutionGovernanceService`。任务上限还随天数有界增长。单次真实验收使用固定 `FINAL_ACCEPTANCE_RUN_ID`，服务端上限固定 12／40／400，独立于日常额度；失败发送不退回。禁止换编号绕开验收上限，禁止清理运行账本。
+Java 高德请求（含照片）及 Python 模型／Embedding／地图调用均先向 Java 预留，SDK 重试也受覆盖。`OUTBOUND_LEDGER_REQUIRED=true` 用于部署；账本不可用时停止付费调用。日常文本／嵌入／地图默认上限为1000／5000／10000，可在 Java 运行环境分别设置 `OUTBOUND_DAILY_TEXT_LIMIT`、`OUTBOUND_DAILY_EMBEDDING_LIMIT`、`OUTBOUND_DAILY_AMAP_LIMIT`（UTC自然日）。任务及其恢复后代共享祖先任务额度，上限还随天数有界增长。单次真实验收使用固定 `FINAL_ACCEPTANCE_RUN_ID`，服务端上限固定12／40／400，独立于日常额度；失败发送不退回。禁止换编号绕开验收上限，禁止清理运行账本。
 
 `outbound_budget_counters` 可按 scope、kind 查看已预留计数；`outbound_reservations` 中 unknown 表示已预留但不确认响应是否落库。查询时只输出汇总，不公开凭据、任务正文或私有账号。
 
