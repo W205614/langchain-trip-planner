@@ -1,0 +1,24 @@
+{
+  "review_mode": "saved_actual_crosscity_result_no_network",
+  "checks": [
+    {
+      "day_index": 0,
+      "city": "北京",
+      "timeline_positive_and_nonoverlapping": true,
+      "status": "unverified"
+    },
+    {
+      "day_index": 1,
+      "city": "上海",
+      "timeline_positive_and_nonoverlapping": true,
+      "status": "unverified"
+    }
+  ],
+  "unconfirmed_recommended_hotel_changed": true,
+  "verified_origin_access_minutes": 37,
+  "confirmed_transport_unchanged": "08:00 to 12:30 Asia/Shanghai",
+  "earliest_departure_unchanged": "07:00",
+  "confirmed_transport_cost_cents": 55000,
+  "unknown_total_budget_not_reported_satisfied": true,
+  "boundary": "POI IDs and directed durations came from actual map providers. Opening/price/dining/boarding lead time remain unverified. Boarding warning was added in source/legacy UI with offline tests, without paid rerun."
+}

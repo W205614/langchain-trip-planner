@@ -1,0 +1,33 @@
+{
+  "mode": "live_providers_http",
+  "run_id": "final-20261020-050d19bce4",
+  "stage": "readback",
+  "passed": true,
+  "started_at": "2026-10-20T10:08:41.322068+00:00",
+  "limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "before": {
+    "text": 6,
+    "embedding": 20,
+    "amap": 392
+  },
+  "checks": [
+    "existing acceptance counters respect fixed caps",
+    "no fixture route",
+    "plan remains readable after rebuild",
+    "plan exact persisted plan survives rebuild",
+    "crosscity remains readable after rebuild",
+    "crosscity exact persisted plan survives rebuild",
+    "confirmed proposal persists"
+  ],
+  "boundary": "Independent live-provider sample; cross-city transport is a hypothetical user-confirmed input, not a real booking. No SLA or generalization claim.",
+  "after": {
+    "text": 6,
+    "embedding": 20,
+    "amap": 392
+  },
+  "finished_at": "2026-10-20T10:08:44.438291+00:00"
+}

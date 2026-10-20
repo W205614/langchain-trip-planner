@@ -1,0 +1,177 @@
+{
+  "reviewed_at_utc": "2026-10-20T09:54:53.837971+00:00",
+  "review_mode": "read_only_saved_evidence",
+  "network_requests": 0,
+  "credentials_exported": false,
+  "crosscity_status": "not_accepted_pending_python_connection_review",
+  "live_reports": {
+    "live-plan": {
+      "passed": true,
+      "check_count": 7
+    },
+    "live-proposal": {
+      "passed": true,
+      "check_count": 14
+    },
+    "live-research": {
+      "passed": true,
+      "check_count": 7
+    }
+  },
+  "plan_timeline": [
+    {
+      "day_index": 0,
+      "date": "2026-10-30",
+      "event_count": 9,
+      "first_start": "2026-10-30T09:00:00+08:00",
+      "last_end": "2026-10-30T18:02:00+08:00",
+      "nonoverlapping_and_within_daily_bounds": true,
+      "issues": [],
+      "feasibility_status": "unverified",
+      "unknown_count": 8
+    },
+    {
+      "day_index": 1,
+      "date": "2026-10-31",
+      "event_count": 7,
+      "first_start": "2026-10-31T09:00:00+08:00",
+      "last_end": "2026-10-31T17:53:00+08:00",
+      "nonoverlapping_and_within_daily_bounds": true,
+      "issues": [],
+      "feasibility_status": "unverified",
+      "unknown_count": 13
+    }
+  ],
+  "proposal_timeline": [
+    {
+      "day_index": 0,
+      "date": "2026-10-30",
+      "event_count": 9,
+      "first_start": "2026-10-30T09:00:00+08:00",
+      "last_end": "2026-10-30T18:02:00+08:00",
+      "nonoverlapping_and_within_daily_bounds": true,
+      "issues": [],
+      "feasibility_status": "unverified",
+      "unknown_count": 8
+    },
+    {
+      "day_index": 1,
+      "date": "2026-10-31",
+      "event_count": 7,
+      "first_start": "2026-10-31T09:00:00+08:00",
+      "last_end": "2026-10-31T17:23:00+08:00",
+      "nonoverlapping_and_within_daily_bounds": true,
+      "issues": [],
+      "feasibility_status": "unverified",
+      "unknown_count": 11
+    }
+  ],
+  "proposal_allowed_days": [
+    1
+  ],
+  "non_target_days": [
+    {
+      "day_index": 0,
+      "equal": true,
+      "before_sha256": "42701f6a2020fee4361ed45cb95f66eaed74a63d1677092ae83b292f12337ae6",
+      "after_sha256": "42701f6a2020fee4361ed45cb95f66eaed74a63d1677092ae83b292f12337ae6"
+    }
+  ],
+  "fixed_appointment_and_lock": {
+    "activity": "妙应寺白塔",
+    "date": "2026-10-31",
+    "local_start": "2026-10-31T10:06:00+08:00",
+    "local_end": "2026-10-31T11:06:00+08:00",
+    "content_lock_retained": true,
+    "activity_content_unchanged": true,
+    "timeline_slot_unchanged": true,
+    "confirmed_commitment_matches_slot": true,
+    "reservation_is_user_confirmed_sample_not_real_ticket": true
+  },
+  "plan_meal_honesty": {
+    "day_level_unassigned_count": 5,
+    "quality_aggregate_unassigned_count": 5,
+    "unassigned_candidates_absent_from_active_meals": true,
+    "all_day_level_records_have_reason_and_remediation": true,
+    "aggregate_covers_all_retained_days": true,
+    "aggregate_missing": [],
+    "note": "Meal gaps are disclosed and the result stays unverified/degraded; the second day has no scheduled restaurant and requires nearby dining plus re-verification. This is not a complete executable itinerary."
+  },
+  "proposal_meal_honesty": {
+    "day_level_unassigned_count": 5,
+    "quality_aggregate_unassigned_count": 3,
+    "unassigned_candidates_absent_from_active_meals": true,
+    "all_day_level_records_have_reason_and_remediation": true,
+    "aggregate_covers_all_retained_days": false,
+    "aggregate_missing": [
+      {
+        "day_index": 0,
+        "type": "breakfast",
+        "restaurant": "紫光园·烤鸭·北京菜(常营店)"
+      },
+      {
+        "day_index": 0,
+        "type": "dinner",
+        "restaurant": "宫宴"
+      }
+    ],
+    "note": "Meal gaps are disclosed and the result stays unverified/degraded; the second day has no scheduled restaurant and requires nearby dining plus re-verification. This is not a complete executable itinerary."
+  },
+  "quality_interpretation": {
+    "plan_score": 100,
+    "proposal_score": 100,
+    "meaning": "100 is the score of the current rule checks, not factual accuracy, real-world executability or production readiness.",
+    "plan_facts_complete": false,
+    "proposal_facts_complete": false,
+    "plan_feasibility": "unverified",
+    "proposal_feasibility": "unverified",
+    "live_plan_outcome": "degraded",
+    "proposal_validated_outcome": "degraded"
+  },
+  "known_historical_sample_defect": {
+    "field": "actual_route_distance_km",
+    "plan_sample_value": 0,
+    "proposal_sample_value": 0,
+    "per_day_distances": [
+      null,
+      null
+    ],
+    "interpretation": "Zero is an old aggregation defect when actual distance is unknown; it does not mean a measured zero-distance route. Historical samples are preserved.",
+    "current_source_fix_verified_read_only": "planning_constraints.py total_if_known now returns None when any contributing daily value is unknown.",
+    "regression_source": "backend/tests/test_meal_candidate_recovery.py checks unknown totals are None and fully known totals remain numeric.",
+    "fix_validation_boundary": "Source and regression assertions inspected; no new tests or provider calls in this manual review."
+  },
+  "research_review": {
+    "report_passed": true,
+    "answer_status": "grounded_answer",
+    "source_count": 5,
+    "source_tiers": [
+      "amap_live",
+      "curated_static",
+      "reviewed"
+    ],
+    "explicitly_distinguishes_sample_guides_from_confirmed_facts": true,
+    "boundary": "Grounded answer in this saved question, including static/demo and synthetic material explicitly qualified as such; not independent verification of current venue rules."
+  },
+  "findings": [
+    {
+      "severity": "medium",
+      "code": "PROPOSAL_MEAL_AGGREGATE_OMITS_RETAINED_DAY",
+      "description": "Proposal quality.unmet_meals contains 3 target-day records but the unchanged first day retains 2 additional gaps in day.feasibility.unmet_meals. Day-level warnings remain, while top-level restaurant-specific details are incomplete.",
+      "recommended_fix": "Aggregate quality.unmet_meals and meal gaps from all persisted day reports, preserving non-target day JSON unchanged.",
+      "resolution": {
+        "source_commit": "6e30a40",
+        "test": "test_scoped_quality_retains_meal_gaps_from_untouched_days",
+        "result": "passed_offline",
+        "paid_case_repeated": false
+      }
+    }
+  ],
+  "review_status": "saved_samples_reviewed_with_historical_aggregate_findings",
+  "limits": [
+    "Only the supplied two-day Beijing plan, its confirmed proposal and one research answer were inspected.",
+    "Temporal consistency checks do not verify opening hours, live traffic, ticket availability or the completeness of dining arrangements.",
+    "Cross-city behavior is explicitly excluded from this review."
+  ],
+  "snapshot_policy": "Original paid snapshots retained as produced. Aggregate defects fixed with targeted offline regressions rather than repeated paid generation."
+}

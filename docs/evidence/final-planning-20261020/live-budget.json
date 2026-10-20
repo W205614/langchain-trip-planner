@@ -1,0 +1,22 @@
+{
+  "run_id": "final-20261020-050d19bce4",
+  "checked_at": "2026-10-20T10:01:54.870283+00:00",
+  "used_reservations": {
+    "amap": 392,
+    "embedding": 20,
+    "text": 6
+  },
+  "fixed_limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "all_within_caps": true,
+  "index_status_counts": [
+    "succeeded:83"
+  ],
+  "paid_sampling_finished": true,
+  "retries_counted_without_refund": true,
+  "old_ledgers_preserved": true,
+  "billing_boundary": "Pre-send durable reservations, not currency amounts. Provider billing/free quotas must be checked with the provider. Recovery of first failed solver added zero sends; subsequent indexing is separately included."
+}

@@ -1,0 +1,17 @@
+{
+  "task": "add7d0d3-b2fa-42f3-b202-aef201307940",
+  "status": "succeeded",
+  "error_code": "",
+  "before": [
+    "amap:348",
+    "embedding:17",
+    "text:6"
+  ],
+  "after": [
+    "amap:392",
+    "embedding:17",
+    "text:6"
+  ],
+  "zero_repeat_text_calls": true,
+  "result_id": 75
+}

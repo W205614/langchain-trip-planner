@@ -1,0 +1,26 @@
+{
+  "checksums_verified": true,
+  "tables_verified": 23,
+  "rows_verified": 539,
+  "restored_java_ready": true,
+  "production_configuration_changed": false,
+  "containers": [
+    "trip-final-restore-pg-25c05f308a8c",
+    "trip-final-restore-backend-25c05f308a8c"
+  ],
+  "network": "trip-final-restore-25c05f308a8c",
+  "mount_archives": [
+    "knowledge_uploads",
+    "chroma",
+    "agent-runtime"
+  ],
+  "upgrade": {
+    "candidate_image_id": "sha256:94a588b2df8d71b9f1a21c0bcabc2fc7432d437d0fe007d438718b2990175fc8",
+    "candidate_ready": true,
+    "original_business_tables_unchanged": 22,
+    "original_migrations_unchanged": 9,
+    "schema_version": "10"
+  },
+  "tested_source_revision": "58338e4ae83c62e39a6ddf9b75d493193fe8e5d7",
+  "boundary": "Actual restored backup and V10 schema upgrade. Later Python/UI-only changes do not alter migration."
+}

@@ -1,0 +1,240 @@
+{
+  "recorded_at": "2026-10-20T10:12:32.630801+00:00",
+  "runtime_source_revision": "f64e579dcacec7246f12b4db6b130af9298992f8",
+  "runtime_checks": {
+    "checked_at": "2026-10-20T10:09:43.705254+00:00",
+    "source_revision": "f64e579dcacec7246f12b4db6b130af9298992f8",
+    "network_mode": "local_read_only_business_http_no_provider_calls",
+    "checks": [
+      {
+        "case": "plan",
+        "record_id": 72,
+        "version": 2,
+        "exact_persisted_plan": true,
+        "plan_sha256": "11779e95f18557e63a92d26297c1bc2ab0fc458ebca8a0481ac69ebdcc6c6ccc"
+      },
+      {
+        "case": "crosscity",
+        "record_id": 75,
+        "version": 1,
+        "exact_persisted_plan": true,
+        "plan_sha256": "ba7f2873eafb6c001c9be9cac5ed6d168b0e9fc8c05b2fe99b9a97d7f74d8768"
+      }
+    ],
+    "services": {
+      "backend": {
+        "container_id": "531c2652ea4ecea6f6d5b4a3f7dcf6fbb195d22e20a6be7be87855f423ff5581",
+        "image_id": "sha256:8d4cd6995d6b6acf7fc29b30b654db5d856335584f79e5669b0bffeaf44f2a86",
+        "revision": "f64e579dcacec7246f12b4db6b130af9298992f8",
+        "healthy": true,
+        "original_mounts_preserved": true,
+        "acceptance_pin_removed": true
+      },
+      "agent": {
+        "container_id": "bc030598d6fc8e8506c6f159d4b001d3927346dc61f7e3ca2bf52957fd2a4ddf",
+        "image_id": "sha256:b409eaecb69cf3201478f432dedff796d7da5a36a6d8ad4ca5683df08596f144",
+        "revision": "f64e579dcacec7246f12b4db6b130af9298992f8",
+        "healthy": true,
+        "original_mounts_preserved": true,
+        "acceptance_pin_removed": true
+      },
+      "frontend": {
+        "container_id": "32029c8d5af769b62e59b5cbab00e472c849e757fe11d0ccc63c94109b852b22",
+        "image_id": "sha256:9694a65d99ce1c4c7a06b259be7b055f1df1587289e70bc5028f97e65814c7a8",
+        "revision": "f64e579dcacec7246f12b4db6b130af9298992f8",
+        "healthy": true,
+        "original_mounts_preserved": true,
+        "acceptance_pin_removed": true
+      },
+      "postgres": {
+        "container_id": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+        "image_id": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "revision": null,
+        "healthy": true,
+        "original_mounts_preserved": true,
+        "acceptance_pin_removed": true
+      }
+    },
+    "counts": {
+      "amap": 392,
+      "embedding": 20,
+      "text": 6
+    },
+    "schema_version": "10",
+    "passed": true
+  },
+  "cleanup": {
+    "passed": true,
+    "actions": [
+      {
+        "kind": "container",
+        "id": "465183eb79ded2ee94dbb8051716dca3c46f06ffd15a1d23b404309df3c74c57",
+        "name": "trip-final-restore-backend-25c05f308a8c",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "ffefa4692183ccaebab78e19880d1e493566cb069acc346d083ff7a3ae61d2ab",
+        "name": "trip-final-restore-pg-25c05f308a8c",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "8f05522de11dee27c692e2a4fae6463e7f284bf3bfa9cde821c5069d26f22dfb",
+        "name": "trip-validation-amap-fixture-1",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "44ec03728ae4d6b20934e02ea014624c16f10867eb40e06bfe9e8a6deb08f950",
+        "name": "trip-validation-agent-1",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "e44f982429933e012db03e9c58cccd10fb952542f42197955294f8db6a0a8d1e",
+        "name": "trip-validation-backend-1",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "2cba11aa8e2cd9fe7fead247b4c518635fb636b645e5e17d575f947684aa886a",
+        "name": "trip-validation-frontend-1",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "f1bab41ff75f66a07fa84534e1401a5892a01cbf9971956ead6464c80121fdea",
+        "name": "trip-final-restore-backend-f8c6d6c220d6",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "00efaf30fdd884dd98418cb20aeab252635746d84cb220a43ee26bfb5ae01b6f",
+        "name": "trip-final-restore-pg-f8c6d6c220d6",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "3ceb4722158cc3d46d66a7892b75b8cef0924fb9456807f78b132e69f708aa04",
+        "name": "trip-validation-postgres-1",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "c28c95aad902c735f6076c33c4f202eb72d19b6935ac372a20062cbcdeef6b92",
+        "name": "trip-final-python-tests",
+        "outcome": "removed"
+      },
+      {
+        "kind": "container",
+        "id": "ca5b0b5ae0a456ebb8cc8ee1fe5a069adbc6b14b71fba6d7c417c833d8b621db",
+        "name": "trip-final-test-postgres",
+        "outcome": "removed"
+      },
+      {
+        "kind": "network",
+        "id": "9197d9dd298473f76bd53bcaad065002447d2102dbfbebd3887943cb5bacf36e",
+        "name": "trip-final-restore-25c05f308a8c",
+        "outcome": "removed"
+      },
+      {
+        "kind": "network",
+        "id": "8c11d9906db542353f2229e5043ee9e35f2e0d6448dd964a6f9fce91b888cb4a",
+        "name": "trip-final-restore-f8c6d6c220d6",
+        "outcome": "removed"
+      },
+      {
+        "kind": "network",
+        "id": "8ce4b8f9fa9a6b0b4454eb9ed75cb16bddd36e4365d8d03a1618c45ace26a720",
+        "name": "trip-validation_default",
+        "outcome": "removed"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:25a8535033c8e01ec00b1ead25ac88ae1c2b547fc005716f600e3d3dc95125a7",
+        "outcome": "removed"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:893ae4ca6dcf03ee4d52630c4169f83fcc913d60cca528d50693986b0f603511",
+        "outcome": "removed"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:f692f1fa53ded8f96f1a739d64599eae9efed16481f42a0198e0e5e16c1ed6d0",
+        "outcome": "removed"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:69f644c78ef07de9a8a29f33c38c834ac7de81e6a033634b2edcbb86ccb8bdaa",
+        "outcome": "removed",
+        "archive_sha256": "d168c910ce950df0a02e58092ed5317599f903366cf17afc4a100118cf8f37c0"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:35a5640f1aaf84a07b67b4c22efc3e1831c826c1f2c4c266cedb0fc44c245721",
+        "outcome": "removed",
+        "archive_sha256": "d168c910ce950df0a02e58092ed5317599f903366cf17afc4a100118cf8f37c0"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:305574159d838d01004713d230f6595f95127e05d1b08bef296026bcca8dd914",
+        "outcome": "already_absent_after_partial_cleanup"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:6283b98cf6ee2bddde00180ea7bb7cf09adef65e8b1ba2e5014263c9b093edd8",
+        "outcome": "already_absent_after_partial_cleanup"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:df3c8a45fcf23b7dee7ab441590a33ffdba77e3a149b895fdfc58b30890e8ec6",
+        "outcome": "removed"
+      },
+      {
+        "kind": "image",
+        "id": "sha256:e9f4a1b7a1237f8376a3a0f0c2df3ebaea80754bab0415ff133dabaaf8bb4e60",
+        "outcome": "removed"
+      }
+    ],
+    "verification_containers_removed": 11,
+    "isolated_networks_removed": 3,
+    "archived_project_images_cleaned": 9,
+    "volume_names_removed": [],
+    "preserved": [
+      "All original business mounts and volumes",
+      "Private configurations and old ledgers",
+      "Baseline/pre-upgrade/intermediate/validation image archives",
+      "Restored backup files and original restoration assets",
+      "Shared PostgreSQL and unrelated projects"
+    ],
+    "concurrent_other_project_changes_recorded": true,
+    "unrelated_resources_mutated_by_this_task": false
+  },
+  "backup_recovery": {
+    "baseline": "backups/final-baseline-20261020",
+    "pre_upgrade": "backups/final-pre-upgrade-20261020-171700",
+    "all_archives_private_and_retained": true,
+    "actual_restore_and_candidate_upgrade": "release-restore-upgrade.json",
+    "historical_business_tables_unchanged_at_cutover": 22,
+    "historical_migrations_unchanged": 9
+  },
+  "stop_criteria": {
+    "core_loop": "Passed scoped HTTP/browser, persisted real plan and confirmed proposal",
+    "server_boundaries": "Passed owner/editor/viewer/revoked/unrelated/admin negative cases and scope/booking/version protection",
+    "failure_handling": "Passed isolated restart/cancel/lease/checkpoint/index/restore checks with recorded evidence",
+    "provable_results": "Targeted tests, retained initial failures, fixed-budget real samples, manual review and restore evidence present; final exact-SHA CI is an independent required gate"
+  },
+  "final_ci_gate": {
+    "workflow": "https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml",
+    "required_jobs": [
+      "Java business PostgreSQL tests",
+      "Python Agent tests",
+      "Frontend build (vue-tsc + vite)",
+      "Docker Compose config and build"
+    ],
+    "rule": "Normal merge/push to main, require every expected job success on the final SHA. Final runtime image labels and remote SHA are checked again in the local delivery record after the merge."
+  },
+  "boundary": "Single-host deployment and agreed scenarios only. Not HA/SLA or a 30-day performance proof. Current opening/prices/dining/boarding conditions retain explicit unknowns."
+}
