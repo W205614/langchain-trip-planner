@@ -54,6 +54,7 @@ class RevisionScope(PlanningValue):
 class PlanningInput(PlanningValue):
     _execution_locks: list[dict] = PrivateAttr(default_factory=list)
     _baseline_times: dict[str, str] = PrivateAttr(default_factory=dict)
+    _scope_mutable_ids: set[str] = PrivateAttr(default_factory=set)
     timezone: str = "Asia/Shanghai"
     day_start: str = Field(default="09:00", pattern=r"^(?:[01]\d|2[0-3]):[0-5]\d$")
     day_end: str = Field(default="20:00", pattern=r"^(?:[01]\d|2[0-3]):[0-5]\d$")

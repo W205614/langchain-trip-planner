@@ -15,11 +15,11 @@ from uuid import uuid4
 import httpx
 
 
-def run(base_url,output):
+def run(base_url,output,cross_city_only=False):
     parsed=urlparse(base_url)
     if parsed.hostname not in {"127.0.0.1","localhost","::1","frontend","backend"}:
         raise RuntimeError("This fixture runner only targets a local isolated stack")
-    report={"mode":"offline_core_scenarios_http","passed":False,"provider_calls":0,"checks":[],"started_at":datetime.now(timezone.utc).isoformat(),
+    report={"mode":"offline_cross_city_hotel_http" if cross_city_only else "offline_core_scenarios_http","passed":False,"provider_calls":0,"checks":[],"started_at":datetime.now(timezone.utc).isoformat(),
         "boundary":"Real Java/Python/PostgreSQL HTTP; model and map are offline provider fixtures. No live quality or capacity claim."}
     with httpx.Client(base_url=base_url,timeout=45,trust_env=False) as client:
         def req(method,path,expected=(200,),label=None,**kwargs):
@@ -75,6 +75,8 @@ def run(base_url,output):
             client.headers["Authorization"]="Bearer "+registered["access_token"]
             request={"city":"北京","start_date":"2026-11-01","end_date":"2026-11-03","travel_days":3,"transportation":"公共交通","accommodation":"经济型酒店","preferences":[],
                 "planning_input":{"day_start":"09:00","day_end":"20:00","timezone":"Asia/Shanghai","city_segments":[{"city":"北京","start_day":0,"end_day":0},{"city":"上海","start_day":1,"end_day":2}],
+                    "day_windows":[{"day_index":1,"start":"07:00","end":"20:00"}],
+                    "hotel_stays":[{"day_index":0,"city":"北京","name":"用户选择的前晚北京住宿","location":{"longitude":116.41,"latitude":39.91}}],
                     "commitments":[{"id":"train-fixture","activity_id":"commitment:train-fixture","day_index":1,"category":"transport","status":"confirmed","title":"用户确认的跨城班次","time_mode":"fixed",
                         "origin_city":"北京","destination_city":"上海","origin_name":"北京站","destination_name":"上海站","origin_location":{"longitude":116.4,"latitude":39.9},"destination_location":{"longitude":121.47,"latitude":31.23},
                         "start_at":"2026-11-02T08:00:00+08:00","end_at":"2026-11-02T12:00:00+08:00","amount_cents":10000}]}}
@@ -92,7 +94,11 @@ def run(base_url,output):
             arrivals=[row for row in days[1]["timeline"] if row["kind"]=="attraction"]
             check("arrival bounds local visits",bool(arrivals) and all(datetime.fromisoformat(row["start_at"])>=datetime.fromisoformat("2026-11-02T12:00:00+08:00") for row in arrivals))
             check("confirmed transport retained in timeline",any(row["activity_id"]=="commitment:train-fixture" and datetime.fromisoformat(row["end_at"])==datetime.fromisoformat("2026-11-02T12:00:00+08:00") for row in days[1]["timeline"]))
+            check("previous-night origin hotel connection is explicitly scheduled",any(row["activity_id"].startswith("connection:") and row["kind"]=="travel" and row["status"]=="confirmed" and datetime.fromisoformat(row["start_at"])==datetime.fromisoformat("2026-11-02T07:50:00+08:00") and datetime.fromisoformat(row["end_at"])==datetime.fromisoformat("2026-11-02T08:00:00+08:00") for row in days[1]["timeline"]))
             check("unknown facts are not certified complete",record["quality"].get("facts_complete") is False)
+            if cross_city_only:
+                report.update(passed=True,trip_id=identity,checks_passed=len(report["checks"]))
+                return report
 
             booked=days[2]["attractions"][0]
             req("POST",f"/api/trips/{identity}/commitments",json={"day_index":2,"category":"ticket","status":"confirmed","title":"确认预约","note":"离线验收固定占用时段","amount":"60.00",
@@ -185,6 +191,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url",default="http://127.0.0.1:18080")
     parser.add_argument("--output",type=Path,required=True)
+    parser.add_argument("--cross-city-only",action="store_true",help="Only rerun changed cross-city/hotel generation checks")
     args=parser.parse_args()
-    result=run(args.base_url,args.output)
+    result=run(args.base_url,args.output,args.cross_city_only)
     print(json.dumps({"passed":result["passed"],"checks_passed":result["checks_passed"]}))

@@ -8,12 +8,13 @@ from datetime import datetime, timedelta, timezone
 from math import ceil, isfinite
 import os
 import time
+import json
 from zoneinfo import ZoneInfo
 
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v1"
+RULE_VERSION = "time-windows-v3-hotel-nights"
 FACT_TTLS = {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600}
 
 
@@ -71,6 +72,7 @@ def scope_days(request, fallback=None):
 def _eligible(original_day, scope):
     ids = set(scope.activity_ids) if scope else set()
     if scope and scope.start_at:
+        timed_ids=set()
         intervals = {row.get("activity_id"): row for row in original_day.timeline}
         for item in [*original_day.attractions, *original_day.meals]:
             row = intervals.get(item.activity_id)
@@ -79,9 +81,10 @@ def _eligible(original_day, scope):
             try:
                 start, end = (datetime.fromisoformat(row[key]) for key in ("start_at", "end_at"))
                 if start >= scope.start_at and end <= scope.end_at:
-                    ids.add(item.activity_id)
+                    timed_ids.add(item.activity_id)
             except (KeyError, ValueError, TypeError):
                 pass
+        ids = ids & timed_ids if scope.activity_ids else timed_ids
         if not ids:
             raise BizException("所选时段没有可安全定位的活动", status_code=409, code="SCOPE_UNRESOLVED")
     return ids
@@ -140,13 +143,16 @@ def protect_revision(plan, original, request, fallback):
                     setattr(day, field, getattr(old_day, field))
         # Existing timeline fixes immutable activities at their original times.
         fixed_ids = protected | ({a.activity_id for a in [*old_day.attractions, *old_day.meals]} - eligible if partial else set())
-        time_fixed_ids = set(request.planning_input.completed_activity_ids) | {lock.get("activity_id") for lock in request.planning_input.locks if lock.get("mode") == "time"}
+        outside_ids={a.activity_id for a in [*old_day.attractions,*old_day.meals]}-eligible if partial else set()
+        request.planning_input._scope_mutable_ids.update(a.activity_id for a in [*day.attractions,*day.meals] if a.activity_id not in outside_ids)
+        user_time_ids = {lock.get("activity_id") for lock in request.planning_input.locks if lock.get("mode") == "time"}
+        time_fixed_ids = set(request.planning_input.completed_activity_ids) | user_time_ids
         if partial:
             time_fixed_ids |= {a.activity_id for a in [*old_day.attractions,*old_day.meals]} - eligible
         unknown_reservations = [c for c in reserved if not c.get("start_at") or not c.get("end_at")]
         time_fixed_ids |= {a.activity_id for a in [*old_day.attractions,*old_day.meals] if any(a.activity_id == c.get("activity_id") or a.poi_id == c.get("poi_id") for c in unknown_reservations)}
         extra_locks = list(request.planning_input._execution_locks)
-        existing_locks = {lock.get("activity_id") for lock in extra_locks}
+        existing_locks = {lock.get("activity_id") for lock in [*request.planning_input.locks,*extra_locks]}
         extra_locks.extend({"activity_id":identity,"mode":"content"} for identity in fixed_ids if identity not in existing_locks)
         timeline_ids = {row.get("activity_id") for row in old_day.timeline}
         if (set(request.planning_input.completed_activity_ids) & {a.activity_id for a in [*old_day.attractions,*old_day.meals]}) - timeline_ids:
@@ -154,7 +160,7 @@ def protect_revision(plan, original, request, fallback):
         for row in old_day.timeline:
             if row.get("activity_id") and row.get("kind") in {"attraction","meal"} and row.get("start_at"):
                 request.planning_input._baseline_times[row["activity_id"]] = row["start_at"]
-            if row.get("activity_id") in time_fixed_ids:
+            if row.get("activity_id") in time_fixed_ids and row.get("activity_id") not in user_time_ids:
                 extra_locks.append({"activity_id": row["activity_id"], "mode": "time", "start_at": row.get("start_at"), "end_at": row.get("end_at")})
         request.planning_input._execution_locks = extra_locks
     return allowed
@@ -296,13 +302,27 @@ def _nodes(day, inputs, low, high, zone, unknown):
                     conflicts.append(f"locked_duration_changed:{node['activity_id']}")
             except (KeyError, ValueError, TypeError):
                 conflicts.append(f"invalid_time_lock:{node['activity_id']}")
+        if inputs.revision_scope and inputs.revision_scope.start_at and node["activity_id"] in inputs._scope_mutable_ids:
+            scope_start=_local_minute(inputs.revision_scope.start_at,day,zone)
+            scope_end=_local_minute(inputs.revision_scope.end_at,day,zone)
+            node["intervals"]=[(max(scope_start,a),min(scope_end-node["duration"],b)) for a,b in node["intervals"]]
         node["intervals"] = [(max(low, a), min(high-node["duration"], b)) for a, b in node["intervals"] if max(low, a) <= min(high-node["duration"], b)]
         if not node["intervals"]:
             conflicts.append(f"no_time_window:{node['activity_id']}")
     return nodes, conflicts
 
 
-def solve_day(day, request, route_planner=None, cache=None, seconds=None):
+def _hotel_anchor(inputs, request, index, day=None):
+    """hotel_stays[i] denotes the night after day i, not that day's origin."""
+    hotel = next((h for h in inputs.hotel_stays if h.get("day_index") == index), None)
+    if hotel:
+        return _location(hotel.get("location")), hotel.get("city") or city_for_day(request,index)
+    if day is not None and day.hotel:
+        return day.hotel.location, city_for_day(request,index)
+    return None, city_for_day(request,index)
+
+
+def solve_day(day, request, route_planner=None, cache=None, seconds=None, previous_day=None):
     from ortools.sat.python import cp_model
     from .plan_quality import transport_to_route_type
     from .execution import remaining
@@ -311,33 +331,71 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None):
     window = next((w for w in inputs.day_windows if w.day_index == day.day_index), None)
     if window:
         low, high = _minutes(window.start), _minutes(window.end)
+    hard_start,hard_end = low,high
     if inputs.arrival_at:
         low = max(low, _local_minute(inputs.arrival_at, day, zone))
     if inputs.departure_at:
         high = min(high, _local_minute(inputs.departure_at, day, zone))
     city = city_for_day(request,day.day_index)
-    bridges, inbound_anchor, outbound_anchor = [], None, None
+    unknown, cache = set(), cache if cache is not None else {}
+    route_type = transport_to_route_type(request.transportation)
+    night_anchor,night_city = _hotel_anchor(inputs,request,day.day_index,day)
+    prior_anchor,prior_city = _hotel_anchor(inputs,request,day.day_index-1,previous_day) if day.day_index else (night_anchor,night_city)
+    bridges, connections, connection_conflicts, inbound_anchor, outbound_anchor = [], [], [], None, None
+    connection_minutes = 0
     for commitment in inputs.commitments:
         if not confirmed(commitment) or commitment.get("category") not in {"transport","train","flight"} or not commitment.get("origin_city") or not commitment.get("destination_city") or commitment["origin_city"] == commitment["destination_city"]:
             continue
         try:
             departure = _local_minute(commitment["start_at"],day,zone)
             arrival = _local_minute(commitment["end_at"],day,zone)
+            if city in {commitment["origin_city"],commitment["destination_city"]} and departure < 1440 and arrival > 0 and (departure < hard_start or arrival > hard_end):
+                connection_conflicts.append(f"fixed_transport_outside_day_window:{commitment['id']}")
             if city == commitment["origin_city"] and 0 <= departure < 1440:
                 high = min(high,departure)
                 outbound_anchor = _location(commitment.get("origin_location") or commitment.get("location"))
             if city == commitment["destination_city"] and 0 <= arrival < 1440:
                 low = max(low,arrival)
                 inbound_anchor = _location(commitment.get("destination_location"))
+                # The arrival-day solver starts at the arrival station. Account
+                # separately for leaving the previous night's origin-city hotel,
+                # even when the departure precedes the local sightseeing window.
+                origin = _location(commitment.get("origin_location") or commitment.get("location"))
+                if prior_city != commitment["origin_city"]:
+                    unknown.add("origin_hotel_city_unverified")
+                elif departure >= 0:
+                    if prior_anchor is None:
+                        unknown.add("origin_hotel_endpoint_unknown")
+                    if origin is None:
+                        unknown.add("origin_station_endpoint_unknown")
+                    access,known = _route(prior_anchor,origin,route_planner,commitment["origin_city"],route_type,cache,unknown)
+                    midnight = datetime.fromisoformat(day.date).replace(tzinfo=zone)
+                    access_start = midnight+timedelta(minutes=departure-access)
+                    if departure-access < hard_start or departure > hard_end:
+                        connection_conflicts.append(f"origin_connection_outside_day_window:{commitment['id']}")
+                    if previous_day and previous_day.timeline:
+                        try:
+                            prior_finish=max(datetime.fromisoformat(r["end_at"]) for r in previous_day.timeline)
+                            if prior_finish > access_start:
+                                connection_conflicts.append("origin_hotel_connection_overlaps_previous_day")
+                        except (KeyError,ValueError,TypeError):
+                            unknown.add("previous_day_finish_unverified")
+                    connections.append(dict(activity_id=f"connection:{commitment['id']}:origin",title="住宿前往跨城出发站",kind="travel",
+                        start_at=access_start.isoformat(),end_at=commitment["start_at"],status="confirmed" if known else "estimated",
+                        source="map" if known else "conservative_allowance",evidence_refs=[str(commitment["id"])],
+                        notes=[] if known else ["住宿或站点资料不足，接驳仅为30分钟占位，尚未核验"]))
+                    connection_minutes += access
+                else:
+                    unknown.add("origin_hotel_connection_before_current_day_unverified")
             if city in {commitment["origin_city"],commitment["destination_city"]} and departure < 1440 and arrival > 0:
                 bridges.append(dict(activity_id=str(commitment.get("activity_id") or f"commitment:{commitment['id']}"),title=commitment.get("title","跨城交通"),kind="commitment",start_at=commitment["start_at"],end_at=commitment["end_at"],status="confirmed",source="user_confirmed",evidence_refs=[str(commitment["id"])],notes=[]))
         except (KeyError,ValueError,TypeError):
             pass  # Input model rejects malformed times before this point.
     high = min(high, low+request.constraints.daily_minutes)
-    unknown, cache = set(), cache if cache is not None else {}
     if day.day_index > 0 and city_for_day(request,day.day_index-1) != city and not any(c.get("destination_city") == city and confirmed(c) and c.get("end_at") and 0 <= _local_minute(c["end_at"],day,zone) < 1440 for c in inputs.commitments):
         unknown.add("cross_city_confirmed_transport_missing")
     nodes, conflicts = _nodes(day, inputs, low, high, zone, unknown)
+    conflicts.extend(connection_conflicts)
     required_names = {n.casefold() for n in request.constraints.must_visit}
     required_ids = {a.activity_id for a in day.attractions if {a.name.casefold(), *(n.casefold() for n in a.requested_names)} & required_names}
     required_ids |= set(inputs.completed_activity_ids) | {lock.get("activity_id") for lock in effective_locks(inputs)}
@@ -365,12 +423,16 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None):
     if len(nodes) > cap:
         report.update(status="not_found", solver_status="CANDIDATE_LIMIT", conflicts=["daily_candidate_limit_exceeded"], unknown=sorted(unknown))
         return [], report, None
-    hotel = next((h for h in inputs.hotel_stays if h.get("day_index") == day.day_index), None)
-    anchor = _location(hotel.get("location")) if hotel else (day.hotel.location if day.hotel else None)
-    start_anchor,end_anchor = inbound_anchor or anchor,outbound_anchor or anchor
+    # A hotel change affects both directed endpoints. Never ask a city route
+    # provider to connect a previous hotel in a different city as a local edge.
+    start_anchor = inbound_anchor or (prior_anchor if prior_city == city else None)
+    end_anchor = outbound_anchor or (night_anchor if night_city == city else None)
+    if not inbound_anchor and prior_city != city:
+        unknown.add("previous_hotel_in_other_city")
+    if night_city != city:
+        unknown.add("tonight_hotel_city_unverified")
     if start_anchor is None or end_anchor is None:
         unknown.add("hotel_endpoint_unknown")
-    route_type = transport_to_route_type(request.transportation)
     model = cp_model.CpModel()
     starts = [model.new_int_var_from_domain(cp_model.Domain.from_intervals(n["intervals"]), f"start_{i}") for i, n in enumerate(nodes)]
     presence = [model.new_bool_var(f"present_{i}") for i in range(len(nodes))]
@@ -459,9 +521,10 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None):
     travel, known = travels[previous, 0]
     if travel:
         timeline.append(dict(activity_id="hotel:return", title="前往出发站" if outbound_anchor else "返回住宿", kind="travel", start_at=instant(cursor), end_at=instant(cursor+travel), status="confirmed" if known else "estimated", source="map" if known else "conservative_allowance", evidence_refs=[], notes=[]))
+    timeline.extend(connections)
     timeline.extend(bridges)
     timeline.sort(key=lambda item:item["start_at"])
-    report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel, finish_at=instant(cursor+travel))
+    report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes, finish_at=instant(cursor+travel))
     return timeline, report, order
 
 
@@ -470,7 +533,8 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
     started = time.monotonic()
     limit = max(1, min(120, float(os.getenv("PLANNER_TOTAL_SECONDS", "30"))))
     cache, reports = {"_deadline":started+limit}, []
-    digest = input_hash(request,plan)
+    digest = input_hash(request,plan,instruction=json.dumps({"baseline_times":request.planning_input._baseline_times,
+        "scope_mutable_ids":sorted(request.planning_input._scope_mutable_ids),"execution_locks":request.planning_input._execution_locks},sort_keys=True))
     saved_routes = read_checkpoint("routes",digest)
     if saved_routes:
         for row in saved_routes.get("routes",[]):
@@ -500,7 +564,8 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
         if time.monotonic()-started >= limit:
             day.feasibility = {"status":"not_found", "solver_status":"TOTAL_BUDGET_EXHAUSTED", "unknown":[], "conflicts":["Resume to continue scheduling remaining days"], "omitted_activity_ids":[]}
         else:
-            timeline, report, order = solve_day(day, request, route_planner, cache, min(2, limit-(time.monotonic()-started)))
+            previous_day=next((d for d in plan.days if d.day_index==day.day_index-1),None)
+            timeline, report, order = solve_day(day, request, route_planner, cache, min(2, limit-(time.monotonic()-started)),previous_day)
             day.timeline, day.feasibility = timeline, report
             if timeline and report["status"] in {"feasible","unverified"}:
                 day.__pydantic_extra__["schedule_stale"] = False
@@ -542,7 +607,8 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                     trial[0].attractions[trial[0].attractions.index(a)] = b.model_copy(deep=True)
                     trial[1].attractions[trial[1].attractions.index(b)] = a.model_copy(deep=True)
                     for candidate in trial:
-                        timeline,report,order = solve_day(candidate,request,route_planner,cache,min(.3,max(.01,limit-(time.monotonic()-started))))
+                        previous_day=next((d for d in [*trial,*plan.days] if d.day_index==candidate.day_index-1),None)
+                        timeline,report,order = solve_day(candidate,request,route_planner,cache,min(.3,max(.01,limit-(time.monotonic()-started))),previous_day)
                         candidate.timeline,candidate.feasibility = timeline,report
                         if timeline and report["status"] in {"feasible","unverified"}:
                             candidate.__pydantic_extra__["schedule_stale"] = False

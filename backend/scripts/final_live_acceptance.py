@@ -104,7 +104,8 @@ def run(args):
                         check("budget remains before generation",current["text"]<=LIMITS["text"]-2 and current["amap"]<=LIMITS["amap"]-40)
                         planning={"timezone":"Asia/Shanghai","day_start":"09:00","day_end":"20:00","budget_mode":"estimate","budget_cents":200000}
                         if stage=="crosscity":
-                            planning.update(city_segments=[{"city":"北京","start_day":0,"end_day":0},{"city":"上海","start_day":1,"end_day":1}],
+                            planning.update(day_windows=[{"day_index":1,"start":"07:00","end":"20:00"}],
+                                city_segments=[{"city":"北京","start_day":0,"end_day":0},{"city":"上海","start_day":1,"end_day":1}],
                                 commitments=[{"id":"sample-train","activity_id":"commitment:sample-train","day_index":1,"category":"transport","status":"confirmed","title":"用户输入的示例跨城交通（非真实票务）","time_mode":"fixed","origin_city":"北京","destination_city":"上海","origin_location":{"longitude":116.3785,"latitude":39.8652},"destination_location":{"longitude":121.3271,"latitude":31.2009},"start_at":f"{start+timedelta(days=1)}T08:00:00+08:00","end_at":f"{start+timedelta(days=1)}T12:30:00+08:00","amount_cents":55000}])
                         request={"city":"北京","start_date":str(start),"end_date":str(start+timedelta(days=1)),"travel_days":2,"transportation":"公共交通","accommodation":"经济型酒店","preferences":["历史文化"],"planning_input":planning,"free_text_input":"每天选择三个可信景点；资料不足明确标注，不要编造营业时间或票价。"}
                         state[stage+"_request"]=request;state.setdefault(stage+"_key",str(uuid4()));persist()

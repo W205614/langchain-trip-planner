@@ -226,7 +226,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         self, day_query, day_index, current_date, request, state=None,
     ):
         from ..services.durable_execution import input_hash, read_checkpoint, save_checkpoint
-        digest = input_hash(request, instruction=day_query, day_index=day_index)
+        digest = input_hash(request, instruction=f"{day_query}\ninclude_last_night={request._include_last_night}", day_index=day_index)
         stage = f"day_draft:{current_date}"
         cached = read_checkpoint(stage, digest)
         if cached:
@@ -614,7 +614,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 opening_hours=poi.opening_hours, fact_source="高德 POI",
             ))
         hotels = (state or {}).get("hotel_pois") or []
-        if day.day_index < request.travel_days - 1 and hotels and not day.hotel:
+        needs_night = day.day_index < request.travel_days - 1 or request._include_last_night
+        if not needs_night:
+            day.hotel = None
+        elif hotels and not day.hotel:
             hotel = hotels[0]
             day.hotel = Hotel(name=hotel.name, address=hotel.address, location=hotel.location,
                               type=request.accommodation)
@@ -823,6 +826,9 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 local.city, local.start_date, local.end_date, local.travel_days = cities[offset], (datetime.fromisoformat(request.start_date)+timedelta(days=offset)).date().isoformat(), (datetime.fromisoformat(request.start_date)+timedelta(days=end-1)).date().isoformat(), end-offset
                 local.planning_input = request.planning_input.model_copy(deep=True)
                 local.planning_input.city_segments = []
+                # A city's final day is not necessarily the trip's final day.
+                # Reuse its existing hotel candidates for the intervening night.
+                local._include_last_night = end < request.travel_days or request._include_last_night
                 local.planning_input.commitments = [{**c,"day_index":c["day_index"]-offset} for c in request.planning_input.commitments if isinstance(c.get("day_index"),int) and offset <= c["day_index"] < end]
                 local.planning_input.day_windows = [w.model_copy(update={"day_index":w.day_index-offset}) for w in request.planning_input.day_windows if offset <= w.day_index < end]
                 part = self.plan_trip(local, user_id, progress_callback, trace_callback)

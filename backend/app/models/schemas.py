@@ -1,7 +1,7 @@
 """数据模型定义"""
 
 from typing import Annotated, Any, List, Literal, Optional, Union
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, field_validator, model_validator
 from datetime import date
 from .planning import PlanningInput
 
@@ -43,6 +43,7 @@ class PlanningConstraints(BaseModel):
 
 class TripRequest(BaseModel):
     """旅行规划请求"""
+    _include_last_night: bool = PrivateAttr(default=False)
     departure_city: str = Field(default="", max_length=32, description="出发地；仅用于跨城提示，不参与市内路线计算")
     city: str = Field(..., max_length=32, description="目的地城市", json_schema_extra={"example": "北京"})
     start_date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$", description="开始日期 YYYY-MM-DD", json_schema_extra={"example": "2025-06-01"})
