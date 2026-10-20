@@ -93,7 +93,9 @@ def test_confirmed_transport_is_fixed_bridge_not_a_map_edge():
         "start_at":f"{plan.days[1].date}T08:00:00+08:00","end_at":f"{plan.days[1].date}T12:00:00+08:00",
         "origin_location":{"longitude":116,"latitude":39},"destination_location":{"longitude":121,"latitude":31}}]
     timeline,report,_=solve_day(plan.days[1],request,Routes())
-    assert report["status"]=="feasible"
+    assert report["status"]=="unverified"
+    assert "transport_predeparture_buffer_unverified:train" in report["unknown"]
+    assert any("当前不能保证赶上班次" in note for row in timeline for note in row["notes"])
     assert any(r["activity_id"]=="commitment:train" for r in timeline)
     visit=next(r for r in timeline if r["kind"]=="attraction")
     assert datetime.fromisoformat(visit["start_at"]).hour>=12
@@ -399,7 +401,7 @@ def test_incoming_intercity_bridge_accounts_for_origin_city_hotel_connection():
     request,plan=intercity_hotel_scenario()
     routes=RecordedRoutes()
     timeline,report,_=solve_day(plan.days[1],request,routes)
-    assert report["status"]=="feasible"
+    assert report["status"]=="unverified"
     access=next(row for row in timeline if row["activity_id"]=="connection:bridge:origin")
     assert access["start_at"].endswith("T07:50:00+08:00") and access["end_at"].endswith("T08:00:00+08:00")
     assert (116.01,116.5,"北京") in routes.edges
@@ -436,7 +438,7 @@ def test_previous_planned_hotel_is_used_when_no_input_override_exists():
     plan.days[0].hotel=Hotel(name="可信候选住宿",location={"longitude":116.02,"latitude":39.02})
     routes=RecordedRoutes()
     _,report,_=solve_day(plan.days[1],request,routes,previous_day=plan.days[0])
-    assert report["status"]=="feasible"
+    assert report["status"]=="unverified"
     assert (116.02,116.5,"北京") in routes.edges
 
 
@@ -458,3 +460,34 @@ def test_early_transport_and_hotel_access_cannot_override_daily_hard_boundary(da
     assert timeline==[] and report["status"]=="infeasible"
     assert ("fixed_transport_outside_day_window:bridge" in report["conflicts"]) is transport_outside
     assert "origin_connection_outside_day_window:bridge" in report["conflicts"]
+
+
+def test_cached_day_transport_buffer_gap_reaches_final_quality_without_resolving(monkeypatch):
+    from app.services import durable_execution as durable,time_planner
+    from app.services.plan_quality import transport_to_route_type
+    request,plan=intercity_hotel_scenario()
+    cached={}
+    for day in plan.days:
+        row={'activity_id':day.attractions[0].activity_id,'kind':'attraction','title':day.attractions[0].name,
+            'start_at':day.date+'T13:00:00+08:00','end_at':day.date+'T14:00:00+08:00','notes':[]}
+        cached_day=day.model_copy(deep=True)
+        cached_day.timeline=[row]
+        if day.day_index==1:
+            cached_day.timeline.insert(0,{'activity_id':'commitment:bridge','kind':'commitment','title':'已输入班次',
+                'start_at':day.date+'T08:00:00+08:00','end_at':day.date+'T12:00:00+08:00','notes':[]})
+        cached_day.feasibility={'status':'feasible','unknown':[],'conflicts':[],'omitted_activity_ids':[]}
+        cached[day.day_index]={'day':cached_day.model_dump(mode='json')}
+    def read(stage,digest):
+        if stage=='routes':
+            return {'routes':[{'key':[116.01,39.01,116.5,39.5,'北京',transport_to_route_type(request.transportation)],'minutes':10,'verified':True}]}
+        return cached[int(stage.split(':')[1])] if stage.startswith('schedule_day:') else None
+    monkeypatch.setattr(durable,'read_checkpoint',read)
+    monkeypatch.setattr(durable,'save_checkpoint',lambda *args,**kwargs:None)
+    def forbidden(*args,**kwargs):
+        raise AssertionError('Cached day must not be solved or sent to a provider again')
+    monkeypatch.setattr(time_planner,'solve_day',forbidden)
+    quality=finalize_plan(plan,request,MagicMock(plan_route_by_locations=forbidden),enhanced=True)
+    gap='transport_predeparture_buffer_unverified:bridge'
+    assert gap in quality['data_gaps'] and any(gap in row['unknown'] for row in quality['schedule_checks'])
+    assert quality['feasibility_status']=='unverified' and quality['facts_complete'] is False
+    assert any(issue['code']=='TRANSPORT_BUFFER_UNVERIFIED' and '当前不能保证赶上班次' in issue['action'] for issue in quality['issues'])

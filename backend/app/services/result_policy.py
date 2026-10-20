@@ -32,6 +32,9 @@ def classify(plan, request, report):
         if gap == "meal_pois_unavailable":
             add("MEAL_POI_UNAVAILABLE", "plan", "暂未获取到可信餐饮候选，未编造餐厅",
                 "可稍后重试餐饮推荐或自行补充餐厅", False, True)
+        elif gap.startswith("transport_predeparture_buffer_unverified:"):
+            add("TRANSPORT_BUFFER_UNVERIFIED", "plan", "固定交通接驳仅按用户输入起止计算，尚未确认提前到站、安检和检票要求",
+                "向承运方确认所需提前量并预留到站时间；当前不能保证赶上班次", False)
         else:
             add("DATA_UNVERIFIED", "plan", gap, "出行前向官方来源确认", False)
     if plan.weather_notice:

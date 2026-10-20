@@ -329,6 +329,21 @@ def _hotel_anchor(inputs, request, index, day=None):
     return None, city_for_day(request,index)
 
 
+def _transport_buffer_gaps(timeline,inputs):
+    """A confirmed departure time does not confirm boarding lead time."""
+    gaps=set()
+    note="接驳仅按用户输入的班次起止计算；提前到站、安检和检票要求尚未确认，请向承运方核实并预留时间，当前不能保证赶上班次。"
+    for trip in inputs.commitments:
+        if not confirmed(trip) or trip.get("category") not in {"transport","train","flight"}:
+            continue
+        identity=str(trip.get("activity_id") or f"commitment:{trip.get('id','unknown')}")
+        for row in timeline:
+            if row.get("activity_id")==identity and row.get("kind")=="commitment":
+                gaps.add(f"transport_predeparture_buffer_unverified:{trip.get('id','unknown')}")
+                row["notes"]=list(dict.fromkeys([*row.get("notes",[]),note]))
+    return gaps
+
+
 def _hotel_candidate_request(request,index):
     """Project the same city request used by the existing candidate search."""
     cities=[city_for_day(request,i) for i in range(request.travel_days)]
@@ -486,6 +501,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         unknown.add("cross_city_confirmed_transport_missing")
     nodes, conflicts = _nodes(day, inputs, low, high, zone, unknown)
     conflicts.extend(connection_conflicts)
+    unknown.update(_transport_buffer_gaps(bridges,inputs))
     required_names = {n.casefold() for n in request.constraints.must_visit}
     required_ids = {a.activity_id for a in day.attractions if {a.name.casefold(), *(n.casefold() for n in a.requested_names)} & required_names}
     required_ids |= set(inputs.completed_activity_ids) | {lock.get("activity_id") for lock in effective_locks(inputs)}
@@ -619,6 +635,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     timeline.extend(connections)
     timeline.extend(bridges)
     timeline.sort(key=lambda item:item["start_at"])
+    unknown.update(_transport_buffer_gaps(timeline,inputs))
+    report["unknown"]=sorted(unknown)
     report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes, finish_at=instant(cursor+travel))
     return timeline, report, order
 
@@ -649,6 +667,10 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
             from ..models.schemas import DayPlan
             restored=DayPlan.model_validate(cached_day["day"])
             if restored.feasibility.get("status") in {"feasible","unverified"} and restored.timeline and not any(gap.startswith("route_") for gap in restored.feasibility.get("unknown",[])):
+                buffer_gaps=_transport_buffer_gaps(restored.timeline,request.planning_input)
+                if buffer_gaps:
+                    restored.feasibility["unknown"]=sorted(set(restored.feasibility.get("unknown",[]))|buffer_gaps)
+                    restored.feasibility["status"]="unverified"
                 plan.days[plan.days.index(day)]=restored
                 continue
         day.city = city_for_day(request, day.day_index)
