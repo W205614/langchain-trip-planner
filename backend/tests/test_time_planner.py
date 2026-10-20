@@ -462,6 +462,15 @@ def test_early_transport_and_hotel_access_cannot_override_daily_hard_boundary(da
     assert "origin_connection_outside_day_window:bridge" in report["conflicts"]
 
 
+def test_estimated_origin_route_cannot_prove_a_hard_connection_conflict():
+    request,plan=intercity_hotel_scenario()
+    request.planning_input.day_windows=[request.planning_input.day_windows[0].model_copy(update={'start':'07:45'})]
+    timeline,report,_=solve_day(plan.days[1],request,Routes(missing=True))
+    assert timeline==[] and report['status']=='unverified'
+    assert 'origin_connection_outside_day_window:bridge' in report['conflicts']
+    assert 'route_duration_estimated_30_minutes' in report['unknown']
+
+
 def test_cached_day_transport_buffer_gap_reaches_final_quality_without_resolving(monkeypatch):
     from app.services import durable_execution as durable,time_planner
     from app.services.plan_quality import transport_to_route_type
