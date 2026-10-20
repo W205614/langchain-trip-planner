@@ -449,11 +449,12 @@ def test_known_previous_day_overlap_cannot_be_ignored_for_origin_access():
     assert "origin_hotel_connection_overlaps_previous_day" in report["conflicts"]
 
 
-def test_early_transport_and_hotel_access_cannot_override_daily_hard_boundary():
+@pytest.mark.parametrize("day_start,transport_outside",[("09:00",True),("08:00",False)])
+def test_early_transport_and_hotel_access_cannot_override_daily_hard_boundary(day_start,transport_outside):
     request,plan=intercity_hotel_scenario()
     request.planning_input.day_windows=[]
-    request.planning_input.day_start="09:00"
+    request.planning_input.day_start=day_start
     timeline,report,_=solve_day(plan.days[1],request,RecordedRoutes())
     assert timeline==[] and report["status"]=="infeasible"
-    assert "fixed_transport_outside_day_window:bridge" in report["conflicts"]
+    assert ("fixed_transport_outside_day_window:bridge" in report["conflicts"]) is transport_outside
     assert "origin_connection_outside_day_window:bridge" in report["conflicts"]

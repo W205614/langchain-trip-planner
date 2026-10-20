@@ -1,0 +1,61 @@
+{
+  "mode": "offline_cross_city_hotel_http",
+  "passed": true,
+  "provider_calls": 0,
+  "checks": [
+    {
+      "name": "overlapping city segments rejected",
+      "passed": true,
+      "http_status": 422
+    },
+    {
+      "name": "task reaches valid successful terminal",
+      "passed": true
+    },
+    {
+      "name": "normal cross-city generation succeeds",
+      "passed": true
+    },
+    {
+      "name": "normal cross-city plan has no blocking draft outcome",
+      "passed": true
+    },
+    {
+      "name": "city segmentation preserved",
+      "passed": true
+    },
+    {
+      "name": "cross-city POIs belong to each city",
+      "passed": true
+    },
+    {
+      "name": "arrival bounds local visits",
+      "passed": true
+    },
+    {
+      "name": "confirmed transport retained in timeline",
+      "passed": true
+    },
+    {
+      "name": "previous-night origin hotel connection is explicitly scheduled",
+      "passed": true
+    },
+    {
+      "name": "unknown facts are not certified complete",
+      "passed": true
+    },
+    {
+      "name": "intermediate city final day retains trusted hotel recommendation",
+      "passed": true
+    },
+    {
+      "name": "whole-trip final day adds no extra recommended hotel night",
+      "passed": true
+    }
+  ],
+  "started_at": "2026-10-20T09:13:56.907306+00:00",
+  "boundary": "Real Java/Python/PostgreSQL HTTP; model and map are offline provider fixtures. No live quality or capacity claim.",
+  "trip_id": 176,
+  "checks_passed": 12,
+  "finished_at": "2026-10-20T09:13:58.520081+00:00"
+}

@@ -1,0 +1,211 @@
+{
+  "mode": "isolated_final_planning_roles",
+  "started_at": "2026-10-20T08:30:57.200797+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "owner submits structured multi-day task",
+      "passed": true,
+      "http_status": 202
+    },
+    {
+      "name": "same key reuses task",
+      "passed": true
+    },
+    {
+      "name": "multi-day result persisted",
+      "passed": true
+    },
+    {
+      "name": "each day exposes timeline",
+      "passed": true
+    },
+    {
+      "name": "stable activity ids",
+      "passed": true
+    },
+    {
+      "name": "editor accepts invitation",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "viewer accepts invitation",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "removed accepts invitation",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "owner revokes member",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "accepted editor reads real backend",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "editor sees current plan",
+      "passed": true
+    },
+    {
+      "name": "accepted viewer reads real backend",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "viewer sees current plan",
+      "passed": true
+    },
+    {
+      "name": "pending cannot read private trip",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "removed cannot read private trip",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "outsider cannot read private trip",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "anonymous cannot read private trip",
+      "passed": true,
+      "http_status": 401
+    },
+    {
+      "name": "editor cannot change owner constraints",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "viewer cannot change owner constraints",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "pending cannot change owner constraints",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "removed cannot change owner constraints",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "outsider cannot change owner constraints",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "anonymous cannot change owner constraints",
+      "passed": true,
+      "http_status": 401
+    },
+    {
+      "name": "owner updates constraints",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "planning revision increases",
+      "passed": true
+    },
+    {
+      "name": "stale planning revision rejected",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "owner locks activity",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "editor cannot unlock owner's activity",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "viewer cannot unlock owner's activity",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "outsider cannot unlock owner's activity",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "manual write cannot bypass locked activity",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "owner requests day-two proposal",
+      "passed": true,
+      "http_status": 202
+    },
+    {
+      "name": "preview leaves original untouched",
+      "passed": true
+    },
+    {
+      "name": "non-target day 0 unchanged",
+      "passed": true
+    },
+    {
+      "name": "non-target day 2 unchanged",
+      "passed": true
+    },
+    {
+      "name": "cross-user confirm rejected",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "proposal differences readable",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "owner confirms exact proposal",
+      "passed": true,
+      "http_status": 200
+    },
+    {
+      "name": "duplicate confirm rejected",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "name": "confirmation increments original exactly once",
+      "passed": true
+    },
+    {
+      "name": "internal budget not publicly exposed",
+      "passed": true,
+      "http_status": 404
+    },
+    {
+      "name": "private task isolated",
+      "passed": true,
+      "http_status": 404
+    }
+  ],
+  "provider_calls": 0,
+  "boundary": "Real HTTP authorization and persistence; map and model are offline substitutes.",
+  "trip_id": 146,
+  "checks_passed": 42,
+  "finished_at": "2026-10-20T08:31:14.741309+00:00"
+}

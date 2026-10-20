@@ -97,6 +97,8 @@ def run(base_url,output,cross_city_only=False):
             check("previous-night origin hotel connection is explicitly scheduled",any(row["activity_id"].startswith("connection:") and row["kind"]=="travel" and row["status"]=="confirmed" and datetime.fromisoformat(row["start_at"])==datetime.fromisoformat("2026-11-02T07:50:00+08:00") and datetime.fromisoformat(row["end_at"])==datetime.fromisoformat("2026-11-02T08:00:00+08:00") for row in days[1]["timeline"]))
             check("unknown facts are not certified complete",record["quality"].get("facts_complete") is False)
             if cross_city_only:
+                check("intermediate city final day retains trusted hotel recommendation",bool(days[0].get("hotel")) and days[0]["hotel"]["location"]["longitude"]<120)
+                check("whole-trip final day adds no extra recommended hotel night",days[-1].get("hotel") is None)
                 report.update(passed=True,trip_id=identity,checks_passed=len(report["checks"]))
                 return report
 
