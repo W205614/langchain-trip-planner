@@ -1,0 +1,26 @@
+{
+  "failed_run": "https://github.com/W205614/langchain-trip-planner/actions/runs/39406335804",
+  "source_sha": "60cc532ab948eff69a95da39b3da41306ea80dc7",
+  "issues": [
+    {
+      "issue": "Independent verified time conflict incorrectly classified unverified after adding boarding unknown",
+      "original_ci_result": "3 failed, 287 passed in Python",
+      "fix": "Proven fixed/verified-route conflicts retain infeasible; estimated route conflict remains unverified",
+      "targeted_result": "5 offline cases passed; original assertions retained",
+      "runtime_files": [
+        "backend/app/services/time_planner.py"
+      ]
+    },
+    {
+      "issue": "Legacy empty day city became the root city in v2 revision and was rejected as out of scope",
+      "original_ci_result": "Assistant HTTP proposal failed REVISION_SCOPE_VIOLATION",
+      "fix": "Only absent/empty day city inherits root city; explicit cities and dates remain protected. Acceptance binds exact planning revision.",
+      "targeted_result": "Red reproduced at protect line 211, then 2 isolated PostgreSQL cases passed; temporary tmpfs database removed",
+      "runtime_files": [
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java"
+      ]
+    }
+  ],
+  "extra_real_provider_requests": 0,
+  "final_gate": "All four expected jobs must succeed on final SHA; first failed run is preserved, not relabeled as passed."
+}

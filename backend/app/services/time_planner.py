@@ -447,6 +447,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     night_anchor,night_city = _hotel_anchor(inputs,request,day.day_index,day)
     prior_anchor,prior_city = _hotel_anchor(inputs,request,day.day_index-1,previous_day) if day.day_index else (night_anchor,night_city)
     bridges, connections, connection_conflicts, inbound_anchor, outbound_anchor = [], [], [], None, None
+    proven_connection_conflicts=set()
     connection_minutes = 0
     for commitment in inputs.commitments:
         if not confirmed(commitment) or commitment.get("category") not in {"transport","train","flight"} or not commitment.get("origin_city") or not commitment.get("destination_city") or commitment["origin_city"] == commitment["destination_city"]:
@@ -456,6 +457,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             arrival = _local_minute(commitment["end_at"],day,zone)
             if city in {commitment["origin_city"],commitment["destination_city"]} and departure < 1440 and arrival > 0 and (departure < hard_start or arrival > hard_end):
                 connection_conflicts.append(f"fixed_transport_outside_day_window:{commitment['id']}")
+                proven_connection_conflicts.add(connection_conflicts[-1])
             if city == commitment["origin_city"] and 0 <= departure < 1440:
                 high = min(high,departure)
                 outbound_anchor = _location(commitment.get("origin_location") or commitment.get("location"))
@@ -478,11 +480,15 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                     access_start = midnight+timedelta(minutes=departure-access)
                     if departure-access < hard_start or departure > hard_end:
                         connection_conflicts.append(f"origin_connection_outside_day_window:{commitment['id']}")
+                        if known:
+                            proven_connection_conflicts.add(connection_conflicts[-1])
                     if previous_day and previous_day.timeline:
                         try:
                             prior_finish=max(datetime.fromisoformat(r["end_at"]) for r in previous_day.timeline)
                             if prior_finish > access_start:
                                 connection_conflicts.append("origin_hotel_connection_overlaps_previous_day")
+                                if known:
+                                    proven_connection_conflicts.add(connection_conflicts[-1])
                         except (KeyError,ValueError,TypeError):
                             unknown.add("previous_day_finish_unverified")
                     connections.append(dict(activity_id=f"connection:{commitment['id']}:origin",title="住宿前往跨城出发站",kind="travel",
@@ -523,7 +529,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     nodes = [n for n in nodes if n["activity_id"] not in forced_omissions]
     report = {"status": "unverified", "solver_status": "NOT_RUN", "unknown": [], "conflicts": conflicts, "omitted_activity_ids": []}
     if conflicts or low >= high or not nodes:
-        report.update(status="infeasible" if not unknown else "unverified", solver_status="INVALID_WINDOWS", unknown=sorted(unknown))
+        model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
+        report.update(status="infeasible" if proven_connection_conflicts or not model_unknown else "unverified", solver_status="INVALID_WINDOWS", unknown=sorted(unknown))
         return [], report, None
     cap = max(1, min(40, int(os.getenv("PLANNER_MAX_DAILY_ACTIVITIES", "20"))))
     if len(nodes) > cap:
@@ -598,7 +605,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     status = solver.solve(model)
     report.update(solver_status=solver.status_name(status), unknown=sorted(unknown), omitted_activity_ids=forced_omissions)
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-        report["status"] = "infeasible" if status == cp_model.INFEASIBLE and not unknown else "not_found"
+        model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
+        report["status"] = "infeasible" if status == cp_model.INFEASIBLE and not model_unknown else "not_found"
         report["conflicts"] = ["candidate_time_model_has_no_solution" if status == cp_model.INFEASIBLE else "solver_budget_exhausted"]
         return [], report, None
     midnight = datetime.fromisoformat(day.date).replace(tzinfo=zone)
