@@ -10,6 +10,22 @@ import org.junit.jupiter.api.*;
 import tools.jackson.databind.json.JsonMapper;
 
 class AmapGatewayTest {
+  @Test
+  void exhaustedDurableBudgetPreventsPhotoNetworkRequest() {
+    var gateway=new AmapGateway("http://127.0.0.1:"+server.getAddress().getPort(),"fixture",
+        0,0,0,10,"test","no",JsonMapper.builder().build());
+    var budget=org.mockito.Mockito.mock(ExecutionGovernanceService.class);
+    org.mockito.Mockito.doThrow(new com.tripplanner.api.ApiException(429,"budget","OUTBOUND_BUDGET_EXHAUSTED"))
+        .when(budget).reserveAmap();
+    var transport=org.mockito.Mockito.mock(java.net.http.HttpClient.class);
+    org.springframework.test.util.ReflectionTestUtils.setField(gateway,"governance",budget);
+    org.springframework.test.util.ReflectionTestUtils.setField(gateway,"http",transport);
+    var poi=JsonMapper.builder().build().createObjectNode();poi.putArray("photos").add("https://photos.amap.com/photo.png");
+    assertTrue(gateway.imageFromPoi("景点",poi).placeholder());
+    org.mockito.Mockito.verify(budget).reserveAmap();
+    org.mockito.Mockito.verifyNoInteractions(transport);
+    assertEquals(0,calls.get());
+  }
   private HttpServer server;
   private final AtomicInteger calls = new AtomicInteger();
 

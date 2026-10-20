@@ -42,7 +42,7 @@ public class PlanningInputService {
   public Map<String,Object> put(long uid,long id,int version,int revision,JsonNode raw) {
     return tx.execute(s->{var row=row(uid,id,true);check(row,version,revision);
       var normalized=normalize(raw,((Number)row.get("travel_days")).intValue());
-      if(!normalized.path("commitments").equals(input(row).path("commitments")))
+      if(!equivalent(normalized.path("commitments"),input(row).path("commitments")))
         throw new ApiException(422,"预订事项请通过预订账本修改");
       var plan=stableIds((ObjectNode)json.readTree(row.get("plan_json").toString()));
       normalized.remove("commitments");
@@ -73,6 +73,21 @@ public class PlanningInputService {
   private void check(Map<String,Object> row,int version,int revision) {
     if(version!=((Number)row.get("version")).intValue()||revision!=((Number)row.get("planning_revision")).intValue())throw new ApiException(409,"行程或规划输入已变化","VERSION_CONFLICT");
     if(!json.readTree(row.get("quality_json").toString()).path("assistant_proposal_status").asText("").isBlank())throw new ApiException(409,"提案不能直接修改规划输入");
+  }
+  /** JSON has one number type; JDBC long IDs must equal identical HTTP integer values. */
+  private static boolean equivalent(JsonNode left,JsonNode right) {
+    if(left.isNumber()&&right.isNumber())return new java.math.BigDecimal(left.asText()).compareTo(new java.math.BigDecimal(right.asText()))==0;
+    if(left.isArray()&&right.isArray()){
+      if(left.size()!=right.size())return false;
+      for(int i=0;i<left.size();i++)if(!equivalent(left.get(i),right.get(i)))return false;
+      return true;
+    }
+    if(left.isObject()&&right.isObject()){
+      if(left.size()!=right.size())return false;
+      for(String field:left.propertyNames())if(!right.has(field)||!equivalent(left.get(field),right.get(field)))return false;
+      return true;
+    }
+    return left.equals(right);
   }
   public static ObjectNode normalize(JsonNode raw,int days) {
     if(!raw.isObject())throw new ApiException(422,"planning_input 必须为对象");

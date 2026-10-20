@@ -145,4 +145,22 @@ class FinalPlanningIntegrationTest {
     assertEquals(1,db.queryForObject("SELECT planning_revision FROM trip_records WHERE id=?",Integer.class,id));
   }
 
+  @Test void publicRoundTripWithLedgerNumbersAllowsInputEditButRejectsCommitmentTampering()throws Exception{
+    long uid=user(),id=trip(uid);String token=tokens.issue(Map.of("id",uid,"token_version",0));
+    db.update("INSERT INTO trip_commitments(trip_id,day_index,category,title,status,created_by,amount_cents,location_json) VALUES(?,0,'ticket','预约','confirmed',?,55000,'{\"longitude\":116.0,\"latitude\":39.0}')",id,uid);
+    var http=java.net.http.HttpClient.newHttpClient();String url="http://localhost:"+port+"/api/trips/"+id+"/planning-input";
+    var get=java.net.http.HttpRequest.newBuilder(java.net.URI.create(url)).header("Authorization","Bearer "+token).GET().build();
+    var actual=json.readTree(http.send(get,java.net.http.HttpResponse.BodyHandlers.ofString()).body()).path("data");
+    var in=(ObjectNode)actual.path("planning_input").deepCopy();in.put("day_end","21:00");
+    ((ObjectNode)in.path("commitments").get(0).path("location")).put("longitude",116).put("latitude",39);
+    var body=json.createObjectNode().put("planning_revision",actual.path("planning_revision").asInt());body.set("planning_input",in);
+    var put=java.net.http.HttpRequest.newBuilder(java.net.URI.create(url)).header("Authorization","Bearer "+token).header("If-Match","1").header("Content-Type","application/json").PUT(java.net.http.HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build();
+    var accepted=http.send(put,java.net.http.HttpResponse.BodyHandlers.ofString());assertEquals(200,accepted.statusCode(),accepted.body());
+    body.put("planning_revision",json.readTree(accepted.body()).path("data").path("planning_revision").asInt());
+    ((ObjectNode)in.path("commitments").get(0)).put("amount_cents",55001);
+    var malicious=java.net.http.HttpRequest.newBuilder(java.net.URI.create(url)).header("Authorization","Bearer "+token).header("If-Match","1").header("Content-Type","application/json").PUT(java.net.http.HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build();
+    assertEquals(422,http.send(malicious,java.net.http.HttpResponse.BodyHandlers.ofString()).statusCode());
+    assertEquals(55000L,db.queryForObject("SELECT amount_cents FROM trip_commitments WHERE trip_id=?",Long.class,id));
+  }
+
 }
