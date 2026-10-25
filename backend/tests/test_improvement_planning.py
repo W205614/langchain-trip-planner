@@ -74,4 +74,3 @@ def test_classification_upgrade_reuses_provider_evidence_but_not_old_schedules(o
     for stage in ("schedule", "schedule_day:0:hash"):
         assert not checkpoint_compatible(stage, saved, current)
     assert not checkpoint_compatible("draft", {**saved, "model": "changed"}, current)
-

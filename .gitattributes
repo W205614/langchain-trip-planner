@@ -1,0 +1,4 @@
+# Preserve frozen evidence bytes and their SHA-256 values across Windows/Linux.
+backend/evals/improvement_cases_20261025.json -text
+backend/scripts/improvement_benchmark.py -text
+docs/evidence/improvement-20261025/*.json -text
