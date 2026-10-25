@@ -1,0 +1,440 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-25T09:11:04.324762+00:00",
+  "review_mode": "read_only_saved_public_reports_no_provider_or_backend_requests",
+  "source_hashes": {
+    "live-inputs.json": "c0e3c7680c38ff787c5615b888a9a1b9531268c313e6997a8777e996a200ae72",
+    "live-plan.json": "91fdd55893bd137792df8a471963bcfbf5b4bac02a44f36856b6105df440150c",
+    "live-crosscity.json": "82f6688b755e6553ad53d8453a1b360bf43fe7f7431a8efa0e8fa3c5e13edeb7",
+    "live-proposal.json": "5ea24bcf5fb14927b6fc058571d7aae39b06dba1e89bb9f31ed4b0b05914bfd1",
+    "live-research.json": "e142022262fd482a374954287eab458e225434590b35bcdf83ade6d7e822097a"
+  },
+  "network_requests": 0,
+  "model_calls": 0,
+  "docker_operations": 0,
+  "credentials_read": false,
+  "review_scope": "Two saved generated timelines and their report/input contracts. Proposal assertions are reviewed only as recorded; no new proposal fetch/confirmation, browser or live-venue verification.",
+  "itinerary_reviews": {
+    "live-plan": {
+      "technical_report_passed": true,
+      "technical_check_count": 7,
+      "quality_rules_passed": true,
+      "quality_score": 100,
+      "facts_complete": false,
+      "feasibility_status": "unverified",
+      "outcome": "degraded",
+      "actual_route_distance_km": null,
+      "total_unassigned_meals": 4,
+      "cost_summary": {
+        "confirmed_cents": 0,
+        "estimated_cents": 82000,
+        "known_total_cents": 82000,
+        "unknown_items": [
+          "attraction_prices",
+          "hotel_prices",
+          "transportation_prices"
+        ],
+        "limit_cents": 200000,
+        "within_limit": null
+      },
+      "days": [
+        {
+          "day_index": 0,
+          "date": "2026-11-04",
+          "city": "北京",
+          "event_count": 9,
+          "first_start": "2026-11-04T09:00:00+08:00",
+          "last_end": "2026-11-04T18:00:00+08:00",
+          "elapsed_minutes": 540,
+          "sum_event_minutes": 540,
+          "all_events_positive": true,
+          "nonoverlapping": true,
+          "within_explicit_day_window": true,
+          "explicit_day_window": [
+            "2026-11-04T09:00:00+08:00",
+            "2026-11-04T20:00:00+08:00"
+          ],
+          "feasibility_status": "unverified",
+          "unknown_count": 8,
+          "active_meal_count": 1,
+          "unassigned_meals": [
+            {
+              "activity_id": "meal:0:dinner:B0G035GU1E",
+              "type": "dinner",
+              "title": "宫宴",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            },
+            {
+              "activity_id": "meal:0:breakfast:B000A82T8Y",
+              "type": "breakfast",
+              "title": "紫光园·烤鸭·北京菜(常营店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            }
+          ],
+          "day_unassigned_count": 2,
+          "top_level_unassigned_count": 2,
+          "top_level_covers_all_day_gaps": true,
+          "unassigned_not_present_as_active_timeline_meals": true,
+          "all_unassigned_have_reason_and_remediation": true,
+          "estimated_route_legs": [],
+          "route_uncertainty_visible_at_day_level": true,
+          "opening_facts_confirmed_for_travel_date": false,
+          "executable_itinerary_proven": false
+        },
+        {
+          "day_index": 1,
+          "date": "2026-11-05",
+          "city": "北京",
+          "event_count": 9,
+          "first_start": "2026-11-05T09:00:00+08:00",
+          "last_end": "2026-11-05T18:34:00+08:00",
+          "elapsed_minutes": 574,
+          "sum_event_minutes": 574,
+          "all_events_positive": true,
+          "nonoverlapping": true,
+          "within_explicit_day_window": true,
+          "explicit_day_window": [
+            "2026-11-05T09:00:00+08:00",
+            "2026-11-05T20:00:00+08:00"
+          ],
+          "feasibility_status": "unverified",
+          "unknown_count": 11,
+          "active_meal_count": 1,
+          "unassigned_meals": [
+            {
+              "activity_id": "meal:1:dinner:B000A87JDG",
+              "type": "dinner",
+              "title": "全聚德(北京和平门店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            },
+            {
+              "activity_id": "meal:1:breakfast:B000A82T8Y",
+              "type": "breakfast",
+              "title": "紫光园·烤鸭·北京菜(常营店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            }
+          ],
+          "day_unassigned_count": 2,
+          "top_level_unassigned_count": 2,
+          "top_level_covers_all_day_gaps": true,
+          "unassigned_not_present_as_active_timeline_meals": true,
+          "all_unassigned_have_reason_and_remediation": true,
+          "estimated_route_legs": [
+            {
+              "activity_id": "hotel:return",
+              "start_at": "2026-11-05T18:04:00+08:00",
+              "end_at": "2026-11-05T18:34:00+08:00",
+              "source": "conservative_allowance",
+              "has_per_leg_note": false
+            }
+          ],
+          "route_uncertainty_visible_at_day_level": true,
+          "opening_facts_confirmed_for_travel_date": false,
+          "executable_itinerary_proven": false
+        }
+      ],
+      "interpretation": "Saved timeline intervals are positive, nonoverlapping and within explicitly supplied day-start/day-end boundaries. Unknown opening, dining, lodging, prices and some route facts prevent a complete executable-itinerary conclusion. Score 100 is a rule-check score, not factual accuracy."
+    },
+    "live-crosscity": {
+      "technical_report_passed": true,
+      "technical_check_count": 11,
+      "quality_rules_passed": true,
+      "quality_score": 100,
+      "facts_complete": false,
+      "feasibility_status": "unverified",
+      "outcome": "degraded",
+      "actual_route_distance_km": null,
+      "total_unassigned_meals": 5,
+      "cost_summary": {
+        "confirmed_cents": 55000,
+        "estimated_cents": 68000,
+        "known_total_cents": 123000,
+        "unknown_items": [
+          "attraction_prices",
+          "hotel_prices",
+          "transportation_prices"
+        ],
+        "limit_cents": 200000,
+        "within_limit": null
+      },
+      "days": [
+        {
+          "day_index": 0,
+          "date": "2026-11-04",
+          "city": "北京",
+          "event_count": 9,
+          "first_start": "2026-11-04T09:00:00+08:00",
+          "last_end": "2026-11-04T17:43:00+08:00",
+          "elapsed_minutes": 523,
+          "sum_event_minutes": 523,
+          "all_events_positive": true,
+          "nonoverlapping": true,
+          "within_explicit_day_window": true,
+          "explicit_day_window": [
+            "2026-11-04T09:00:00+08:00",
+            "2026-11-04T20:00:00+08:00"
+          ],
+          "feasibility_status": "unverified",
+          "unknown_count": 8,
+          "active_meal_count": 1,
+          "unassigned_meals": [
+            {
+              "activity_id": "meal:0:dinner:B0G035GU1E",
+              "type": "dinner",
+              "title": "宫宴",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            },
+            {
+              "activity_id": "meal:0:breakfast:B000A82T8Y",
+              "type": "breakfast",
+              "title": "紫光园·烤鸭·北京菜(常营店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            }
+          ],
+          "day_unassigned_count": 2,
+          "top_level_unassigned_count": 2,
+          "top_level_covers_all_day_gaps": true,
+          "unassigned_not_present_as_active_timeline_meals": true,
+          "all_unassigned_have_reason_and_remediation": true,
+          "estimated_route_legs": [],
+          "route_uncertainty_visible_at_day_level": true,
+          "opening_facts_confirmed_for_travel_date": false,
+          "executable_itinerary_proven": false
+        },
+        {
+          "day_index": 1,
+          "date": "2026-11-05",
+          "city": "上海",
+          "event_count": 9,
+          "first_start": "2026-11-05T07:19:00+08:00",
+          "last_end": "2026-11-05T18:42:00+08:00",
+          "elapsed_minutes": 683,
+          "sum_event_minutes": 683,
+          "all_events_positive": true,
+          "nonoverlapping": true,
+          "within_explicit_day_window": true,
+          "explicit_day_window": [
+            "2026-11-05T07:00:00+08:00",
+            "2026-11-05T20:00:00+08:00"
+          ],
+          "feasibility_status": "unverified",
+          "unknown_count": 13,
+          "active_meal_count": 0,
+          "unassigned_meals": [
+            {
+              "activity_id": "meal:1:breakfast:B00154YR8Z",
+              "type": "breakfast",
+              "title": "味香斋(雁荡路店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            },
+            {
+              "activity_id": "meal:1:lunch:B0FFJBZBG2",
+              "type": "lunch",
+              "title": "点都德(环宇荟店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            },
+            {
+              "activity_id": "meal:1:dinner:B00155LWOY",
+              "type": "dinner",
+              "title": "晓平饭店(嘉善路店)",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            }
+          ],
+          "day_unassigned_count": 3,
+          "top_level_unassigned_count": 3,
+          "top_level_covers_all_day_gaps": true,
+          "unassigned_not_present_as_active_timeline_meals": true,
+          "all_unassigned_have_reason_and_remediation": true,
+          "estimated_route_legs": [
+            {
+              "activity_id": "route:3:poi:1:B0FFHDQHCS",
+              "start_at": "2026-11-05T15:01:00+08:00",
+              "end_at": "2026-11-05T15:31:00+08:00",
+              "source": "conservative_allowance",
+              "has_per_leg_note": true
+            },
+            {
+              "activity_id": "hotel:return",
+              "start_at": "2026-11-05T18:12:00+08:00",
+              "end_at": "2026-11-05T18:42:00+08:00",
+              "source": "conservative_allowance",
+              "has_per_leg_note": false
+            }
+          ],
+          "route_uncertainty_visible_at_day_level": true,
+          "opening_facts_confirmed_for_travel_date": false,
+          "executable_itinerary_proven": false
+        }
+      ],
+      "interpretation": "Saved timeline intervals are positive, nonoverlapping and within explicitly supplied day-start/day-end boundaries. Unknown opening, dining, lodging, prices and some route facts prevent a complete executable-itinerary conclusion. Score 100 is a rule-check score, not factual accuracy."
+    }
+  },
+  "crosscity_fixed_bridge_review": {
+    "user_confirmed_hypothetical_input_not_real_ticket": true,
+    "fixed_bridge_times_unchanged": true,
+    "bridge_start_at": "2026-11-05T08:00:00+08:00",
+    "bridge_end_at": "2026-11-05T12:30:00+08:00",
+    "origin_access_start": "2026-11-05T07:19:00+08:00",
+    "origin_access_end": "2026-11-05T08:00:00+08:00",
+    "origin_access_minutes": 41,
+    "origin_access_is_map_backed": true,
+    "access_ends_at_fixed_departure": true,
+    "all_shanghai_visits_follow_fixed_arrival": true,
+    "confirmed_booking_cents": 55000,
+    "matches_hypothetical_confirmed_amount": true,
+    "boarding_lead_time_unverified": true,
+    "boarding_uncertainty_note_present": true,
+    "boarding_or_real_trip_feasibility_proven": false
+  },
+  "proposal_review": {
+    "technical_report_passed": true,
+    "recorded_check_count": 14,
+    "recorded_checks": [
+      "existing acceptance counters respect fixed caps",
+      "no fixture route",
+      "setup still targets original trip version",
+      "ledger stores confirmed amount in integer cents",
+      "budget remains before revision",
+      "task produces persisted usable result",
+      "revision has usable validated outcome",
+      "stored record is a proposal in known state",
+      "proposal binds trip and planning input revisions",
+      "preview leaves original intact",
+      "first day unchanged",
+      "locked activity unchanged",
+      "confirmed appointment unchanged",
+      "confirmation stores exact preview once"
+    ],
+    "quality_snapshot_status": "pending",
+    "quality_snapshot_outcome": "draft",
+    "validated_outcome": "degraded",
+    "feasibility_status": "unverified",
+    "facts_complete": false,
+    "allowed_days": [
+      1
+    ],
+    "unassigned_meals_count": 4,
+    "unassigned_meals_by_day": {
+      "0": 2,
+      "1": 2
+    },
+    "evidence_boundary": "The report records first-day unchanged, lock and appointment unchanged, original untouched during preview, revision binding and exact-preview confirmation. Full proposal day JSON and before/after hashes are not included in this public report, so those checks were not independently recomputed. The quality object is the pending preview snapshot; the recorded confirmation check is later in the same run. Do not infer final status from the earlier quality snapshot.",
+    "independently_rechecked_preview_or_confirmation": false,
+    "complete_executability_proven": false
+  },
+  "research_review": {
+    "technical_report_passed": true,
+    "recorded_check_count": 7,
+    "answer_status": "extractive_fallback",
+    "nonempty_answer": true,
+    "source_count": 5,
+    "evidence_count": 5,
+    "source_tiers": [
+      "amap_live",
+      "curated_static",
+      "reviewed"
+    ],
+    "synthetic_source_explicitly_labelled": true,
+    "static_demo_content_is_not_current_official_fact": true,
+    "map_evidence_scope": "Identity/address/coordinates/category of Palace Museum; not confirmed opening hours, ticket prices, booking availability or train lead time.",
+    "answer_utility": "Fallback returns cited excerpts and a reminder to verify official rules, including synthetic and static demo material; it does not demonstrate a successful generated answer or full query-specific synthesis.",
+    "llm_generated_answer_quality_passed": false,
+    "runtime_failure": {
+      "exception": "OpenAITimeoutError",
+      "configured_generation_timeout_seconds": 15,
+      "evidence_provenance": "The parent reports it confirmed the actual runtime log. This reviewer independently verified extractive_fallback in the saved report and 15-second default plus exception-to-fallback path in current source; it did not read private logs or make another request."
+    },
+    "repeat_sample_performed": false
+  },
+  "budget_review": {
+    "reported_final_durable_reservations": {
+      "text": 6,
+      "embedding": 16,
+      "amap": 283
+    },
+    "limits": {
+      "text": 12,
+      "embedding": 40,
+      "amap": 400
+    },
+    "latest_public_research_after_matches_reported_final": true,
+    "asynchronous_indexing_included_as_reported_by_parent": true,
+    "not_currency_billing": true,
+    "comparison_to_historical_amap_392": "No cost-saving claim: campaign inputs, caches, samples and failures differ. Reservations do not measure RMB charges."
+  },
+  "findings": [
+    {
+      "code": "DINING_GAP_COUNTS_DIFFER_BY_SAMPLE",
+      "classification": "verified_saved_report_fact",
+      "details": "Beijing plan and proposal each disclose four omitted restaurant candidates. Crosscity discloses five: two on Beijing day and all three meals on Shanghai day. Shanghai has zero scheduled restaurant events. Do not summarize all results as four gaps."
+    },
+    {
+      "code": "CROSSCITY_DAILY_MINUTE_BUDGET_SEMANTICS",
+      "classification": "verified_saved_output_exceeds_documented_default_daily_limit_root_cause_not_independently_executed",
+      "details": "Crosscity day 2 spans 07:19 to 18:42, 683 contiguous event minutes. Explicit 07:00-20:00 bounds pass, but the omitted constraints.daily_minutes defaults to 600. Home.vue labels this daily arrangement limit as including transportation and meal allowances. Current solve_day shifts low to fixed arrival 12:30 before applying low+600, excluding the origin access and fixed bridge from that bound. The persisted selected itinerary therefore exceeds the documented default daily limit. An independent production regression/recovery is still required; this read-only review did not execute the solver or fetch candidates.",
+      "source_refs": [
+        "backend/app/models/schemas.py:15",
+        "frontend/src/views/Home.vue:238",
+        "frontend/src/views/Home.vue:345",
+        "backend/app/services/time_planner.py:465",
+        "backend/app/services/time_planner.py:498",
+        "backend/app/services/time_planner.py:505",
+        "backend/app/services/time_planner.py:653"
+      ],
+      "production_fix_requested_in_this_review": false,
+      "duration_breakdown": {
+        "selected_attractions_count": 3,
+        "selected_attractions_minutes": [
+          90,
+          40,
+          120
+        ],
+        "selected_attractions_total_minutes": 250,
+        "scheduled_meal_count": 0,
+        "fixed_user_confirmed_bridge_minutes": 270,
+        "map_backed_origin_access_minutes": 41,
+        "other_map_backed_local_routes_minutes": [
+          61,
+          1
+        ],
+        "estimated_route_allowances_minutes": [
+          30,
+          30
+        ],
+        "known_duration_lower_bound_with_selected_activities": 623,
+        "all_emitted_event_minutes": 683,
+        "default_daily_minutes": 600,
+        "public_report_does_not_include_candidate_optional_flags": true,
+        "selected_activities_are_not_claimed_to_be_all_mandatory": true
+      }
+    },
+    {
+      "code": "VENUE_HIERARCHY_AND_FACT_COMPLETENESS",
+      "classification": "limited_sample_quality_observation",
+      "details": "The Beijing plan lists Palace Museum and its Yangxin Hall as separate POI activities. Distinct POI IDs alone do not prove independent attractions or prevent parent/child venue duplication. The later Palace Museum/Hall times cannot be accepted as legal opening or admission without travel-date facts. No current official venue verification was performed."
+    },
+    {
+      "code": "RESEARCH_EXTRACTIVE_FALLBACK",
+      "classification": "verified_saved_report_fact_with_parent_runtime_log_context",
+      "details": "Research HTTP and evidence exposure checks passed, but answer_status=extractive_fallback follows the reported 15-second LLM timeout. This is recovery-path evidence, not a successful live LLM answer-quality sample."
+    }
+  ],
+  "overall_conclusion": {
+    "technical_reports_passed": 4,
+    "complete_executable_itinerary_proven": false,
+    "real_llm_research_answer_quality_proven": false,
+    "new_program_bug_independently_reproduced": false,
+    "verified_output_boundaries": "Positive/nonoverlapping intervals and explicit daily clock windows in the two saved plans; preserved hypothetical bridge; disclosed uncertainty and omissions. The crosscity saved day nevertheless exceeds the documented default 600-minute daily arrangement limit. Current venue rules, ticketing, dining, accommodation, traffic and satisfaction remain unverified.",
+    "no_new_provider_sampling_or_production_change": true,
+    "saved_output_daily_limit_violation_found": true
+  }
+}

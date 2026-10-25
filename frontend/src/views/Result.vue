@@ -106,10 +106,10 @@
           </a-space>
           <a-button v-else-if="!readOnlyPlan && quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
           <a-alert v-if="quality.policy_version" :type="quality.rules_passed ? 'info' : 'warning'" show-icon
-            :message="quality.rules_passed ? '已通过当前规则检查，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
+            :message="quality.rules_passed ? '已通过生成时的规则检查；规则或输入变化后应重新核验，开放与预约等事实仍需核实' : '部分旅行要求尚未满足，请检查下方说明并调整行程'" />
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
             :message="dayCheckMessage(check)" />
-          <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处重复、不去或超限景点；请确认必去要求是否满足。`" />
+          <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处候选安排；请检查省略的活动、餐饮缺口及必去要求是否满足。`" />
           <a-alert v-if="unsaved" type="warning" show-icon message="当前修改尚未保存到服务器，请重新保存或从历史记录加载。" />
           <a-alert v-if="quality.degraded_days?.length" type="warning" show-icon
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />
@@ -1298,6 +1298,7 @@ const exportAsPDF = async () => {
 </script>
 
 <style scoped>
+.proposal-review { background: #fff; color: #25324a; border: 1px solid #dfe5ed; border-radius: 10px; padding: 18px; margin: 12px 0; }
 .result-empty { max-width: 900px; margin: 0 auto; padding: 76px 20px; border-radius: 20px; background: rgba(255,255,255,.96); box-shadow: 0 18px 46px rgba(2,6,23,.28); }
 .result-empty :deep(.ant-empty-description) { color: var(--trip-text-on-light); font-size: 16px; }
 .activity-tags { display: flex; flex-wrap: wrap; margin-bottom: 18px !important; }

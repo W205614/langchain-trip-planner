@@ -10,6 +10,7 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
   const marker = await request.get('/api/validation/fixture')
   expect(marker.ok(), 'mutations require the isolated offline fixture stack').toBe(true)
   expect((await marker.json()).offline_fixture).toBe(true)
+  page.setDefaultTimeout(15_000)
   await page.route('https://*.amap.com/**', route => route.abort())
 
   const username = `imp_${Date.now().toString(36)}_${crypto.randomUUID().slice(0, 6)}`
@@ -21,15 +22,15 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
     await page.getByPlaceholder('密码', { exact: true }).fill(password)
     await page.getByPlaceholder('确认密码', { exact: true }).fill(password)
     await page.getByRole('button', { name: '注册并登录', exact: true }).click()
-    await expect(page.getByRole('button', { name: '退出', exact: true })).toBeVisible()
-    await page.getByRole('button', { name: '退出', exact: true }).click()
-    await expect(page.getByRole('button', { name: '退出', exact: true })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: /^退\s*出$/ })).toBeVisible()
+    await page.getByRole('button', { name: /^退\s*出$/ }).click()
+    await expect(page.getByRole('button', { name: /^退\s*出$/ })).toHaveCount(0)
     await expect.poll(() => page.evaluate(() => Boolean(sessionStorage.getItem('access_token')))).toBe(false)
     await page.goto('/login')
     await page.getByPlaceholder('用户名', { exact: true }).fill(username)
     await page.getByPlaceholder('密码', { exact: true }).fill(password)
     await page.getByRole('button', { name: '登 录', exact: true }).click()
-    await expect(page.getByRole('button', { name: '退出', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^退\s*出$/ })).toBeVisible()
   })
 
   const token = await page.evaluate(() => sessionStorage.getItem('access_token'))
@@ -61,10 +62,10 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
   await test.step('enter a two-day request and reconnect after refreshing while it runs', async () => {
     await page.getByPlaceholder('例如: 北京', { exact: true }).fill('北京')
     const dates = page.getByPlaceholder('选择日期', { exact: true })
-    await dates.nth(0).fill('2026-11-04')
-    await dates.nth(0).press('Enter')
-    await dates.nth(1).fill('2026-11-05')
-    await dates.nth(1).press('Enter')
+    await dates.nth(0).click()
+    await page.locator('.ant-picker-dropdown:visible').getByTitle('2026-11-04', { exact: true }).click()
+    await dates.nth(1).click()
+    await page.locator('.ant-picker-dropdown:visible').getByTitle('2026-11-05', { exact: true }).click()
     await page.getByPlaceholder('请输入您的额外要求,例如:想去看升旗、需要无障碍设施、对海鲜过敏等...').fill('北京两日游，每天保留休息时间，未知的营业、餐饮和路线条件请明确提示。')
     const submitted = page.waitForResponse(response => new URL(response.url()).pathname === '/api/trip/tasks' && response.request().method() === 'POST')
     await page.getByRole('button', { name: '开始规划我的旅行' }).click()
@@ -89,7 +90,9 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
   let proposalTaskId = ''
   let conversation = ''
   await test.step('lock an activity and create a real scoped assistant proposal', async () => {
-    const activity = page.locator('[data-testid^="activity-"]').filter({ has: page.getByRole('button', { name: '锁定时段', exact: true }) }).first()
+    const activityId = await page.locator('[data-testid^="activity-"]').filter({ has: page.getByRole('button', { name: '锁定时段', exact: true }) }).first().getAttribute('data-testid')
+    expect(activityId).toBeTruthy()
+    const activity = page.getByTestId(activityId!)
     await activity.getByRole('button', { name: '锁定时段', exact: true }).click()
     await expect(activity.getByText('已锁定', { exact: true })).toBeVisible()
     before = (await api('GET', `/api/history/${tripId}`)).data

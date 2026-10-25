@@ -63,7 +63,7 @@ def test_untouched_legacy_day_without_schedule_cannot_be_reported_feasible():
     assert report["facts_complete"] is False
 
 
-@pytest.mark.parametrize("old_rule", ["time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure"])
+@pytest.mark.parametrize("old_rule", ["time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure", "time-windows-v6-conflict-classification"])
 def test_classification_upgrade_reuses_provider_evidence_but_not_old_schedules(old_rule):
     from app.services.durable_execution import checkpoint_compatible
     from app.services.time_planner import RULE_VERSION

@@ -43,7 +43,7 @@ test('add, prevent duplicates, redraw order, delete and cancel restore original 
   await page.locator('.attraction-card').first().getByRole('button', { name: '🗑️', exact: true }).click()
   await expect(page.locator('.attraction-card')).toHaveCount(1)
   await page.getByRole('button', { name: /取消编辑/ }).click()
-  await expect(page.getByText('已通过当前规则检查', { exact: false })).toBeVisible()
+  await expect(page.getByText('已通过生成时的规则检查', { exact: false })).toBeVisible()
   expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('tripPlan')!).days[0].attractions.length)).toBe(1)
 })
 

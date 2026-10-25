@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v6-conflict-classification"
+RULE_VERSION = "time-windows-v7-whole-day-budget"
 FACT_TTLS = {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600}
 
 
@@ -502,14 +502,35 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                 bridges.append(dict(activity_id=str(commitment.get("activity_id") or f"commitment:{commitment['id']}"),title=commitment.get("title","跨城交通"),kind="commitment",start_at=commitment["start_at"],end_at=commitment["end_at"],status="confirmed",source="user_confirmed",evidence_refs=[str(commitment["id"])],notes=[]))
         except (KeyError,ValueError,TypeError):
             pass  # Input model rejects malformed times before this point.
-    high = min(high, low+request.constraints.daily_minutes)
+    # Arrival moves the local sightseeing start, but must not restart the daily
+    # clock after an already scheduled train/flight and its origin connection.
+    # Keep a relaxed, proven bound too: an estimated access duration cannot by
+    # itself prove that the user's hard daily limit is impossible.
+    fixed_rows = [*bridges, *connections]
+    budget_start = min([low, *[_local_minute(row["start_at"], day, zone) for row in fixed_rows]])
+    known_budget_start = min([low, *[_local_minute(row["start_at"], day, zone) for row in fixed_rows if row["status"] == "confirmed"]])
+    budget_end = budget_start + request.constraints.daily_minutes
+    known_budget_end = known_budget_start + request.constraints.daily_minutes
+    proof_high = min(high, known_budget_end)
+    high = min(high, budget_end)
+    for bridge in bridges:
+        end = _local_minute(bridge["end_at"], day, zone)
+        if end > budget_end:
+            conflict = f"daily_duration_limit_exceeded:{bridge['activity_id']}"
+            connection_conflicts.append(conflict)
+            if end > known_budget_end:
+                proven_connection_conflicts.add(conflict)
     if day.day_index > 0 and city_for_day(request,day.day_index-1) != city and not any(c.get("destination_city") == city and confirmed(c) and c.get("end_at") and 0 <= _local_minute(c["end_at"],day,zone) < 1440 for c in inputs.commitments):
         unknown.add("cross_city_confirmed_transport_missing")
     nodes, conflicts = _nodes(day, inputs, low, high, zone, unknown)
-    # Node windows depend on dated openings, locks, appointments and explicit
-    # day/arrival bounds, never on estimated map durations. An empty mandatory
-    # window is therefore a proof independent of other missing facts.
-    proven_window_conflicts = set(conflicts)
+    # Prove window contradictions against the relaxed bound when access is
+    # estimated. Closed/locked/appointment contradictions that survive it remain
+    # independent of other missing facts.
+    if high < proof_high:
+        _, proof_conflicts = _nodes(day, inputs, low, proof_high, zone, set())
+        proven_window_conflicts = set(proof_conflicts)
+    else:
+        proven_window_conflicts = set(conflicts)
     conflicts.extend(connection_conflicts)
     unknown.update(_transport_buffer_gaps(bridges,inputs))
     required_names = {n.casefold() for n in request.constraints.must_visit}
@@ -534,7 +555,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     report = {"status": "unverified", "solver_status": "NOT_RUN", "unknown": [], "conflicts": conflicts, "omitted_activity_ids": []}
     if conflicts or low >= high or not nodes:
         model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
-        proven = proven_connection_conflicts or proven_window_conflicts.intersection(conflicts) or low >= high
+        proven = proven_connection_conflicts or proven_window_conflicts.intersection(conflicts) or low >= proof_high
         report.update(status="infeasible" if proven or not model_unknown else "unverified", solver_status="INVALID_WINDOWS", unknown=sorted(unknown))
         return [], report, None
     cap = max(1, min(40, int(os.getenv("PLANNER_MAX_DAILY_ACTIVITIES", "20"))))

@@ -1,0 +1,117 @@
+{
+  "mode": "live_providers_http",
+  "run_id": "improvement-20261025-v1",
+  "stage": "research",
+  "passed": true,
+  "started_at": "2026-10-25T09:04:16.417896+00:00",
+  "limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "before": {
+    "text": 5,
+    "embedding": 15,
+    "amap": 283
+  },
+  "checks": [
+    "existing acceptance counters respect fixed caps",
+    "no fixture route",
+    "budget remains before research",
+    "research has nonempty answer",
+    "research classifies evidence availability",
+    "research exposes evidence and sources",
+    "grounded result has supporting sources"
+  ],
+  "boundary": "Independent live-provider sample; cross-city transport is a hypothetical user-confirmed input, not a real booking. No SLA or generalization claim.",
+  "research": {
+    "success": true,
+    "message": "查询完成",
+    "data": {
+      "city": "北京",
+      "query": "故宫参观前有哪些需要核实的信息？请区分攻略与已确认事实。",
+      "answer": "根据当前可核验资料，与你的问题最相关的信息如下：\n- ## Java迁移验收合成资料（非景点事实） 来源页: 1 摘要: 该页为合成测试文档，涉及北京旅行准备，建议出发前核实官方开放时间；该页不应视为门票或价格信息。 - 城市：北京 - 主题：旅行准备 - 建议出发前核实官方开放时间 - 该页为合成测试文档 - 该页不应视为门票或价格信息 [1]\n- # 北京旅游知识库 > 本知识库为学习演示数据，价格/线路为示例，实际以官方为准。 ## 城市概览 北京，中国首都，3000 多年建城史，历史文化底蕴深厚，同时拥有现代化的都市面貌。必游元素：故宫、长城、皇家园林、胡同文化、博物馆。最佳旅游季节：4-5 月、9-10 月（春秋季气候宜人）。 - 出行方式：地铁 27 条线路，覆盖绝大多数景点 - 消费水平：餐饮人均 40-100 元，景点门票多在 20-60 元 - 语言：普通话，方言较少 [2]\n- ## 避坑指南汇总 1. 故宫、国博必须提前预约，旺季一票难求 2. 看升旗要查当天时间，凌晨排队 3. 长城建议坐 S2 线或高铁，别坐黑车 4. 胡同三轮车先谈价格再上车 5. 北京地铁末班车约 23:00，注意回程时间 6. 春秋风大，冬天干冷，注意保暖保湿 7. 环球影城、欢乐谷门票官方 App 提前买，避免黄牛 [3]\n\n开放时间、票价和预约规则可能变化，出行前请再核对官方渠道。",
+      "answer_status": "extractive_fallback",
+      "sources": [
+        {
+          "index": 1,
+          "source": "Java迁移验收合成资料（非景点事实）",
+          "page": 1,
+          "source_tier": "reviewed"
+        },
+        {
+          "index": 2,
+          "source": "beijing.md",
+          "page": null,
+          "source_tier": "curated_static"
+        },
+        {
+          "index": 3,
+          "source": "beijing.md",
+          "page": null,
+          "source_tier": "curated_static"
+        },
+        {
+          "index": 4,
+          "source": "beijing.md",
+          "page": null,
+          "source_tier": "curated_static"
+        },
+        {
+          "index": 5,
+          "source": "gaode:北京",
+          "page": null,
+          "source_tier": "amap_live"
+        }
+      ],
+      "evidence": [
+        {
+          "content": "## Java迁移验收合成资料（非景点事实）\n来源页: 1\n摘要: 该页为合成测试文档，涉及北京旅行准备，建议出发前核实官方开放时间；该页不应视为门票或价格信息。\n- 城市：北京\n- 主题：旅行准备\n- 建议出发前核实官方开放时间\n- 该页为合成测试文档\n- 该页不应视为门票或价格信息",
+          "source": "Java迁移验收合成资料（非景点事实）",
+          "page": 1,
+          "source_type": "multimodal",
+          "source_tier": "reviewed",
+          "chunk_id": "submission:5:1:0"
+        },
+        {
+          "content": "# 北京旅游知识库\n\n> 本知识库为学习演示数据，价格/线路为示例，实际以官方为准。\n\n## 城市概览\n\n北京，中国首都，3000 多年建城史，历史文化底蕴深厚，同时拥有现代化的都市面貌。必游元素：故宫、长城、皇家园林、胡同文化、博物馆。最佳旅游季节：4-5 月、9-10 月（春秋季气候宜人）。\n\n- 出行方式：地铁 27 条线路，覆盖绝大多数景点\n- 消费水平：餐饮人均 40-100 元，景点门票多在 20-60 元\n- 语言：普通话，方言较少",
+          "source": "beijing.md",
+          "page": null,
+          "source_type": "markdown",
+          "source_tier": "curated_static",
+          "chunk_id": "beijing.md:0"
+        },
+        {
+          "content": "## 避坑指南汇总\n\n1. 故宫、国博必须提前预约，旺季一票难求\n2. 看升旗要查当天时间，凌晨排队\n3. 长城建议坐 S2 线或高铁，别坐黑车\n4. 胡同三轮车先谈价格再上车\n5. 北京地铁末班车约 23:00，注意回程时间\n6. 春秋风大，冬天干冷，注意保暖保湿\n7. 环球影城、欢乐谷门票官方 App 提前买，避免黄牛",
+          "source": "beijing.md",
+          "page": null,
+          "source_type": "markdown",
+          "source_tier": "curated_static",
+          "chunk_id": "beijing.md:12"
+        },
+        {
+          "content": "## 必去景点\n\n### 故宫博物院（紫禁城）\n- 门票：旺季 60 元，淡季 40 元（周一闭馆）\n- 开放时间：08:30-17:00（旺季），08:30-16:30（淡季）\n- 建议游玩：4 小时\n- 地址：东城区景山前街 4 号\n- 交通：地铁 1 号线天安门东站 B 口出步行 600 米\n- 打卡点：午门、太和殿、乾清宫、御花园、角楼\n- 避坑：必须提前 7 天官网预约，现场不售票；珍宝馆、钟表馆单独购票各 10 元",
+          "source": "beijing.md",
+          "page": null,
+          "source_type": "markdown",
+          "source_tier": "curated_static",
+          "chunk_id": "beijing.md:1"
+        },
+        {
+          "content": "### 故宫博物院\n- 地址: 景山前街4号\n- 坐标: 116.397029,39.917839\n- 类别: 风景名胜;风景名胜;世界遗产|科教文化服务;博物馆;博物馆",
+          "source": "gaode:北京",
+          "page": null,
+          "source_type": "unknown",
+          "source_tier": "amap_live",
+          "chunk_id": ""
+        }
+      ]
+    }
+  },
+  "after": {
+    "text": 6,
+    "embedding": 16,
+    "amap": 283
+  },
+  "finished_at": "2026-10-25T09:04:36.124057+00:00"
+}

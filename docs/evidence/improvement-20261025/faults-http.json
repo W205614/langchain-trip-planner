@@ -1,0 +1,100 @@
+{
+  "mode": "isolated_final_faults",
+  "started_at": "2026-10-25T09:06:27.986928+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "offline fixture marker verified before mutations",
+      "passed": true
+    },
+    {
+      "name": "direct business endpoint also has offline fixture marker",
+      "passed": true
+    },
+    {
+      "name": "administrator is real persisted role",
+      "passed": true
+    },
+    {
+      "name": "owner can identify running execution",
+      "passed": true
+    },
+    {
+      "name": "checkpoint persisted before cancellation",
+      "passed": true
+    },
+    {
+      "name": "cancel is durable terminal",
+      "passed": true
+    },
+    {
+      "name": "cancelled execution cannot write checkpoint",
+      "passed": true
+    },
+    {
+      "name": "late provider completion did not revive cancelled task or save result",
+      "passed": true
+    },
+    {
+      "name": "resume key creates exactly one new linked task",
+      "passed": true
+    },
+    {
+      "name": "new execution differs from cancelled one",
+      "passed": true
+    },
+    {
+      "name": "old execution cannot write after new execution starts",
+      "passed": true
+    },
+    {
+      "name": "resume succeeds while original remains terminal",
+      "passed": true
+    },
+    {
+      "name": "new task keeps recovery ancestry",
+      "passed": true
+    },
+    {
+      "name": "administrator governance permission works",
+      "passed": true
+    },
+    {
+      "name": "administrator cannot bypass private trip owner checks",
+      "passed": true
+    },
+    {
+      "name": "fixture-only slow prompt marker removed without fabricating plan result",
+      "passed": true
+    },
+    {
+      "name": "proposal actually bound live opening facts before expiry",
+      "passed": true
+    },
+    {
+      "name": "expired fact confirmation is rejected",
+      "passed": true
+    },
+    {
+      "name": "expired proposal cannot change original version",
+      "passed": true
+    },
+    {
+      "name": "actual container restart marks interrupted task",
+      "passed": true
+    },
+    {
+      "name": "restarted task recovers with fresh execution",
+      "passed": true
+    }
+  ],
+  "not_executed": [],
+  "provider_calls": 0,
+  "boundary": "Real HTTP, database, permissions and lifecycle; offline model/map only.",
+  "scope_limits": [
+    "Does not inject live-provider 429s or assess real travel fact accuracy."
+  ],
+  "fully_executed": true,
+  "finished_at": "2026-10-25T09:08:06.243474+00:00",
+  "checks_passed": 21
+}

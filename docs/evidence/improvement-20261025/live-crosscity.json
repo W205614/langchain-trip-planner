@@ -1,0 +1,936 @@
+{
+  "mode": "live_providers_http",
+  "run_id": "improvement-20261025-v1",
+  "stage": "crosscity",
+  "passed": true,
+  "started_at": "2026-10-25T08:59:54.578762+00:00",
+  "limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "before": {
+    "text": 2,
+    "embedding": 6,
+    "amap": 131
+  },
+  "checks": [
+    "existing acceptance counters respect fixed caps",
+    "no fixture route",
+    "task produces persisted usable result",
+    "two days persisted",
+    "no blocking draft",
+    "each day has stable trusted POIs",
+    "timeline emitted",
+    "two city segments retained",
+    "Shanghai visits follow confirmed arrival",
+    "cross-city booking keeps confirmed integer cents",
+    "cross-city quality counts confirmed booking cost"
+  ],
+  "boundary": "Independent live-provider sample; cross-city transport is a hypothetical user-confirmed input, not a real booking. No SLA or generalization claim.",
+  "task": {
+    "id": "feb0e9ae-2309-4d1a-992b-408a65a1ac97",
+    "status": "succeeded",
+    "error_code": ""
+  },
+  "record_id": 77,
+  "quality": {
+    "score": 100,
+    "passed": true,
+    "warnings": [],
+    "days_checked": 2,
+    "attractions_checked": 6,
+    "duplicate_attractions_removed": 0,
+    "estimated_intra_day_distance_km": 21.57,
+    "route_checked": false,
+    "actual_route_distance_km": null,
+    "actual_route_minutes": null,
+    "repairs": [
+      {
+        "day_index": 0,
+        "removed_activity_id": "meal:0:dinner:B0G035GU1E",
+        "reason": "optional_activity_omitted_by_time_constraints"
+      },
+      {
+        "day_index": 0,
+        "removed_activity_id": "meal:0:breakfast:B000A82T8Y",
+        "reason": "optional_activity_omitted_by_time_constraints"
+      },
+      {
+        "day_index": 1,
+        "removed_activity_id": "meal:1:breakfast:B00154YR8Z",
+        "reason": "optional_activity_omitted_by_time_constraints"
+      },
+      {
+        "day_index": 1,
+        "removed_activity_id": "meal:1:lunch:B0FFJBZBG2",
+        "reason": "optional_activity_omitted_by_time_constraints"
+      },
+      {
+        "day_index": 1,
+        "removed_activity_id": "meal:1:dinner:B00155LWOY",
+        "reason": "optional_activity_omitted_by_time_constraints"
+      }
+    ],
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "hotel_endpoint_unknown",
+      "in_attraction_walking_unknown",
+      "meal_candidate_unassigned:breakfast:meal:0:breakfast:B000A82T8Y",
+      "meal_candidate_unassigned:breakfast:meal:1:breakfast:B00154YR8Z",
+      "meal_candidate_unassigned:dinner:meal:0:dinner:B0G035GU1E",
+      "meal_candidate_unassigned:dinner:meal:1:dinner:B00155LWOY",
+      "meal_candidate_unassigned:lunch:meal:1:lunch:B0FFJBZBG2",
+      "meal_opening_unverified:meal:0:breakfast:B000A82T8Y",
+      "meal_opening_unverified:meal:0:dinner:B0G035GU1E",
+      "meal_opening_unverified:meal:0:lunch:B000A87JDG",
+      "meal_opening_unverified:meal:1:breakfast:B00154YR8Z",
+      "meal_opening_unverified:meal:1:dinner:B00155LWOY",
+      "meal_opening_unverified:meal:1:lunch:B0FFJBZBG2",
+      "opening_hours_travel_date_unverified",
+      "opening_unknown_or_stale:poi:0:B000A7CRPA",
+      "opening_unknown_or_stale:poi:0:B0FFG6VF81",
+      "opening_unknown_or_stale:poi:0:B0MDDHMX4B",
+      "opening_unknown_or_stale:poi:1:B00155AMEJ",
+      "opening_unknown_or_stale:poi:1:B00155LZBN",
+      "opening_unknown_or_stale:poi:1:B0FFHDQHCS",
+      "reservation_unverified",
+      "route_distance_and_walking_unverified",
+      "route_duration_estimated_30_minutes",
+      "route_duration_unavailable_fallback_to_straight_line",
+      "route_endpoint_unknown",
+      "transport_predeparture_buffer_unverified:sample-train"
+    ],
+    "degraded_days": [],
+    "policy_version": "constraints-v2",
+    "rules_passed": true,
+    "facts_complete": false,
+    "feasibility_status": "unverified",
+    "day_checks": [
+      {
+        "day_index": 0,
+        "visit_minutes": 270,
+        "meal_allowance_minutes": 90,
+        "buffer_minutes": 30,
+        "route_minutes": 42.0,
+        "planned_minutes": 432.0,
+        "inter_stop_walking_km": null,
+        "route_distance_km": null,
+        "routes": [
+          {
+            "from": "国家自然博物馆",
+            "to": "正阳门箭楼",
+            "route_type": "transit",
+            "minutes": 25,
+            "distance_km": null,
+            "walking_km": null
+          },
+          {
+            "from": "正阳门箭楼",
+            "to": "北京地下城(北京人民防空历史文化馆)",
+            "route_type": "transit",
+            "minutes": 17,
+            "distance_km": null,
+            "walking_km": null
+          }
+        ],
+        "walking_status": "unavailable"
+      },
+      {
+        "day_index": 1,
+        "visit_minutes": 250,
+        "meal_allowance_minutes": 90,
+        "buffer_minutes": 30,
+        "route_minutes": null,
+        "planned_minutes": null,
+        "inter_stop_walking_km": null,
+        "route_distance_km": null,
+        "routes": [
+          {
+            "from": "龙华寺",
+            "to": "南翔寺砖塔",
+            "route_type": "transit",
+            "minutes": null,
+            "distance_km": null,
+            "walking_km": null
+          },
+          {
+            "from": "南翔寺砖塔",
+            "to": "南翔古镇",
+            "route_type": "transit",
+            "minutes": 1,
+            "distance_km": null,
+            "walking_km": null
+          }
+        ],
+        "walking_status": "unavailable"
+      }
+    ],
+    "schedule_checks": [
+      {
+        "status": "unverified",
+        "solver_status": "OPTIMAL",
+        "unknown": [
+          "meal_candidate_unassigned:breakfast:meal:0:breakfast:B000A82T8Y",
+          "meal_candidate_unassigned:dinner:meal:0:dinner:B0G035GU1E",
+          "meal_opening_unverified:meal:0:breakfast:B000A82T8Y",
+          "meal_opening_unverified:meal:0:dinner:B0G035GU1E",
+          "meal_opening_unverified:meal:0:lunch:B000A87JDG",
+          "opening_unknown_or_stale:poi:0:B000A7CRPA",
+          "opening_unknown_or_stale:poi:0:B0FFG6VF81",
+          "opening_unknown_or_stale:poi:0:B0MDDHMX4B"
+        ],
+        "conflicts": [],
+        "omitted_activity_ids": [
+          "meal:0:dinner:B0G035GU1E",
+          "meal:0:breakfast:B000A82T8Y"
+        ],
+        "unmet_meals": [
+          {
+            "activity_id": "meal:0:dinner:B0G035GU1E",
+            "type": "dinner",
+            "title": "宫宴",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          },
+          {
+            "activity_id": "meal:0:breakfast:B000A82T8Y",
+            "type": "breakfast",
+            "title": "紫光园·烤鸭·北京菜(常营店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          }
+        ],
+        "route_minutes": 193,
+        "finish_at": "2026-11-04T17:43:00+08:00",
+        "day_index": 0
+      },
+      {
+        "status": "unverified",
+        "solver_status": "OPTIMAL",
+        "unknown": [
+          "hotel_endpoint_unknown",
+          "meal_candidate_unassigned:breakfast:meal:1:breakfast:B00154YR8Z",
+          "meal_candidate_unassigned:dinner:meal:1:dinner:B00155LWOY",
+          "meal_candidate_unassigned:lunch:meal:1:lunch:B0FFJBZBG2",
+          "meal_opening_unverified:meal:1:breakfast:B00154YR8Z",
+          "meal_opening_unverified:meal:1:dinner:B00155LWOY",
+          "meal_opening_unverified:meal:1:lunch:B0FFJBZBG2",
+          "opening_unknown_or_stale:poi:1:B00155AMEJ",
+          "opening_unknown_or_stale:poi:1:B00155LZBN",
+          "opening_unknown_or_stale:poi:1:B0FFHDQHCS",
+          "route_duration_estimated_30_minutes",
+          "route_endpoint_unknown",
+          "transport_predeparture_buffer_unverified:sample-train"
+        ],
+        "conflicts": [],
+        "omitted_activity_ids": [
+          "meal:1:breakfast:B00154YR8Z",
+          "meal:1:lunch:B0FFJBZBG2",
+          "meal:1:dinner:B00155LWOY"
+        ],
+        "unmet_meals": [
+          {
+            "activity_id": "meal:1:breakfast:B00154YR8Z",
+            "type": "breakfast",
+            "title": "味香斋(雁荡路店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          },
+          {
+            "activity_id": "meal:1:lunch:B0FFJBZBG2",
+            "type": "lunch",
+            "title": "点都德(环宇荟店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          },
+          {
+            "activity_id": "meal:1:dinner:B00155LWOY",
+            "type": "dinner",
+            "title": "晓平饭店(嘉善路店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          }
+        ],
+        "route_minutes": 163,
+        "finish_at": "2026-11-05T18:42:00+08:00",
+        "day_index": 1
+      }
+    ],
+    "unmet_meals": [
+      {
+        "day_index": 0,
+        "activity_id": "meal:0:dinner:B0G035GU1E",
+        "type": "dinner",
+        "title": "宫宴",
+        "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+        "action": "该餐厅未安排，需就近用餐并重新核验"
+      },
+      {
+        "day_index": 0,
+        "activity_id": "meal:0:breakfast:B000A82T8Y",
+        "type": "breakfast",
+        "title": "紫光园·烤鸭·北京菜(常营店)",
+        "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+        "action": "该餐厅未安排，需就近用餐并重新核验"
+      },
+      {
+        "day_index": 1,
+        "activity_id": "meal:1:breakfast:B00154YR8Z",
+        "type": "breakfast",
+        "title": "味香斋(雁荡路店)",
+        "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+        "action": "该餐厅未安排，需就近用餐并重新核验"
+      },
+      {
+        "day_index": 1,
+        "activity_id": "meal:1:lunch:B0FFJBZBG2",
+        "type": "lunch",
+        "title": "点都德(环宇荟店)",
+        "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+        "action": "该餐厅未安排，需就近用餐并重新核验"
+      },
+      {
+        "day_index": 1,
+        "activity_id": "meal:1:dinner:B00155LWOY",
+        "type": "dinner",
+        "title": "晓平饭店(嘉善路店)",
+        "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+        "action": "该餐厅未安排，需就近用餐并重新核验"
+      }
+    ],
+    "time_policy_version": "time-windows-v6-conflict-classification",
+    "fact_status": "unknown",
+    "cost_summary": {
+      "confirmed_cents": 55000,
+      "estimated_cents": 68000,
+      "known_total_cents": 123000,
+      "unknown_items": [
+        "attraction_prices",
+        "hotel_prices",
+        "transportation_prices"
+      ],
+      "limit_cents": 200000,
+      "within_limit": null
+    },
+    "completion_policy": "reliability-v1",
+    "issues": [
+      {
+        "code": "ROUTE_UNAVAILABLE",
+        "scope": "plan",
+        "reason": "第2天部分景点间路线暂不可用，Agent 已保留可继续调整的行程",
+        "action": "可直接查看行程；出发前确认交通，或在具体行程中调整景点",
+        "blocking": false,
+        "retryable": true
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "hotel_and_meal_routes_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "hotel_endpoint_unknown",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "in_attraction_walking_unknown",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_candidate_unassigned:breakfast:meal:0:breakfast:B000A82T8Y",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_candidate_unassigned:breakfast:meal:1:breakfast:B00154YR8Z",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_candidate_unassigned:dinner:meal:0:dinner:B0G035GU1E",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_candidate_unassigned:dinner:meal:1:dinner:B00155LWOY",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_candidate_unassigned:lunch:meal:1:lunch:B0FFJBZBG2",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_opening_unverified:meal:0:breakfast:B000A82T8Y",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_opening_unverified:meal:0:dinner:B0G035GU1E",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_opening_unverified:meal:0:lunch:B000A87JDG",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_opening_unverified:meal:1:breakfast:B00154YR8Z",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_opening_unverified:meal:1:dinner:B00155LWOY",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "meal_opening_unverified:meal:1:lunch:B0FFJBZBG2",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_hours_travel_date_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_unknown_or_stale:poi:0:B000A7CRPA",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_unknown_or_stale:poi:0:B0FFG6VF81",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_unknown_or_stale:poi:0:B0MDDHMX4B",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_unknown_or_stale:poi:1:B00155AMEJ",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_unknown_or_stale:poi:1:B00155LZBN",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "opening_unknown_or_stale:poi:1:B0FFHDQHCS",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "reservation_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "route_distance_and_walking_unverified",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "route_duration_estimated_30_minutes",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "route_duration_unavailable_fallback_to_straight_line",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "DATA_UNVERIFIED",
+        "scope": "plan",
+        "reason": "route_endpoint_unknown",
+        "action": "出行前向官方来源确认",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "TRANSPORT_BUFFER_UNVERIFIED",
+        "scope": "plan",
+        "reason": "固定交通接驳仅按用户输入起止计算，尚未确认提前到站、安检和检票要求",
+        "action": "向承运方确认所需提前量并预留到站时间；当前不能保证赶上班次",
+        "blocking": false,
+        "retryable": false
+      },
+      {
+        "code": "WEATHER_UNAVAILABLE",
+        "scope": "plan",
+        "reason": "高德天气接口仅提供近期 4 天预报；本次行程仍有 1 天暂无可靠预报。",
+        "action": "出行前查询天气",
+        "blocking": false,
+        "retryable": true
+      },
+      {
+        "code": "RAG_NO_MATCH",
+        "scope": "plan",
+        "reason": "部分攻略资料暂无可靠匹配，请以官方信息为准",
+        "action": "可继续查看行程；以官方信息为准",
+        "blocking": false,
+        "retryable": false
+      }
+    ],
+    "outcome": "degraded",
+    "timings": {
+      "agent_route_and_constraints_ms": 30386,
+      "java_protocol_validation_ms": 0
+    },
+    "usage": {
+      "calls": 2,
+      "input_tokens": 4485,
+      "output_tokens": 1739
+    },
+    "planning_dependencies": {
+      "facts": []
+    }
+  },
+  "days": [
+    {
+      "city": "北京",
+      "names": [
+        "国家自然博物馆",
+        "正阳门箭楼",
+        "北京地下城(北京人民防空历史文化馆)"
+      ],
+      "feasibility": {
+        "status": "unverified",
+        "solver_status": "OPTIMAL",
+        "unknown": [
+          "meal_candidate_unassigned:breakfast:meal:0:breakfast:B000A82T8Y",
+          "meal_candidate_unassigned:dinner:meal:0:dinner:B0G035GU1E",
+          "meal_opening_unverified:meal:0:breakfast:B000A82T8Y",
+          "meal_opening_unverified:meal:0:dinner:B0G035GU1E",
+          "meal_opening_unverified:meal:0:lunch:B000A87JDG",
+          "opening_unknown_or_stale:poi:0:B000A7CRPA",
+          "opening_unknown_or_stale:poi:0:B0FFG6VF81",
+          "opening_unknown_or_stale:poi:0:B0MDDHMX4B"
+        ],
+        "conflicts": [],
+        "omitted_activity_ids": [
+          "meal:0:dinner:B0G035GU1E",
+          "meal:0:breakfast:B000A82T8Y"
+        ],
+        "unmet_meals": [
+          {
+            "activity_id": "meal:0:dinner:B0G035GU1E",
+            "type": "dinner",
+            "title": "宫宴",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          },
+          {
+            "activity_id": "meal:0:breakfast:B000A82T8Y",
+            "type": "breakfast",
+            "title": "紫光园·烤鸭·北京菜(常营店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          }
+        ],
+        "route_minutes": 193,
+        "finish_at": "2026-11-04T17:43:00+08:00"
+      },
+      "timeline": [
+        {
+          "activity_id": "route:0:poi:0:B000A7CRPA",
+          "title": "前往国家自然博物馆",
+          "kind": "travel",
+          "start_at": "2026-11-04T09:00:00+08:00",
+          "end_at": "2026-11-04T09:57:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        },
+        {
+          "activity_id": "poi:0:B000A7CRPA",
+          "title": "国家自然博物馆",
+          "kind": "attraction",
+          "start_at": "2026-11-04T09:57:00+08:00",
+          "end_at": "2026-11-04T11:57:00+08:00",
+          "status": "unverified",
+          "source": "",
+          "evidence_refs": [
+            "B000A7CRPA"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 116.399833,
+            "latitude": 39.883183
+          }
+        },
+        {
+          "activity_id": "route:3:meal:0:lunch:B000A87JDG",
+          "title": "前往全聚德(北京和平门店)",
+          "kind": "travel",
+          "start_at": "2026-11-04T11:57:00+08:00",
+          "end_at": "2026-11-04T12:27:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        },
+        {
+          "activity_id": "meal:0:lunch:B000A87JDG",
+          "title": "全聚德(北京和平门店)",
+          "kind": "meal",
+          "start_at": "2026-11-04T12:27:00+08:00",
+          "end_at": "2026-11-04T13:27:00+08:00",
+          "status": "unverified",
+          "source": "高德 POI",
+          "evidence_refs": [
+            "B000A87JDG"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 116.385072,
+            "latitude": 39.899292
+          }
+        },
+        {
+          "activity_id": "route:4:poi:0:B0FFG6VF81",
+          "title": "前往正阳门箭楼",
+          "kind": "travel",
+          "start_at": "2026-11-04T13:27:00+08:00",
+          "end_at": "2026-11-04T13:47:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        },
+        {
+          "activity_id": "poi:0:B0FFG6VF81",
+          "title": "正阳门箭楼",
+          "kind": "attraction",
+          "start_at": "2026-11-04T13:47:00+08:00",
+          "end_at": "2026-11-04T14:47:00+08:00",
+          "status": "unverified",
+          "source": "",
+          "evidence_refs": [
+            "B0FFG6VF81"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 116.39791,
+            "latitude": 39.899368
+          }
+        },
+        {
+          "activity_id": "route:1:poi:0:B0MDDHMX4B",
+          "title": "前往北京地下城(北京人民防空历史文化馆)",
+          "kind": "travel",
+          "start_at": "2026-11-04T14:47:00+08:00",
+          "end_at": "2026-11-04T15:04:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        },
+        {
+          "activity_id": "poi:0:B0MDDHMX4B",
+          "title": "北京地下城(北京人民防空历史文化馆)",
+          "kind": "attraction",
+          "start_at": "2026-11-04T15:04:00+08:00",
+          "end_at": "2026-11-04T16:34:00+08:00",
+          "status": "unverified",
+          "source": "",
+          "evidence_refs": [
+            "B0MDDHMX4B"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 116.408911,
+            "latitude": 39.897824
+          }
+        },
+        {
+          "activity_id": "hotel:return",
+          "title": "返回住宿",
+          "kind": "travel",
+          "start_at": "2026-11-04T16:34:00+08:00",
+          "end_at": "2026-11-04T17:43:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        }
+      ]
+    },
+    {
+      "city": "上海",
+      "names": [
+        "龙华寺",
+        "南翔寺砖塔",
+        "南翔古镇"
+      ],
+      "feasibility": {
+        "status": "unverified",
+        "solver_status": "OPTIMAL",
+        "unknown": [
+          "hotel_endpoint_unknown",
+          "meal_candidate_unassigned:breakfast:meal:1:breakfast:B00154YR8Z",
+          "meal_candidate_unassigned:dinner:meal:1:dinner:B00155LWOY",
+          "meal_candidate_unassigned:lunch:meal:1:lunch:B0FFJBZBG2",
+          "meal_opening_unverified:meal:1:breakfast:B00154YR8Z",
+          "meal_opening_unverified:meal:1:dinner:B00155LWOY",
+          "meal_opening_unverified:meal:1:lunch:B0FFJBZBG2",
+          "opening_unknown_or_stale:poi:1:B00155AMEJ",
+          "opening_unknown_or_stale:poi:1:B00155LZBN",
+          "opening_unknown_or_stale:poi:1:B0FFHDQHCS",
+          "route_duration_estimated_30_minutes",
+          "route_endpoint_unknown",
+          "transport_predeparture_buffer_unverified:sample-train"
+        ],
+        "conflicts": [],
+        "omitted_activity_ids": [
+          "meal:1:breakfast:B00154YR8Z",
+          "meal:1:lunch:B0FFJBZBG2",
+          "meal:1:dinner:B00155LWOY"
+        ],
+        "unmet_meals": [
+          {
+            "activity_id": "meal:1:breakfast:B00154YR8Z",
+            "type": "breakfast",
+            "title": "味香斋(雁荡路店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          },
+          {
+            "activity_id": "meal:1:lunch:B0FFJBZBG2",
+            "type": "lunch",
+            "title": "点都德(环宇荟店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          },
+          {
+            "activity_id": "meal:1:dinner:B00155LWOY",
+            "type": "dinner",
+            "title": "晓平饭店(嘉善路店)",
+            "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+            "action": "该餐厅未安排，需就近用餐并重新核验"
+          }
+        ],
+        "route_minutes": 163,
+        "finish_at": "2026-11-05T18:42:00+08:00"
+      },
+      "timeline": [
+        {
+          "activity_id": "connection:sample-train:origin",
+          "title": "住宿前往跨城出发站",
+          "kind": "travel",
+          "start_at": "2026-11-05T07:19:00+08:00",
+          "end_at": "2026-11-05T08:00:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [
+            "sample-train"
+          ],
+          "notes": []
+        },
+        {
+          "activity_id": "commitment:sample-train",
+          "title": "用户输入的示例跨城交通（非真实票务）",
+          "kind": "commitment",
+          "start_at": "2026-11-05T08:00:00+08:00",
+          "end_at": "2026-11-05T12:30:00+08:00",
+          "status": "confirmed",
+          "source": "user_confirmed",
+          "evidence_refs": [
+            "sample-train"
+          ],
+          "notes": [
+            "接驳仅按用户输入的班次起止计算；提前到站、安检和检票要求尚未确认，请向承运方核实并预留时间，当前不能保证赶上班次。"
+          ]
+        },
+        {
+          "activity_id": "route:0:poi:1:B00155AMEJ",
+          "title": "前往龙华寺",
+          "kind": "travel",
+          "start_at": "2026-11-05T12:30:00+08:00",
+          "end_at": "2026-11-05T13:31:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        },
+        {
+          "activity_id": "poi:1:B00155AMEJ",
+          "title": "龙华寺",
+          "kind": "attraction",
+          "start_at": "2026-11-05T13:31:00+08:00",
+          "end_at": "2026-11-05T15:01:00+08:00",
+          "status": "unverified",
+          "source": "",
+          "evidence_refs": [
+            "B00155AMEJ"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 121.451842,
+            "latitude": 31.175174
+          }
+        },
+        {
+          "activity_id": "route:3:poi:1:B0FFHDQHCS",
+          "title": "前往南翔寺砖塔",
+          "kind": "travel",
+          "start_at": "2026-11-05T15:01:00+08:00",
+          "end_at": "2026-11-05T15:31:00+08:00",
+          "status": "estimated",
+          "source": "conservative_allowance",
+          "evidence_refs": [],
+          "notes": [
+            "路线缺失，暂以30分钟占位；未验证可行性"
+          ]
+        },
+        {
+          "activity_id": "poi:1:B0FFHDQHCS",
+          "title": "南翔寺砖塔",
+          "kind": "attraction",
+          "start_at": "2026-11-05T15:31:00+08:00",
+          "end_at": "2026-11-05T16:11:00+08:00",
+          "status": "unverified",
+          "source": "",
+          "evidence_refs": [
+            "B0FFHDQHCS"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 121.308106,
+            "latitude": 31.291011
+          }
+        },
+        {
+          "activity_id": "route:2:poi:1:B00155LZBN",
+          "title": "前往南翔古镇",
+          "kind": "travel",
+          "start_at": "2026-11-05T16:11:00+08:00",
+          "end_at": "2026-11-05T16:12:00+08:00",
+          "status": "confirmed",
+          "source": "map",
+          "evidence_refs": [],
+          "notes": []
+        },
+        {
+          "activity_id": "poi:1:B00155LZBN",
+          "title": "南翔古镇",
+          "kind": "attraction",
+          "start_at": "2026-11-05T16:12:00+08:00",
+          "end_at": "2026-11-05T18:12:00+08:00",
+          "status": "unverified",
+          "source": "",
+          "evidence_refs": [
+            "B00155LZBN"
+          ],
+          "notes": [],
+          "location": {
+            "longitude": 121.308228,
+            "latitude": 31.291233
+          }
+        },
+        {
+          "activity_id": "hotel:return",
+          "title": "返回住宿",
+          "kind": "travel",
+          "start_at": "2026-11-05T18:12:00+08:00",
+          "end_at": "2026-11-05T18:42:00+08:00",
+          "status": "estimated",
+          "source": "conservative_allowance",
+          "evidence_refs": [],
+          "notes": []
+        }
+      ]
+    }
+  ],
+  "after": {
+    "text": 4,
+    "embedding": 12,
+    "amap": 252
+  },
+  "finished_at": "2026-10-25T09:01:31.758713+00:00"
+}

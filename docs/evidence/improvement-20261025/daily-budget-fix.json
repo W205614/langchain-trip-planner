@@ -1,0 +1,40 @@
+{
+  "discovery_source": "manual-live-review.json",
+  "original_paid_sample": "live-crosscity.json",
+  "problem": "The arrival station moved the local solver's low bound to 12:30 before applying daily_minutes, omitting fixed intercity transport and origin-city access from the daily elapsed-time limit.",
+  "original_selected_timeline_minutes": 683,
+  "known_duration_lower_bound_minutes": 623,
+  "default_daily_limit_minutes": 600,
+  "original_explicit_day_window": "07:00-20:00",
+  "new_independent_regressions": {
+    "file": "backend/tests/test_intercity_daily_budget.py",
+    "before": {"failed": 3, "passed": 1},
+    "cases": [
+      "Known origin access and fixed bridge consume the daily budget",
+      "A fitting cross-city schedule stays within the whole-day elapsed cap",
+      "Estimated access alone cannot prove an infeasible daily limit",
+      "An outbound fixed bridge's end must also respect the daily limit"
+    ],
+    "after_with_directly_affected_planning_checks": {"passed": 50, "dependency_deferred": 2}
+  },
+  "fix": "Daily bounds start from the earliest included fixed bridge/access event; a separate relaxed bound using only confirmed events distinguishes proofs from estimated-route uncertainty. Candidate and route checkpoints remain compatible, while v6 schedule checkpoints are rejected under v7.",
+  "rules_after": "time-windows-v7-whole-day-budget",
+  "saved_provider_revalidation": {
+    "report": "crosscity-budget-revalidation.json",
+    "mode": "offline_saved_provider_evidence_replay",
+    "second_day_after_minutes": 562,
+    "fixed_bridge_preserved": true,
+    "optional_attractions_before": 3,
+    "optional_attractions_after": 2,
+    "omission_disclosed": true,
+    "new_provider_calls": 0,
+    "new_reservations": 0,
+    "database_writes": 0
+  },
+  "evidence_boundaries": [
+    "The paid v6 report is preserved; it is not relabeled as satisfying the 600-minute cap.",
+    "No successful provider scene was generated again and no campaign ledger was reset.",
+    "The six-case holdout was run once on v6 before this separate live-output discovery; it was not used to tune v7 or rerun as unseen evidence.",
+    "The revalidated output is still degraded/unverified with incomplete venue, lodging, dining and price facts."
+  ]
+}

@@ -98,7 +98,7 @@ def checkpoint_compatible(stage, saved, current):
         return True
     if not isinstance(saved,dict) or not isinstance(current,dict):
         return False
-    # v4/v5/v6 change only deterministic scheduling and classification.
+    # v4-v7 change only deterministic scheduling and classification.
     # Provider facts and drafts retain the same models, prompts, schema and input
     # hashes; reusing them must not trigger another paid generation. A solved
     # schedule is deliberately excluded and has to run under the new rules.
@@ -109,7 +109,11 @@ def checkpoint_compatible(stage, saved, current):
         ("time-windows-v4-meal-candidates","time-windows-v5-hotel-departure"),
         ("time-windows-v3-hotel-nights","time-windows-v6-conflict-classification"),
         ("time-windows-v4-meal-candidates","time-windows-v6-conflict-classification"),
-        ("time-windows-v5-hotel-departure","time-windows-v6-conflict-classification")}
+        ("time-windows-v5-hotel-departure","time-windows-v6-conflict-classification"),
+        ("time-windows-v3-hotel-nights","time-windows-v7-whole-day-budget"),
+        ("time-windows-v4-meal-candidates","time-windows-v7-whole-day-budget"),
+        ("time-windows-v5-hotel-departure","time-windows-v7-whole-day-budget"),
+        ("time-windows-v6-conflict-classification","time-windows-v7-whole-day-budget")}
     return bool(unaffected and isinstance(saved,dict) and allowed_upgrade
         and {key:value for key,value in saved.items() if key!="rules"}=={key:value for key,value in current.items() if key!="rules"})
 

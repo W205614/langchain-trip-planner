@@ -1,0 +1,61 @@
+{
+  "mode": "isolated_postgresql_targeted_java_integration",
+  "recorded_at_utc": "2026-10-25T08:51:03.0079870+00:00",
+  "source_revision": "9de6ad0adde667d1b79985a4ff16fddeca4f53c0",
+  "working_tree_changes_included": true,
+  "environment": {
+    "os": "Windows",
+    "java": "21.0.1",
+    "postgresql": "17.6",
+    "database": "isolated validation database",
+    "workers_enabled": false,
+    "agent": "Mockito replacement; no provider sends"
+  },
+  "tests": 6,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "seconds": 17.01,
+  "passed": true,
+  "cases": [
+    {
+      "name": "interruptedAssistantGenerationCanStillResumeAndRetry",
+      "seconds": 0.481,
+      "passed": true
+    },
+    {
+      "name": "resumeCannotReclassifyExistingOrdinaryTaskButReusesItsOwnRecoveryKey",
+      "seconds": 0.087,
+      "passed": true
+    },
+    {
+      "name": "resumeCreationAndAncestryAreAtomicWithoutNetworkInTransaction",
+      "seconds": 0.142,
+      "passed": true
+    },
+    {
+      "name": "savedAssistantProposalCannotBeRecoveredOrRetriedThroughTaskEndpoints",
+      "seconds": 0.089,
+      "passed": true
+    },
+    {
+      "name": "savedDraftCannotRecoverWhenItsResultIsMissingOrNotOwned",
+      "seconds": 0.04,
+      "passed": true
+    },
+    {
+      "name": "ordinarySavedDraftCanResumeIdempotentlyAndRetryWithoutChangingItsRecord",
+      "seconds": 0.08,
+      "passed": true
+    }
+  ],
+  "fingerprints": {
+    "task_service_sha256": "5ec2466d7998e55ce0117f6906db3b9111d8d0d85ff2ba07bd0103c196d1654d",
+    "integration_test_sha256": "5f5d8792bef9afa95ddd9a335a2ab4a456be98f8443a1136c0ee83068c25e88b",
+    "junit_report_sha256": "a2507deaa1cbde839a621cd5dfe0c8220bb287e8137ebaaea1fa0e42223100a7"
+  },
+  "real_provider_calls": 0,
+  "production_data_changed": false,
+  "container_actions_performed_by_this_test_run": [],
+  "boundary": "Six direct service/database tests on an isolated PostgreSQL schema with mocked Agent availability. Not live provider quality, browser UX, production recovery, load, or CI evidence."
+}
