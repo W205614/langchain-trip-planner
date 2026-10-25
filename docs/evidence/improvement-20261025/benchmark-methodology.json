@@ -1,0 +1,16 @@
+{
+  "dataset_sha256": "a308d9a3613e6cb82de6c90d26cf47ed788a95339c66f268db17a503f19f72ac",
+  "dataset_policy": "Twelve complete synthetic inputs and semantic expectations were frozen before the parent changed Python production code. Six development and six holdout cases; no model or map provider sends.",
+  "before_policy": "The benchmark loads time_planner.py, planning_constraints.py and result_policy.py from e0d51a9 into memory. Model schemas and installed dependency versions are recorded separately. It does not claim the whole repository was checked out to that revision.",
+  "clock_policy": "The synthetic fact clock is fixed at 2026-10-25T00:00:00+00:00 for reproducibility. Fact sources are synthetic and do not verify any actual venue.",
+  "oracle_policy": "An independent checker evaluates timeline order, positive durations, day bounds, required activity presence, opening windows, time locks/completed slots, route uncertainty disclosure and unchanged days. Frozen expected status/outcome constants evaluate product classifications. The checker never calls production quality functions to grade their own output.",
+  "baseline_policy": "Travel-order minimizes directed route minutes over exactly the same candidate locations, then attempts earliest legal windows in that order. Window-greedy selects earliest closing feasible nodes with the same facts and directed routes. Mandatory visits are never silently dropped. Infeasible attempts remain visible to the checker. Prior-day state aggregation and intercity access are explicitly not applicable to local route-order baselines.",
+  "initial_validator_correction": {
+    "preserved_report": "benchmark-development-before-initial-validator.json",
+    "initial_production_cases_passed": 3,
+    "issue": "The first checker required duplicate prose notes on every estimated route leg, stricter than the frozen estimated_routes_disclosed semantic expectation. The current UI uses estimated leg status and whole-day unknown gaps; the final return leg need not repeat identical prose.",
+    "correction": "Require estimated timeline legs, a whole-day route uncertainty gap and a visible uncertainty note, without requiring duplicate prose on every leg. Normalize both sides identically for baseline outside-scope comparisons. No input or expected result was changed.",
+    "comparison_policy": "Final before and after reports must contain the same evaluator_sha256. Initial-validator diagnostics are preserved and excluded from before/after effect counts."
+  },
+  "interpretation": "Targeted regression evidence only. Do not call these ratios model factual accuracy, general itinerary usability, real-user satisfaction, production SLA or provider-cost savings."
+}

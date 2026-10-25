@@ -259,6 +259,7 @@ public class TaskService {
     var row = owned(uid, id);
     if (!Set.of("failed", "cancelled", "needs_attention").contains(row.get("status")))
       throw new ApiException(409, "只有失败、取消或草稿任务可以重试");
+    requireRecoverableResult(uid, row);
     var body = (ObjectNode) json.readTree(row.get("request_json").toString());
     var revision = (ObjectNode) body.remove("_revision");
     return submit(uid, body, key, requestId, revision);
@@ -267,9 +268,27 @@ public class TaskService {
   public synchronized ObjectNode resume(long uid,String id,String key,String requestId) {
     var row=owned(uid,id);
     if(!Set.of("failed","cancelled","needs_attention").contains(row.get("status")))throw new ApiException(409,"只有中断或未完成任务可恢复");
+    requireRecoverableResult(uid, row);
     var body=(ObjectNode)json.readTree(row.get("request_json").toString());
     var revision=(ObjectNode)body.remove("_revision");
     return submit(uid,body,key,requestId,revision,id);
+  }
+
+  private void requireRecoverableResult(long uid, Map<String, Object> task) {
+    if (!"needs_attention".equals(task.get("status"))) return;
+    var record = task.get("record_id") == null ? null
+        : history.owned(uid, ((Number) task.get("record_id")).longValue());
+    if (record == null)
+      throw new ApiException(409, "任务关联的行程已删除，不能恢复或重新提交", "RESULT_DELETED");
+    var quality = json.readTree(record.get("quality_json").toString());
+    // A completed assistant execution is a proposal awaiting its own review
+    // lifecycle, not an interrupted generation. Inspect the saved result rather
+    // than the request, so failed/cancelled assistant generations can recover.
+    if (quality.path("assistant_confirmation_required").asBoolean(false)
+        || !quality.path("assistant_proposal_status").asText("").isBlank())
+      throw new ApiException(409,
+          "已生成的助手提案不能通过任务恢复或重新提交，请打开方案查看状态并确认或放弃；需要新调整请从原行程发起",
+          "ASSISTANT_PROPOSAL_REVIEW_REQUIRED");
   }
 
   @Scheduled(fixedDelay = 250)

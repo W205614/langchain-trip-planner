@@ -3,6 +3,20 @@ import { expect, test } from '@playwright/test'
 const planning = { timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate' }
 const plan = { city: '北京', start_date: '2026-11-01', end_date: '2026-11-01', weather_info: [], overall_suggestions: '核对预约', days: [{ day_index: 0, date: '2026-11-01', attractions: [{ activity_id: 'activity-1', poi_id: 'P1', name: '故宫', address: '北京', description: '游览', visit_duration: 120, location: { longitude: 116.4, latitude: 39.9 } }], meals: [], transportation: '公共交通', accommodation: '酒店', description: '按预约游览', timeline: [{ activity_id: 'activity-1', title: '故宫', kind: 'attraction', status: 'estimated', start_at: '2026-11-01T09:00:00+08:00', end_at: '2026-11-01T11:00:00+08:00', notes: ['营业信息待核实'] }], feasibility: { status: 'unverified', unknown: ['opening_unknown_or_stale:activity-1'] } }] }
 
+test('legacy missing or stale schedule explains why the unchanged day still needs verification', async ({ page }) => {
+  const code = 'schedule_unknown_or_stale'
+  const sample = { ...plan, days: [{ ...plan.days[0], timeline: [], feasibility: { status: 'unverified', unknown: [code] } }] }
+  await page.addInitScript(({ sample, code }) => { sessionStorage.setItem('tripPlan', JSON.stringify(sample)); sessionStorage.setItem('tripQuality', JSON.stringify({ data_gaps: [code], feasibility_status: 'unverified', facts_complete: false })) }, { sample, code })
+  await page.route('https://*.amap.com/**', route => route.abort())
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+  await page.goto('/result')
+  await expect(page.locator('.timeline')).toContainText('旧时间轴缺失或已过期，请重新核验或改排。')
+  await expect(page.locator('.timeline')).toContainText('部分条件待核实')
+  await expect(page.getByText(/部分日期的旧时间轴缺失或已过期，请重新核验或改排/)).toBeVisible()
+  await expect(page.getByText(code, { exact: true })).toHaveCount(0)
+  await expect(page.locator('.timeline').getByText('满足已知时间约束', { exact: true })).toHaveCount(0)
+})
+
 test('omitted restaurant candidate remains an explicit dated meal gap', async ({ page }) => {
   const code = 'meal_candidate_unassigned:lunch:omitted-lunch'
   const sample = { ...plan, days: [{ ...plan.days[0], feasibility: { status: 'unverified', unknown: [code] } }] }

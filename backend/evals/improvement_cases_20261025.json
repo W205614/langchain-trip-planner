@@ -1,0 +1,2387 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-25T00:00:00+00:00",
+  "clock": "2026-10-25T00:00:00+00:00",
+  "purpose": "Twelve targeted synthetic cases: 6 development and 6 untouched holdout. No general accuracy claims.",
+  "expected_policy": "Expected values come from hard input semantics, not observed production output. Freeze before production edits; preserve any failures.",
+  "cases": [
+    {
+      "id": "dev-retained-infeasible",
+      "split": "development",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "dev-retained-infeasible-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-retained-infeasible-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-retained-infeasible-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-retained-infeasible-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            }
+          ],
+          "revision_scope": {
+            "day_indices": [
+              1
+            ]
+          }
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-retained-infeasible-0-0",
+                "poi_id": "dev-retained-infeasible-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-retained-infeasible-0-1",
+                "poi_id": "dev-retained-infeasible-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {
+              "status": "infeasible",
+              "solver_status": "FROZEN_PRIOR_RESULT",
+              "unknown": [],
+              "conflicts": [
+                "frozen_prior_conflict"
+              ],
+              "omitted_activity_ids": []
+            }
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:dev-retained-infeasible-1-0",
+                "poi_id": "dev-retained-infeasible-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:dev-retained-infeasible-1-1",
+                "poi_id": "dev-retained-infeasible-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        1
+      ],
+      "revision": true,
+      "expected": {
+        "overall_status": "infeasible",
+        "outcome": "draft",
+        "outside_days_unchanged": true
+      },
+      "baseline_applicable": false,
+      "baseline_not_applicable_reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+    },
+    {
+      "id": "dev-closed-with-unknown",
+      "split": "development",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "travel_days": 1,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "dev-closed-with-unknown-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true,
+              "closed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-closed-with-unknown-0-0",
+                "poi_id": "dev-closed-with-unknown-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-closed-with-unknown-0-1",
+                "poi_id": "dev-closed-with-unknown-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        0
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "infeasible",
+        "empty_timeline": true
+      },
+      "baseline_applicable": true
+    },
+    {
+      "id": "dev-unknown-route",
+      "split": "development",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "travel_days": 1,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "dev-unknown-route-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-unknown-route-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-unknown-route-0-0",
+                "poi_id": "dev-unknown-route-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-unknown-route-0-1",
+                "poi_id": "dev-unknown-route-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": true,
+        "overrides": []
+      },
+      "allowed_days": [
+        0
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "unverified",
+        "estimated_routes_disclosed": true
+      },
+      "baseline_applicable": true
+    },
+    {
+      "id": "dev-optional-meal",
+      "split": "development",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "travel_days": 1,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "dev-optional-meal-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-optional-meal-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-optional-meal-0-0",
+                "poi_id": "dev-optional-meal-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-optional-meal-0-1",
+                "poi_id": "dev-optional-meal-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [
+              {
+                "type": "breakfast",
+                "activity_id": "meal:0:remote",
+                "poi_id": "remote",
+                "name": "Synthetic remote breakfast",
+                "location": {
+                  "longitude": 117,
+                  "latitude": 40
+                }
+              }
+            ],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": [
+          {
+            "right": {
+              "longitude": 117,
+              "latitude": 40
+            },
+            "minutes": 90
+          }
+        ]
+      },
+      "allowed_days": [
+        0
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "unverified",
+        "omitted_ids": [
+          "meal:0:remote"
+        ],
+        "meal_gap_disclosed": true
+      },
+      "baseline_applicable": true
+    },
+    {
+      "id": "dev-time-lock",
+      "split": "development",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "travel_days": 1,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "dev-time-lock-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-time-lock-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            }
+          ],
+          "locks": [
+            {
+              "activity_id": "poi:0:dev-time-lock-0-0",
+              "mode": "time",
+              "start_at": "2026-11-10T11:00:00+08:00",
+              "end_at": "2026-11-10T12:00:00+08:00"
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-time-lock-0-0",
+                "poi_id": "dev-time-lock-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-time-lock-0-1",
+                "poi_id": "dev-time-lock-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        0
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "feasible",
+        "fixed_slots": {
+          "poi:0:dev-time-lock-0-0": [
+            "2026-11-10T11:00:00+08:00",
+            "2026-11-10T12:00:00+08:00"
+          ]
+        }
+      },
+      "baseline_applicable": true
+    },
+    {
+      "id": "dev-crosscity-hard-access",
+      "split": "development",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "07:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "dev-crosscity-hard-access-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-crosscity-hard-access-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-crosscity-hard-access-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "dev-crosscity-hard-access-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "上海",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 121.45,
+                "latitude": 31.2
+              }
+            }
+          ],
+          "city_segments": [
+            {
+              "city": "北京",
+              "start_day": 0,
+              "end_day": 0
+            },
+            {
+              "city": "上海",
+              "start_day": 1,
+              "end_day": 1
+            }
+          ],
+          "commitments": [
+            {
+              "id": "frozen-train",
+              "day_index": 1,
+              "category": "transport",
+              "status": "confirmed",
+              "title": "Synthetic fixed bridge",
+              "origin_city": "北京",
+              "destination_city": "上海",
+              "start_at": "2026-11-11T08:00:00+08:00",
+              "end_at": "2026-11-11T12:00:00+08:00",
+              "origin_location": {
+                "longitude": 116.4,
+                "latitude": 39.9
+              },
+              "destination_location": {
+                "longitude": 121.44,
+                "latitude": 31.2
+              }
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-crosscity-hard-access-0-0",
+                "poi_id": "dev-crosscity-hard-access-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-crosscity-hard-access-0-1",
+                "poi_id": "dev-crosscity-hard-access-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "上海",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 121.45,
+                "latitude": 31.2
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:dev-crosscity-hard-access-1-0",
+                "poi_id": "dev-crosscity-hard-access-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 121.46,
+                  "latitude": 31.21
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:dev-crosscity-hard-access-1-1",
+                "poi_id": "dev-crosscity-hard-access-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 121.47,
+                  "latitude": 31.21
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": [
+          {
+            "left": {
+              "longitude": 116.3,
+              "latitude": 39.9
+            },
+            "right": {
+              "longitude": 116.4,
+              "latitude": 39.9
+            },
+            "minutes": 90,
+            "missing": false
+          }
+        ]
+      },
+      "allowed_days": [
+        1
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "infeasible",
+        "empty_timeline": true
+      },
+      "baseline_applicable": false,
+      "baseline_not_applicable_reason": "Origin-hotel intercity access and fixed bridge need a separate transport model, not local order baseline."
+    },
+    {
+      "id": "hold-retained-not-found",
+      "split": "holdout",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-12",
+        "travel_days": 3,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "hold-retained-not-found-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-not-found-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-not-found-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-not-found-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-not-found-2-0",
+              "date": "2026-11-12",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-not-found-2-1",
+              "date": "2026-11-12",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            },
+            {
+              "day_index": 2,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.92
+              }
+            }
+          ],
+          "revision_scope": {
+            "day_indices": [
+              2
+            ]
+          }
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-12",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:hold-retained-not-found-0-0",
+                "poi_id": "hold-retained-not-found-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:hold-retained-not-found-0-1",
+                "poi_id": "hold-retained-not-found-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {
+              "status": "not_found",
+              "solver_status": "FROZEN_PRIOR_RESULT",
+              "unknown": [],
+              "conflicts": [
+                "frozen_prior_conflict"
+              ],
+              "omitted_activity_ids": []
+            }
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:hold-retained-not-found-1-0",
+                "poi_id": "hold-retained-not-found-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:hold-retained-not-found-1-1",
+                "poi_id": "hold-retained-not-found-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          },
+          {
+            "date": "2026-11-12",
+            "day_index": 2,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.92
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 20",
+                "activity_id": "poi:2:hold-retained-not-found-2-0",
+                "poi_id": "hold-retained-not-found-2-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.92
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 21",
+                "activity_id": "poi:2:hold-retained-not-found-2-1",
+                "poi_id": "hold-retained-not-found-2-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.92
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        2
+      ],
+      "revision": true,
+      "expected": {
+        "overall_status": "not_found",
+        "outcome": "draft",
+        "outside_days_unchanged": true
+      },
+      "baseline_applicable": false,
+      "baseline_not_applicable_reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+    },
+    {
+      "id": "hold-retained-unknown",
+      "split": "holdout",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "hold-retained-unknown-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-unknown-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-unknown-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-retained-unknown-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            }
+          ],
+          "revision_scope": {
+            "day_indices": [
+              1
+            ]
+          }
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:hold-retained-unknown-0-0",
+                "poi_id": "hold-retained-unknown-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:hold-retained-unknown-0-1",
+                "poi_id": "hold-retained-unknown-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {
+              "status": "unverified",
+              "solver_status": "FROZEN_PRIOR_RESULT",
+              "unknown": [
+                "opening_unknown_or_stale:retained"
+              ],
+              "conflicts": [],
+              "omitted_activity_ids": []
+            }
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:hold-retained-unknown-1-0",
+                "poi_id": "hold-retained-unknown-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:hold-retained-unknown-1-1",
+                "poi_id": "hold-retained-unknown-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        1
+      ],
+      "revision": true,
+      "expected": {
+        "overall_status": "unverified",
+        "outcome": "degraded",
+        "outside_days_unchanged": true
+      },
+      "baseline_applicable": false,
+      "baseline_not_applicable_reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+    },
+    {
+      "id": "hold-lock-conflict-unknown",
+      "split": "holdout",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "travel_days": 1,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "hold-lock-conflict-unknown-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            }
+          ],
+          "locks": [
+            {
+              "activity_id": "poi:0:hold-lock-conflict-unknown-0-0",
+              "mode": "time",
+              "start_at": "2026-11-10T08:00:00+08:00",
+              "end_at": "2026-11-10T09:00:00+08:00"
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-10",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:hold-lock-conflict-unknown-0-0",
+                "poi_id": "hold-lock-conflict-unknown-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:hold-lock-conflict-unknown-0-1",
+                "poi_id": "hold-lock-conflict-unknown-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        0
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "infeasible",
+        "empty_timeline": true
+      },
+      "baseline_applicable": true
+    },
+    {
+      "id": "hold-completed-scope",
+      "split": "holdout",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "hold-completed-scope-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-completed-scope-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-completed-scope-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-completed-scope-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            }
+          ],
+          "revision_scope": {
+            "day_indices": [
+              0
+            ]
+          },
+          "completed_activity_ids": [
+            "poi:0:hold-completed-scope-0-0"
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:hold-completed-scope-0-0",
+                "poi_id": "hold-completed-scope-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:hold-completed-scope-0-1",
+                "poi_id": "hold-completed-scope-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [
+              {
+                "activity_id": "poi:0:hold-completed-scope-0-0",
+                "kind": "attraction",
+                "title": "Fixture 00",
+                "start_at": "2026-11-10T10:00:00+08:00",
+                "end_at": "2026-11-10T11:00:00+08:00"
+              }
+            ],
+            "feasibility": {}
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:hold-completed-scope-1-0",
+                "poi_id": "hold-completed-scope-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:hold-completed-scope-1-1",
+                "poi_id": "hold-completed-scope-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        0
+      ],
+      "revision": true,
+      "expected": {
+        "day_status": "feasible",
+        "fixed_slots": {
+          "poi:0:hold-completed-scope-0-0": [
+            "2026-11-10T10:00:00+08:00",
+            "2026-11-10T11:00:00+08:00"
+          ]
+        },
+        "outside_days_unchanged": true
+      },
+      "baseline_applicable": true
+    },
+    {
+      "id": "hold-crosscity-unknown-access",
+      "split": "holdout",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "07:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "hold-crosscity-unknown-access-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-crosscity-unknown-access-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-crosscity-unknown-access-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-crosscity-unknown-access-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "上海",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 121.45,
+                "latitude": 31.2
+              }
+            }
+          ],
+          "city_segments": [
+            {
+              "city": "北京",
+              "start_day": 0,
+              "end_day": 0
+            },
+            {
+              "city": "上海",
+              "start_day": 1,
+              "end_day": 1
+            }
+          ],
+          "commitments": [
+            {
+              "id": "frozen-train",
+              "day_index": 1,
+              "category": "transport",
+              "status": "confirmed",
+              "title": "Synthetic fixed bridge",
+              "origin_city": "北京",
+              "destination_city": "上海",
+              "start_at": "2026-11-11T08:00:00+08:00",
+              "end_at": "2026-11-11T12:00:00+08:00",
+              "origin_location": {
+                "longitude": 116.4,
+                "latitude": 39.9
+              },
+              "destination_location": {
+                "longitude": 121.44,
+                "latitude": 31.2
+              }
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:hold-crosscity-unknown-access-0-0",
+                "poi_id": "hold-crosscity-unknown-access-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:hold-crosscity-unknown-access-0-1",
+                "poi_id": "hold-crosscity-unknown-access-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "上海",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 121.45,
+                "latitude": 31.2
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:hold-crosscity-unknown-access-1-0",
+                "poi_id": "hold-crosscity-unknown-access-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 121.46,
+                  "latitude": 31.21
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:hold-crosscity-unknown-access-1-1",
+                "poi_id": "hold-crosscity-unknown-access-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 121.47,
+                  "latitude": 31.21
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": [
+          {
+            "left": {
+              "longitude": 116.3,
+              "latitude": 39.9
+            },
+            "right": {
+              "longitude": 116.4,
+              "latitude": 39.9
+            },
+            "minutes": 90,
+            "missing": true
+          }
+        ]
+      },
+      "allowed_days": [
+        1
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "unverified",
+        "estimated_routes_disclosed": true
+      },
+      "baseline_applicable": false,
+      "baseline_not_applicable_reason": "Origin-hotel intercity access and fixed bridge need a separate transport model, not local order baseline."
+    },
+    {
+      "id": "hold-multiday-window-order",
+      "split": "holdout",
+      "request": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "酒店",
+        "constraints": {
+          "daily_minutes": 600
+        },
+        "planning_input": {
+          "day_start": "09:00",
+          "day_end": "19:00",
+          "opening_windows": [
+            {
+              "poi_id": "hold-multiday-window-order-0-0",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "12:00",
+                  "end": "15:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-multiday-window-order-0-1",
+              "date": "2026-11-10",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "11:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-multiday-window-order-1-0",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            },
+            {
+              "poi_id": "hold-multiday-window-order-1-1",
+              "date": "2026-11-11",
+              "windows": [
+                {
+                  "start": "09:00",
+                  "end": "19:00"
+                }
+              ],
+              "source": "frozen-synthetic-20261025",
+              "observed_at": "2026-10-25T00:00:00+00:00",
+              "expires_at": "2026-10-25T12:00:00+00:00",
+              "confirmed": true
+            }
+          ],
+          "hotel_stays": [
+            {
+              "day_index": 0,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            {
+              "day_index": 1,
+              "city": "北京",
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            }
+          ]
+        }
+      },
+      "plan": {
+        "city": "北京",
+        "start_date": "2026-11-10",
+        "end_date": "2026-11-11",
+        "days": [
+          {
+            "date": "2026-11-10",
+            "day_index": 0,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:hold-multiday-window-order-0-0",
+                "poi_id": "hold-multiday-window-order-0-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:hold-multiday-window-order-0-1",
+                "poi_id": "hold-multiday-window-order-0-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          },
+          {
+            "date": "2026-11-11",
+            "day_index": 1,
+            "city": "北京",
+            "description": "Frozen synthetic day",
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              }
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:hold-multiday-window-order-1-0",
+                "poi_id": "hold-multiday-window-order-1-0",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:hold-multiday-window-order-1-1",
+                "poi_id": "hold-multiday-window-order-1-1",
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "optional": false
+              }
+            ],
+            "meals": [],
+            "timeline": [],
+            "feasibility": {}
+          }
+        ],
+        "overall_suggestions": "Synthetic benchmark only"
+      },
+      "routes": {
+        "default_minutes": 10,
+        "missing": false,
+        "overrides": []
+      },
+      "allowed_days": [
+        0,
+        1
+      ],
+      "revision": false,
+      "expected": {
+        "day_status": "feasible",
+        "all_days_checked": true
+      },
+      "baseline_applicable": true
+    }
+  ]
+}

@@ -239,6 +239,18 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     recalculate_budget(plan, estimate_missing=True, budget_limit=request.budget_total)
     if enhanced:
         from .time_planner import RULE_VERSION, confirmed
+        # The solver deliberately touches only allowed_days. Whole-trip quality
+        # must also retain the evidence of every untouched day without rewriting
+        # its persisted JSON. Legacy/stale schedules cannot imply feasibility.
+        schedules = []
+        for day in plan.days:
+            saved = dict(day.feasibility)
+            if saved.get("status") not in {"feasible", "unverified", "not_found", "infeasible"} or getattr(day, "schedule_stale", False):
+                saved["status"] = "unverified"
+                saved["unknown"] = sorted(set(saved.get("unknown", [])) | {"schedule_unknown_or_stale"})
+            for field in ("unknown", "conflicts", "omitted_activity_ids"):
+                saved.setdefault(field, [])
+            schedules.append({**saved, "day_index": day.day_index})
         report["schedule_checks"] = schedules
         report["unmet_meals"]=[{"day_index":day.day_index,**meal} for day in plan.days for meal in day.feasibility.get("unmet_meals",[])]
         report["data_gaps"]=sorted(set(report["data_gaps"])|{f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"]})
@@ -253,6 +265,9 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             repairs.extend({"day_index":schedule["day_index"],"removed_activity_id":identity,"reason":"optional_activity_omitted_by_time_constraints"} for identity in schedule["omitted_activity_ids"])
             for conflict in schedule["conflicts"]:
                 report["warnings"].append(f"第{schedule['day_index']+1}天：{conflict}")
+            if schedule["status"] in {"infeasible", "not_found"} and not schedule["conflicts"]:
+                reason = "当前候选的时间约束存在冲突" if schedule["status"] == "infeasible" else "计算预算内尚未找到可行安排，请检查草稿后恢复或调整要求"
+                report["warnings"].append(f"第{schedule['day_index']+1}天：{reason}")
         report["passed"] = report["rules_passed"] = not report["warnings"]
         if report["warnings"] and report["feasibility_status"] == "feasible":
             report["feasibility_status"] = "not_found"

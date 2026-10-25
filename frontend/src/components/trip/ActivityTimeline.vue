@@ -39,6 +39,7 @@ function issueText(issue: string) {
   if (code === 'meal_candidate_unassigned') { const meal = ({ breakfast: '早餐', lunch: '午餐', dinner: '晚餐', snack: '小吃' } as Record<string, string>)[id.split(':')[0]] || '餐饮'; return `${meal}候选未安排，需就近用餐并重新核验。` }
   const title = props.day.timeline?.find(item => item.activity_id === id)?.title || props.planning?.commitments?.find(item => String(item.id) === id)?.title
   const labels: Record<string, string> = {
+    schedule_unknown_or_stale: '旧时间轴缺失或已过期，请重新核验或改排。',
     opening_unknown_or_stale: '景点营业信息未知或已过期，请核对出行日期的开放与最后入场时间。', opening_conflict: '景点营业信息存在冲突，请根据官方来源核对。',
     meal_opening_unverified: '餐厅营业时间尚未核实。', meal_opening_conflict: '餐厅营业信息存在冲突。', meal_location_unknown: '餐厅位置未知，接驳时间尚无法核实。',
     route_endpoint_unknown: '部分路线起终点位置未知，交通时间尚未核实。', route_duration_estimated_30_minutes: '部分路段暂按 30 分钟估算，请核实真实交通时间。',

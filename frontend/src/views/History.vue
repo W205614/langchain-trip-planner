@@ -92,10 +92,14 @@
           <a-alert
             type="info"
             show-icon
-            message="这里只显示需要操作的任务"
-            description="排队中和生成中的任务可以取消；中断任务可检查有效阶段后恢复。重新提交会新建任务，恢复可能需要重新查询过期信息。"
+            :message="taskFilter === 'actionable' ? '当前显示需要操作的任务' : '当前显示全部任务，包括已保存结果与未完成草稿'"
+            description="排队中和生成中的任务可以取消；全部任务中可打开结果或恢复普通草稿。助手方案请先查看并确认或放弃。恢复会创建关联执行，过期信息可能需要重新查询。"
           />
           <div class="task-toolbar">
+            <a-radio-group v-model:value="taskFilter" aria-label="任务筛选" :disabled="taskLoading" @change="changeTaskFilter">
+              <a-radio-button value="actionable">需要操作</a-radio-button>
+              <a-radio-button value="all">全部任务</a-radio-button>
+            </a-radio-group>
             <a-button :loading="taskLoading" @click="loadTasks()">刷新任务状态</a-button>
           </div>
           <a-alert v-if="taskError" type="error" :message="taskError" show-icon />
@@ -104,18 +108,19 @@
           </div>
           <a-list v-else-if="tasks.length" :data-source="tasks" class="task-list">
             <template #renderItem="{ item }">
-              <a-list-item>
+              <a-list-item :data-testid="`task-${item.id}`">
                 <a-list-item-meta :title="item.city" :description="`${item.message || ''} ${item.error_code || ''}`.trim()" />
                 <template #actions>
-                  <a-tag :color="taskColors[item.status] || 'default'">{{ taskLabels[item.status] || item.status }}</a-tag>
+                  <a-tag :color="taskColors[item.status] || 'default'">{{ item.detailsUnavailable ? '待查看' : isAssistantTask(item) ? '助手方案' : taskLabels[item.status] || item.status }}</a-tag>
                   <a-button v-if="['queued', 'running'].includes(item.status)" :disabled="taskBusy === item.id" @click="cancelTaskItem(item.id)">取消任务</a-button>
-                  <a-button v-if="['failed', 'cancelled'].includes(item.status)" type="primary" :disabled="taskBusy === item.id" @click="retryTaskItem(item.id)">重新提交</a-button>
-                  <a-button v-if="['failed', 'cancelled', 'needs_attention'].includes(item.status)" :disabled="taskBusy === item.id" @click="resumeTaskItem(item.id)">恢复有效阶段</a-button>
+                  <a-button v-if="canRestartTask(item)" type="primary" :disabled="taskBusy === item.id" @click="retryTaskItem(item.id)">重新提交</a-button>
+                  <a-button v-if="canResumeTask(item)" :disabled="taskBusy === item.id" @click="resumeTaskItem(item.id)">恢复有效阶段</a-button>
+                  <a-button v-if="['succeeded', 'needs_attention'].includes(item.status) && (item.result?.id || item.record_id)" :disabled="taskBusy === item.id" @click="viewRecord(Number(item.result?.id || item.record_id))">{{ isAssistantTask(item) ? '查看助手方案' : '查看结果' }}</a-button>
                 </template>
               </a-list-item>
             </template>
           </a-list>
-          <a-empty v-else class="task-empty" description="当前没有进行中、失败或已取消的任务" />
+          <a-empty v-else class="task-empty" :description="taskFilter === 'actionable' ? '当前没有进行中、失败或已取消的任务；可切换全部任务查看结果与草稿' : '当前没有任务记录'" />
           <div class="pagination-wrapper" v-if="taskTotal > taskPageSize">
             <a-pagination v-model:current="taskPage" :total="taskTotal" :page-size="taskPageSize" :show-size-changer="false" @change="loadTasks()" />
           </div>
@@ -148,7 +153,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { formatDateTime } from '@/utils/datetime'
-import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, cancelTask, retryTask, resumeTask, submitCommunityCard } from '@/services/api'
+import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, fetchTask, cancelTask, retryTask, resumeTask, submitCommunityCard } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -179,8 +184,12 @@ const taskLoading = ref(false)
 const taskError = ref('')
 const taskBusy = ref('')
 const taskKeys = new Map<string, string>()
-const taskLabels: Record<string, string> = { queued: '排队中', running: '生成中', failed: '失败', cancelled: '已取消' }
-const taskColors: Record<string, string> = { queued: 'blue', running: 'processing', failed: 'red', cancelled: 'default' }
+const taskFilter = ref<'actionable' | 'all'>('actionable')
+const taskLabels: Record<string, string> = { queued: '排队中', running: '生成中', failed: '失败', cancelled: '已取消', succeeded: '已完成', needs_attention: '未完成草稿' }
+const taskColors: Record<string, string> = { queued: 'blue', running: 'processing', failed: 'red', cancelled: 'default', succeeded: 'green', needs_attention: 'orange' }
+const isAssistantTask = (item: any) => Boolean(item.result?.quality?.assistant_confirmation_required || item.result?.quality?.assistant_proposal_status)
+const canRestartTask = (item: any) => ['failed', 'cancelled'].includes(item.status) && item.error_code !== 'RESULT_DELETED' && !isAssistantTask(item)
+const canResumeTask = (item: any) => canRestartTask(item) || (item.status === 'needs_attention' && item.result?.quality?.outcome === 'draft' && !!item.result?.id && !isAssistantTask(item))
 const quickPrompts = ['这份行程有哪些预约事项？', '怎样减少排队和步行？', '有哪些容易忽略的注意事项？']
 let taskTimer: ReturnType<typeof setInterval> | undefined
 
@@ -207,8 +216,12 @@ const loadTasks = async () => {
   taskLoading.value = true
   taskError.value = ''
   try {
-    const result = await fetchTasks(taskPage.value, true)
-    tasks.value = result.data || []
+    const result = await fetchTasks(taskPage.value, taskFilter.value === 'actionable')
+    tasks.value = await Promise.all((result.data || []).map(async (item: any) => {
+      if (item.status !== 'needs_attention') return item
+      try { return { ...item, ...await fetchTask(item.id) } }
+      catch { return { ...item, message: '任务详情暂不可用，请刷新后查看；恢复入口暂不开放。', detailsUnavailable: true } }
+    }))
     taskTotal.value = result.total || 0
   } catch (error: any) {
     taskError.value = error.response?.data?.message || '读取任务状态失败'
@@ -216,6 +229,8 @@ const loadTasks = async () => {
     taskLoading.value = false
   }
 }
+
+const changeTaskFilter = () => { taskPage.value = 1; loadTasks() }
 
 const cancelTaskItem = async (id: string) => {
   taskBusy.value = id
@@ -454,6 +469,8 @@ const removeRecord = async (id: number) => {
 
 .task-toolbar {
   display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
   justify-content: flex-end;
 }
 

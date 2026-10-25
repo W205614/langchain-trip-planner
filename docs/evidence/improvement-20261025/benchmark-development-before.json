@@ -1,0 +1,2942 @@
+{
+  "schema_version": 1,
+  "split": "development",
+  "source_ref": "e0d51a9",
+  "evaluator_sha256": "766e3f333b402ec7cf5fda851bd203614eff7053d0409c68c49edc9eddfba7e7",
+  "environment": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "pydantic": "2.13.5",
+    "ortools": "9.15.6755",
+    "numpy": "2.4.6"
+  },
+  "source_sha": "e0d51a966cfe4221c248fc7b99cefc0a6b995e20",
+  "source_fingerprints": {
+    "backend/app/services/time_planner.py": "708336627ea1ab777d2e536c44af389fece40f7a1329ca1f4d7dbdeaf3aef825",
+    "backend/app/services/planning_constraints.py": "886a3dac49f1e2479975d58ce5fbf0778388d8ed3ea1596b25048a107751bc55",
+    "backend/app/services/result_policy.py": "c07638749b4b2acfae86fb9284a7259c108fb8712133d8822f5eda773dd94da2"
+  },
+  "dataset_sha256": "a308d9a3613e6cb82de6c90d26cf47ed788a95339c66f268db17a503f19f72ac",
+  "fixed_clock": "2026-10-25T00:00:00+00:00",
+  "real_provider_calls": 0,
+  "model_calls": 0,
+  "network_policy": "socket connects forbidden",
+  "case_count": 6,
+  "passed": false,
+  "production_cases_passed": 4,
+  "cases": [
+    {
+      "id": "dev-retained-infeasible",
+      "production": {
+        "checks": {
+          "passed": false,
+          "checks": [
+            {
+              "name": "overall_status_matches_frozen_semantics",
+              "passed": false,
+              "detail": {
+                "expected": "infeasible",
+                "actual": "feasible"
+              }
+            },
+            {
+              "name": "outcome_matches_frozen_semantics",
+              "passed": false,
+              "detail": {
+                "expected": "draft",
+                "actual": "degraded"
+              }
+            },
+            {
+              "name": "day_0_outside_scope_unchanged",
+              "passed": true
+            },
+            {
+              "name": "day_1_positive_nonoverlapping",
+              "passed": true
+            },
+            {
+              "name": "day_1_daily_hard_bounds",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:1:dev-retained-infeasible-1-0",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:1:dev-retained-infeasible-1-0",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:1:dev-retained-infeasible-1-1",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:1:dev-retained-infeasible-1-1",
+              "passed": true
+            }
+          ],
+          "checked": 9,
+          "failed": 2
+        },
+        "quality": {
+          "score": 100,
+          "passed": true,
+          "warnings": [],
+          "days_checked": 2,
+          "attractions_checked": 4,
+          "duplicate_attractions_removed": 0,
+          "estimated_intra_day_distance_km": 1.71,
+          "route_checked": false,
+          "actual_route_distance_km": null,
+          "actual_route_minutes": null,
+          "repairs": [],
+          "data_gaps": [
+            "hotel_and_meal_routes_unverified",
+            "in_attraction_walking_unknown",
+            "meal_pois_unavailable",
+            "opening_hours_unavailable",
+            "reservation_unverified",
+            "route_distance_and_walking_unverified",
+            "route_duration_unavailable_fallback_to_straight_line"
+          ],
+          "degraded_days": [],
+          "policy_version": "constraints-v2",
+          "rules_passed": true,
+          "facts_complete": false,
+          "feasibility_status": "feasible",
+          "day_checks": [
+            {
+              "day_index": 0,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": null,
+              "planned_minutes": null,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 00",
+                  "to": "Fixture 01",
+                  "route_type": "transit",
+                  "minutes": null,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            },
+            {
+              "day_index": 1,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": 10.0,
+              "planned_minutes": 250.0,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 11",
+                  "to": "Fixture 10",
+                  "route_type": "transit",
+                  "minutes": 10,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            }
+          ],
+          "schedule_checks": [
+            {
+              "day_index": 1,
+              "status": "feasible",
+              "solver_status": "OPTIMAL",
+              "unknown": [],
+              "conflicts": [],
+              "omitted_activity_ids": [],
+              "unmet_meals": [],
+              "route_minutes": 30,
+              "finish_at": "2026-11-11T11:30:00+08:00"
+            }
+          ],
+          "unmet_meals": [],
+          "time_policy_version": "time-windows-v5-hotel-departure",
+          "fact_status": "unknown",
+          "cost_summary": {
+            "confirmed_cents": 0,
+            "estimated_cents": 63000,
+            "known_total_cents": 63000,
+            "unknown_items": [
+              "attraction_prices",
+              "hotel_prices",
+              "transportation_prices"
+            ],
+            "limit_cents": null,
+            "within_limit": null
+          },
+          "completion_policy": "reliability-v1",
+          "issues": [
+            {
+              "code": "ROUTE_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "第1天部分景点间路线暂不可用，Agent 已保留可继续调整的行程",
+              "action": "可直接查看行程；出发前确认交通，或在具体行程中调整景点",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "hotel_and_meal_routes_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "in_attraction_walking_unknown",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "MEAL_POI_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+              "action": "可稍后重试餐饮推荐或自行补充餐厅",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_hours_unavailable",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "reservation_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_distance_and_walking_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_duration_unavailable_fallback_to_straight_line",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            }
+          ],
+          "outcome": "degraded"
+        },
+        "days": [
+          {
+            "city": "北京",
+            "timeline": [],
+            "feasibility": {
+              "status": "infeasible",
+              "solver_status": "FROZEN_PRIOR_RESULT",
+              "unknown": [],
+              "conflicts": [
+                "frozen_prior_conflict"
+              ],
+              "omitted_activity_ids": []
+            },
+            "date": "2026-11-10",
+            "day_index": 0,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-retained-infeasible-0-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-retained-infeasible-0-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-retained-infeasible-0-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-retained-infeasible-0-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null
+          },
+          {
+            "city": "北京",
+            "timeline": [
+              {
+                "activity_id": "route:0:poi:1:dev-retained-infeasible-1-1",
+                "title": "前往Fixture 11",
+                "kind": "travel",
+                "start_at": "2026-11-11T09:00:00+08:00",
+                "end_at": "2026-11-11T09:10:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "poi:1:dev-retained-infeasible-1-1",
+                "title": "Fixture 11",
+                "kind": "attraction",
+                "start_at": "2026-11-11T09:10:00+08:00",
+                "end_at": "2026-11-11T10:10:00+08:00",
+                "status": "confirmed",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-retained-infeasible-1-1"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                }
+              },
+              {
+                "activity_id": "route:2:poi:1:dev-retained-infeasible-1-0",
+                "title": "前往Fixture 10",
+                "kind": "travel",
+                "start_at": "2026-11-11T10:10:00+08:00",
+                "end_at": "2026-11-11T10:20:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "poi:1:dev-retained-infeasible-1-0",
+                "title": "Fixture 10",
+                "kind": "attraction",
+                "start_at": "2026-11-11T10:20:00+08:00",
+                "end_at": "2026-11-11T11:20:00+08:00",
+                "status": "confirmed",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-retained-infeasible-1-0"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                }
+              },
+              {
+                "activity_id": "hotel:return",
+                "title": "返回住宿",
+                "kind": "travel",
+                "start_at": "2026-11-11T11:20:00+08:00",
+                "end_at": "2026-11-11T11:30:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              }
+            ],
+            "feasibility": {
+              "status": "feasible",
+              "solver_status": "OPTIMAL",
+              "unknown": [],
+              "conflicts": [],
+              "omitted_activity_ids": [],
+              "unmet_meals": [],
+              "route_minutes": 30,
+              "finish_at": "2026-11-11T11:30:00+08:00"
+            },
+            "date": "2026-11-11",
+            "day_index": 1,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.91
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:dev-retained-infeasible-1-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-retained-infeasible-1-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:dev-retained-infeasible-1-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.91
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-retained-infeasible-1-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null,
+            "schedule_stale": false
+          }
+        ],
+        "fixture_route_lookups": 6,
+        "elapsed_seconds": 3.22
+      },
+      "baselines": {
+        "travel_order": {
+          "applicable": false,
+          "reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+        },
+        "time_window_greedy": {
+          "applicable": false,
+          "reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+        }
+      }
+    },
+    {
+      "id": "dev-closed-with-unknown",
+      "production": {
+        "checks": {
+          "passed": false,
+          "checks": [
+            {
+              "name": "day_0_status_matches_frozen_semantics",
+              "passed": false,
+              "detail": {
+                "expected": "infeasible",
+                "actual": "unverified"
+              }
+            },
+            {
+              "name": "proven_conflict_has_no_executable_timeline",
+              "passed": true
+            }
+          ],
+          "checked": 2,
+          "failed": 1
+        },
+        "quality": {
+          "score": 85,
+          "passed": false,
+          "warnings": [
+            "第1天：no_time_window:poi:0:dev-closed-with-unknown-0-0"
+          ],
+          "days_checked": 1,
+          "attractions_checked": 2,
+          "duplicate_attractions_removed": 0,
+          "estimated_intra_day_distance_km": 0.85,
+          "route_checked": false,
+          "actual_route_distance_km": null,
+          "actual_route_minutes": null,
+          "repairs": [],
+          "data_gaps": [
+            "hotel_and_meal_routes_unverified",
+            "in_attraction_walking_unknown",
+            "meal_pois_unavailable",
+            "opening_hours_unavailable",
+            "opening_unknown_or_stale:poi:0:dev-closed-with-unknown-0-1",
+            "reservation_unverified",
+            "route_duration_unavailable_fallback_to_straight_line"
+          ],
+          "degraded_days": [],
+          "policy_version": "constraints-v2",
+          "rules_passed": false,
+          "facts_complete": false,
+          "feasibility_status": "unverified",
+          "day_checks": [
+            {
+              "day_index": 0,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": null,
+              "planned_minutes": null,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 00",
+                  "to": "Fixture 01",
+                  "route_type": "transit",
+                  "minutes": null,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            }
+          ],
+          "schedule_checks": [
+            {
+              "day_index": 0,
+              "status": "unverified",
+              "solver_status": "INVALID_WINDOWS",
+              "unknown": [
+                "opening_unknown_or_stale:poi:0:dev-closed-with-unknown-0-1"
+              ],
+              "conflicts": [
+                "no_time_window:poi:0:dev-closed-with-unknown-0-0"
+              ],
+              "omitted_activity_ids": []
+            }
+          ],
+          "unmet_meals": [],
+          "time_policy_version": "time-windows-v5-hotel-departure",
+          "fact_status": "unknown",
+          "cost_summary": {
+            "confirmed_cents": 0,
+            "estimated_cents": 19000,
+            "known_total_cents": 19000,
+            "unknown_items": [
+              "attraction_prices",
+              "transportation_prices"
+            ],
+            "limit_cents": null,
+            "within_limit": null
+          },
+          "completion_policy": "reliability-v1",
+          "issues": [
+            {
+              "code": "CONSTRAINT_UNSATISFIED",
+              "scope": "plan",
+              "reason": "第1天：no_time_window:poi:0:dev-closed-with-unknown-0-0",
+              "action": "修改要求或调整行程后重新检查",
+              "blocking": true,
+              "retryable": false
+            },
+            {
+              "code": "ROUTE_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "第1天部分景点间路线暂不可用，Agent 已保留可继续调整的行程",
+              "action": "可直接查看行程；出发前确认交通，或在具体行程中调整景点",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "hotel_and_meal_routes_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "in_attraction_walking_unknown",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "MEAL_POI_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+              "action": "可稍后重试餐饮推荐或自行补充餐厅",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_hours_unavailable",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_unknown_or_stale:poi:0:dev-closed-with-unknown-0-1",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "reservation_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_duration_unavailable_fallback_to_straight_line",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            }
+          ],
+          "outcome": "draft"
+        },
+        "days": [
+          {
+            "city": "北京",
+            "timeline": [],
+            "feasibility": {
+              "status": "unverified",
+              "solver_status": "INVALID_WINDOWS",
+              "unknown": [
+                "opening_unknown_or_stale:poi:0:dev-closed-with-unknown-0-1"
+              ],
+              "conflicts": [
+                "no_time_window:poi:0:dev-closed-with-unknown-0-0"
+              ],
+              "omitted_activity_ids": []
+            },
+            "date": "2026-11-10",
+            "day_index": 0,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-closed-with-unknown-0-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-closed-with-unknown-0-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-closed-with-unknown-0-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-closed-with-unknown-0-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null
+          }
+        ],
+        "fixture_route_lookups": 0,
+        "elapsed_seconds": 0.0013
+      },
+      "baselines": {
+        "travel_order": {
+          "applicable": true,
+          "checks": {
+            "passed": false,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-closed-with-unknown-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-closed-with-unknown-0-0",
+                "passed": false
+              },
+              {
+                "name": "duration:poi:0:dev-closed-with-unknown-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-closed-with-unknown-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 6,
+            "failed": 1
+          },
+          "travel_minutes": 30.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-closed-with-unknown-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-closed-with-unknown-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:10:00+08:00",
+                "end_at": "2026-11-10T10:10:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-closed-with-unknown-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:10:00+08:00",
+                "end_at": "2026-11-10T10:20:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-closed-with-unknown-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T10:20:00+08:00",
+                "end_at": "2026-11-10T11:20:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T11:20:00+08:00",
+                "end_at": "2026-11-10T11:30:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        },
+        "time_window_greedy": {
+          "applicable": true,
+          "checks": {
+            "passed": false,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-closed-with-unknown-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-closed-with-unknown-0-0",
+                "passed": false
+              },
+              {
+                "name": "duration:poi:0:dev-closed-with-unknown-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-closed-with-unknown-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 6,
+            "failed": 1
+          },
+          "travel_minutes": 30.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-closed-with-unknown-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-closed-with-unknown-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:10:00+08:00",
+                "end_at": "2026-11-10T10:10:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-closed-with-unknown-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:10:00+08:00",
+                "end_at": "2026-11-10T10:20:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-closed-with-unknown-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T10:20:00+08:00",
+                "end_at": "2026-11-10T11:20:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T11:20:00+08:00",
+                "end_at": "2026-11-10T11:30:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        }
+      }
+    },
+    {
+      "id": "dev-unknown-route",
+      "production": {
+        "checks": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "day_0_status_matches_frozen_semantics",
+              "passed": true,
+              "detail": {
+                "expected": "unverified",
+                "actual": "unverified"
+              }
+            },
+            {
+              "name": "day_0_positive_nonoverlapping",
+              "passed": true
+            },
+            {
+              "name": "day_0_daily_hard_bounds",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:0:dev-unknown-route-0-0",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:0:dev-unknown-route-0-0",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:0:dev-unknown-route-0-1",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:0:dev-unknown-route-0-1",
+              "passed": true
+            },
+            {
+              "name": "day_0_missing_route_disclosed",
+              "passed": true
+            }
+          ],
+          "checked": 8,
+          "failed": 0
+        },
+        "quality": {
+          "score": 100,
+          "passed": true,
+          "warnings": [],
+          "days_checked": 1,
+          "attractions_checked": 2,
+          "duplicate_attractions_removed": 0,
+          "estimated_intra_day_distance_km": 0.85,
+          "route_checked": false,
+          "actual_route_distance_km": null,
+          "actual_route_minutes": null,
+          "repairs": [],
+          "data_gaps": [
+            "hotel_and_meal_routes_unverified",
+            "in_attraction_walking_unknown",
+            "meal_pois_unavailable",
+            "opening_hours_unavailable",
+            "reservation_unverified",
+            "route_duration_estimated_30_minutes",
+            "route_duration_unavailable_fallback_to_straight_line"
+          ],
+          "degraded_days": [],
+          "policy_version": "constraints-v2",
+          "rules_passed": true,
+          "facts_complete": false,
+          "feasibility_status": "unverified",
+          "day_checks": [
+            {
+              "day_index": 0,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": null,
+              "planned_minutes": null,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 01",
+                  "to": "Fixture 00",
+                  "route_type": "transit",
+                  "minutes": null,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            }
+          ],
+          "schedule_checks": [
+            {
+              "day_index": 0,
+              "status": "unverified",
+              "solver_status": "OPTIMAL",
+              "unknown": [
+                "route_duration_estimated_30_minutes"
+              ],
+              "conflicts": [],
+              "omitted_activity_ids": [],
+              "unmet_meals": [],
+              "route_minutes": 90,
+              "finish_at": "2026-11-10T12:30:00+08:00"
+            }
+          ],
+          "unmet_meals": [],
+          "time_policy_version": "time-windows-v5-hotel-departure",
+          "fact_status": "unknown",
+          "cost_summary": {
+            "confirmed_cents": 0,
+            "estimated_cents": 19000,
+            "known_total_cents": 19000,
+            "unknown_items": [
+              "attraction_prices",
+              "transportation_prices"
+            ],
+            "limit_cents": null,
+            "within_limit": null
+          },
+          "completion_policy": "reliability-v1",
+          "issues": [
+            {
+              "code": "ROUTE_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "第1天部分景点间路线暂不可用，Agent 已保留可继续调整的行程",
+              "action": "可直接查看行程；出发前确认交通，或在具体行程中调整景点",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "hotel_and_meal_routes_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "in_attraction_walking_unknown",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "MEAL_POI_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+              "action": "可稍后重试餐饮推荐或自行补充餐厅",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_hours_unavailable",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "reservation_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_duration_estimated_30_minutes",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_duration_unavailable_fallback_to_straight_line",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            }
+          ],
+          "outcome": "degraded"
+        },
+        "days": [
+          {
+            "city": "北京",
+            "timeline": [
+              {
+                "activity_id": "route:0:poi:0:dev-unknown-route-0-1",
+                "title": "前往Fixture 01",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:30:00+08:00",
+                "status": "estimated",
+                "source": "conservative_allowance",
+                "evidence_refs": [],
+                "notes": [
+                  "路线缺失，暂以30分钟占位；未验证可行性"
+                ]
+              },
+              {
+                "activity_id": "poi:0:dev-unknown-route-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:30:00+08:00",
+                "end_at": "2026-11-10T10:30:00+08:00",
+                "status": "unverified",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-unknown-route-0-1"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                }
+              },
+              {
+                "activity_id": "route:2:poi:0:dev-unknown-route-0-0",
+                "title": "前往Fixture 00",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:30:00+08:00",
+                "end_at": "2026-11-10T11:00:00+08:00",
+                "status": "estimated",
+                "source": "conservative_allowance",
+                "evidence_refs": [],
+                "notes": [
+                  "路线缺失，暂以30分钟占位；未验证可行性"
+                ]
+              },
+              {
+                "activity_id": "poi:0:dev-unknown-route-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T11:00:00+08:00",
+                "end_at": "2026-11-10T12:00:00+08:00",
+                "status": "unverified",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-unknown-route-0-0"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                }
+              },
+              {
+                "activity_id": "hotel:return",
+                "title": "返回住宿",
+                "kind": "travel",
+                "start_at": "2026-11-10T12:00:00+08:00",
+                "end_at": "2026-11-10T12:30:00+08:00",
+                "status": "estimated",
+                "source": "conservative_allowance",
+                "evidence_refs": [],
+                "notes": []
+              }
+            ],
+            "feasibility": {
+              "status": "unverified",
+              "solver_status": "OPTIMAL",
+              "unknown": [
+                "route_duration_estimated_30_minutes"
+              ],
+              "conflicts": [],
+              "omitted_activity_ids": [],
+              "unmet_meals": [],
+              "route_minutes": 90,
+              "finish_at": "2026-11-10T12:30:00+08:00"
+            },
+            "date": "2026-11-10",
+            "day_index": 0,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-unknown-route-0-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-unknown-route-0-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-unknown-route-0-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-unknown-route-0-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null,
+            "schedule_stale": false
+          }
+        ],
+        "fixture_route_lookups": 6,
+        "elapsed_seconds": 0.0148
+      },
+      "baselines": {
+        "travel_order": {
+          "applicable": true,
+          "checks": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-unknown-route-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-unknown-route-0-0",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-unknown-route-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-unknown-route-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 6,
+            "failed": 0
+          },
+          "travel_minutes": 90.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-unknown-route-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:30:00+08:00",
+                "status": "estimated",
+                "notes": [
+                  "unknown route: 30 minute allowance"
+                ]
+              },
+              {
+                "activity_id": "poi:0:dev-unknown-route-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:30:00+08:00",
+                "end_at": "2026-11-10T10:30:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-unknown-route-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:30:00+08:00",
+                "end_at": "2026-11-10T11:00:00+08:00",
+                "status": "estimated",
+                "notes": [
+                  "unknown route: 30 minute allowance"
+                ]
+              },
+              {
+                "activity_id": "poi:0:dev-unknown-route-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T11:00:00+08:00",
+                "end_at": "2026-11-10T12:00:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T12:00:00+08:00",
+                "end_at": "2026-11-10T12:30:00+08:00",
+                "status": "estimated",
+                "notes": [
+                  "unknown route: 30 minute allowance"
+                ]
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        },
+        "time_window_greedy": {
+          "applicable": true,
+          "checks": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-unknown-route-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-unknown-route-0-0",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-unknown-route-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-unknown-route-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 6,
+            "failed": 0
+          },
+          "travel_minutes": 90.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-unknown-route-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:30:00+08:00",
+                "status": "estimated",
+                "notes": [
+                  "unknown route: 30 minute allowance"
+                ]
+              },
+              {
+                "activity_id": "poi:0:dev-unknown-route-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:30:00+08:00",
+                "end_at": "2026-11-10T10:30:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-unknown-route-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:30:00+08:00",
+                "end_at": "2026-11-10T11:00:00+08:00",
+                "status": "estimated",
+                "notes": [
+                  "unknown route: 30 minute allowance"
+                ]
+              },
+              {
+                "activity_id": "poi:0:dev-unknown-route-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T11:00:00+08:00",
+                "end_at": "2026-11-10T12:00:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T12:00:00+08:00",
+                "end_at": "2026-11-10T12:30:00+08:00",
+                "status": "estimated",
+                "notes": [
+                  "unknown route: 30 minute allowance"
+                ]
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        }
+      }
+    },
+    {
+      "id": "dev-optional-meal",
+      "production": {
+        "checks": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "day_0_status_matches_frozen_semantics",
+              "passed": true,
+              "detail": {
+                "expected": "unverified",
+                "actual": "unverified"
+              }
+            },
+            {
+              "name": "day_0_positive_nonoverlapping",
+              "passed": true
+            },
+            {
+              "name": "day_0_daily_hard_bounds",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:0:dev-optional-meal-0-0",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:0:dev-optional-meal-0-0",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:0:dev-optional-meal-0-1",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:0:dev-optional-meal-0-1",
+              "passed": true
+            },
+            {
+              "name": "omission_visible:meal:0:remote",
+              "passed": true
+            }
+          ],
+          "checked": 8,
+          "failed": 0
+        },
+        "quality": {
+          "score": 100,
+          "passed": true,
+          "warnings": [],
+          "days_checked": 1,
+          "attractions_checked": 2,
+          "duplicate_attractions_removed": 0,
+          "estimated_intra_day_distance_km": 0.85,
+          "route_checked": true,
+          "actual_route_distance_km": null,
+          "actual_route_minutes": 10.0,
+          "repairs": [
+            {
+              "day_index": 0,
+              "removed_activity_id": "meal:0:remote",
+              "reason": "optional_activity_omitted_by_time_constraints"
+            }
+          ],
+          "data_gaps": [
+            "hotel_and_meal_routes_unverified",
+            "in_attraction_walking_unknown",
+            "meal_candidate_unassigned:breakfast:meal:0:remote",
+            "meal_opening_unverified:meal:0:remote",
+            "meal_pois_unavailable",
+            "opening_hours_unavailable",
+            "reservation_unverified",
+            "route_distance_and_walking_unverified"
+          ],
+          "degraded_days": [],
+          "policy_version": "constraints-v2",
+          "rules_passed": true,
+          "facts_complete": false,
+          "feasibility_status": "unverified",
+          "day_checks": [
+            {
+              "day_index": 0,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": 10.0,
+              "planned_minutes": 250.0,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 01",
+                  "to": "Fixture 00",
+                  "route_type": "transit",
+                  "minutes": 10,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            }
+          ],
+          "schedule_checks": [
+            {
+              "day_index": 0,
+              "status": "unverified",
+              "solver_status": "OPTIMAL",
+              "unknown": [
+                "meal_candidate_unassigned:breakfast:meal:0:remote",
+                "meal_opening_unverified:meal:0:remote"
+              ],
+              "conflicts": [],
+              "omitted_activity_ids": [
+                "meal:0:remote"
+              ],
+              "unmet_meals": [
+                {
+                  "activity_id": "meal:0:remote",
+                  "type": "breakfast",
+                  "title": "Synthetic remote breakfast",
+                  "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+                  "action": "该餐厅未安排，需就近用餐并重新核验"
+                }
+              ],
+              "route_minutes": 30,
+              "finish_at": "2026-11-10T11:30:00+08:00"
+            }
+          ],
+          "unmet_meals": [
+            {
+              "day_index": 0,
+              "activity_id": "meal:0:remote",
+              "type": "breakfast",
+              "title": "Synthetic remote breakfast",
+              "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+              "action": "该餐厅未安排，需就近用餐并重新核验"
+            }
+          ],
+          "time_policy_version": "time-windows-v5-hotel-departure",
+          "fact_status": "unknown",
+          "cost_summary": {
+            "confirmed_cents": 0,
+            "estimated_cents": 19000,
+            "known_total_cents": 19000,
+            "unknown_items": [
+              "attraction_prices",
+              "transportation_prices"
+            ],
+            "limit_cents": null,
+            "within_limit": null
+          },
+          "completion_policy": "reliability-v1",
+          "issues": [
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "hotel_and_meal_routes_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "in_attraction_walking_unknown",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "meal_candidate_unassigned:breakfast:meal:0:remote",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "meal_opening_unverified:meal:0:remote",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "MEAL_POI_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+              "action": "可稍后重试餐饮推荐或自行补充餐厅",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_hours_unavailable",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "reservation_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_distance_and_walking_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            }
+          ],
+          "outcome": "degraded"
+        },
+        "days": [
+          {
+            "city": "北京",
+            "timeline": [
+              {
+                "activity_id": "route:0:poi:0:dev-optional-meal-0-1",
+                "title": "前往Fixture 01",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-optional-meal-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:10:00+08:00",
+                "end_at": "2026-11-10T10:10:00+08:00",
+                "status": "unverified",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-optional-meal-0-1"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                }
+              },
+              {
+                "activity_id": "route:2:poi:0:dev-optional-meal-0-0",
+                "title": "前往Fixture 00",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:10:00+08:00",
+                "end_at": "2026-11-10T10:20:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-optional-meal-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T10:20:00+08:00",
+                "end_at": "2026-11-10T11:20:00+08:00",
+                "status": "unverified",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-optional-meal-0-0"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                }
+              },
+              {
+                "activity_id": "hotel:return",
+                "title": "返回住宿",
+                "kind": "travel",
+                "start_at": "2026-11-10T11:20:00+08:00",
+                "end_at": "2026-11-10T11:30:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              }
+            ],
+            "feasibility": {
+              "status": "unverified",
+              "solver_status": "OPTIMAL",
+              "unknown": [
+                "meal_candidate_unassigned:breakfast:meal:0:remote",
+                "meal_opening_unverified:meal:0:remote"
+              ],
+              "conflicts": [],
+              "omitted_activity_ids": [
+                "meal:0:remote"
+              ],
+              "unmet_meals": [
+                {
+                  "activity_id": "meal:0:remote",
+                  "type": "breakfast",
+                  "title": "Synthetic remote breakfast",
+                  "reason": "restaurant_candidate_does_not_fit_time_and_routes",
+                  "action": "该餐厅未安排，需就近用餐并重新核验"
+                }
+              ],
+              "route_minutes": 30,
+              "finish_at": "2026-11-10T11:30:00+08:00"
+            },
+            "date": "2026-11-10",
+            "day_index": 0,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-optional-meal-0-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-optional-meal-0-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-optional-meal-0-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-optional-meal-0-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null,
+            "schedule_stale": false
+          }
+        ],
+        "fixture_route_lookups": 12,
+        "elapsed_seconds": 0.0108
+      },
+      "baselines": {
+        "travel_order": {
+          "applicable": true,
+          "checks": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-optional-meal-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-optional-meal-0-0",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-optional-meal-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-optional-meal-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 6,
+            "failed": 0
+          },
+          "travel_minutes": 30.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-optional-meal-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-optional-meal-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:10:00+08:00",
+                "end_at": "2026-11-10T10:10:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-optional-meal-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:10:00+08:00",
+                "end_at": "2026-11-10T10:20:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-optional-meal-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T10:20:00+08:00",
+                "end_at": "2026-11-10T11:20:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T11:20:00+08:00",
+                "end_at": "2026-11-10T11:30:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        },
+        "time_window_greedy": {
+          "applicable": true,
+          "checks": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-optional-meal-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-optional-meal-0-0",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-optional-meal-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-optional-meal-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 6,
+            "failed": 0
+          },
+          "travel_minutes": 30.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-optional-meal-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-optional-meal-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:10:00+08:00",
+                "end_at": "2026-11-10T10:10:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-optional-meal-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:10:00+08:00",
+                "end_at": "2026-11-10T10:20:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-optional-meal-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T10:20:00+08:00",
+                "end_at": "2026-11-10T11:20:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T11:20:00+08:00",
+                "end_at": "2026-11-10T11:30:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        }
+      }
+    },
+    {
+      "id": "dev-time-lock",
+      "production": {
+        "checks": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "day_0_status_matches_frozen_semantics",
+              "passed": true,
+              "detail": {
+                "expected": "feasible",
+                "actual": "feasible"
+              }
+            },
+            {
+              "name": "day_0_positive_nonoverlapping",
+              "passed": true
+            },
+            {
+              "name": "day_0_daily_hard_bounds",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:0:dev-time-lock-0-0",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:0:dev-time-lock-0-0",
+              "passed": true
+            },
+            {
+              "name": "lock_or_completed_unchanged:poi:0:dev-time-lock-0-0",
+              "passed": true
+            },
+            {
+              "name": "duration:poi:0:dev-time-lock-0-1",
+              "passed": true
+            },
+            {
+              "name": "opening_and_day_window:poi:0:dev-time-lock-0-1",
+              "passed": true
+            }
+          ],
+          "checked": 8,
+          "failed": 0
+        },
+        "quality": {
+          "score": 100,
+          "passed": true,
+          "warnings": [],
+          "days_checked": 1,
+          "attractions_checked": 2,
+          "duplicate_attractions_removed": 0,
+          "estimated_intra_day_distance_km": 0.85,
+          "route_checked": true,
+          "actual_route_distance_km": null,
+          "actual_route_minutes": 10.0,
+          "repairs": [],
+          "data_gaps": [
+            "hotel_and_meal_routes_unverified",
+            "in_attraction_walking_unknown",
+            "meal_pois_unavailable",
+            "opening_hours_unavailable",
+            "reservation_unverified",
+            "route_distance_and_walking_unverified"
+          ],
+          "degraded_days": [],
+          "policy_version": "constraints-v2",
+          "rules_passed": true,
+          "facts_complete": false,
+          "feasibility_status": "feasible",
+          "day_checks": [
+            {
+              "day_index": 0,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": 10.0,
+              "planned_minutes": 250.0,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 01",
+                  "to": "Fixture 00",
+                  "route_type": "transit",
+                  "minutes": 10,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            }
+          ],
+          "schedule_checks": [
+            {
+              "day_index": 0,
+              "status": "feasible",
+              "solver_status": "OPTIMAL",
+              "unknown": [],
+              "conflicts": [],
+              "omitted_activity_ids": [],
+              "unmet_meals": [],
+              "route_minutes": 30,
+              "finish_at": "2026-11-10T12:10:00+08:00"
+            }
+          ],
+          "unmet_meals": [],
+          "time_policy_version": "time-windows-v5-hotel-departure",
+          "fact_status": "unknown",
+          "cost_summary": {
+            "confirmed_cents": 0,
+            "estimated_cents": 19000,
+            "known_total_cents": 19000,
+            "unknown_items": [
+              "attraction_prices",
+              "transportation_prices"
+            ],
+            "limit_cents": null,
+            "within_limit": null
+          },
+          "completion_policy": "reliability-v1",
+          "issues": [
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "hotel_and_meal_routes_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "in_attraction_walking_unknown",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "MEAL_POI_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+              "action": "可稍后重试餐饮推荐或自行补充餐厅",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_hours_unavailable",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "reservation_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_distance_and_walking_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            }
+          ],
+          "outcome": "degraded"
+        },
+        "days": [
+          {
+            "city": "北京",
+            "timeline": [
+              {
+                "activity_id": "route:0:poi:0:dev-time-lock-0-1",
+                "title": "前往Fixture 01",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-time-lock-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T09:10:00+08:00",
+                "end_at": "2026-11-10T10:10:00+08:00",
+                "status": "confirmed",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-time-lock-0-1"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                }
+              },
+              {
+                "activity_id": "route:2:poi:0:dev-time-lock-0-0",
+                "title": "前往Fixture 00",
+                "kind": "travel",
+                "start_at": "2026-11-10T10:10:00+08:00",
+                "end_at": "2026-11-10T10:20:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "wait:poi:0:dev-time-lock-0-0",
+                "title": "等待",
+                "kind": "waiting",
+                "start_at": "2026-11-10T10:20:00+08:00",
+                "end_at": "2026-11-10T11:00:00+08:00",
+                "status": "estimated",
+                "source": "solver",
+                "evidence_refs": [],
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-time-lock-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T11:00:00+08:00",
+                "end_at": "2026-11-10T12:00:00+08:00",
+                "status": "confirmed",
+                "source": "frozen-synthetic-20261025",
+                "evidence_refs": [
+                  "dev-time-lock-0-0"
+                ],
+                "notes": [],
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                }
+              },
+              {
+                "activity_id": "hotel:return",
+                "title": "返回住宿",
+                "kind": "travel",
+                "start_at": "2026-11-10T12:00:00+08:00",
+                "end_at": "2026-11-10T12:10:00+08:00",
+                "status": "confirmed",
+                "source": "map",
+                "evidence_refs": [],
+                "notes": []
+              }
+            ],
+            "feasibility": {
+              "status": "feasible",
+              "solver_status": "OPTIMAL",
+              "unknown": [],
+              "conflicts": [],
+              "omitted_activity_ids": [],
+              "unmet_meals": [],
+              "route_minutes": 30,
+              "finish_at": "2026-11-10T12:10:00+08:00"
+            },
+            "date": "2026-11-10",
+            "day_index": 0,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-time-lock-0-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-time-lock-0-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-time-lock-0-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-time-lock-0-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null,
+            "schedule_stale": false
+          }
+        ],
+        "fixture_route_lookups": 6,
+        "elapsed_seconds": 0.0151
+      },
+      "baselines": {
+        "travel_order": {
+          "applicable": true,
+          "checks": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-time-lock-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-time-lock-0-0",
+                "passed": true
+              },
+              {
+                "name": "lock_or_completed_unchanged:poi:0:dev-time-lock-0-0",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-time-lock-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-time-lock-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 7,
+            "failed": 0
+          },
+          "travel_minutes": 30.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-time-lock-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-time-lock-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T11:00:00+08:00",
+                "end_at": "2026-11-10T12:00:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-time-lock-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T12:00:00+08:00",
+                "end_at": "2026-11-10T12:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-time-lock-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T12:10:00+08:00",
+                "end_at": "2026-11-10T13:10:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T13:10:00+08:00",
+                "end_at": "2026-11-10T13:20:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        },
+        "time_window_greedy": {
+          "applicable": true,
+          "checks": {
+            "passed": true,
+            "checks": [
+              {
+                "name": "day_0_positive_nonoverlapping",
+                "passed": true
+              },
+              {
+                "name": "day_0_daily_hard_bounds",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-time-lock-0-0",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-time-lock-0-0",
+                "passed": true
+              },
+              {
+                "name": "lock_or_completed_unchanged:poi:0:dev-time-lock-0-0",
+                "passed": true
+              },
+              {
+                "name": "duration:poi:0:dev-time-lock-0-1",
+                "passed": true
+              },
+              {
+                "name": "opening_and_day_window:poi:0:dev-time-lock-0-1",
+                "passed": true
+              }
+            ],
+            "checked": 7,
+            "failed": 0
+          },
+          "travel_minutes": 30.0,
+          "scheduled_attractions": 2,
+          "timeline": [
+            [
+              {
+                "activity_id": "baseline-route:poi:0:dev-time-lock-0-0",
+                "kind": "travel",
+                "start_at": "2026-11-10T09:00:00+08:00",
+                "end_at": "2026-11-10T09:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-time-lock-0-0",
+                "title": "Fixture 00",
+                "kind": "attraction",
+                "start_at": "2026-11-10T11:00:00+08:00",
+                "end_at": "2026-11-10T12:00:00+08:00"
+              },
+              {
+                "activity_id": "baseline-route:poi:0:dev-time-lock-0-1",
+                "kind": "travel",
+                "start_at": "2026-11-10T12:00:00+08:00",
+                "end_at": "2026-11-10T12:10:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              },
+              {
+                "activity_id": "poi:0:dev-time-lock-0-1",
+                "title": "Fixture 01",
+                "kind": "attraction",
+                "start_at": "2026-11-10T12:10:00+08:00",
+                "end_at": "2026-11-10T13:10:00+08:00"
+              },
+              {
+                "activity_id": "hotel:return",
+                "kind": "travel",
+                "start_at": "2026-11-10T13:10:00+08:00",
+                "end_at": "2026-11-10T13:20:00+08:00",
+                "status": "confirmed",
+                "notes": []
+              }
+            ]
+          ],
+          "scope": "Same candidates, directed route fixture, day bounds and opening facts. No intercity or prior-state aggregation model."
+        }
+      }
+    },
+    {
+      "id": "dev-crosscity-hard-access",
+      "production": {
+        "checks": {
+          "passed": true,
+          "checks": [
+            {
+              "name": "day_1_status_matches_frozen_semantics",
+              "passed": true,
+              "detail": {
+                "expected": "infeasible",
+                "actual": "infeasible"
+              }
+            },
+            {
+              "name": "proven_conflict_has_no_executable_timeline",
+              "passed": true
+            },
+            {
+              "name": "day_0_outside_scope_unchanged",
+              "passed": true
+            }
+          ],
+          "checked": 3,
+          "failed": 0
+        },
+        "quality": {
+          "score": 85,
+          "passed": false,
+          "warnings": [
+            "第2天：origin_connection_outside_day_window:frozen-train"
+          ],
+          "days_checked": 2,
+          "attractions_checked": 4,
+          "duplicate_attractions_removed": 0,
+          "estimated_intra_day_distance_km": 1.8,
+          "route_checked": false,
+          "actual_route_distance_km": null,
+          "actual_route_minutes": null,
+          "repairs": [],
+          "data_gaps": [
+            "hotel_and_meal_routes_unverified",
+            "in_attraction_walking_unknown",
+            "meal_pois_unavailable",
+            "opening_hours_unavailable",
+            "reservation_unverified",
+            "route_duration_unavailable_fallback_to_straight_line",
+            "transport_predeparture_buffer_unverified:frozen-train"
+          ],
+          "degraded_days": [],
+          "policy_version": "constraints-v2",
+          "rules_passed": false,
+          "facts_complete": false,
+          "feasibility_status": "infeasible",
+          "day_checks": [
+            {
+              "day_index": 0,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": null,
+              "planned_minutes": null,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 00",
+                  "to": "Fixture 01",
+                  "route_type": "transit",
+                  "minutes": null,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            },
+            {
+              "day_index": 1,
+              "visit_minutes": 120,
+              "meal_allowance_minutes": 90,
+              "buffer_minutes": 30,
+              "route_minutes": null,
+              "planned_minutes": null,
+              "inter_stop_walking_km": null,
+              "route_distance_km": null,
+              "routes": [
+                {
+                  "from": "Fixture 10",
+                  "to": "Fixture 11",
+                  "route_type": "transit",
+                  "minutes": null,
+                  "distance_km": null,
+                  "walking_km": null
+                }
+              ],
+              "walking_status": "unavailable"
+            }
+          ],
+          "schedule_checks": [
+            {
+              "day_index": 1,
+              "status": "infeasible",
+              "solver_status": "INVALID_WINDOWS",
+              "unknown": [
+                "transport_predeparture_buffer_unverified:frozen-train"
+              ],
+              "conflicts": [
+                "origin_connection_outside_day_window:frozen-train"
+              ],
+              "omitted_activity_ids": [],
+              "resolution_options": [
+                {
+                  "action": "allow_earlier_departure",
+                  "start_at": "2026-11-11T06:30:00+08:00",
+                  "message": "当前住宿接驳超出最早出发边界；需用户明确允许更早出发"
+                },
+                {
+                  "action": "choose_other_hotel",
+                  "message": "选择并重新核验能赶上固定班次的前晚住宿；未自动放宽约束"
+                }
+              ]
+            }
+          ],
+          "unmet_meals": [],
+          "time_policy_version": "time-windows-v5-hotel-departure",
+          "fact_status": "unknown",
+          "cost_summary": {
+            "confirmed_cents": 0,
+            "estimated_cents": 63000,
+            "known_total_cents": 63000,
+            "unknown_items": [
+              "attraction_prices",
+              "hotel_prices",
+              "transportation_prices",
+              "frozen-train"
+            ],
+            "limit_cents": null,
+            "within_limit": null
+          },
+          "completion_policy": "reliability-v1",
+          "issues": [
+            {
+              "code": "CONSTRAINT_UNSATISFIED",
+              "scope": "plan",
+              "reason": "第2天：origin_connection_outside_day_window:frozen-train",
+              "action": "修改要求或调整行程后重新检查",
+              "blocking": true,
+              "retryable": false
+            },
+            {
+              "code": "ROUTE_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "第1天、第2天部分景点间路线暂不可用，Agent 已保留可继续调整的行程",
+              "action": "可直接查看行程；出发前确认交通，或在具体行程中调整景点",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "hotel_and_meal_routes_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "in_attraction_walking_unknown",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "MEAL_POI_UNAVAILABLE",
+              "scope": "plan",
+              "reason": "暂未获取到可信餐饮候选，未编造餐厅",
+              "action": "可稍后重试餐饮推荐或自行补充餐厅",
+              "blocking": false,
+              "retryable": true
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "opening_hours_unavailable",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "reservation_unverified",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "DATA_UNVERIFIED",
+              "scope": "plan",
+              "reason": "route_duration_unavailable_fallback_to_straight_line",
+              "action": "出行前向官方来源确认",
+              "blocking": false,
+              "retryable": false
+            },
+            {
+              "code": "TRANSPORT_BUFFER_UNVERIFIED",
+              "scope": "plan",
+              "reason": "固定交通接驳仅按用户输入起止计算，尚未确认提前到站、安检和检票要求",
+              "action": "向承运方确认所需提前量并预留到站时间；当前不能保证赶上班次",
+              "blocking": false,
+              "retryable": false
+            }
+          ],
+          "outcome": "draft"
+        },
+        "days": [
+          {
+            "city": "北京",
+            "timeline": [],
+            "feasibility": {},
+            "date": "2026-11-10",
+            "day_index": 0,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 116.3,
+                "latitude": 39.9
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 00",
+                "activity_id": "poi:0:dev-crosscity-hard-access-0-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.31,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-crosscity-hard-access-0-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 01",
+                "activity_id": "poi:0:dev-crosscity-hard-access-0-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 116.32000000000001,
+                  "latitude": 39.9
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-crosscity-hard-access-0-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null
+          },
+          {
+            "city": "上海",
+            "timeline": [],
+            "feasibility": {
+              "status": "infeasible",
+              "solver_status": "INVALID_WINDOWS",
+              "unknown": [
+                "transport_predeparture_buffer_unverified:frozen-train"
+              ],
+              "conflicts": [
+                "origin_connection_outside_day_window:frozen-train"
+              ],
+              "omitted_activity_ids": [],
+              "resolution_options": [
+                {
+                  "action": "allow_earlier_departure",
+                  "start_at": "2026-11-11T06:30:00+08:00",
+                  "message": "当前住宿接驳超出最早出发边界；需用户明确允许更早出发"
+                },
+                {
+                  "action": "choose_other_hotel",
+                  "message": "选择并重新核验能赶上固定班次的前晚住宿；未自动放宽约束"
+                }
+              ]
+            },
+            "date": "2026-11-11",
+            "day_index": 1,
+            "description": "Frozen synthetic day",
+            "theme": "",
+            "activities": [],
+            "transportation": "公共交通",
+            "accommodation": "酒店",
+            "hotel": {
+              "name": "Fixture hotel",
+              "address": "",
+              "location": {
+                "longitude": 121.45,
+                "latitude": 31.2
+              },
+              "price_range": "",
+              "rating": "",
+              "distance": "",
+              "type": "",
+              "estimated_cost": 0
+            },
+            "attractions": [
+              {
+                "name": "Fixture 10",
+                "activity_id": "poi:1:dev-crosscity-hard-access-1-0",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 121.46,
+                  "latitude": 31.21
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-crosscity-hard-access-1-0",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              },
+              {
+                "name": "Fixture 11",
+                "activity_id": "poi:1:dev-crosscity-hard-access-1-1",
+                "optional": false,
+                "priority": 50,
+                "address": "Frozen synthetic fixture",
+                "location": {
+                  "longitude": 121.47,
+                  "latitude": 31.21
+                },
+                "visit_duration": 60,
+                "description": "Synthetic, not a real venue",
+                "category": "景点",
+                "rating": null,
+                "photos": [],
+                "poi_id": "dev-crosscity-hard-access-1-1",
+                "image_url": null,
+                "ticket_price": 0,
+                "price_source": "unknown",
+                "requested_names": [],
+                "opening_hours": "",
+                "fact_source": ""
+              }
+            ],
+            "meals": [],
+            "generation_mode": "llm",
+            "fallback_reason": null
+          }
+        ],
+        "fixture_route_lookups": 1,
+        "elapsed_seconds": 0.0077
+      },
+      "baselines": {
+        "travel_order": {
+          "applicable": false,
+          "reason": "Origin-hotel intercity access and fixed bridge need a separate transport model, not local order baseline."
+        },
+        "time_window_greedy": {
+          "applicable": false,
+          "reason": "Origin-hotel intercity access and fixed bridge need a separate transport model, not local order baseline."
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Twelve targeted synthetic cases, not independent real-world itinerary accuracy.",
+    "Baselines apply only to local scheduling; prior-state aggregation and intercity access are explicitly not applicable.",
+    "Travel-order baseline chooses shortest directed order, then attempts earliest legal windows; time-window greedy chooses earliest closing feasible candidate.",
+    "Provider latency, model grounding, Java authorization and browser experience are not evaluated here.",
+    "Independent checker reports named constraints, not a general completeness or factual-accuracy score."
+  ]
+}

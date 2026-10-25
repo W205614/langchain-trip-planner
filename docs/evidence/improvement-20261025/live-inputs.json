@@ -1,0 +1,154 @@
+{
+  "run_id": "improvement-20261025-v1",
+  "previous_campaign": "final-20261020-050d19bce4",
+  "limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "budget_boundary": "Durable pre-send reservations, including failed sends/retries/photo/indexing; not currency billing.",
+  "private_state_outside_repository": true,
+  "requests": {
+    "plan": {
+      "city": "北京",
+      "start_date": "2026-11-04",
+      "end_date": "2026-11-05",
+      "travel_days": 2,
+      "transportation": "公共交通",
+      "accommodation": "经济型酒店",
+      "preferences": [
+        "历史文化"
+      ],
+      "planning_input": {
+        "timezone": "Asia/Shanghai",
+        "day_start": "09:00",
+        "day_end": "20:00",
+        "budget_mode": "estimate",
+        "budget_cents": 200000
+      },
+      "free_text_input": "安排北京两日历史文化旅行，每天选择三个可信景点并留出休息时间；营业、预约、价格或路线资料不足时明确列出缺口，不要编造。"
+    },
+    "crosscity": {
+      "city": "北京",
+      "start_date": "2026-11-04",
+      "end_date": "2026-11-05",
+      "travel_days": 2,
+      "transportation": "公共交通",
+      "accommodation": "经济型酒店",
+      "preferences": [
+        "历史文化"
+      ],
+      "planning_input": {
+        "timezone": "Asia/Shanghai",
+        "day_start": "09:00",
+        "day_end": "20:00",
+        "budget_mode": "estimate",
+        "budget_cents": 200000,
+        "day_windows": [
+          {
+            "day_index": 1,
+            "start": "07:00",
+            "end": "20:00"
+          }
+        ],
+        "city_segments": [
+          {
+            "city": "北京",
+            "start_day": 0,
+            "end_day": 0
+          },
+          {
+            "city": "上海",
+            "start_day": 1,
+            "end_day": 1
+          }
+        ],
+        "commitments": [
+          {
+            "id": "sample-train",
+            "activity_id": "commitment:sample-train",
+            "day_index": 1,
+            "category": "transport",
+            "status": "confirmed",
+            "title": "用户输入的示例跨城交通（非真实票务）",
+            "time_mode": "fixed",
+            "origin_city": "北京",
+            "destination_city": "上海",
+            "origin_location": {
+              "longitude": 116.3785,
+              "latitude": 39.8652
+            },
+            "destination_location": {
+              "longitude": 121.3271,
+              "latitude": 31.2009
+            },
+            "start_at": "2026-11-05T08:00:00+08:00",
+            "end_at": "2026-11-05T12:30:00+08:00",
+            "amount_cents": 55000
+          }
+        ]
+      },
+      "free_text_input": "第一天北京、第二天上海，每天选择三个可信景点；保留用户输入的示例跨城交通，不代表真实出票，营业、用餐和接驳资料不足应明确列出。"
+    }
+  },
+  "proposal_instruction": "只调整第2天，保留确认预约和锁定活动，尽量少走路，其他日期完全不变",
+  "research_query": "故宫参观前有哪些需要核实的信息？请区分攻略与已确认事实。",
+  "configured_model_parameters": {
+    "LLM_MODEL_ID": "deepseek-v4-flash",
+    "LLM_TEMPERATURE": "0.7",
+    "EMBEDDING_MODEL": "text-embedding-3-large"
+  },
+  "agent_source_fingerprints": {
+    "backend/app/__init__.py": "112522af6a968b4482e91ccc13989d65325e59deab0e4193033202b4e680b18c",
+    "backend/app/agent_api/__init__.py": "4cfcdeb0bfb086a471d297be25f31339e96a230d829eccbdd1922454bd83fd3d",
+    "backend/app/agent_api/business_client.py": "0c6944a636b1e4a4e09177bced44e295068930988795a873f7cf90d327f45c7a",
+    "backend/app/agent_api/contracts.py": "dcbb1ba547405f8f3b68faa3a8747c3e5ee57fa5edb71e4a535bb4dbe24a9823",
+    "backend/app/agent_api/extraction.py": "06aa4617632db449732fbd3d5d48e9d4336c36da1b0c352381232a53bf9a31bb",
+    "backend/app/agent_api/index_versions.py": "81e9a4127a05c6bf2004ca6ceb7f39d9a6e3e5f21ed18456b0fdd87116320956",
+    "backend/app/agent_api/indexing.py": "bef5ed93e896cbd9f4d2af604f4dba14683700b856d4aa91d876d06771da3f2a",
+    "backend/app/agent_api/main.py": "1e6201d944ba5ccbd37f857ae9ac33b225514ca67b972ccdd719e6ae54642e1d",
+    "backend/app/agent_api/rebuild.py": "514b480e3e76146e6b5260ab19700353b4305a6385bcf156b1facaed4bbc34a6",
+    "backend/app/agents/__init__.py": "fa3da4334a8f74106271761d50a7eabc3c3459c3e9fc09d704698c31427a6409",
+    "backend/app/agents/data_nodes.py": "d095697b4b025406a8b7bd0adde2ae0615a0385c7c948370b58a6a263535f63b",
+    "backend/app/agents/prompts.py": "f9f60798f7ddd06665fb5a34b9c1d3d98a977c2d246dbfe3fe65a1f7a3e937cd",
+    "backend/app/agents/state.py": "3e808212f3f633390038e6a17a14aa620a0964af8fff01b29cb9cd6a4975ddc0",
+    "backend/app/agents/trip_planner_agent.py": "a45ee224621574f1d0f396162b1e30a9c0f687c62a1aad5b1c4333ecb892d500",
+    "backend/app/config.py": "73025b9cd6473e8bd6f9584fc9541099e344772429539d983963db17830e997e",
+    "backend/app/core/__init__.py": "3a3e5fba992826e80faecc8d506c37cddbed6cac0b1d19ae1599e8a2c37dca5b",
+    "backend/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
+    "backend/app/core/logging.py": "9c77c5c71d1e7dc4335913dd1995f5b032c28a90eb56983d48a549c221d52e69",
+    "backend/app/core/rag_metrics.py": "b9c9e5a5d565fd3b4aca7aa2d5cf5b1a294a6c11b85aa1aac8bbee4fec86120f",
+    "backend/app/core/trip_metrics.py": "0bb5b53fce3226c5734ef614eabd9a6ddeae56c65c36378c4981bb749388f53a",
+    "backend/app/evals/__init__.py": "7ed5d2a9fbea712aac840a20a684f314da3374151775a492c2ad679d7afed00c",
+    "backend/app/evals/constraint_benchmark.py": "9388c7544c719a58a46d127193ec6459f7a60cb5c808abb14027567d07b20543",
+    "backend/app/evals/planning_benchmark.py": "4cf6b5d2c3ce48ef8de1db19cd5fcd77be0021c20146d4c4c35dbf2060bf35e2",
+    "backend/app/evals/rag_benchmark.py": "be09264c6a037ad7a13d6fc80ed830c9f20264ca0ca672cff1256dfb2c288ee5",
+    "backend/app/models/__init__.py": "1e624445fdf51ded7466ab6ca301b8a2d5989e4fe2f90f35b69536d0f04884e8",
+    "backend/app/models/planning.py": "1448c4f5e1b176013baf5bfcc255dd618337ca8ef85b6bba62105ce6a1babc96",
+    "backend/app/models/schemas.py": "c83fa5f649afdfd1eab323067f48a1e2f9d4c6d6ba55e581c9042f70d8f19028",
+    "backend/app/services/__init__.py": "cb4346c48da59e98457b35e0e4e6cc5069793c1061c3debf5ddc84b7570bd500",
+    "backend/app/services/agent_paths.py": "3ff1bb47a9c2ade8fc80e756bc52c0938caa7d468ad95615eb153d3aed4b9e8a",
+    "backend/app/services/amap_mcp_client.py": "fa52348d14cbc3e9433c9873ee727a225da125260403301f10dee8715724bd8b",
+    "backend/app/services/amap_mcp_service.py": "70b7c748d24147b8aead5a7fb1e2c358153ac3c31da50b4d178219f7032577ef",
+    "backend/app/services/amap_service.py": "6d6e94505a62309b2fcb19746e5e0f7ebab1060f6ed320369810005a24ca243a",
+    "backend/app/services/assistant_intent.py": "2223d825a0c4478557c21469d73bb0d16ea61348fa6d4eec881b645cd4f97896",
+    "backend/app/services/attraction_names.py": "4b8adbb18abeababc3976374c638e97e5dc6722a7eb4fd454908db454f01a973",
+    "backend/app/services/call_budget.py": "5e0fd681b6d586a8bedbd02c7fb753ba7c8347aa074cc3813a8e39f0ff9fca7a",
+    "backend/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
+    "backend/app/services/durable_execution.py": "d163b31e240b6fbff6b09870802e800180111363d8007d47d6bb43cd6767ea13",
+    "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+    "backend/app/services/execution.py": "5618051ae1a86e598b6ea4e3025fe47e1417e7ff36d8439f6f2401f47d19a664",
+    "backend/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
+    "backend/app/services/llm_service.py": "3e5d98c282e221426ed17b16dcd8c0e34f26bec4bb83c7c4894cd4a4dd4952e9",
+    "backend/app/services/plan_quality.py": "363efac5a2c125236a8989391cc10174ae7702e812d16d291925e862dce22b03",
+    "backend/app/services/planning_constraints.py": "a4ba3378b50b7b7f2bb935b8f50f6f95c90bf4cbddc17e60a23b6e72599b3436",
+    "backend/app/services/poi_photos.py": "adb57d7f8b44f384d6a110d80777aa8be3c885d7999577ef832dd58ab96cdb87",
+    "backend/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
+    "backend/app/services/rag_service.py": "0169c48b88e158f7a3be15a17516592a6de78e8bd1006cae8e939ff3846008b5",
+    "backend/app/services/research_answer.py": "6b947f284df73cd35ac36f2f3d5f093176f45f4fdde7da4b91fcb6ade1624e99",
+    "backend/app/services/result_policy.py": "722228645bfea5bbdf33a31730a08de4fe17717baa6b57d83ff7abb5263075f7",
+    "backend/app/services/time_planner.py": "28927ad2d93b8c1b86b963d6b5b62f6838111d11721a5bb0b2a1ab96062b0861"
+  },
+  "stop_policy": "Each of four scenes once; at most one necessary explicit recovery after a targeted fix. Never rotate this run or reset either ledger. No repeat of successful scenes.",
+  "daily_followup": "Default: no new provider sends; original daily data/config preserved. No ledger copy to original business database."
+}

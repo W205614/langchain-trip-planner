@@ -76,7 +76,8 @@ def setup(monkeypatch, sampler, tmp_path, stage, state, handler):
     return args, calls
 
 
-def test_generation_replays_saved_request_and_key_after_lost_submit_response(monkeypatch, sampler, tmp_path):
+@pytest.mark.parametrize("isolated", [False, True])
+def test_generation_replays_saved_request_and_key_after_lost_submit_response(monkeypatch, sampler, tmp_path, isolated):
     saved = {"city": "北京", "start_date": "2020-01-01", "end_date": "2020-01-02", "travel_days": 2}
     def handler(method, path, kwargs):
         if path == "/api/trip/tasks":
@@ -89,7 +90,18 @@ def test_generation_replays_saved_request_and_key_after_lost_submit_response(mon
             return Response(200, {"data": record()})
         raise AssertionError(f"Unexpected call: {method} {path}")
     args, calls = setup(monkeypatch, sampler, tmp_path, "plan", {"plan_request": saved, "plan_key": "original-key"}, handler)
+    targets = []
+    inspect = sampler.inspect
+    def tracked_inspect(name):
+        targets.append(name)
+        return inspect(name)
+    monkeypatch.setattr(sampler, "inspect", tracked_inspect)
+    if isolated:
+        args.backend_container = "trip-improvement-backend-1"
+        args.database_container = "trip-improvement-postgres-1"
     assert sampler.run(args)["passed"]
+    assert targets == ([args.backend_container, args.database_container] if isolated else
+        ["langchain-trip-planner-backend-1", "langchain-trip-planner-postgres-1"])
     persisted = json.loads((args.private_dir / "state.json").read_text(encoding="utf-8"))
     assert persisted["plan_request"] == saved and persisted["plan_task"] == "existing-task"
     assert sum(path == "/api/trip/tasks" for _, path, _ in calls) == 1

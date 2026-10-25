@@ -48,11 +48,13 @@ def run(args):
         raise ValueError("Only the local deployment is supported")
     if not re.fullmatch(r"[A-Za-z0-9_.:-]{1,120}",args.run_id):
         raise ValueError("Invalid existing run ID")
-    deployed=inspect("langchain-trip-planner-backend-1")
+    # Explicit container targets allow a restored, isolated candidate stack to
+    # own the single durable campaign before any daily deployment is changed.
+    deployed=inspect(getattr(args,"backend_container","langchain-trip-planner-backend-1"))
     env=dict(x.split("=",1) for x in deployed["Config"]["Env"] if "=" in x)
     if env.get("FINAL_ACCEPTANCE_RUN_ID")!=args.run_id:
         raise RuntimeError("Backend is not pinned to the requested acceptance run")
-    postgres=inspect("langchain-trip-planner-postgres-1")
+    postgres=inspect(getattr(args,"database_container","langchain-trip-planner-postgres-1"))
     pg_env=dict(x.split("=",1) for x in postgres["Config"]["Env"] if "=" in x)
     database=business_database(env,pg_env)
     def counts():
@@ -236,6 +238,8 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--base-url",default="http://127.0.0.1:8380")
     p.add_argument("--run-id",required=True)
+    p.add_argument("--backend-container",default="langchain-trip-planner-backend-1")
+    p.add_argument("--database-container",default="langchain-trip-planner-postgres-1")
     p.add_argument("--private-dir",type=Path,required=True)
     p.add_argument("--output",type=Path,required=True)
     p.add_argument("--stage",choices=("plan","proposal","crosscity","research","readback"),required=True)

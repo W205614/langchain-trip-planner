@@ -91,6 +91,110 @@ class FinalPlanningIntegrationTest {
     assertNotEquals(task,child);assertEquals("failed",db.queryForObject("SELECT status FROM trip_tasks WHERE id=?",String.class,task));assertEquals(task,db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?",String.class,child));
     assertEquals("unknown",db.queryForObject("SELECT column_default FROM information_schema.columns WHERE table_name='outbound_reservations' AND column_name='outcome'",String.class).replace("'","").replace("::character varying",""));
   }
+  ObjectNode recoveryRequest() {
+    var request = json.createObjectNode().put("city", "北京").put("start_date", "2026-11-01")
+        .put("end_date", "2026-11-02").put("travel_days", 2).put("transportation", "步行")
+        .put("accommodation", "经济");
+    request.putObject("planning_input");
+    return request;
+  }
+
+  @Test void ordinarySavedDraftCanResumeIdempotentlyAndRetryWithoutChangingItsRecord() {
+    when(agent.available()).thenReturn(true);
+    long uid = user(), record = trip(uid), stranger = user();
+    db.update("UPDATE trip_records SET quality_json='{\"outcome\":\"draft\"}' WHERE id=?", record);
+    String task = tasks.submit(uid, recoveryRequest(), "draft:" + UUID.randomUUID(), "test", null)
+        .path("data").path("id").asText();
+    db.update("UPDATE trip_tasks SET status='needs_attention',record_id=? WHERE id=?", record, task);
+    assertEquals(404, assertThrows(ApiException.class,
+        () -> tasks.resume(stranger, task, "other", "test")).status);
+    assertEquals(404, assertThrows(ApiException.class,
+        () -> tasks.retry(stranger, task, "other", "test")).status);
+    String key = "resume:" + UUID.randomUUID();
+    String child = tasks.resume(uid, task, key, "test").path("data").path("id").asText();
+    assertEquals(child, tasks.resume(uid, task, key, "test").path("data").path("id").asText());
+    assertEquals(task, db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?", String.class, child));
+    String retry = tasks.retry(uid, task, "retry:" + UUID.randomUUID(), "test").path("data").path("id").asText();
+    assertNotEquals(child, retry);
+    assertNull(db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?", String.class, retry));
+    assertEquals("needs_attention", db.queryForObject("SELECT status FROM trip_tasks WHERE id=?", String.class, task));
+    assertEquals(1, db.queryForObject("SELECT version FROM trip_records WHERE id=?", Integer.class, record));
+    assertEquals("draft", tasks.snapshot(uid, task).path("result").path("quality").path("outcome").asText());
+    db.update("UPDATE trip_tasks SET status='cancelled' WHERE id IN (?,?)", child, retry);
+  }
+
+  @Test void savedAssistantProposalCannotBeRecoveredOrRetriedThroughTaskEndpoints() {
+    when(agent.available()).thenReturn(true);
+    long uid = user(), record = trip(uid);
+    // The persisted result governs this restriction, even for a legacy request
+    // without assistant metadata.
+    String task = tasks.submit(uid, recoveryRequest(), "proposal:" + UUID.randomUUID(), "test", null)
+        .path("data").path("id").asText();
+    db.update("UPDATE trip_tasks SET status='needs_attention',record_id=? WHERE id=?", record, task);
+    long before = db.queryForObject("SELECT count(*) FROM trip_tasks WHERE user_id=?", Long.class, uid);
+    clearInvocations(agent);
+    for (String status : List.of("pending", "confirmed", "discarded", "")) {
+      var quality = json.createObjectNode().put("outcome", "draft")
+          .put("assistant_proposal_status", status).put("assistant_confirmation_required", status.isEmpty());
+      String saved = json.writeValueAsString(quality);
+      db.update("UPDATE trip_records SET quality_json=? WHERE id=?", saved, record);
+      var resume = assertThrows(ApiException.class,
+          () -> tasks.resume(uid, task, "resume:" + UUID.randomUUID(), "test"));
+      var retry = assertThrows(ApiException.class,
+          () -> tasks.retry(uid, task, "retry:" + UUID.randomUUID(), "test"));
+      for (var rejected : List.of(resume, retry)) {
+        assertEquals(409, rejected.status);
+        assertEquals("ASSISTANT_PROPOSAL_REVIEW_REQUIRED", rejected.code);
+        assertTrue(rejected.getMessage().contains("确认或放弃"));
+      }
+      assertEquals(saved, db.queryForObject("SELECT quality_json FROM trip_records WHERE id=?", String.class, record));
+      assertEquals(1, db.queryForObject("SELECT version FROM trip_records WHERE id=?", Integer.class, record));
+    }
+    verify(agent, never()).available();
+    assertEquals(before, db.queryForObject("SELECT count(*) FROM trip_tasks WHERE user_id=?", Long.class, uid));
+    assertEquals("needs_attention", db.queryForObject("SELECT status FROM trip_tasks WHERE id=?", String.class, task));
+  }
+
+  @Test void interruptedAssistantGenerationCanStillResumeAndRetry() {
+    when(agent.available()).thenReturn(true);
+    for (String status : List.of("failed", "cancelled")) {
+      long uid = user(), original = trip(uid);
+      var revision = json.createObjectNode().put("record_id", original).put("version", 1)
+          .put("day_index", 0).put("assistant_conversation_id", UUID.randomUUID().toString());
+      String task = tasks.submit(uid, recoveryRequest(), "interrupted:" + UUID.randomUUID(), "test", revision)
+          .path("data").path("id").asText();
+      db.update("UPDATE trip_tasks SET status=? WHERE id=?", status, task);
+      String child = tasks.resume(uid, task, "resume:" + UUID.randomUUID(), "test")
+          .path("data").path("id").asText();
+      String retry = tasks.retry(uid, task, "retry:" + UUID.randomUUID(), "test")
+          .path("data").path("id").asText();
+      assertEquals(task, db.queryForObject("SELECT resumed_from FROM trip_tasks WHERE id=?", String.class, child));
+      assertNotEquals(child, retry);
+      assertEquals(status, db.queryForObject("SELECT status FROM trip_tasks WHERE id=?", String.class, task));
+      assertEquals(revision.path("assistant_conversation_id").asText(), json.readTree(db.queryForObject(
+          "SELECT request_json FROM trip_tasks WHERE id=?", String.class, child))
+          .path("_revision").path("assistant_conversation_id").asText());
+      db.update("UPDATE trip_tasks SET status='cancelled' WHERE id IN (?,?)", child, retry);
+    }
+  }
+
+  @Test void savedDraftCannotRecoverWhenItsResultIsMissingOrNotOwned() {
+    when(agent.available()).thenReturn(true);
+    long uid = user(), otherRecord = trip(user());
+    String task = tasks.submit(uid, recoveryRequest(), "missing:" + UUID.randomUUID(), "test", null)
+        .path("data").path("id").asText();
+    db.update("UPDATE trip_tasks SET status='needs_attention' WHERE id=?", task);
+    clearInvocations(agent);
+    for (Long record : Arrays.asList(null, otherRecord)) {
+      db.update("UPDATE trip_tasks SET record_id=? WHERE id=?", record, task);
+      assertEquals("RESULT_DELETED", assertThrows(ApiException.class,
+          () -> tasks.resume(uid, task, "resume:" + UUID.randomUUID(), "test")).code);
+      assertEquals("RESULT_DELETED", assertThrows(ApiException.class,
+          () -> tasks.retry(uid, task, "retry:" + UUID.randomUUID(), "test")).code);
+    }
+    verify(agent, never()).available();
+    assertEquals(1L, db.queryForObject("SELECT count(*) FROM trip_tasks WHERE user_id=?", Long.class, uid));
+  }
   @Test void resumeCannotReclassifyExistingOrdinaryTaskButReusesItsOwnRecoveryKey(){
     when(agent.available()).thenReturn(true);long uid=user(),trip=trip(uid);
     var request=(ObjectNode)json.readTree("{\"city\":\"北京\",\"start_date\":\"2026-11-01\",\"end_date\":\"2026-11-02\",\"travel_days\":2,\"transportation\":\"步行\",\"accommodation\":\"经济\",\"planning_input\":{}}");

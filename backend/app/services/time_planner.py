@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v5-hotel-departure"
+RULE_VERSION = "time-windows-v6-conflict-classification"
 FACT_TTLS = {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600}
 
 
@@ -506,6 +506,10 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     if day.day_index > 0 and city_for_day(request,day.day_index-1) != city and not any(c.get("destination_city") == city and confirmed(c) and c.get("end_at") and 0 <= _local_minute(c["end_at"],day,zone) < 1440 for c in inputs.commitments):
         unknown.add("cross_city_confirmed_transport_missing")
     nodes, conflicts = _nodes(day, inputs, low, high, zone, unknown)
+    # Node windows depend on dated openings, locks, appointments and explicit
+    # day/arrival bounds, never on estimated map durations. An empty mandatory
+    # window is therefore a proof independent of other missing facts.
+    proven_window_conflicts = set(conflicts)
     conflicts.extend(connection_conflicts)
     unknown.update(_transport_buffer_gaps(bridges,inputs))
     required_names = {n.casefold() for n in request.constraints.must_visit}
@@ -530,7 +534,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     report = {"status": "unverified", "solver_status": "NOT_RUN", "unknown": [], "conflicts": conflicts, "omitted_activity_ids": []}
     if conflicts or low >= high or not nodes:
         model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
-        report.update(status="infeasible" if proven_connection_conflicts or not model_unknown else "unverified", solver_status="INVALID_WINDOWS", unknown=sorted(unknown))
+        proven = proven_connection_conflicts or proven_window_conflicts.intersection(conflicts) or low >= high
+        report.update(status="infeasible" if proven or not model_unknown else "unverified", solver_status="INVALID_WINDOWS", unknown=sorted(unknown))
         return [], report, None
     cap = max(1, min(40, int(os.getenv("PLANNER_MAX_DAILY_ACTIVITIES", "20"))))
     if len(nodes) > cap:

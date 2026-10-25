@@ -81,8 +81,9 @@
           <section v-if="quality.assistant_proposal_status === 'pending'" class="proposal-review" data-testid="proposal-diff">
             <h3>本次改排的变化与确认条件</h3>
             <a-alert v-if="proposalDetailsError" type="warning" :message="proposalDetailsError" />
+            <a-alert v-if="proposalConfirmError" data-testid="proposal-confirm-error" type="error" show-icon :message="proposalConfirmError" />
             <template v-if="proposalDetails">
-              <a-alert v-if="proposalDetails.stale" type="error" :message="proposalDetails.invalidation_reason || '依赖已变化，请重新生成提案。'" />
+              <a-alert v-if="proposalDetails.stale" data-testid="proposal-stale" type="error" :message="proposalConflictMessage(proposalDetails.invalidation_reason)" />
               <p v-if="proposalDetails.diff?.summary">{{ proposalDetails.diff.summary }}</p>
               <p v-if="proposalDetails.diff?.cost_delta_cents != null">费用估算变化：{{ proposalDetails.diff.cost_delta_cents >= 0 ? '+' : '' }}¥{{ (proposalDetails.diff.cost_delta_cents / 100).toFixed(2) }}（未知费用仍单列）</p>
               <ul v-if="proposalChanges.length"><li v-for="(change, i) in proposalChanges" :key="i">{{ change }}</li></ul>
@@ -452,6 +453,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
+import { proposalConflictMessage } from '@/utils/proposalConflict'
 import { useTripMap } from '@/composables/useTripMap'
 import AttractionPicker from '@/components/trip/AttractionPicker.vue'
 import ActivityTimeline from '@/components/trip/ActivityTimeline.vue'
@@ -476,6 +478,7 @@ const planningRevision = ref(0)
 const activityBusy = ref(false)
 const proposalDetails = ref<any>(null)
 const proposalDetailsError = ref('')
+const proposalConfirmError = ref('')
 const scopeEditor = ref<InstanceType<typeof RevisionScopeEditor>>()
 const revisionScope = ref<RevisionScope>({ day_indices: [], activity_ids: [] })
 const describeChange = (value: any) => typeof value === 'string' ? value : value.title || value.name || value.activity_id || value.id || '活动安排变化'
@@ -490,6 +493,7 @@ const proposalChanges = computed(() => {
   return values
 })
 async function loadProposalDetails() {
+  proposalConfirmError.value = ''
   if (!historyRecordId.value || !quality.value.assistant_conversation_id || quality.value.assistant_proposal_status !== 'pending') { proposalDetails.value = null; return }
   try { proposalDetails.value = await fetchAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value); proposalDetailsError.value = '' }
   catch (e: any) { proposalDetails.value = null; proposalDetailsError.value = e?.response?.data?.message || '提案依赖读取失败，请刷新后确认。'; revokeAccess(e) }
@@ -520,6 +524,7 @@ onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); docu
 async function confirmAssistant() {
   if (!historyRecordId.value || !quality.value.assistant_conversation_id || proposalBusy.value) return
   proposalBusy.value = true
+  proposalConfirmError.value = ''
   try {
     const response = await confirmAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value, recordVersion.value)
     historyRecordId.value = response.id; recordVersion.value = response.version; quality.value = response.quality; tripPlan.value = response.data
@@ -528,8 +533,12 @@ async function confirmAssistant() {
     proposalDetails.value = null
     await loadPlanningInput()
   } catch (e: any) {
-    if (e.response?.status === 409) { message.error('方案或原行程版本已变化，请返回我的行程重新查看'); await router.push('/history') }
-    else message.error(e.response?.data?.message || '确认失败，请重新打开方案')
+    if (e.response?.status === 409) {
+      const reason = proposalConflictMessage(e.response?.data?.code, e.response?.data?.message)
+      await loadProposalDetails()
+      proposalConfirmError.value = reason
+      message.error(reason)
+    } else { revokeAccess(e); message.error(e.response?.data?.message || '确认失败，请重新打开方案') }
   } finally { proposalBusy.value = false }
 }
 async function discardAssistant() {
@@ -564,6 +573,7 @@ const proposalQualityMessage = computed(() => ({
 const factGapMessage = computed(() => {
   const gaps: string[] = quality.value.data_gaps || []
   const notes = ['预约要求及余票请通过景区官方渠道确认']
+  if (gaps.some(gap => gap.split(':')[0] === 'schedule_unknown_or_stale')) notes.push('部分日期的旧时间轴缺失或已过期，请重新核验或改排')
   notes.push(gaps.includes('opening_hours_unavailable') ? '部分景点暂无开放时间数据' : '开放时间为查询参考，出行日请再次确认')
   if (gaps.includes('route_duration_unavailable_fallback_to_straight_line')) notes.push('部分景点间路线查询失败，详见每日交通')
   if (gaps.some(gap => gap.startsWith('meal_candidate_unassigned:'))) notes.push('部分餐饮候选未能安排，用餐仍有缺口，请就近用餐并重新核验')

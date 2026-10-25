@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "dataset_sha256": "a308d9a3613e6cb82de6c90d26cf47ed788a95339c66f268db17a503f19f72ac",
+  "evaluator_sha256": "766e3f333b402ec7cf5fda851bd203614eff7053d0409c68c49edc9eddfba7e7",
+  "evidence_files": {
+    "benchmark-development-before.json": {
+      "sha256": "724b62c1c25692157e5ec892f1a9cc8c52df24385c1306eec9178a8c61c5e570",
+      "source_ref": "e0d51a9",
+      "source_fingerprints": {
+        "backend/app/services/time_planner.py": "708336627ea1ab777d2e536c44af389fece40f7a1329ca1f4d7dbdeaf3aef825",
+        "backend/app/services/planning_constraints.py": "886a3dac49f1e2479975d58ce5fbf0778388d8ed3ea1596b25048a107751bc55",
+        "backend/app/services/result_policy.py": "c07638749b4b2acfae86fb9284a7259c108fb8712133d8822f5eda773dd94da2"
+      }
+    },
+    "benchmark-development-after.json": {
+      "sha256": "84e8061ce8662ccafbc68451da75f39f528328a07c63a971fa7bb453afe743aa",
+      "source_ref": "working-tree",
+      "source_fingerprints": {
+        "backend/app/services/time_planner.py": "28927ad2d93b8c1b86b963d6b5b62f6838111d11721a5bb0b2a1ab96062b0861",
+        "backend/app/services/planning_constraints.py": "a4ba3378b50b7b7f2bb935b8f50f6f95c90bf4cbddc17e60a23b6e72599b3436",
+        "backend/app/services/result_policy.py": "722228645bfea5bbdf33a31730a08de4fe17717baa6b57d83ff7abb5263075f7"
+      }
+    },
+    "benchmark-holdout.json": {
+      "sha256": "d2a2efff056572ce34c2f440286c702c4bcb4d2811bb9b82151a97e1c7dffba9",
+      "source_ref": "working-tree",
+      "source_fingerprints": {
+        "backend/app/services/time_planner.py": "28927ad2d93b8c1b86b963d6b5b62f6838111d11721a5bb0b2a1ab96062b0861",
+        "backend/app/services/planning_constraints.py": "a4ba3378b50b7b7f2bb935b8f50f6f95c90bf4cbddc17e60a23b6e72599b3436",
+        "backend/app/services/result_policy.py": "722228645bfea5bbdf33a31730a08de4fe17717baa6b57d83ff7abb5263075f7"
+      }
+    }
+  },
+  "development": {
+    "before_cases_passed": 4,
+    "after_cases_passed": 6,
+    "cases": 6,
+    "scope": "Frozen targeted synthetic development inputs, not a general accuracy rate.",
+    "fixed_failures": [
+      "Prior persisted infeasible day incorrectly hidden by successful scoped scheduling.",
+      "Proven required-visit closure incorrectly downgraded to uncertainty by unrelated missing opening facts."
+    ]
+  },
+  "holdout": {
+    "cases_passed": 6,
+    "cases": 6,
+    "runs": 1,
+    "run_only_after_parent_production_freeze": true,
+    "expectations_or_production_tuned_after_results": false
+  },
+  "final_production_named_check_counts": {
+    "overall_status_matches_frozen_semantics": 3,
+    "outcome_matches_frozen_semantics": 3,
+    "outside_scope_unchanged": 7,
+    "positive_nonoverlapping": 10,
+    "daily_hard_bounds": 10,
+    "duration": 20,
+    "opening_and_day_window": 20,
+    "status_matches_frozen_semantics": 10,
+    "proven_conflict_has_no_executable_timeline": 3,
+    "missing_route_disclosed": 2,
+    "omission_visible": 1,
+    "lock_or_completed_unchanged": 2
+  },
+  "baseline_comparison": {
+    "applicable_cases": 7,
+    "not_applicable_cases": 5,
+    "satisfiable_local_cases": 5,
+    "travel_order_without_named_violations": 4,
+    "window_greedy_without_named_violations": 5,
+    "interpretation": "Production and window-aware greedy satisfy the named local constraints on all five schedulable local cases. Shortest-travel-order has one opening-window violation. This does not establish general optimality or superiority to a constraint-aware baseline.",
+    "satisfiable_local_results": [
+      {
+        "id": "dev-unknown-route",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [],
+            "travel_minutes": 90.0,
+            "scheduled_attractions": 2
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [],
+            "travel_minutes": 90.0,
+            "scheduled_attractions": 2
+          }
+        }
+      },
+      {
+        "id": "dev-optional-meal",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          }
+        }
+      },
+      {
+        "id": "dev-time-lock",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          }
+        }
+      },
+      {
+        "id": "hold-completed-scope",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          }
+        }
+      },
+      {
+        "id": "hold-multiday-window-order",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [
+              "opening_and_day_window:poi:0:hold-multiday-window-order-0-1"
+            ],
+            "travel_minutes": 60.0,
+            "scheduled_attractions": 4
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [],
+            "travel_minutes": 60.0,
+            "scheduled_attractions": 4
+          }
+        }
+      }
+    ],
+    "proven_conflicts": [
+      {
+        "id": "dev-closed-with-unknown",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [
+              "opening_and_day_window:poi:0:dev-closed-with-unknown-0-0"
+            ],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [
+              "opening_and_day_window:poi:0:dev-closed-with-unknown-0-0"
+            ],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          }
+        }
+      },
+      {
+        "id": "hold-lock-conflict-unknown",
+        "production_passed": true,
+        "baselines": {
+          "travel_order": {
+            "independent_named_violations": [
+              "opening_and_day_window:poi:0:hold-lock-conflict-unknown-0-0",
+              "lock_or_completed_unchanged:poi:0:hold-lock-conflict-unknown-0-0"
+            ],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          },
+          "time_window_greedy": {
+            "independent_named_violations": [
+              "opening_and_day_window:poi:0:hold-lock-conflict-unknown-0-0",
+              "lock_or_completed_unchanged:poi:0:hold-lock-conflict-unknown-0-0"
+            ],
+            "travel_minutes": 30.0,
+            "scheduled_attractions": 2
+          }
+        }
+      }
+    ],
+    "proven_conflict_interpretation": "These two inputs are intentionally infeasible. Baseline construction attempts retain mandatory visits and expose violations; they are not counted as schedulable-case failures or used for a success-rate claim. Production must explicitly reject them as infeasible.",
+    "not_applicable": [
+      {
+        "id": "dev-retained-infeasible",
+        "reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+      },
+      {
+        "id": "dev-crosscity-hard-access",
+        "reason": "Origin-hotel intercity access and fixed bridge need a separate transport model, not local order baseline."
+      },
+      {
+        "id": "hold-retained-not-found",
+        "reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+      },
+      {
+        "id": "hold-retained-unknown",
+        "reason": "Prior persisted day-state aggregation is not a route-ordering problem."
+      },
+      {
+        "id": "hold-crosscity-unknown-access",
+        "reason": "Origin-hotel intercity access and fixed bridge need a separate transport model, not local order baseline."
+      }
+    ]
+  },
+  "real_provider_calls": 0,
+  "model_calls": 0,
+  "limits": [
+    "All twelve cases use synthetic venue facts and local directed-route fixtures. Fixed clock and dataset frozen_at are synthetic fixture timestamps, not actual provider observation times or wall-clock freeze evidence.",
+    "This validates deterministic scheduling/state classification and specific disclosure rules, not real-world facts, model answer quality, restaurant availability, live traffic, Java permissions, browser experience or user satisfaction.",
+    "Source_ref e0d51a9 loads only the three named scheduling modules; schemas and installed environment remain current and are recorded.",
+    "Production elapsed times are local observations on small fixtures, not performance or SLA evidence.",
+    "No general accuracy, RMB cost savings, Exactly Once, HA or production-readiness claim follows."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "dataset": "backend/evals/improvement_cases_20261025.json",
+  "sha256": "a308d9a3613e6cb82de6c90d26cf47ed788a95339c66f268db17a503f19f72ac",
+  "case_count": 12,
+  "development": 6,
+  "holdout": 6,
+  "fixed_clock": "2026-10-25T00:00:00+00:00",
+  "production_changed_after_freeze_only": true,
+  "holdout_execution": "prohibited_until_parent_announces_production_freeze",
+  "real_provider_calls": 0,
+  "expectations_source": "Hard constraints and explicitly persisted prior states; no observed output tuning",
+  "coverage": [
+    "dev-retained-infeasible",
+    "dev-closed-with-unknown",
+    "dev-unknown-route",
+    "dev-optional-meal",
+    "dev-time-lock",
+    "dev-crosscity-hard-access",
+    "hold-retained-not-found",
+    "hold-retained-unknown",
+    "hold-lock-conflict-unknown",
+    "hold-completed-scope",
+    "hold-crosscity-unknown-access",
+    "hold-multiday-window-order"
+  ]
+}
