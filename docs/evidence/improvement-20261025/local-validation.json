@@ -1,0 +1,46 @@
+{
+  "phase": "before_docker_window",
+  "python_reproduction": {
+    "cases": 8,
+    "before_failed": 8,
+    "after_passed": 8,
+    "provider_calls": 0,
+    "scope": "Retained infeasible/not_found/unverified day, missing legacy schedule, independently proven closed/locked/appointment/arrival conflicts with unrelated unknown facts."
+  },
+  "python_affected_checks": {
+    "passed": 79,
+    "environment_failures": 4,
+    "deselected": 1,
+    "environment_failure_reason": "The minimal local Python 3.11 environment lacks LangGraph and prometheus_client; these failures must be rerun in the candidate image, not counted as passed.",
+    "pending_image_cases": [
+      "test_multicity_generation_fetches_each_city_and_preserves_global_dates",
+      "test_spatial_groups_reduce_fixture_cross_city_travel",
+      "test_actual_v2_resume_uses_original_hashes_without_any_outbound_reservation",
+      "test_actual_v2_crosscity_resume_reuses_original_generation_and_hotel_stage_hashes",
+      "test_v2_execution_restores_draft_without_regenerating"
+    ]
+  },
+  "sampler_affected_checks": {
+    "passed": 4,
+    "scope": "Frozen request and idempotency reuse, explicit isolated container targets, unknown research response no implicit retry, confirmation crash-window recovery.",
+    "docker_or_http_calls": 0
+  },
+  "java": {
+    "test_compile": "passed",
+    "new_database_scenarios": 4,
+    "database_execution": "pending_docker_window"
+  },
+  "frontend": {
+    "type_check_and_build": "passed",
+    "affected_mock_browser_scenarios_passed": 14,
+    "fixture_adjustment": "A hidden Ant Design radio input could not be checked as a user action. The task test clicks the visible label; original business assertions were retained. Only failed/affected cases were rerun.",
+    "real_backend_browser": "pending_docker_window"
+  },
+  "credential_check": {
+    "committed_changed_files_scanned": 29,
+    "nonempty_private_runtime_values_checked": 6,
+    "matches": 0,
+    "boundary": "Exact-value comparison against private deployment credentials, not a claim of comprehensive vulnerability scanning."
+  },
+  "boundary": "Pre-deployment evidence only. No Docker mutation or real supplier call has been performed at this phase. Final delivery records must distinguish later results from this snapshot."
+}
