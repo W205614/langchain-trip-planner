@@ -219,9 +219,11 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
     await page.getByRole('button', { name: '放弃方案', exact: true }).click()
     const discarded = await discarding
     expect(discarded.status()).toBe(200)
-    expect((await discarded.json()).quality.assistant_proposal_status).toBe('discarded')
+    const discardResult = await discarded.json()
+    expect(discardResult.quality.assistant_proposal_status).toBe('discarded')
+    expect(discardResult.message).toBeTruthy()
     await expect(page).toHaveURL(/\/history$/)
-    await expect(page.getByText('助手方案已放弃', { exact: true })).toBeVisible()
+    await expect(page.getByText(discardResult.message, { exact: true })).toBeVisible()
     const afterDiscard = (await api('GET', `/api/history/${tripId}`)).data
     expect(afterDiscard.version).toBe(afterInputChange.version)
     expect(afterDiscard.plan).toEqual(afterInputChange.plan)

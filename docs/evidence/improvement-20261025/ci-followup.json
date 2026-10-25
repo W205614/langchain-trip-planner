@@ -17,5 +17,16 @@
     "Real HTTP browser: planning input edit increments only planning_revision, shows the distinct conflict, disables confirmation, rejects HTTP confirmation without rewriting either record, and permits UI discard while preserving original.",
     "Real Java/PostgreSQL HTTP: FACTS_EXPIRED, VERSION_CONFLICT and PLANNING_INPUT_CONFLICT compare full original/proposal records, versions and outbox before/after rejection. Version conflict exercises rollback after the proposal update."
   ],
+  "second_run": {
+    "revision": "2b08dab1acae8c2fde4315c48c280934ad11eef9",
+    "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40183168816",
+    "java": "101 passed, no skips; includes full rejected-confirmation snapshots",
+    "python_and_frontend_build": "passed",
+    "original_scoped_scenarios": "passed after explicit fixture target fix",
+    "browser": "49 passed, 2 failed on text expectations",
+    "browser_failures": ["Existing reliability check still expected the old current-rules wording instead of generated-at rules wording", "New discard test invented a success message instead of checking the actual nonempty response message displayed by the UI"],
+    "correction": "Match the intended generated-at wording and actual discard response message. Retain all prior response/status/record/version/quality assertions, then run the final SHA CI.",
+    "production_implementation_changed": false
+  },
   "evidence_binding": "The added tests were not counted in earlier local passed totals. Final pushed delivery SHA must pass every expected CI job; final handoff records that exact SHA and run URL. Local application images still use 61d983a production implementation."
 }
