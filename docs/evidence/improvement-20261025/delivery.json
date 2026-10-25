@@ -1,0 +1,55 @@
+{
+  "recorded_at_utc": "2026-10-25T09:50:36.628383+00:00",
+  "local_status": "accepted; final remote SHA CI remains an external completion gate",
+  "baseline_revision": "e0d51a966cfe4221c248fc7b99cefc0a6b995e20",
+  "application_source_revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+  "delivery_revision_binding": "The commit containing this delivery.json is the delivery revision. Resolve git log -1 --format=%H -- docs/evidence/improvement-20261025/delivery.json; final chat records verified local/remote HEAD, divergence and CI URL. Avoid a self-referential SHA.",
+  "implemented": [
+    "Reason-specific proposal conflict feedback and retained proposal review",
+    "Reachable all-task filter and ordinary draft recovery; generated proposal generic recovery rejected",
+    "Whole-trip feasibility aggregation preserving untouched dates",
+    "Independent proven conflicts remain infeasible despite unrelated unknowns",
+    "Whole-day crosscity time cap includes fixed transport and access, with estimated-vs-proven distinction",
+    "Compatible candidate/fact checkpoint reuse; stale schedules recomputed"
+  ],
+  "unchanged": [
+    "Java owns authorization, execution and final transaction",
+    "No schema migration or destructive API change",
+    "No solver rewrite or unrelated dependency upgrade",
+    "No resume HTML, agent.pdf, guide or interview edits"
+  ],
+  "effect": {
+    "development": "4/6 to 6/6",
+    "holdout": "6/6 once on frozen v6, not v7 evidence",
+    "baseline": "5 schedulable local cases: travel order 4/5, time-window greedy 5/5, solver 5/5; no universal superiority",
+    "live_discovery": "Original crosscity day 683 minutes exceeded 600; retained",
+    "offline_v7_revalidation": "562 minutes, one optional POI omitted and disclosed, fixed bridge preserved, zero new calls/reservations"
+  },
+  "experience": "browser-acceptance.json",
+  "budget": "live-budget.json",
+  "runtime_and_backup": "runtime-validation.json",
+  "deployment": "daily-deployment.json",
+  "cleanup": "cleanup.json",
+  "remaining_limits": [
+    "Live plans remain degraded/unverified and facts_complete=false",
+    "Beijing plan and proposal each disclose 4 meal gaps; crosscity 5 and no Shanghai restaurant scheduled",
+    "Opening/admission/lodging/price/route/access facts remain incomplete",
+    "Palace Museum and Yangxin Hall separate POI IDs do not prove semantic exclusivity",
+    "Research model timed out after 15 seconds and returned extractive_fallback",
+    "v7 cached replay is not a new live model sample",
+    "Reservation counts are not currency or exact completed sends; browser AMap SDK is outside tool/REST ledger",
+    "Single-host acceptance is not HA, SLA, Exactly Once, general accuracy or external-user feedback"
+  ],
+  "daily_final_state": "four services stopped; original environment and mounts preserved; database 26 tables/1044 rows unchanged",
+  "ci_gate": {
+    "expected": [
+      "Java business PostgreSQL tests",
+      "Python Agent tests",
+      "Frontend build (vue-tsc + vite)",
+      "Docker Compose config and build"
+    ],
+    "workflow": ".github/workflows/ci.yml",
+    "requirement": "All expected checks and any additional remote required gates must pass on final pushed main SHA; if a CI fix creates a new SHA recheck every expected check. No standalone security workflow is claimed."
+  },
+  "supported_resume_statement": "完善局部改排、任务恢复与提案确认；区分已证明冲突与事实未知，修复跨城每日时长上限，并以冻结案例、真实HTTP体验及恢复演练界定交付证据。"
+}

@@ -1,0 +1,70 @@
+{
+  "mode": "real_browser_real_http_offline_providers",
+  "passed": true,
+  "provider_calls": 0,
+  "checks": [
+    "UI registration/logout/login",
+    "two-day input and reload reconnect",
+    "timeline caveats and lock",
+    "scoped pending proposal preserves original",
+    "proposal-specific task action and API recovery denial",
+    "exact preview confirmed",
+    "downloaded HTML opened and checked",
+    "ordinary draft linked recovery remains a draft"
+  ],
+  "task_ids": {
+    "submitted": "75969a13-b777-4d88-802a-5215201b6345",
+    "proposal": "3a1d2865-49ef-4fde-989e-3a616d5809e1",
+    "draft": "4f6a6da7-0274-49aa-92e7-d72b518fa588",
+    "resumed": "70de79f8-d698-4ff4-9973-e8f00f06180f"
+  },
+  "boundary": "No business API mocks; only the external AMap SDK is blocked. Model and map providers are isolated fixtures. No live quality or external-user feedback claim.",
+  "browser_test": {
+    "file": "frontend/e2e/improvement-http.spec.ts",
+    "passed": 1,
+    "seconds": 21.7,
+    "business_api_mocks": false,
+    "real_backend_and_database": true
+  },
+  "roles": {
+    "file": "frontend/e2e/final-roles-live.spec.ts",
+    "passed": 1,
+    "seconds": 18.905,
+    "covered": [
+      "owner",
+      "editor",
+      "viewer",
+      "invitation_pending",
+      "revoked"
+    ],
+    "providers": "isolated offline fixtures",
+    "missing_attachments": "Two role screenshot attachments no longer exist; JSON result retained."
+  },
+  "manual_real_browser": {
+    "screenshots": [
+      "browser-live-plan.png",
+      "browser-expired-facts.png",
+      "browser-version-conflict.png"
+    ],
+    "observed": [
+      "Real sampled plan with timeline and unknown-fact disclosure",
+      "Actual expired-fact proposal with disabled confirmation",
+      "Actual version-conflict proposal retaining details and reason-specific next action",
+      "Final proposal white card/dark text contrast and historical-rule wording"
+    ],
+    "boundary": "Expired screenshot predates contrast fix. Live plan uses paid v6 result, not a new v7 paid sample."
+  },
+  "export": {
+    "download_opened": true,
+    "bytes": 403448,
+    "sha256": "6a3afbe792601e2f26568cc143554f6befe3f226dae1b882954f63fcc58bd9e1",
+    "private_location": ".codex-improvement-20261025/browser-itinerary-offline.html",
+    "public_copy_omitted": "Generated HTML may embed browser map credentials; raw export and private traces are not committed."
+  },
+  "harness_diagnostics": [
+    "Initial Ant button whitespace locator failed",
+    "Readonly calendar input required user-facing calendar selection",
+    "Lock button disappears after success; stable activity locator substituted"
+  ],
+  "assertions_retained": true
+}

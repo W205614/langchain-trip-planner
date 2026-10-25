@@ -1,0 +1,71 @@
+{
+  "checked_at_utc": "2026-10-25T09:48:25.087711+00:00",
+  "passed": true,
+  "offline_archive": "backups\\improvement-offline-validation-20261025",
+  "offline_archive_hashed_files": 14,
+  "offline_database_tables": 26,
+  "removed_containers": [
+    {
+      "id": "27f9d1d13278bb370c5a2c52d82818ee19660afff4b6d093d73554972d297318",
+      "name": "/trip-validation-frontend-1"
+    },
+    {
+      "id": "8076a482304db76f968a9c1846404b941d9c26b16c0f957c6c374ee3f2eb612a",
+      "name": "/trip-validation-backend-1"
+    },
+    {
+      "id": "4b0569e2a6ff5bf139bb308032348dba1d7b9c6768db5f488d039d0c4a5bf020",
+      "name": "/trip-validation-agent-1"
+    },
+    {
+      "id": "5dfab05d3dac3bc1b31c3ff47cea91203e5738519cb89a72e439692ee097c97b",
+      "name": "/trip-validation-amap-fixture-1"
+    },
+    {
+      "id": "58411f53d893e9952582c4f876b2969ead7592bd8c7bfa7fe80b581178df5c7c",
+      "name": "/trip-validation-postgres-1"
+    },
+    {
+      "id": "6fec573208d466df418bc9948e4a5de48625596eb27fdad46215c2f52ee32a77",
+      "name": "/trip-final-restore-pg-b250a2477f8d"
+    },
+    {
+      "id": "6af5e3d8f5543fe39b59e1fb009ec643354d6bbf9e540f263ae48f6f65eab5a5",
+      "name": "/trip-final-restore-backend-b250a2477f8d"
+    },
+    {
+      "id": "70d453e7d08d7bfd0612624457361670dc8064f0d09e8c7898463b31af13f99c",
+      "name": "/trip-final-restore-pg-3b581833a127"
+    }
+  ],
+  "previous_candidate_app_removals": "private candidate-app-cleanup.json; archived before removal",
+  "removed_networks": [
+    {
+      "id": "c512b0d53607e2a78b12f90bdc3716215037ca5802872bae82032ff4f8295f5f",
+      "name": "trip-validation_default"
+    },
+    {
+      "id": "c6bc1bd6eb31da577b8fc6ee72dade601ab8aeeba415f94599095962c96b87d9",
+      "name": "trip-final-restore-3b581833a127"
+    },
+    {
+      "id": "4a0f02425e7e3961b6134d3b6205f4ad6594c2a2a898962f28bbe6f61ec4de85",
+      "name": "trip-final-restore-b250a2477f8d"
+    }
+  ],
+  "removed_volumes": [
+    "trip-validation_migration_database",
+    "trip-validation_migration_uploads"
+  ],
+  "images_removed": [],
+  "retained": [
+    "daily business volume and all original binds",
+    "current and rollback images",
+    "sampled image archive and verified restore evidence",
+    "shared caches and unknown anonymous volumes",
+    "all unique historical materials"
+  ],
+  "filesystem_deletions": [],
+  "daily_four_stopped": true,
+  "unrelated_containers_unchanged": true
+}

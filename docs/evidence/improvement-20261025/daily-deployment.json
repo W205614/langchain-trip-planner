@@ -1,0 +1,81 @@
+{
+  "checked_at_utc": "2026-10-25T09:42:22.854089+00:00",
+  "source_revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+  "passed": true,
+  "network_mode": "zero allowance, disabled background workers, provider base URLs blocked during read-only daily verification",
+  "historical_readback": [
+    {
+      "case": "plan",
+      "record_id": 72,
+      "version": 2,
+      "exact_saved_plan": true,
+      "plan_sha256": "11779e95f18557e63a92d26297c1bc2ab0fc458ebca8a0481ac69ebdcc6c6ccc"
+    },
+    {
+      "case": "crosscity",
+      "record_id": 75,
+      "version": 1,
+      "exact_saved_plan": true,
+      "plan_sha256": "ba7f2873eafb6c001c9be9cac5ed6d168b0e9fc8c05b2fe99b9a97d7f74d8768"
+    }
+  ],
+  "zero_allowance": {
+    "no_provider_send": true,
+    "zero_allowance_checks": [
+      {
+        "kind": "text",
+        "http_status": 429,
+        "code": "OUTBOUND_BUDGET_EXHAUSTED"
+      },
+      {
+        "kind": "embedding",
+        "http_status": 429,
+        "code": "OUTBOUND_BUDGET_EXHAUSTED"
+      },
+      {
+        "kind": "amap",
+        "http_status": 429,
+        "code": "OUTBOUND_BUDGET_EXHAUSTED"
+      }
+    ]
+  },
+  "database_tables_unchanged": 26,
+  "database_rows_unchanged": 1044,
+  "original_persistent_file_hashes_unchanged": true,
+  "original_effective_environment_restored": true,
+  "final_daily_state": "all_four_stopped",
+  "private_env_files_edited": false,
+  "candidate_campaign_ledger_not_imported_into_daily_database": true,
+  "services": {
+    "agent": {
+      "container_id": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+      "image_id": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+      "state": "created",
+      "original_mounts_preserved": true
+    },
+    "backend": {
+      "container_id": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "image_id": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+      "state": "created",
+      "original_mounts_preserved": true
+    },
+    "frontend": {
+      "container_id": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "image_id": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+      "state": "exited",
+      "original_mounts_preserved": true
+    },
+    "postgres": {
+      "container_id": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "image_id": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "revision": null,
+      "state": "exited",
+      "original_mounts_preserved": true
+    }
+  },
+  "backup": "backups/current-20261025-improvement",
+  "campaign_archive": "backups/improvement-live-20261025"
+}

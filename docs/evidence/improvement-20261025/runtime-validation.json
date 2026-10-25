@@ -1,0 +1,60 @@
+{
+  "application_source_revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+  "java_targeted": "java-targeted.json: 6 passed, no skip; Java source unchanged after 9de6ad0",
+  "python_image_initial": {
+    "passed": 16,
+    "covers": "All five dependency-deferred paths and directly affected planning/recovery tests"
+  },
+  "python_v7_local": {
+    "passed": 50,
+    "dependency_deselected": 2
+  },
+  "python_final_image": {
+    "passed": 10,
+    "covers": "v7 whole-day cap, checkpoint compatibility and deferred recovery paths"
+  },
+  "sampler_targeted_passed": 4,
+  "frontend": {
+    "initial_affected_mock_browser_cases": 14,
+    "v7_affected_copy_meal_cases": 2,
+    "type_check_and_build": "passed",
+    "reruns_not_summed_as_unique": true
+  },
+  "http_faults": {
+    "passed": 21,
+    "report": "faults-http.json",
+    "providers": "isolated offline fixtures"
+  },
+  "build": {
+    "standard_local_compose_build": "Blocked after bounded retries: PyPI attrs 26.1.0 wheel was empty and failed locked SHA verification; lock/hash unchanged.",
+    "actual_release_recipe": "Reused original runtime base images. Python copied current source into audited base with 143 applicable locked package versions matching and pip check passing. Java copied locally Maven-packaged current JAR; frontend copied type-checked/built current dist. Builds used --network=none --pull=false.",
+    "java_jar_sha256": "18b32ad3c9a51cbdc32204cecf41436cbbad6b389929d57ee4f507447658ecc5",
+    "frontend_manifest_sha256": "699dd6f8bbe8bd133e6c148eb87e6ada08f6a4c4f5a4d87bb19c160311dea5bc",
+    "image_ids": {
+      "agent": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "backend": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "frontend": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "postgres": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+    },
+    "boundary": "Runtime-reuse local builds are not evidence that the standard clean build passed. Final remote CI builds the standard Dockerfiles."
+  },
+  "recovery": {
+    "preupgrade": {
+      "directory": "backups/current-20261025-improvement",
+      "hash_files": 17,
+      "tables": 26,
+      "rows": 1044,
+      "oci_graph_verified": true,
+      "isolated_restore_and_candidate_upgrade": true
+    },
+    "sampled_campaign": {
+      "directory": "backups/improvement-live-20261025",
+      "tables": 26,
+      "rows": 1421,
+      "independent_restore": true,
+      "ledger_preserved": true
+    },
+    "daily": "daily-deployment.json",
+    "cleanup": "cleanup.json"
+  }
+}

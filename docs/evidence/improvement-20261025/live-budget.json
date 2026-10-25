@@ -1,0 +1,43 @@
+{
+  "run_id": "improvement-20261025-v1",
+  "used_reservations": {
+    "amap": 283,
+    "embedding": 16,
+    "text": 6
+  },
+  "fixed_limits": {
+    "text": 12,
+    "embedding": 40,
+    "amap": 400
+  },
+  "all_within_caps": true,
+  "reservation_rows_archived": 305,
+  "old_ledgers_preserved": true,
+  "successful_samples_repeated": false,
+  "new_paid_recovery_attempts": 0,
+  "after_sampling_and_async_index": true,
+  "billing_boundary": "Pre-send durable reservations, not currency or exact completed requests. Unknown response outcomes remain unknown.",
+  "sdk_boundary": "Java and Python tool/REST requests are metered. Browser AMap JS SDK rendering is separate from this tool/REST ledger.",
+  "model": "deepseek-v4-flash",
+  "temperature": 0.7,
+  "embedding_model": "text-embedding-3-large",
+  "sample_app_revision": "9de6ad0adde667d1b79985a4ff16fddeca4f53c0",
+  "sample_rules": "time-windows-v6-conflict-classification",
+  "post_fix_evidence": "crosscity-budget-revalidation.json is offline v7 revalidation with zero ledger increment; paid output preserved.",
+  "archive": "backups/improvement-live-20261025",
+  "archive_file_hashes_verified": 18,
+  "image_roots_verified": [
+    "sha256:41d8afacb3e3fbc2da3d5a0c00df055594dcb85ca83a41e8b2cc1032d7c101a4",
+    "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+    "sha256:ddd803998502c7350f5e3be746f4506a6e16a421f9e7c48e48d0969c946d29e9",
+    "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+  ],
+  "independent_archive_restore": {
+    "passed": true,
+    "tables": 26,
+    "rows": 1421,
+    "restored_java_ready": true,
+    "persistent_archives_restored": true
+  },
+  "archive_image_reconstruction": "The sampled backend index was reconstructed after a local tag overwrite. Linux/amd64 manifest and executable config match the original sampled image; OCI index/attestation identity differs. Full private manifest retains both identities."
+}
