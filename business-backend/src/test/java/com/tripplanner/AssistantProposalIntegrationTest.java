@@ -11,6 +11,8 @@ import com.tripplanner.persistence.TaskMapper;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.net.URI;
 import java.net.http.*;
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -262,6 +264,45 @@ class AssistantProposalIntegrationTest {
     assertTrue(history.owned(uid, original).get("plan_json").toString().contains("原安排"));
     assertEquals(200, request("POST", "/api/assistant/conversations/" + conversation
         + "/proposals/" + stale + "/discard", owner, "{}", "1").statusCode());
+  }
+
+  private Map<String, Object> confirmationState(long uid, long original, long proposal) {
+    return Map.of("original", history.owned(uid, original), "proposal", history.owned(uid, proposal),
+        "outbox", jdbc.queryForList(
+            "SELECT * FROM rag_sync_jobs WHERE user_id=? AND record_id IN (?,?) ORDER BY id",
+            uid, original, proposal));
+  }
+
+  @Test
+  void rejectedConfirmationPreservesBothRecordsVersionsAndOutbox() throws Exception {
+    for (String reason : List.of("FACTS_EXPIRED", "VERSION_CONFLICT", "PLANNING_INPUT_CONFLICT")) {
+      String username = "confirm_reject_" + UUID.randomUUID().toString().substring(0, 12);
+      String owner = token(username);
+      long uid = jdbc.queryForObject("SELECT id FROM users WHERE username=?", Long.class, username);
+      long original = original(uid);
+      String conversation = conversation(owner, original);
+      long proposal = proposal(owner, conversation, "complete", true);
+      if (reason.equals("FACTS_EXPIRED")) {
+        var quality = (ObjectNode) json.readTree(history.owned(uid, proposal).get("quality_json").toString());
+        quality.putObject("planning_dependencies").putArray("facts").addObject()
+            .put("expires_at", Instant.now().minusSeconds(30).toString());
+        jdbc.update("UPDATE trip_records SET quality_json=? WHERE id=?",
+            json.writeValueAsString(quality), proposal);
+      } else if (reason.equals("VERSION_CONFLICT")) {
+        jdbc.update("UPDATE trip_records SET version=version+1 WHERE id=?", original);
+      } else {
+        jdbc.update("UPDATE trip_records SET planning_revision=planning_revision+1 WHERE id=?", original);
+      }
+      // Snapshot after the intentional external change. The version-conflict
+      // case fails after the proposal UPDATE, so equality also checks rollback
+      // of that earlier write, not just rejection before the transaction.
+      var before = confirmationState(uid, original, proposal);
+      var rejected = request("POST", "/api/assistant/conversations/" + conversation
+          + "/proposals/" + proposal + "/confirm", owner, "{}", "1");
+      assertEquals(409, rejected.statusCode(), rejected.body());
+      assertEquals(reason, json.readTree(rejected.body()).path("code").asText(), rejected.body());
+      assertEquals(before, confirmationState(uid, original, proposal), reason);
+    }
   }
 
   @Test

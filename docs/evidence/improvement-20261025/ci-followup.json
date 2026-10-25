@@ -1,0 +1,21 @@
+{
+  "initial_revision": "eb20277cc2502d94276245b790c8b8d4b5037f1a",
+  "initial_run": "https://github.com/W205614/langchain-trip-planner/actions/runs/40182517268",
+  "initial_successful_jobs": ["Java business PostgreSQL tests", "Python Agent tests", "Frontend build (vue-tsc + vite)"],
+  "initial_docker_job": {
+    "standard_image_build": "passed",
+    "business_benchmark": "22/22 passed",
+    "planning_roles": "42 checks passed",
+    "failed_assertion": "final_scenarios.py: remaining-day scope actually replaces a future visit",
+    "diagnosis": "The offline provider always replaces whitelist position 1. The remaining-day scenario selects a future visit by timeline order, which need not be position 1; protection correctly restores a protected activity the fixture accidentally chose instead. This is an offline scenario construction issue, not evidence of a production fix.",
+    "resolution": "Specify the intended mutable POI in the isolated fixture request, choose a different allowed candidate, and retain every existing scope/protection/replacement assertion. Pure fixture regression covers each current candidate position and rejects an unlisted target.",
+    "production_implementation_changed": false,
+    "pure_fixture_reproduction": {"before_failed": 3, "before_passed": 1, "after_passed": 4, "provider_calls": 0},
+    "regression_file": "backend/tests/test_validation_fixture_replacement.py"
+  },
+  "additional_completion_checks": [
+    "Real HTTP browser: planning input edit increments only planning_revision, shows the distinct conflict, disables confirmation, rejects HTTP confirmation without rewriting either record, and permits UI discard while preserving original.",
+    "Real Java/PostgreSQL HTTP: FACTS_EXPIRED, VERSION_CONFLICT and PLANNING_INPUT_CONFLICT compare full original/proposal records, versions and outbox before/after rejection. Version conflict exercises rollback after the proposal update."
+  ],
+  "evidence_binding": "The added tests were not counted in earlier local passed totals. Final pushed delivery SHA must pass every expected CI job; final handoff records that exact SHA and run URL. Local application images still use 61d983a production implementation."
+}

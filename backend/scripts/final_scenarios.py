@@ -116,11 +116,11 @@ def run(base_url,output,cross_city_only=False):
 
             target_day=after["plan"]["days"][2]
             mutable=next(a for a in target_day["attractions"] if a["activity_id"]!=booked["activity_id"])
-            # Choose the middle current candidate so the provider fixture can
-            # deterministically replace it with the fourth whitelisted POI.
+            # Keep this scenario's selected current activity, but identify it
+            # explicitly to the provider fixture instead of assuming a slot.
             mutable=target_day["attractions"][1] if target_day["attractions"][1]["activity_id"]!=booked["activity_id"] else mutable
             scope={"day_indices":[2],"activity_ids":[mutable["activity_id"]]}
-            conversation,proposal,before=propose(identity,2,scope,"只替换指定活动 fixture:replace，保留其他活动及预约")
+            conversation,proposal,before=propose(identity,2,scope,f"只替换指定活动 fixture:replace={mutable['poi_id']}，保留其他活动及预约")
             old_by_id={a["activity_id"]:a for a in before["plan"]["days"][2]["attractions"]}
             new_by_id={a["activity_id"]:a for a in proposal["plan"]["days"][2]["attractions"]}
             check("partial scope actually replaces selected activity",mutable["activity_id"] not in new_by_id and len(new_by_id)==len(old_by_id))
@@ -163,7 +163,7 @@ def run(base_url,output,cross_city_only=False):
             req("POST",f"/api/trips/{identity}/activities/{quote(completed['activity_id'],safe='')}/state",json={"planning_revision":cfg["planning_revision"],"locked":True,"lock_mode":"time","completed":True},headers={"If-Match":str(cfg["trip_version"])},label="owner marks first activity completed and time-locked")
             cutoff=timeline[remaining["activity_id"]]["start_at"]
             end=f"{day['date']}T20:30:00+08:00"
-            conversation,proposal,before=propose(identity,2,{"day_indices":[2],"start_at":cutoff,"end_at":end},"从所选时刻开始调整当天剩余安排 fixture:replace，已完成和锁定活动以及预约不得变化")
+            conversation,proposal,before=propose(identity,2,{"day_indices":[2],"start_at":cutoff,"end_at":end},f"从所选时刻开始调整当天剩余安排 fixture:replace={remaining['poi_id']}，已完成和锁定活动以及预约不得变化")
             old_day,new_day=before["plan"]["days"][2],proposal["plan"]["days"][2]
             old_activities={a["activity_id"]:a for a in [*old_day["attractions"],*old_day["meals"]]}
             new_activities={a["activity_id"]:a for a in [*new_day["attractions"],*new_day["meals"]]}

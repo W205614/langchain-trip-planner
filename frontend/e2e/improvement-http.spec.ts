@@ -162,6 +162,75 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
     await testInfo.attach('offline-html', { path: output, contentType: 'text/html' })
   })
 
+  let inputConflictTaskId = ''
+  await test.step('a real planning revision change disables confirmation with its own reason and permits discard', async () => {
+    const original = (await api('GET', `/api/history/${tripId}`)).data
+    const planning = (await api('GET', `/api/trips/${tripId}/planning-input`)).data
+    const accepted = await api('POST', `/api/assistant/conversations/${conversation}/messages`, {
+      content: '只调整第2天的游览节奏，第1天与锁定安排保持不变，先给我查看提案。',
+      mode: 'revise', record_id: tripId, version: original.version, day_index: 1,
+      planning_revision: planning.planning_revision, revision_scope: { day_indices: [1] },
+    }, 202, { 'Idempotency-Key': crypto.randomUUID() })
+    inputConflictTaskId = accepted.task_id
+    const state = await task(inputConflictTaskId)
+    expect(state.status).toBe('needs_attention')
+    const proposalId = Number(state.result.id)
+    const pending = (await api('GET', `/api/history/${proposalId}`)).data
+    expect(pending.quality.assistant_proposal_status).toBe('pending')
+    const proposalPath = `/api/assistant/conversations/${conversation}/proposals/${proposalId}`
+    expect((await api('GET', proposalPath)).data.stale).toBe(false)
+
+    const changedInput = structuredClone(planning.planning_input)
+    changedInput.day_end = changedInput.day_end === '19:30' ? '20:00' : '19:30'
+    const changed = (await api('PUT', `/api/trips/${tripId}/planning-input`, {
+      planning_input: changedInput, planning_revision: planning.planning_revision,
+    }, 200, { 'If-Match': String(planning.trip_version) })).data
+    expect(changed.trip_version).toBe(original.version)
+    expect(changed.planning_revision).toBe(planning.planning_revision + 1)
+    expect(changed.planning_input.day_end).toBe(changedInput.day_end)
+    // The intentional input edit may mark schedules stale. This persisted
+    // post-edit state, not the earlier plan, is the rollback comparison.
+    const afterInputChange = (await api('GET', `/api/history/${tripId}`)).data
+    expect(afterInputChange.version).toBe(original.version)
+    const stale = (await api('GET', proposalPath)).data
+    expect(stale.stale).toBe(true)
+    expect(stale.invalidation_reason.split(',')).toEqual(['PLANNING_INPUT_CONFLICT'])
+
+    await allTasks()
+    await page.getByTestId(`task-${inputConflictTaskId}`).getByRole('button', { name: '查看助手方案', exact: true }).click()
+    const explanation = page.getByTestId('proposal-stale')
+    await expect(explanation).toContainText('规划约束或预订事项已变化，请重新加载原行程并生成提案。')
+    await expect(explanation).not.toContainText('版本已变化')
+    await expect(explanation).not.toContainText('事实已过期')
+    await expect(page.getByRole('button', { name: '确认应用到原行程', exact: true })).toBeDisabled()
+    const rejected = await api('POST', `${proposalPath}/confirm`, {}, 409, { 'If-Match': String(pending.version) })
+    expect(rejected.code).toBe('PLANNING_INPUT_CONFLICT')
+    const stillPending = (await api('GET', `/api/history/${proposalId}`)).data
+    expect(stillPending.quality.assistant_proposal_status).toBe('pending')
+    expect(stillPending.version).toBe(pending.version)
+    expect(stillPending.plan).toEqual(pending.plan)
+    const afterRejection = (await api('GET', `/api/history/${tripId}`)).data
+    expect(afterRejection.version).toBe(afterInputChange.version)
+    expect(afterRejection.plan).toEqual(afterInputChange.plan)
+    expect(afterRejection.quality).toEqual(afterInputChange.quality)
+    expect((await api('GET', `/api/trips/${tripId}/planning-input`)).data.planning_revision).toBe(changed.planning_revision)
+
+    const discarding = page.waitForResponse(response => new URL(response.url()).pathname === `${proposalPath}/discard` && response.request().method() === 'POST')
+    await page.getByRole('button', { name: '放弃方案', exact: true }).click()
+    const discarded = await discarding
+    expect(discarded.status()).toBe(200)
+    expect((await discarded.json()).quality.assistant_proposal_status).toBe('discarded')
+    await expect(page).toHaveURL(/\/history$/)
+    await expect(page.getByText('助手方案已放弃', { exact: true })).toBeVisible()
+    const afterDiscard = (await api('GET', `/api/history/${tripId}`)).data
+    expect(afterDiscard.version).toBe(afterInputChange.version)
+    expect(afterDiscard.plan).toEqual(afterInputChange.plan)
+    expect(afterDiscard.quality).toEqual(afterInputChange.quality)
+    const discardedRecord = (await api('GET', `/api/history/${proposalId}`)).data
+    expect(discardedRecord.quality.assistant_proposal_status).toBe('discarded')
+    expect(discardedRecord.version).toBe(pending.version + 1)
+  })
+
   let draftTaskId = ''
   let resumedId = ''
   await test.step('a genuine infeasible ordinary draft remains recoverable as a new linked execution', async () => {
@@ -198,8 +267,8 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
 
   await testInfo.attach('improvement-http-summary', { contentType: 'application/json', body: JSON.stringify({
     mode: 'real_browser_real_http_offline_providers', passed: true, provider_calls: 0,
-    checks: ['UI registration/logout/login', 'two-day input and reload reconnect', 'timeline caveats and lock', 'scoped pending proposal preserves original', 'proposal-specific task action and API recovery denial', 'exact preview confirmed', 'downloaded HTML opened and checked', 'ordinary draft linked recovery remains a draft'],
-    task_ids: { submitted: submittedTaskId, proposal: proposalTaskId, draft: draftTaskId, resumed: resumedId },
+    checks: ['UI registration/logout/login', 'two-day input and reload reconnect', 'timeline caveats and lock', 'scoped pending proposal preserves original', 'proposal-specific task action and API recovery denial', 'exact preview confirmed', 'downloaded HTML opened and checked', 'planning revision conflict explained and rejected without changing either record; UI discard preserves original', 'ordinary draft linked recovery remains a draft'],
+    task_ids: { submitted: submittedTaskId, proposal: proposalTaskId, planning_conflict: inputConflictTaskId, draft: draftTaskId, resumed: resumedId },
     boundary: 'No business API mocks; only the external AMap SDK is blocked. Model and map providers are isolated fixtures. No live quality or external-user feedback claim.',
   }, null, 2) })
 })

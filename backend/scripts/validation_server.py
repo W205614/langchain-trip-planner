@@ -84,7 +84,18 @@ def response(prompt, **kwargs):
     restaurant_ids=list(dict.fromkeys(re.findall(r"poi_id=([^\s|]+)",restaurant_section.group(1)))) if restaurant_section else []
     if "fixture:unknown-poi" in text:
         ids = ["not-in-candidates"]
-    if "fixture:replace" in text and len(ids)>=4:
+    replacement_target=re.search(r"fixture:replace=([^\s<，,]+)",text)
+    if replacement_target:
+        target=replacement_target.group(1)
+        # Incremental prompts list the three current activities first. The
+        # requested mutable POI need not occupy position 1 after earlier solves.
+        # Replace it in place using a different, already whitelisted candidate.
+        if target not in ids[:3] or len(ids)<4:
+            raise ValueError("Offline replacement target/spare must be in the current whitelist")
+        current=ids[:3]
+        replacement=next(identity for identity in ids if identity not in current)
+        ids=[replacement if identity==target else identity for identity in current]
+    elif "fixture:replace" in text and len(ids)>=4:
         ids=[ids[0],ids[3],ids[2]]
     draft = {"description": "离线验证行程", "attractions": [
         {"poi_id": item, "name": "模型篡改名称", "address": "模型错误地址",
