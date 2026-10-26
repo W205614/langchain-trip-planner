@@ -205,7 +205,7 @@ jobs:
         run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --tag "$SECURITY_IMAGE" "${{ matrix.context }}"
       - name: Verify the changed Agent native library ABI without provider calls
         if: matrix.service == 'agent'
-        run: docker run --rm --network none --read-only --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_runtime_security_abi.py,target=/fixture/test_runtime_security_abi.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py
+        run: docker run --rm --network none --read-only --memory 1g --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_runtime_security_abi.py,target=/fixture/test_runtime_security_abi.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py
       - name: Scan without executing the image (checksum-verified Grype CLI)
         env:
           MATRIX_SERVICE: ${{ matrix.service }}

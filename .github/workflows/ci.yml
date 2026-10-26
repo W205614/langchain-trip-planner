@@ -151,6 +151,10 @@ jobs:
 
       - name: Start isolated validation stack
         run: |
+          validation_mfa_key=$(python -c 'import base64,secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())')
+          echo "::add-mask::$validation_mfa_key"
+          echo "VALIDATION_ACCOUNT_SECURITY_ENCRYPTION_KEY=$validation_mfa_key" >> "$GITHUB_ENV"
+          export VALIDATION_ACCOUNT_SECURITY_ENCRYPTION_KEY="$validation_mfa_key"
           docker compose -p trip-validation -f docker-compose.validation.yml up -d --no-build --wait postgres backend agent frontend
 
       - name: Agent image packaging and runtime contracts
@@ -180,9 +184,17 @@ jobs:
       - name: Browser recovery and isolation
         working-directory: frontend
         run: |
+          python -m pip install httpx==0.28.1
+          python ../backend/scripts/optimization_seed_admin.py --project trip-validation --base-url http://127.0.0.1:18080 --output ../.codex-optimization/admin-ci.json --allow-optional-admin-mfa
           npm ci
           npx playwright install --with-deps chromium
-          npx playwright test
+          python - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          environment=dict(os.environ)
+          environment.update(json.loads(Path('../.codex-optimization/admin-ci.json').read_text(encoding='utf-8')))
+          subprocess.run(['npx','playwright','test'],env=environment,check=True)
+          PY
 
       - name: Isolated recovery drill
         run: python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
@@ -195,7 +207,7 @@ jobs:
 
       - name: Local notification failure and recovery
         run: |
-          docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.15.1 test rules alerts.test.yml
+          docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.15.1 test rules alerts.test.yml alerts.capacity.test.yml
           python backend/scripts/notification_smoke.py
           cp docs/evidence/notifications.json evidence/notifications.json
 

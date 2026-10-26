@@ -38,12 +38,28 @@ groups:
           summary: "索引同步停滞，检查 worker 与依赖后重放失败任务"
           runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
       - alert: TripDiskLow
-        expr: trip_data_disk_free_ratio < 0.1
+        expr: (trip_data_disk_free_ratio < 0.1) and (trip_data_disk_sample_available == 1)
         for: 2m
         labels:
           severity: warning
         annotations:
           summary: "数据卷空间不足，暂停上传并检查备份和日志保留"
+          runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
+      - alert: TripDatabaseSizeHigh
+        expr: (trip_database_size_bytes > trip_database_size_warning_bytes) and (trip_database_capacity_sample_available == 1) and (trip_database_capacity_last_success_age_seconds <= 180)
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "当前数据库文件大小超过配置预警值；不等于PG卷剩余空间或硬配额"
+          runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
+      - alert: TripCapacitySamplingUnknown
+        expr: (trip_database_capacity_sample_available == 0) or (trip_database_capacity_last_success_age_seconds > 180) or absent(trip_database_capacity_sample_available{job="trip"}) or (trip_data_disk_sample_available == 0) or absent(trip_data_disk_sample_available{job="trip"})
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "数据库或上传容量采样失败、缺失或数据库样本过期；未知值不代表健康"
           runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
       - alert: TripRagDegraded
         expr: sum(increase(trip_rag_events_total{reason=~"timeout|busy|lock_timeout|entity_rejected"}[10m])) >= 5

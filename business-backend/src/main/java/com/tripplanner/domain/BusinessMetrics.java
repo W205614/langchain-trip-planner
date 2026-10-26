@@ -23,7 +23,8 @@ public class BusinessMetrics {
   private final Path storage;
   private final AtomicReference<Double> oldestQueueAge = new AtomicReference<>(0d);
   private final AtomicReference<Double> oldestSyncAge = new AtomicReference<>(0d);
-  private final AtomicReference<Double> diskFreeRatio = new AtomicReference<>(1d);
+  private final AtomicReference<Double> diskFreeRatio = new AtomicReference<>(Double.NaN);
+  private final AtomicReference<Double> diskSampleAvailable = new AtomicReference<>(0d);
 
   public BusinessMetrics(
       JdbcTemplate jdbc,
@@ -38,6 +39,7 @@ public class BusinessMetrics {
     Gauge.builder("trip.oldest.queue.age.seconds", oldestQueueAge, AtomicReference::get).register(registry);
     Gauge.builder("trip.oldest.sync.age.seconds", oldestSyncAge, AtomicReference::get).register(registry);
     Gauge.builder("trip.data.disk.free.ratio", diskFreeRatio, AtomicReference::get).register(registry);
+    Gauge.builder("trip.data.disk.sample.available", diskSampleAvailable, AtomicReference::get).register(registry);
     Gauge.builder("trip.backup.age.seconds",this,value->value.heartbeatAge("backup")).register(registry);
     Gauge.builder("trip.offhost.backup.age.seconds",this,value->value.heartbeatAge("offhost_backup")).register(registry);
     for (String metric : List.of("requests", "failures", "poi_cache_size", "weather_cache_size", "detail_cache_size", "route_cache_size"))
@@ -47,6 +49,7 @@ public class BusinessMetrics {
 
   @PostConstruct
   void initialRefresh() {
+    refreshDisk();
     refresh();
   }
 
@@ -98,14 +101,26 @@ public class BusinessMetrics {
     oldestSyncAge.set(
         age(
             "SELECT min(created_at) FROM (SELECT created_at FROM rag_sync_jobs WHERE status<>'succeeded' UNION ALL SELECT created_at FROM knowledge_ingest_jobs WHERE status<>'succeeded') q"));
+  }
+
+  /** Upload filesystem sampling must still run when unrelated JDBC aggregates fail. */
+  @Scheduled(fixedDelayString = "${METRICS_REFRESH_MILLIS:15000}")
+  public void refreshDisk() {
     try {
       if (Files.exists(storage)) {
         var disk = Files.getFileStore(storage);
-        diskFreeRatio.set((double) disk.getUsableSpace() / Math.max(1L, disk.getTotalSpace()));
+        long total = disk.getTotalSpace(), usable = disk.getUsableSpace();
+        if (total > 0 && usable >= 0) {
+          diskFreeRatio.set((double) usable / total);
+          diskSampleAvailable.set(1d);
+          return;
+        }
       }
     } catch (Exception ignored) {
       // A missing disk metric must not make the business service unavailable.
     }
+    diskFreeRatio.set(Double.NaN);
+    diskSampleAvailable.set(0d);
   }
 
   public void recordPlanOutcomeAfterCommit(String outcome) {

@@ -100,6 +100,12 @@ python backend/scripts/automated_maintenance.py recover-scheduler `
 
 Compose 为数据库、Java、Agent、前端和监控配置 CPU、内存、PID 与日志轮转上限。这些值限制故障影响，不证明实际峰值容量或长期稳定性。容量调整需结合实际资源、队列、连接池和受影响链路证据。
 
+数据库容量按独立低频采样观测：`trip_database_size_bytes` 读取当前连接库的 `pg_database_size(current_database())`，默认每 60 秒刷新；指标抓取只读缓存，不在每次 scrape 查询数据库。`DB_CAPACITY_QUERY_TIMEOUT_SECONDS` 默认 2 秒，限制在 1—5 秒，连接等待仍受既有连接池超时约束。`DB_SIZE_WARNING_BYTES` 默认 10737418240（10 GiB），必须大于零；它是部署可调预警线，不是数据库硬配额，也不暂停或删除业务数据。采样成功且不超过 180 秒的数据库大小高于预警线持续两分钟触发告警。
+
+采样启动前、异常或数据不可用时，数据库大小为 `NaN`、`trip_database_capacity_sample_available=0`，不沿用上次健康值；`trip_database_capacity_last_success_age_seconds` 仅在成功时重置。上传目录 `FileStore` 采样与 JDBC 聚合独立，目录缺失或采样异常同样为 `NaN`、`trip_data_disk_sample_available=0`。数据库或上传采样未知、数据库样本超过 180 秒或对应指标缺失持续两分钟触发 `TripCapacitySamplingUnknown`，不能把无数据理解为健康。配置更长数据库刷新间隔时，应同时审查 180 秒告警新鲜度阈值。
+
+`pg_database_size` 观测的是当前库的数据文件（含索引等），不等于 PostgreSQL 数据卷剩余空间，也不完整覆盖 WAL、临时文件、其他数据库、宿主磁盘和 Docker Desktop 虚拟磁盘增长。现有上传与 PostgreSQL 使用不同挂载，只提供逻辑路径和配额隔离；同一宿主/物理磁盘仍可能共同耗尽或故障。物理容量与独立故障域需要宿主及实际 PG 挂载的另行监测证据，不能用上传 `FileStore` 或数据库大小阈值替代。
+
 `OperationalRetention` 分批处理过期快照和超保留期终态任务载荷，保留任务身份、状态、恢复血缘和调用预算。成功 Outbox 历史保留每个实体最新成功，失败/待处理工作与必要删除水位不按成功历史清理。载荷到期后恢复返回明确原因。数据保留不表示可以删除业务库、预算账本、审计或用户备份。
 
 ## 资源保留与验收缺口

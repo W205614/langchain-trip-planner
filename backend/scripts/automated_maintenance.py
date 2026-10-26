@@ -165,12 +165,51 @@ def run_backup(project,root,replica_root=None,execute=False):
         return _run_backup_locked(project,root,replica_root,execute)
 
 
+def _preflight_images(before,report):
+    """Inspect the four selected containers' exact images before any writes.
+
+    Running rootfs layers do not establish that Docker can still export their
+    image identity. Never resolve a mutable tag as a substitute for that image.
+    """
+    results=[];missing=[]
+    for name in ("backend","agent","postgres","frontend"):
+        identity=before[name]["image"]
+        item={"service":name,"image_id":identity}
+        try:
+            inspected=json.loads(docker("image","inspect",identity))
+            if not isinstance(inspected,list) or len(inspected)!=1 or not isinstance(inspected[0],dict):
+                raise ValueError("Unexpected image inspect shape")
+            if inspected[0].get("Id")!=identity:
+                item["status"]="identity_mismatch"
+                raise ValueError("Image inspect did not return the exact selected identity")
+            item["status"]="verified"
+        except Exception as exception:
+            # Only Docker's explicit missing-image diagnostic establishes
+            # absence. Daemon/permission/JSON failures remain unclassified;
+            # exception messages can contain private details and are omitted.
+            if isinstance(exception,RuntimeError) and str(exception).strip().endswith("No such image: "+identity):
+                item["status"]="missing"
+                if identity not in missing:missing.append(identity)
+            else:item.setdefault("status","inspect_failed")
+            item["error_type"]=type(exception).__name__
+            report.setdefault("errors",[]).append({"step":"image_preflight",**item})
+        results.append(item)
+    report["image_preflight"]={"passed":all(item["status"]=="verified" for item in results),
+                               "images":results,"missing_image_ids":missing}
+    if not report["image_preflight"]["passed"]:
+        report.update(passed=False,execution_started=False,no_container_mutations_attempted=True,
+                      last_success_updated=False)
+        raise MaintenanceFailure(report)
+
+
 def _run_backup_locked(project,root,replica_root=None,execute=False):
     before=snapshot(project)
     report={"operation":"backup","project":project,"before":before,"executed":execute,
             "rpo_target_seconds":86400,"rto_target_seconds":3600,
             "targets_are_objectives_not_measured_guarantees":True}
     if not execute:return report
+    _preflight_images(before,report)
+    report["execution_started"]=True
     stamp=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     destination=root.resolve()/f"scheduled-{stamp}"
     start=time.monotonic();pg_started=False

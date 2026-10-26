@@ -1,0 +1,100 @@
+rule_files:
+  - alerts.yml
+evaluation_interval: 1m
+tests:
+  - name: measured_database_above_warning
+    interval: 1m
+    input_series:
+      - {series: 'trip_database_size_bytes{job="trip",instance="capacity"}', values: '200+0x4'}
+      - {series: 'trip_database_size_warning_bytes{job="trip",instance="capacity"}', values: '100+0x4'}
+      - {series: 'trip_database_capacity_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+      - {series: 'trip_database_capacity_last_success_age_seconds{job="trip",instance="capacity"}', values: '0+0x4'}
+      - {series: 'trip_data_disk_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+      - {series: 'trip_data_disk_free_ratio{job="trip",instance="capacity"}', values: '0.5+0x4'}
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: TripDatabaseSizeHigh
+        exp_alerts:
+          - exp_labels: {job: trip, instance: capacity, severity: warning}
+            exp_annotations:
+              summary: "当前数据库文件大小超过配置预警值；不等于PG卷剩余空间或硬配额"
+              runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
+      - {eval_time: 2m, alertname: TripCapacitySamplingUnknown, exp_alerts: []}
+      - {eval_time: 2m, alertname: TripDiskLow, exp_alerts: []}
+  - name: measured_database_at_warning_not_above
+    interval: 1m
+    input_series:
+      - {series: 'trip_database_size_bytes{job="trip",instance="capacity"}', values: '100+0x4'}
+      - {series: 'trip_database_size_warning_bytes{job="trip",instance="capacity"}', values: '100+0x4'}
+      - {series: 'trip_database_capacity_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+      - {series: 'trip_database_capacity_last_success_age_seconds{job="trip",instance="capacity"}', values: '0+0x4'}
+      - {series: 'trip_data_disk_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+    alert_rule_test:
+      - {eval_time: 3m, alertname: TripDatabaseSizeHigh, exp_alerts: []}
+      - {eval_time: 3m, alertname: TripCapacitySamplingUnknown, exp_alerts: []}
+  - name: successful_then_failed_sample_is_unknown_not_old_high_capacity
+    interval: 1m
+    input_series:
+      - {series: 'trip_database_size_bytes{job="trip",instance="capacity"}', values: '200 NaN NaN NaN NaN'}
+      - {series: 'trip_database_size_warning_bytes{job="trip",instance="capacity"}', values: '100+0x4'}
+      - {series: 'trip_database_capacity_sample_available{job="trip",instance="capacity"}', values: '1 0 0 0 0'}
+      - {series: 'trip_database_capacity_last_success_age_seconds{job="trip",instance="capacity"}', values: '0 60 120 180 240'}
+      - {series: 'trip_data_disk_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+    alert_rule_test:
+      - {eval_time: 3m, alertname: TripDatabaseSizeHigh, exp_alerts: []}
+      - eval_time: 3m
+        alertname: TripCapacitySamplingUnknown
+        exp_alerts:
+          - exp_labels: {job: trip, instance: capacity, severity: warning}
+            exp_annotations:
+              summary: "数据库或上传容量采样失败、缺失或数据库样本过期；未知值不代表健康"
+              runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
+  - name: available_flag_cannot_hide_stale_database_sample
+    interval: 1m
+    input_series:
+      - {series: 'trip_database_size_bytes{job="trip",instance="capacity"}', values: '50+0x5'}
+      - {series: 'trip_database_size_warning_bytes{job="trip",instance="capacity"}', values: '100+0x5'}
+      - {series: 'trip_database_capacity_sample_available{job="trip",instance="capacity"}', values: '1+0x5'}
+      - {series: 'trip_database_capacity_last_success_age_seconds{job="trip",instance="capacity"}', values: '0 120 240 360 480 600'}
+      - {series: 'trip_data_disk_sample_available{job="trip",instance="capacity"}', values: '1+0x5'}
+    alert_rule_test:
+      - {eval_time: 4m, alertname: TripDatabaseSizeHigh, exp_alerts: []}
+      - eval_time: 4m
+        alertname: TripCapacitySamplingUnknown
+        exp_alerts:
+          - exp_labels: {job: trip, instance: capacity, severity: warning}
+            exp_annotations:
+              summary: "数据库或上传容量采样失败、缺失或数据库样本过期；未知值不代表健康"
+              runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
+  - name: missing_database_sampler_is_unknown
+    interval: 1m
+    input_series:
+      - {series: 'trip_data_disk_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+    alert_rule_test:
+      - {eval_time: 2m, alertname: TripDatabaseSizeHigh, exp_alerts: []}
+      - eval_time: 2m
+        alertname: TripCapacitySamplingUnknown
+        exp_alerts:
+          - exp_labels: {job: trip, severity: warning}
+            exp_annotations:
+              summary: "数据库或上传容量采样失败、缺失或数据库样本过期；未知值不代表健康"
+              runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
+  - name: upload_sampling_failure_is_unknown_not_false_low_disk
+    interval: 1m
+    input_series:
+      - {series: 'trip_database_size_bytes{job="trip",instance="capacity"}', values: '50+0x4'}
+      - {series: 'trip_database_size_warning_bytes{job="trip",instance="capacity"}', values: '100+0x4'}
+      - {series: 'trip_database_capacity_sample_available{job="trip",instance="capacity"}', values: '1+0x4'}
+      - {series: 'trip_database_capacity_last_success_age_seconds{job="trip",instance="capacity"}', values: '0+0x4'}
+      - {series: 'trip_data_disk_sample_available{job="trip",instance="capacity"}', values: '0+0x4'}
+      - {series: 'trip_data_disk_free_ratio{job="trip",instance="capacity"}', values: 'NaN NaN NaN NaN NaN'}
+    alert_rule_test:
+      - {eval_time: 2m, alertname: TripDatabaseSizeHigh, exp_alerts: []}
+      - {eval_time: 2m, alertname: TripDiskLow, exp_alerts: []}
+      - eval_time: 2m
+        alertname: TripCapacitySamplingUnknown
+        exp_alerts:
+          - exp_labels: {job: trip, instance: capacity, severity: warning}
+            exp_annotations:
+              summary: "数据库或上传容量采样失败、缺失或数据库样本过期；未知值不代表健康"
+              runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"

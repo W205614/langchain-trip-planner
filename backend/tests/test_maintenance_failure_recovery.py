@@ -22,6 +22,8 @@ def environment(monkeypatch, states=None):
             for name, running in current.items()}
     def docker(*args, **_kwargs):
         calls.append(args)
+        if args[:2] == ("image", "inspect"):
+            return json.dumps([{"Id": args[2]}]).encode()
         if args[0] in ("stop", "start", "restart"):
             name = args[-1].removesuffix("-selected")
             current[name] = args[0] != "stop"
