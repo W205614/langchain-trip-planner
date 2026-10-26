@@ -1,0 +1,222 @@
+{
+  "status": "premature_ephemeral_cleanup",
+  "acknowledged_on": "2026-10-26",
+  "requirement": "Shared Docker host common 0.8 requires retaining every Docker object until the authorized cleanup window, including this task own temporary objects.",
+  "deviation": "The security subagent incorrectly treated data-free temporary tool/inventory/smoke objects as immediately disposable. This violated the object-retention window. No daily container or business volume was selected. Passing protocol results do not cure this process deviation.",
+  "confirmed_smoke_attempts": [
+    {
+      "fixture": "trip-monitor-smoke-35c92b8321f6",
+      "image": "trip-opt-alertmanager:candidate-20261026",
+      "status": "failed",
+      "scope": "isolated real Alertmanager HTTP v2 -> webhook v4 firing and resolved; no external recipient",
+      "image_id": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+      "cleanup": [],
+      "resource_policy_deviation": "no_objects_created",
+      "business_data": false,
+      "historical_container_ids": "not captured before automatic removal; subsequent daemon event buffer overwritten by shared-host health events; cannot reconstruct accurately"
+    },
+    {
+      "fixture": "trip-monitor-smoke-f53bdb539738",
+      "image": "trip-opt-alertmanager:candidate-20261026",
+      "status": "failed",
+      "scope": "isolated real Alertmanager HTTP v2 -> webhook v4 firing and resolved; no external recipient",
+      "image_id": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+      "cleanup": [
+        {
+          "container": "trip-monitor-smoke-f53bdb539738-alertmanager",
+          "exit": 0
+        },
+        {
+          "container": "trip-monitor-smoke-f53bdb539738-receiver",
+          "exit": 0
+        },
+        {
+          "network": "trip-monitor-smoke-f53bdb539738",
+          "exit": 0
+        }
+      ],
+      "resource_policy_deviation": "premature_ephemeral_cleanup",
+      "business_data": false,
+      "historical_container_ids": "not captured before automatic removal; subsequent daemon event buffer overwritten by shared-host health events; cannot reconstruct accurately"
+    },
+    {
+      "fixture": "trip-monitor-smoke-f8942fc9f716",
+      "image": "trip-opt-alertmanager:candidate-20261026",
+      "status": "pass",
+      "scope": "isolated real Alertmanager HTTP v2 -> webhook v4 firing and resolved; no external recipient",
+      "image_id": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+      "reported_version": {
+        "branch": "",
+        "buildDate": "",
+        "buildUser": "",
+        "goVersion": "go1.27.3",
+        "revision": "73c6bfe7393929211294c1954f30d8ed78e4d0ad-security1",
+        "version": "0.34.1"
+      },
+      "firing": {
+        "receiver": "isolated-fixture",
+        "status": "firing",
+        "alerts": [
+          {
+            "status": "firing",
+            "labels": {
+              "alertname": "TripSecuritySmoke",
+              "job": "trip-monitor-smoke-f8942fc9f716",
+              "severity": "warning"
+            },
+            "annotations": {
+              "summary": "Isolated security build compatibility fixture"
+            },
+            "startsAt": "2026-10-26T10:30:13.249848Z",
+            "endsAt": "0001-01-01T00:00:00Z",
+            "generatorURL": "",
+            "fingerprint": "de774fd1ac873cea"
+          }
+        ],
+        "notification_reason": "first notification",
+        "groupLabels": {
+          "alertname": "TripSecuritySmoke"
+        },
+        "commonLabels": {
+          "alertname": "TripSecuritySmoke",
+          "job": "trip-monitor-smoke-f8942fc9f716",
+          "severity": "warning"
+        },
+        "commonAnnotations": {
+          "summary": "Isolated security build compatibility fixture"
+        },
+        "routeLabels": {},
+        "externalURL": "http://ce4fad1cbb35:9093",
+        "version": "4",
+        "groupKey": "{}:{alertname=\"TripSecuritySmoke\"}",
+        "truncatedAlerts": 0
+      },
+      "resolved": {
+        "receiver": "isolated-fixture",
+        "status": "resolved",
+        "alerts": [
+          {
+            "status": "resolved",
+            "labels": {
+              "alertname": "TripSecuritySmoke",
+              "job": "trip-monitor-smoke-f8942fc9f716",
+              "severity": "warning"
+            },
+            "annotations": {
+              "summary": "Isolated security build compatibility fixture"
+            },
+            "startsAt": "2026-10-26T10:30:13.249848Z",
+            "endsAt": "2026-10-26T10:30:15.260887Z",
+            "generatorURL": "",
+            "fingerprint": "de774fd1ac873cea"
+          }
+        ],
+        "notification_reason": "all alerts resolved",
+        "groupLabels": {
+          "alertname": "TripSecuritySmoke"
+        },
+        "commonLabels": {
+          "alertname": "TripSecuritySmoke",
+          "job": "trip-monitor-smoke-f8942fc9f716",
+          "severity": "warning"
+        },
+        "commonAnnotations": {
+          "summary": "Isolated security build compatibility fixture"
+        },
+        "routeLabels": {},
+        "externalURL": "http://ce4fad1cbb35:9093",
+        "version": "4",
+        "groupKey": "{}:{alertname=\"TripSecuritySmoke\"}",
+        "truncatedAlerts": 0
+      },
+      "cleanup": [
+        {
+          "container": "trip-monitor-smoke-f8942fc9f716-alertmanager",
+          "exit": 0
+        },
+        {
+          "container": "trip-monitor-smoke-f8942fc9f716-receiver",
+          "exit": 0
+        },
+        {
+          "network": "trip-monitor-smoke-f8942fc9f716",
+          "exit": 0
+        }
+      ],
+      "resource_policy_deviation": "premature_ephemeral_cleanup",
+      "business_data": false,
+      "historical_container_ids": "not captured before automatic removal; subsequent daemon event buffer overwritten by shared-host health events; cannot reconstruct accurately"
+    }
+  ],
+  "stopped_inventory_attempts": {
+    "count": 3,
+    "purpose": "Read dpkg/os-release via stopped image container; no image command executed; no business mounts",
+    "disposition": "automatically removed before correction",
+    "exact_names_ids": "not retained in the failing pre-correction helper and unavailable in the subsequent bounded daemon event buffer"
+  },
+  "additional_tool_runs": {
+    "disposition": "docker run --rm before correction",
+    "purposes": [
+      "two Go dependency-lock resolution attempts",
+      "read-only promtool/amtool/version/package/Pebble inventory probes"
+    ],
+    "exact_ids": "not captured by --rm tool calls; cannot reconstruct from overwritten daemon events; no invented IDs or unsupported zero-object claim"
+  },
+  "corrective_changes": [
+    "Local smoke now stops and retains UUID containers and internal network by default, records exact IDs.",
+    "Local stopped inventory containers retained with immediate ID manifest; cleanup is explicit CI-only flag.",
+    "No subsequent local Docker rm/prune/--rm commands are authorized before coordinator window."
+  ],
+  "retained_after_correction": [
+    {
+      "container_name": "trip-security-apt-metadata-bfad86d78a6e",
+      "container_id": "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+      "purpose": "Read signed-index metadata for exactly two library security updates; tmpfs fixes first read-only-temp failure",
+      "business_data": false,
+      "disposition": "retained_for_authorized_window"
+    },
+    {
+      "container_name": "trip-security-apt-metadata-1e2ac7f2d9e7",
+      "container_id": "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+      "purpose": "Read signed-index metadata for exactly two library security updates",
+      "business_data": false,
+      "disposition": "retained_for_authorized_window"
+    },
+    {
+      "purpose": "Retained-default lifecycle verification after correcting cleanup policy",
+      "network": {
+        "name": "trip-monitor-smoke-ccc7737ced39",
+        "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+      },
+      "containers": [
+        {
+          "name": "trip-monitor-smoke-ccc7737ced39-receiver",
+          "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+          "business_data": false
+        },
+        {
+          "name": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+          "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+          "business_data": false
+        }
+      ],
+      "disposition": "stopped containers and network retained; exact cleanup window left to coordinator",
+      "result": "firing/resolved protocol pass; resource retain pass"
+    },
+    {
+      "name": "trip-security-inventory-d5bb2a85a6c5",
+      "container_id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+      "image_id": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+      "purpose": "stopped image inventory extraction; no image command executed",
+      "business_data": false,
+      "status": "retained",
+      "cleanup_explicit": false
+    }
+  ],
+  "event_lookup": {
+    "file": ".cache/security-report-raw/docker-events-window.jsonl",
+    "available_events": 248,
+    "matching_old_fixture_events": 0,
+    "limitation": "Docker daemon bounded event history was already overwritten; read-only lookup performed."
+  }
+}

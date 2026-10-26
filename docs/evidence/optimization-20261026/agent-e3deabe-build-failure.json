@@ -1,0 +1,13 @@
+{
+  "business_sha": "e3deabed1decd07ef29da891460dc98f3d3f2beb",
+  "passed": false,
+  "stage": "CLI-only image hardening",
+  "error": "RuntimeError: Refusing to remove a directory from CLI inventory",
+  "diagnosis": "dpkg mount package lists a documentation directory whose basename is mount; initial helper incorrectly included it. Safety refusal prevented directory removal. This is a helper defect, not proof of runtime safety.",
+  "agent_image_created": false,
+  "private_raw_log": "E:\\project\\langchain-trip-planner\\.codex-optimization-hard-agent-build.log",
+  "raw_sha256": "0fafca8eb2e8def2fc0ab68d2bdbaf2edd1b1840d1c9482243e7361a03cd6cbf",
+  "fix": "Bound package-record candidates to actual CLI files/links and add the Debian documentation-directory counterexample. Existing dangerous-directory refusal remains required.",
+  "not_rewritten_as_success": true,
+  "updated_at": "2026-10-26T13:12:09.851735+00:00"
+}

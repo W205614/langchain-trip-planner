@@ -1,0 +1,41 @@
+{
+  "campaign_id": "optimization-20261026-v1",
+  "activation": "Server configuration only; this implementation subtask did not enable or send any real paid sample",
+  "hard_limits": {"text_calls": 12, "embedding_calls": 40, "amap_rest_calls": 120, "conservative_reserved_tokens": 800000, "full_workflows": 4, "development_workflows": 2, "acceptance_workflows": 2},
+  "older_stricter_limits_preserved": true,
+  "browser_sdk_included": false,
+  "map_transport": "rest",
+  "mcp_policy": "Reject before tool invocation; when campaign is known to the Python process, reject before MCP connection. Server also rejects map_protocol=mcp before incrementing counters",
+  "durable_authority": {
+    "service": "CampaignBudgetService",
+    "migration": "V14__campaign_budget_reservations.sql",
+    "tables": ["outbound_campaigns", "outbound_campaign_binding", "outbound_campaign_samples", "outbound_campaign_workflows", "outbound_reservations.reserved_tokens"],
+    "id_changes": "A durable singleton binding rejects another FINAL_RUN_ID instead of granting a fresh budget",
+    "old_ledgers": "Existing counters are imported for the exact ID without resetting. If old model calls lack token evidence, the new token allowance is conservatively exhausted",
+    "failure_policy": "Reservations and slots are monotonic; failed or uncertain sends do not refund them"
+  },
+  "sample_grouping": {
+    "configuration": "FINAL_CAMPAIGN_SAMPLES_JSON",
+    "fields": ["sample_id", "fingerprint", "phase"],
+    "allowed_phases": ["development", "acceptance"],
+    "authority": "Business-service configuration and persistent immutable registry, never request-body fields",
+    "fingerprint_source": "Canonical root trip_task fingerprint resolved by Java; resume ancestry reuses its root slot",
+    "duplicates": "The same registered fingerprint cannot claim a second root task; new input cannot claim an unregistered sample slot",
+    "phase_gate": "FINAL_RUN_PHASE must match the persisted sample group; changing a client body cannot move a sample into holdout"
+  },
+  "token_reservation": {
+    "model": "Actual serialized HTTP request UTF-8 bytes + 4096 overhead + declared max output tokens multiplied by n",
+    "embedding": "Actual batch serialized UTF-8 bytes + 4096 overhead",
+    "unbounded_campaign_request": "Fail closed before transport; if only Java knows the campaign it rejects a missing token bound",
+    "ordinary_daily_compatibility": "Legacy unbounded requests outside acceptance keep their old call-counter path, with no claimed token bound",
+    "billing_boundary": "Conservative pre-send accounting, not provider billed usage or a currency guarantee"
+  },
+  "private_apis": ["GET /internal/v2/campaign", "POST /internal/v2/campaign/workflows/reserve", "POST /internal/v2/outbound/reserve"],
+  "validation": {
+    "python_command": ".cache/improvement-venv/Scripts/python.exe -m pytest -q -p no:cacheprovider backend/tests/test_campaign_token_budget.py backend/tests/test_call_budget.py",
+    "python_passed": 13,
+    "java": "CampaignBudgetIntegrationTest added for one fresh isolated DB and handed to root for serial Maven; pending execution at this handoff",
+    "java_test_database": "tripopt_campaign must be freshly created by root; do not clean or reset an older budget table",
+    "real_external_paid_calls": 0
+  }
+}

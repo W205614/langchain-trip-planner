@@ -1,0 +1,66 @@
+{
+  "recorded_at": "2026-10-26T09:08:08.243942+00:00",
+  "results": [
+    {
+      "log": ".codex-optimization-java-patched-dependencies.log",
+      "sha256": "a5c356fcfedad70cea56b04147b7631c96d22a4e8e608bf72c6a8bed98a77eb2",
+      "last_result": [
+        "2026-10-26T16:36:21.941+08:00  INFO 36024 --- [o-auto-5-exec-2] [request_id=] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'",
+        "2026-10-26T16:36:21.942+08:00  INFO 36024 --- [o-auto-5-exec-2] [request_id=] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms",
+        "[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.942 s -- in com.tripplanner.TripOperationsIntegrationTest",
+        "[INFO] ",
+        "[INFO] Results:",
+        "[INFO] ",
+        "[INFO] Tests run: 68, Failures: 0, Errors: 0, Skipped: 0",
+        "[INFO] ",
+        "[INFO] ------------------------------------------------------------------------",
+        "[INFO] BUILD SUCCESS",
+        "[INFO] ------------------------------------------------------------------------",
+        "[INFO] Total time:  01:19 min",
+        "[INFO] Finished at: 2026-10-26T16:36:23+08:00",
+        "[INFO] ------------------------------------------------------------------------"
+      ]
+    },
+    {
+      "log": ".codex-optimization-java-lifetime.log",
+      "sha256": "25c08cca0feb52f343d7bb723493d8ec53e3fb8c300781c7c33595f239be11bb",
+      "last_result": [
+        "[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.05 s -- in com.tripplanner.FinalPlanningIntegrationTest",
+        "[INFO] Running com.tripplanner.security.BrowserSessionTest",
+        "[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in com.tripplanner.security.BrowserSessionTest",
+        "[INFO] ",
+        "[INFO] Results:",
+        "[INFO] ",
+        "[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0",
+        "[INFO] ",
+        "[INFO] ------------------------------------------------------------------------",
+        "[INFO] BUILD SUCCESS",
+        "[INFO] ------------------------------------------------------------------------",
+        "[INFO] Total time:  01:19 min",
+        "[INFO] Finished at: 2026-10-26T16:55:10+08:00",
+        "[INFO] ------------------------------------------------------------------------"
+      ]
+    },
+    {
+      "log": ".codex-optimization-python-container.log",
+      "sha256": "a5ec46c8682163154155dd20dc3aeb82de2ed95da22128512b88ac2daecf3c69",
+      "last_result": [
+        "........................................................................ [ 80%]",
+        ".................                                                        [100%]",
+        "89 passed in 10.48s"
+      ]
+    },
+    {
+      "log": ".codex-optimization-ops-tests-2.log",
+      "sha256": "4473cf6817624e37ce8bff5129ffe6eaec394b92cfb6c75ef621e39fdfdd1ed9",
+      "last_result": [
+        "",
+        "ERROR: file or directory not found: backend/tests/test_automated_maintenance.py",
+        "no tests ran in 0.00s",
+        ""
+      ]
+    }
+  ],
+  "overlapping_runs_must_not_be_summed": true,
+  "boundary": "Selected changed paths; not CI, production capacity or real-provider proof. Earlier failed runs retained in local ignored diagnostics."
+}

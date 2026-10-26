@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-26",
+  "status": "implemented_and_pure_failure_counterexamples_passed",
+  "scope": [
+    "Backup-backed enrollment compares actual original PostgreSQL tables/columns, database name/user and available PostgreSQL mount identity; legacy missing identity is explicitly unverified.",
+    "Stopped file mounts are compared with backup tar members using streaming SHA-256/size inventory, including missing/new/changed data. Only the matching root dataset marker is optional metadata.",
+    "Future backups record PostgreSQL persistent mount identity.",
+    "Backup restoration independently attempts every originally running application service and originally stopped PostgreSQL restoration, records individual failures and waits for selected-container readiness.",
+    "A valid backup archive does not produce a successful maintenance result or refreshed success marker when state restoration/readiness fails. CLI failure returns exit code 1.",
+    "Scheduler recovery probes only the selected backend container loopback; optional URL must be a local published frontend port of the selected project.",
+    "UNC copy verification is not off-host or independent failure-domain proof. Localhost/loopback/machine-name aliases are not configured remote targets. Other UNC targets remain configuration-only evidence."
+  ],
+  "tests": [
+    {
+      "command": "python -m pytest backend/tests/test_dataset_enrollment.py backend/tests/test_deployment_assets.py -q -p no:cacheprovider --basetemp=.pytest-opt-enrollment-final",
+      "result": "14 passed"
+    },
+    {
+      "command": "python -m pytest backend/tests/test_maintenance_failure_recovery.py backend/tests/test_operational_governance.py -q -p no:cacheprovider --basetemp=.pytest-opt-maintenance-recovery",
+      "result": "21 passed"
+    }
+  ],
+  "evidence_boundary": [
+    "Tests use stateful Docker mocks, temporary files and tar streams; no daily containers, mounts or database were touched.",
+    "No actual dataset enrollment, maintenance stop/start, recovery restart or UNC replica copy was executed by this subtask.",
+    "Actual candidate maintenance and recovery rehearsal, off-host independent failure-domain proof, final CI and exact deployed revision remain coordinator gates.",
+    "Original PostgreSQL content comparison follows the backup's existing row-count/whole-row digest summary format; it is not a fresh restore drill."
+  ],
+  "restore_candidate_resource_retention": {
+    "status": "implemented; not executed against Docker by this subtask",
+    "baseline": "stop and uniquely rename the restored baseline backend; retain it while starting candidate under the freed original clone name",
+    "reports": "Progress and failure reports persist exact baseline/candidate/PostgreSQL resources, isolated network, creation attempts and retention flags; no automatic resource removal",
+    "rollback_boundary": "Old image on upgraded schema is untested, not a database rollback. A fresh backup restore into another clone is needed for data rollback proof.",
+    "test_command": "python -m pytest backend/tests/test_restore_retained_baseline.py backend/tests/test_deployment_assets.py -q -p no:cacheprovider --basetemp=.pytest-opt-retained-restore",
+    "test_result": "11 passed"
+  },
+  "existing_data_rehearsal_preparation": {
+    "status": "preflight_only; actual Docker restore deliberately not executed",
+    "backup": "backups/current-20261025-improvement",
+    "checksums_verified": true,
+    "original_tables": 26,
+    "trip_records": 59,
+    "users": 42,
+    "backup_application_revision": "e0d51a966cfe4221c248fc7b99cefc0a6b995e20",
+    "old_application_images_locally_present": true,
+    "command": "python backend/scripts/existing_data_rehearsal.py --backup E:/project/langchain-trip-planner/backups/current-20261025-improvement --output E:/recovery/trip-opt-20261026-existing-data --candidate-image <fixed-sha256-id> --execute --report docs/evidence/optimization-20261026/existing-data-rehearsal-result.json",
+    "plan": "docs/evidence/optimization-20261026/existing-data-rehearsal-plan.json",
+    "runbook": "docs/operations/optimization-governance.md",
+    "candidate_build_gate": "pending coordinator candidate image ID",
+    "pure_test_command": "python -m pytest backend/tests/test_existing_data_rehearsal.py backend/tests/test_dataset_enrollment.py backend/tests/test_maintenance_failure_recovery.py backend/tests/test_operational_governance.py backend/tests/test_restore_retained_baseline.py backend/tests/test_deployment_assets.py -q -p no:cacheprovider --basetemp=.pytest-opt-ops-final",
+    "pure_test_result": "48 passed; actual restore and measured recovery time remain pending",
+    "production_dataset_identity": {
+      "status": "implemented and pure counterexamples passed; actual candidate guards not executed by this subtask",
+      "enrollment": "Before metadata writes, compare original database columns/content and streamed directory inventories against the protected backup. Resolve one consistent ID across database/env/three extracted directories; refuse foreign or changed markers.",
+      "candidate_environment": {
+        "APP_ENV": "production",
+        "DATASET_ENROLL_NEW": "false",
+        "VALIDATION_ALLOW_FIXTURES": "no",
+        "DATASET_ID": "one consistent verified clone ID"
+      },
+      "negative_guards": [
+        "Wrong DATASET_ID against verified clone DB/upload must exit nonzero with the specific DB identity failure.",
+        "Correct DB ID plus separate wrong upload marker/sentinel must exit nonzero with the specific mount identity failure."
+      ],
+      "no_mutation_proof": "Compare clone identity, original three directory inventories/markers, wrong upload sentinel, and complete Flyway history before/after both negative startups; fail before the correct candidate starts if any changes.",
+      "resources": {
+        "containers": 7,
+        "isolated_networks": 2,
+        "expected_failed_negative_containers": 2,
+        "automatic_deletions": 0
+      },
+      "java_boundary": "Coordinator owns the Java pre-Flyway guard. Runner verifies specific error text and unchanged Flyway history rather than accepting arbitrary startup failure.",
+      "test_command": "python -m pytest backend/tests/test_restore_dataset_identity.py backend/tests/test_restore_retained_baseline.py backend/tests/test_existing_data_rehearsal.py -q -p no:cacheprovider --basetemp=.pytest-opt-restore-identity-history",
+      "test_result": "21 passed"
+    },
+    "plan_refreshed": "Verified protected V2 source files in default plan-only mode after adding two identity negative resources. No recovery output directory or Docker resources created."
+  },
+  "maintenance_process_lock": {
+    "status": "implemented; real Windows OS process-lock counterexamples passed; no Docker operations executed",
+    "scope": "Nonblocking per-project lock covers inspection, snapshot, stop, archive, restore and heartbeat; scheduler recovery uses the same lock before Docker inspection/mutation.",
+    "implementation": "Windows msvcrt first-byte lock; Unix fcntl flock. Persistent file is never deleted. OS releases the lock on process exit.",
+    "directory": "TRIP_MAINTENANCE_LOCK_DIR or current execution user temporary directory/trip-planner-maintenance-locks",
+    "boundary": "Different execution users sharing a Docker daemon must configure the same writable directory. The Windows path was executed; Unix implementation was not executed on this host.",
+    "test_command": "python -m pytest backend/tests/test_maintenance_process_lock.py backend/tests/test_maintenance_failure_recovery.py backend/tests/test_operational_governance.py -q -p no:cacheprovider --basetemp=.pytest-opt-maintenance-process-lock-final",
+    "test_result": "26 passed",
+    "counterexamples": [
+      "Real separate process rejects backup, recover and inspection before any Docker call.",
+      "Holder process termination releases the lock while retaining its file.",
+      "Different projects have independent locks."
+    ]
+  },
+  "scheduled_task_failure_report": {
+    "status": "installer changed; dry-run verified only; no task installed",
+    "output": "BackupRoot/last-run.json records structured failure as well as success; last-success.json only updates after all restoration/readiness steps pass.",
+    "runbook": "docs/operations/optimization-governance.md",
+    "alerts": "deploy/alerts.yml runbook_url points at the existing operations manual."
+  }
+}

@@ -1,0 +1,770 @@
+{
+  "results": [
+    {
+      "source": {
+        "path": "E:/project/langchain-trip-planner/docs/evidence/optimization-20261026/security-scans/java-patched/java.cdx.json",
+        "type": "sbom"
+      },
+      "packages": [
+        {
+          "package": {
+            "name": "org.hdrhistogram:HdrHistogram",
+            "version": "2.2.2",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.hdrhistogram/HdrHistogram@2.2.2?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.zaxxer:HikariCP",
+            "version": "7.0.2",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.zaxxer/HikariCP@7.0.2?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.latencyutils:LatencyUtils",
+            "version": "2.0.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.latencyutils/LatencyUtils@2.0.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "at.favre.lib:bcrypt",
+            "version": "0.10.2",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/at.favre.lib/bcrypt@0.10.2?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "at.favre.lib:bytes",
+            "version": "1.5.0",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/at.favre.lib/bytes@1.5.0?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.github.ben-manes.caffeine:caffeine",
+            "version": "3.2.4",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.github.ben-manes.caffeine/caffeine@3.2.4?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.checkerframework:checker-qual",
+            "version": "3.55.1",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.checkerframework/checker-qual@3.55.1?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.fasterxml:classmate",
+            "version": "1.7.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.fasterxml/classmate@1.7.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "commons-logging:commons-logging",
+            "version": "1.3.6",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/commons-logging/commons-logging@1.3.6?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.google.errorprone:error_prone_annotations",
+            "version": "2.49.0",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.google.errorprone/error_prone_annotations@2.49.0?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.flywaydb:flyway-core",
+            "version": "11.14.1",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.flywaydb/flyway-core@11.14.1?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.flywaydb:flyway-database-postgresql",
+            "version": "11.14.1",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.flywaydb/flyway-database-postgresql@11.14.1?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.hibernate.validator:hibernate-validator",
+            "version": "9.0.2.Final",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.hibernate.validator/hibernate-validator@9.0.2.Final?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.fasterxml.jackson.core:jackson-annotations",
+            "version": "2.21",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.21?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.fasterxml.jackson.core:jackson-core",
+            "version": "2.21.7",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.21.7?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "tools.jackson.core:jackson-core",
+            "version": "3.1.7",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/tools.jackson.core/jackson-core@3.1.7?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.fasterxml.jackson.core:jackson-databind",
+            "version": "2.21.7",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.21.7?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "tools.jackson.core:jackson-databind",
+            "version": "3.1.7",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/tools.jackson.core/jackson-databind@3.1.7?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "jakarta.annotation:jakarta.annotation-api",
+            "version": "3.0.0",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/jakarta.annotation/jakarta.annotation-api@3.0.0?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "jakarta.validation:jakarta.validation-api",
+            "version": "3.1.1",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/jakarta.validation/jakarta.validation-api@3.1.1?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.jboss.logging:jboss-logging",
+            "version": "3.6.3.Final",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.jboss.logging/jboss-logging@3.6.3.Final?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.jspecify:jspecify",
+            "version": "1.0.1",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.jspecify/jspecify@1.0.1?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.slf4j:jul-to-slf4j",
+            "version": "2.0.20",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.slf4j/jul-to-slf4j@2.0.20?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.apache.logging.log4j:log4j-api",
+            "version": "2.25.5",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.apache.logging.log4j/log4j-api@2.25.5?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.apache.logging.log4j:log4j-to-slf4j",
+            "version": "2.25.5",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.apache.logging.log4j/log4j-to-slf4j@2.25.5?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "ch.qos.logback:logback-classic",
+            "version": "1.5.38",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/ch.qos.logback/logback-classic@1.5.38?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "ch.qos.logback:logback-core",
+            "version": "1.5.38",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/ch.qos.logback/logback-core@1.5.38?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.micrometer:micrometer-commons",
+            "version": "1.16.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.micrometer/micrometer-commons@1.16.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.micrometer:micrometer-core",
+            "version": "1.16.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.micrometer/micrometer-core@1.16.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.micrometer:micrometer-jakarta9",
+            "version": "1.16.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.micrometer/micrometer-jakarta9@1.16.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.micrometer:micrometer-observation",
+            "version": "1.16.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.micrometer/micrometer-observation@1.16.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.micrometer:micrometer-registry-prometheus",
+            "version": "1.16.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.micrometer/micrometer-registry-prometheus@1.16.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.mybatis:mybatis",
+            "version": "3.5.19",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.mybatis/mybatis@3.5.19?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.mybatis:mybatis-spring",
+            "version": "4.0.0",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.mybatis/mybatis-spring@4.0.0?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure",
+            "version": "4.0.0",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.mybatis.spring.boot/mybatis-spring-boot-autoconfigure@4.0.0?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.mybatis.spring.boot:mybatis-spring-boot-starter",
+            "version": "4.0.0",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.mybatis.spring.boot/mybatis-spring-boot-starter@4.0.0?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "com.nimbusds:nimbus-jose-jwt",
+            "version": "10.0.2",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/com.nimbusds/nimbus-jose-jwt@10.0.2?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.postgresql:postgresql",
+            "version": "42.7.14",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.postgresql/postgresql@42.7.14?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.prometheus:prometheus-metrics-config",
+            "version": "1.4.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.prometheus/prometheus-metrics-config@1.4.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.prometheus:prometheus-metrics-core",
+            "version": "1.4.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.prometheus/prometheus-metrics-core@1.4.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.prometheus:prometheus-metrics-exposition-formats",
+            "version": "1.4.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.prometheus/prometheus-metrics-exposition-formats@1.4.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.prometheus:prometheus-metrics-exposition-textformats",
+            "version": "1.4.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.prometheus/prometheus-metrics-exposition-textformats@1.4.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.prometheus:prometheus-metrics-model",
+            "version": "1.4.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.prometheus/prometheus-metrics-model@1.4.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "io.prometheus:prometheus-metrics-tracer-common",
+            "version": "1.4.3",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/io.prometheus/prometheus-metrics-tracer-common@1.4.3?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.slf4j:slf4j-api",
+            "version": "2.0.20",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.slf4j/slf4j-api@2.0.20?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.yaml:snakeyaml",
+            "version": "2.5",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.yaml/snakeyaml@2.5?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-aop",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-aop@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-beans",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-beans@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-actuator",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-actuator@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-actuator-autoconfigure",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-actuator-autoconfigure@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-autoconfigure",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-autoconfigure@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-flyway",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-flyway@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-health",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-health@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-http-converter",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-http-converter@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-jackson",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-jackson@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-jdbc",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-jdbc@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-micrometer-metrics",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-micrometer-metrics@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-micrometer-observation",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-micrometer-observation@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-persistence",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-persistence@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-security",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-security@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-servlet",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-servlet@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-sql",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-sql@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-actuator",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-actuator@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-flyway",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-flyway@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-jackson",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-jackson@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-jdbc",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-jdbc@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-logging",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-logging@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-micrometer-metrics",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-micrometer-metrics@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-security",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-security@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-tomcat",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-tomcat@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-tomcat-runtime",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-tomcat-runtime@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-validation",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-validation@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-starter-webmvc",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-starter-webmvc@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-tomcat",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-tomcat@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-transaction",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-transaction@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-validation",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-validation@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-web-server",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-web-server@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.boot:spring-boot-webmvc",
+            "version": "4.0.9",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.boot/spring-boot-webmvc@4.0.9?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-context",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-context@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-core",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-core@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-expression",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-expression@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-jdbc",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-jdbc@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.security:spring-security-config",
+            "version": "7.0.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.security/spring-security-config@7.0.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.security:spring-security-core",
+            "version": "7.0.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.security/spring-security-core@7.0.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.security:spring-security-crypto",
+            "version": "7.0.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.security/spring-security-crypto@7.0.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework.security:spring-security-web",
+            "version": "7.0.8",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework.security/spring-security-web@7.0.8?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-tx",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-tx@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-web",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-web@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.springframework:spring-webmvc",
+            "version": "7.0.10",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.springframework/spring-webmvc@7.0.10?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.apache.tomcat.embed:tomcat-embed-core",
+            "version": "11.0.27",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-core@11.0.27?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.apache.tomcat.embed:tomcat-embed-el",
+            "version": "11.0.27",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-el@11.0.27?type=jar"
+          }
+        },
+        {
+          "package": {
+            "name": "org.apache.tomcat.embed:tomcat-embed-websocket",
+            "version": "11.0.27",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-websocket@11.0.27?type=jar"
+          }
+        }
+      ]
+    }
+  ],
+  "experimental_config": {
+    "licenses": {
+      "summary": false,
+      "allowlist": null
+    }
+  }
+}

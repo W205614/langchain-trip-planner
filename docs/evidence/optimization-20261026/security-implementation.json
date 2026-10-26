@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "scope": "security and uploads optimization",
+  "updated_date": "2026-10-26",
+  "change_mode": "implementation; no daily Docker rebuild; no real model calls; no Git commit by this subagent",
+  "verification": {
+    "coordinator": "root",
+    "first_java_run": {
+      "compiled": true,
+      "tests": 32,
+      "failures": 2,
+      "errors": 0,
+      "description": "Two assertions exposed UTC timestamp interpretation bugs, repaired with preserved counterexamples; later coordinator reruns passed."
+    },
+    "browser": "Coordinator reports actual MFA account UI flow passed after form model/name repair; remaining password/recovery-related final browser flow acceptance coordinated separately.",
+    "dependency_security_audit": {
+      "evidence": "security-scans/final-dependencies/dependencies-summary.json",
+      "python": "5 raw Chroma records, exact contextual assessment, no skipped packages; upstream not fixed",
+      "npm": "0 known advisories across all severities",
+      "maven": "94 resolved components, OSV 0 advisories",
+      "scope": "lockfile/SBOM audit only, not a statement of image or runtime absence of vulnerabilities"
+    },
+    "focused_java_command": "TEST_DATABASE_URL=jdbc:postgresql://localhost:15436/tripopt_security; mvn -f business-backend/pom.xml -Dtest=SecurityOptimizationIntegrationTest,TotpTest,TokenServiceTest,PasswordsTest,RequestLimitsTest test",
+    "browser_command": "E2E_BASE_URL=<isolated-candidate>; npx playwright test e2e/security-optimization.spec.ts",
+    "coordinator_reported_java_result": {
+      "description": "Coordinator reports Spring Boot 4.0.9 focused 68 tests passed; additional route/browser tests passed. This is coordinator-reported evidence, not a full-suite or production certification.",
+      "new_tiny_command": "mvn -f business-backend/pom.xml -Dtest=BrowserSessionTest test",
+      "tiny_test_status": "Verified current surefire XML: BrowserSession1, TokenService1, SecurityOptimization10, Totp3; all failures/errors/skips0. No duplicate Maven run."
+    },
+    "resource_window_deviation": "security-resource-window-deviation.json; temporary Docker objects were prematurely removed before common 0.8 correction; protocol success and process deviation remain separate."
+  },
+  "items": [
+    {
+      "id": "upload.atomic_reservation",
+      "status": "verified_targeted",
+      "implementation": "PostgreSQL advisory transaction lock accounts for existing documents plus durable reserved/stored/uncertain bytes before writing; pending count, user/global capacity, persistent per-user upload frequency, nginx ingress and MVC rate limits; disk free-space headroom includes outstanding reservations. Production MultipartFile ingestion and reconciliation use 8 KiB streaming buffers; write pass revalidates both size and digest against the pre-reservation hash.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.concurrentUploadReservationsCannotOverspendUserQuota",
+        "SecurityOptimizationIntegrationTest.duplicateContentIsOwnerScopedAndPendingRateGlobalDiskLimitsAreEffective",
+        "SecurityOptimizationIntegrationTest.streamedUploadNeverRequestsWholeFileBytesAndChangedSourceRemainsUncertain"
+      ],
+      "counterexamples": [
+        "Concurrent distinct uploads over user quota are rejected without new files",
+        "Pending-count, rate, global-byte and disk-low-water denial branches checked",
+        "A MultipartFile whose getBytes() throws can still be ingested; changing content between hash and write remains uncertain and is never silently published."
+      ],
+      "limits": [
+        "Existing documents conservatively count as 20 MiB until their size is known; no original file is deleted",
+        "Single-host architecture remains the supported deployment boundary"
+      ]
+    },
+    {
+      "id": "upload.owner_scoped_deduplication",
+      "status": "verified_targeted",
+      "implementation": "Same owner + same SHA256 returns existing non-deleted document; in-flight same-hash reservation conflicts instead of writing a second file; other owners never receive another user's document.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.duplicateContentIsOwnerScopedAndPendingRateGlobalDiskLimitsAreEffective"
+      ],
+      "counterexamples": [
+        "Same content under another owner creates that owner's own document"
+      ]
+    },
+    {
+      "id": "upload.uncertain_outcome_reconciliation",
+      "status": "verified_targeted",
+      "implementation": "Filesystem or database errors retain original file and reservation; stale inactive reservations are reconciled under the same global lock. Verified complete bytes recover metadata, missing files release reservation, corrupt files remain uncertain and charged.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.failedMetadataCommitRetainsFileAndReservationThenReconciles",
+        "SecurityOptimizationIntegrationTest.successfulCommitWithLostAcknowledgmentDoesNotDeleteOrDoubleCharge",
+        "SecurityOptimizationIntegrationTest.missingReservationCanBeReleasedButCorruptExistingFileIsRetained"
+      ],
+      "counterexamples": [
+        "Metadata transaction rollback retains the file and blocks duplicate retry until reconciliation",
+        "Successful commit with lost acknowledgment is not deleted or charged twice",
+        "Corrupt original is retained"
+      ],
+      "limits": [
+        "Uncertain files require administrator review; there is no destructive automatic cleanup"
+      ]
+    },
+    {
+      "id": "account.browser_cookie_csrf",
+      "status": "verified_targeted_browser_pending",
+      "implementation": "X-Auth-Mode: cookie explicitly selects same-origin HttpOnly SameSite=Strict session cookie. New browser login response contains no JWT. Mutations authenticated by cookie require a token derived from and bound to that session. Legacy Bearer API remains supported, and all credentials retain token_version revocation. Non-loopback cookies always carry Secure; the legacy false flag cannot downgrade them.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.browserCookieIsHttpOnlyCsrfBoundAndLogoutRevokesBearerToo",
+        "frontend/e2e/security-optimization.spec.ts"
+      ],
+      "counterexamples": [
+        "Missing/wrong CSRF returns 403",
+        "Logout invalidates old cookie and the same JWT presented as Bearer",
+        "BrowserSessionTest rejects non-loopback insecure cookies even when legacy false flag is set; loopback HTTP and HTTPS branches retained."
+      ],
+      "limits": [
+        "Loopback HTTP development uses a non-Secure cookie; public deployment requires TLS",
+        "A confirmed XSS could still perform actions in the browser; HttpOnly is not an XSS cure",
+        "Legacy stored Bearer state can still be read for compatibility; new browser logins never write a JWT into Storage"
+      ]
+    },
+    {
+      "id": "account.password_and_recovery",
+      "status": "verified_targeted_browser_pending",
+      "implementation": "Current-password-gated password change; password quality validation blocks common values and new passwords above bcrypt's 72-byte boundary; cryptographic one-time offline recovery code is stored only as SHA256. Recovery consumes the code, changes password, revokes all sessions and clears MFA for re-enrollment.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.passwordChangeAndOneTimeRecoveryRevokeEveryOldSession",
+        "TotpTest.newPasswordsDoNotSilentlyTruncateUnicodeOrAcceptCommonValues",
+        "frontend/e2e/security-optimization.spec.ts"
+      ],
+      "counterexamples": [
+        "Recovery-code reuse returns 401",
+        "Old sessions fail after password change or recovery"
+      ],
+      "limits": [
+        "Existing password hashes preserve legacy bcrypt byte-truncation verification semantics",
+        "Without a pre-generated recovery code, lost-password identity verification needs an external operator process"
+      ]
+    },
+    {
+      "id": "account.persistent_login_throttle",
+      "status": "verified_targeted_coordinator_report",
+      "implementation": "Identity-hashed PostgreSQL attempt state applies progressive short blocks across clients and survives process restart; existing ingress IP limits remain.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.persistentAccountThrottleSurvivesClientIdentityChanges"
+      ],
+      "counterexamples": [
+        "After five failures correct credentials are temporarily blocked for that identity, another identity remains usable"
+      ],
+      "repair": "Initial Windows run exposed naive UTC timestamp interpreted in host timezone. Code now explicitly interprets schema timestamps as UTC; assertions preserved."
+    },
+    {
+      "id": "account.admin_totp",
+      "status": "verified_targeted_api_and_browser_mfa",
+      "implementation": "RFC6238 TOTP enrollment, expiring pending seed, explicit confirmation, one-use step enforcement, password-gated disable/rotation; AES-256-GCM encrypted seed with separate operator key. Enabled accounts must supply TOTP in both Cookie and Bearer login. ADMIN_MFA_REQUIRED=true removes admin roles until enrollment while keeping the security setup route usable. Enable/disable revoke old tokens.",
+      "evidence": [
+        "SecurityOptimizationIntegrationTest.adminMfaMustBeSetThenAllLoginModesRequireNonReplayedCode",
+        "TotpTest.matchesRfc6238Sha1VectorAndRejectsReplayMalformedAndExpiredCodes",
+        "TotpTest.encryptedSeedRoundTripsAndTamperingAndWrongKeyFailClosed",
+        "frontend/e2e/security-optimization.spec.ts"
+      ],
+      "counterexamples": [
+        "Missing code fails for both login modes",
+        "Replayed code fails",
+        "Absent/mismatched storage key fails closed",
+        "Required-but-unenrolled administrator cannot access review APIs"
+      ],
+      "repair": "Pending-seed expiration uses UTC explicitly after Windows timezone regression was detected.",
+      "limits": [
+        "Operator must generate ACCOUNT_SECURITY_ENCRYPTION_KEY as independent random 32-byte base64 and preserve it with private recovery configuration; no production default key exists",
+        "ADMIN_MFA_REQUIRED is opt-in to allow an existing administrator to enroll before enforcement"
+      ]
+    },
+    {
+      "id": "sharing.log_redaction_and_cache",
+      "status": "implemented_proxy_verification_pending",
+      "implementation": "Nginx redacts API and frontend capability-token paths in access logs; share locations suppress request-bearing error logs, retain redacted status/request_id access evidence, and emit no-store/no-referrer. Java shared-trip responses also use no-store.",
+      "evidence": [
+        "frontend/nginx.conf",
+        "business-backend/src/main/java/com/tripplanner/api/RequestLimits.java"
+      ],
+      "counterexamples": [
+        "A token must not appear in captured access or error logs"
+      ],
+      "limits": [
+        "An external TLS reverse proxy or third-party collector requires its own capability-URL redaction; repository nginx cannot configure that external layer"
+      ]
+    },
+    {
+      "id": "account.revocation_store_outage",
+      "status": "verified_targeted_coordinator_report",
+      "implementation": "TokenService maps DataAccessException to 503 AUTH_STORE_UNAVAILABLE, retaining 401 for malformed, forged, expired or revoked tokens. The security filter preserves the retryable 503 classification so the frontend's 401 logout handler is not activated.",
+      "evidence": [
+        "TokenServiceTest.revocationStoreFailureIs503WhileBadSignaturesAndExpiredTokensRemain401"
+      ],
+      "counterexamples": [
+        "A signed valid JWT with a failed user/revocation DAO must return 503, and becomes usable after the DAO recovers",
+        "Forged, expired and malformed tokens still return 401 before querying the failed store"
+      ]
+    }
+  ],
+  "external_gaps": [
+    {
+      "id": "email_sms_recovery_delivery",
+      "status": "blocked_external",
+      "reason": "No user-approved email/SMS transport, sender identity, public callback domain or channel acceptance credentials supplied; offline recovery is locally verifiable."
+    },
+    {
+      "id": "public_tls_and_outer_proxy_logs",
+      "status": "blocked_external",
+      "reason": "Public HTTPS endpoint and upstream log pipeline are outside repository runtime; their TLS/cookie/log-redaction acceptance needs the actual deployment."
+    }
+  ],
+  "qa": {
+    "main_question": "上传容量如何在并发、进程崩溃及数据库提交结果不确定时仍保持可核对？",
+    "answer": "先在PostgreSQL事务锁下计算已有文件和所有未决预留，持久化预留后再写文件；文件写入和文档元数据完成阶段受同一锁保护。失败不推断事务一定回滚，不删文件，保留额度。管理员核对只处理过期且无本进程活跃写入的预留；完整哈希文件恢复入库，确实缺失释放额度，损坏文件保留待人工核查。测试分别注入元数据失败和提交后响应丢失。",
+    "followups": [
+      {
+        "question": "Cookie为什么还需要CSRF，Bearer兼容会不会绕过MFA？",
+        "answer": "Cookie会随浏览器自动发送，所以写操作要求与该会话JWT绑定的CSRF头。Bearer兼容只改变凭证传输，仍调用同一密码和TOTP登录校验；启用MFA会递增token_version，使启用前的所有旧凭证失效。已启用账号在两种模式下都必须提供未用过的验证码。",
+        "sources": [
+          "security/BrowserSession.java",
+          "security/SecurityConfiguration.java",
+          "security/AccountSecurityService.java"
+        ]
+      },
+      {
+        "question": "恢复码或MFA密钥丢失怎样处理，哪些内容还不能声称交付？",
+        "answer": "恢复码是一次性高熵秘密，仅哈希落库；使用会重设密码、撤销旧会话并清除旧MFA。MFA存储密钥需要部署方随机生成并随私有配置备份，丢失或不匹配必须报错，不能免校验放行。邮件/SMS通道和公网TLS入口未提供，单独标记blocked_external；离线恢复、TOTP和Cookie链路可在隔离本机验证。",
+        "sources": [
+          "api/AccountSecurityController.java",
+          "security/AccountSecurityService.java",
+          "security/Totp.java"
+        ]
+      }
+    ],
+    "sources": [
+      "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+      "business-backend/src/main/resources/db/migration/V12__upload_and_account_security.sql",
+      "business-backend/src/test/java/com/tripplanner/SecurityOptimizationIntegrationTest.java",
+      "frontend/src/views/AccountSecurity.vue",
+      "frontend/src/components/UploadQuotaPanel.vue"
+    ]
+  },
+  "supply_chain_evidence": "security-supply-chain.json"
+}

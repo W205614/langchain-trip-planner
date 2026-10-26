@@ -1,0 +1,179 @@
+{
+  "started_at": "2026-10-26T12:20:20.435Z",
+  "base_url": "http://127.0.0.1:18088",
+  "passed": true,
+  "boundary": {
+    "real_business_http": true,
+    "cookie_ui_login": true,
+    "provider_fixture": true,
+    "external_browser_resources_aborted": true,
+    "business_response_fulfill": false,
+    "real_supplier_validation": false,
+    "direct_paid_provider_calls": 0,
+    "backend_provider_counts": "not_measured_here"
+  },
+  "checks": [
+    {
+      "name": "isolated_fixture_marker",
+      "passed": true
+    },
+    {
+      "name": "ui_login_issued_http_only_cookie",
+      "passed": true
+    },
+    {
+      "name": "adding_unsaved_fact_does_not_mutate_server_plan_or_revision",
+      "passed": true
+    },
+    {
+      "name": "saved_fact_preserves_source_ttl_and_user_declared_authority",
+      "passed": true,
+      "planning_revision": 3
+    },
+    {
+      "name": "local_replan_preserves_untargeted_day_and_original_until_confirmation",
+      "passed": true
+    },
+    {
+      "name": "explicit_ui_confirmation_updates_only_the_owned_original_and_retains_fact",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\fact-ui-run-2\\01-fact-source-ttl-awaiting-save.png",
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\fact-ui-run-2\\02-local-replan-preview-before-confirmation.png",
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\fact-ui-run-2\\03-confirmed-fact-replan.png"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/capabilities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/preferences/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/workspace",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/commitments",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/checks/latest",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/expenses",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/members",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/planning-input",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/trips/3/planning-input",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/08006e9b-d8a5-496b-b019-3e3c180df184/messages",
+      "status": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/trip/tasks",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/history",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trip/tasks",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trip/tasks/879b9e88-8b36-4be3-9007-6825d1bc46b2",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/history/4",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/history/4",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/assistant/conversations/08006e9b-d8a5-496b-b019-3e3c180df184/proposals/4",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/assistant/conversations/08006e9b-d8a5-496b-b019-3e3c180df184/proposals/4/confirm",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/trips/3/planning-input",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/poi/photo/image",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/poi/photo/image",
+      "status": 200
+    }
+  ],
+  "coverage": [
+    "fact_editor_source_ttl_declaration",
+    "save_planning_revision",
+    "local_replan_preview",
+    "explicit_proposal_confirmation"
+  ],
+  "not_covered_here": [
+    "reverify_failure_retry_ui",
+    "explicit_poi_replacement_ui"
+  ],
+  "trip_id": 3,
+  "protected_activity_id": "poi:0:fixture-beijing-0",
+  "task_id": "879b9e88-8b36-4be3-9007-6825d1bc46b2",
+  "proposal_id": 4,
+  "finished_at": "2026-10-26T12:20:34.027Z"
+}

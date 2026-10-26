@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-26",
+  "scope": "common 0.7 / scope 12 database capacity observation gap and upload sampling availability",
+  "status": "implemented_and_five_targeted_tests_passed_promtool_rule_execution_pending_coordinator",
+  "initial_gap": {
+    "database": "No database-size gauge or unknown sample alert. Existing connection pool, memory/CPU/PID budgets, log rotation and payload retention did not observe PostgreSQL disk growth.",
+    "upload": "Existing UPLOAD_DIR FileStore ratio started at 1 and retained a previous healthy value when missing or failing; disk sampling was behind JDBC aggregates."
+  },
+  "implementation": {
+    "database_service": "business-backend/src/main/java/com/tripplanner/domain/DatabaseCapacityMetrics.java",
+    "query": "SELECT pg_database_size(current_database())",
+    "sample_interval_millis": "DB_CAPACITY_METRICS_REFRESH_MILLIS; default 60000",
+    "query_timeout": "Dedicated JdbcTemplate, DB_CAPACITY_QUERY_TIMEOUT_SECONDS default 2, bounded to 1-5 seconds; datasource acquisition retains existing connection-pool timeout.",
+    "warning": "DB_SIZE_WARNING_BYTES must be positive; default 10737418240 (10 GiB). Observation threshold only, no hard quota, deletion or business admission change.",
+    "metrics": [
+      "trip_database_size_bytes",
+      "trip_database_size_warning_bytes",
+      "trip_database_capacity_sample_available",
+      "trip_database_capacity_last_success_age_seconds",
+      "trip_data_disk_sample_available"
+    ],
+    "unknown_behavior": "Initial/failed database sample exposes NaN size and available=0, retains last successful sample age without presenting old bytes as current. Upload missing/error sample exposes NaN ratio and available=0.",
+    "scrape_behavior": "Database metric reads only access cached immutable sample state; no SQL per scrape. Upload filesystem sampling is separate from the earlier JDBC aggregate refresh.",
+    "alerts": {
+      "TripDatabaseSizeHigh": "Successful sample, age <=180 seconds and measured size > configured warning, sustained 2 minutes.",
+      "TripCapacitySamplingUnknown": "Database/upload sample unavailable or absent, or database sample age >180 seconds, sustained 2 minutes.",
+      "TripDiskLow": "Upload ratio <10% requires an available sample; unknown is handled by the separate unknown alert."
+    }
+  },
+  "targeted_verification": {
+    "command": "$env:TEST_DATABASE_URL='jdbc:postgresql://localhost:15436/tripopt_root'; mvn -q '-Dtest=DatabaseCapacityMetricsTest,BusinessMetricsDiskTest' test",
+    "directory": "business-backend",
+    "result": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "database_tests": "3 passed: actual isolated PostgreSQL database size, cached metric reads do not open connections, configured threshold does not block measurement, real PostgreSQL authentication failure after a healthy sample clears NaN/available, age remains and successful recovery resamples, invalid warning rejected.",
+    "upload_tests": "2 passed: missing path is unknown initially/after sampling; a real test-only directory is renamed and retained after a healthy sample, then missing-path sampling clears the healthy value despite independent JDBC aggregate failure.",
+    "database_mutation": "None: authentication failure changes only the test DriverManagerDataSource password; no PostgreSQL role, table, database or server setting is changed.",
+    "docker_operations": 0,
+    "external_paid_calls": 0
+  },
+  "prometheus_rule_tests": {
+    "file": "deploy/alerts.capacity.test.yml",
+    "rule_file": "deploy/alerts.yml",
+    "execution": "pending coordinator; no local promtool binary and this subtask was instructed not to operate Docker",
+    "command": "promtool test rules <test-directory>/alerts.capacity.test.yml (alerts.yml must be in the same directory)",
+    "prospective_cases": [
+      "Successful fresh database size above warning triggers size alert without unknown/low-upload false alerts.",
+      "Size exactly at warning does not trigger high alert or unknown.",
+      "Success followed by failed NaN/unavailable sample triggers unknown, not old high-size alert.",
+      "Available flag plus old database sample still triggers unknown by age.",
+      "Missing database sampler triggers unknown.",
+      "Unknown upload sample triggers unknown, not false low-upload/high-database alerts."
+    ],
+    "not_claimed": "Rule fixture authoring or YAML inspection is not Prometheus rule execution or notification delivery evidence."
+  },
+  "boundaries": [
+    "pg_database_size measures current database files, not free bytes on the PostgreSQL filesystem, Docker Desktop virtual disk or physical host.",
+    "WAL, temporary files, other databases and host/other-container growth need separate physical PG mount/host capacity monitoring.",
+    "Upload and PostgreSQL use different mounts and logical quotas; this does not prove separate physical capacity or independent failure domains on one host.",
+    "Sampling/alerts do not implement hard database quotas, production capacity guarantees, automatic deletion or high availability.",
+    "Longer sample intervals require review of the fixed 180-second freshness alert threshold.",
+    "Final candidate image, actual scrape/alert rule execution and alert delivery remain coordinator evidence. No candidate or daily container was rebuilt by this subtask."
+  ],
+  "frozen_holdout": {
+    "selected_27_files_include_BusinessMetrics": false,
+    "frozen_inputs_rules_manifest_or_results_modified": false,
+    "statement": "New capacity service, BusinessMetrics, alert files and targeted test files are outside the frozen 27 source fingerprints. The first holdout score remains 16/17 and is not rerun.",
+    "source_drift_read_only_check": []
+  },
+  "runbook": "docs/operations/optimization-governance.md#告警容量和保留",
+  "recorded_at": "2026-10-26T11:42:24.516336+00:00",
+  "implementation_sha256": {
+    "business-backend/src/main/java/com/tripplanner/domain/DatabaseCapacityMetrics.java": "12bc04b806b86bcac79079e5ea695d230ccb7fe93a201966da7502720503fb30",
+    "business-backend/src/main/java/com/tripplanner/domain/BusinessMetrics.java": "f446dd4a311efb54733c551e58f98e4a42e54a206e23ebb1353813578314bfff",
+    "business-backend/src/test/java/com/tripplanner/domain/DatabaseCapacityMetricsTest.java": "030a2a4757eb44af20119a4bb41da611d4b0f241801b2f6bd952ce11ae7baee2",
+    "business-backend/src/test/java/com/tripplanner/domain/BusinessMetricsDiskTest.java": "2890e8f2551d62cd30b1ca6c9dca8fad90011139a58eda0a586d294270f0d3b3",
+    "deploy/alerts.yml": "61a563edb176a965a9c4f73b4d56ee63557089e11f74c1bd3b0e109a96acd56c",
+    "deploy/alerts.capacity.test.yml": "b97eb394ab5e1296d514aaaac0ea11e048079db01e148e316edf21808df85126"
+  },
+  "surefire_report_sha256": {
+    "business-backend/target/surefire-reports/TEST-com.tripplanner.domain.DatabaseCapacityMetricsTest.xml": "cd67e279a0a44a667f6a7e8ff6b7add46fbf32b29ba5cb8f11f99a54caec216d",
+    "business-backend/target/surefire-reports/TEST-com.tripplanner.domain.BusinessMetricsDiskTest.xml": "e2661a43fd6125d04199df37a07cc4d4f5a747a5cb1a84b4961dce9c30c6f756"
+  },
+  "root_promtool_validation": {
+    "result": "SUCCESS",
+    "command": "docker exec --workdir /etc/prometheus trip-opt-candidate-20261026-v2-prometheus-1 /bin/promtool test rules alerts.capacity.test.yml",
+    "cases": 6,
+    "rule_file_sha256": "61a563edb176a965a9c4f73b4d56ee63557089e11f74c1bd3b0e109a96acd56c",
+    "test_file_sha256": "b97eb394ab5e1296d514aaaac0ea11e048079db01e148e316edf21808df85126",
+    "boundary": "Rule evaluation with synthetic metric series; not production storage capacity or a hard quota."
+  }
+}

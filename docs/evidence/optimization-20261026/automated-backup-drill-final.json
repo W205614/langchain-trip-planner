@@ -1,0 +1,108 @@
+{
+  "scope": "trip-opt-final-20261026 isolated fixed-image candidate",
+  "business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "real_paid_calls": 0,
+  "offhost": "deferred_by_user_not_verified",
+  "passed": true,
+  "record_id": 1,
+  "before_sha256": "650a815e21f3f42a50510bfb60ddd986c5a7e567c3ca552009b60e79049cf0df",
+  "maintenance": {
+    "operation": "backup",
+    "project": "trip-opt-final-20261026",
+    "before": {
+      "agent": {
+        "id": "ccc59a4d48f0853f7e289f6270ff02801884836bd50e1e53eb3da4af5d392bea",
+        "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+        "running": true
+      },
+      "frontend": {
+        "id": "1e52c13b83091cda08e372b11defa8cc85019f9ddaa2d4c53cf58431b1b22871",
+        "image": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+        "running": true
+      },
+      "backend": {
+        "id": "ccd77eb6ea766cee15cfc93ec09508536ef873b12f67207dd9ba78298cd19e17",
+        "image": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+        "running": true
+      },
+      "postgres": {
+        "id": "d898fdc4a0a7424d8b0d078caa11ce3c85af6c059e19176c3b7151ab6b53825b",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "running": true
+      }
+    },
+    "executed": true,
+    "rpo_target_seconds": 86400,
+    "rto_target_seconds": 3600,
+    "targets_are_objectives_not_measured_guarantees": true,
+    "image_preflight": {
+      "passed": true,
+      "images": [
+        {
+          "service": "backend",
+          "image_id": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+          "status": "verified"
+        },
+        {
+          "service": "agent",
+          "image_id": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+          "status": "verified"
+        },
+        {
+          "service": "postgres",
+          "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+          "status": "verified"
+        },
+        {
+          "service": "frontend",
+          "image_id": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+          "status": "verified"
+        }
+      ],
+      "missing_image_ids": []
+    },
+    "execution_started": true,
+    "errors": [],
+    "ready_after_restore": {
+      "backend": true,
+      "agent": true
+    },
+    "backup": "E:\\project\\langchain-trip-planner\\backups\\optimization-final-20261026\\scheduled-20261026T115251Z",
+    "local_verified": true,
+    "replica": {
+      "path": "backups\\optimization-final-replicas-20261026\\scheduled-20261026T115251Z",
+      "verified": true,
+      "off_host": false,
+      "configured_remote_target": false,
+      "failure_domain_verified": false,
+      "boundary": "Copy bytes verified; a UNC hostname alone does not prove an independent host or disaster-recovery domain."
+    },
+    "after": {
+      "agent": {
+        "id": "ccc59a4d48f0853f7e289f6270ff02801884836bd50e1e53eb3da4af5d392bea",
+        "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+        "running": true
+      },
+      "frontend": {
+        "id": "1e52c13b83091cda08e372b11defa8cc85019f9ddaa2d4c53cf58431b1b22871",
+        "image": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+        "running": true
+      },
+      "backend": {
+        "id": "ccd77eb6ea766cee15cfc93ec09508536ef873b12f67207dd9ba78298cd19e17",
+        "image": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+        "running": true
+      },
+      "postgres": {
+        "id": "d898fdc4a0a7424d8b0d078caa11ce3c85af6c059e19176c3b7151ab6b53825b",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "running": true
+      }
+    },
+    "elapsed_seconds": 108.26,
+    "original_running_state_restored": true,
+    "passed": true
+  },
+  "after_sha256": "650a815e21f3f42a50510bfb60ddd986c5a7e567c3ca552009b60e79049cf0df",
+  "owner_private_history_unchanged_after_restart": true
+}

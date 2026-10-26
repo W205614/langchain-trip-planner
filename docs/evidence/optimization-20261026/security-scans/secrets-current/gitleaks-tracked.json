@@ -1,0 +1,42 @@
+[
+ {
+  "RuleID": "generic-api-key",
+  "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+  "StartLine": 37,
+  "EndLine": 37,
+  "StartColumn": 7,
+  "EndColumn": 83,
+  "Match": "ACCOUNT_SECURITY_ENCRYPTION_KEY=REDACTED\"",
+  "Secret": "REDACTED",
+  "File": "E:/project/langchain-trip-planner/.cache/security-source-exports/tracked-wk5mvcsv/business-backend/src/test/java/com/tripplanner/SecurityOptimizationIntegrationTest.java",
+  "SymlinkFile": "",
+  "Commit": "",
+  "Entropy": 4.695576,
+  "Author": "",
+  "Email": "",
+  "Date": "",
+  "Message": "",
+  "Tags": [],
+  "Fingerprint": "E:/project/langchain-trip-planner/.cache/security-source-exports/tracked-wk5mvcsv/business-backend/src/test/java/com/tripplanner/SecurityOptimizationIntegrationTest.java:generic-api-key:37"
+ },
+ {
+  "RuleID": "jwt",
+  "Description": "Uncovered a JSON Web Token, which may lead to unauthorized access to web applications and sensitive user data.",
+  "StartLine": 1,
+  "EndLine": 1,
+  "StartColumn": 23449,
+  "EndColumn": 23627,
+  "Match": "REDACTED ",
+  "Secret": "REDACTED",
+  "File": "E:/project/langchain-trip-planner/.cache/security-source-exports/tracked-wk5mvcsv/docs/evidence/optimization-20261026/security-scans/pip-audit-local.json",
+  "SymlinkFile": "",
+  "Commit": "",
+  "Entropy": 5.6198397,
+  "Author": "",
+  "Email": "",
+  "Date": "",
+  "Message": "",
+  "Tags": [],
+  "Fingerprint": "E:/project/langchain-trip-planner/.cache/security-source-exports/tracked-wk5mvcsv/docs/evidence/optimization-20261026/security-scans/pip-audit-local.json:jwt:1"
+ }
+]

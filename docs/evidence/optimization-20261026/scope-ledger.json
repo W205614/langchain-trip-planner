@@ -1,0 +1,2215 @@
+{
+  "baseline_sha": "d81410f6d77a8c1fcfb6cd18c2c4f239be8f3e9d",
+  "started_at": "2026-10-26T07:21:20.960259+00:00",
+  "scope": [
+    {
+      "id": 0,
+      "title": "baseline and common delivery requirements",
+      "status": "candidate_validated_pending_window_daily_push_ci",
+      "subitems": [
+        {
+          "name": "scope ledger",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/scripts/optimization_status.py",
+            "docs/evidence/optimization-20261026/scope-ledger.json"
+          ],
+          "evidence": [
+            "baseline.json",
+            "candidate-handoff.json",
+            "guide-handoff.json"
+          ],
+          "limits": [
+            "Evidence ledger refreshed; runtime delivery/final CI remain separate gates."
+          ]
+        },
+        {
+          "name": "frozen evaluation and blind review",
+          "status": "offline_evidence_frozen_human_review_pending",
+          "implementation": [
+            "backend/scripts/travel_holdout_acceptance.py",
+            "docs/evidence/optimization-20261026/holdout-first-runner.py"
+          ],
+          "evidence": [
+            "http-comparison-freeze.json",
+            "http-comparison-summary.json",
+            "travel-holdout-frozen.json",
+            "travel-holdout-freeze-manifest.json",
+            "travel-holdout-first-execution.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "blind-review/manifest.json",
+            "research-independent-review-pack.json"
+          ],
+          "limits": [
+            "Three development counterexamples are not unseen quality accuracy.",
+            "First offline held-out score stays 16/17, A01 failed; post-hoc alias/Instant audit does not rewrite to 17/17.",
+            "Consumed failed holdout is now development evidence; no replacing cases/retry-for-green.",
+            "Independent human blind review pending; no new live-model quality or user adoption claim."
+          ],
+          "delivery_blocking": false
+        },
+        {
+          "name": "persistent paid-call limits",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/CampaignBudgetService.java",
+            "business-backend/src/main/resources/db/migration/V14__campaign_budget_reservations.sql",
+            "backend/app/services/call_budget.py",
+            "backend/app/services/durable_execution.py"
+          ],
+          "evidence": [
+            "campaign-budget.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "http-comparison-summary.json",
+            "travel-holdout-handoff.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Stricter text-call limit 12 retained; immutable sample/run binding and token reservation are not billed tokens/currency.",
+            "Reported acceptance paid sends zero; map browser SDK blocked, campaign MCP transport rejected."
+          ]
+        },
+        {
+          "name": "targeted tests and real-role browser",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "frontend/e2e/optimization-flows.spec.ts",
+            "frontend/e2e/security-optimization.spec.ts",
+            "frontend/e2e/improvement-http.spec.ts"
+          ],
+          "evidence": [
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "candidate-frontend-overlay.json",
+            "fact-ui-acceptance-result.json",
+            "database-capacity-implementation.json",
+            "poi-ui-acceptance-result.json",
+            "poi-ui-run1-failure.json",
+            "poi-ui-run2-process-failure-diagnostic.json",
+            "hardened-runtime-probe-result.json",
+            "temporary-risk-acceptance-enforcement.json",
+            "final-secret-scan.json",
+            "risk-mechanism-targeted-tests.json"
+          ],
+          "limits": [
+            "Final exact-SHA GitHub CI/CodeQL not yet run; daily rebuild/cleanup window not granted. Temporary risk acceptance is local controlled demo only, expires2026-11-09 and leaves vulnerabilities unresolved."
+          ]
+        },
+        {
+          "name": "deployment window",
+          "status": "pending_coordinator_window_not_granted",
+          "implementation": [
+            "docs/operations/optimization-governance.md",
+            "backend/scripts/prepare_java_deployment.py"
+          ],
+          "evidence": [
+            "baseline.json",
+            "candidate-handoff.json",
+            "cleanup-plan.json"
+          ],
+          "limits": [
+            "Window owner=null/state=not_granted; candidate success is not daily/cleanup authority.",
+            "Human temporary local controlled-demo decision and exact enforcement are recorded. Coordinator must separately grant the deployment/cleanup window."
+          ]
+        },
+        {
+          "name": "backup and safe cleanup",
+          "status": "candidate_backup_validated_cleanup_pending_window",
+          "implementation": [
+            "backend/scripts/automated_maintenance.py",
+            "backend/scripts/backup_java_deployment.py",
+            "backend/scripts/restore_java_backup.py",
+            "backend/scripts/existing_data_rehearsal.py"
+          ],
+          "evidence": [
+            "automated-backup-drill-final.json",
+            "backup-image-archive-closure.json",
+            "existing-data-rehearsal-result-3.json",
+            "cleanup-plan.json",
+            "resource-inventory.json",
+            "security-resource-window-deviation.json",
+            "hardened-runtime-probe-result.json",
+            "hardened-backup-file-restore-result.json",
+            "release-candidate-images-220257a.json"
+          ],
+          "limits": [
+            "Fixed candidate backup passed in 108.26 seconds; original readiness/states/private History unchanged. Local replica is not off-host.",
+            "Selected historical real-data upgrade and independent snapshot rollback passed; daily pre-window fresh backup/readback pending.",
+            "delete_now=[]; keep daily4/final8/restored7, recovery directories, protected images/backups. Plan is not cleanup.",
+            "Historical security premature ephemeral cleanup deviation remains acknowledged; missing old IDs are not guessed.",
+            "220257ad hardened explicit local backup64.13s; three full tar inventories/extracted hashes match, actual independent read-only/capdropALL/NNP uvicorn Agent re-read two persisted Chroma canary records. Total94.716s. Uses live Java identity; not fresh PostgreSQL/empty-daemon/off-host disaster recovery.",
+            "Current targeted hardened supplement retains nine source services, exact stopped restored Agent and new security inventory, nine volumes/two networks/six release images plus backup/restore paths; no global rescan or deletion eligibility inferred."
+          ]
+        },
+        {
+          "name": "README and exact-SHA CI",
+          "status": "pending_push_exact_sha_ci",
+          "implementation": [
+            "README.md",
+            ".github/workflows/ci.yml",
+            ".github/workflows/security.yml"
+          ],
+          "evidence": [
+            "candidate-handoff.json",
+            "release-candidate-images.json",
+            "release-security-summary.json",
+            "security-supply-chain.json",
+            "release-candidate-images-220257a.json",
+            "release-220257a-security-summary.json",
+            "hardening-implementation.json",
+            "hardened-runtime-probe-result.json",
+            "temporary-risk-acceptance-enforcement.json",
+            "final-secret-scan.json",
+            "risk-mechanism-targeted-tests.json"
+          ],
+          "limits": [
+            "Final exact-SHA GitHub CI/CodeQL not yet run; daily rebuild/cleanup window not granted. Temporary risk acceptance is local controlled demo only, expires2026-11-09 and leaves vulnerabilities unresolved."
+          ]
+        },
+        {
+          "name": "complete guide handoff",
+          "status": "implemented_pending_final_evidence_sync",
+          "implementation": [
+            "docs/evidence/optimization-20261026/guide-handoff.json",
+            "docs/operations/optimization-governance.md"
+          ],
+          "evidence": [
+            "guide-handoff.json",
+            "ui-coverage-handoff.json",
+            "candidate-handoff.json"
+          ],
+          "limits": [
+            "52 ordinary/new function entries with main question and >=2 followups exist; source is not all-function browser proof/personal contribution.",
+            "Coordinator owns shared resume/personal guides after delivery; final deployment/CI/risk outcomes need synchronization."
+          ]
+        },
+        {
+          "name": "shared Java/Python ownership and source version binding",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "backend/app/agent_api/main.py",
+            "backend/app/agents/trip_planner_agent.py"
+          ],
+          "evidence": [
+            "baseline.json",
+            "release-candidate-images.json",
+            "planning-implementation.json",
+            "assistant-research-implementation.json",
+            "release-candidate-images-220257a.json",
+            "release-220257a-security-summary.json",
+            "hardening-implementation.json",
+            "hardened-runtime-probe-result.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Java owns authorization/admission/final persistence; Python supplies controlled candidate/research/solve; PostgreSQL authoritative, Chroma derived."
+          ]
+        },
+        {
+          "name": "security gate and human deployment risk decision",
+          "status": "temporary_local_demo_risk_accepted_pending_daily_and_final_ci",
+          "implementation": [
+            ".github/workflows/security.yml",
+            "tools/security_gate.py",
+            "tools/image_policy.py",
+            ".github/security-vendor-policy.json",
+            ".github/security-vex.json"
+          ],
+          "evidence": [
+            "release-security-summary.json",
+            "security-supply-chain.json",
+            "unresolved-cve-deployment-matrix.json",
+            "security-resource-window-deviation.json",
+            "release-candidate-images-220257a.json",
+            "release-220257a-security-summary.json",
+            "hardening-implementation.json",
+            "hardened-runtime-probe-result.json",
+            "temporary-risk-acceptance-enforcement.json"
+          ],
+          "limits": [
+            "Six immutable220257ad artifacts were rescanned locally. Five raw H/C gates zero; Agent raw79 H/C includes52 still-vulnerable vendor-Minor records across8 unique IDs. Local pass_vendor_policy is not a fix, global not-affected result or human approval.",
+            "Round-specific small hardening removed reviewed CLI exposure paths and verified actual uvicorn cap bounding/effective zero, NNP, read-only rootfs and persistent/temporary write boundaries. Retained libmount, libc/libstdc++/native/FFI/PBDS and allocator uncertainties are assessed separately per CVE; no uniform reachable/unreachable verdict.",
+            "Deployment impact matrix and actual constraints reviewed. Human explicitly accepted the exact local controlled-demo combination through2026-11-09; current fail-closed enforcement passed. Raw affected/unknown identities remain unfixed.",
+            "Final pushed exact-SHA GitHub CI/CodeQL/dependency/image/secret checks remain pending; VEX/vendor policies remain conditional/expiring, not deployment authority."
+          ]
+        }
+      ],
+      "implementation": [
+        "backend/scripts/optimization_status.py",
+        "README.md"
+      ],
+      "evidence": [
+        "baseline.json",
+        "candidate-handoff.json",
+        "release-candidate-images.json",
+        "browser-acceptance.json",
+        "fact-ui-acceptance-result.json",
+        "targeted-verification.json",
+        "release-security-summary.json",
+        "unresolved-cve-deployment-matrix.json",
+        "poi-ui-acceptance-result.json",
+        "poi-ui-run1-failure.json",
+        "poi-ui-run2-process-failure-diagnostic.json",
+        "release-candidate-images-220257a.json",
+        "release-220257a-security-summary.json",
+        "hardening-implementation.json",
+        "hardened-runtime-probe-result.json",
+        "hardened-backup-file-restore-result.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "DEPLOY_READY is established after scoped human acceptance and actual enforcement. Daily deployment/cleanup still waits the coordinator window; final exact-SHA CI remains pending.",
+        "Off-host user deferral is separate from valid local backup and controlled alerts.",
+        "Human blind review and future public TLS/email-SMS configuration are evidence/external limits, not newly introduced hard delivery gates. Only real off-host verification is explicitly deferred by user."
+      ]
+    },
+    {
+      "id": 1,
+      "title": "lossless reverification",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "timeout/rate-limit/connection failure",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TripFactVerificationService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripService.java",
+            "frontend/src/components/trip/AttractionReplacementReview.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "poi-ui-acceptance-result.json",
+            "poi-ui-run1-failure.json",
+            "poi-ui-run2-process-failure-diagnostic.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Offline provider fixtures/counterexamples establish preservation on known failure paths, not live suppliers.",
+            "Actual POI run3 seven-check flow passed; run1 failure and run2 lost-primary diagnostic remain retained.",
+            "Run3 covers local-draft replacement confirmation, locked-target denial, actual uncached map outage/retry and POI/lock preservation. Run2 primary/full checklist was lost; partial observations are not reconstructed as success."
+          ]
+        },
+        {
+          "name": "not-found replacement confirmation",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TripFactVerificationService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripService.java",
+            "frontend/src/components/trip/AttractionReplacementReview.vue",
+            "frontend/src/components/trip/AttractionPicker.vue",
+            "frontend/src/views/Result.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "poi-ui-acceptance-result.json",
+            "poi-ui-run1-failure.json",
+            "poi-ui-run2-process-failure-diagnostic.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Offline provider fixtures/counterexamples establish preservation on known failure paths, not live suppliers.",
+            "Actual POI run3 seven-check flow passed; run1 failure and run2 lost-primary diagnostic remain retained.",
+            "Run3 covers local-draft replacement confirmation, locked-target denial, actual uncached map outage/retry and POI/lock preservation. Run2 primary/full checklist was lost; partial observations are not reconstructed as success."
+          ]
+        },
+        {
+          "name": "locked/completed protection",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripService.java",
+            "frontend/src/components/trip/AttractionReplacementReview.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "poi-ui-acceptance-result.json",
+            "poi-ui-run1-failure.json",
+            "poi-ui-run2-process-failure-diagnostic.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Offline provider fixtures/counterexamples establish preservation on known failure paths, not live suppliers.",
+            "Actual POI run3 seven-check flow passed; run1 failure and run2 lost-primary diagnostic remain retained.",
+            "Run3 covers local-draft replacement confirmation, locked-target denial, actual uncached map outage/retry and POI/lock preservation. Run2 primary/full checklist was lost; partial observations are not reconstructed as success."
+          ]
+        }
+      ],
+      "implementation_report": "planning-implementation.json",
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripFactVerificationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripService.java",
+        "frontend/src/components/trip/AttractionReplacementReview.vue"
+      ],
+      "evidence": [
+        "planning-implementation.json",
+        "targeted-verification.json",
+        "http-comparison-summary.json",
+        "poi-ui-acceptance-result.json",
+        "poi-ui-run1-failure.json",
+        "poi-ui-run2-process-failure-diagnostic.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Offline provider fixtures/counterexamples establish preservation on known failure paths, not live suppliers.",
+        "Actual POI run3 seven-check flow passed; run1 failure and run2 lost-primary diagnostic remain retained."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "schedule dependency validity",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "planning revision and per-day dependencies",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+            "frontend/src/utils/scheduleValidity.ts",
+            "frontend/src/composables/useTripExport.ts"
+          ],
+          "evidence": [
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json",
+            "fact-ui-acceptance-result.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Original holdout remains 16/17; post-hoc alias adjudication is separate.",
+            "Unknown/expired facts remain conservative; no global optimum/live route accuracy claim."
+          ]
+        },
+        {
+          "name": "fact validity",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+            "backend/app/services/route_facts.py",
+            "backend/app/services/travel_facts.py",
+            "frontend/src/utils/scheduleValidity.ts"
+          ],
+          "evidence": [
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json",
+            "fact-ui-acceptance-result.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Original holdout remains 16/17; post-hoc alias adjudication is separate.",
+            "Unknown/expired facts remain conservative; no global optimum/live route accuracy claim."
+          ]
+        },
+        {
+          "name": "display/lock/complete/confirm/export",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+            "frontend/src/utils/scheduleValidity.ts",
+            "frontend/src/composables/useTripExport.ts"
+          ],
+          "evidence": [
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json",
+            "fact-ui-acceptance-result.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Original holdout remains 16/17; post-hoc alias adjudication is separate.",
+            "Unknown/expired facts remain conservative; no global optimum/live route accuracy claim."
+          ]
+        },
+        {
+          "name": "atomic rejection and unchanged days",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+            "frontend/src/utils/scheduleValidity.ts",
+            "frontend/src/composables/useTripExport.ts"
+          ],
+          "evidence": [
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json",
+            "fact-ui-acceptance-result.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Holdout B passed scoped hotel edit, other-day content protection and exact atomic SCHEDULE_STALE rejections; bounded fixture rule evidence, not general accuracy."
+          ]
+        }
+      ],
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+        "frontend/src/utils/scheduleValidity.ts",
+        "frontend/src/composables/useTripExport.ts"
+      ],
+      "evidence": [
+        "targeted-verification.json",
+        "http-comparison-summary.json",
+        "browser-acceptance.json",
+        "travel-holdout-first-result.json",
+        "holdout-adjudication.json",
+        "route-observation-lifetime.json",
+        "fact-ui-acceptance-result.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Original holdout remains 16/17; post-hoc alias adjudication is separate.",
+        "Unknown/expired facts remain conservative; no global optimum/live route accuracy claim."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "cross-city contract",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "daily city and endpoints",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TimelineVerificationService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningSemantics.java",
+            "backend/app/contracts/planning-semantics.json",
+            "backend/app/services/planning_semantics.py",
+            "backend/app/services/time_planner.py"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Holdout A01 failed strict inline-ID versus ledger-ID oracle assumption. Captured semantic/Instant audit found no transport business-field change; original 16/17 retained.",
+            "First Shanghai holdout was explicitly unverified with gaps; A05 is not proof of a feasible railway timeline."
+          ]
+        },
+        {
+          "name": "fixed transport and whole-day budget",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TimelineVerificationService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+            "backend/app/services/time_planner.py",
+            "backend/app/services/travel_facts.py"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Holdout A01 failed strict inline-ID versus ledger-ID oracle assumption. Captured semantic/Instant audit found no transport business-field change; original 16/17 retained.",
+            "First Shanghai holdout was explicitly unverified with gaps; A05 is not proof of a feasible railway timeline.",
+            "Inline IDs map to numeric ledger IDs with input_commitment_id/activity aliases. Timestamps compare as Instants, but original strict-oracle holdout failure remains unchanged."
+          ]
+        },
+        {
+          "name": "shared missing/stale/conflict semantics",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TimelineVerificationService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/PlanningSemantics.java",
+            "backend/app/contracts/planning-semantics.json",
+            "backend/app/services/planning_semantics.py",
+            "backend/app/services/time_planner.py"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json",
+            "route-observation-lifetime.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Holdout A01 failed strict inline-ID versus ledger-ID oracle assumption. Captured semantic/Instant audit found no transport business-field change; original 16/17 retained.",
+            "First Shanghai holdout was explicitly unverified with gaps; A05 is not proof of a feasible railway timeline."
+          ]
+        }
+      ],
+      "implementation_report": "planning-implementation.json",
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/TimelineVerificationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningSemantics.java",
+        "backend/app/contracts/planning-semantics.json",
+        "backend/app/services/planning_semantics.py",
+        "backend/app/services/time_planner.py"
+      ],
+      "evidence": [
+        "planning-implementation.json",
+        "targeted-verification.json",
+        "travel-holdout-first-result.json",
+        "holdout-adjudication.json",
+        "route-observation-lifetime.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Holdout A01 failed strict inline-ID versus ledger-ID oracle assumption. Captured semantic/Instant audit found no transport business-field change; original 16/17 retained.",
+        "First Shanghai holdout was explicitly unverified with gaps; A05 is not proof of a feasible railway timeline."
+      ]
+    },
+    {
+      "id": 4,
+      "title": "durable assistant clarification",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "original request and slots",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/AssistantClarificationService.java",
+            "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+            "business-backend/src/main/resources/db/migration/V13__assistant_clarification.sql",
+            "backend/app/services/assistant_intent.py",
+            "frontend/src/views/History.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Browser evidence spans candidate v1/v2 with recorded frontend overlay provenance; no real-user or real-model quality claim."
+          ]
+        },
+        {
+          "name": "ownership and expiry",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/AssistantClarificationService.java",
+            "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+            "business-backend/src/main/resources/db/migration/V13__assistant_clarification.sql",
+            "backend/app/services/assistant_intent.py",
+            "frontend/src/views/History.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Browser evidence spans candidate v1/v2 with recorded frontend overlay provenance; no real-user or real-model quality claim."
+          ]
+        },
+        {
+          "name": "continue/change/cancel",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/AssistantClarificationService.java",
+            "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+            "business-backend/src/main/resources/db/migration/V13__assistant_clarification.sql",
+            "backend/app/services/assistant_intent.py",
+            "frontend/src/views/History.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Browser evidence spans candidate v1/v2 with recorded frontend overlay provenance; no real-user or real-model quality claim."
+          ]
+        },
+        {
+          "name": "proposal confirmation preserved",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/AssistantClarificationService.java",
+            "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+            "business-backend/src/main/resources/db/migration/V13__assistant_clarification.sql",
+            "backend/app/services/assistant_intent.py",
+            "frontend/src/views/History.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "http-comparison-summary.json",
+            "browser-acceptance.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Browser evidence spans candidate v1/v2 with recorded frontend overlay provenance; no real-user or real-model quality claim."
+          ]
+        }
+      ],
+      "implementation_report": "assistant-research-implementation.json",
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/AssistantClarificationService.java",
+        "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+        "business-backend/src/main/resources/db/migration/V13__assistant_clarification.sql",
+        "backend/app/services/assistant_intent.py",
+        "frontend/src/views/History.vue"
+      ],
+      "evidence": [
+        "assistant-research-implementation.json",
+        "targeted-verification.json",
+        "http-comparison-summary.json",
+        "browser-acceptance.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Browser evidence spans candidate v1/v2 with recorded frontend overlay provenance; no real-user or real-model quality claim."
+      ]
+    },
+    {
+      "id": 5,
+      "title": "research evidence constraints",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "citation IDs and support",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/research_evidence.py",
+            "backend/app/services/research_answer.py",
+            "backend/app/services/rag_service.py",
+            "frontend/src/views/Research.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "research-independent-review-pack.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Citation/textual support is conservative structural/extractive validation, not independent semantic truth.",
+            "Independent human blind review pending; no model self-judgement represented as human truth."
+          ]
+        },
+        {
+          "name": "source/date/scope/demo metadata",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/research_evidence.py",
+            "backend/app/services/research_answer.py",
+            "backend/app/services/rag_service.py",
+            "frontend/src/views/Research.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "research-independent-review-pack.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Citation/textual support is conservative structural/extractive validation, not independent semantic truth.",
+            "Independent human blind review pending; no model self-judgement represented as human truth."
+          ]
+        },
+        {
+          "name": "distinct failure states",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/research_evidence.py",
+            "backend/app/services/research_answer.py",
+            "backend/app/services/rag_service.py",
+            "frontend/src/views/Research.vue"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "research-independent-review-pack.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Citation/textual support is conservative structural/extractive validation, not independent semantic truth.",
+            "Independent human blind review pending; no model self-judgement represented as human truth."
+          ]
+        },
+        {
+          "name": "independent evaluation limits",
+          "status": "pending_independent_human_review",
+          "implementation": [
+            "docs/evidence/optimization-20261026/research-independent-review-pack.json",
+            "docs/evidence/optimization-20261026/blind-review/review.html"
+          ],
+          "evidence": [
+            "research-independent-review-pack.json",
+            "blind-review/manifest.json",
+            "holdout-adjudication.json"
+          ],
+          "limits": [
+            "Blind-review package prepared; independent human reviewer result absent.",
+            "Author deterministic checks/post-hoc adjudication are not independent human semantic/factual truth."
+          ],
+          "delivery_blocking": false,
+          "classification": "Uncompleted evidence limitation, not a new hard delivery blocker; no fabricated human truth."
+        }
+      ],
+      "implementation_report": "assistant-research-implementation.json",
+      "implementation": [
+        "backend/app/services/research_evidence.py",
+        "backend/app/services/research_answer.py",
+        "backend/app/services/rag_service.py",
+        "frontend/src/views/Research.vue"
+      ],
+      "evidence": [
+        "assistant-research-implementation.json",
+        "targeted-verification.json",
+        "browser-acceptance.json",
+        "research-independent-review-pack.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Citation/textual support is conservative structural/extractive validation, not independent semantic truth.",
+        "Independent human blind review pending; no model self-judgement represented as human truth."
+      ]
+    },
+    {
+      "id": 6,
+      "title": "retrieval versus generation",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "retrieval zero answer-model sends",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/agent_api/research.py",
+            "backend/app/services/research_answer.py",
+            "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "frontend/src/views/Research.vue",
+            "frontend/src/services/api.ts"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "campaign-budget.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Zero answer-model/embedding/build sends are bounded forbidden-call contract evidence for pure retrieval; answering is separate.",
+            "Offline fixture/local accounting is not provider billing or production cost guarantee."
+          ]
+        },
+        {
+          "name": "visible answer/sources/fallback",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/agent_api/research.py",
+            "backend/app/services/research_answer.py",
+            "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "frontend/src/views/Research.vue",
+            "frontend/src/services/api.ts"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "campaign-budget.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Zero answer-model/embedding/build sends are bounded forbidden-call contract evidence for pure retrieval; answering is separate.",
+            "Offline fixture/local accounting is not provider billing or production cost guarantee."
+          ]
+        },
+        {
+          "name": "call accounting",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/CampaignBudgetService.java",
+            "backend/app/services/call_budget.py",
+            "backend/app/agent_api/research.py"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "campaign-budget.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Forbidden-send contract checks prove intended pure retrieval path; no provider invoice/currency saving/live-cost benchmark claimed."
+          ]
+        }
+      ],
+      "implementation_report": "assistant-research-implementation.json",
+      "implementation": [
+        "backend/app/agent_api/research.py",
+        "backend/app/services/research_answer.py",
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+        "frontend/src/views/Research.vue",
+        "frontend/src/services/api.ts"
+      ],
+      "evidence": [
+        "assistant-research-implementation.json",
+        "targeted-verification.json",
+        "browser-acceptance.json",
+        "campaign-budget.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Zero answer-model/embedding/build sends are bounded forbidden-call contract evidence for pure retrieval; answering is separate.",
+        "Offline fixture/local accounting is not provider billing or production cost guarantee."
+      ]
+    },
+    {
+      "id": 7,
+      "title": "upload resource governance",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "frequency/bytes/pending/disk limits",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+            "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+            "business-backend/src/main/resources/db/migration/V12__upload_and_account_security.sql",
+            "frontend/src/components/UploadQuotaPanel.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "database-capacity-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Logical upload quota/mount separation is not physically independent PG capacity on one host.",
+            "DB-size observation excludes PG filesystem free space, WAL/temp/other DB/host capacity."
+          ]
+        },
+        {
+          "name": "atomic reservation",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+            "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+            "business-backend/src/main/resources/db/migration/V12__upload_and_account_security.sql",
+            "frontend/src/components/UploadQuotaPanel.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "database-capacity-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Logical upload quota/mount separation is not physically independent PG capacity on one host.",
+            "DB-size observation excludes PG filesystem free space, WAL/temp/other DB/host capacity."
+          ]
+        },
+        {
+          "name": "same-user duplicate hash",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+            "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+            "business-backend/src/main/resources/db/migration/V12__upload_and_account_security.sql",
+            "frontend/src/components/UploadQuotaPanel.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "database-capacity-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Logical upload quota/mount separation is not physically independent PG capacity on one host.",
+            "DB-size observation excludes PG filesystem free space, WAL/temp/other DB/host capacity."
+          ]
+        },
+        {
+          "name": "uncertain commit reconciliation",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+            "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+            "business-backend/src/main/resources/db/migration/V12__upload_and_account_security.sql",
+            "frontend/src/components/UploadQuotaPanel.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "database-capacity-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Logical upload quota/mount separation is not physically independent PG capacity on one host.",
+            "DB-size observation excludes PG filesystem free space, WAL/temp/other DB/host capacity."
+          ]
+        },
+        {
+          "name": "release and storage isolation",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+            "business-backend/src/main/java/com/tripplanner/domain/DatabaseCapacityMetrics.java",
+            "business-backend/src/main/java/com/tripplanner/domain/BusinessMetrics.java",
+            "docker-compose.yml",
+            "docker-compose.production.yml"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "database-capacity-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Separate upload/PG mounts and logical limits are not independent physical capacity on one host.",
+            "DB size excludes PG WAL/temp/other databases/host free space; confirmed/uncertain upload reservation release remains explicit."
+          ]
+        }
+      ],
+      "implementation_report": "security-implementation.json",
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+        "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+        "business-backend/src/main/resources/db/migration/V12__upload_and_account_security.sql",
+        "frontend/src/components/UploadQuotaPanel.vue"
+      ],
+      "evidence": [
+        "security-implementation.json",
+        "targeted-verification.json",
+        "browser-acceptance.json",
+        "database-capacity-implementation.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Logical upload quota/mount separation is not physically independent PG capacity on one host.",
+        "DB-size observation excludes PG filesystem free space, WAL/temp/other DB/host capacity."
+      ]
+    },
+    {
+      "id": 8,
+      "title": "deployment dataset identity",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "isolated new environment",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentMigrationGuard.java",
+            "backend/app/services/dataset_identity.py",
+            "backend/scripts/enroll_dataset.py",
+            "backend/scripts/restore_java_backup.py",
+            "backend/scripts/existing_data_rehearsal.py",
+            "docker-compose.production.yml"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "existing-data-rehearsal-result-3.json",
+            "release-candidate-images.json",
+            "automated-backup-drill-final.json",
+            "backup-image-archive-closure.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Historical rehearsal uses the selected 2026-10-25 snapshot and exact older candidate image recorded in its report; not current daily upgrade or restoration of later writes.",
+            "Final fixed a01 images/backup separately bound; daily original mounts/enrollment/rebuild/readback require coordinator window.",
+            "Old image on upgraded DB is not rollback; independent fresh-snapshot clone supplied rollback evidence."
+          ]
+        },
+        {
+          "name": "preserved existing mounts",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentMigrationGuard.java",
+            "backend/app/services/dataset_identity.py",
+            "backend/scripts/enroll_dataset.py",
+            "backend/scripts/restore_java_backup.py",
+            "backend/scripts/existing_data_rehearsal.py",
+            "docker-compose.production.yml"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "existing-data-rehearsal-result-3.json",
+            "release-candidate-images.json",
+            "automated-backup-drill-final.json",
+            "backup-image-archive-closure.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Historical rehearsal uses the selected 2026-10-25 snapshot and exact older candidate image recorded in its report; not current daily upgrade or restoration of later writes.",
+            "Final fixed a01 images/backup separately bound; daily original mounts/enrollment/rebuild/readback require coordinator window.",
+            "Old image on upgraded DB is not rollback; independent fresh-snapshot clone supplied rollback evidence."
+          ]
+        },
+        {
+          "name": "startup identity guard",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentMigrationGuard.java",
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+            "backend/app/services/dataset_identity.py"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "existing-data-rehearsal-result-3.json",
+            "release-candidate-images.json",
+            "automated-backup-drill-final.json",
+            "backup-image-archive-closure.json",
+            "hardened-runtime-probe-result.json",
+            "hardened-backup-file-restore-result.json",
+            "release-candidate-images-220257a.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Historical clone DB/upload negative starts rejected with specific reasons and unchanged files/markers/full Flyway history. Identity binds ownership, not equal restore time.",
+            "220257ad hardened explicit local backup64.13s; three full tar inventories/extracted hashes match, actual independent read-only/capdropALL/NNP uvicorn Agent re-read two persisted Chroma canary records. Total94.716s. Uses live Java identity; not fresh PostgreSQL/empty-daemon/off-host disaster recovery."
+          ]
+        },
+        {
+          "name": "existing-data upgrade and rollback",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+            "business-backend/src/main/java/com/tripplanner/domain/DeploymentMigrationGuard.java",
+            "backend/app/services/dataset_identity.py",
+            "backend/scripts/enroll_dataset.py",
+            "backend/scripts/restore_java_backup.py",
+            "backend/scripts/existing_data_rehearsal.py",
+            "docker-compose.production.yml"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "existing-data-rehearsal-result-3.json",
+            "release-candidate-images.json",
+            "automated-backup-drill-final.json",
+            "backup-image-archive-closure.json",
+            "hardened-runtime-probe-result.json",
+            "hardened-backup-file-restore-result.json",
+            "release-candidate-images-220257a.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Historical rehearsal uses the selected 2026-10-25 snapshot and exact older candidate image recorded in its report; not current daily upgrade or restoration of later writes.",
+            "Final fixed a01 images/backup separately bound; daily original mounts/enrollment/rebuild/readback require coordinator window.",
+            "Old image on upgraded DB is not rollback; independent fresh-snapshot clone supplied rollback evidence.",
+            "220257ad hardened explicit local backup64.13s; three full tar inventories/extracted hashes match, actual independent read-only/capdropALL/NNP uvicorn Agent re-read two persisted Chroma canary records. Total94.716s. Uses live Java identity; not fresh PostgreSQL/empty-daemon/off-host disaster recovery."
+          ]
+        }
+      ],
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+        "business-backend/src/main/java/com/tripplanner/domain/DeploymentMigrationGuard.java",
+        "backend/app/services/dataset_identity.py",
+        "backend/scripts/enroll_dataset.py",
+        "backend/scripts/restore_java_backup.py",
+        "backend/scripts/existing_data_rehearsal.py",
+        "docker-compose.production.yml"
+      ],
+      "evidence": [
+        "operational-maintenance-implementation.json",
+        "existing-data-rehearsal-result-3.json",
+        "release-candidate-images.json",
+        "automated-backup-drill-final.json",
+        "backup-image-archive-closure.json",
+        "release-candidate-images-220257a.json",
+        "release-220257a-security-summary.json",
+        "hardening-implementation.json",
+        "hardened-runtime-probe-result.json",
+        "hardened-backup-file-restore-result.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Historical rehearsal uses the selected 2026-10-25 snapshot and exact older candidate image recorded in its report; not current daily upgrade or restoration of later writes.",
+        "Final fixed a01 images/backup separately bound; daily original mounts/enrollment/rebuild/readback require coordinator window.",
+        "Old image on upgraded DB is not rollback; independent fresh-snapshot clone supplied rollback evidence."
+      ]
+    },
+    {
+      "id": 9,
+      "title": "scheduler ownership recovery",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "loss stops claims",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "backend/scripts/automated_maintenance.py",
+            "deploy/alerts.yml"
+          ],
+          "evidence": [
+            "scheduler-fault-drill-3.json",
+            "scheduler-fault-drill.json",
+            "scheduler-fault-drill-2.json",
+            "scheduler-fault-continuation.json",
+            "operational-maintenance-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Third isolated drill passed; first two failures retained.",
+            "Controlled single-instance restart is not HA or automatic ownership reacquisition."
+          ]
+        },
+        {
+          "name": "readiness and alert",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "backend/scripts/automated_maintenance.py",
+            "deploy/alerts.yml"
+          ],
+          "evidence": [
+            "scheduler-fault-drill-3.json",
+            "scheduler-fault-drill.json",
+            "scheduler-fault-drill-2.json",
+            "operational-maintenance-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Third drill recorded Prometheus firing, durable local inbox firing/resolved and zero duplicate event IDs; no real-person external delivery."
+          ]
+        },
+        {
+          "name": "controlled recovery",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "backend/scripts/automated_maintenance.py",
+            "deploy/alerts.yml"
+          ],
+          "evidence": [
+            "scheduler-fault-drill-3.json",
+            "scheduler-fault-drill.json",
+            "scheduler-fault-drill-2.json",
+            "scheduler-fault-continuation.json",
+            "operational-maintenance-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Third drill readiness 200, original task PROCESS_INTERRUPTED, new task succeeded. Selected-container probe/project binding and maintenance lock retained.",
+            "Earlier failed drills preserved; single-host controlled restart is not HA."
+          ]
+        },
+        {
+          "name": "old-execution fencing",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "backend/scripts/automated_maintenance.py",
+            "deploy/alerts.yml"
+          ],
+          "evidence": [
+            "scheduler-fault-drill-3.json",
+            "scheduler-fault-drill.json",
+            "scheduler-fault-drill-2.json",
+            "scheduler-fault-continuation.json",
+            "operational-maintenance-implementation.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Third isolated drill passed; first two failures retained.",
+            "Controlled single-instance restart is not HA or automatic ownership reacquisition."
+          ]
+        }
+      ],
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "backend/scripts/automated_maintenance.py",
+        "deploy/alerts.yml"
+      ],
+      "evidence": [
+        "scheduler-fault-drill-3.json",
+        "scheduler-fault-drill.json",
+        "scheduler-fault-drill-2.json",
+        "scheduler-fault-continuation.json",
+        "operational-maintenance-implementation.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Third isolated drill passed; first two failures retained.",
+        "Controlled single-instance restart is not HA or automatic ownership reacquisition."
+      ]
+    },
+    {
+      "id": 10,
+      "title": "session and share security",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "redacted capability URLs",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "frontend/nginx.conf",
+            "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+            "business-backend/src/main/java/com/tripplanner/api/SharesController.java"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "release-security-summary.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Repository proxy redacts capability paths and controls cache/referrer; actual external TLS/proxy log pipeline remains blocked_external."
+          ],
+          "external_configuration_limits_are_delivery_blockers": false
+        },
+        {
+          "name": "cookie and CSRF",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java",
+            "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java",
+            "business-backend/src/main/java/com/tripplanner/security/TokenService.java",
+            "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+            "frontend/nginx.conf",
+            "frontend/src/views/AccountSecurity.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "release-security-summary.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Local Cookie/CSRF/recovery/TOTP/role flows passed; public TLS/outer logs/email-SMS delivery remain external gaps.",
+            "Admin public governance does not authorize unrelated private trips."
+          ]
+        },
+        {
+          "name": "expiry/revocation",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java",
+            "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java",
+            "business-backend/src/main/java/com/tripplanner/security/TokenService.java",
+            "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+            "frontend/nginx.conf",
+            "frontend/src/views/AccountSecurity.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "release-security-summary.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Local Cookie/CSRF/recovery/TOTP/role flows passed; public TLS/outer logs/email-SMS delivery remain external gaps.",
+            "Admin public governance does not authorize unrelated private trips."
+          ]
+        },
+        {
+          "name": "recovery and MFA",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java",
+            "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+            "frontend/src/views/AccountSecurity.vue",
+            "frontend/src/views/Login.vue"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "browser-acceptance.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Real Cookie recovery/TOTP flows passed after recorded form binding fixes; email/SMS transport/sender/public callback acceptance absent.",
+            "No external channel readiness or public HTTPS proof."
+          ],
+          "external_configuration_limits_are_delivery_blockers": false
+        },
+        {
+          "name": "private-trip authorization",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+            "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+            "frontend/e2e/optimization-flows.spec.ts"
+          ],
+          "evidence": [
+            "security-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json",
+            "release-security-summary.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Independent owner/editor/viewer/pending/removed/stranger/guest/admin contexts passed bounded affected flows; admin cannot read unrelated private trips."
+          ]
+        }
+      ],
+      "implementation_report": "security-implementation.json",
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java",
+        "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java",
+        "business-backend/src/main/java/com/tripplanner/security/TokenService.java",
+        "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+        "frontend/nginx.conf",
+        "frontend/src/views/AccountSecurity.vue"
+      ],
+      "evidence": [
+        "security-implementation.json",
+        "targeted-verification.json",
+        "browser-acceptance.json",
+        "release-security-summary.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Local Cookie/CSRF/recovery/TOTP/role flows passed; public TLS/outer logs/email-SMS delivery remain external gaps.",
+        "Admin public governance does not authorize unrelated private trips."
+      ]
+    },
+    {
+      "id": 11,
+      "title": "fact completion loop",
+      "status": "candidate_validated_pending_daily_ci",
+      "subitems": [
+        {
+          "name": "opening and reservations",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/travel_facts.py",
+            "backend/app/services/time_planner.py",
+            "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+            "frontend/src/components/trip/FactCompletionEditor.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "fact-ui-acceptance-result.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Six real fact UI checks cover one source/TTL/save/local-preview/confirmation loop, not every collection or live destination.",
+            "User provenance stays user_declared; ambiguous semantic relationships/feasibility remain unknown."
+          ]
+        },
+        {
+          "name": "hotel endpoints and station lead time",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/travel_facts.py",
+            "backend/app/services/time_planner.py",
+            "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+            "frontend/src/components/trip/FactCompletionEditor.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "fact-ui-acceptance-result.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Six real fact UI checks cover one source/TTL/save/local-preview/confirmation loop, not every collection or live destination.",
+            "User provenance stays user_declared; ambiguous semantic relationships/feasibility remain unknown."
+          ]
+        },
+        {
+          "name": "meals",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/travel_facts.py",
+            "backend/app/services/time_planner.py",
+            "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+            "frontend/src/components/trip/FactCompletionEditor.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "fact-ui-acceptance-result.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Six real fact UI checks cover one source/TTL/save/local-preview/confirmation loop, not every collection or live destination.",
+            "User provenance stays user_declared; ambiguous semantic relationships/feasibility remain unknown."
+          ]
+        },
+        {
+          "name": "parent/child relations",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/travel_facts.py",
+            "backend/app/services/time_planner.py",
+            "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+            "frontend/src/components/trip/FactCompletionEditor.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "fact-ui-acceptance-result.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Six real fact UI checks cover one source/TTL/save/local-preview/confirmation loop, not every collection or live destination.",
+            "User provenance stays user_declared; ambiguous semantic relationships/feasibility remain unknown."
+          ]
+        },
+        {
+          "name": "source/expiry and local replanning",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/services/travel_facts.py",
+            "backend/app/services/time_planner.py",
+            "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+            "frontend/src/components/trip/FactCompletionEditor.vue"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "targeted-verification.json",
+            "fact-ui-acceptance-result.json",
+            "travel-holdout-first-result.json",
+            "holdout-adjudication.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Six final-candidate UI checks passed source/TTL/save/scoped-preview/explicit-confirmation with original and untouched day preserved in that flow.",
+            "POI run3 is a separate seven-check passing flow; earlier fact checks did not cover it."
+          ]
+        }
+      ],
+      "implementation_report": "planning-implementation.json",
+      "implementation": [
+        "backend/app/services/travel_facts.py",
+        "backend/app/services/time_planner.py",
+        "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+        "frontend/src/components/trip/FactCompletionEditor.vue"
+      ],
+      "evidence": [
+        "planning-implementation.json",
+        "targeted-verification.json",
+        "fact-ui-acceptance-result.json",
+        "travel-holdout-first-result.json",
+        "holdout-adjudication.json",
+        "poi-ui-acceptance-result.json",
+        "poi-ui-run1-failure.json",
+        "poi-ui-run2-process-failure-diagnostic.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Six real fact UI checks cover one source/TTL/save/local-preview/confirmation loop, not every collection or live destination.",
+        "User provenance stays user_declared; ambiguous semantic relationships/feasibility remain unknown."
+      ]
+    },
+    {
+      "id": 12,
+      "title": "modules and operating boundaries",
+      "status": "candidate_validated_pending_window_daily_push_ci",
+      "subitems": [
+        {
+          "name": "Java responsibilities",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/TripOperationsService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripCheckService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+            "business-backend/src/main/java/com/tripplanner/domain/TripNotificationUsageService.java"
+          ],
+          "evidence": [
+            "assistant-research-implementation.json",
+            "targeted-verification.json",
+            "browser-acceptance.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Stable facade delegates real business modules sharing authorization/member row locks/version/audit. DB rollback/role regressions are changed-path evidence, not all-function acceptance."
+          ]
+        },
+        {
+          "name": "execution responsibilities",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/app/agent_api/research.py",
+            "backend/app/services/research_evidence.py",
+            "backend/app/services/travel_facts.py",
+            "backend/app/services/route_facts.py",
+            "backend/app/services/time_planner.py",
+            "backend/app/services/plan_quality.py",
+            "backend/app/services/durable_execution.py",
+            "backend/app/agents/data_nodes.py"
+          ],
+          "evidence": [
+            "planning-implementation.json",
+            "assistant-research-implementation.json",
+            "route-observation-lifetime.json",
+            "targeted-verification.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Actual normalization/research/solver/quality/recovery boundaries, no extra deployment services; no global optimum or live-model quality claim."
+          ]
+        },
+        {
+          "name": "result-page components",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "frontend/src/components/trip/ProposalReviewPanel.vue",
+            "frontend/src/components/trip/ActivityTimeline.vue",
+            "frontend/src/components/trip/FactCompletionEditor.vue",
+            "frontend/src/components/trip/AttractionReplacementReview.vue",
+            "frontend/src/composables/useTripExport.ts"
+          ],
+          "evidence": [
+            "browser-acceptance.json",
+            "candidate-frontend-overlay.json",
+            "fact-ui-acceptance-result.json",
+            "ui-coverage-handoff.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Eight prior valid browser flows, six prior fact UI checks and seven new POI checks have distinct provenance; no all-function E2E claim.",
+            "No all-ordinary-function regression/real external user feedback claimed."
+          ]
+        },
+        {
+          "name": "resource/log/data retention",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "business-backend/src/main/java/com/tripplanner/domain/OperationalRetention.java",
+            "business-backend/src/main/java/com/tripplanner/domain/DatabaseCapacityMetrics.java",
+            "business-backend/src/main/java/com/tripplanner/domain/BusinessMetrics.java",
+            "docker-compose.yml",
+            "docker-compose.production.yml",
+            "deploy/alerts.yml"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "database-capacity-implementation.json",
+            "targeted-verification.json",
+            "release-candidate-images.json",
+            "hardened-runtime-probe-result.json",
+            "hardened-backup-file-restore-result.json",
+            "release-candidate-images-220257a.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Five targeted real-PG/upload metrics tests and six synthetic Promtool capacity alert cases passed.",
+            "Resource/log budgets and disposable payload retention limit growth; not production capacity or PG filesystem space recovery after DELETE.",
+            "pg_database_size and UPLOAD_DIR free ratio are not full PG physical/WAL/other DB monitoring or independent physical failure domains.",
+            "220257ad hardened explicit local backup64.13s; three full tar inventories/extracted hashes match, actual independent read-only/capdropALL/NNP uvicorn Agent re-read two persisted Chroma canary records. Total94.716s. Uses live Java identity; not fresh PostgreSQL/empty-daemon/off-host disaster recovery.",
+            "This round additionally removes four restricted CLI exposure paths/aliases/copies in the bounded checker and applies ALL-capability drop, NNP and canonical read-only rootfs with writable persistent directories plus bounded tmpfs. This does not patch retained libraries or prove all eight native CVEs unreachable."
+          ]
+        },
+        {
+          "name": "alerts and automated local backup",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/scripts/automated_maintenance.py",
+            "backend/scripts/operational_alert_receiver.py",
+            "backend/scripts/backup_java_deployment.py",
+            "deploy/alerts.yml",
+            "deploy/alertmanager.yml",
+            "deploy/prometheus.yml"
+          ],
+          "evidence": [
+            "scheduler-fault-drill-3.json",
+            "automated-backup-drill-final.json",
+            "backup-image-archive-closure.json",
+            "operational-maintenance-implementation.json",
+            "hardened-runtime-probe-result.json",
+            "hardened-backup-file-restore-result.json",
+            "release-candidate-images-220257a.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "Controlled local firing/resolved/dedup delivery passed; no real-person external notification sent.",
+            "Final candidate local backup 108.26s, readiness/states/private History unchanged, local replica bytes verified.",
+            "Windows scheduler installation is separate pending item; local replica explicitly off_host=false.",
+            "220257ad hardened explicit local backup64.13s; three full tar inventories/extracted hashes match, actual independent read-only/capdropALL/NNP uvicorn Agent re-read two persisted Chroma canary records. Total94.716s. Uses live Java identity; not fresh PostgreSQL/empty-daemon/off-host disaster recovery."
+          ],
+          "split_from": "alerts and automated off-host backup"
+        },
+        {
+          "name": "RPO/RTO",
+          "status": "candidate_validated_pending_daily_ci",
+          "implementation": [
+            "backend/scripts/automated_maintenance.py",
+            "backend/scripts/existing_data_rehearsal.py",
+            "backend/scripts/restore_java_backup.py",
+            "docs/operations/optimization-governance.md"
+          ],
+          "evidence": [
+            "automated-backup-drill-final.json",
+            "existing-data-rehearsal-result-3.json",
+            "scheduler-fault-drill-3.json",
+            "hardened-runtime-probe-result.json",
+            "hardened-backup-file-restore-result.json",
+            "release-candidate-images-220257a.json"
+          ],
+          "limits": [
+            "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+            "RPO 86400s/RTO 3600s are objectives. Backup108.26s and historical clone upgrade/rollback131.199s are measured local timings, not production guarantees.",
+            "Timings exclude detection/operator response/off-host transfer; daily latest backup/readback pending window.",
+            "220257ad hardened explicit local backup64.13s; three full tar inventories/extracted hashes match, actual independent read-only/capdropALL/NNP uvicorn Agent re-read two persisted Chroma canary records. Total94.716s. Uses live Java identity; not fresh PostgreSQL/empty-daemon/off-host disaster recovery."
+          ]
+        },
+        {
+          "name": "security CI",
+          "status": "temporary_local_demo_risk_accepted_pending_daily_and_final_ci",
+          "implementation": [
+            ".github/workflows/security.yml",
+            "tools/security_gate.py",
+            "tools/image_policy.py",
+            ".github/security-vendor-policy.json",
+            ".github/security-vex.json",
+            "backend/runtime-security-packages.json"
+          ],
+          "evidence": [
+            "release-security-summary.json",
+            "security-supply-chain.json",
+            "unresolved-cve-deployment-matrix.json",
+            "debian-base-cve-verification.json",
+            "security-resource-window-deviation.json",
+            "release-candidate-images-220257a.json",
+            "release-220257a-security-summary.json",
+            "hardening-implementation.json",
+            "hardened-runtime-probe-result.json",
+            "temporary-risk-acceptance-enforcement.json",
+            "final-secret-scan.json",
+            "risk-mechanism-targeted-tests.json"
+          ],
+          "limits": [
+            "Final exact-SHA GitHub CI/CodeQL not yet run; daily rebuild/cleanup window not granted. Temporary risk acceptance is local controlled demo only, expires2026-11-09 and leaves vulnerabilities unresolved."
+          ]
+        },
+        {
+          "name": "configurable off-host target and real off-host restore",
+          "status": "deferred_by_user_not_verified",
+          "implementation": [
+            "backend/scripts/automated_maintenance.py",
+            "backend/scripts/restore_java_backup.py"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "candidate-handoff.json"
+          ],
+          "limits": [
+            "Direct human decision relayed by coordinator: no off-host target; finish other work first.",
+            "No independent-host copy/restore verified. UNC configuration alone is not independent failure-domain proof.",
+            "Deferral only applies to real off-host evidence; local backup/controlled alerts/retention remain required and recorded separately."
+          ],
+          "decision_source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\25\\01a172e2-8a39-7783-b536-b6dbe2f478cd\\execution-20261026\\offhost-user-decision.json",
+          "delivery_blocking": false
+        },
+        {
+          "name": "Windows automatic backup task installation",
+          "status": "pending_scheduler_installation_not_installed",
+          "implementation": [
+            "deploy/install-backup-task.ps1",
+            "backend/scripts/automated_maintenance.py"
+          ],
+          "evidence": [
+            "operational-maintenance-implementation.json",
+            "automated-backup-drill-final.json"
+          ],
+          "limits": [
+            "Installer dry-run only; Windows scheduled task not installed/triggered.",
+            "Explicit candidate backup success is not installed automation. User session/Docker availability and shared lock-directory execution-account conditions remain."
+          ]
+        },
+        {
+          "name": "daily rebuild readback and approved cleanup",
+          "status": "pending_coordinator_window_not_granted",
+          "implementation": [
+            "backend/scripts/enroll_dataset.py",
+            "backend/scripts/prepare_java_deployment.py",
+            "backend/scripts/automated_maintenance.py"
+          ],
+          "evidence": [
+            "baseline.json",
+            "candidate-handoff.json",
+            "cleanup-plan.json",
+            "resource-inventory.json"
+          ],
+          "limits": [
+            "Window owner=null/not_granted; daily replacement and cleanup not executed.",
+            "Keep daily4, final8 until daily readback, restored7/recovery directories, protected images/backups/unknown anonymous volumes/shared cache.",
+            "Conditional exact-ID plan is not authority; fresh ownership/reference inspection and coordinator grant required.",
+            "Current targeted hardened supplement retains nine source services, exact stopped restored Agent and new security inventory, nine volumes/two networks/six release images plus backup/restore paths; no global rescan or deletion eligibility inferred."
+          ]
+        }
+      ],
+      "implementation": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationsService.java",
+        "backend/scripts/automated_maintenance.py",
+        "deploy/install-backup-task.ps1",
+        ".github/workflows/security.yml"
+      ],
+      "evidence": [
+        "assistant-research-implementation.json",
+        "operational-maintenance-implementation.json",
+        "targeted-verification.json",
+        "database-capacity-implementation.json",
+        "browser-acceptance.json",
+        "fact-ui-acceptance-result.json",
+        "scheduler-fault-drill-3.json",
+        "automated-backup-drill-final.json",
+        "existing-data-rehearsal-result-3.json",
+        "release-security-summary.json",
+        "unresolved-cve-deployment-matrix.json",
+        "poi-ui-acceptance-result.json",
+        "poi-ui-run1-failure.json",
+        "poi-ui-run2-process-failure-diagnostic.json",
+        "release-candidate-images-220257a.json",
+        "release-220257a-security-summary.json",
+        "hardening-implementation.json",
+        "hardened-runtime-probe-result.json",
+        "hardened-backup-file-restore-result.json"
+      ],
+      "limits": [
+        "Daily deployment/readback and final pushed exact-SHA CI remain pending; candidate validation is not final delivery.",
+        "Candidate bounded-resource/operational checks are not production capacity/HA/SLA guarantees.",
+        "Eight unique unpatched vendor-Minor CVEs remain; pass_vendor_policy is neither fix nor human risk approval.",
+        "Human blind review and future public TLS/email-SMS configuration are evidence/external limits, not newly introduced hard delivery gates. Only real off-host verification is explicitly deferred by user."
+      ]
+    }
+  ],
+  "updated_at": "2026-10-26T14:36:48.772728+00:00",
+  "schema_version": 2,
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "phase": "RUNNING_NOT_DEPLOY_READY",
+  "status_vocabulary": {
+    "candidate_validated_pending_daily_ci": "Local candidate affected-path evidence exists; daily deploy/readback and final pushed CI incomplete.",
+    "candidate_api_validated_poi_ui_pending_daily_ci": "API/component evidence valid; actual POI browser flow pending.",
+    "candidate_validated_pending_poi_ui_daily_ci": "Latest role/fact flows valid; POI UI pending.",
+    "candidate_validated_pending_risk_decision_window_push_ci": "CVE decision, daily window/delivery and remote CI incomplete.",
+    "pending_human_risk_decision_and_final_ci": "No human acceptance inferred from policy pass; final remote CI pending.",
+    "deferred_by_user_not_verified": "User explicitly postponed real off-host verification only.",
+    "pending_coordinator_window_not_granted": "No daily Docker or cleanup authorization.",
+    "pending_scheduler_installation_not_installed": "Tool/dry-run exists, actual OS scheduler not installed.",
+    "offline_evidence_frozen_human_review_pending": "Frozen offline evidence retained, no human blind result.",
+    "pending_independent_human_review": "Independent human assessment absent.",
+    "pending_push_exact_sha_ci": "No final remote push/CI evidence.",
+    "implemented_pending_final_evidence_sync": "Source/function handoff exists, delivery outcomes need sync.",
+    "candidate_backup_validated_cleanup_pending_window": "Actual local candidate backup valid; daily latest-data/cleanup window pending."
+  },
+  "current_verified_summary": {
+    "final_business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "release_images": "release-candidate-images-220257a.json: current five app/monitor images share220257ad; official PG separately pinned. Earlier release-candidate-images.json remains a01 history.",
+    "browser": {
+      "latest_valid_unique_flows": 8,
+      "all_latest_passed": true,
+      "historical_failures_preserved": true,
+      "provenance": "Candidate v1/v2 and recorded frontend overlay; offline suppliers, actual Java/PG/Agent HTTP."
+    },
+    "fact_ui": {
+      "checks": 6,
+      "passed": true,
+      "does_not_cover": [
+        "POI failure/retry UI",
+        "explicit POI replacement UI"
+      ]
+    },
+    "poi_ui": {
+      "passed": true,
+      "checks": 7,
+      "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "report": "poi-ui-acceptance-result.json",
+      "prior_failures": [
+        "poi-ui-run1-failure.json",
+        "poi-ui-run2-process-failure-diagnostic.json"
+      ],
+      "prior_primary_loss_explicit": true
+    },
+    "backup": {
+      "passed": true,
+      "elapsed_seconds": 108.26,
+      "private_owner_history_unchanged": true,
+      "offhost": false,
+      "historical_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+      "historical_report": "automated-backup-drill-final.json:108.26s; current hardened64.13s is separate above."
+    },
+    "restoration": {
+      "passed": true,
+      "snapshot_rollback_verified": true,
+      "elapsed_seconds": 131.199,
+      "daily_before_after_equal": true,
+      "boundary": "Selected historical snapshot and exact older tested candidate in original report, not daily a01 upgrade claim."
+    },
+    "scheduler": {
+      "third_drill_passed": true,
+      "first_two_failed_reports_retained": true,
+      "boundary": "Isolated loss/readiness/restart/firing-resolved/new task, not HA."
+    },
+    "capacity": {
+      "targeted_maven_tests": 5,
+      "root_promtool_cases": 6,
+      "root_promtool_result": "SUCCESS",
+      "physical_pg_disk_proven": false
+    },
+    "holdout": {
+      "first_rules_passed": 16,
+      "first_rules_total": 17,
+      "original_result_immutable": true,
+      "posthoc_audit": "holdout-adjudication.json; alias/Instant audit separate, not first-run17/17 or human truth.",
+      "human_blind_review": "pending"
+    },
+    "security": {
+      "current_report": "release-220257a-security-summary.json",
+      "artifacts": 6,
+      "raw_agent_high_critical": 79,
+      "real_unpatched_unique_cves": 8,
+      "still_vulnerable_records": 52,
+      "pass_vendor_policy_is_fix_or_approval": false,
+      "human_deployment_risk_decision": "pending",
+      "native_per_cve_context": {
+        "CVE-2026-102010": {
+          "assessment": "No native code fix or complete reachability exclusion established by this hardening. Actual libc/libstdc++ remain present; original native/FFI/PBDS uncertainties remain.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-19499": {
+          "assessment": "No native code fix or complete reachability exclusion established by this hardening. Actual libc/libstdc++ remain present; original native/FFI/PBDS uncertainties remain.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-5435": {
+          "assessment": "No native code fix or complete reachability exclusion established by this hardening. Actual libc/libstdc++ remain present; original native/FFI/PBDS uncertainties remain.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-76642": {
+          "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-78408": {
+          "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-78409": {
+          "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-78410": {
+          "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        },
+        "CVE-2026-95619": {
+          "assessment": "Same SHA256 actual dynamic libstdc++ retains the previously verified POSIX posix_memalign branch unaffected by the specific size-rounding defect. Source-package raw vulnerable classification remains; other vendored/static/replacement allocators are not exhaustively proved absent.",
+          "original_vendor_classification_preserved": true,
+          "risk_accepted": false
+        }
+      },
+      "matrix": "unresolved-cve-deployment-matrix.json: DEPLOY_READY_not_established"
+    },
+    "daily_deployment": "not executed; window not_granted",
+    "cleanup": "plan only; delete_now=[]",
+    "windows_backup_task": "not installed",
+    "offhost": "deferred_by_user_not_verified",
+    "push_final_exact_sha_ci": "pending",
+    "actual_canonical_runtime": {
+      "passed": true,
+      "checks": 11,
+      "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "report": "hardened-runtime-probe-result.json",
+      "separate_browser_supplier_fixture": true
+    },
+    "hardened_file_restore": {
+      "passed": true,
+      "errors": [],
+      "maintenance_seconds": 64.13,
+      "total_seconds": 94.716,
+      "all_three_archives_match": true,
+      "source_four_restored": true,
+      "chroma_records": 2,
+      "restore_agent_id": "4e5dc16d01d3cbe8d552bc525098e606b97357d6d1f6a1fdb86bf4e289d6d170",
+      "restore_agent_stopped_retained": true,
+      "restore_directory_retained": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb",
+      "independent_postgres_restored": false,
+      "report": "hardened-backup-file-restore-result.json"
+    },
+    "resource_supplement": {
+      "property": "hardened_220257a_supplement",
+      "container_count": 11,
+      "hardened_source_services": 9,
+      "stopped_restore_agent": 1,
+      "new_retained_security_inventory": 1,
+      "volumes_retained": 9,
+      "networks_retained": 2,
+      "current_release_images_retained": 6,
+      "restore_directory_hard_retained": true,
+      "delete_now": [],
+      "global_host_rescan": false
+    }
+  },
+  "evidence_precedence": [
+    "Original reports and failures remain; later evidence supersedes only paths it actually verified.",
+    "Historical targeted-verification runs overlap and are not summed. Wrong ops filename/no-tests-ran remains diagnostic; later corrected ops/capacity reports are separate successful evidence.",
+    "Browser report preserves early failures/timeouts and latest valid per-flow results. Fact UI six-check flow is separate and was not POI evidence; later POI run3 independently supplied seven passing checks.",
+    "Scheduler drill3 and real-data rehearsal result3 passed; earlier attempts remain failures/diagnostics.",
+    "First frozen holdout remains16/17 despite later deterministic source/response audit. No case/rule/result replacement or independent human truth claim.",
+    "Local pass_vendor_policy preserves eight real unpatched CVEs. Matrix/human deployment decision and final CI remain pending.",
+    "Resource-inventory is referenced by path only, not loaded for this update; read-only audit/cleanup-plan grants no deletion authority.",
+    "220257ad supplement: POI run3 seven checks, real canonical uvicorn eleven checks and hardened file snapshot restore passed. Earlier POI run1 failure/run2 lost-primary diagnostics are retained; earlier browser8/fact6/a01 backup/full PG clone evidence keeps its original version and scope."
+  ],
+  "unfinished_delivery_gates": [
+    {
+      "id": "eight_cve_context_human_decision",
+      "status": "pending_human_risk_decision",
+      "scope_ids": [
+        0,
+        12
+      ],
+      "details": "220257ad small hardening and six rescans completed, but eight native CVE package/raw affected-or-unknown identities remain. Per-CVE context review/informed human decision pending; no uniform reachability or implied acceptance."
+    },
+    {
+      "id": "coordinator_window",
+      "status": "not_granted",
+      "scope_ids": [
+        0,
+        8,
+        12
+      ],
+      "details": "owner=null; no daily rebuild/cleanup authority."
+    },
+    {
+      "id": "daily_fresh_backup_enrollment_rebuild_readback",
+      "status": "pending_window",
+      "scope_ids": [
+        0,
+        8,
+        12
+      ],
+      "details": "Daily latest state/original mounts/exact image-source relation/current business readback/original running preference in granted window."
+    },
+    {
+      "id": "conditional_cleanup",
+      "status": "pending_window_and_readback",
+      "scope_ids": [
+        0,
+        12
+      ],
+      "details": "Exact approved candidates after fresh inspection; keep recovery/unknown volumes/shared cache. Plan is not deletion."
+    },
+    {
+      "id": "windows_backup_task_installation",
+      "status": "not_installed",
+      "scope_ids": [
+        12
+      ],
+      "details": "Installer dry-run and manual backup passed; actual scheduled task installation/trigger absent."
+    },
+    {
+      "id": "push_final_exact_sha_ci",
+      "status": "pending",
+      "scope_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "details": "Push/final exact-SHA expected GitHub CI/security jobs pending; local checks cannot replace them."
+    },
+    {
+      "id": "final_readme_scope_personal_handoff_sync",
+      "status": "pending_delivery_outcomes",
+      "scope_ids": [
+        0,
+        12
+      ],
+      "details": "Sync final deployment/cleanup/CI/risk outcomes; shared personal materials remain coordinator-owned."
+    }
+  ],
+  "ledger_update_boundary": "Only scope-ledger plus small append-only current-resource supplements to cleanup-plan/resource-inventory updated. No source/test/HTTP/Docker lifecycle operation; only targeted inspect metadata for nominated new resources.",
+  "status_distribution": {
+    "scope": {
+      "candidate_validated_pending_risk_decision_window_push_ci": 2,
+      "candidate_validated_pending_daily_ci": 11
+    },
+    "subitems": {
+      "candidate_validated_pending_daily_ci": 53,
+      "offline_evidence_frozen_human_review_pending": 1,
+      "pending_coordinator_window_not_granted": 2,
+      "candidate_backup_validated_cleanup_pending_window": 1,
+      "pending_push_exact_sha_ci": 1,
+      "implemented_pending_final_evidence_sync": 1,
+      "pending_human_risk_decision_and_final_ci": 2,
+      "pending_independent_human_review": 1,
+      "deferred_by_user_not_verified": 1,
+      "pending_scheduler_installation_not_installed": 1
+    }
+  },
+  "historical_verified_summary_a01a0d7c": {
+    "final_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+    "release_images": "Five app/monitor images share business SHA in release-candidate-images.json; official PG separately pinned.",
+    "browser": {
+      "latest_valid_unique_flows": 8,
+      "all_latest_passed": true,
+      "historical_failures_preserved": true,
+      "provenance": "Candidate v1/v2 and recorded frontend overlay; offline suppliers, actual Java/PG/Agent HTTP."
+    },
+    "fact_ui": {
+      "checks": 6,
+      "passed": true,
+      "does_not_cover": [
+        "POI failure/retry UI",
+        "explicit POI replacement UI"
+      ]
+    },
+    "poi_ui": "pending root actual execution; no passed result attached by this ledger update",
+    "backup": {
+      "passed": true,
+      "elapsed_seconds": 108.26,
+      "private_owner_history_unchanged": true,
+      "offhost": false
+    },
+    "restoration": {
+      "passed": true,
+      "snapshot_rollback_verified": true,
+      "elapsed_seconds": 131.199,
+      "daily_before_after_equal": true,
+      "boundary": "Selected historical snapshot and exact older tested candidate in original report, not daily a01 upgrade claim."
+    },
+    "scheduler": {
+      "third_drill_passed": true,
+      "first_two_failed_reports_retained": true,
+      "boundary": "Isolated loss/readiness/restart/firing-resolved/new task, not HA."
+    },
+    "capacity": {
+      "targeted_maven_tests": 5,
+      "root_promtool_cases": 6,
+      "root_promtool_result": "SUCCESS",
+      "physical_pg_disk_proven": false
+    },
+    "holdout": {
+      "first_rules_passed": 16,
+      "first_rules_total": 17,
+      "original_result_immutable": true,
+      "posthoc_audit": "holdout-adjudication.json; alias/Instant audit separate, not first-run17/17 or human truth.",
+      "human_blind_review": "pending"
+    },
+    "security": {
+      "local_policy_status": "all_six_image_policy_gates_and_history_current_source_secret_gates_passed",
+      "real_unpatched_unique_cves": 8,
+      "pass_vendor_policy_is_fix_or_approval": false,
+      "human_deployment_risk_decision": "pending",
+      "matrix": "unresolved-cve-deployment-matrix.json: DEPLOY_READY_not_established"
+    },
+    "daily_deployment": "not executed; window not_granted",
+    "cleanup": "plan only; delete_now=[]",
+    "windows_backup_task": "not installed",
+    "offhost": "deferred_by_user_not_verified",
+    "push_final_exact_sha_ci": "pending"
+  },
+  "unfinished_evidence_and_external_limits": [
+    {
+      "id": "independent_human_blind_review",
+      "status": "pending",
+      "scope_ids": [
+        0,
+        5
+      ],
+      "details": "Prepared blind materials; genuine human review remains uncompleted evidence, not a new hard delivery blocker. No human/general accuracy claim.",
+      "delivery_blocking": false
+    },
+    {
+      "id": "public_tls_outer_proxy_email_sms",
+      "status": "blocked_external",
+      "scope_ids": [
+        10
+      ],
+      "details": "Known future external deployment configuration boundary; not a new hard blocker for the bounded local release.",
+      "delivery_blocking": false
+    },
+    {
+      "id": "real_offhost_copy_restore",
+      "status": "deferred_by_user_not_verified",
+      "scope_ids": [
+        12
+      ],
+      "details": "User has no target and postponed only this; valid local backup/alert evidence remains separate.",
+      "delivery_blocking": false
+    }
+  ],
+  "temporary_risk_decision": {
+    "accepted": true,
+    "limited_scope": "controlled_single_host_local_demo_only",
+    "expires_at": "2026-11-09T23:59:59+08:00",
+    "enforcement": "temporary-risk-acceptance-enforcement.json",
+    "fixed": false,
+    "raw79_unfixed52_unique8_preserved": true,
+    "policy_source_sha": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a"
+  },
+  "final_local_candidate_evidence": {
+    "security": "temporary-risk-acceptance-enforcement.json",
+    "secrets": "final-secret-scan.json",
+    "changed_security_counterexamples": "risk-mechanism-targeted-tests.json:25passed",
+    "runtime": "hardened-runtime-probe-result.json:11passed; runtime-constraint-final-proof.json additional strict actual combo",
+    "poi_ui": "poi-ui-acceptance-result.json:7passed",
+    "backup_restore": "hardened-backup-file-restore-result.json:pass",
+    "guide": "54 features each with2+ followups"
+  },
+  "current_pending_hard_gates": [
+    "Coordinator deployment/cleanup window",
+    "Fresh daily backup/enrollment/rebuild/business readback",
+    "Install Windows automated backup task",
+    "Conditional exact-resource cleanup with retention checks",
+    "Push and all expected final exact-SHA CI/security jobs",
+    "Final delivery evidence synchronization"
+  ]
+}

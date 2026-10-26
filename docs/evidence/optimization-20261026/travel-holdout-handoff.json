@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-26",
+  "status": "frozen_and_runner_ready_not_http_executed",
+  "requirement": "common 0.3; two previously unused offline cross-scenario acceptance inputs with prospective deterministic rules",
+  "frozen_at": "2026-10-26T10:56:22.098762+00:00",
+  "files": {
+    "inputs_and_rules": "docs/evidence/optimization-20261026/travel-holdout-frozen.json",
+    "source_and_input_fingerprints": "docs/evidence/optimization-20261026/travel-holdout-freeze-manifest.json",
+    "runner": "backend/scripts/travel_holdout_acceptance.py",
+    "first_execution_claim": "docs/evidence/optimization-20261026/travel-holdout-first-execution.json (created only after a valid isolated fixture marker)",
+    "intended_first_result": "docs/evidence/optimization-20261026/travel-holdout-first-result.json (not yet created)"
+  },
+  "samples": [
+    {
+      "id": "HOLDOUT-A",
+      "intersection": "Beijing/Shanghai days, explicitly fixed railway with different origin/destination endpoints, user-declared arrival buffer and later Shanghai reservation fact",
+      "rules": "Conserve fixed timing/endpoints and user authority; require honest feasibility disclosure; enforce Shanghai-only invalidation without changing Beijing after the scoped fact edit."
+    },
+    {
+      "id": "HOLDOUT-B",
+      "intersection": "Two-city plan, accepted Beijing content lock, later Shanghai accommodation endpoint change, rejected stale time-lock/completion",
+      "rules": "Keep the first-day activity/content lock and unaffected day projection; make the second day stale; require specific SCHEDULE_STALE denials using current revisions and atomic unchanged authoritative snapshots."
+    }
+  ],
+  "command_after_coordinator_browser_acceptance": "python backend/scripts/travel_holdout_acceptance.py --base-url <actual-loopback-isolated-fixture-origin> --output docs/evidence/optimization-20261026/travel-holdout-first-result.json",
+  "execution_controls": [
+    "Only loopback base URLs; reject credentials, path suffixes, query/fragment, redirects and proxy environment routing.",
+    "Verify /api/validation/fixture has offline_fixture=true before any account/business mutation.",
+    "Check frozen input bytes and all 27 selected application/prompt/fact/provider/dependency/deployment source fingerprints before HTTP execution. Version drift is a preflight rejection, not silently updated evidence.",
+    "Use unique synthetic accounts through registration HTTP and real durable Agent tasks; no SQL, database creation, business response interception or Docker operations.",
+    "Persist bounded redacted HTTP artifacts and per-rule results. Never save bearer tokens or generated passwords.",
+    "Exclusively reserve the first execution in a persistent claim file after fixture validation; different output filenames cannot reset the holdout. No full sample retry or cleanup.",
+    "Every prerequisite failure is a failed sample, never a skipped rule. Preserve failures, classify a failed holdout as development, and keep later repair/rechecks separate."
+  ],
+  "verification_performed": [
+    "Runner --help parses successfully; this does not invoke HTTP.",
+    "Python AST parses; frozen input byte checksum matches; all 27 source fingerprints match at handoff; execution claim does not exist.",
+    "Before any HTTP execution, corrected the manifest digest to hash actual Windows CRLF bytes and separately added eight prompt/provider/fact/quality fingerprints. Original case bytes, rules and frozen_at did not change."
+  ],
+  "boundaries": [
+    "No HTTP acceptance has been executed by this subtask, and no passing business result is claimed.",
+    "This is synthetic offline supplier evaluation over the real Java/PostgreSQL/Agent business path, not new live-model quality, live route truth, model general accuracy or independent human truth.",
+    "Source/fixture fingerprints and returned observations identify the tested deterministic fixture definition; they do not establish a snapshot of a live supplier cache or runtime image provenance. Coordinator must bind deployed candidate image/configuration separately.",
+    "No current planning test case bodies or current development counterexample details were read to construct the samples. Novelty is relative to the author's knowledge, not a corpus-wide duplicate search.",
+    "Genuine independent human blind review is pending. No real user adoption, external feedback, production RTO or new model quality claim follows from these two samples."
+  ],
+  "external_paid_calls": 0,
+  "human_blind_review": "pending",
+  "runner_sha256": "b631346e82a928c93ea36dd174dd693f15bbc2e48ab4af8b82eeb24e99ae8e89",
+  "frozen_source_count": 27,
+  "source_drift_at_handoff": []
+}

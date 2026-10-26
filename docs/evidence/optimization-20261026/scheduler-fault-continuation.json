@@ -1,0 +1,50 @@
+{
+  "prior_failure_sha256": "1e017d285677696598eeeba83a5afa4a25b8778a661a0ebc0d00bbed9b266edc",
+  "started_at": "2026-10-26T11:14:04.146532+00:00",
+  "reason": "Preserve the original observation timeout. Confirm later actual delivery, recover the selected isolated scheduler, then explicitly evaluate rules every 15 seconds.",
+  "passed": true,
+  "firing_observed_after_first_timeout": true,
+  "delivered_firing": [
+    {
+      "name": "TripSchedulerOwnershipLost",
+      "job": "trip",
+      "status": "firing",
+      "starts_at": "2026-10-26T11:07:08.718Z",
+      "event_id": "5e50ae6af89f051afba0dc4026267ffa4959b43ab2aa5e930b737025bf07d729",
+      "received_at": "2026-10-26T11:08:08.530751+00:00"
+    }
+  ],
+  "recovery": {
+    "operation": "scheduler_restart",
+    "project": "trip-opt-candidate-20261026-v2",
+    "before": {
+      "agent": {
+        "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "running": true
+      },
+      "frontend": {
+        "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+        "image": "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3",
+        "running": true
+      },
+      "backend": {
+        "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+        "image": "sha256:8f0e8464527ac7c500e7d83ddccddad7053274944b9ed111316751d6ec4a28e0",
+        "running": true
+      },
+      "postgres": {
+        "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "running": true
+      }
+    },
+    "executed": true,
+    "probe": "selected_backend_container_loopback",
+    "errors": [],
+    "ready_after_restart": true,
+    "passed": true
+  },
+  "old_task_stored_state": "failed:PROCESS_INTERRUPTED:none",
+  "evaluation_interval_configured_seconds": 15
+}

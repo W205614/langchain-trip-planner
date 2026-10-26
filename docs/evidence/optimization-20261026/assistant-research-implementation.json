@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "scope": [
+    4,
+    5,
+    6,
+    12
+  ],
+  "implementation_status": "implemented_in_shared_worktree; final Java, frontend and end-to-end validation owned by root",
+  "changes": {
+    "4": {
+      "status": "implemented",
+      "summary": "Persistent clarification with original request, operation, slots, ownership, version, TTL, cancel, change of mind, CAS claim and idempotent task continuation. Existing proposal confirmation remains mandatory.",
+      "migration": "business-backend/src/main/resources/db/migration/V13__assistant_clarification.sql",
+      "guide_features": [
+        "assistant-clarification",
+        "assistant-proposals"
+      ]
+    },
+    "5": {
+      "status": "implemented_conservative_boundary",
+      "summary": "Metadata legality, citation range, whole sentence/line textual support, numeric and negation counterexamples, stale/demo exclusion and document-level demo inheritance. Unknown source freshness is displayed. No unchecked streamed provider tokens.",
+      "independent_semantic_truth": "not_evaluated",
+      "guide_features": [
+        "research-answer"
+      ]
+    },
+    "6": {
+      "status": "implemented",
+      "summary": "Distinct /research/retrieve and /research/answer. Retrieval uses local lexical existing index, answer=null, no generation/embedding/city-build. UI explicitly separates modes and displays provenance, freshness, demo and support boundary.",
+      "zero_generation_proof": "test_research_evidence_contract tests use call spies and forbidden-call sentinels, not response self-report alone",
+      "guide_features": [
+        "research-retrieve",
+        "research-answer"
+      ]
+    },
+    "12": {
+      "status": "implemented",
+      "summary": "TripOperationsService stable facade delegates four independently injected business modules; TripOperationAccess centralizes authorization, locked membership, version and validation. Existing transaction bodies retained. Added DB rollback/role-revocation regression to existing integration suite.",
+      "guide_features": [
+        "architecture-modules"
+      ]
+    }
+  },
+  "test_results": [
+    {
+      "command": "python -m pytest backend/tests/test_assistant_intent.py backend/tests/test_research_answer.py backend/tests/test_research_evidence_contract.py backend/tests/test_rag_service.py backend/tests/test_agent_internal.py backend/tests/test_internal_contracts.py backend/tests/test_protocol_v2_schema.py -q -p no:cacheprovider --basetemp=.pytest-optimization-assistant-global",
+      "result": "52 passed, 1 deprecation warning; before final whole-sentence/number check added"
+    },
+    {
+      "command": "python -m pytest backend/tests/test_research_evidence_contract.py backend/tests/test_research_answer.py -q -p no:cacheprovider --basetemp=.pytest-optimization-support-final",
+      "result": "12 passed; after whole-sentence/number/negation support tightening. Overlaps above; do not add counts."
+    },
+    {
+      "command": "mvn -B -ntp -Dtest=AssistantClarificationServiceTest,AssistantClarificationIntegrationTest,TripOperationsIntegrationTest test",
+      "result": "requested root run with isolated TEST_DATABASE_URL; this subtask did not run Maven to avoid shared target races"
+    },
+    {
+      "command": "python -m pytest backend/tests/test_research_evidence_contract.py backend/tests/test_research_answer.py -q -p no:cacheprovider --basetemp=.pytest-optimization-support-citations",
+      "result": "13 passed; includes citation numbering after filtering expired/demo evidence. Overlaps earlier runs; do not add counts."
+    }
+  ],
+  "environment_note": "Existing improvement-venv lacked langchain_core/prometheus/jsonschema for these tests; global Anaconda Python supplied existing dependencies. No packages installed by this subtask.",
+  "external_gaps": [
+    "Final PostgreSQL migration and HTTP integration run",
+    "Final frontend build and actual browser-to-backend acceptance",
+    "Independent blinded semantic factuality/relevance evaluation",
+    "Real supplier capability and performance; no paid calls made",
+    "Final exact-revision CI"
+  ],
+  "independent_review_pack": "docs/evidence/optimization-20261026/research-independent-review-pack.json",
+  "handoff": "docs/evidence/optimization-20261026/guide-handoff.json",
+  "modification_boundaries": [
+    "No personal shared resume/guide files changed",
+    "No daily Docker or database mutations",
+    "No Git commit or push by this subtask"
+  ]
+}

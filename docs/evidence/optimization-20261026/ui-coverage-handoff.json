@@ -1,0 +1,48 @@
+{
+  "stage": "Candidate UI executable tests prepared; browser execution is owned by root after the new candidate starts",
+  "completed_this_pass": {
+    "dependency_fix": "ScheduleDependencies binds numeric/string persisted commitment IDs and original input_commitment_id aliases; actual crossed transport dates also receive their buffer dependency",
+    "java_command": "mvn -q '-Dtest=ScheduleDependenciesTest' test",
+    "java_tests": {"passed": 11, "failed": 0, "errors": 0, "skipped": 0},
+    "python_command": ".cache/improvement-venv/Scripts/python.exe -m pytest -q -p no:cacheprovider backend/tests/test_validation_research_provider.py backend/tests/test_validation_fixture_replacement.py",
+    "python_tests": {"passed": 7, "failed": 0, "skipped": 0},
+    "playwright_discovery_command": "frontend/node_modules/.bin/playwright.cmd test e2e/optimization-flows.spec.ts --list",
+    "discovered_flows": 5,
+    "discovery_is_not_browser_acceptance": true
+  },
+  "candidate_browser_command": "E2E_BASE_URL=<isolated candidate>; OPTIMIZATION_ADMIN_USERNAME/PASSWORD/TOTP_SECRET=<prepared isolated account>; playwright test e2e/optimization-flows.spec.ts e2e/security-optimization.spec.ts",
+  "prepared_flows": [
+    "Owner real UI planning, persistent clarification, proposal preview and discard, original unchanged",
+    "Planning input update, obsolete action API denial, stale UI and downloaded HTML warning",
+    "Independent Cookie contexts for owner/editor/viewer/pending/removed/stranger/guest/admin",
+    "Knowledge real multipart upload, admin parsing, original-file blob, edit/save/versioned publication, publication visibility, Research retrieval-only and explicit answer",
+    "Community real owner page submission, pending invisibility, admin page approval, guest login redirect without copy POST, independent logged-in member copy as private draft"
+  ],
+  "roles": {
+    "guest": "Prepared: public shared trip, revoked-share warning, workspace 401, community public read and login redirect before copying",
+    "ordinary_member": "Prepared: Cookie login, knowledge upload/quota read, privileged 403, Research, independent community copy and cross-owner 404",
+    "owner": "Prepared: create/clarify/review-discard, workspace input changes, stale lock/completion denial, HTML export, community submission",
+    "editor": "Prepared: real workspace read and UI expense write, planning-input denial, revocation denial",
+    "viewer": "Prepared: real read, absence of edit controls and denied actual expense mutation",
+    "pending_invitee": "Prepared: workspace unavailable and planning mutation denied",
+    "removed_collaborator": "Prepared: workspace unavailable and mutations denied, plus editor removal/reload",
+    "stranger": "Prepared: workspace unavailable, planning mutation denied, privileged endpoint denied",
+    "admin": "Prepared: actual MFA Cookie login, knowledge parsing/review/publication, community approval and no implicit access to another user's trip"
+  },
+  "root_followups": [
+    "Actually run all five optimization UI flows plus security flows on the new isolated candidate; configuration omissions must fail rather than skip",
+    "Complete a real UI proposal-confirm path as well as the prepared discard path, preserving original/version evidence",
+    "Use FactCompletionEditor to save provenance/expiry and trigger scoped solving, then confirm or discard the actual proposal; current stale test exercises the advanced planning editor rather than the new fact editor",
+    "Exercise pending invitation acceptance in the actual Inbox UI if required; role setup currently uses real HTTP to accept invitations",
+    "Check that community/shared copies cannot inherit an apparently current solver binding simply because default planning inputs happen to match; copy currently sets draft quality while retaining the snapshot plan",
+    "Record actual candidate results, screenshots/traces and material failures separately from source discovery or synthetic provider unit tests"
+  ],
+  "provider_boundary": {
+    "business_http": "Actual browser to Java to PostgreSQL and Agent/outbox HTTP; no fulfilled or substituted business responses",
+    "providers": "Validation-only model/vector/map fixtures; original upload, versions, approval and publication visibility stay authoritative in Java",
+    "visibility": "Nonempty research evidence still calls the actual /internal/v1/evidence/visible endpoint",
+    "external_browser_resources": "Blocked by guardOfflineResources; the map is left unavailable rather than fabricated",
+    "real_supplier_validation": false,
+    "real_paid_calls": 0
+  }
+}

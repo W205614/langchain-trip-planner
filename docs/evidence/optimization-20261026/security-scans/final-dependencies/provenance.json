@@ -1,0 +1,35 @@
+{
+  "reason": "Raw scanner narrative can contain public exploit example credentials; preserve raw locally with hash and retain machine finding IDs, versions and fix fields in committed evidence.",
+  "files": [
+    {
+      "file": "dependencies-summary.json",
+      "raw_source": ".cache\\security-report-raw\\final-gate\\dependencies-summary.json",
+      "raw_sha256": "268fd01bbee7f155ad602db5dbc99c8726300894d4fd04e0021c82af03f798cf",
+      "description_omitted": false
+    },
+    {
+      "file": "java.cdx.json",
+      "raw_source": ".cache\\security-report-raw\\final-gate\\java.cdx.json",
+      "raw_sha256": "4e307370a8ad301ad87fe505bff2cf1972f1258effff8185810877ab351cdd87",
+      "description_omitted": false
+    },
+    {
+      "file": "osv-maven.json",
+      "raw_source": ".cache\\security-report-raw\\final-gate\\osv-maven.json",
+      "raw_sha256": "6d5d46f788b24bb82d86a5bfb8ac1ad86433e0d22934f215e78d3c61b0a970d7",
+      "description_omitted": false
+    },
+    {
+      "file": "npm-audit.json",
+      "raw_source": ".cache\\security-report-raw\\final-gate\\npm-audit.json",
+      "raw_sha256": "37d36650bae2d26a03521c034d96d66d703444b49141acacb11cbc6391d93b15",
+      "description_omitted": false
+    },
+    {
+      "file": "pip-audit.json",
+      "raw_source": ".cache\\security-report-raw\\final-gate\\pip-audit.json",
+      "raw_sha256": "bd870333ff1e7f272c7dc0d0098ba9362c2ebb149945ee82ad8504482ff10409",
+      "description_omitted": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "grype-image",
+      "target": "prom/prometheus:v3.15.1",
+      "image_id": "sha256:fa3302279710be2f21a8301ec17a8b4f2301fd829bd113839b3b6b02b6f191a2",
+      "status": "blocked_findings",
+      "blocking_findings": 3,
+      "raw_high_critical_findings": 3,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 2,
+      "vex_expires_on": null
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "mode": "existing_data_upgrade_and_independent_snapshot_rollback",
+  "created_at": "2026-10-26T10:22:06.617354+00:00",
+  "execute": true,
+  "passed": true,
+  "preflight_verified": true,
+  "candidate_image_id": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+  "ready_to_execute": true,
+  "local_image_availability": "exact_ids_verified",
+  "backup": "E:\\project\\langchain-trip-planner\\backups\\current-20261025-improvement",
+  "backup_created_at": "2026-10-25T08:46:41.378891+00:00",
+  "backup_schema": "Java/Flyway-v2",
+  "source_project": "langchain-trip-planner",
+  "table_counts": {
+    "assistant_conversations": 22,
+    "assistant_messages": 24,
+    "business_audit_events": 114,
+    "community_trip_cards": 2,
+    "evidence_revision": 1,
+    "execution_checkpoints": 38,
+    "favorite_pois": 2,
+    "flyway_schema_history": 10,
+    "knowledge_documents": 3,
+    "knowledge_ingest_jobs": 6,
+    "outbound_budget_counters": 12,
+    "outbound_reservations": 418,
+    "rag_sync_jobs": 83,
+    "trip_checks": 19,
+    "trip_commitments": 6,
+    "trip_expenses": 2,
+    "trip_members": 2,
+    "trip_notifications": 34,
+    "trip_record_versions": 80,
+    "trip_records": 59,
+    "trip_risks": 6,
+    "trip_shares": 2,
+    "trip_tasks": 53,
+    "trip_usage_policies": 2,
+    "user_travel_preferences": 2,
+    "users": 42
+  },
+  "table_count": 26,
+  "baseline_images": {
+    "postgres": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "backend": "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4"
+  },
+  "output": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data",
+  "automatic_cleanup": false,
+  "upgrade_output": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade",
+  "rollback_output": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\rollback",
+  "upgrade_subnet": "10.254.250.0/24",
+  "rollback_subnet": "10.254.251.0/24",
+  "expected_resources": {
+    "isolated_postgres": 2,
+    "retained_baseline_backend": 1,
+    "candidate_backend": 1,
+    "independent_rollback_backend": 1,
+    "identity_guard_negative_backends": 2,
+    "isolated_networks": 2,
+    "automatic_deletions": 0
+  },
+  "rpo_target_seconds": 86400,
+  "rto_target_seconds": 3600,
+  "targets_are_objectives_not_measured_guarantees": true,
+  "boundaries": [
+    "This recovery point is the selected backup snapshot; it is not proof of the current daily database or a new pre-deployment backup.",
+    "Upgrade clone A restores original columns and checks candidate migrations. Rollback clone B restores the original backup again with the old image, in a separate database and directory.",
+    "Before the correct candidate starts, verified clone rows/files are enrolled under one dataset ID; production startup is exercised with deliberately wrong DB/upload IDs and must reject them without overwriting markers.",
+    "Starting retained old image A against A's upgraded database is not the rollback proof.",
+    "Only isolated PostgreSQL and workers-disabled Java clones are started. Agent/frontend business flows are separate candidate acceptance gates; extracted Chroma/runtime bytes alone are not runtime-availability proof.",
+    "Elapsed clone timings do not include incident detection, a production maintenance window or off-host transfer, and do not prove a production RTO.",
+    "No daily service mutation, Docker cleanup, provider call or deployment-window grant is authorized by this runner."
+  ],
+  "image_revisions": {
+    "postgres": null,
+    "baseline": "e0d51a966cfe4221c248fc7b99cefc0a6b995e20",
+    "candidate": "workingtree-optimization-20261026"
+  },
+  "daily_project": "langchain-trip-planner",
+  "daily_before": {
+    "agent": {
+      "id": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+      "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "destination": "/app/runtime"
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "destination": "/app/data/chroma"
+        }
+      ]
+    },
+    "backend": {
+      "id": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "destination": "/data/uploads"
+        }
+      ]
+    },
+    "frontend": {
+      "id": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "running": true,
+      "mounts": []
+    },
+    "postgres": {
+      "id": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "running": true,
+      "mounts": [
+        {
+          "type": "volume",
+          "source": "langchain-trip-planner_java_business_data",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    }
+  },
+  "started_at": "2026-10-26T10:22:08.893125+00:00",
+  "steps": [
+    {
+      "name": "upgrade",
+      "started_at": "2026-10-26T10:22:08.894571+00:00",
+      "passed": true,
+      "restore_report": {
+        "checksums_verified": true,
+        "passed": true,
+        "stage": "complete",
+        "production_configuration_changed": false,
+        "containers": [
+          "trip-final-restore-pg-efdbc98937cf",
+          "trip-final-restore-baseline-efdbc98937cf",
+          "trip-final-restore-guard-db-efdbc98937cf",
+          "trip-final-restore-guard-upload-efdbc98937cf",
+          "trip-final-restore-backend-efdbc98937cf"
+        ],
+        "network": "trip-final-restore-efdbc98937cf",
+        "network_created": true,
+        "files": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade",
+        "resources": [
+          {
+            "role": "isolated_postgres",
+            "name": "trip-final-restore-pg-efdbc98937cf",
+            "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+            "created": true,
+            "creation_attempted": true
+          },
+          {
+            "role": "baseline_backend",
+            "name": "trip-final-restore-baseline-efdbc98937cf",
+            "original_name": "trip-final-restore-backend-efdbc98937cf",
+            "preserved_name": "trip-final-restore-baseline-efdbc98937cf",
+            "image": "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4",
+            "created": true,
+            "creation_attempted": true,
+            "state": "stopped",
+            "rename_attempted": true,
+            "renamed": true
+          },
+          {
+            "role": "identity_guard_negative",
+            "name": "trip-final-restore-guard-db-efdbc98937cf",
+            "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+            "created": true,
+            "creation_attempted": true,
+            "state": "exited",
+            "exit_code": 1,
+            "expected_identity_error_verified": true
+          },
+          {
+            "role": "identity_guard_negative",
+            "name": "trip-final-restore-guard-upload-efdbc98937cf",
+            "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+            "created": true,
+            "creation_attempted": true,
+            "state": "exited",
+            "exit_code": 1,
+            "expected_identity_error_verified": true
+          },
+          {
+            "role": "candidate_backend",
+            "name": "trip-final-restore-backend-efdbc98937cf",
+            "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+            "created": true,
+            "creation_attempted": true,
+            "state": "running"
+          }
+        ],
+        "mount_archives": [
+          "knowledge_uploads",
+          "chroma",
+          "agent-runtime"
+        ],
+        "automatic_cleanup": false,
+        "resource_retention": "All created clone containers and the isolated network are retained until separately authorized cleanup.",
+        "tables_verified": 26,
+        "rows_verified": 1044,
+        "restored_java_ready": true,
+        "baseline_ready_before_upgrade": true,
+        "active_backend_ready": true,
+        "rollback": {
+          "retained_baseline_container": "trip-final-restore-baseline-efdbc98937cf",
+          "retained_baseline_image": "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4",
+          "old_image_on_upgraded_schema": "not_tested",
+          "data_rollback_verified": false,
+          "boundary": "Starting the retained old image uses the candidate-upgraded database; this is not a data rollback and compatibility is not guaranteed. Restore the verified backup into a separate fresh clone to verify an actual database rollback.",
+          "inspection_restart_command": [
+            "docker",
+            "start",
+            "trip-final-restore-baseline-efdbc98937cf"
+          ]
+        },
+        "dataset_identity": {
+          "dataset_id": "9c60b29914394e59b6410248c11a9eba",
+          "scope": "fresh isolated clone only",
+          "original_rows_and_files_verified": true,
+          "marker_directories": [
+            "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\knowledge_uploads",
+            "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\chroma",
+            "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\agent-runtime"
+          ],
+          "production_guard_required": true,
+          "existing_markers_overwritten": false
+        },
+        "dataset_identity_guards": {
+          "database_mismatch": {
+            "container": "trip-final-restore-guard-db-efdbc98937cf",
+            "rejected": true,
+            "expected_error_verified": true
+          },
+          "upload_mismatch": {
+            "container": "trip-final-restore-guard-upload-efdbc98937cf",
+            "rejected": true,
+            "expected_error_verified": true
+          },
+          "clone_files_and_markers_unchanged": true,
+          "flyway_history_unchanged": true
+        },
+        "upgrade": {
+          "candidate_image_id": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+          "candidate_ready": true,
+          "original_business_tables_unchanged": 25,
+          "original_migrations_unchanged": 10,
+          "schema_version": "14"
+        }
+      },
+      "elapsed_seconds": 96.606
+    },
+    {
+      "name": "independent_snapshot_rollback",
+      "started_at": "2026-10-26T10:23:45.504031+00:00",
+      "passed": true,
+      "restore_report": {
+        "checksums_verified": true,
+        "passed": true,
+        "stage": "complete",
+        "production_configuration_changed": false,
+        "containers": [
+          "trip-final-restore-pg-67c275bccbc3",
+          "trip-final-restore-backend-67c275bccbc3"
+        ],
+        "network": "trip-final-restore-67c275bccbc3",
+        "network_created": true,
+        "files": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\rollback",
+        "resources": [
+          {
+            "role": "isolated_postgres",
+            "name": "trip-final-restore-pg-67c275bccbc3",
+            "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+            "created": true,
+            "creation_attempted": true
+          },
+          {
+            "role": "baseline_backend",
+            "name": "trip-final-restore-backend-67c275bccbc3",
+            "original_name": "trip-final-restore-backend-67c275bccbc3",
+            "preserved_name": "trip-final-restore-baseline-67c275bccbc3",
+            "image": "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4",
+            "created": true,
+            "creation_attempted": true,
+            "state": "running"
+          }
+        ],
+        "mount_archives": [
+          "knowledge_uploads",
+          "chroma",
+          "agent-runtime"
+        ],
+        "automatic_cleanup": false,
+        "resource_retention": "All created clone containers and the isolated network are retained until separately authorized cleanup.",
+        "tables_verified": 26,
+        "rows_verified": 1044,
+        "restored_java_ready": true,
+        "baseline_ready_before_upgrade": true,
+        "active_backend_ready": true
+      },
+      "original_snapshot_rechecked_after_old_backend_ready": true,
+      "elapsed_seconds": 33.114
+    }
+  ],
+  "containers": [
+    "trip-final-restore-pg-efdbc98937cf",
+    "trip-final-restore-baseline-efdbc98937cf",
+    "trip-final-restore-guard-db-efdbc98937cf",
+    "trip-final-restore-guard-upload-efdbc98937cf",
+    "trip-final-restore-backend-efdbc98937cf",
+    "trip-final-restore-pg-67c275bccbc3",
+    "trip-final-restore-backend-67c275bccbc3"
+  ],
+  "networks": [
+    "trip-final-restore-efdbc98937cf",
+    "trip-final-restore-67c275bccbc3"
+  ],
+  "daily_after": {
+    "agent": {
+      "id": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+      "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "destination": "/app/runtime"
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "destination": "/app/data/chroma"
+        }
+      ]
+    },
+    "backend": {
+      "id": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "destination": "/data/uploads"
+        }
+      ]
+    },
+    "frontend": {
+      "id": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "running": true,
+      "mounts": []
+    },
+    "postgres": {
+      "id": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "running": true,
+      "mounts": [
+        {
+          "type": "volume",
+          "source": "langchain-trip-planner_java_business_data",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    }
+  },
+  "daily_before_after_equal": true,
+  "elapsed_seconds": 131.199,
+  "completed_at": "2026-10-26T10:24:20.092144+00:00",
+  "true_snapshot_data_rollback_verified": true
+}

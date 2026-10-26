@@ -1,0 +1,60 @@
+{
+  "phase": "DEPLOY_READY",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "source_committed_locally": true,
+  "pushed": false,
+  "daily_environment_replaced": false,
+  "role_flows_latest_passed": 8,
+  "additional_fact_ui_flow": "fact-ui-acceptance-result.json:6 checks passed on exact final business image",
+  "backup": "hardened-backup-file-restore-result.json:pass, maintenance64.13s, total94.716s; full3 file archive inventory equality; actual restored Agent reads2Chroma rows; source4 identities/states/mounts unchanged; reuses Java identity, not independent PG/offhost DR",
+  "restoration": "existing-data-rehearsal-result-3.json:pass; original historical snapshot only",
+  "scheduler": "scheduler-fault-drill-3.json:pass with firing/resolved/new task success",
+  "holdout": "first 16/17 retained; source/ID representation adjudication separate",
+  "cleanup_plan": "cleanup-plan.json:delete_now=[]; window still not granted",
+  "security_gate": "release-220257a-security-summary.json:6 fixed artifacts scanned,5 raw H/C0; Agent raw79 incl52vendorMinor/8IDs, policy classification not patch/permission",
+  "security_risk_acceptance": {
+    "direct_human_approval_found": true,
+    "decision": ".github/security-risk-authorization.json",
+    "frozen_components": ".github/security-risk-acceptance.json",
+    "status": "effective_temporary_local_controlled_demo_acceptance; exact live source/component/runtime/scanner enforcement passed",
+    "expires_at": "2026-11-09T23:59:59+08:00",
+    "still_vulnerable": true,
+    "raw_high_critical": 79,
+    "accepted_unfixed_records": 52,
+    "accepted_cve_ids": 8,
+    "public_production_permission": false,
+    "deployment_window_granted": false,
+    "machine_equivalence_required": true,
+    "fingerprints_automatically_refreshed": false,
+    "enforcement": "temporary-risk-acceptance-enforcement.json"
+  },
+  "offhost": "deferred_by_user_not_verified; user has no target and asked to finish other work",
+  "remaining": [
+    "Coordinator serial deployment/cleanup window; not yet granted",
+    "Fresh daily backup/enrollment/rebuild/business readback and Windows backup task installation",
+    "Conditional exact-resource cleanup retaining all required recovery/unknown/shared objects",
+    "Push and all expected final exact-SHA GitHub CI/security jobs, then finalize delivery evidence"
+  ],
+  "human_blind_review": "pending; no general accuracy/HA/SLA claim",
+  "previous_committed_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "security_hardening_in_progress": {
+    "coordinator_authorized": true,
+    "actions": [
+      "Agent base/production cap_drop ALL and no-new-privileges",
+      "Remove four unused mount/namespace CLIs, retain essential libraries",
+      "Validate actual uvicorn process and bounded local native/write/recovery impact",
+      "Rescan immutable new artifact before residual-risk decision"
+    ],
+    "status": "completed candidate verification: actual uvicorn11, four algorithm counterexamples, mounted-data snapshot restore, final artifact scans"
+  },
+  "poi_ui": {
+    "current": "poi-ui-acceptance-result.json:7/7 passed on final220, own backend/mapfixture restored",
+    "original_failures": "run1 retained; run2 primary error/full checklist lost, post-run diagnostic and recovered waiter excerpt retained"
+  },
+  "updated_at": "2026-10-26T14:36:48.772728+00:00",
+  "actual_runtime_probe": "hardened-runtime-probe-result.json:11 passed; actual uvicorn PID1; CapBnd/Eff0;NNP1;ROroot;boundedtmpfs;native component checks",
+  "new_candidate": "trip-opt-hardened-20261026; canonical Agent actual uvicorn, separate agent-fixture supplies browser providers explicitly",
+  "backup_previous_a01": "automated-backup-drill-final.json:pass/full archive/local copy/private owner history unchanged",
+  "policy_source_sha": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
+  "secrets": "final-secret-scan.json:fullhistory/current+untracked0; actual negative fixture validates narrow public fingerprints"
+}

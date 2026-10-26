@@ -1,0 +1,25 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-backend:candidate-20261026",
+      "image_id": "sha256:8f0e8464527ac7c500e7d83ddccddad7053274944b9ed111316751d6ec4a28e0",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 212,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "image_revision_context_verified": false
+    }
+  ]
+}

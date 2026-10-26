@@ -1,0 +1,55 @@
+{
+  "errors": [
+    {
+      "step": "image_preflight",
+      "service": "agent",
+      "image_id": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+      "status": "missing",
+      "error_type": "RuntimeError"
+    },
+    {
+      "step": "image_preflight",
+      "service": "frontend",
+      "image_id": "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3",
+      "status": "missing",
+      "error_type": "RuntimeError"
+    }
+  ],
+  "scope": "isolated candidate v2 missing-runtime-image regression",
+  "image_preflight": {
+    "passed": false,
+    "images": [
+      {
+        "service": "backend",
+        "image_id": "sha256:8f0e8464527ac7c500e7d83ddccddad7053274944b9ed111316751d6ec4a28e0",
+        "status": "verified"
+      },
+      {
+        "service": "agent",
+        "image_id": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "status": "missing",
+        "error_type": "RuntimeError"
+      },
+      {
+        "service": "postgres",
+        "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "status": "verified"
+      },
+      {
+        "service": "frontend",
+        "image_id": "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3",
+        "status": "missing",
+        "error_type": "RuntimeError"
+      }
+    ],
+    "missing_image_ids": [
+      "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+      "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3"
+    ]
+  },
+  "passed": false,
+  "execution_started": false,
+  "no_container_mutations_attempted": true,
+  "last_success_updated": false,
+  "running_state_unchanged": true
+}

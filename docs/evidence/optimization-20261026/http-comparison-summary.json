@@ -1,0 +1,102 @@
+{
+  "dataset_role": "development_counterexamples_not_general_accuracy",
+  "input_sha256": "2212a3909a4b51117d6920bcfef66437bbf088da3a67982cf107a81c3df45383",
+  "baseline_cases": [
+    {
+      "id": "provider-outage-keeps-places",
+      "http_status": 200,
+      "before_poi_ids": [
+        "fixture-beijing-0",
+        "fixture-beijing-1",
+        "fixture-beijing-2",
+        "fixture-beijing-47",
+        "fixture-beijing-46",
+        "fixture-beijing-45"
+      ],
+      "after_poi_ids": [],
+      "preserved": false
+    },
+    {
+      "id": "changed-input-rejects-old-time-lock",
+      "http_status": 200,
+      "error_code": null,
+      "rejected_as_stale": false
+    },
+    {
+      "id": "clarification-retains-original-intent",
+      "first_status": "needs_clarification",
+      "second_http_status": 503,
+      "created_revision_task": false,
+      "reported_intent": null
+    }
+  ],
+  "candidate_cases": [
+    {
+      "id": "provider-outage-keeps-places",
+      "http_status": 200,
+      "before_poi_ids": [
+        "fixture-beijing-0",
+        "fixture-beijing-1",
+        "fixture-beijing-2",
+        "fixture-beijing-47",
+        "fixture-beijing-46",
+        "fixture-beijing-45"
+      ],
+      "after_poi_ids": [
+        "fixture-beijing-0",
+        "fixture-beijing-1",
+        "fixture-beijing-2",
+        "fixture-beijing-47",
+        "fixture-beijing-46",
+        "fixture-beijing-45"
+      ],
+      "preserved": true
+    },
+    {
+      "id": "changed-input-rejects-old-time-lock",
+      "http_status": 409,
+      "error_code": "SCHEDULE_STALE",
+      "rejected_as_stale": true
+    },
+    {
+      "id": "clarification-retains-original-intent",
+      "first_status": "needs_clarification",
+      "second_http_status": 202,
+      "created_revision_task": true,
+      "reported_intent": null
+    }
+  ],
+  "diagnostics_retained": [
+    {
+      "report": "http-baseline.json",
+      "reason": "Docker internal-only network did not publish host ingress; no business case executed"
+    },
+    {
+      "report": "http-baseline-result.json",
+      "reason": "Outage probe used nonexistent /reverify path and returned404; that case is excluded. The independent input-lock and clarification cases remain valid."
+    }
+  ],
+  "harness_correction": "Actual API is /api/trips/{id}/verify, verified against controller and frontend; corrected outage case alone reran with identical frozen input. Provider outage restored in finally. No provider data or expected behavior was changed.",
+  "real_paid_calls": 0,
+  "human_review_results": null,
+  "candidate_report": "http-candidate-result.json",
+  "candidate_report_sha256": "cfc0728a47ce94162aef4ce9ce769e65d887a50e8580119a81003613cb62eaa3",
+  "measured_conclusions": [
+    "Identical frozen provider-outage case: baseline 6 places became 0; candidate retained the same 6 IDs.",
+    "Changed input + old time lock: baseline HTTP200; candidate HTTP409 SCHEDULE_STALE.",
+    "Short clarification continuation: baseline second HTTP503 without task; candidate HTTP202 with revision task."
+  ],
+  "not_proven": [
+    "General trip quality or new unseen holdout accuracy",
+    "Live map or model behavior",
+    "Human blind review or external user adoption"
+  ],
+  "retrospective_failure_status_crosscheck": {
+    "report": "http-candidate-outage-status-audit.json",
+    "finding_count": 6,
+    "status": "lookup_failed",
+    "within_original_execution_interval": true,
+    "raw_result_unchanged": true,
+    "cache_boundary": "Original retained findings show actual lookup failure; they do not prove universal cache-miss/failure handling."
+  }
+}

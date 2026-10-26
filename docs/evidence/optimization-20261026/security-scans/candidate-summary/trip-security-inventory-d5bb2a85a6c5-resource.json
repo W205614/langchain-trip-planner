@@ -1,0 +1,9 @@
+{
+  "name": "trip-security-inventory-d5bb2a85a6c5",
+  "container_id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+  "image_id": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+  "purpose": "stopped image inventory extraction; no image command executed",
+  "business_data": false,
+  "status": "retained",
+  "cleanup_explicit": false
+}

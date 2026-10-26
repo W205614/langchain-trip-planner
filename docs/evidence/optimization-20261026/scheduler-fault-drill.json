@@ -1,0 +1,114 @@
+{
+  "operation": "isolated_scheduler_fault_drill",
+  "project": "trip-opt-candidate-20261026-v2",
+  "started_at": "2026-10-26T11:05:41.599326+00:00",
+  "passed": false,
+  "real_paid_calls": 0,
+  "daily_before": {
+    "agent": {
+      "id": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "target": "/app/runtime"
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "target": "/app/data/chroma"
+        }
+      ]
+    },
+    "backend": {
+      "id": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "target": "/data/uploads"
+        }
+      ]
+    },
+    "frontend": {
+      "id": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "running": true,
+      "mounts": []
+    },
+    "postgres": {
+      "id": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "running": true,
+      "mounts": [
+        {
+          "type": "volume",
+          "source": "/var/lib/docker/volumes/langchain-trip-planner_java_business_data/_data",
+          "target": "/var/lib/postgresql/data"
+        }
+      ]
+    }
+  },
+  "checks": {
+    "admission_after_lease_loss": {
+      "status": 503,
+      "code": "SCHEDULER_OWNERSHIP_LOST"
+    },
+    "old_execution_before_restart": {
+      "api_status": "running",
+      "stored_status_and_record": "running:none"
+    }
+  },
+  "interrupted_task": "3f9bbbd0-a6cf-4ca4-bbc3-9b08f3e2b9c2",
+  "failure": {
+    "type": "TimeoutError",
+    "message": "Isolated fault-drill condition did not arrive"
+  },
+  "daily_after": {
+    "agent": {
+      "id": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "target": "/app/runtime"
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "target": "/app/data/chroma"
+        }
+      ]
+    },
+    "backend": {
+      "id": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "target": "/data/uploads"
+        }
+      ]
+    },
+    "frontend": {
+      "id": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "running": true,
+      "mounts": []
+    },
+    "postgres": {
+      "id": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "running": true,
+      "mounts": [
+        {
+          "type": "volume",
+          "source": "/var/lib/docker/volumes/langchain-trip-planner_java_business_data/_data",
+          "target": "/var/lib/postgresql/data"
+        }
+      ]
+    }
+  },
+  "daily_unchanged": true,
+  "completed_at": "2026-10-26T11:08:03.074628+00:00"
+}

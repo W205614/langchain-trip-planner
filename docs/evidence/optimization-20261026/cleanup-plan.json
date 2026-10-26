@@ -1,0 +1,1839 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-26T12:13:53.416921+00:00",
+  "status": "READ_ONLY_PLAN_NO_CLEANUP_WINDOW_NO_EXECUTION",
+  "deployment_window_observed": {
+    "owner": null,
+    "state": "not_granted",
+    "rule": "daily rebuild and Docker cleanup require coordinator window; code work and isolated project checks may proceed"
+  },
+  "inventory_file": "docs/evidence/optimization-20261026/resource-inventory.json",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "delete_now": [],
+  "docker_mutations_performed": 0,
+  "authorized_to_execute_by_this_audit": false,
+  "mandatory_global_preconditions": [
+    "Coordinator grants a cleanup window with owner=Trip/state=granted; null/not_granted means do nothing.",
+    "Daily final deployment/readback and affected validation complete and evidence retained.",
+    "Recollect Docker metadata/references; abort if any ID, ownership, mount, protected backup or cross-project reference changed.",
+    "Use exact separately approved full container/network IDs and exact named volume identities, never glob/prefix-based deletion, global prune, down -v or implicit --volumes.",
+    "No filesystem backup/recovery/maintenance material deletion; unknown resources and shared cache remain retained."
+  ],
+  "hard_retained": {
+    "daily_container_ids": [
+      "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b"
+    ],
+    "final_container_ids_until_daily_readback": [
+      "03494373c1dfe9d79d9cb1a6bb85dd2b926a54944e50aa98f5bc7d86261a634c",
+      "03b6b38867fb74d01f3565cbb9bf2ce67eb7da5e9984440850cc6576e42524aa",
+      "1e52c13b83091cda08e372b11defa8cc85019f9ddaa2d4c53cf58431b1b22871",
+      "2b7a7559c4e7939859f537a717698ebebe698a5c2131f23a7a0fc3efc2613d57",
+      "ccc59a4d48f0853f7e289f6270ff02801884836bd50e1e53eb3da4af5d392bea",
+      "ccd77eb6ea766cee15cfc93ec09508536ef873b12f67207dd9ba78298cd19e17",
+      "d898fdc4a0a7424d8b0d078caa11ce3c85af6c059e19176c3b7151ab6b53825b",
+      "ede8bfbdd459a796adbeb241dabe5f760dd823d5f1e34d7309f6dea2f2a7694a"
+    ],
+    "real_data_restore_container_ids": [
+      "1a7d800187b7c2618fcd9c9322093bb08b4fade0928e4c20f43a6340766b74cf",
+      "22f237d84ffd36a67656bde218a11818b874bca9baf9c7205ff92bc20662926c",
+      "31166664d8a5d88d34f875137fe5794d5ac97367282e7260d0e8416432f2aebe",
+      "5a67d75ef9a275d2a27f410069512c005fa96da7d6fcf65350514d5c98b2ca97",
+      "5abc88486a9c3aa415194e641be0e798d62b05731ac8f9a778e2044279875c3a",
+      "aa331e18095365030ddeed2bf671cb8f33d1207aa6eca6b9fd4194a42d1e0e42",
+      "edde3423d374fa31dcd6706799407012254ab3dd41260a7cbf463803f0e7f352"
+    ],
+    "recovery_directory_paths": [
+      "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data",
+      "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\rollback",
+      "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade"
+    ],
+    "protected_volume_names": [
+      "8d5046c679c77c8bd0038fe62860ff30dfa1117178c6ce1a5e76d93e45fca15a",
+      "langchain-trip-planner_java_business_data",
+      "trip-opt-final-20261026_candidate_alert_inbox",
+      "trip-opt-final-20261026_candidate_alerts",
+      "trip-opt-final-20261026_candidate_chroma",
+      "trip-opt-final-20261026_candidate_runtime",
+      "trip-opt-final-20261026_migration_database",
+      "trip-opt-final-20261026_migration_uploads"
+    ],
+    "protected_image_ids": [
+      "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "sha256:2596234d1d1a703ff4fa5438ac89c3c7df28e750a1775228116edf30fd05ee06",
+      "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "sha256:361e00fa2ca9944d6528eeea7ced520d0481d33532f60352495f3d0d5bad928e",
+      "sha256:41d8afacb3e3fbc2da3d5a0c00df055594dcb85ca83a41e8b2cc1032d7c101a4",
+      "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+      "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+      "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+      "sha256:cf635b57aca84a440dd87636244449ac98695b068ea1a21ff440bc28b5c07d22",
+      "sha256:d0aac7dcf9680af076bbe7debbed0d808d06e25b94e81364d35ad22dcd22c741",
+      "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4",
+      "sha256:ddd803998502c7350f5e3be746f4506a6e16a421f9e7c48e48d0969c946d29e9",
+      "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+    ],
+    "backup_manifest_paths": [
+      "backups\\current-20261021-170930\\manifest.json",
+      "backups\\current-20261025-improvement\\manifest.json",
+      "backups\\improvement-live-20261025\\manifest.json",
+      "backups\\optimization-final-replicas-20261026\\scheduled-20261026T115251Z\\manifest.json",
+      "backups\\optimization-final-20261026\\scheduled-20261026T115251Z\\manifest.json"
+    ],
+    "shared_build_cache": "retain_all",
+    "unknown_anonymous_volumes": "retain_all",
+    "current_hardened_container_ids": [
+      "1a48945735ff924798d4ee754b631929fdc2ccee4ebd53b54776af095df48685",
+      "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+      "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+      "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+      "025b7465ab7a7dcff5d16fd2b31df4a7f6ab584fa244bbc5cbb68c4a44bc6815",
+      "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+      "bd0404cf890a31ba3b3a2edeb7a267ce4152e6079d357441e9777a06fa9da350",
+      "6751ba5211d87fb7d68b203045d25abf051d4ee94dc9f49363e6f021a476956b",
+      "4e5dc16d01d3cbe8d552bc525098e606b97357d6d1f6a1fdb86bf4e289d6d170",
+      "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3"
+    ],
+    "current_hardened_network_ids": [
+      "545b7a6de8d5ce36d12245b9dc59447da54300362a1f7c2e9ea6573738139c34",
+      "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+    ],
+    "current_hardened_volume_names": [
+      "579c8deb74feecd70f5c59979a96b7b6af7e8ee53a4d2c4648f87968165b0af3",
+      "trip-opt-hardened-20261026_candidate_alert_inbox",
+      "trip-opt-hardened-20261026_candidate_alerts",
+      "trip-opt-hardened-20261026_candidate_chroma",
+      "trip-opt-hardened-20261026_candidate_runtime",
+      "trip-opt-hardened-20261026_fixture_chroma",
+      "trip-opt-hardened-20261026_fixture_runtime",
+      "trip-opt-hardened-20261026_migration_database",
+      "trip-opt-hardened-20261026_migration_uploads"
+    ],
+    "current_hardened_release_image_ids": [
+      "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+    ],
+    "hardened_restore_and_backup_paths": [
+      "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb",
+      "E:\\project\\langchain-trip-planner\\backups\\optimization-hardened-20261026\\scheduled-20261026T133026Z",
+      "E:\\project\\langchain-trip-planner\\backups\\optimization-hardened-replicas-20261026\\scheduled-20261026T133026Z"
+    ]
+  },
+  "window_after_validation_candidates": {
+    "containers": [
+      {
+        "type": "container",
+        "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+        "name": "trip-opt-candidate-20261026-alertmanager-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_alerts",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_alerts/_data",
+            "Destination": "/alertmanager",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+            "Destination": "/etc/alertmanager/alertmanager.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+        "name": "trip-opt-candidate-20261026-amap-fixture-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+        "name": "trip-security-inventory-8f213fe9e1a1",
+        "project": null,
+        "state": "created",
+        "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          ".cache\\security-report-raw\\release-a01a0d7c\\agent\\trip-security-inventory-8f213fe9e1a1-resource.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+        "name": "trip-security-inventory-33baec0ce676",
+        "project": null,
+        "state": "created",
+        "image": "sha256:444577029d9564696c939756299447c09507a8867ad61e6867034b5d216e0b74",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          ".cache\\security-report-raw\\release-06445e07\\agent\\trip-security-inventory-33baec0ce676-resource.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+        "name": "trip-opt-candidate-20261026-v2-agent-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_runtime",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_runtime/_data",
+            "Destination": "/app/runtime",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_chroma",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_chroma/_data",
+            "Destination": "/app/data/chroma",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "/run/desktop/mnt/host/e/project/langchain-trip-planner/backend/scripts/validation_research_provider.py",
+            "Destination": "/app/scripts/validation_research_provider.py",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+        "name": "trip-opt-candidate-20261026-frontend-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:b45f5e518a7fb4147bc30954452473756ff6206515cd332354f91a15a2f9bd50",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+        "name": "trip-opt-candidate-20261026-v2-amap-fixture-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+        "name": "trip-opt-baseline-20261026-frontend-1",
+        "project": "trip-opt-baseline-20261026",
+        "state": "exited",
+        "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+        "name": "trip-security-apt-metadata-1e2ac7f2d9e7",
+        "project": null,
+        "state": "exited",
+        "image": "sha256:5c88311a32848f3d718e3b64e5e99e76e9659d03d8e4c07226a0a60325626a12",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          ".cache\\security-report-raw\\apt-metadata-resource.json",
+          "docs/evidence/optimization-20261026/security-resource-window-deviation.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "38b12bbdf9627f616b082d1a85d97e4a431001c5f5dc7b0c5ac1d6d909d5e085",
+        "name": "trip-opt-20261026-python-patched",
+        "project": "trip-opt-unit-20261026",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\backend\\tests",
+            "Destination": "/app/tests",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+        "name": "trip-opt-candidate-20261026-backend-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_migration_uploads",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_migration_uploads/_data",
+            "Destination": "/data/uploads",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+        "name": "trip-opt-baseline-20261026-gateway-1",
+        "project": "trip-opt-baseline-20261026",
+        "state": "exited",
+        "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+        "name": "trip-opt-candidate-20261026-alert-receiver-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_alert_inbox",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_alert_inbox/_data",
+            "Destination": "/app/runtime",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+        "name": "trip-opt-candidate-20261026-v2-alertmanager-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_alerts",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_alerts/_data",
+            "Destination": "/alertmanager",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+            "Destination": "/etc/alertmanager/alertmanager.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+        "name": "trip-opt-candidate-20261026-v2-postgres-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_migration_database",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_migration_database/_data",
+            "Destination": "/var/lib/postgresql/data",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+        "name": "trip-opt-candidate-20261026-v2-backend-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:8f0e8464527ac7c500e7d83ddccddad7053274944b9ed111316751d6ec4a28e0",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_migration_uploads",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_migration_uploads/_data",
+            "Destination": "/data/uploads",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+        "name": "trip-monitor-smoke-ccc7737ced39-receiver",
+        "project": null,
+        "state": "exited",
+        "image": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\.cache\\trip-monitor-smoke-ccc7737ced39\\receiver.py",
+            "Destination": "/fixture.py",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          "docs/evidence/optimization-20261026/security-resource-window-deviation.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+        "name": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+        "project": null,
+        "state": "exited",
+        "image": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\.cache\\trip-monitor-smoke-ccc7737ced39\\alertmanager.yml",
+            "Destination": "/etc/alertmanager/alertmanager.yml",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          "docs/evidence/optimization-20261026/security-resource-window-deviation.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+        "name": "trip-opt-baseline-20261026-postgres-1",
+        "project": "trip-opt-baseline-20261026",
+        "state": "exited",
+        "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-baseline-20261026_migration_database",
+            "Source": "/var/lib/docker/volumes/trip-opt-baseline-20261026_migration_database/_data",
+            "Destination": "/var/lib/postgresql/data",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+        "name": "trip-opt-baseline-20261026-backend-1",
+        "project": "trip-opt-baseline-20261026",
+        "state": "exited",
+        "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-baseline-20261026_migration_uploads",
+            "Source": "/var/lib/docker/volumes/trip-opt-baseline-20261026_migration_uploads/_data",
+            "Destination": "/data/uploads",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+        "name": "trip-opt-candidate-20261026-prometheus-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:229af4e1776cc48ccfcd655909cb0a074465039aa3017b7ed8377771e0718460",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "c5dbac63c385ce26617cd99fa42b4b6b00104a7c9b304b4ef0cccd32331081c6",
+            "Source": "/var/lib/docker/volumes/c5dbac63c385ce26617cd99fa42b4b6b00104a7c9b304b4ef0cccd32331081c6/_data",
+            "Destination": "/prometheus",
+            "Mode": "",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+            "Destination": "/etc/prometheus/alerts.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+            "Destination": "/etc/prometheus/prometheus.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+        "name": "trip-security-inventory-d5bb2a85a6c5",
+        "project": null,
+        "state": "created",
+        "image": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          ".cache\\security-report-raw\\candidate-images-final\\agent\\trip-security-inventory-d5bb2a85a6c5-resource.json",
+          "docs\\evidence\\optimization-20261026\\security-scans\\candidate-summary\\trip-security-inventory-d5bb2a85a6c5-resource.json",
+          "docs/evidence/optimization-20261026/security-resource-window-deviation.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+        "name": "trip-opt-candidate-20261026-agent-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_runtime",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_runtime/_data",
+            "Destination": "/app/runtime",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_chroma",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_chroma/_data",
+            "Destination": "/app/data/chroma",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+        "name": "trip-opt-baseline-20261026-agent-1",
+        "project": "trip-opt-baseline-20261026",
+        "state": "exited",
+        "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+        "name": "trip-security-apt-metadata-bfad86d78a6e",
+        "project": null,
+        "state": "exited",
+        "image": "sha256:5c88311a32848f3d718e3b64e5e99e76e9659d03d8e4c07226a0a60325626a12",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          ".cache\\security-report-raw\\apt-metadata-resource-retry.json",
+          "docs/evidence/optimization-20261026/security-resource-window-deviation.json"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "e3ae1773c3ffe5d31b7ce525a7f73440eae3f7694db2b4689520d6662585d1b7",
+        "name": "trip-opt-20261026-native-compat",
+        "project": "trip-opt-unit-20261026",
+        "state": "exited",
+        "image": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\backend\\tests",
+            "Destination": "/app/tests",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+        "name": "trip-opt-baseline-20261026-amap-fixture-1",
+        "project": "trip-opt-baseline-20261026",
+        "state": "exited",
+        "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+        "name": "trip-opt-candidate-20261026-v2-alert-receiver-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_alert_inbox/_data",
+            "Destination": "/app/runtime",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+        "name": "trip-opt-candidate-20261026-v2-frontend-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+        "name": "trip-opt-candidate-20261026-v2-prometheus-1",
+        "project": "trip-opt-candidate-20261026-v2",
+        "state": "exited",
+        "image": "sha256:229af4e1776cc48ccfcd655909cb0a074465039aa3017b7ed8377771e0718460",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "2cd6fef4eb92184744630286686656bfba84fd2e51988433b24bb806133130ab",
+            "Source": "/var/lib/docker/volumes/2cd6fef4eb92184744630286686656bfba84fd2e51988433b24bb806133130ab/_data",
+            "Destination": "/prometheus",
+            "Mode": "",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+            "Destination": "/etc/prometheus/alerts.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+            "Destination": "/etc/prometheus/prometheus.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "f53add76f2bc1dffe3e4e55f4a8381ab6633d39439363070d0a1950451fdf417",
+        "name": "trip-opt-20261026-rag-recheck",
+        "project": "trip-opt-unit-20261026",
+        "state": "exited",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\backend\\tests",
+            "Destination": "/app/tests",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      },
+      {
+        "type": "container",
+        "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+        "name": "trip-opt-candidate-20261026-postgres-1",
+        "project": "trip-opt-candidate-20261026",
+        "state": "exited",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "reason": "Explicitly assigned isolated synthetic Compose project or exact data-free security metadata/smoke resource evidence; current inspect records identity and complete mount references.",
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_migration_database",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_migration_database/_data",
+            "Destination": "/var/lib/postgresql/data",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "evidence": [
+          "exact project in coordinator read-only cleanup scope; docker inspect Compose labels"
+        ],
+        "preconditions": [
+          "Coordinator deployment-window owner=Trip and state=granted for exact cleanup IDs.",
+          "Daily final readback and affected validation complete; preserve required reports/artifacts.",
+          "Re-inspect full ID, labels, mounts and all cross-project references immediately before any authorized action.",
+          "If running, stop only this exact owned synthetic container within the window before removal; this audit does neither.",
+          "Never infer volume deletion from container removal; evaluate each volume separately."
+        ]
+      }
+    ],
+    "networks": [
+      {
+        "type": "network",
+        "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4",
+        "name": "trip-monitor-smoke-ccc7737ced39",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+            "name": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+            "project": null
+          },
+          {
+            "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+            "name": "trip-monitor-smoke-ccc7737ced39-receiver",
+            "project": null
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {},
+        "evidence": [
+          ".cache\\security-report-raw\\release-a01a0d7c\\release-security-summary.json",
+          "docs/evidence/optimization-20261026/security-resource-window-deviation.json"
+        ],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      },
+      {
+        "type": "network",
+        "id": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+        "name": "trip-opt-baseline-20261026_default",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+            "name": "trip-opt-baseline-20261026-gateway-1",
+            "project": "trip-opt-baseline-20261026"
+          },
+          {
+            "id": "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+            "name": "trip-opt-baseline-20261026-frontend-1",
+            "project": "trip-opt-baseline-20261026"
+          },
+          {
+            "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+            "name": "trip-opt-baseline-20261026-backend-1",
+            "project": "trip-opt-baseline-20261026"
+          },
+          {
+            "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+            "name": "trip-opt-baseline-20261026-postgres-1",
+            "project": "trip-opt-baseline-20261026"
+          },
+          {
+            "id": "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+            "name": "trip-opt-baseline-20261026-amap-fixture-1",
+            "project": "trip-opt-baseline-20261026"
+          },
+          {
+            "id": "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+            "name": "trip-opt-baseline-20261026-agent-1",
+            "project": "trip-opt-baseline-20261026"
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {
+          "com.docker.compose.config-hash": "96e116d6e417d85331897a0d29b1368c676d8ed1ea61847bfc4a1a7c02a29e2e",
+          "com.docker.compose.network": "default",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "evidence": [],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      },
+      {
+        "type": "network",
+        "id": "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9",
+        "name": "trip-opt-baseline-20261026_ingress",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+            "name": "trip-opt-baseline-20261026-gateway-1",
+            "project": "trip-opt-baseline-20261026"
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {
+          "com.docker.compose.config-hash": "9873be5b31b81ebd63825f6f22a7fc1f4657c58b70a075c94a69e768a90d7b08",
+          "com.docker.compose.network": "ingress",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "evidence": [],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      },
+      {
+        "type": "network",
+        "id": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+        "name": "trip-opt-candidate-20261026-v2_default",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+            "name": "trip-opt-candidate-20261026-v2-agent-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+            "name": "trip-opt-candidate-20261026-v2-frontend-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+            "name": "trip-opt-candidate-20261026-v2-backend-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+            "name": "trip-opt-candidate-20261026-v2-prometheus-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+            "name": "trip-opt-candidate-20261026-v2-alertmanager-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+            "name": "trip-opt-candidate-20261026-v2-postgres-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+            "name": "trip-opt-candidate-20261026-v2-amap-fixture-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+            "name": "trip-opt-candidate-20261026-v2-alert-receiver-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {
+          "com.docker.compose.config-hash": "bc1d026e50808cc6e0300a6b75fa18fa1e6acca1d228c94607b4762170758ea8",
+          "com.docker.compose.network": "default",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "evidence": [],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      },
+      {
+        "type": "network",
+        "id": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c",
+        "name": "trip-opt-candidate-20261026-v2_ingress",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+            "name": "trip-opt-candidate-20261026-v2-frontend-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+            "name": "trip-opt-candidate-20261026-v2-prometheus-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          },
+          {
+            "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+            "name": "trip-opt-candidate-20261026-v2-alertmanager-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {
+          "com.docker.compose.config-hash": "121a15b47763e373de2107e2c5da25b359e55ac1ec9dec7a5bf57a48a8fd03f9",
+          "com.docker.compose.network": "ingress",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "evidence": [],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      },
+      {
+        "type": "network",
+        "id": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+        "name": "trip-opt-candidate-20261026_default",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+            "name": "trip-opt-candidate-20261026-alert-receiver-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+            "name": "trip-opt-candidate-20261026-alertmanager-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+            "name": "trip-opt-candidate-20261026-prometheus-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+            "name": "trip-opt-candidate-20261026-agent-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+            "name": "trip-opt-candidate-20261026-frontend-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+            "name": "trip-opt-candidate-20261026-backend-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+            "name": "trip-opt-candidate-20261026-postgres-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+            "name": "trip-opt-candidate-20261026-amap-fixture-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {
+          "com.docker.compose.config-hash": "0aba43afaafc3b143f717f4aec1607e92f1514420cab8467fad21edefc854caf",
+          "com.docker.compose.network": "default",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "evidence": [],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      },
+      {
+        "type": "network",
+        "id": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81",
+        "name": "trip-opt-candidate-20261026_ingress",
+        "reason": "Exact isolated synthetic Compose or security-smoke network; all declared/current endpoints belong only to separately listed candidate containers.",
+        "current_container_references": [
+          {
+            "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+            "name": "trip-opt-candidate-20261026-alertmanager-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+            "name": "trip-opt-candidate-20261026-prometheus-1",
+            "project": "trip-opt-candidate-20261026"
+          },
+          {
+            "id": "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+            "name": "trip-opt-candidate-20261026-frontend-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "active_endpoints": [],
+        "labels": {
+          "com.docker.compose.config-hash": "77ed5ff7022c6bc4098631a6bb78def09f0abe56184146c0712774aa768eee97",
+          "com.docker.compose.network": "ingress",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "evidence": [],
+        "preconditions": [
+          "Explicit coordinator cleanup window; full network ID/name reverified.",
+          "Separately authorized candidate containers removed first; fresh inspect requires zero active AND declared retained references.",
+          "Never disconnect another project or retained daily/final/recovery service to force deletion."
+        ]
+      }
+    ],
+    "named_synthetic_volumes": [
+      {
+        "type": "volume",
+        "id": "trip-opt-baseline-20261026_migration_database",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+            "name": "trip-opt-baseline-20261026-postgres-1",
+            "project": "trip-opt-baseline-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "6b849447a74ea0016482083a10a5ed00fa5e1865c02acf21397d393f9cc46f67",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_database"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-baseline-20261026_migration_uploads",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+            "name": "trip-opt-baseline-20261026-backend-1",
+            "project": "trip-opt-baseline-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "17dc82b93f6221985760e91727466fec84efbe81df7c9931a1a1d1e91c300fa1",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_uploads"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+            "name": "trip-opt-candidate-20261026-v2-alert-receiver-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "5aaab839fd47dac49ede6ec0d80e0ca8d37cbb1c672da972d7b206b75996ee39",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alert_inbox"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026-v2_candidate_alerts",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+            "name": "trip-opt-candidate-20261026-v2-alertmanager-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "9932db53a4311fbe1b78fa031694eec66260d65fef00acd316c5e71fe7171e7a",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alerts"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026-v2_candidate_chroma",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+            "name": "trip-opt-candidate-20261026-v2-agent-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "768f3dd3804b7c602900f5aaca38667b69bf91c3ce3f59031a38ddfc105aae3b",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_chroma"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026-v2_candidate_runtime",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+            "name": "trip-opt-candidate-20261026-v2-agent-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "4862d77fa667193315f8d300d3ce5e899dc8d51123a0c8c318257c0ce67209ca",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_runtime"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026-v2_migration_database",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+            "name": "trip-opt-candidate-20261026-v2-postgres-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "3a13a2b2e6cb89584e882553beea82305d19b57a4f0c3b64dd1b59ddd8492d2a",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_database"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026-v2_migration_uploads",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+            "name": "trip-opt-candidate-20261026-v2-backend-1",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "6b27ec40768e7c1cafbc2604c5526bab7a8e6067fca42997c552f587f6d062f3",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_uploads"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026_candidate_alert_inbox",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+            "name": "trip-opt-candidate-20261026-alert-receiver-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "989d53bda357ecb22512c369d2eb8eef3b1e9bbe03521e59c97daa870544dac0",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alert_inbox"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026_candidate_alerts",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+            "name": "trip-opt-candidate-20261026-alertmanager-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "18eef779f836a628c53a6fb39e0e50e989cb6096bbe3e4f4080fecc9bc3b00cd",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alerts"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026_candidate_chroma",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+            "name": "trip-opt-candidate-20261026-agent-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "c2c4ec5f3cfd1ea83e4cefd6130840d6582e75a0008e1b037e29ab5790290ae8",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_chroma"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026_candidate_runtime",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+            "name": "trip-opt-candidate-20261026-agent-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "c20699d20d38f0ebcfb0c9b00ee767b30c2bf0db7441c6d88766caa931c5d7cc",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_runtime"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026_migration_database",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+            "name": "trip-opt-candidate-20261026-postgres-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "c6d65dcc760692cdd44baaa5846bc88166cf84c338f476c22d0ed1f9fecf249d",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_database"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      },
+      {
+        "type": "volume",
+        "id": "trip-opt-candidate-20261026_migration_uploads",
+        "identity_kind": "Docker volume exact Name (Docker exposes no separate volume UUID)",
+        "reason": "Named synthetic Compose volume with exact selected project/volume labels; no current reference from another project or retained object.",
+        "current_container_references": [
+          {
+            "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+            "name": "trip-opt-candidate-20261026-backend-1",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "labels": {
+          "com.docker.compose.config-hash": "fbb312405f9cb112689186a9a68ce1d1cf3301063d49063605f7d198249035d3",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_uploads"
+        },
+        "preconditions": [
+          "Explicit granted cleanup window and exact volume-name approval.",
+          "Remove only separately authorized referencing synthetic containers first; requery ALL container mounts and require zero references.",
+          "Confirm no needed synthetic fixture state or rollback artifact remains; never apply to daily/final/recovery/unknown anonymous volumes."
+        ]
+      }
+    ],
+    "images": []
+  },
+  "counts": {
+    "candidate_containers": 32,
+    "candidate_networks": 7,
+    "candidate_named_synthetic_volumes": 14,
+    "candidate_images": 0,
+    "deleted": 0
+  },
+  "image_review_boundary": "Current Docker image Id/Descriptor can be an OCI index digest, not config. Final protected backup byte identity and amd64 index->manifest->config/layers verified/reused explicitly. RootFS DiffIDs are uncompressed and are not OCI compressed blob digests. Older or unreferenced images remain retained/review because disposal/rollback/index closure proof is incomplete; no shared blob pruning.",
+  "security_policy_deviation": "Earlier premature ephemeral cleanup remains recorded separately; lack of captured old IDs is not repaired by guessing and does not justify new deletion.",
+  "state_is_not_authority": "Running/stopped/exited/created and <none> tags are descriptive only, never sole deletion reasons.",
+  "post_cleanup_requirements": "Only if a future cleanup is separately authorized/executed: record exact successes/failures, recollect post inventory, confirm retained daily/final/recovery metadata and business readback, preserve original running preferences.",
+  "inventory_sha256": "46a4fad54d9ad7b7151f636e4dbb660c2e35c074db7fd32f58a9f35997562013",
+  "historical_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "inventory_sha256_before_hardened_supplement": "8aa18c0544f0608032578e5b2b35af5bfe479916d87895f9a3dd40848580f832",
+  "hardened_220257a_supplement": {
+    "recorded_at": "2026-10-26T13:40:49.507741+00:00",
+    "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "deployment_window_observed": {
+      "owner": null,
+      "state": "not_granted",
+      "rule": "daily rebuild and Docker cleanup require coordinator window; code work and isolated project checks may proceed"
+    },
+    "disposition": "retain_all_current_hardened_restore_and_security_objects",
+    "containers": [
+      {
+        "id": "1a48945735ff924798d4ee754b631929fdc2ccee4ebd53b54776af095df48685",
+        "name": "trip-opt-hardened-20261026-agent-fixture-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+        "name": "trip-opt-hardened-20261026-agent-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+        "name": "trip-opt-hardened-20261026-frontend-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+        "name": "trip-opt-hardened-20261026-backend-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+        "name": "trip-opt-hardened-20261026-postgres-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "025b7465ab7a7dcff5d16fd2b31df4a7f6ab584fa244bbc5cbb68c4a44bc6815",
+        "name": "trip-opt-hardened-20261026-prometheus-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+        "name": "trip-opt-hardened-20261026-amap-fixture-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "bd0404cf890a31ba3b3a2edeb7a267ce4152e6079d357441e9777a06fa9da350",
+        "name": "trip-opt-hardened-20261026-alertmanager-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "6751ba5211d87fb7d68b203045d25abf051d4ee94dc9f49363e6f021a476956b",
+        "name": "trip-opt-hardened-20261026-alert-receiver-1",
+        "role": "current_hardened_candidate",
+        "state": "running",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "4e5dc16d01d3cbe8d552bc525098e606b97357d6d1f6a1fdb86bf4e289d6d170",
+        "name": "trip-opt-hardened-file-restore-20261026-agent",
+        "role": "retained_hardened_file_restore",
+        "state": "exited",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      },
+      {
+        "id": "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3",
+        "name": "trip-security-inventory-d1dcf48481a2",
+        "role": "retained_new_security_inventory",
+        "state": "created",
+        "reason": "Current hardened validation, actual restored-data evidence or exact current security inventory; no deletion authorization."
+      }
+    ],
+    "network_ids": [
+      "545b7a6de8d5ce36d12245b9dc59447da54300362a1f7c2e9ea6573738139c34",
+      "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+    ],
+    "volume_names": [
+      "579c8deb74feecd70f5c59979a96b7b6af7e8ee53a4d2c4648f87968165b0af3",
+      "trip-opt-hardened-20261026_candidate_alert_inbox",
+      "trip-opt-hardened-20261026_candidate_alerts",
+      "trip-opt-hardened-20261026_candidate_chroma",
+      "trip-opt-hardened-20261026_candidate_runtime",
+      "trip-opt-hardened-20261026_fixture_chroma",
+      "trip-opt-hardened-20261026_fixture_runtime",
+      "trip-opt-hardened-20261026_migration_database",
+      "trip-opt-hardened-20261026_migration_uploads"
+    ],
+    "protected_image_ids": [
+      "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+    ],
+    "hard_retained_paths": [
+      {
+        "kind": "restore_directory",
+        "path": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb",
+        "exists": true,
+        "disposition": "hard_retain_recovery_or_backup_material"
+      },
+      {
+        "kind": "backup_directory",
+        "path": "E:\\project\\langchain-trip-planner\\backups\\optimization-hardened-20261026\\scheduled-20261026T133026Z",
+        "exists": true,
+        "disposition": "hard_retain_recovery_or_backup_material"
+      },
+      {
+        "kind": "same_host_replica_directory",
+        "path": "E:\\project\\langchain-trip-planner\\backups\\optimization-hardened-replicas-20261026\\scheduled-20261026T133026Z",
+        "exists": true,
+        "disposition": "hard_retain_recovery_or_backup_material"
+      }
+    ],
+    "delete_now": [],
+    "new_window_after_validation_candidates": [],
+    "old_candidates_note": "Original early synthetic conditional candidates are historical and still require grant, daily readback and fresh full reference checks. No original retain entry is released.",
+    "source_inventory_property": "hardened_220257a_supplement",
+    "no_global_host_rescan": true,
+    "no_lifecycle_operation": true
+  }
+}

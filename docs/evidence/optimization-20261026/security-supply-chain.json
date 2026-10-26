@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "updated_on": "2026-10-26",
+  "status": "candidate_ready_local_demo_temporary_risk_accepted_daily_and_exact_final_ci_pending",
+  "scope": "Security CI, production dependency remediation and actual application/runtime image scans; no real provider calls; no daily Docker replacement or business-data deletion. Explicit resource-window deviation is separately disclosed.",
+  "code_gate": {
+    "workflow": ".github/workflows/security.yml",
+    "languages": [
+      "java-kotlin",
+      "python",
+      "javascript-typescript",
+      "actions"
+    ],
+    "query_suite": "security-extended",
+    "blocking_severity": "high or critical",
+    "local_status": "workflow syntax and fail-closed SARIF policy tested; actual CodeQL semantic scan is pending final GitHub CI",
+    "permissions": "contents read by default; security-events write only official CodeQL publishing job",
+    "actions": "Official actions pinned to verified commit SHAs using Node24; frontend build uses Node22 LTS"
+  },
+  "tool_integrity": {
+    "pins": ".github/security-tool-pins.json",
+    "tools": {
+      "gitleaks": "8.30.1",
+      "osv-scanner": "2.7.0",
+      "grype": "0.121.0",
+      "pip-audit": "2.10.1"
+    },
+    "verification": "Official assets, version and per-platform SHA256 checked before execution; an observed truncated Gitleaks download was rejected before execution, not accepted by hash bypass.",
+    "tests": "8 focused policy counterexample tests passed"
+  },
+  "dependencies": {
+    "java": {
+      "spring_boot_before": "4.0.3",
+      "spring_boot_after": "4.0.9",
+      "resolved_production_components": 94,
+      "before_advisory_records": 89,
+      "after_advisory_records": 0,
+      "compatibility": "Coordinator Spring Boot4.0.9 targeted68 passed; no claim of full regression or production capacity"
+    },
+    "python": {
+      "lock_packages": 138,
+      "before_advisory_records": 85,
+      "after_raw_advisory_records": 5,
+      "remaining_upstream_unfixed_component": "chromadb1.5.9:4 unique advisory families,5 duplicate pip-audit records",
+      "status": "pass_contextual for lock audit; not upstream fixed",
+      "lock_delta": "security-scans/python-lock-delta.json",
+      "removed_orphans": "ecdsa and8 other orphan transitives removed only after two-platform dependency resolution; jose operator import migrated toPyJWT2.15.1",
+      "compatibility": "Coordinator reports actual final Agent native ABI2 and Chroma3 passed with no provider network, 5 passed/no skip"
+    },
+    "frontend": {
+      "official_registry": "https://registry.npmjs.org",
+      "all_known_advisory_severities": 0
+    },
+    "evidence": "security-scans/final-dependencies/"
+  },
+  "native_packages": {
+    "lock": "backend/runtime-security-packages.json",
+    "review_expires_on": "2026-11-09",
+    "packages": {
+      "libacl1": "2.4.0-1",
+      "zlib1g": "1:1.3.dfsg+really1.3.2-4"
+    },
+    "method": "Signed official Debian archive, negative priority for all sid packages, exactly two explicit package versions and SHA256; no new/removed packages; same SONAME; full actual dpkg delta restricted to those two; original libc unchanged; sid source/pin removed after build.",
+    "actual_abi": "5 targeted native/embedded fixture tests passed by coordinator",
+    "maintenance_responsibility": "This is a narrowly maintained security derivative. Re-evaluate stable backports, exact package hashes and source/ABI on expiry; never enable a rolling sid upgrade."
+  },
+  "images": {
+    "evidence": "security-scans/candidate-summary/index.json",
+    "frontend": "nginx1.30.6-alpine with signed Alpine package security upgrades; patched candidate H/C0; final UI image must still be scanned",
+    "java": "Java21-jre plus signed apt updates; exactly unused unowned/usr/bin/pebble removed; source ENTRYPOINT directlyjava; patched candidate H/C0; noble base experiment50H/C retained as rejected comparison",
+    "postgres": "17.11 same major security patch; actual17.11-alpine H/C0,4 lower findings; old backup/rollback image manifests retained unchanged",
+    "postgres_migration_notes": [
+      "Same17.X does not require dump/restore.",
+      "Review custom logical output plugins, affected pgcrypto cipher recovery, scriptedCOPY error terminators and contrib btree_gist/ltree index notes for existing installations before moving versions."
+    ],
+    "prometheus": "Official3.15.1 binaries copied unchanged from immutable upstream digest into signed-updatedAlpine3.24; H/C0 and3 lower findings; rules validated",
+    "alertmanager": "Official0.34.1 fixed source commit+archiveSHA+official generatedUI assetSHA; Go1.27.3; x/net0.60/grpc1.83.2 and minimum selected transitives pinned in go.mod/sum; H/C0 and11 lower findings; amtool config and isolatedHTTPv2→webhookv4 firing/resolved passed",
+    "agent": "Actual Agent3 raw79H/C. Current workingtree label deliberately fails exact-revision gate. Precise actual-inventory preview:4Chroma context,14Debianbackports,3actualsecurityupgrade,6absentcomponents,52still-vulnerable vendorMinor records (8unique CVEs); no unassessed record in preview. Final exact-revision rebuild and scanner execution required.",
+    "monitor_build_context": "deploy/images only in both Compose files and security workflow; never repository root. A context allowlist includes only the two Dockerfiles and three lock/provenance files; .cache/backups/.env are outside that context."
+  },
+  "remaining_risks": [
+    {
+      "status": "upstream_unfixed_contextual_not_affected",
+      "component": "Chroma1.5.9",
+      "policy": ".github/security-vex.json",
+      "expires_on": "2026-11-25",
+      "limits": "Embedded Rust client only; all6 source bindings exact; no HTTP Chroma server/remoteEF/tenantSimpleRBAC; changed source or unknown advisory fails closed. Actual image also requires expected entrypoint and exact checked-out revision label."
+    },
+    {
+      "status": "still_vulnerable_vendor_minor",
+      "advisory_ids": [
+        "CVE-2026-102010",
+        "CVE-2026-19499",
+        "CVE-2026-5435",
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410",
+        "CVE-2026-95619"
+      ],
+      "policy": ".github/security-vendor-policy.json",
+      "expires_on": "2026-11-09",
+      "limits": "glibc/gcc/util-linux remain affected. Debian trixie explicitly no-dsaMinor; severity policy calibration, not fixed or notaffected. Raw High records remain. Exact distro/dpkg/source/revision applies, unknown ID/version blocks."
+    },
+    {
+      "status": "blocked_external",
+      "scope": "Real publicTLS/outerproxy share-log redaction; email/SMS recovery delivery",
+      "limits": "Offline recovery/TOTP/cookie test success does not verify external transport or public deployment."
+    },
+    {
+      "status": "pending_final_ci",
+      "scope": "Exact final release revision CodeQL/dependency/image/secrets jobs",
+      "limits": "Local scan results do not certify final SHA, zero risk, HA, SLA or capacity."
+    }
+  ],
+  "secret_scanning": {
+    "history_and_tracked_source": "Prefinal history0, source1falsepositive: overlay evidence used API asset filename as map key with SHA digest value. Coordinator changed evidence schema to path/sha256 array without broadening allowlist; final exactsource rescan pending.",
+    "allowlist": ".gitleaks.toml uses exact fixture path AND exact public test values, not directory ignores.",
+    "public_poc_false_positive": "An upstream PyJWT advisory narrative contained a public demonstration JWT. It was not a project credential; raw report is retained in ignored cache with SHA256. Committed pip-audit evidence removes narrative descriptions only, retaining package/version/ID/alias/fix fields. No token value is printed or allowlisted broadly.",
+    "final_recheck": "final-secret-scan.json:history/current+untracked0; initial12 actual public hash false positives reviewed; exact path+11 literals only; negative fixture passed"
+  },
+  "resource_window_deviation": "security-resource-window-deviation.json records premature ephemeral cleanup honestly; later local scanner/smoke defaults retain exact UUID-owned resources with manifests. CI-only explicit cleanup is separately opt-in.",
+  "qa": {
+    "main_question": "为什么锁文件扫描没有漏洞，镜像扫描仍会报高危；为什么最终策略通过也不能写成零漏洞？",
+    "answer": "镜像包含发行版库、捆绑工具与构建工具的vendor依赖，锁文件看不到这些。先修实际可修版本，再用厂商补丁与真实dpkg/ELF核对丢失revision的泛匹配。真实未修的厂商Minor仍保留vulnerable身份和原始High记录，只有精确、有到期的严重度策略校准；未知或变更项继续阻塞。",
+    "followups": [
+      {
+        "question": "Chroma为何暂不整包升级或直接忽略？",
+        "answer": "当前上游未修复四类server/tenant能力问题。项目只用本机嵌入式索引、受控自定义embedding；显式强制Rust客户端、隔离服务入口并做实际无网络读写和恶意环境反例，形成有到期、源码和镜像revision绑定的notaffected评估。任何server模式、未知ID或源码变化都会使其失效。"
+      },
+      {
+        "question": "同发行版拿sid的两个库，会不会变成全栈滚动升级？",
+        "answer": "构建只临时加入签名官方sid源并全局priority-1，显式锁两包版本与SHA。安装前模拟和安装后全包diff都必须只有两项，验证同SONAME和既有glibc不变；然后移除sid入口并用真实原生依赖验证。该补丁有短到期与维护责任，后续应换回经过核实的稳定分支安全包。"
+      }
+    ],
+    "sources": [
+      "tools/security_gate.py",
+      "tools/image_policy.py",
+      ".github/security-vex.json",
+      ".github/security-vendor-policy.json",
+      "backend/runtime-security-packages.json",
+      "backend/scripts/install_runtime_security_patches.py",
+      "deploy/images/monitoring-source.lock.json"
+    ]
+  },
+  "primary_sources": [
+    "https://spring.io/blog/category/releases/",
+    "https://nginx.org/en/security_advisories.html",
+    "https://www.postgresql.org/docs/release/17.11/",
+    "https://github.com/prometheus/prometheus/releases/tag/v3.15.1",
+    "https://github.com/prometheus/alertmanager/releases/tag/v0.34.1",
+    "https://go.dev/doc/devel/release#go1.27.3",
+    "https://security-tracker.debian.org/tracker/DSA-6465-1",
+    "https://security-tracker.debian.org/tracker/DSA-6531-1",
+    "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+  ],
+  "root_release_verification": {
+    "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "summary": "release-220257a-security-summary.json",
+    "summary_sha256": "cb552c5c17012218a5227423b3f51332c0b3120656d0d039e3d9b4b12c347ab2",
+    "raw_reports": ".cache/security-report-raw/release-220257a (ignored, retained)",
+    "risk": "Agent raw79 including unfixed vendorMinor52records/8IDs retained. CLI/privilege hardening is not a native fix. Direct human temporary acceptance now applies only to the exact local controlled-demo combination through2026-11-09; see separate fail-closed enforcement receipt.",
+    "context": "unresolved-cve-deployment-matrix.md/.json; actual probe11 and snapshot restore separately bounded",
+    "ci_status": "not yet pushed; final exact-SHA CI/CodeQL pending",
+    "human_disposition": "Temporary local controlled demo risk accepted; current enforcement receipt separately bound to actual source/components/proc and original fresh scan"
+  },
+  "previous_root_release_verification": {
+    "business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+    "summary": "release-security-summary.json",
+    "summary_sha256": "f8ff0c9ee8cdb96b6c644260cfde27f5a06eeca99cc806e4641adffe80c8dc6a",
+    "raw_reports": "Retained under ignored .cache/security-report-raw/release-a01a0d7c; final GitHub security jobs upload their own exact-revision reports.",
+    "risk": "Agent pass_vendor_policy retains 8 unique vendor-Minor unpatched CVEs; Chroma contextual assessment is not an upstream fix.",
+    "ci_status": "not yet pushed; CodeQL and final GitHub CI pending"
+  },
+  "temporary_human_risk_acceptance": {
+    "enforcement": "temporary-risk-acceptance-enforcement.json",
+    "authorization": ".github/security-risk-authorization.json",
+    "frozen_record": ".github/security-risk-acceptance.json",
+    "scope": "controlled_single_host_local_demo_only",
+    "expires_at": "2026-11-09T23:59:59+08:00",
+    "still_vulnerable_raw_records": 52,
+    "still_vulnerable_unique_cves": 8,
+    "agent_raw_high_critical": 79,
+    "fixed": false,
+    "public_production_permission": false,
+    "fingerprints_refreshed": false,
+    "machine_equivalence": "5 business trees/4recipes,87dpkg,1086ELFpaths,135appfiles plus fresh/live runtime and raw scan; unknown/high/error/expiry blocks"
+  }
+}

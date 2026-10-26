@@ -1,0 +1,23 @@
+{
+  "package": "onnxruntime",
+  "version": "1.29.0",
+  "filename": "onnxruntime-1.29.0-cp311-cp311-manylinux_2_28_x86_64.whl",
+  "url": "https://files.pythonhosted.org/packages/3b/91/a66cd77f28379ede419672edda3184f1eb286db215dce1e7b976fae2d63b/onnxruntime-1.29.0-cp311-cp311-manylinux_2_28_x86_64.whl",
+  "official_expected_sha256": "85f8e8406c52658735fe5c7fbfd3ebaa1ed340768324f6252e4274e374580a23",
+  "official_size_bytes": 23113193,
+  "independent_download_size_bytes": 18610174,
+  "independent_download_sha256": "76b0630ed988be4c7b022a49ae0b184b6cf69b76746f4a7fd89c75de96c28318",
+  "verified": false,
+  "initial_build_received_sha256": "a703872978f76e9c23feed84c8d7e40164c24582d748dc62e1cadaf0b8d30edc",
+  "initial_build_outcome": "rejected_by_pip_hash_check",
+  "cause": "not proven; a corrupted/truncated transport or proxy response is plausible, not established",
+  "retry": {
+    "headers": {
+      "content_length": "23113193",
+      "content_type": "application/octet-stream"
+    },
+    "size_bytes": 23113193,
+    "sha256": "85f8e8406c52658735fe5c7fbfd3ebaa1ed340768324f6252e4274e374580a23",
+    "verified": true
+  }
+}

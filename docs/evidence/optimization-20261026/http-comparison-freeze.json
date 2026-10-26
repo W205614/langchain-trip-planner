@@ -1,0 +1,18 @@
+{
+  "frozen_at": "2026-10-26T08:42:17.5553301Z",
+  "baseline_application_source": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+  "cases": [
+    "provider-outage-keeps-places",
+    "changed-input-rejects-old-time-lock",
+    "clarification-retains-original-intent"
+  ],
+  "limits": [
+    "Targeted regression selection informed implementation; not a new independent holdout",
+    "Baseline runs original image; candidate must bind final source separately",
+    "Same synthetic request and guarded offline provider stack",
+    "No capacity or live-travel accuracy conclusion"
+  ],
+  "real_paid_provider_calls": 0,
+  "dataset_role": "frozen_development_counterexamples",
+  "baseline_delivery": "d81410f6d77a8c1fcfb6cd18c2c4f239be8f3e9d"
+}

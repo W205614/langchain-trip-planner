@@ -1,0 +1,258 @@
+{
+  "archive": "backups\\optimization-final-20261026\\scheduled-20261026T115251Z\\images.tar",
+  "platform": "linux/amd64",
+  "scope": "OCI index -> selected platform manifest -> config/layers; non-host platform availability is reported separately",
+  "images": [
+    {
+      "index": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "selected_manifests": [
+        {
+          "digest": "sha256:04445901f15f87cb20e5beab7900ecac773241eecc4621165a207fe358dc64df",
+          "config": "sha256:af3567fe0a093b63aab486e5dcb24dd84718f5125b2e7882c5a56b7ab75fa4e9",
+          "layers": [
+            "sha256:f2be67225471500c788ce88c597eb5ea8336e912ad1ca4815650e0281afe2034",
+            "sha256:90d47cf54851a8d83f33db71f0025a8ba367c12fb24817259dd9736098cb305b",
+            "sha256:6d9af71a343efe2a00fdfc9507db3bdf3530bf3f8cf2975eb1be235a7eb70128",
+            "sha256:b0aec4a98ced1e92f1d50c37aa89c78d60e3dc6a52d61f8134afda24b185ad06",
+            "sha256:2cc699b12c586262ddda5c4446c9519095a31e66c18f3b0e073b3aa63a44f863",
+            "sha256:c6c6a04bee87fdde9f3bd5e605bf2b90a52921b502a53e641ae2411be4a2d783",
+            "sha256:8324cccb444c316d0fa84fae720e1fe66a25a22f7b3636677f54c7ae751befc7",
+            "sha256:b5050f51a9779a0936f79e7e56de5bb8362470c5714d1ea19914e98598a8d646",
+            "sha256:53c648c3fd0098b3fdfc119b6902f7156478d314df83b2983998a676697d580f",
+            "sha256:58bf9ff0bd7712f4dd3d17f87b5d7c0547d7bd7af286eac723b89fe428488a1a",
+            "sha256:f938a9e16c69daeafc88b1215bb1d25326cade4400095cc4812b2b5d0450360b",
+            "sha256:1aff868c32fb8c71a0a30706cdada743a38781c7dd1369a8f5a6500e5c76097c",
+            "sha256:b6fca2b493f0c15a71c1ca37b17109fbab4b22ea29a948412ee432f738a7e633",
+            "sha256:290534e1b32226058abd6f079e38665c45b32da46c4a2fc79574bd4021929c97",
+            "sha256:6d233ac1c305726053da48744331e835c76ccba018fe195e6a583aab2fde5c4b",
+            "sha256:5e4c4ecd48e21d0d868ca730e031152d37c8c0ded239f179c382ae2b933d8b2b",
+            "sha256:2bd6f892f822ba5e8566251c735dc5dc594635f93edb13e47cd9444d01a14c68",
+            "sha256:014925a3dcc54c469257b727ca121ae1e1c15ba7f1fb30c136484c71ed911a7b"
+          ]
+        }
+      ]
+    },
+    {
+      "index": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "selected_manifests": [
+        {
+          "digest": "sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4",
+          "config": "sha256:ab20e934b27ba3ff927c1b4c9ff8cf6c32f315f743efe68dd3441182a87fb085",
+          "layers": [
+            "sha256:7b229517ed222597277036d94892173207d01a731ab3a88eeb1de2e963a2c788",
+            "sha256:9098654d337792c4c42bd3a73896b70a6c248259ccfc5f684857a3fa19fd93cb",
+            "sha256:dddde5442af41c3b2874cdc2863276d1f33277da66d1975001cb5fb390de9a7d",
+            "sha256:fa5e490e3893d7bb6a7df997363332968f49564a1611dababd7167839c3e9dc3",
+            "sha256:694a01b64034f0992326512adbafc93dd0b318fde13b91ba7b59f3af999cb169",
+            "sha256:7a82a00c713d2e6c6d07e73d5d08f852985a3a3fe4a2be1a32049b122ba5c40f",
+            "sha256:d6e09b1bfe5f8e510b39401758b39f0772bfd98fa267bc7064f99dce925d7535",
+            "sha256:e018eb860c5e472edb8e38c5ed9bb5ddd5b9d979da4dd2b31729d167b56d4b03",
+            "sha256:f5e975d661d7f5f28eed5fb0d019fad8adf14789168c029a65c9da779e518835",
+            "sha256:d5bf1ad711f76c3f7ba71d3bc71bd9f7535692290948731b61e44b6d96b23c4e"
+          ]
+        }
+      ]
+    },
+    {
+      "index": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+      "selected_manifests": [
+        {
+          "digest": "sha256:ec439803f034a3f25b166943c958014d14cecb7b2a4df4293dd73edc6f311bc9",
+          "config": "sha256:83aeb8b60922c2b04f36fdd639b1f237ae2c534ad252c7105806cf7bda82d1d8",
+          "layers": [
+            "sha256:7b229517ed222597277036d94892173207d01a731ab3a88eeb1de2e963a2c788",
+            "sha256:9f0afb44f10e826253b342c0265e188067c2f0a30c782a52e329928a763adc60",
+            "sha256:f19a2d3b695178ba0e57d473535f74f5d934f45e191de8334e730f83d2c62704",
+            "sha256:885725a63a7cf1d4d5aac105944b35ece2b69a8c2cc6f7040f04727b7b8a63d2",
+            "sha256:e125989d16f03d1e00b60afdd9abe46ed1437ed63b73926d036a5537f6be770a",
+            "sha256:81b64ae234ef95f3cfc19b7f6c45a511eccbefa6148889ee33ed43c6c3f39939",
+            "sha256:bb658a2541968d2b90a8ee165ad08b7f71055c7f7832bdff98e2de2d8b90cf14",
+            "sha256:5b8cb54cfa408030aaa43d7bffa9141e0ae6f8a479df13c7aa152100cca358fb",
+            "sha256:50cf889db9f4bb3349d0f15655de092929667d5b27089757dce9066635d6197a",
+            "sha256:d048286f92dd1962649997e73ce1d8f196dfcb59753e353bda4cc7e3e00befb2",
+            "sha256:978fbf4f543c6f251c2f19b0adb8c81b19337fe361dfb16a1ede237bad0bdcb2"
+          ]
+        }
+      ]
+    },
+    {
+      "index": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+      "selected_manifests": [
+        {
+          "digest": "sha256:3068a39a82d749d948cfb169a1d4d31d0370539c0aa9455adaf61ef281ecffef",
+          "config": "sha256:360281b9ca33b0ee2c25ae320da0b6bbc422d8c585216f66d6cfc5fbbd446a5a",
+          "layers": [
+            "sha256:435bf5c20694c99dd5a9877e58e24b26a2207fcf8c692a3c3ce3c867770a5b41",
+            "sha256:d9d511d19a19ebdeda520e0752f184d457905c7a310df5b748d133a51274ecd4",
+            "sha256:082f3711ec02b5a05a0fbee55570854a286bad6c219253407b7351ec4278a5e0",
+            "sha256:0df34dd379940da83b42705ddc0ff5003ce7a013e912a7c4bf90c54e2072a010",
+            "sha256:35e448951dfd8efd541223c0694e786af2edd0ee771ca82155105d36b58ce905",
+            "sha256:4c7ba16bd344f677c6f8d058cbc17116b5dc990913267c9cc52980d2dfcd054e",
+            "sha256:fa550bc308789ce23e264993d6fd55c167e79ea390d45bab24563705c82454fb",
+            "sha256:b28ba67c2a1e2f8438a8f6ef5f7650952aed34346ce5c44b416955d90abdb9a6",
+            "sha256:d52719f157a49b4941a0a886fc604c88e06cc02ba18569b4948ceda548711d12",
+            "sha256:53af5c6e17706743798a9ee7f1819a5accb2bfeb18df056feae43d74f508adda"
+          ]
+        }
+      ]
+    }
+  ],
+  "verified_blob_count": 60,
+  "non_host_descriptors": [
+    {
+      "digest": "sha256:a5c9b17b4e39ba5fe48453b805cd766063af4d2f816ebc1a4220f6053802db30",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": true
+    },
+    {
+      "digest": "sha256:a0efbbe371503ceb9e55a5a8b6647f85a643e255301f06a498a50ffe27c9497e",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": true
+    },
+    {
+      "digest": "sha256:7f5072e1d42dd60828444377475874453ba6c77f69bf46b1421901864f3c8003",
+      "platform": {
+        "architecture": "arm",
+        "os": "linux",
+        "variant": "v6"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:def70ef1a060a2719d4f9c8c96d4280e533e3a3404fb17be919f777d3cef8497",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:78123beb4fb45d8fc32b7d72157675fedce12c23c4d121fcdb10e8370034460c",
+      "platform": {
+        "architecture": "arm",
+        "os": "linux",
+        "variant": "v7"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:c2641da1f691a5b4c4a64999a742fc6733a7d3204dd508006ece488eb40f8c3a",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:a717692f944862397bd102c6abee9b3f7927adbf7ee5f3a93e50b65aea0c5396",
+      "platform": {
+        "architecture": "arm64",
+        "os": "linux",
+        "variant": "v8"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:1aecca65c66f7e071a16d017c87fcbf34b6483f4f93b441adf6c5aebb6460b00",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:4200544fbcd9f8251d4cd0281b0f4ca699f152fdde6a024bed8390d6c80cf079",
+      "platform": {
+        "architecture": "386",
+        "os": "linux"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:28b7df621baa1afc77124967cd5b8b15f446ac3ce8f01528e3ef8fff6a9f8dd0",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:89249094fe7391fd08376c5bf05a14f6bf115d023a9c8dd2ac1df7430ac211bf",
+      "platform": {
+        "architecture": "ppc64le",
+        "os": "linux"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:040a8fd05d29f824d7a2b3202cbffc8eeae65ad0b332a2e6b8ab9aa136dbfdc5",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:f8f7e4c872e2b3b91d05e093b5bc172746f85fc39289caccb04a410355c55224",
+      "platform": {
+        "architecture": "riscv64",
+        "os": "linux"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:2a17056a9db31b2b90037e1966b7628c6560be28db2ad11913816fc3c4e39f3a",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:410855b25d37876cdfe20ddd33b4e97a865bc066f1021acc27ef55e141fc6a82",
+      "platform": {
+        "architecture": "s390x",
+        "os": "linux"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:3577c6343ba0498e87fb2dc4942f67fb646bb5c4c5a92b7766f60f32b5733cf6",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false
+    },
+    {
+      "digest": "sha256:0bc1e3a6dff6033031d1d9d48062797906c35d5dee134ecf66adcc1a133258fc",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": true
+    },
+    {
+      "digest": "sha256:6c1f6d6d660414f138e38fb31965be5b935fe0ac0f76287d0828388ffab7d1b4",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": true
+    }
+  ],
+  "passed": true,
+  "empty_daemon_restore_tested": false,
+  "docker_load_tags": [
+    null,
+    null,
+    null,
+    null
+  ]
+}

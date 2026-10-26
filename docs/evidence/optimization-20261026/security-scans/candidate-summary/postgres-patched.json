@@ -1,0 +1,17 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "grype-image",
+      "target": "postgres:17.11-alpine",
+      "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 4,
+      "exit_code": 0,
+      "vex_expires_on": null
+    }
+  ]
+}

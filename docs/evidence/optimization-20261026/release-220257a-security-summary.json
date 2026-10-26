@@ -1,0 +1,454 @@
+{
+  "schema_version": 1,
+  "source_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "checked_at_utc": "2026-10-26T13:28:15.360481+00:00",
+  "scope": "Exact locally built immutable artifacts; Grype H/C gate plus precise existing Agent VEX/vendor policy. Not an upstream patch or general safety certification.",
+  "artifact_count": 6,
+  "artifacts": [
+    {
+      "service": "frontend",
+      "tag": "trip-opt-frontend:220257a",
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "scan": {
+        "scanner": "grype-image",
+        "target": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+        "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+        "status": "pass",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 0,
+        "contextual_not_affected": 0,
+        "all_findings": 3,
+        "exit_code": 0,
+        "vex_expires_on": null,
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 0,
+          "fixed_by_pinned_security_upgrade": 0,
+          "still_vulnerable_vendor_minor": 0,
+          "not_affected_component_absent": 0
+        },
+        "still_vulnerable_vendor_minor_ids": [],
+        "vendor_policy_expires_on": null,
+        "image_revision_context_verified": false
+      }
+    },
+    {
+      "service": "backend",
+      "tag": "trip-opt-backend:220257a",
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "scan": {
+        "scanner": "grype-image",
+        "target": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+        "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+        "status": "pass",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 0,
+        "contextual_not_affected": 0,
+        "all_findings": 212,
+        "exit_code": 0,
+        "vex_expires_on": null,
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 0,
+          "fixed_by_pinned_security_upgrade": 0,
+          "still_vulnerable_vendor_minor": 0,
+          "not_affected_component_absent": 0
+        },
+        "still_vulnerable_vendor_minor_ids": [],
+        "vendor_policy_expires_on": null,
+        "image_revision_context_verified": false
+      }
+    },
+    {
+      "service": "agent",
+      "tag": "trip-opt-agent:220257a",
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "scan": {
+        "scanner": "grype-image",
+        "target": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "status": "pass_vendor_policy",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 79,
+        "contextual_not_affected": 4,
+        "all_findings": 214,
+        "exit_code": 2,
+        "vex_expires_on": "2026-11-25",
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 14,
+          "fixed_by_pinned_security_upgrade": 3,
+          "still_vulnerable_vendor_minor": 52,
+          "not_affected_component_absent": 6
+        },
+        "still_vulnerable_vendor_minor_ids": [
+          "CVE-2026-102010",
+          "CVE-2026-19499",
+          "CVE-2026-5435",
+          "CVE-2026-76642",
+          "CVE-2026-78408",
+          "CVE-2026-78409",
+          "CVE-2026-78410",
+          "CVE-2026-95619"
+        ],
+        "vendor_policy_expires_on": "2026-11-09",
+        "image_revision_context_verified": true
+      }
+    },
+    {
+      "service": "prometheus",
+      "tag": "trip-opt-prometheus:220257a",
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "image_id": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "scan": {
+        "scanner": "grype-image",
+        "target": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+        "image_id": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+        "status": "pass",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 0,
+        "contextual_not_affected": 0,
+        "all_findings": 3,
+        "exit_code": 0,
+        "vex_expires_on": null,
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 0,
+          "fixed_by_pinned_security_upgrade": 0,
+          "still_vulnerable_vendor_minor": 0,
+          "not_affected_component_absent": 0
+        },
+        "still_vulnerable_vendor_minor_ids": [],
+        "vendor_policy_expires_on": null,
+        "image_revision_context_verified": false
+      }
+    },
+    {
+      "service": "alertmanager",
+      "tag": "trip-opt-alertmanager:220257a",
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "image_id": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "scan": {
+        "scanner": "grype-image",
+        "target": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+        "image_id": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+        "status": "pass",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 0,
+        "contextual_not_affected": 0,
+        "all_findings": 11,
+        "exit_code": 0,
+        "vex_expires_on": null,
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 0,
+          "fixed_by_pinned_security_upgrade": 0,
+          "still_vulnerable_vendor_minor": 0,
+          "not_affected_component_absent": 0
+        },
+        "still_vulnerable_vendor_minor_ids": [],
+        "vendor_policy_expires_on": null,
+        "image_revision_context_verified": false
+      }
+    },
+    {
+      "service": "postgres",
+      "tag": "postgres:17.11-alpine",
+      "revision": null,
+      "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "scan": {
+        "scanner": "grype-image",
+        "target": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "status": "pass",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 0,
+        "contextual_not_affected": 0,
+        "all_findings": 4,
+        "exit_code": 0,
+        "vex_expires_on": null,
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 0,
+          "fixed_by_pinned_security_upgrade": 0,
+          "still_vulnerable_vendor_minor": 0,
+          "not_affected_component_absent": 0
+        },
+        "still_vulnerable_vendor_minor_ids": [],
+        "vendor_policy_expires_on": null,
+        "image_revision_context_verified": false
+      }
+    }
+  ],
+  "raw_agent_high_critical": 79,
+  "still_vulnerable_vendor_minor_records": 52,
+  "still_vulnerable_vendor_minor_unique_ids": [
+    "CVE-2026-102010",
+    "CVE-2026-19499",
+    "CVE-2026-5435",
+    "CVE-2026-76642",
+    "CVE-2026-78408",
+    "CVE-2026-78409",
+    "CVE-2026-78410",
+    "CVE-2026-95619"
+  ],
+  "admission_boundary": {
+    "five_images": "Raw H/C zero under the current scanner database; lower-severity findings remain in raw reports.",
+    "agent": "pass_vendor_policy, not raw zero; 8 vendor-vulnerable CVEs remain explicitly recorded.",
+    "threshold_change": "Initial new H/C blocking gate was subsequently changed to apply an exact vendor-Minor policy. The old d814 baseline did not contain this Security workflow.",
+    "human_risk_acceptance": false,
+    "deploy_ready_inferred": false,
+    "policy_classification_versions_expiry_threshold_unchanged_from_a01": {
+      ".github/security-vex.json": {
+        "non_binding_policy_unchanged": true
+      },
+      ".github/security-vendor-policy.json": {
+        "non_binding_policy_unchanged": true
+      }
+    }
+  },
+  "hardened_runtime": {
+    "probe_file": "docs/evidence/optimization-20261026/hardened-runtime-probe-result.json",
+    "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+    "passed_checks": 11,
+    "actual_uvicorn": true,
+    "uid": 1000,
+    "CapEff": "0",
+    "CapBnd": "0",
+    "NoNewPrivs": 1,
+    "ReadonlyRootfs": true,
+    "restricted_tools_status": "verified_absent",
+    "tools": [
+      "mount",
+      "nsenter",
+      "umount",
+      "unshare"
+    ],
+    "rootfs_and_mount_boundary": "read-only rootfs; dedicated data/chroma rw volumes and logs/tmp rw tmpfs verified locally.",
+    "readiness_scope": {
+      "url": "http://127.0.0.1:9000/readyz",
+      "status": 200,
+      "service": "trip-agent",
+      "rag_status_from_running_process": "not_initialized_or_degraded",
+      "body_sha256": "115527440f04c13f53a7796c6a30705b2037aaca31d26b9b9b420e68251b4c20"
+    },
+    "component_checks": "Independent fresh-process persistent Chroma two-record roundtrip and small native CP-SAT; no paid provider or general workload/capacity proof."
+  },
+  "remaining_native_assessment": {
+    "CVE-2026-102010": {
+      "assessment": "No native code fix or complete reachability exclusion established by this hardening. Actual libc/libstdc++ remain present; original native/FFI/PBDS uncertainties remain.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-19499": {
+      "assessment": "No native code fix or complete reachability exclusion established by this hardening. Actual libc/libstdc++ remain present; original native/FFI/PBDS uncertainties remain.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-5435": {
+      "assessment": "No native code fix or complete reachability exclusion established by this hardening. Actual libc/libstdc++ remain present; original native/FFI/PBDS uncertainties remain.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-76642": {
+      "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-78408": {
+      "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-78409": {
+      "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-78410": {
+      "assessment": "Actual final runtime has no recorded mount/umount/nsenter/unshare names, aliases or byte-identical copies/filecap variants in the bounded checker inventory; CapBnd/Eff=0 and NNP=1. CLI exposure is reduced. Retained libmount/other consumers are not declared fixed or globally unreachable.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    },
+    "CVE-2026-95619": {
+      "assessment": "Same SHA256 actual dynamic libstdc++ retains the previously verified POSIX posix_memalign branch unaffected by the specific size-rounding defect. Source-package raw vulnerable classification remains; other vendored/static/replacement allocators are not exhaustively proved absent.",
+      "original_vendor_classification_preserved": true,
+      "risk_accepted": false
+    }
+  },
+  "retained_local_resources": [
+    {
+      "name": "trip-security-inventory-d1dcf48481a2",
+      "container_id": "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3",
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "purpose": "stopped image inventory extraction; no image command executed",
+      "business_data": false,
+      "status": "retained",
+      "cleanup_explicit": false
+    }
+  ],
+  "historical_evidence_preserved": [
+    "release-a01a0d7c",
+    "release-e3deabe (5 scans only; Agent build failed safely and was fixed before new 220 artifact)"
+  ],
+  "external_boundaries": [
+    "Public TLS/reverse-proxy behavior and email/SMS delivery remain unverified external channels.",
+    "Off-host recovery is deferred_by_user_not_verified per explicit user decision; local restore evidence is not off-host recovery proof."
+  ],
+  "secret_scan": {
+    "status": "pass",
+    "scope": "Full git history --all plus cached tracked and nonignored untracked current files; ignored runtime/private local files are intentionally outside source scanning.",
+    "results": [
+      {
+        "scanner": "gitleaks-history",
+        "status": "pass",
+        "findings": 0,
+        "exit_code": 0
+      },
+      {
+        "scanner": "gitleaks-tracked",
+        "status": "pass",
+        "findings": 0,
+        "exit_code": 0
+      }
+    ],
+    "command": ".cache/improvement-venv/Scripts/python.exe tools/security_gate.py secrets --include-untracked --reports .cache/security-report-raw/release-220257a/secrets",
+    "checked_at_utc": "2026-10-26T13:30:05.269298+00:00",
+    "evidence_description": "The scan included the public summary in its pending form; this final update only substitutes scanner results and SHA/path metadata, adds no credential material."
+  },
+  "evidence_hashes": {
+    ".cache/security-report-raw/release-220257a/cohort.json": {
+      "sha256": "8556fbb50bc00201f9d85b83c0b30435cc996dab7d65194b351266c966c6ed51",
+      "bytes": 7271
+    },
+    ".cache/security-report-raw/release-220257a/final-restricted-tools-and-libraries.json": {
+      "sha256": "439301800fc728eba1663f631269da68125a84a8c4dc09929971c40094eacfdf",
+      "bytes": 3742
+    },
+    ".cache/security-report-raw/release-220257a/final-runtime-inspect.json": {
+      "sha256": "4724abe49cedab78d0dbe06f8f1b55084f3ea30b3864256b941461e22291b212",
+      "bytes": 664
+    },
+    ".cache/security-report-raw/release-220257a/policy-delta.json": {
+      "sha256": "4c4c02b6d0d9e19eb0cef11da387b6ae6c167bc3a30a291703fa925eb1a7e70a",
+      "bytes": 179
+    },
+    ".cache/security-report-raw/release-220257a/agent/distribution-assessments.json": {
+      "sha256": "7005b0fd44f6c75cece2306c8e28c64d6dc4389ed7308ebeb8476a7f7da23f31",
+      "bytes": 15211
+    },
+    ".cache/security-report-raw/release-220257a/agent/distribution-inventory.json": {
+      "sha256": "1907b17ac84e1bd44ed2823faca926d527d1b9151b5c29c432ec5ded731cbec5",
+      "bytes": 5097
+    },
+    ".cache/security-report-raw/release-220257a/agent/image-scan.log": {
+      "sha256": "d501ca02834296d16694a95dfe5e86c045bb52e43f80a2535306563b59dc9e43",
+      "bytes": 78
+    },
+    ".cache/security-report-raw/release-220257a/agent/image-summary.json": {
+      "sha256": "81310c209776caefbabb7b5bc105fbd57e39fafddb941506b70662d4126cdec4",
+      "bytes": 1141
+    },
+    ".cache/security-report-raw/release-220257a/agent/image-vulnerabilities.json": {
+      "sha256": "8cd22b7380299df93719482705c0dea9b004b253d4f7a50fb68035a5811b7abb",
+      "bytes": 1017538
+    },
+    ".cache/security-report-raw/release-220257a/agent/trip-security-inventory-d1dcf48481a2-resource.json": {
+      "sha256": "083e6b3134396e0daec8c962e02c884c0cb6554595278fb9f38ebb8612b4eba5",
+      "bytes": 394
+    },
+    ".cache/security-report-raw/release-220257a/alertmanager/image-scan.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/alertmanager/image-summary.json": {
+      "sha256": "4912a0d7b94da0eac9f29c74491e27f95f0ba18e25e1d8c2ae3a45228492e7f5",
+      "bytes": 885
+    },
+    ".cache/security-report-raw/release-220257a/alertmanager/image-vulnerabilities.json": {
+      "sha256": "098e16f217c8232c57ada4bef983b2b6462de1e0f1b4b2e415bbfd734e484e29",
+      "bytes": 60533
+    },
+    ".cache/security-report-raw/release-220257a/backend/image-scan.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/backend/image-summary.json": {
+      "sha256": "1868d4b73f5082ff79de75e666eab6644db503da994775e40c780953a85095d5",
+      "bytes": 886
+    },
+    ".cache/security-report-raw/release-220257a/backend/image-vulnerabilities.json": {
+      "sha256": "f9d0005239502f6f320b961b217d1130ef4aa567f8dc07e629d6a2a0a3cf4d7e",
+      "bytes": 1369170
+    },
+    ".cache/security-report-raw/release-220257a/frontend/image-scan.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/frontend/image-summary.json": {
+      "sha256": "843b5cdd8f2bbdf9bce5e54c161256bb3c068ebaf322ff1d9ae0188ac6ecc59c",
+      "bytes": 884
+    },
+    ".cache/security-report-raw/release-220257a/frontend/image-vulnerabilities.json": {
+      "sha256": "3fcb022a2b82f5f03475aa6c6ff55ba2e8fcfd67c6ebd157d6bdb4c255a789bf",
+      "bytes": 37968
+    },
+    ".cache/security-report-raw/release-220257a/postgres/image-scan.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/postgres/image-summary.json": {
+      "sha256": "b24cd5f4cf18a24a6947cd3751c2c3bee5f5545d3c7eea06f92fc9d53796d5c3",
+      "bytes": 884
+    },
+    ".cache/security-report-raw/release-220257a/postgres/image-vulnerabilities.json": {
+      "sha256": "04009eec5b62a7105f9cc6d9bac09eefc9e5e17387764993ca7a058bcb71df04",
+      "bytes": 34277
+    },
+    ".cache/security-report-raw/release-220257a/prometheus/image-scan.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/prometheus/image-summary.json": {
+      "sha256": "4278846882fef21c995e08728a97f2a2354154258b20b82dbcdeea0dbbcae6b9",
+      "bytes": 884
+    },
+    ".cache/security-report-raw/release-220257a/prometheus/image-vulnerabilities.json": {
+      "sha256": "d8767e74a28e6213b9206a47b56b07fef3ada2cac0a28769d187bb5eaa0e3c18",
+      "bytes": 23948
+    },
+    ".cache/security-report-raw/release-220257a/secrets/gitleaks-history.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    ".cache/security-report-raw/release-220257a/secrets/gitleaks-history.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/secrets/gitleaks-tracked.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    ".cache/security-report-raw/release-220257a/secrets/gitleaks-tracked.log": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2
+    },
+    ".cache/security-report-raw/release-220257a/secrets/secrets-summary.json": {
+      "sha256": "cd5f28ae0b9a8c702587793bc42e28697c01102c535f9232fe451128146d7c04",
+      "bytes": 314
+    }
+  },
+  "matrix_file": "docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.json",
+  "public_context_evidence_hashes": {
+    "docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.json": {
+      "sha256": "df5ebeaadefbcc4e763069c7b48c07cb201aa14b31f836c32e59e5fdf50d0d6a",
+      "bytes": 51238
+    },
+    "docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md": {
+      "sha256": "28e08526a693f36d5aed8c593b8dc1c5572454c42ef582015eefe2e8bf235ec4",
+      "bytes": 17611
+    },
+    "docs/evidence/optimization-20261026/hardened-runtime-probe-result.json": {
+      "sha256": "6649b64ad521e80270de3a16268ef33fc4e798aede550b9493ec1443e359616f",
+      "bytes": 8421
+    }
+  }
+}

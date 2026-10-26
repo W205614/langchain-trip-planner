@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-26",
+  "base_commit": "d81410f6d77a8c1fcfb6cd18c2c4f239be8f3e9d",
+  "scope": [1, 3, 11],
+  "changes": {
+    "non_destructive_reverification": {
+      "owner": "TripFactVerificationService",
+      "states": ["verified", "not_found", "lookup_failed"],
+      "preserves_original_places": true,
+      "provider_observations": "quality.poi_verification[].observed",
+      "replacement": "Explicit trusted-place selection and confirmation in Result; Workspace links with replace_poi",
+      "failed_attempt_updates_verified_timestamp": false
+    },
+    "shared_planning_contract": {
+      "canonical": "backend/app/contracts/planning-semantics.json",
+      "java_packaged_mirror": "business-backend/src/main/resources/contracts/planning-semantics.json",
+      "mirror_equality_test": "SharedPlanningSemanticsTest.packagedContractMatchesPythonContract",
+      "version": "planning-semantics-v1",
+      "java_reverification": "day city and mode, recorded real endpoints, fixed intercity transport, origin-city hotel connection, boarding lead time, whole-day elapsed budget",
+      "unknown_policy": "Unknown or estimated routes cannot prove feasibility or infeasibility; independently confirmed fixed intervals may prove a daily-budget conflict"
+    },
+    "fact_completion": {
+      "editor": "frontend/src/components/trip/FactCompletionEditor.vue",
+      "workflow": "Owner supplies provenance and expiry, reviews declaration, saves inputs, creates scoped async revision task, previews and confirms proposal",
+      "collections": ["opening_windows", "hotel_stays", "reservation_facts", "transport_buffers", "poi_relations", "meal_resolutions"],
+      "authority": "user_declared",
+      "poi_relationships": "Included parent-child visits cannot count as independent visits; ambiguous nesting remains unverified; cross-day checks preserve out-of-scope day content",
+      "meal_resolution": "Self-arranged meals use a declared real endpoint and occupy a time window without inventing a restaurant",
+      "boarding": "Confirmed fresh lead time occupies the predeparture window and counts in daily budget; missing or expired declarations remain explicit gaps"
+    },
+    "recovery": {
+      "solver_rules": "time-windows-v8-fact-completion",
+      "empty_additive_fields_preserve_old_digest": true,
+      "nonempty_fact_changes_invalidate_digest": true,
+      "old_compatible_provider_and_draft_stages_reused": true,
+      "old_solved_schedules_reused": false
+    }
+  },
+  "validation": {
+    "python": {
+      "command": ".cache/improvement-venv/Scripts/python.exe -m pytest -q -p no:cacheprovider backend/tests/test_travel_fact_completion.py backend/tests/test_time_planner.py backend/tests/test_intercity_daily_budget.py backend/tests/test_hotel_departure_recovery.py backend/tests/test_meal_candidate_recovery.py backend/tests/test_planning_constraints.py -k 'not multicity_generation and not v2_execution and not actual_v2 and not spatial_groups'",
+      "passed": 79,
+      "deselected": 5,
+      "deselection_reason": "The existing isolated venv lacks langgraph and prometheus_client needed by the five generation/API integration paths; initial runs confirmed import failures, not assertions about those paths",
+      "external_paid_calls": 0
+    },
+    "frontend": {"command": "frontend/node_modules/.bin/vue-tsc.cmd --noEmit --project frontend/tsconfig.json", "result": "passed"},
+    "java": {
+      "execution": "Root agent runs the shared Maven target serially",
+      "classes": ["TripFactVerificationTest", "SharedPlanningSemanticsTest", "FactInputPolicyTest", "PlanRulesTest", "ScheduleValidityIntegrationTest"],
+      "current_status": "Pending root integration run; do not interpret source completion as passing tests",
+      "isolated_database": "jdbc:postgresql://localhost:15436/tripopt_functional",
+      "workers": false
+    }
+  },
+  "evidence_boundaries": [
+    "Synthetic deterministic tests do not prove real destination facts or actual transport punctuality",
+    "User-provided URLs and source names are not independent official verification",
+    "Java rechecks an existing timeline; Python performs bounded scoped solving",
+    "No paid external calls, routine deployment changes, cleanup or Git submission were performed by this subtask"
+  ],
+  "integration_handoff": [
+    "Root owns PlanningInputService effective dependency invalidation and Result replacement confirmation",
+    "The shared internal execution schemas need regeneration after adding fact fields",
+    "Run the pending Java tests and the five Python integration paths in an environment with the declared dependencies before final release"
+  ]
+}

@@ -1,0 +1,22 @@
+[
+ {
+  "RuleID": "generic-api-key",
+  "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+  "StartLine": 15,
+  "EndLine": 15,
+  "StartColumn": 14,
+  "EndColumn": 97,
+  "Match": "api-JXbGpjGX.js\": \"REDACTED\"",
+  "Secret": "REDACTED",
+  "File": "E:/project/langchain-trip-planner/.cache/security-source-exports/tracked-ti9xxzrg/docs/evidence/optimization-20261026/candidate-frontend-overlay.json",
+  "SymlinkFile": "",
+  "Commit": "",
+  "Entropy": 3.9026716,
+  "Author": "",
+  "Email": "",
+  "Date": "",
+  "Message": "",
+  "Tags": [],
+  "Fingerprint": "E:/project/langchain-trip-planner/.cache/security-source-exports/tracked-ti9xxzrg/docs/evidence/optimization-20261026/candidate-frontend-overlay.json:generic-api-key:15"
+ }
+]

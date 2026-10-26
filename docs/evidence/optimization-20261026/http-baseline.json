@@ -1,0 +1,30 @@
+{
+  "variant": "baseline",
+  "dataset_role": "frozen_development_counterexamples",
+  "input": {
+    "city": "北京",
+    "start_date": "2026-11-01",
+    "end_date": "2026-11-02",
+    "travel_days": 2,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "planning_input": {},
+    "preferences": [
+      "历史文化"
+    ]
+  },
+  "input_sha256": "2212a3909a4b51117d6920bcfef66437bbf088da3a67982cf107a81c3df45383",
+  "providers": "explicit offline substitutes",
+  "real_paid_calls": 0,
+  "cases": [],
+  "not_proven": [
+    "general accuracy",
+    "independent human review",
+    "live-provider quality",
+    "capacity",
+    "HA"
+  ],
+  "started_at": "2026-10-26T08:42:34.867914+00:00",
+  "failed": true,
+  "error_type": "ConnectError"
+}

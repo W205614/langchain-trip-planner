@@ -1,0 +1,36 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "pip-audit",
+      "status": "pass_contextual",
+      "raw_findings": 5,
+      "contextual_not_affected": 5,
+      "unresolved_findings": 0,
+      "skipped": 0,
+      "exit_code": 1,
+      "vex_expires_on": "2026-11-25"
+    },
+    {
+      "scanner": "npm-audit",
+      "status": "pass",
+      "blocking_findings": 0,
+      "all_severities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "exit_code": 0
+    },
+    {
+      "scanner": "osv-maven",
+      "status": "pass",
+      "findings": 0,
+      "resolved_components": 94,
+      "exit_code": 0
+    }
+  ]
+}

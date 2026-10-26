@@ -1,0 +1,21 @@
+{
+  "scope": "Changed/directly affected image policy, explicit risk acceptance, scanner failure policy and runtime constraint guards only",
+  "command": "python -m unittest tools.tests.test_image_policy tools.tests.test_risk_acceptance tools.tests.test_security_gate tools.tests.test_runtime_constraint_probe -v",
+  "passed": true,
+  "tests": 25,
+  "elapsed_seconds": 20.12,
+  "private_log": "E:\\project\\langchain-trip-planner\\.codex-optimization-risk-tests-final.log",
+  "raw_log_sha256": "6edc74dea1938329e728b7b185553429356f869f0b4f0a5a360652751f972bfc",
+  "not_cumulative_with_prior_runs": true,
+  "coverage": [
+    "missing/expired/future authorization, scope and anchor mismatch",
+    "business/recipe/component/native/application changes and unknown HIGH",
+    "failed/incomplete/old scan and invalid/old advisory DB",
+    "actual-runtime receipt forgery/staleness and live identity mismatch",
+    "read-only shadow mounts, namespace/devices/ports/quotas, cwd/PATH/loader/security-profile overrides",
+    "CI-only owned cleanup and borrowed resource refusal"
+  ],
+  "real_provider_calls": 0,
+  "business_function_retests": "none; previous actual-role and artifact evidence remains separately scoped",
+  "updated_at": "2026-10-26T14:24:23.453670+00:00"
+}

@@ -1,0 +1,17 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-frontend:candidate-20261026",
+      "image_id": "sha256:ba7c993b5b55ad7561406afc54342136cf30b6c845791bb3ab99d8ec234a2ad0",
+      "status": "blocked_findings",
+      "blocking_findings": 3,
+      "raw_high_critical_findings": 3,
+      "contextual_not_affected": 0,
+      "all_findings": 52,
+      "exit_code": 2,
+      "vex_expires_on": null
+    }
+  ]
+}

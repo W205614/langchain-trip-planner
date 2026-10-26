@@ -1,0 +1,109 @@
+{
+  "started_at": "2026-10-26T12:43:32.282517+00:00",
+  "project": "trip-opt-candidate-20261026",
+  "read_only_database_audit": true,
+  "original_running": false,
+  "records": [
+    {
+      "id": 9,
+      "findings": [
+        {
+          "code": "MAP_UNAVAILABLE",
+          "poi_id": "fixture-beijing-0",
+          "status": "lookup_failed",
+          "message": "本次地图核验失败；原景点和安排保留，可稍后重试",
+          "day_index": 0,
+          "retryable": true,
+          "checked_at": "2026-10-26T10:44:41.076512913Z",
+          "activity_id": "poi:0:fixture-beijing-0",
+          "replacement_confirmation_required": false
+        },
+        {
+          "code": "MAP_UNAVAILABLE",
+          "poi_id": "fixture-beijing-1",
+          "status": "lookup_failed",
+          "message": "本次地图核验失败；原景点和安排保留，可稍后重试",
+          "day_index": 0,
+          "retryable": true,
+          "checked_at": "2026-10-26T10:44:41.133041056Z",
+          "activity_id": "poi:0:fixture-beijing-1",
+          "replacement_confirmation_required": false
+        },
+        {
+          "code": "MAP_UNAVAILABLE",
+          "poi_id": "fixture-beijing-2",
+          "status": "lookup_failed",
+          "message": "本次地图核验失败；原景点和安排保留，可稍后重试",
+          "day_index": 0,
+          "retryable": true,
+          "checked_at": "2026-10-26T10:44:41.140197740Z",
+          "activity_id": "poi:0:fixture-beijing-2",
+          "replacement_confirmation_required": false
+        },
+        {
+          "code": "MAP_UNAVAILABLE",
+          "poi_id": "fixture-beijing-47",
+          "status": "lookup_failed",
+          "message": "本次地图核验失败；原景点和安排保留，可稍后重试",
+          "day_index": 1,
+          "retryable": true,
+          "checked_at": "2026-10-26T10:44:41.147291393Z",
+          "activity_id": "poi:1:fixture-beijing-47",
+          "replacement_confirmation_required": false
+        },
+        {
+          "code": "MAP_UNAVAILABLE",
+          "poi_id": "fixture-beijing-46",
+          "status": "lookup_failed",
+          "message": "本次地图核验失败；原景点和安排保留，可稍后重试",
+          "day_index": 1,
+          "retryable": true,
+          "checked_at": "2026-10-26T10:44:41.154613553Z",
+          "activity_id": "poi:1:fixture-beijing-46",
+          "replacement_confirmation_required": false
+        },
+        {
+          "code": "AMAP_CIRCUIT_OPEN",
+          "poi_id": "fixture-beijing-45",
+          "status": "lookup_failed",
+          "message": "本次地图核验失败；原景点和安排保留，可稍后重试",
+          "day_index": 1,
+          "retryable": true,
+          "checked_at": "2026-10-26T10:44:41.180148116Z",
+          "activity_id": "poi:1:fixture-beijing-45",
+          "replacement_confirmation_required": false
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "findings": null
+    },
+    {
+      "id": 11,
+      "findings": null
+    },
+    {
+      "id": 12,
+      "findings": null
+    }
+  ],
+  "finding_statuses": [
+    "lookup_failed",
+    "lookup_failed",
+    "lookup_failed",
+    "lookup_failed",
+    "lookup_failed",
+    "lookup_failed"
+  ],
+  "interpretation": "Retained database findings independently support the original execution reaching lookup_failed, including MAP_UNAVAILABLE and AMAP_CIRCUIT_OPEN. Their timestamps are inside the original request-run interval; original raw HTTP report still only logged POI counts. No new business execution.",
+  "original_running_restored": true,
+  "crosscheck_original_execution": {
+    "original_result_sha256": "cfc0728a47ce94162aef4ce9ce769e65d887a50e8580119a81003613cb62eaa3",
+    "record_with_findings": 9,
+    "findings_count": 6,
+    "statuses_all_lookup_failed": true,
+    "checked_at_all_within_original_http_execution": true,
+    "remaining_limitation": "Retrospective persisted findings, not the original HTTP response payload or an independent network trace; no statement that every conceivable failure/cache branch was exercised."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "previous_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "business_sha": "e3deabed1decd07ef29da891460dc98f3d3f2beb",
+  "source": [
+    "backend/scripts/restrict_runtime_tools.py",
+    "backend/Dockerfile",
+    "docker-compose.yml",
+    "docker-compose.production.yml",
+    "frontend/src/views/History.vue"
+  ],
+  "local_checks": {
+    "restricted_cli_counterexamples": "3 passed by security reviewer: hardlink/copy precision, read-only verification catches reintroduced capability copy, dpkg parent traversal refusal",
+    "frontend_typecheck": "passed by functional reviewer after History one-line entry change",
+    "bound_source_hashes": "all current LF-normalized bindings verified; only source bindings changed, classifications/versions/expiry/threshold unchanged"
+  },
+  "runtime_acceptance": "pending exact new immutable image; no inference from old fixture process",
+  "risk_acceptance": "not_granted; cap-drop/NNP/RO/CLI removal do not fix retained native memory or header-template vulnerabilities",
+  "log_lifecycle": "/app/logs tmpfs64MiB is volatile at container stop; stdout persists in existing Docker bounded logs",
+  "deployment": "daily untouched; no cleanup window"
+}

@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-26T10:56:22.098762+00:00",
+  "classification": "new_offline_rule_holdout_not_real_model_quality",
+  "sample_count": 2,
+  "external_paid_calls_allowed": 0,
+  "human_blind_review": "pending",
+  "independence": {
+    "author": "separate implementation agent",
+    "basis": "User scope/common requirement 0.3 and public HTTP/input contracts; no current planning test case bodies or development counterexample details read to construct these samples.",
+    "limits": "Agent-authored deterministic rules are not independent human truth or general semantic accuracy; novelty is relative to this author knowledge, not a corpus-wide duplicate proof."
+  },
+  "freeze_policy": [
+    "Never replace a case or lower a rule after its first HTTP result. Preserve success and failure.",
+    "A failed held-out case becomes development evidence; subsequent fixes/rechecks must be a separate report and cannot reuse its holdout designation.",
+    "Do not retry an entire sample for a better result. Task polling is allowed within the fixed deadline.",
+    "Keep inputs/rules/source hashes immutable. Any implementation-version drift must be recorded and rejected by this runner before account creation."
+  ],
+  "execution_boundary": {
+    "only": "Real Java HTTP + PostgreSQL + Agent inside explicit isolated fixture stack; fixture provider responses replace paid suppliers only.",
+    "prohibited": [
+      "Business HTTP interception",
+      "Direct database creation/insertion",
+      "Daily deployment URL",
+      "Paid external supplier calls",
+      "Claiming a human or live-model assessment"
+    ],
+    "required_fixture_marker": {
+      "path": "/api/validation/fixture",
+      "offline_fixture": true
+    },
+    "network": "Only loopback HTTP/HTTPS base URLs; redirects refused.",
+    "provider_truth": "Synthetic map facts, synthetic fixture LLM, and runtime provider observed/expiry stamps; source code hashes freeze the fixture definition. Response artifacts retain returned facts/stamps. No snapshot of a live supplier cache is claimed."
+  },
+  "common_rules": [
+    {
+      "id": "C01",
+      "rule": "Every accepted plan has exactly day 0 Beijing and day 1 Shanghai; no silent day loss or cross-city attraction reassignment.",
+      "weight": 1
+    },
+    {
+      "id": "C02",
+      "rule": "Task must end succeeded/needs_attention with a persisted trip. Explicit HTTP failure or missing expected prerequisites is a retained failed sample, not skipped.",
+      "weight": 1
+    },
+    {
+      "id": "C03",
+      "rule": "A feasible day must have no stale flag, unknowns or conflicts. An unverified/infeasible day must carry an explicit nonempty explanation in feasibility or quality.",
+      "weight": 1
+    },
+    {
+      "id": "C04",
+      "rule": "Unknowns and omitted activity IDs must be retained in artifacts. No structural score is described as actual route truth, semantic truth or model accuracy.",
+      "weight": 1
+    }
+  ],
+  "cases": [
+    {
+      "id": "HOLDOUT-A",
+      "title": "跨城固定铁路与用户预约声明交叉",
+      "request": {
+        "city": "北京",
+        "departure_city": "北京",
+        "start_date": "2026-12-07",
+        "end_date": "2026-12-08",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "经济型酒店",
+        "traveler_count": 1,
+        "room_count": 1,
+        "budget_total": null,
+        "preferences": [
+          "历史文化"
+        ],
+        "constraints": {
+          "must_visit": [],
+          "avoid": [],
+          "daily_minutes": 600,
+          "max_inter_stop_walking_km": null
+        },
+        "planning_input": {
+          "timezone": "Asia/Shanghai",
+          "day_start": "08:00",
+          "day_end": "20:00",
+          "city_segments": [
+            {
+              "city": "北京",
+              "start_day": 0,
+              "end_day": 0
+            },
+            {
+              "city": "上海",
+              "start_day": 1,
+              "end_day": 1
+            }
+          ],
+          "day_windows": [],
+          "commitments": [
+            {
+              "id": "holdout-A-rail",
+              "version": 1,
+              "day_index": 1,
+              "category": "transport",
+              "status": "confirmed",
+              "title": "留出固定铁路A",
+              "time_mode": "fixed",
+              "start_at": "2026-12-08T08:10:00+08:00",
+              "end_at": "2026-12-08T13:25:00+08:00",
+              "origin_city": "北京",
+              "destination_city": "上海",
+              "origin_name": "北京南站",
+              "destination_name": "上海虹桥站",
+              "origin_location": {
+                "longitude": 116.3785,
+                "latitude": 39.8652
+              },
+              "destination_location": {
+                "longitude": 121.327,
+                "latitude": 31.2006
+              }
+            }
+          ],
+          "hotel_stays": [],
+          "meal_windows": [],
+          "opening_windows": [],
+          "reservation_facts": [],
+          "transport_buffers": [
+            {
+              "source": "holdout_synthetic_user_statement",
+              "observed_at": "2026-10-26T00:00:00+08:00",
+              "expires_at": "2026-12-09T23:59:59+08:00",
+              "confirmed": true,
+              "authority": "user_declared",
+              "commitment_id": "holdout-A-rail",
+              "minutes": 45
+            }
+          ],
+          "poi_relations": [],
+          "meal_resolutions": [],
+          "locks": [],
+          "completed_activity_ids": [],
+          "budget_mode": "estimate"
+        },
+        "free_text_input": "冻结留出A：第1日北京，第2日先乘已确认08:10—13:25固定铁路至上海；到站提前量45分钟是用户声明，不能当作官方事实。"
+      },
+      "steps": [
+        "Generate a persisted two-day plan through the durable Agent task.",
+        "Retrieve authoritative planning input. Bind the first returned day-1 attraction POI, requiring a nonempty real activity/POI ID.",
+        "Add exactly one user-declared not_required reservation fact for that POI/date through planning-input PUT, preserving all other input.",
+        "Read back persisted input and current validity. No solve/reverify retry is used to turn this case green."
+      ],
+      "fact_to_add": {
+        "source": "holdout_synthetic_user_statement",
+        "observed_at": "2026-10-26T00:00:00+08:00",
+        "expires_at": "2026-12-09T23:59:59+08:00",
+        "confirmed": true,
+        "authority": "user_declared",
+        "date": "2026-12-08",
+        "status": "not_required",
+        "poi_id": "$first_day_1_attraction.poi_id"
+      },
+      "rules": [
+        {
+          "id": "A01",
+          "rule": "The persisted fixed railway keeps ID, fixed interval, origin/destination city/name/coordinates and confirmed category/status; compare instants, not timezone spelling.",
+          "weight": 1
+        },
+        {
+          "id": "A02",
+          "rule": "The buffer remains 45 minutes, with exact supplied source, authority, confirmed flag and timestamps; it must not acquire official authority.",
+          "weight": 1
+        },
+        {
+          "id": "A03",
+          "rule": "The new reservation fact is persisted for exactly the bound Shanghai POI/date with exact user source/authority/status/timestamps.",
+          "weight": 1
+        },
+        {
+          "id": "A04",
+          "rule": "Adding the Shanghai-specific fact invalidates day 1; day 0 city, activities, timeline, feasibility and stale status are unchanged.",
+          "weight": 1
+        },
+        {
+          "id": "A05",
+          "rule": "If the initial Shanghai day claims feasible, its timeline contains the fixed railway interval and no tourism attraction overlaps it. Otherwise explicit unknown/infeasible with reasons is allowed while the fixed input is still conserved.",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "HOLDOUT-B",
+      "title": "局部住宿依赖变化与异日内容保护交叉",
+      "request": {
+        "city": "北京",
+        "departure_city": "北京",
+        "start_date": "2026-12-07",
+        "end_date": "2026-12-08",
+        "travel_days": 2,
+        "transportation": "公共交通",
+        "accommodation": "经济型酒店",
+        "traveler_count": 1,
+        "room_count": 1,
+        "budget_total": null,
+        "preferences": [
+          "历史文化"
+        ],
+        "constraints": {
+          "must_visit": [],
+          "avoid": [],
+          "daily_minutes": 600,
+          "max_inter_stop_walking_km": null
+        },
+        "planning_input": {
+          "timezone": "Asia/Shanghai",
+          "day_start": "08:00",
+          "day_end": "20:00",
+          "city_segments": [
+            {
+              "city": "北京",
+              "start_day": 0,
+              "end_day": 0
+            },
+            {
+              "city": "上海",
+              "start_day": 1,
+              "end_day": 1
+            }
+          ],
+          "day_windows": [],
+          "commitments": [],
+          "hotel_stays": [
+            {
+              "day_index": 1,
+              "name": "留出原住宿B",
+              "location": {
+                "longitude": 121.47,
+                "latitude": 31.23
+              }
+            }
+          ],
+          "meal_windows": [],
+          "opening_windows": [],
+          "reservation_facts": [],
+          "transport_buffers": [],
+          "poi_relations": [],
+          "meal_resolutions": [],
+          "locks": [],
+          "completed_activity_ids": [],
+          "budget_mode": "estimate"
+        },
+        "free_text_input": "冻结留出B：第1日北京、第2日上海；随后只修改上海住宿端点，未受影响的北京日和内容保护应保留。"
+      },
+      "steps": [
+        "Generate a separate persisted two-day plan through the Agent task.",
+        "Content-lock the first returned day-0 attraction by its real activity ID. Capture the authoritative state after the accepted lock.",
+        "Change only the day-1 hotel name/location through planning-input PUT; preserve its other inputs and the content lock.",
+        "Try time-lock then completed=true for the first day-1 attraction using the latest version/revision. Both must reject as SCHEDULE_STALE, and every rejected request must leave authoritative input/revisions/plan unchanged."
+      ],
+      "hotel_replacement": {
+        "day_index": 1,
+        "name": "留出变更住宿B",
+        "location": {
+          "longitude": 121.599,
+          "latitude": 31.145
+        }
+      },
+      "rules": [
+        {
+          "id": "B01",
+          "rule": "The content lock is actually persisted before the hotel edit and survives afterward; its attraction content is unchanged.",
+          "weight": 1
+        },
+        {
+          "id": "B02",
+          "rule": "Only day-1 hotel input changes; day 1 becomes schedule_stale=true; day 0 city, attractions, meals, hotel, timeline, feasibility and stale flag equal the post-lock baseline.",
+          "weight": 1
+        },
+        {
+          "id": "B03",
+          "rule": "Time-lock and completion each return HTTP 409 with code SCHEDULE_STALE using latest revision/version. Generic denial does not pass.",
+          "weight": 1
+        },
+        {
+          "id": "B04",
+          "rule": "Each rejected state write leaves planning_revision, trip_version, complete planning_input and plan equal to its pre-request authoritative snapshot.",
+          "weight": 1
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "pass": "All common and per-case binary rules pass; prerequisites count as rules and cannot skip.",
+    "aggregation": "Report each case, each rule and total passed/total; do not pool this into a real-model accuracy percentage.",
+    "comparison_baseline": "Within-case immutable pre-edit authoritative HTTP snapshot, not an invented old-version implementation.",
+    "human_review": "Package retained JSON/response artifacts for later independent review; no reviewer or approval fabricated."
+  }
+}

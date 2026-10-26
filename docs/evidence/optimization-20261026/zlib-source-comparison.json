@@ -1,0 +1,46 @@
+{
+  "source_files": {
+    "gzguts.h": {
+      "debian_sha256": "716fa648aca1bb06c219d7b97ad4846d8479206143bc39557bfd8283f5783e04",
+      "upstream_sha256": "716fa648aca1bb06c219d7b97ad4846d8479206143bc39557bfd8283f5783e04",
+      "equal_to_upstream_v1_3_1": true,
+      "has_gz_vacate": false,
+      "has_state_again": false
+    },
+    "gzwrite.c": {
+      "debian_sha256": "469b1e58932ea11bdda2a153f6655f7b3c13254240fae157181b49ed1bc93b47",
+      "upstream_sha256": "469b1e58932ea11bdda2a153f6655f7b3c13254240fae157181b49ed1bc93b47",
+      "equal_to_upstream_v1_3_1": true,
+      "has_gz_vacate": false,
+      "has_state_again": false
+    },
+    "gzlib.c": {
+      "debian_sha256": "042c2be8ec67ad525a2812e508de7381c6766dde903acf5ae6ac4fa6b541946d",
+      "upstream_sha256": "042c2be8ec67ad525a2812e508de7381c6766dde903acf5ae6ac4fa6b541946d",
+      "equal_to_upstream_v1_3_1": true,
+      "has_gz_vacate": false,
+      "has_state_again": false
+    },
+    "gzread.c": {
+      "debian_sha256": "72e481aca07b0b85a9783237b85dc67ff3a4c1d19878d0cec69f58d38634867b",
+      "upstream_sha256": "72e481aca07b0b85a9783237b85dc67ff3a4c1d19878d0cec69f58d38634867b",
+      "equal_to_upstream_v1_3_1": true,
+      "has_gz_vacate": false,
+      "has_state_again": false
+    }
+  },
+  "zlib_1.3.dfsg+really1.3.1.orig.tar.gz": {
+    "sha256": "60dd315c07f616887caa029408308a018ace66e3d142726a97db164b3b8f69fb",
+    "download_url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.3.dfsg+really1.3.1.orig.tar.gz"
+  },
+  "debian_patch_paths": [
+    "debian/patches",
+    "debian/patches/series"
+  ],
+  "zlib_1.3.dfsg+really1.3.1-1.debian.tar.xz": {
+    "sha256": "9ed525955ce9fb0c1b39be8ff98f73450dbfc6305a9a27e6149c8972d38a0a9e",
+    "download_url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.3.dfsg+really1.3.1-1.debian.tar.xz"
+  },
+  "debian_patch_series": "",
+  "source_verification_limit": "Checksums compared with HTTPS Debian .dsc; no independent .dsc GPG signer verification or runtime library binary binding performed by this reviewer."
+}

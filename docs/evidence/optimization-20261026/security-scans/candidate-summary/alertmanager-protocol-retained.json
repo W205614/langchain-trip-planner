@@ -1,0 +1,124 @@
+{
+  "fixture": "trip-monitor-smoke-ccc7737ced39",
+  "image": "trip-opt-alertmanager:candidate-20261026",
+  "status": "pass",
+  "scope": "isolated real Alertmanager HTTP v2 -> webhook v4 firing and resolved; no external recipient",
+  "image_id": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+  "network": {
+    "name": "trip-monitor-smoke-ccc7737ced39",
+    "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+  },
+  "containers": [
+    {
+      "name": "trip-monitor-smoke-ccc7737ced39-receiver",
+      "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+      "business_data": false
+    },
+    {
+      "name": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+      "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+      "business_data": false
+    }
+  ],
+  "reported_version": {
+    "branch": "",
+    "buildDate": "",
+    "buildUser": "",
+    "goVersion": "go1.27.3",
+    "revision": "73c6bfe7393929211294c1954f30d8ed78e4d0ad-security1",
+    "version": "0.34.1"
+  },
+  "firing": {
+    "receiver": "isolated-fixture",
+    "status": "firing",
+    "alerts": [
+      {
+        "status": "firing",
+        "labels": {
+          "alertname": "TripSecuritySmoke",
+          "job": "trip-monitor-smoke-ccc7737ced39",
+          "severity": "warning"
+        },
+        "annotations": {
+          "summary": "Isolated security build compatibility fixture"
+        },
+        "startsAt": "2026-10-26T10:56:28.006573Z",
+        "endsAt": "0001-01-01T00:00:00Z",
+        "generatorURL": "",
+        "fingerprint": "09aaa2f0068f6d5c"
+      }
+    ],
+    "notification_reason": "first notification",
+    "groupLabels": {
+      "alertname": "TripSecuritySmoke"
+    },
+    "commonLabels": {
+      "alertname": "TripSecuritySmoke",
+      "job": "trip-monitor-smoke-ccc7737ced39",
+      "severity": "warning"
+    },
+    "commonAnnotations": {
+      "summary": "Isolated security build compatibility fixture"
+    },
+    "routeLabels": {},
+    "externalURL": "http://b48eb9c8f426:9093",
+    "version": "4",
+    "groupKey": "{}:{alertname=\"TripSecuritySmoke\"}",
+    "truncatedAlerts": 0
+  },
+  "resolved": {
+    "receiver": "isolated-fixture",
+    "status": "resolved",
+    "alerts": [
+      {
+        "status": "resolved",
+        "labels": {
+          "alertname": "TripSecuritySmoke",
+          "job": "trip-monitor-smoke-ccc7737ced39",
+          "severity": "warning"
+        },
+        "annotations": {
+          "summary": "Isolated security build compatibility fixture"
+        },
+        "startsAt": "2026-10-26T10:56:28.006573Z",
+        "endsAt": "2026-10-26T10:56:30.037083Z",
+        "generatorURL": "",
+        "fingerprint": "09aaa2f0068f6d5c"
+      }
+    ],
+    "notification_reason": "all alerts resolved",
+    "groupLabels": {
+      "alertname": "TripSecuritySmoke"
+    },
+    "commonLabels": {
+      "alertname": "TripSecuritySmoke",
+      "job": "trip-monitor-smoke-ccc7737ced39",
+      "severity": "warning"
+    },
+    "commonAnnotations": {
+      "summary": "Isolated security build compatibility fixture"
+    },
+    "routeLabels": {},
+    "externalURL": "http://b48eb9c8f426:9093",
+    "version": "4",
+    "groupKey": "{}:{alertname=\"TripSecuritySmoke\"}",
+    "truncatedAlerts": 0
+  },
+  "cleanup": [
+    {
+      "container": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+      "action": "stop_and_retain",
+      "exit": 0
+    },
+    {
+      "container": "trip-monitor-smoke-ccc7737ced39-receiver",
+      "action": "stop_and_retain",
+      "exit": 0
+    },
+    {
+      "network": "trip-monitor-smoke-ccc7737ced39",
+      "action": "retain",
+      "exit": 0
+    }
+  ]
+}

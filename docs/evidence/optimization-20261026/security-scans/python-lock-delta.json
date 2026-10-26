@@ -1,0 +1,120 @@
+{
+  "python": "3.11",
+  "platforms": [
+    "Linux x86_64",
+    "Windows x86_64"
+  ],
+  "resolvers": {
+    "Windows": "pip-tools 7.6.2 / pip 26.2.2",
+    "Linux": "uv 0.13.5"
+  },
+  "changed": [
+    {
+      "name": "aiohttp",
+      "before": "==3.14.3",
+      "after": "==3.14.5"
+    },
+    {
+      "name": "certifi",
+      "before": "==2026.7.22",
+      "after": "==2026.10.23"
+    },
+    {
+      "name": "filelock",
+      "before": "==3.32.5",
+      "after": "==4.2.4"
+    },
+    {
+      "name": "multidict",
+      "before": "==6.7.1",
+      "after": "==6.9.1"
+    },
+    {
+      "name": "oauthlib",
+      "before": "==3.3.1",
+      "after": "==4.0.0"
+    },
+    {
+      "name": "opentelemetry-api",
+      "before": "==1.44.0",
+      "after": "==1.45.1"
+    },
+    {
+      "name": "opentelemetry-exporter-otlp-proto-common",
+      "before": "==1.44.0",
+      "after": "==1.45.1"
+    },
+    {
+      "name": "opentelemetry-exporter-otlp-proto-grpc",
+      "before": "==1.44.0",
+      "after": "==1.45.1"
+    },
+    {
+      "name": "opentelemetry-proto",
+      "before": "==1.44.0",
+      "after": "==1.45.1"
+    },
+    {
+      "name": "opentelemetry-sdk",
+      "before": "==1.44.0",
+      "after": "==1.45.1"
+    },
+    {
+      "name": "opentelemetry-semantic-conventions",
+      "before": "==0.65b0",
+      "after": "==0.66b1"
+    },
+    {
+      "name": "pillow",
+      "before": "==12.3.0",
+      "after": "==13.0.0"
+    },
+    {
+      "name": "pyjwt",
+      "before": "==2.10.1",
+      "after": "==2.15.1"
+    },
+    {
+      "name": "urllib3",
+      "before": "==2.7.0",
+      "after": "==2.8.0"
+    },
+    {
+      "name": "yarl",
+      "before": "==1.24.5",
+      "after": "==1.25.1"
+    }
+  ],
+  "removed_orphans": [
+    "deprecated",
+    "ecdsa",
+    "greenlet",
+    "mako",
+    "markupsafe",
+    "pyasn1",
+    "rsa",
+    "sqlalchemy",
+    "wrapt"
+  ],
+  "added": [
+    "colorama",
+    "opentelemetry-exporter-otlp-common",
+    "tzdata"
+  ],
+  "preserved_core": {
+    "chromadb": "==1.5.9",
+    "langchain": "==1.3.18",
+    "langchain-chroma": "==1.1.0",
+    "langchain-openai": "==1.6.0",
+    "langgraph": "==1.2.11",
+    "mcp": "==1.30.0",
+    "ortools": "==9.15.6755"
+  },
+  "compatibility_notes": [
+    "Pillow 13 requires Python>=3.11; project uses open/verify and RGB conversions, no removed I-mode PNG save or fromarray dtype-changing mode.",
+    "Filelock 4.2.4 requires Python>=3.11; Agent uses standard FileLock acquire/release lifecycle, must verify affected lifecycle tests.",
+    "OAuthlib 4 provider JSONP/device-grant API changes are not invoked by this application; transitive requests-oauthlib client contract permits OAuthlib>=3.0.",
+    "python-jose is not a declared dependency; the sole operator script import was replaced by PyJWT HS256. ECDSA/rsa disappeared from both resolved platform closures, not ignored by the scanner."
+  ],
+  "failed_attempt_preserved": ".codex-security-python-relock.log (initial wheel download timeout, not counted as a pass)"
+}

@@ -1,0 +1,176 @@
+{
+  "mode": "actual_browser_real_Java_PostgreSQL_Agent_HTTP_with_offline_suppliers",
+  "unique_flow_count": 8,
+  "all_latest_flows_passed": true,
+  "latest_per_flow": [
+    {
+      "latest_run": 1,
+      "title": "real browser reviews proposals and restores ordinary drafts without mixing their actions",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 2,
+      "title": "owner UI planning, durable clarification and proposal review preserve the original until a decision",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 1,
+      "title": "changed planning input disables obsolete time actions and real HTML export retains the stale warning",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 1,
+      "title": "separate guest, member and admin browser contexts enforce the actual authorization boundaries",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 3,
+      "title": "knowledge submission, original-file review and publication feed actual Research retrieval and explicit answering",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 2,
+      "title": "community owner submission, admin review, independent Cookie member copy and guest login prompt use actual HTTP",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 3,
+      "title": "browser Cookie login, CSRF denial, password change and one-time recovery work without stored JWT",
+      "status": "passed",
+      "expected_status": "passed"
+    },
+    {
+      "latest_run": 2,
+      "title": "TOTP enrollment requires confirmation and login enforces the next non-replayed code",
+      "status": "passed",
+      "expected_status": "passed"
+    }
+  ],
+  "runs": [
+    {
+      "id": 1,
+      "raw_report_sha256": "fac01b5a5921020309d4ae38eb2dc527f69568819157abc3b8e4380e0746e8f3",
+      "private_diagnostics_retained": true,
+      "tests": [
+        {
+          "title": "real browser reviews proposals and restores ordinary drafts without mixing their actions",
+          "status": "passed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "owner UI planning, durable clarification and proposal review preserve the original until a decision",
+          "status": "timedOut",
+          "expected_status": "passed"
+        },
+        {
+          "title": "changed planning input disables obsolete time actions and real HTML export retains the stale warning",
+          "status": "passed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "separate guest, member and admin browser contexts enforce the actual authorization boundaries",
+          "status": "passed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "knowledge submission, original-file review and publication feed actual Research retrieval and explicit answering",
+          "status": "failed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "community owner submission, admin review, independent Cookie member copy and guest login prompt use actual HTTP",
+          "status": "timedOut",
+          "expected_status": "passed"
+        },
+        {
+          "title": "browser Cookie login, CSRF denial, password change and one-time recovery work without stored JWT",
+          "status": "failed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "TOTP enrollment requires confirmation and login enforces the next non-replayed code",
+          "status": "failed",
+          "expected_status": "passed"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "raw_report_sha256": "d88de18cd5a2a47781c1d6d1fead4de6b40ab147a5fbb35e83416f30847d43ea",
+      "private_diagnostics_retained": true,
+      "tests": [
+        {
+          "title": "owner UI planning, durable clarification and proposal review preserve the original until a decision",
+          "status": "passed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "knowledge submission, original-file review and publication feed actual Research retrieval and explicit answering",
+          "status": "failed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "community owner submission, admin review, independent Cookie member copy and guest login prompt use actual HTTP",
+          "status": "passed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "browser Cookie login, CSRF denial, password change and one-time recovery work without stored JWT",
+          "status": "failed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "TOTP enrollment requires confirmation and login enforces the next non-replayed code",
+          "status": "passed",
+          "expected_status": "passed"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "raw_report_sha256": "758945a758d54b7889764a8c3a18507b32f8f5a9b81f0a8b1da15a7a9f713e72",
+      "private_diagnostics_retained": true,
+      "tests": [
+        {
+          "title": "knowledge submission, original-file review and publication feed actual Research retrieval and explicit answering",
+          "status": "passed",
+          "expected_status": "passed"
+        },
+        {
+          "title": "browser Cookie login, CSRF denial, password change and one-time recovery work without stored JWT",
+          "status": "passed",
+          "expected_status": "passed"
+        }
+      ]
+    }
+  ],
+  "diagnostics_classification": {
+    "run1": [
+      "Owner flow attempted to fill a readonly date input; corrected to actual calendar selection.",
+      "Community approval button accessible name has the Ant Chinese-character space; fixed locator.",
+      "Research provider fixture could not parse a collapsed section heading; production correctly returned extractive_fallback.",
+      "Actual AccountSecurity forms lacked model bindings and did not POST."
+    ],
+    "run2": [
+      "Research fixture additionally assumed section heading equals source title; corrected fixture only; original E2E input and business support checks retained.",
+      "Actual Login recovery form lacked a model binding and did not POST."
+    ],
+    "run3": [
+      "Only the two remaining failed flows rerun; both passed."
+    ]
+  },
+  "provenance": [
+    "Run1 used isolated candidate v1; run2 and run3 used candidate v2.",
+    "Run3 frontend assets were copied from exact image into the retained isolated frontend; candidate-frontend-overlay.json records all hashes.",
+    "A validation-only provider file was mounted read-only. No business response was fulfilled by browser interception.",
+    "External browser resources, including map SDK, were blocked. No live-provider quality or external-user feedback claim."
+  ],
+  "real_paid_provider_calls": 0,
+  "new_general_accuracy_claim": false
+}

@@ -1,0 +1,424 @@
+{
+  "scope": "hardened isolated mount-snapshot restore with actual uvicorn Agent",
+  "project": "trip-opt-hardened-20261026",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "started_at": "2026-10-26T13:30:17.183395+00:00",
+  "passed": true,
+  "execute": true,
+  "steps": [
+    {
+      "stage": "verify_fixed_release_source_and_probe",
+      "at": "2026-10-26T13:30:17.185529+00:00"
+    },
+    {
+      "stage": "maintenance_backup_and_local_replica",
+      "at": "2026-10-26T13:30:22.692394+00:00"
+    },
+    {
+      "stage": "verify_all_archive_hashes_and_extract_fresh",
+      "at": "2026-10-26T13:31:37.211862+00:00"
+    },
+    {
+      "stage": "create_independent_hardened_restore_agent",
+      "at": "2026-10-26T13:31:38.333151+00:00"
+    },
+    {
+      "stage": "transfer_probe_as_actual_appuser_and_verify_uvicorn_readiness",
+      "at": "2026-10-26T13:31:39.879609+00:00"
+    },
+    {
+      "stage": "fresh_process_reads_restored_independent_chroma",
+      "at": "2026-10-26T13:31:41.298153+00:00"
+    }
+  ],
+  "errors": [],
+  "automatic_cleanup": false,
+  "resource": {
+    "name": "trip-opt-hardened-file-restore-20261026-agent",
+    "id": "4e5dc16d01d3cbe8d552bc525098e606b97357d6d1f6a1fdb86bf4e289d6d170",
+    "created": true,
+    "retained": true,
+    "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "final_state": "exited",
+    "stop_verified": true
+  },
+  "direct_external_paid_calls": 0,
+  "boundaries": [
+    "Restores three file archives and starts an independent real Agent using restored runtime/Chroma.",
+    "The existing running Java service/dataset identity is reused. No PostgreSQL database is restored or modified by this runner's explicit operations.",
+    "This is not independent PostgreSQL disaster recovery, an empty-daemon image restore, off-host recovery, live-provider RAG or general answer-quality proof.",
+    "knowledge_uploads is restored and hash-checked but not mounted into Agent; /app/logs and /tmp are fresh tmpfs, not persistent log recovery.",
+    "Source maintenance restores the original four states; finally only stops this run's uniquely owned new restore Agent. All objects/files/backups remain retained.",
+    "Readiness/identity may read the same live Java service. No planning/model/map/remote-embedding request is made by this runner; component read uses explicit deterministic embeddings."
+  ],
+  "stage": "fresh_process_reads_restored_independent_chroma",
+  "source_before": {
+    "agent": {
+      "id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "running": true,
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_runtime",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_runtime/_data",
+          "Destination": "/app/runtime",
+          "RW": true
+        },
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_chroma",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_chroma/_data",
+          "Destination": "/app/data/chroma",
+          "RW": true
+        }
+      ]
+    },
+    "frontend": {
+      "id": "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+      "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "running": true,
+      "mounts": []
+    },
+    "backend": {
+      "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+      "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "running": true,
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_migration_uploads",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_migration_uploads/_data",
+          "Destination": "/data/uploads",
+          "RW": true
+        }
+      ]
+    },
+    "postgres": {
+      "id": "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+      "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "running": true,
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_migration_database",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_migration_database/_data",
+          "Destination": "/var/lib/postgresql/data",
+          "RW": true
+        }
+      ]
+    }
+  },
+  "images": {
+    "backend": {
+      "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "fixed_release_matches": true,
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "official_postgres_separately_pinned": false
+    },
+    "agent": {
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "fixed_release_matches": true,
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "official_postgres_separately_pinned": false
+    },
+    "postgres": {
+      "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "fixed_release_matches": true,
+      "revision": null,
+      "official_postgres_separately_pinned": true
+    },
+    "frontend": {
+      "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "fixed_release_matches": true,
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "official_postgres_separately_pinned": false
+    }
+  },
+  "snapshot_writer_checks": [
+    {
+      "archive": "knowledge_uploads",
+      "volume": "trip-opt-hardened-20261026_migration_uploads",
+      "no_other_running_writer": true
+    },
+    {
+      "archive": "chroma",
+      "volume": "trip-opt-hardened-20261026_candidate_chroma",
+      "no_other_running_writer": true
+    },
+    {
+      "archive": "agent-runtime",
+      "volume": "trip-opt-hardened-20261026_candidate_runtime",
+      "no_other_running_writer": true
+    }
+  ],
+  "probe_report_sha256": "6649b64ad521e80270de3a16268ef33fc4e798aede550b9493ec1443e359616f",
+  "probe_script_sha256": "21b3306e2d7c451b8f9e68ebe46193488b24ddd0d1eb8264af4eda497c0bd13c",
+  "release_metadata_sha256": "19f2e16271b51867b887d87a4565b80d6306f14e77a01061015629f4197f673b",
+  "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+  "maintenance": {
+    "operation": "backup",
+    "project": "trip-opt-hardened-20261026",
+    "before": {
+      "agent": {
+        "id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+        "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "running": true
+      },
+      "frontend": {
+        "id": "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+        "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+        "running": true
+      },
+      "backend": {
+        "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+        "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+        "running": true
+      },
+      "postgres": {
+        "id": "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "running": true
+      }
+    },
+    "executed": true,
+    "rpo_target_seconds": 86400,
+    "rto_target_seconds": 3600,
+    "targets_are_objectives_not_measured_guarantees": true,
+    "image_preflight": {
+      "passed": true,
+      "images": [
+        {
+          "service": "backend",
+          "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+          "status": "verified"
+        },
+        {
+          "service": "agent",
+          "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+          "status": "verified"
+        },
+        {
+          "service": "postgres",
+          "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+          "status": "verified"
+        },
+        {
+          "service": "frontend",
+          "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+          "status": "verified"
+        }
+      ],
+      "missing_image_ids": []
+    },
+    "execution_started": true,
+    "errors": [],
+    "ready_after_restore": {
+      "backend": true,
+      "agent": true
+    },
+    "backup": "E:\\project\\langchain-trip-planner\\backups\\optimization-hardened-20261026\\scheduled-20261026T133026Z",
+    "local_verified": true,
+    "replica": {
+      "path": "E:\\project\\langchain-trip-planner\\backups\\optimization-hardened-replicas-20261026\\scheduled-20261026T133026Z",
+      "verified": true,
+      "off_host": false,
+      "configured_remote_target": false,
+      "failure_domain_verified": false,
+      "boundary": "Copy bytes verified; a UNC hostname alone does not prove an independent host or disaster-recovery domain."
+    },
+    "after": {
+      "agent": {
+        "id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+        "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "running": true
+      },
+      "frontend": {
+        "id": "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+        "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+        "running": true
+      },
+      "backend": {
+        "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+        "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+        "running": true
+      },
+      "postgres": {
+        "id": "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "running": true
+      }
+    },
+    "elapsed_seconds": 64.13,
+    "original_running_state_restored": true,
+    "passed": true
+  },
+  "restore_directory": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb",
+  "archives": {
+    "knowledge_uploads": {
+      "archive_sha256": "6625bd4d28a080b430070edc60ecab19af150a5f05bc81279f97a53048150c8e",
+      "inventory_sha256": "ec9b2d9308c4dda71956481df8d146387a3760e2ed1e548565da027c28e265c5",
+      "file_count": 1,
+      "full_inventory_matches": true,
+      "marker_matches_without_overwrite": true,
+      "restored_to": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb\\knowledge_uploads"
+    },
+    "chroma": {
+      "archive_sha256": "8c43dd70dd969e5453c62dd7a274d51e616fc5c80fdec634c780010dcc436f85",
+      "inventory_sha256": "207bfeef880f57821a625578afeb8d58c3cbd2b79c20bb9b49826e6f0de126ae",
+      "file_count": 7,
+      "full_inventory_matches": true,
+      "marker_matches_without_overwrite": true,
+      "restored_to": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb\\chroma"
+    },
+    "agent-runtime": {
+      "archive_sha256": "d82a1618e89642322c04919962af8fb198160ac049d78266b32c2da59e45effb",
+      "inventory_sha256": "dad6ed5d5b2580bb41d4f4f457ff3834a218c60989ff8c8e2cda8cd676425889",
+      "file_count": 4,
+      "full_inventory_matches": true,
+      "marker_matches_without_overwrite": true,
+      "restored_to": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb\\agent-runtime"
+    }
+  },
+  "canary_snapshot": {
+    "database_directory": "/app/data/chroma/.hardened-chroma-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+    "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+    "sqlite_sha256": "78d7e64e903eaa60ae1c7c66587fe8da24e02d3c3b4f89af9f64f42e96ab1b02",
+    "sqlite_bytes": 188416,
+    "source_runtime_and_chroma_write_canaries_match": true
+  },
+  "restore_boundary": {
+    "read_only_rootfs": true,
+    "cap_drop_all": true,
+    "no_new_privileges": true,
+    "tmpfs": {
+      "/tmp": "rw,nosuid,nodev,noexec,size=128m,uid=1000,gid=1000,mode=1777",
+      "/app/logs": "rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000,mode=0750"
+    },
+    "canonical_environment_matches_except_enroll_false": true,
+    "secrets_forwarded_by_environment_only": true,
+    "new_network_created": false,
+    "postgres_restored": false
+  },
+  "actual_restore_agent": {
+    "process": {
+      "pid1_cmdline": [
+        "/usr/local/bin/python3.11",
+        "/usr/local/bin/uvicorn",
+        "app.agent_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9000",
+        "--workers",
+        "1"
+      ],
+      "pid1_status": {
+        "Uid": "1000\t1000\t1000\t1000",
+        "Gid": "1000\t1000\t1000\t1000",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1"
+      },
+      "probe_status": {
+        "Uid": "1000\t1000\t1000\t1000",
+        "Gid": "1000\t1000\t1000\t1000",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1"
+      },
+      "probe_effective_uid": 1000,
+      "python_bytecode_writes_disabled": true
+    },
+    "rootfs": {
+      "read_only": true,
+      "read_only_required": true,
+      "mount": {
+        "target": "/",
+        "options": [
+          "ro",
+          "relatime"
+        ],
+        "filesystem": "overlay"
+      },
+      "boundary": "Observed mount flags; no write attempt to the application/root filesystem."
+    },
+    "readiness": {
+      "url": "http://127.0.0.1:9000/readyz",
+      "status": 200,
+      "service": "trip-agent",
+      "rag_status_from_running_process": "not_initialized_or_degraded",
+      "body_sha256": "115527440f04c13f53a7796c6a30705b2037aaca31d26b9b9b420e68251b4c20"
+    }
+  },
+  "restored_chroma_fresh_process": {
+    "mode": "read",
+    "stored_count": 2,
+    "readback_verified": true,
+    "retrieval_verified": true,
+    "collection": "hardened_probe_c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+    "database_directory": "/app/data/chroma/.hardened-chroma-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+    "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+    "boundary": "Explicit deterministic-embedding component snapshot readback; not full PostgreSQL disaster recovery or real-provider RAG verification."
+  },
+  "source_after": {
+    "agent": {
+      "id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "running": true,
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_runtime",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_runtime/_data",
+          "Destination": "/app/runtime",
+          "RW": true
+        },
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_chroma",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_chroma/_data",
+          "Destination": "/app/data/chroma",
+          "RW": true
+        }
+      ]
+    },
+    "frontend": {
+      "id": "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+      "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "running": true,
+      "mounts": []
+    },
+    "backend": {
+      "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+      "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "running": true,
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_migration_uploads",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_migration_uploads/_data",
+          "Destination": "/data/uploads",
+          "RW": true
+        }
+      ]
+    },
+    "postgres": {
+      "id": "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+      "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "running": true,
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_migration_database",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_migration_database/_data",
+          "Destination": "/var/lib/postgresql/data",
+          "RW": true
+        }
+      ]
+    }
+  },
+  "source_four_original_id_image_state_mounts_unchanged": true,
+  "finished_at": "2026-10-26T13:31:51.900972+00:00",
+  "elapsed_seconds": 94.716
+}

@@ -1,0 +1,10 @@
+{
+  "project": "trip-opt-hardened-20261026",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "passed": true,
+  "real_agent_image_cmd": true,
+  "explicit_browser_provider_fixture": true,
+  "private_log": "E:\\project\\langchain-trip-planner\\.codex-optimization-hardened-start.log",
+  "daily_replaced": false,
+  "docker_deletion": false
+}

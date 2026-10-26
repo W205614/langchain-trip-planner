@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "pending_independent_review",
+  "dataset_type": "synthetic_counterexamples_not_live_travel_truth",
+  "instructions": "An independent human reviewer should assess the shuffled candidate statements against each excerpt, label citation legality, textual support, factual currency and question relevance separately. Do not use the production matcher or the generating model as the independent evaluator. Do not infer real-world truth from synthetic excerpts.",
+  "rubric": [
+    "citation_id_legal",
+    "full_claim_supported",
+    "numeric_values_and_negation_preserved",
+    "relevant_to_question",
+    "fresh_enough_for_claim",
+    "demo_label_preserved",
+    "unanswerable_is_acknowledged"
+  ],
+  "cases": [
+    {
+      "id": "R01",
+      "query": "周一开放吗？",
+      "excerpt": "每周一闭馆。",
+      "candidate_a": "每周一开放。[1]",
+      "candidate_b": "每周一闭馆。[1]"
+    },
+    {
+      "id": "R02",
+      "query": "票价多少？",
+      "excerpt": "票价1.0元。",
+      "candidate_a": "票价10元。[1]",
+      "candidate_b": "票价1.0元。[1]"
+    },
+    {
+      "id": "R03",
+      "query": "今天还要预约吗？",
+      "excerpt": "2020年规则：无需预约。",
+      "candidate_a": "今天无需预约。[1]",
+      "candidate_b": "这份旧资料不能证明今天的预约要求。"
+    },
+    {
+      "id": "R04",
+      "query": "如何预约？",
+      "excerpt": "地铁站距离景区500米。",
+      "candidate_a": "通过官方小程序预约。[1]",
+      "candidate_b": "资料只说明交通距离，没有预约步骤。"
+    },
+    {
+      "id": "R05",
+      "query": "门票是否免费？",
+      "excerpt": "演示数据：门票10元，仅用于学习示例。",
+      "candidate_a": "目前门票10元。[1]",
+      "candidate_b": "演示资料写了10元，不能据此确认当前票价。"
+    },
+    {
+      "id": "R06",
+      "query": "是否开放？",
+      "excerpt": "景区周一不开放。",
+      "candidate_a": "开放。[1]",
+      "candidate_b": "景区周一不开放。[1]"
+    }
+  ],
+  "review_results": null,
+  "production_semantic_accuracy_claim": null
+}

@@ -1,0 +1,89 @@
+{
+  "reports": [
+    {
+      "label": "frontend-before",
+      "summary": "security-scans\\candidate-summary\\frontend-before.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images\\frontend\\image-vulnerabilities.json",
+      "raw_sha256": "f16901adf96d01d40741db45e36264a6cd830e20389d99fcd085b1cb8a49f8a2",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "backend-default-before",
+      "summary": "security-scans\\candidate-summary\\backend-default-before.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images\\backend\\image-vulnerabilities.json",
+      "raw_sha256": "dca88d3c627c5400df8da29c87d1ceeaa32b93e815c7ceff0ddd77219939cb1b",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "backend-noble-rejected",
+      "summary": "security-scans\\candidate-summary\\backend-noble-rejected.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images-patched\\backend\\image-vulnerabilities.json",
+      "raw_sha256": "714b8862dac74a958c121052569bcd8b155604016976094c57d7f18d63791a75",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "agent-before",
+      "summary": "security-scans\\candidate-summary\\agent-before.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images\\agent\\image-vulnerabilities.json",
+      "raw_sha256": "bd176899c0fdf7b8afd61b4edd5e70ab69db9cec0645c6879f36b286dfd9b962",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "prometheus-before",
+      "summary": "security-scans\\candidate-summary\\prometheus-before.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images\\prometheus\\image-vulnerabilities.json",
+      "raw_sha256": "03a4daf7890141bcd6d44016e6612116f069a94ff633d5db7bb4f56810b3f0eb",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "alertmanager-before",
+      "summary": "security-scans\\candidate-summary\\alertmanager-before.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images\\alertmanager\\image-vulnerabilities.json",
+      "raw_sha256": "eec77cb3ff676d39ec2316872161f0f575abae11c254f7eff814a48d8bcb6306",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "postgres-patched",
+      "summary": "security-scans\\candidate-summary\\postgres-patched.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images\\postgres\\image-vulnerabilities.json",
+      "raw_sha256": "ee641aacada232eb66013613de7f5048906a15200442d98867872e89e9940ef3",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "frontend-patched",
+      "summary": "security-scans\\candidate-summary\\frontend-patched.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images-patched\\frontend\\image-vulnerabilities.json",
+      "raw_sha256": "90e9d424db1a3fae51c570dd17ae9377d7d668f19652aa292d77a03b8c6e6d77",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "backend-pebble-removed",
+      "summary": "security-scans\\candidate-summary\\backend-pebble-removed.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images-final\\backend\\image-vulnerabilities.json",
+      "raw_sha256": "d1b8afcb10f7938cbc6fdd64f6e67a91246415b26b2df8e1be3c9ab1807d04b7",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "prometheus-patched",
+      "summary": "security-scans\\candidate-summary\\prometheus-patched.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images-patched\\prometheus\\image-vulnerabilities.json",
+      "raw_sha256": "84bb525e18ddf1ad6d005ee5725a71526a6315909501c73b189ce9983a6f7502",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "alertmanager-patched",
+      "summary": "security-scans\\candidate-summary\\alertmanager-patched.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images-patched\\alertmanager\\image-vulnerabilities.json",
+      "raw_sha256": "741bb97681aa5aa852a6229139c68d26c94d29600589931af1d1c8c13e741f3d",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    },
+    {
+      "label": "agent-final-workingtree",
+      "summary": "security-scans\\candidate-summary\\agent-final-workingtree.json",
+      "raw_report": ".cache\\security-report-raw\\candidate-images-final\\agent\\image-vulnerabilities.json",
+      "raw_sha256": "ba2c11fbacc6b932d77478343f640d7c68bdcb6614c132855785601e96edc073",
+      "scope": "actual immutable candidate image; workingtree revision, not final committed release"
+    }
+  ],
+  "raw_report_policy": "Full machine reports retained in ignored cache and future CI artifacts; committed summaries reference exact raw SHA256. No finding is removed from raw reports."
+}

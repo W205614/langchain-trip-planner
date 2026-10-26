@@ -1,0 +1,292 @@
+{
+  "source_revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "current_head_after_scan": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "status": "all_six_image_policy_gates_and_history_current_source_secret_gates_passed",
+  "scope": "Fresh final actual immutable images; scanner-policy success is not zero risk or production certification. Actual CodeQL/GitHub CI remains separate.",
+  "image_results": [
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-frontend:a01a0d7c",
+      "image_id": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "image_revision_context_verified": false
+    },
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-backend:a01a0d7c",
+      "image_id": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 212,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "image_revision_context_verified": false
+    },
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-agent:a01a0d7c",
+      "image_id": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "status": "pass_vendor_policy",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 79,
+      "contextual_not_affected": 4,
+      "all_findings": 214,
+      "exit_code": 2,
+      "vex_expires_on": "2026-11-25",
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 14,
+        "fixed_by_pinned_security_upgrade": 3,
+        "still_vulnerable_vendor_minor": 52,
+        "not_affected_component_absent": 6
+      },
+      "still_vulnerable_vendor_minor_ids": [
+        "CVE-2026-102010",
+        "CVE-2026-19499",
+        "CVE-2026-5435",
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410",
+        "CVE-2026-95619"
+      ],
+      "vendor_policy_expires_on": "2026-11-09",
+      "image_revision_context_verified": true
+    },
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-prometheus:a01a0d7c",
+      "image_id": "sha256:cf635b57aca84a440dd87636244449ac98695b068ea1a21ff440bc28b5c07d22",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "image_revision_context_verified": false
+    },
+    {
+      "scanner": "grype-image",
+      "target": "trip-opt-alertmanager:a01a0d7c",
+      "image_id": "sha256:361e00fa2ca9944d6528eeea7ced520d0481d33532f60352495f3d0d5bad928e",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 11,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "image_revision_context_verified": false
+    },
+    {
+      "scanner": "grype-image",
+      "target": "postgres:17.11-alpine",
+      "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 4,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "image_revision_context_verified": false
+    }
+  ],
+  "secrets": {
+    "tool_pins_verified_date": "2026-10-26",
+    "results": [
+      {
+        "scanner": "gitleaks-history",
+        "status": "pass",
+        "findings": 0,
+        "exit_code": 0
+      },
+      {
+        "scanner": "gitleaks-tracked",
+        "status": "pass",
+        "findings": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  "remaining_real_vulnerability_summary": "Agent retains52 rawHigh records across8 unique glibc/gcc/util-linux CVEs, vendor classifiesMinor/noDSA. They remain vulnerable; policy expires2026-11-09. Chroma4 rawserver/tenant advisories have embedded-context notaffected assessment expiring2026-11-25, not an upstream fix.",
+  "evidence_hashes": [
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\frontend\\image-summary.json",
+      "sha256": "70d142c4c697c612da91f2e9369ff991c6fa928344c8c1bc24970e71d5ee77ed"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\frontend\\image-vulnerabilities.json",
+      "sha256": "bc0f268c8ff17a2adb77768d0b5813fb587907d64f3a95db32c86d008297d1bd"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\backend\\image-summary.json",
+      "sha256": "a5c619b4fb1186ba3bf45a458658c30f0bffb254f8e3ebe3a0b8b669a009b0a3"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\backend\\image-vulnerabilities.json",
+      "sha256": "c19d2e708fc1be5818b15e4f7d1b760e30f2b95f0f7873018b292e51cbdb1e52"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\agent\\image-summary.json",
+      "sha256": "a201e6d13ea59cda8c3b3284fc719c5e1bc8a4c07e8dea1437d4140b16981fb0"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\agent\\image-vulnerabilities.json",
+      "sha256": "a10ce6cb452abcb54641d1b364efd3356c81ef7f9da95f2aea9a3de245e6180d"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\agent\\distribution-assessments.json",
+      "sha256": "834728f0ec98692e080203014447f90b6036ed322754b733a2302674d507bd4d"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\agent\\distribution-inventory.json",
+      "sha256": "bd69058f5c17db766c2193d0c245d7290eea311d9aaea85b6fa9935c7355019a"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\prometheus\\image-summary.json",
+      "sha256": "52c34da41a7b34c7079b274cfbcc9026ad8781ac159c61590c0ee16c5b50afbf"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\prometheus\\image-vulnerabilities.json",
+      "sha256": "c017e5260164ef92cf015654289a0db6a41bc4ea58d8590517e5cfc79a6d1c51"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\alertmanager\\image-summary.json",
+      "sha256": "3483112fb0cda983cd5ff93c453f56fcfc586b97127dffcacd4fe1283ec8ca99"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\alertmanager\\image-vulnerabilities.json",
+      "sha256": "aac014cf7fcddc7630fbf6d6520350d8df3efed174f8b242a0b0eeba2f1a8c27"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\postgres\\image-summary.json",
+      "sha256": "ef5bca3ba670908a83431a1100e9b8ef00907dff9d5a32dc96dd472fcf9cef34"
+    },
+    {
+      "file": ".cache\\security-report-raw\\release-a01a0d7c\\postgres\\image-vulnerabilities.json",
+      "sha256": "63173d50582ab96d3a0ecaa0d4299d15807d3e61e0f850c33104c67cb56d45fb"
+    }
+  ],
+  "retained_local_resources": [
+    {
+      "name": "trip-security-inventory-d5bb2a85a6c5",
+      "container_id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+      "image_id": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+      "purpose": "stopped image inventory extraction; no image command executed",
+      "business_data": false,
+      "status": "retained",
+      "cleanup_explicit": false
+    },
+    {
+      "name": "trip-security-inventory-33baec0ce676",
+      "container_id": "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+      "image_id": "sha256:444577029d9564696c939756299447c09507a8867ad61e6867034b5d216e0b74",
+      "purpose": "stopped image inventory extraction; no image command executed",
+      "business_data": false,
+      "status": "retained",
+      "cleanup_explicit": false
+    },
+    {
+      "name": "trip-security-inventory-8f213fe9e1a1",
+      "container_id": "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+      "image_id": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "purpose": "stopped image inventory extraction; no image command executed",
+      "business_data": false,
+      "status": "retained",
+      "cleanup_explicit": false
+    },
+    {
+      "container_name": "trip-security-apt-metadata-bfad86d78a6e",
+      "container_id": "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+      "purpose": "Read signed-index metadata for exactly two library security updates; tmpfs fixes first read-only-temp failure",
+      "business_data": false,
+      "disposition": "retained_for_authorized_window"
+    },
+    {
+      "container_name": "trip-security-apt-metadata-1e2ac7f2d9e7",
+      "container_id": "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+      "purpose": "Read signed-index metadata for exactly two library security updates",
+      "business_data": false,
+      "disposition": "retained_for_authorized_window"
+    },
+    {
+      "purpose": "retained default lifecycle fixture",
+      "containers": [
+        {
+          "name": "trip-monitor-smoke-ccc7737ced39-receiver",
+          "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+          "business_data": false
+        },
+        {
+          "name": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+          "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+          "business_data": false
+        }
+      ],
+      "network": {
+        "name": "trip-monitor-smoke-ccc7737ced39",
+        "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+      },
+      "status": "stopped containers and retained network",
+      "business_data": false
+    }
+  ],
+  "local_cleanup": "None performed during final scans. Stopped inventory containers retained with exact ID manifests. Earlier premature ephemeral cleanup remains disclosed separately in docs/evidence/optimization-20261026/security-resource-window-deviation.json.",
+  "public_poc_report_handling": "Old pip-audit advisory narrative contained public demonstration JWT, not project secret. Original cache report and its SHA are retained; committed version removes descriptions only, preserving IDs/versions/fixes. No broad ignore rule added. Final full-history+current/untracked-source scan found0.",
+  "verification_record_notes": [
+    "Raw image_revision_context_verified applies to Agent VEX/vendor eligibility only; non-Agent entries do not ask for that context. All5 application/monitor full revision labels were independently checked against sourceSHA in cohort.json.",
+    "Native ABI2 andChroma3 actual candidate runtime fixture tests passed by coordinator before final CI/helper-only commits; final image exact native ELF hashes were rechecked. Not claimed as a second fresh fixture execution on final tag. SecurityOptimization10/Totp3/TokenService1/BrowserSession1 verified0fail,error,skip from surefire XML.",
+    "Coordinator reports8 actualbrowser cases passed; no repeatedbrowser acceptance by this subagent.",
+    "120minute setting controls newly mintedJWT; historical nonrevokedBearer follows its ownexp+token_version until revocation or naturalexpiry.",
+    "No claim here verifies publicTLS/outerproxy log pipelines, email/SMS recovery transport, offhost recovery or HA/capacity. Offhost target was explicitly deferred by user in coordinator ledger."
+  ]
+}

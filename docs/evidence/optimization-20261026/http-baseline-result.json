@@ -1,0 +1,64 @@
+{
+  "variant": "baseline",
+  "dataset_role": "frozen_development_counterexamples",
+  "input": {
+    "city": "北京",
+    "start_date": "2026-11-01",
+    "end_date": "2026-11-02",
+    "travel_days": 2,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "planning_input": {},
+    "preferences": [
+      "历史文化"
+    ]
+  },
+  "input_sha256": "2212a3909a4b51117d6920bcfef66437bbf088da3a67982cf107a81c3df45383",
+  "providers": "explicit offline substitutes",
+  "real_paid_calls": 0,
+  "cases": [
+    {
+      "id": "provider-outage-keeps-places",
+      "http_status": 404,
+      "before_poi_ids": [
+        "fixture-beijing-0",
+        "fixture-beijing-1",
+        "fixture-beijing-2",
+        "fixture-beijing-47",
+        "fixture-beijing-46",
+        "fixture-beijing-45"
+      ],
+      "after_poi_ids": [
+        "fixture-beijing-0",
+        "fixture-beijing-1",
+        "fixture-beijing-2",
+        "fixture-beijing-47",
+        "fixture-beijing-46",
+        "fixture-beijing-45"
+      ],
+      "preserved": true
+    },
+    {
+      "id": "changed-input-rejects-old-time-lock",
+      "http_status": 200,
+      "error_code": null,
+      "rejected_as_stale": false
+    },
+    {
+      "id": "clarification-retains-original-intent",
+      "first_status": "needs_clarification",
+      "second_http_status": 503,
+      "created_revision_task": false,
+      "reported_intent": null
+    }
+  ],
+  "not_proven": [
+    "general accuracy",
+    "independent human review",
+    "live-provider quality",
+    "capacity",
+    "HA"
+  ],
+  "started_at": "2026-10-26T08:44:34.757612+00:00",
+  "completed_at": "2026-10-26T08:44:43.467026+00:00"
+}

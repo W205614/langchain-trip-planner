@@ -1,0 +1,28 @@
+{
+  "scope": "Route observation TTL propagation; no new provider calls or budget-counter changes",
+  "provider_contract": ["observed_at", "expires_at"],
+  "python": {
+    "rest_and_mcp": "Fresh route parsing stamps the actual response observation; declared provider timestamps are retained and TTL-capped. MCP normalization preserves timestamps if provided",
+    "memory_cache": "The solver keeps original observation metadata alongside existing two-element duration/verified tuples",
+    "checkpoint": "Each persisted route includes original observed_at and expires_at; restoration never assigns now to a saved route",
+    "day_output": "route_fact_expires_at carries a conservative minimum over route evidence seen while solving that day",
+    "expiry_during_solve": "Expiry is checked again after the solver returns, before feasibility classification",
+    "legacy_without_observation": "Retain the old duration for comparison, mark unverified and emit an expired deadline; do not silently make another provider request",
+    "saved_day": "A saved day must retain a still-current route deadline to be reused"
+  },
+  "java": {
+    "cache": "AmapGateway puts observation and expiry into the initial route cache value; cache hits return a copy without renewing them",
+    "quality": "PlanRules retains route observation metadata in route legs and takes a non-renewing minimum into day.route_fact_expires_at",
+    "schedule_binding": "Root-owned ScheduleDependencies must also min the returned route_fact_expires_at with other dependency expiry"
+  },
+  "tests": {
+    "python_command": ".cache/improvement-venv/Scripts/python.exe -m pytest -q -p no:cacheprovider backend/tests/test_route_fact_lifetime.py",
+    "python_cases": ["Near-expiry provider fact survives checkpoint recovery, then becomes unverified without renewal or another send", "Legacy checkpoint missing observation cannot receive a fresh thirty-minute lifetime"],
+    "python_passed": 2,
+    "java_class": "RouteFactLifetimeTest",
+    "java_status": "Handed to root for serial Maven; no claim of completion until that run",
+    "existing_full_suite_repeated": false,
+    "synthetic_fixture_note": "The old hotel-matrix replay test now explicitly injects synthetic fresh observation metadata in memory to test hotel logic; historical JSON evidence is unchanged and runtime restoration never does this"
+  },
+  "real_external_paid_calls": 0
+}

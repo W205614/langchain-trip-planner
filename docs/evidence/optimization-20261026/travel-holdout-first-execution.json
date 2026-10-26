@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-10-26T11:02:42.093146+00:00",
+  "frozen_inputs_sha256": "c07a349686ff6d0b671c0b0df86d2cd291b6c2e40fe3f9b56589d32a52ccdf79",
+  "runner_sha256": "709737ff15942fe864e86ac56a7e79951a4e00de8926be1a6fdd2b4e08817c6e",
+  "output": "E:\\project\\langchain-trip-planner\\docs\\evidence\\optimization-20261026\\travel-holdout-first-result.json",
+  "policy": "First sample execution reserved; never remove to rerun for a better result."
+}

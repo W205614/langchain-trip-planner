@@ -1,0 +1,1907 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "purpose": "Project-guide and interview handoff based on current source, not a claim of personal authorship or full acceptance.",
+  "coverage": "All requested ordinary product functions and current optimization areas; root may append final exact-revision tests and remaining external gates.",
+  "global_evidence_boundary": [
+    "Source existence is verified for each listed path.",
+    "Descriptions are implementation observations, not a claim that every feature was exercised this round.",
+    "No real paid model or provider evaluation was performed by this subtask.",
+    "No individual ownership, production adoption, accuracy gain, capacity or SLA is inferred."
+  ],
+  "features": [
+    {
+      "id": "account-register",
+      "name": "注册与登录",
+      "entry": "/login; POST /api/auth/register, /api/auth/login",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/UsersController.java",
+        "business-backend/src/main/java/com/tripplanner/security/Passwords.java",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java",
+        "frontend/src/views/Login.vue"
+      ],
+      "main_question": "注册和登录如何确认真实用户并保护密码？",
+      "answer_points": [
+        "服务端校验用户名与密码策略，保存密码哈希并校验登录凭据。",
+        "登录签发用户凭据，认证上下文由服务端创建，不能信任前端传入的角色。"
+      ],
+      "followups": [
+        {
+          "question": "密码哈希与加密有什么不同？",
+          "answer_points": [
+            "哈希用于不可逆校验，不能依靠保存明文或可逆密文实现登录。"
+          ]
+        },
+        {
+          "question": "登录失败和重复注册如何处理？",
+          "answer_points": [
+            "由服务端校验和数据库唯一约束处理，失败不能产生有效认证状态。"
+          ]
+        }
+      ],
+      "evidence_boundary": "未据此证明真实用户规模、撞库抗压或第三方身份认证。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "account-session",
+      "name": "浏览器会话、退出与凭据失效",
+      "entry": "POST /api/auth/logout; GET /api/auth/me",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java",
+        "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+        "business-backend/src/main/java/com/tripplanner/api/UsersController.java",
+        "frontend/src/services/auth.ts"
+      ],
+      "main_question": "退出登录后，旧凭据还能继续访问吗？",
+      "answer_points": [
+        "浏览器显式cookie模式把认证凭据放在HttpOnly cookie，变更请求同时校验CSRF。",
+        "服务端token版本/失效机制和客户端清理共同构成退出行为，不能只删浏览器显示状态。"
+      ],
+      "followups": [
+        {
+          "question": "HttpOnly能防住所有XSS后果吗？",
+          "answer_points": [
+            "不能；它降低脚本直接读取凭据的风险，仍须处理XSS和跨站请求。"
+          ]
+        },
+        {
+          "question": "非浏览器客户端是否还有Bearer入口？",
+          "answer_points": [
+            "显式保留既有Bearer契约，须区分浏览器cookie模式与API客户端。"
+          ]
+        }
+      ],
+      "evidence_boundary": "安全cookie策略依赖实际HTTPS入口；当前代码变化不能替代真实部署验收。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "account-recovery",
+      "name": "密码修改、恢复码与管理员MFA",
+      "entry": "/account/security; /api/auth/password, /recover, /mfa/*",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/AccountSecurityController.java",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java",
+        "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+        "frontend/src/views/AccountSecurity.vue"
+      ],
+      "main_question": "没有邮箱服务时，账号如何恢复并增强管理员保护？",
+      "answer_points": [
+        "采用恢复码与密码修改流程，敏感变更需要重新验证凭据。",
+        "管理员权限与MFA状态结合检查，不能只依赖is_admin布尔值。"
+      ],
+      "followups": [
+        {
+          "question": "恢复码泄露会怎样？",
+          "answer_points": [
+            "恢复码属于认证秘密，应安全保管、使用后轮换，不能写进日志或公开证据。"
+          ]
+        },
+        {
+          "question": "TOTP校验有哪些边界？",
+          "answer_points": [
+            "时间窗口、重复使用和密钥存储保护需要分别检查；不等于硬件密钥抗钓鱼。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不宣称实现邮箱找回、企业SSO或抗钓鱼认证。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "preferences",
+      "name": "偏好读取、保存与重置",
+      "entry": "GET/PUT/DELETE /api/preferences/me; 首页偏好",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/UsersController.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/UserMapper.java",
+        "frontend/src/views/Home.vue"
+      ],
+      "main_question": "偏好如何影响下一次规划又不覆盖既有行程？",
+      "answer_points": [
+        "偏好按当前用户持久化，读取时用于表单初值，提交规划后输入形成独立任务快照。"
+      ],
+      "followups": [
+        {
+          "question": "为什么不能直接把偏好更新应用到历史行程？",
+          "answer_points": [
+            "历史行程有独立版本和已确认内容，变更需走显式编辑或改排。"
+          ]
+        },
+        {
+          "question": "异常偏好如何防止进入模型？",
+          "answer_points": [
+            "服务端限制数组、字符串及交通住宿输入，模型输出不能替代输入契约。"
+          ]
+        }
+      ],
+      "evidence_boundary": "偏好是规划输入，不是用户长期画像准确性的证明。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "planning-create",
+      "name": "智能规划与持久化任务",
+      "entry": "首页提交; POST /api/trip/tasks",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/TasksController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "backend/app/agents/trip_planner_agent.py",
+        "frontend/src/views/Home.vue"
+      ],
+      "main_question": "规划耗时较长时，为什么先创建任务而不是一直等HTTP响应？",
+      "answer_points": [
+        "Java保存任务与截止时间、幂等键后，由受限worker调用Python Agent。",
+        "Python生成计划与质量结果，Java核对协议和可信候选后持久化。"
+      ],
+      "followups": [
+        {
+          "question": "页面刷新会丢失任务吗？",
+          "answer_points": [
+            "任务保存在业务库，可重新读取任务状态；浏览器不是任务事实源。"
+          ]
+        },
+        {
+          "question": "幂等能保证模型费用恰好一次吗？",
+          "answer_points": [
+            "只能限制业务重复提交；发送后结果未知仍可能有费用，外部调用账本不承诺费用Exactly Once。"
+          ]
+        }
+      ],
+      "evidence_boundary": "单机任务实现不代表多机高可用或真实模型并发容量。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "task-lifecycle",
+      "name": "任务查看、取消、重试与显式恢复",
+      "entry": "/history?tab=tasks; /api/trip/tasks/{id}/*",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java",
+        "backend/app/services/durable_execution.py",
+        "frontend/src/views/History.vue"
+      ],
+      "main_question": "任务中断后如何恢复而不让旧执行覆盖新结果？",
+      "answer_points": [
+        "终态任务保留，新恢复任务关联祖先，兼容且未过期阶段才复用。",
+        "execution_id、任务状态和截止时间限制写回；助手待确认提案不能通过通用恢复绕过确认。"
+      ],
+      "followups": [
+        {
+          "question": "取消能停止已经发送的外部调用吗？",
+          "answer_points": [
+            "取消影响本地执行和后续调用，已发出的请求可能继续计费。"
+          ]
+        },
+        {
+          "question": "版本变化后能复用旧草稿吗？",
+          "answer_points": [
+            "输入哈希、模型/提示/规则兼容性和事实有效期都要满足，不能只凭任务编号复用。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不宣称所有外部结果都能恢复，也不宣称中断零费用。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-manual",
+      "name": "手动新增行程",
+      "entry": "POST /api/trips",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/TripsController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/PlanRules.java"
+      ],
+      "main_question": "没有Agent时，能否创建和保存手动行程？",
+      "answer_points": [
+        "手动创建通过Java业务入口校验输入与质量，再保存行程、版本和索引同步任务。"
+      ],
+      "followups": [
+        {
+          "question": "手动输入的POI能视为可信地图事实吗？",
+          "answer_points": [
+            "不能；输入事实需要独立来源与核验，未核验字段不得装作已验证。"
+          ]
+        },
+        {
+          "question": "能否绕过版本与权限直接写数据库？",
+          "answer_points": [
+            "公开入口仍走用户身份、校验及业务事务，不以Agent不可用为理由跳过。"
+          ]
+        }
+      ],
+      "evidence_boundary": "存在后端入口不等于所有前端页面都有完整的手动录入体验。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "history-read-delete",
+      "name": "历史分页、详情与删除",
+      "entry": "/history; GET/DELETE /api/history/{id}",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripLedgerService.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java",
+        "frontend/src/views/History.vue"
+      ],
+      "main_question": "历史记录如何隔离用户，删除还涉及哪些关联数据？",
+      "answer_points": [
+        "查询使用当前用户归属条件，删除撤销分享、解绑会话并写索引删除Outbox。",
+        "版本快照与业务表的外键生命周期需要一起考虑。"
+      ],
+      "followups": [
+        {
+          "question": "猜到其他用户id能查看吗？",
+          "answer_points": [
+            "服务端按用户归属或明确成员授权校验，不能靠id难猜保障隔离。"
+          ]
+        },
+        {
+          "question": "删除行程等于所有备份与执行副本立即消失吗？",
+          "answer_points": [
+            "不等于；任务、快照、审计和备份应遵守分别声明的数据保留政策。"
+          ]
+        }
+      ],
+      "evidence_boundary": "删除业务记录不应被描述为全系统即时擦除。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-edit",
+      "name": "编辑行程与并发冲突",
+      "entry": "结果页编辑; PUT /api/history/{id}",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+        "frontend/src/views/Result.vue"
+      ],
+      "main_question": "两个窗口同时编辑时如何防止后保存覆盖先保存？",
+      "answer_points": [
+        "If-Match携带行程版本，数据库条件更新只接受当前版本。",
+        "编辑影响排程依赖时，旧时间证明失效并由页面显示待核验。"
+      ],
+      "followups": [
+        {
+          "question": "只改景点顺序能保留旧到达时间吗？",
+          "answer_points": [
+            "路线和时间依赖顺序；不能保留旧证明冒充新安排已核验。"
+          ]
+        },
+        {
+          "question": "冲突后应怎样处理？",
+          "answer_points": [
+            "返回明确冲突并重新读取版本，再让用户决定合并或重新编辑。"
+          ]
+        }
+      ],
+      "evidence_boundary": "乐观锁解决丢失更新，不自动实现多用户实时合并。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-version",
+      "name": "历史版本查看与恢复",
+      "entry": "/api/trips/{id}/versions; POST /api/trips/{id}/restore",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/TripsController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripLedgerService.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/TripVersionMapper.java"
+      ],
+      "main_question": "恢复历史版本为什么还要校验当前版本和执行约束？",
+      "answer_points": [
+        "恢复是一次新的业务写入，需要当前版本匹配、来源版本存在和规划保护检查。",
+        "恢复成功会产生新版本并同步派生索引。"
+      ],
+      "followups": [
+        {
+          "question": "恢复会倒退数据库版本号吗？",
+          "answer_points": [
+            "不会把并发控制退回旧值，恢复作为新一次变更捕获。"
+          ]
+        },
+        {
+          "question": "过去可行的安排今天一定可行吗？",
+          "answer_points": [
+            "事实具有时效；恢复内容不自动刷新营业、预订或路线事实。"
+          ]
+        }
+      ],
+      "evidence_boundary": "版本恢复不等于实时重新规划。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-export",
+      "name": "图片、PDF与离线HTML导出",
+      "entry": "结果页导出菜单",
+      "source_paths": [
+        "frontend/src/views/Result.vue",
+        "frontend/src/composables/useTripExport.ts"
+      ],
+      "main_question": "导出如何保持屏幕上质量状态与文件一致？",
+      "answer_points": [
+        "导出使用当前展示的行程与质量信息，图片/PDF/HTML由独立导出组合逻辑处理。"
+      ],
+      "followups": [
+        {
+          "question": "离线文件是否包含实时服务能力？",
+          "answer_points": [
+            "静态导出不能承诺实时地图、天气或模型问答，离线HTML仅保留本地可运行展示。"
+          ]
+        },
+        {
+          "question": "导出能证明内容已核验吗？",
+          "answer_points": [
+            "文件生成不改变业务质量状态，需保留未核验和草稿提示。"
+          ]
+        }
+      ],
+      "evidence_boundary": "排版、跨浏览器下载和离线资源完整性需要实际文件与浏览器验收。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "share-link",
+      "name": "分享创建、查看和撤销",
+      "entry": "结果页分享; /api/trips/{id}/shares; /shared/{token}",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/SharesController.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/ShareMapper.java",
+        "frontend/src/views/SharedTrip.vue"
+      ],
+      "main_question": "分享链接如何避免公开用户完整账户数据？",
+      "answer_points": [
+        "分享采用独立随机token和快照，服务端保存token哈希并控制有效期与撤销。"
+      ],
+      "followups": [
+        {
+          "question": "修改原行程后分享内容会怎样？",
+          "answer_points": [
+            "分享包含记录版本与快照，展示语义应按实现核对，不能默认是实时协作视图。"
+          ]
+        },
+        {
+          "question": "拿到链接的人能修改原行程吗？",
+          "answer_points": [
+            "分享读取与拥有者写权限分离，链接本身不授予原行程编辑权限。"
+          ]
+        }
+      ],
+      "evidence_boundary": "token链接是持有即访问的能力，泄露和过期策略仍需产品说明。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "share-copy",
+      "name": "分享行程复制",
+      "entry": "POST /api/shared-trips/{token}/copy",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/SharesController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripLedgerService.java",
+        "frontend/src/views/SharedTrip.vue"
+      ],
+      "main_question": "复制分享行程如何成为新用户自己的数据？",
+      "answer_points": [
+        "复制写入当前用户的新行程，不能把分享来源的owner或版本标识当作当前用户权限。"
+      ],
+      "followups": [
+        {
+          "question": "复制后会继续跟随原作者编辑吗？",
+          "answer_points": [
+            "复制是独立记录，不能宣称双向实时同步。"
+          ]
+        },
+        {
+          "question": "复制能沿用原计划的核验有效性吗？",
+          "answer_points": [
+            "路线、日期和事实时效需重新判断，来源快照不代表当前可行。"
+          ]
+        }
+      ],
+      "evidence_boundary": "复制并未获得原作者账号或私有上下文。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "collab-members",
+      "name": "邀请、接受、移除与主动离开",
+      "entry": "行程执行页; /api/trips/{id}/members/*",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/TripOperationsController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+        "frontend/src/views/TripWorkspace.vue"
+      ],
+      "main_question": "同行邀请为什么需要接受，viewer与editor有什么差别？",
+      "answer_points": [
+        "待接受邀请不产生访问权限；接受后按viewer/editor授权。",
+        "移除成员或主动离开终止后续访问，写操作在事务内锁定成员授权行。"
+      ],
+      "followups": [
+        {
+          "question": "编辑正在执行时移除成员怎样避免竞态？",
+          "answer_points": [
+            "业务写持有成员FOR SHARE锁，成员移除与写入要遵守同一数据库锁边界。"
+          ]
+        },
+        {
+          "question": "仅前端隐藏按钮足够吗？",
+          "answer_points": [
+            "不够；每个读取、写入和成员操作由服务端验证授权。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不提供实时共同编辑或组织级多租户能力。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "collab-reorder",
+      "name": "协同工作台与当天调序",
+      "entry": "PUT /api/trips/{id}/workspace/day-order",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+        "frontend/src/views/TripWorkspace.vue"
+      ],
+      "main_question": "编辑成员怎样只调整既有景点顺序而不越权替换行程？",
+      "answer_points": [
+        "验证当天POI集合和重复项，只重排现有景点；写入同时校验版本、规划保护并记录操作者。"
+      ],
+      "followups": [
+        {
+          "question": "为什么重排后仍标记路线未核验？",
+          "answer_points": [
+            "旧路线与时间依赖原顺序，需要重新计算，不能直接沿用。"
+          ]
+        },
+        {
+          "question": "viewer、已被移除editor能调用接口吗？",
+          "answer_points": [
+            "服务端拒绝，不依赖页面角色标签。"
+          ]
+        }
+      ],
+      "evidence_boundary": "调序不自动获得全局最优路线。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "explore-poi",
+      "name": "探索地点与POI详情",
+      "entry": "/explore; /api/map/poi, /api/poi/detail/{id}",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+        "backend/app/services/amap_service.py",
+        "backend/app/services/amap_mcp_service.py",
+        "frontend/src/views/Explore.vue"
+      ],
+      "main_question": "探索搜索如何区分用户输入与地图供应商返回的地点？",
+      "answer_points": [
+        "用户关键词经契约校验后交由地图能力搜索，结果以供应商POI编号关联详情与收藏。"
+      ],
+      "followups": [
+        {
+          "question": "搜索名称相近就是同一地点吗？",
+          "answer_points": [
+            "不是；需要POI编号、城市及坐标归属等信息，不能只比较短名称。"
+          ]
+        },
+        {
+          "question": "供应商不可用时怎样展示？",
+          "answer_points": [
+            "明确能力不可用或空结果，不虚构地点与营业事实。"
+          ]
+        }
+      ],
+      "evidence_boundary": "地图搜索不代表景区官方预约、票务或营业承诺。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "explore-favorites",
+      "name": "收藏保存、查看与取消",
+      "entry": "/explore; /api/favorites",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/FavoritesController.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/FavoriteMapper.java",
+        "frontend/src/views/Explore.vue"
+      ],
+      "main_question": "收藏为什么按用户和供应商POI编号做唯一约束？",
+      "answer_points": [
+        "按当前用户保存供应商地点快照，重复收藏不应产生无界重复数据。"
+      ],
+      "followups": [
+        {
+          "question": "取消他人收藏如何防护？",
+          "answer_points": [
+            "删除条件包含当前用户身份，不接受前端伪造owner。"
+          ]
+        },
+        {
+          "question": "收藏快照是否永远最新？",
+          "answer_points": [
+            "不是；展示的地点快照与实时详情需要区分。"
+          ]
+        }
+      ],
+      "evidence_boundary": "收藏不是票务预订、价格锁定或出行事实核验。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "explore-photo",
+      "name": "POI图片与占位降级",
+      "entry": "/api/poi/photo/image",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+        "backend/app/services/poi_photos.py"
+      ],
+      "main_question": "地点图片如何限制来源并处理缺图？",
+      "answer_points": [
+        "图片通过受限代理处理可信POI详情来源，并区分真实图片与明确占位。"
+      ],
+      "followups": [
+        {
+          "question": "为什么不允许客户端传任意图片URL给代理？",
+          "answer_points": [
+            "会扩大SSRF和资源滥用面，入口应使用服务端可验证来源。"
+          ]
+        },
+        {
+          "question": "占位图能算真实地点照片吗？",
+          "answer_points": [
+            "不能，响应和页面应保留占位来源。"
+          ]
+        }
+      ],
+      "evidence_boundary": "图片真实性和授权不能仅凭下载成功证明。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "explore-weather-route",
+      "name": "天气和路线查询",
+      "entry": "/api/map/weather; POST /api/map/route",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+        "backend/app/services/amap_service.py"
+      ],
+      "main_question": "路线和天气如何用作辅助事实而非长期保证？",
+      "answer_points": [
+        "地图网关提供超时、缓存及上游保护；结果按日期、坐标和交通方式使用。"
+      ],
+      "followups": [
+        {
+          "question": "没有路线时能把直线距离当可行路径吗？",
+          "answer_points": [
+            "不能将估计冒充已核验交通，应保留未知或降级标志。"
+          ]
+        },
+        {
+          "question": "缓存命中是否意味着数据仍适用于出行日？",
+          "answer_points": [
+            "必须核对日期、来源时间和事实范围，缓存TTL不等于业务有效期。"
+          ]
+        }
+      ],
+      "evidence_boundary": "天气预测与路况可能变化，不证明未来实际情况。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "community-submit",
+      "name": "社区投稿与审核列表",
+      "entry": "/community; POST /api/community/cards",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CommunityController.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/CommunityMapper.java",
+        "frontend/src/views/Community.vue"
+      ],
+      "main_question": "个人行程为什么需要审核后才能作为公共卡片展示？",
+      "answer_points": [
+        "投稿从本人行程生成独立公共内容，经状态与权限检查进入审核生命周期。"
+      ],
+      "followups": [
+        {
+          "question": "助手待确认方案能直接投稿吗？",
+          "answer_points": [
+            "应拒绝绕过提案确认的公开传播路径。"
+          ]
+        },
+        {
+          "question": "审核通过就能当作官方攻略吗？",
+          "answer_points": [
+            "人工审核与官方事实来源不同，来源等级和时效仍需表达。"
+          ]
+        }
+      ],
+      "evidence_boundary": "社区内容不等于独立事实真值或商业旅游产品。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "community-review-copy",
+      "name": "社区审核与复制",
+      "entry": "/community/admin; /api/community/cards/{id}/copy",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CommunityController.java",
+        "frontend/src/views/CommunityAdmin.vue",
+        "frontend/src/views/Community.vue"
+      ],
+      "main_question": "社区审核和复制各自改变哪个数据主体？",
+      "answer_points": [
+        "管理员控制公共卡片发布状态；复制为当前用户创建自己的独立行程。"
+      ],
+      "followups": [
+        {
+          "question": "普通用户能直接调用审核URL吗？",
+          "answer_points": [
+            "服务端管理员授权必须独立验证，不能只保护管理页面。"
+          ]
+        },
+        {
+          "question": "复制后原作者撤稿会自动删除用户副本吗？",
+          "answer_points": [
+            "副本生命周期不同，不能默认存在联动删除或实时同步。"
+          ]
+        }
+      ],
+      "evidence_boundary": "具体公开字段与脱敏效果需检查实际响应，不以审核状态代替隐私检查。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "knowledge-upload",
+      "name": "知识投稿上传、存储配额与原件",
+      "entry": "/knowledge; /api/knowledge/submissions",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+        "frontend/src/views/Knowledge.vue"
+      ],
+      "main_question": "文件上传怎样避免单文件限额之外的磁盘耗尽？",
+      "answer_points": [
+        "校验文件与受限大小，存储层另管理用户/全局配额、预留与实际文件对账。",
+        "原件路径由服务端生成并受归属及管理权限保护。"
+      ],
+      "followups": [
+        {
+          "question": "Content-Type可信就能安全接收文件吗？",
+          "answer_points": [
+            "不能，类型、内容、文件大小、文件名路径和提取过程分别需要限制。"
+          ]
+        },
+        {
+          "question": "写文件成功、数据库失败会怎样？",
+          "answer_points": [
+            "需要补偿或存储对账发现孤儿文件，不能仅靠正常路径统计。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不宣称已接入病毒扫描或任意格式沙箱。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "knowledge-extract",
+      "name": "资料原件读取与受控提取",
+      "entry": "管理员预览/原件; /internal/v1/documents/{id}/{version}/original",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboxWorker.java",
+        "backend/app/agent_api/extraction.py",
+        "frontend/src/views/KnowledgeAdmin.vue"
+      ],
+      "main_question": "为什么资料提取要经过Java版本和原件接口？",
+      "answer_points": [
+        "Java保管原件和版本，Agent经服务鉴权读取特定版本进行提取，不直接接受任意路径。"
+      ],
+      "followups": [
+        {
+          "question": "上传后提取成功就能立即公开检索吗？",
+          "answer_points": [
+            "不能，还需复核、发布与索引同步。"
+          ]
+        },
+        {
+          "question": "提取失败会丢失原件吗？",
+          "answer_points": [
+            "应保留业务状态、原件和可重放作业，失败不是授权删除的理由。"
+          ]
+        }
+      ],
+      "evidence_boundary": "提取文本完整性和OCR准确度需对真实资料抽样核验。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "knowledge-review-publish",
+      "name": "提取修订、复核、发布与删除",
+      "entry": "/knowledge/admin; /api/knowledge/admin/submissions/{id}/*",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/KnowledgeController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboxWorker.java",
+        "frontend/src/views/KnowledgeAdmin.vue"
+      ],
+      "main_question": "资料复核和公开发布为什么要拆成状态变化与索引同步？",
+      "answer_points": [
+        "业务库记录复核内容、来源等级和版本，Outbox在事务后同步Chroma。",
+        "删除与新版本通过索引版本水位和可见性过滤阻止过期内容复活。"
+      ],
+      "followups": [
+        {
+          "question": "管理员选择official就证明来源官方吗？",
+          "answer_points": [
+            "它是声明元数据，不是独立验证；应保留具体来源与核验边界。"
+          ]
+        },
+        {
+          "question": "删除索引失败会继续泄露已删除资料吗？",
+          "answer_points": [
+            "检索还需向Java校验当前可见性和文档版本，不能只信Chroma副本。"
+          ]
+        }
+      ],
+      "evidence_boundary": "人工复核不自动证明事实真实性与未来时效。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "knowledge-index",
+      "name": "索引作业重放、重建与可见性",
+      "entry": "/api/rag/jobs, /jobs/{kind}/{id}/replay, /rebuild",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/RagController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboxWorker.java",
+        "backend/app/agent_api/index_versions.py",
+        "backend/app/agent_api/rebuild.py"
+      ],
+      "main_question": "为什么重建索引不能通过删除业务数据库解决？",
+      "answer_points": [
+        "业务事实源是PostgreSQL，Chroma只保存可重建的派生索引。",
+        "重放受状态和版本约束，重建读取业务快照并校验水位。"
+      ],
+      "followups": [
+        {
+          "question": "旧重试能复活已删除文档吗？",
+          "answer_points": [
+            "索引水位、删除墓碑和实时可见性共同限制旧作业。"
+          ]
+        },
+        {
+          "question": "Outbox是否等于消息只处理一次？",
+          "answer_points": [
+            "网络结果不确定时可能重复投递，消费者要保持幂等与版本保护。"
+          ]
+        }
+      ],
+      "evidence_boundary": "单机索引流程不等于分布式搜索集群容灾。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "execution-checks",
+      "name": "行前检查与风险确认",
+      "entry": "行程执行页; /api/trips/{id}/checks, /risks/{id}/acknowledge",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripCheckService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+        "frontend/src/views/TripWorkspace.vue"
+      ],
+      "main_question": "行前核验为什么记录风险而不偷偷改写保存计划？",
+      "answer_points": [
+        "核验读取天气与POI事实，按行程版本持久化检查结果和风险，原计划保持用户控制。",
+        "风险确认是记录用户处理行为，不等于证明问题已经消除。"
+      ],
+      "followups": [
+        {
+          "question": "旧版本的风险能继续确认吗？",
+          "answer_points": [
+            "确认条件包含当前行程版本，过期或已处理结果应冲突拒绝。"
+          ]
+        },
+        {
+          "question": "检查current能保证所有预约和未来天气吗？",
+          "answer_points": [
+            "只能覆盖本次已检查范围，未覆盖来源与未来变化不能承诺。"
+          ]
+        }
+      ],
+      "evidence_boundary": "地图营业信息不一定适用于具体出行日，检查状态不等于全行程安全保证。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "execution-bookings",
+      "name": "预订事项新增与更新",
+      "entry": "/api/trips/{id}/commitments",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+        "frontend/src/views/TripWorkspace.vue"
+      ],
+      "main_question": "预订事项怎样与规划约束关联且避免重复记入？",
+      "answer_points": [
+        "事项记录按天、类别、状态和幂等键保存；规划细节与活动/地点、时间关联。",
+        "详细规划字段需拥有者权限，事务内校验确保拒绝时连插入及触发器一起回滚。"
+      ],
+      "followups": [
+        {
+          "question": "confirmed表示平台已向供应商付款预订吗？",
+          "answer_points": [
+            "没有外部下单集成，只表示用户登记的业务状态。"
+          ]
+        },
+        {
+          "question": "相同幂等键不同内容怎么办？",
+          "answer_points": [
+            "比对请求指纹并返回冲突，不静默覆盖。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不存在查票、真实下单或支付闭环。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "execution-expenses",
+      "name": "实际费用、汇总与作废",
+      "entry": "/api/trips/{id}/expenses; /expenses/{id}/void",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+        "frontend/src/views/TripWorkspace.vue"
+      ],
+      "main_question": "为什么费用用整数分且作废不直接删除？",
+      "answer_points": [
+        "金额精确到分，区分计划估算、确认金额和实际支出。",
+        "作废保留原记录、原因与操作者，汇总排除已作废记录。"
+      ],
+      "followups": [
+        {
+          "question": "编辑成员能作废别人的支出吗？",
+          "answer_points": [
+            "服务端按创建者或拥有者权限判断，不由前端按钮决定。"
+          ]
+        },
+        {
+          "question": "未知预订价格应记作零吗？",
+          "answer_points": [
+            "未知单独计数，不能把缺失价格混为零费用。"
+          ]
+        }
+      ],
+      "evidence_boundary": "记账不等于支付结算或财务凭证系统。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "notifications",
+      "name": "站内通知、已读与出发提醒",
+      "entry": "/inbox; /api/notifications",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripNotificationUsageService.java",
+        "frontend/src/views/TripInbox.vue"
+      ],
+      "main_question": "通知和出发提醒如何去重并限制到当前用户？",
+      "answer_points": [
+        "通知按user_id读取和标记已读，以用户和事件键唯一约束去重。",
+        "定时提醒仅由持有单实例所有权的调度器执行。"
+      ],
+      "followups": [
+        {
+          "question": "站内通知等于短信或邮件送达吗？",
+          "answer_points": [
+            "不是，当前入口是站内收件箱；外部通知需要单独通道与送达证据。"
+          ]
+        },
+        {
+          "question": "按小时扫描能承诺精确到分钟吗？",
+          "answer_points": [
+            "不能，需说明扫描频率、时区和服务停机边界。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不宣称外部消息已投递或用户已阅读。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "usage",
+      "name": "用量、成本估算与阈值提醒",
+      "entry": "/inbox; /api/usage/summary, /api/usage/policy",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripNotificationUsageService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java",
+        "frontend/src/views/TripInbox.vue"
+      ],
+      "main_question": "展示用量与限制外部调用预算有何区别？",
+      "answer_points": [
+        "展示汇总已报告的任务usage，配置单价后才给估算。",
+        "提醒阈值不会自动停止任务；调用前预算预留是另一条硬限制链路。"
+      ],
+      "followups": [
+        {
+          "question": "取消后迟到的上游费用是否总能计入？",
+          "answer_points": [
+            "不能保证，未报告或晚到费用可能缺失，应在页面保留说明。"
+          ]
+        },
+        {
+          "question": "估算是否能直接当供应商账单？",
+          "answer_points": [
+            "不能，供应商计费单位、价格和实际账单需独立核对。"
+          ]
+        }
+      ],
+      "evidence_boundary": "无已核实供应商价格时不宣称真实节费金额。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "assistant-clarification",
+      "name": "助手持久多轮澄清",
+      "entry": "我的行程问攻略; /api/assistant/conversations/{id}/messages",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/AssistantClarificationService.java",
+        "business-backend/src/main/java/com/tripplanner/persistence/AssistantMapper.java",
+        "backend/app/services/assistant_intent.py",
+        "frontend/src/views/History.vue"
+      ],
+      "main_question": "用户只回复“第2天”时如何继续先前的调整意图？",
+      "answer_points": [
+        "服务端保存原需求、待操作、缺失槽位、收集槽位、会话/用户/行程归属、版本和TTL。",
+        "后续显式日期与原需求组合后重新分类；过期、行程变化、取消与改意都有独立分支。"
+      ],
+      "followups": [
+        {
+          "question": "重启后原需求还在吗？",
+          "answer_points": [
+            "状态存PostgreSQL，不依靠Python模型记忆；测试通过重建服务实例读取同一持久状态检查。"
+          ]
+        },
+        {
+          "question": "收齐槽位能直接覆盖原计划吗？",
+          "answer_points": [
+            "不能，只创建带会话归属的提案任务；确认入口仍校验版本、依赖与范围。"
+          ]
+        }
+      ],
+      "evidence_boundary": "意图解析是有界规则，不宣称开放域对话理解；实际迁移和HTTP结果由本轮测试证据另记。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "assistant-proposals",
+      "name": "助手方案差异、确认与放弃",
+      "entry": "结果页待确认方案; /api/assistant/conversations/{id}/proposals/{recordId}/*",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "frontend/src/views/Result.vue"
+      ],
+      "main_question": "为什么助手改排结果先保存为提案？",
+      "answer_points": [
+        "提案和原行程分离，确认时校验父版本、规划输入、修改范围和事实依赖，事务性更新。",
+        "放弃只改变提案状态，不能悄悄改写原行程。"
+      ],
+      "followups": [
+        {
+          "question": "从通用草稿应用或任务恢复能绕过确认吗？",
+          "answer_points": [
+            "不能，助手提案有独立生命周期，其他入口应拒绝。"
+          ]
+        },
+        {
+          "question": "用户确认前资料过期怎么办？",
+          "answer_points": [
+            "确认重新校验依赖并拒绝陈旧提案，需要重新核验或生成。"
+          ]
+        }
+      ],
+      "evidence_boundary": "确认是用户授权，不替代事实完整性和质量判断。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "research-retrieve",
+      "name": "纯资料检索",
+      "entry": "/research 的仅检索按钮; /api/research/retrieve",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+        "backend/app/agent_api/research.py",
+        "backend/app/services/rag_service.py",
+        "backend/app/services/research_evidence.py",
+        "frontend/src/views/Research.vue"
+      ],
+      "main_question": "点击“仅检索”是否会暗中调用模型生成答案？",
+      "answer_points": [
+        "纯检索入口只查现有公开索引，local_only禁用生成、查询嵌入和自动城市建库。",
+        "响应answer为null、answer_status为not_generated，并明确检索边界。"
+      ],
+      "followups": [
+        {
+          "question": "缺少城市索引时为何不自动补？",
+          "answer_points": [
+            "自动建库可能触发外部地图/嵌入费用，需与明确的问答或维护流程分开。"
+          ]
+        },
+        {
+          "question": "零生成调用怎么证明？",
+          "answer_points": [
+            "定向反例用可观察调用计数和禁止调用哨兵检查；响应自报数字不单独构成证明。"
+          ]
+        }
+      ],
+      "evidence_boundary": "只检索已有索引，召回范围有限；业务可见性读取不等于生成模型调用。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "research-answer",
+      "name": "问答、合法引用与支持校验",
+      "entry": "/research 根据资料回答按钮; /api/research/answer; 助手攻略问答",
+      "source_paths": [
+        "backend/app/services/research_answer.py",
+        "backend/app/services/research_evidence.py",
+        "business-backend/src/main/java/com/tripplanner/api/AssistantController.java",
+        "frontend/src/views/Research.vue"
+      ],
+      "main_question": "答案带[1]引用就能称为有依据吗？",
+      "answer_points": [
+        "先校验来源/页码/等级/时间元数据，生成内容逐句检查引用范围及完整原句支持。",
+        "无法建立支持时只显示资料摘录；未通过检查的模型token不先发到页面。"
+      ],
+      "followups": [
+        {
+          "question": "完整原句匹配证明事实是真的吗？",
+          "answer_points": [
+            "不证明；它只说明文本支持，不能证明来源真伪、相关性或当前有效，独立语义评审仍待做。"
+          ]
+        },
+        {
+          "question": "演示和过期数据如何处理？",
+          "answer_points": [
+            "标记从来源文件继承至全部块；保留可见性但禁止提升为当前生成结论。"
+          ]
+        }
+      ],
+      "evidence_boundary": "保守校验会拒绝许多正确改写，是安全取舍；不声称达到语义事实判定或模型泛化。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-revise",
+      "name": "局部改排与修改范围",
+      "entry": "结果页按天改排; /api/history/{id}/revise-task",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "backend/app/services/time_planner.py",
+        "frontend/src/components/trip/RevisionScopeEditor.vue"
+      ],
+      "main_question": "如何确保局部改排不改变范围外日期和受保护活动？",
+      "answer_points": [
+        "请求携带原行程版本、planning_revision及明确修改范围；Python保护范围外内容，Java写入前再次检查。"
+      ],
+      "followups": [
+        {
+          "question": "只有day_index还足够吗？",
+          "answer_points": [
+            "还需处理活动id、锁定/已完成等状态和预约约束。"
+          ]
+        },
+        {
+          "question": "模型说已遵守范围能直接信吗？",
+          "answer_points": [
+            "不能，用结构比较和业务保护检查拒绝越界写入。"
+          ]
+        }
+      ],
+      "evidence_boundary": "局部范围保护不证明改排质量一定更优。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-draft",
+      "name": "普通草稿查看与应用",
+      "entry": "结果页确认应用普通草稿; /api/history/{id}/apply-draft",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+        "frontend/src/views/Result.vue"
+      ],
+      "main_question": "普通草稿怎样在用户确认后应用到原计划？",
+      "answer_points": [
+        "普通草稿保留父行程版本，应用时重新检查父版本、规划保护和归属。",
+        "助手提案不能复用这个入口。"
+      ],
+      "followups": [
+        {
+          "question": "草稿为什么不能当作规划成功？",
+          "answer_points": [
+            "它保留约束冲突或缺失事实，需要明确显示未完成状态。"
+          ]
+        },
+        {
+          "question": "原计划已被修改会怎样？",
+          "answer_points": [
+            "版本或规划输入冲突应拒绝，避免用旧草稿覆盖新安排。"
+          ]
+        }
+      ],
+      "evidence_boundary": "用户确认草稿不代表缺失事实自动补齐。",
+      "new_or_hardened_this_round": false,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "trip-reverify",
+      "name": "旧方案路线和时间重新核验",
+      "entry": "我的行程重新核验; POST /api/trips/{id}/verify",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TimelineVerificationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+        "frontend/src/utils/scheduleValidity.ts"
+      ],
+      "main_question": "重新核验为什么不等于重新生成整份行程？",
+      "answer_points": [
+        "按保存的景点、交通和时间线重新核对路线与约束，检查结果说明已覆盖和未知范围。",
+        "依赖指纹变化或缺失的旧方案不能继续展示为已验证时间表。",
+        "本轮补齐历史页普通ready记录的主动重验入口；助手提案继续不开放该入口，服务端所有权和If-Match仍决定是否允许写入。"
+      ],
+      "followups": [
+        {
+          "question": "能沿用旧Java/Python不同的路线单位吗？",
+          "answer_points": [
+            "需要共享交通方式、城市和时效契约，不能靠两套近似规则各自判断。"
+          ]
+        },
+        {
+          "question": "路线可查是否足够证明时间可行？",
+          "answer_points": [
+            "还要核对窗口、预约、营业时间、时长、跨城与活动顺序等依赖。"
+          ]
+        }
+      ],
+      "evidence_boundary": "核验保留未知与冲突，不宣称自动重新求解或全局最优。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Final220 browser outage/retry/replacement7 checks passed; old baseline and original failures remain separately documented",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance.",
+      "evidence": [
+        "poi-ui-acceptance-result.json",
+        "http-candidate-outage-status-audit.json"
+      ]
+    },
+    {
+      "id": "planning-facts",
+      "name": "规划事实补全与服务端来源治理",
+      "entry": "结果页事实补全; /api/trips/{id}/planning-input",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/FactInputPolicy.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripFactVerificationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+        "backend/app/services/travel_facts.py",
+        "frontend/src/components/trip/FactCompletionEditor.vue"
+      ],
+      "main_question": "用户填写营业或预约信息后，为什么不能直接标成已核验事实？",
+      "answer_points": [
+        "用户输入和服务端观测来源分开，限制客户端伪造核验字段。",
+        "POI关系、营业窗口和预约信息由明确来源与时效参与规划，未知继续保留。"
+      ],
+      "followups": [
+        {
+          "question": "同一景点的父子POI会重复规划吗？",
+          "answer_points": [
+            "有证据的父子关系参与冲突检查，不能仅凭名称相似猜关系。"
+          ]
+        },
+        {
+          "question": "门票价格字段能代表预订成功吗？",
+          "answer_points": [
+            "不能，价格、营业和预约可用性是不同事实维度。"
+          ]
+        },
+        {
+          "question": "补齐事实后为什么仍通过局部重验提案确认？",
+          "answer_points": [
+            "保存用户声明不等于当前时间线已重新求解；局部重验产生待确认方案，原行程在明确确认前保持不变。"
+          ]
+        }
+      ],
+      "evidence_boundary": "未知保持未知；供应商没有对应事实不应伪造补全。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "planning-contract",
+      "name": "跨语言规划语义契约",
+      "entry": "内部规划协议与Java/Python规则",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningSemantics.java",
+        "backend/app/services/planning_semantics.py",
+        "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+        "backend/app/services/planning_constraints.py"
+      ],
+      "main_question": "Java与Python怎样避免对城市、交通与时效作出不同判断？",
+      "answer_points": [
+        "共享契约和相同边界样例约束两端语义，Java掌管业务权威，Python提供规划与约束处理。"
+      ],
+      "followups": [
+        {
+          "question": "共享JSON是否足以保证行为一致？",
+          "answer_points": [
+            "不足，需要两端独立实现都消费同一规范并用反例验证实际行为。"
+          ]
+        },
+        {
+          "question": "规则升级后旧快照怎样处理？",
+          "answer_points": [
+            "兼容性声明仅对明确未受影响阶段放行，排程与依赖要重新校验。"
+          ]
+        }
+      ],
+      "evidence_boundary": "契约测试通过不等于覆盖所有真实行程组合。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "architecture-modules",
+      "name": "按业务边界拆分执行服务",
+      "entry": "TripOperationsService兼容门面",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationsService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripOperationAccess.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCheckService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TripNotificationUsageService.java"
+      ],
+      "main_question": "拆分服务怎样避免只把巨型文件移动到多个目录？",
+      "answer_points": [
+        "核验、协作、预订费用、通知用量各有可注入业务服务，门面只保持既有public签名。",
+        "授权、成员行锁和版本策略集中在TripOperationAccess，调度只有通知用量模块持有。"
+      ],
+      "followups": [
+        {
+          "question": "拆开后如何防止权限规则分叉？",
+          "answer_points": [
+            "业务写继续使用统一授权和事务内成员锁，既有PostgreSQL集成测试检验行为。"
+          ]
+        },
+        {
+          "question": "事务是否被拆成多个不原子的步骤？",
+          "answer_points": [
+            "保留原事务边界，新增回归检查被拒绝的预订写入及规划revision触发器整体回滚。"
+          ]
+        }
+      ],
+      "evidence_boundary": "模块拆分是可维护性变化，不据此宣称吞吐提升或微服务成熟度。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "operations-deployment",
+      "name": "部署数据身份与挂载一致性",
+      "entry": "生产Compose与准备脚本; /internal/v2/dataset",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+        "backend/app/services/dataset_identity.py",
+        "backend/scripts/prepare_java_deployment.py",
+        "docker-compose.production.yml"
+      ],
+      "main_question": "怎样阻止同一个业务库配上另一套空文件卷？",
+      "answer_points": [
+        "数据集身份同时绑定数据库及上传/Agent持久化挂载，生产启动检查不匹配时拒绝。",
+        "既有数据需通过备份支持的迁移登记，不能静默初始化替代卷。"
+      ],
+      "followups": [
+        {
+          "question": "改project name就一定隔离了吗？",
+          "answer_points": [
+            "还要核对有效环境、卷归属及数据集身份，名称本身不足以证明数据一致。"
+          ]
+        },
+        {
+          "question": "旧部署可以直接套新身份吗？",
+          "answer_points": [
+            "应成套备份并显式迁移，不自动为有数据的库声明新卷正确。"
+          ]
+        }
+      ],
+      "evidence_boundary": "实际切换与恢复演练需独立环境证据，源码机制不等于上线已执行。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "operations-recovery",
+      "name": "单实例所有权与恢复",
+      "entry": "/readyz; 任务/Outbox调度",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java",
+        "business-backend/src/main/java/com/tripplanner/api/HealthController.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboxWorker.java"
+      ],
+      "main_question": "调度连接丢失后为什么首先停止领取任务？",
+      "answer_points": [
+        "没有调度所有权时停止新任务与索引领取，readiness明确失败。",
+        "恢复要重新确认所有权并保护旧执行，不能只把健康状态改绿。"
+      ],
+      "followups": [
+        {
+          "question": "多个实例同时启动会怎样？",
+          "answer_points": [
+            "同一数据库调度所有权受锁约束，当前仍是单实例部署边界。"
+          ]
+        },
+        {
+          "question": "readiness失败等于容器会自动重启吗？",
+          "answer_points": [
+            "需按实际恢复机制与部署策略核实，不能从healthcheck配置推断已自动修复。"
+          ]
+        }
+      ],
+      "evidence_boundary": "不宣称多机HA或零中断。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "operations-backup-alerts",
+      "name": "监控告警与备份恢复",
+      "entry": "部署monitoring配置; backend/scripts/*backup*、*restore*",
+      "source_paths": [
+        "deploy/prometheus.yml",
+        "deploy/alertmanager.yml",
+        "backend/scripts/backup_java_deployment.py",
+        "backend/scripts/restore_java_backup.py"
+      ],
+      "main_question": "有告警规则和备份文件，为什么还不能称为可靠运维闭环？",
+      "answer_points": [
+        "需要监控采集、规则触发、接收端送达和处置链路证据。",
+        "备份需包含数据库/上传/索引/运行账本/配置并在隔离环境验证恢复。"
+      ],
+      "followups": [
+        {
+          "question": "哈希校验通过是否等于恢复成功？",
+          "answer_points": [
+            "只证明文件一致，需恢复数据库、检查内容及服务能力。"
+          ]
+        },
+        {
+          "question": "单机备份能承诺RPO/RTO吗？",
+          "answer_points": [
+            "需要调度、异地副本、故障范围和实测恢复时间，缺证据不能承诺。"
+          ]
+        }
+      ],
+      "evidence_boundary": "历史恢复或本地通知验收不代表当前真实生产灾备和外部送达。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "source_inspected; actual test evidence to be attached by root",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "activity-protection",
+      "name": "活动内容锁、时段锁与完成状态",
+      "entry": "结果页活动时间轴; /api/trips/{id}/activities/{activityId}/state",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+        "frontend/src/components/trip/ActivityTimeline.vue"
+      ],
+      "main_question": "锁定安排、锁定时段和标记完成分别保护什么？",
+      "answer_points": [
+        "内容锁保护活动内容与归属，时段锁额外保护既有起止时间，完成状态保护已执行内容。",
+        "服务端校验拥有者、行程版本、规划输入修订和时间轴有效性，不能靠前端禁用按钮建立权限。"
+      ],
+      "followups": [
+        {
+          "question": "输入改了还能锁定旧时间吗？",
+          "answer_points": [
+            "旧时间证明失效后拒绝时段锁与新增完成；内容保护和时间证明不能混为一谈。"
+          ]
+        },
+        {
+          "question": "局部改排怎样对待保护项？",
+          "answer_points": [
+            "Java/Python都需保持保护内容、日期和适用时段，写入前由Java再次检查。"
+          ]
+        }
+      ],
+      "evidence_boundary": "活动状态是用户登记的执行信息，不证明线下已经到访；实际角色与过期闭环需候选浏览器证据。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "capability-status",
+      "name": "能力状态与降级说明",
+      "entry": "首页能力状态; /api/capabilities, /api/map/health, /api/rag/status",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+        "backend/app/agent_api/main.py",
+        "frontend/src/views/Home.vue"
+      ],
+      "main_question": "首页显示能力已配置，是否表示供应商当前真实调用成功？",
+      "answer_points": [
+        "能力接口区分未配置、等待Agent和可用状态，允许AI失败时保留已有行程等基础功能。",
+        "状态读取不应为了展示状态自动消耗真实模型额度。"
+      ],
+      "followups": [
+        {
+          "question": "配置检查与连通性检查有什么区别？",
+          "answer_points": [
+            "有密钥或模型名只说明配置，必须另有受控调用证据才能声称连通。"
+          ]
+        },
+        {
+          "question": "RAG禁用时能伪造有来源回答吗？",
+          "answer_points": [
+            "不能，明确返回检索不可用或资料不足，不能把普通生成文本伪装成检索结论。"
+          ]
+        }
+      ],
+      "evidence_boundary": "health、配置状态和HTTP200均不替代旅行效果、真实外部连通或服务SLA。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-enrollment",
+      "name": "停写数据集登记与卷内容证明",
+      "entry": "backend/scripts/enroll_dataset.py；默认检查，--execute才登记",
+      "source_paths": [
+        "backend/scripts/enroll_dataset.py",
+        "backend/scripts/backup_java_deployment.py",
+        "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java",
+        "backend/app/services/dataset_identity.py"
+      ],
+      "main_question": "为什么同名卷和相同DATASET_ID还不够证明可以安全升级？",
+      "answer_points": [
+        "登记先比对备份原数据库名/用户、原表原列摘要和三套停写文件卷的流式SHA-256清单，新增、缺失和变化都拒绝。",
+        "生产启动的静态数据集标记用于归属检查，不等于同一恢复时点证明。"
+      ],
+      "followups": [
+        {
+          "question": "旧manifest没有PG卷身份怎么办？",
+          "answer_points": [
+            "报告明确没有比过该身份，只引用原表列内容比对；不能补造已核验信息。"
+          ]
+        },
+        {
+          "question": "检查失败可以直接覆盖标记吗？",
+          "answer_points": [
+            "不可以；先找出数据或备份不一致来源，失败预检不得先写数据库、标记或环境文件。"
+          ]
+        }
+      ],
+      "evidence_boundary": "纯反例不代表实际日常登记完成。日常停写、登记和升级都由协调窗口串行执行。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-automated-backup",
+      "name": "自动备份、计划任务与原状态恢复",
+      "entry": "deploy/install-backup-task.ps1；backend/scripts/automated_maintenance.py backup",
+      "source_paths": [
+        "deploy/install-backup-task.ps1",
+        "backend/scripts/automated_maintenance.py",
+        "backend/scripts/backup_java_deployment.py"
+      ],
+      "main_question": "自动备份如何避免拿到归档却把原服务留在停机状态？",
+      "answer_points": [
+        "保存原状态后停写，归档成功和服务恢复成功分别记录；每个服务独立尝试恢复并等待实际就绪。",
+        "任一步失败记录阶段和服务、进程非零退出，不刷新伪成功心跳；原本停止的服务保留停止意图。",
+        "备份、检查和调度恢复按项目获取同一跨进程独占锁，锁覆盖读取原状态到恢复和成功心跳；争用在 Docker 读取/变更前拒绝，锁文件不删除。",
+        "计划任务实际命令带 --output 写入 last-run.json，失败也保留结构化报告；last-success.json 只在整个维护成功后更新。"
+      ],
+      "followups": [
+        {
+          "question": "存在安装脚本是否就代表计划任务已经启用？",
+          "answer_points": [
+            "不是；需要实际安装状态、触发时间、执行身份和退出结果，Docker Desktop与用户会话可用性也是条件。"
+          ]
+        },
+        {
+          "question": "归档哈希通过能证明RPO/RTO吗？",
+          "answer_points": [
+            "不能。需实际恢复与时间记录，RPO/RTO目标值和本轮测量、生产保证要分开。"
+          ]
+        },
+        {
+          "question": "计划任务 IgnoreNew 能阻止手动维护进程交错吗？",
+          "answer_points": [
+            "不能；需要 Python 入口共用的操作系统跨进程锁。Windows 字节锁已用真实子进程验证，Unix flock 尚未在本机运行；跨执行账号必须统一 TRIP_MAINTENANCE_LOCK_DIR。"
+          ]
+        }
+      ],
+      "evidence_boundary": "真实 Windows 子进程只验证操作系统锁；Docker 状态恢复使用替身。计划任务仅 dry-run，未安装或触发；实际维护窗口与结果由主任务提供。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-existing-data-rollback",
+      "name": "已有数据升级与真正快照回退",
+      "entry": "backend/scripts/existing_data_rehearsal.py；固定候选镜像ID；默认仅预检",
+      "source_paths": [
+        "backend/scripts/existing_data_rehearsal.py",
+        "backend/scripts/restore_java_backup.py",
+        "docs/operations/optimization-governance.md"
+      ],
+      "main_question": "为什么保留旧镜像容器还不能算数据已经可以回滚？",
+      "answer_points": [
+        "A克隆验证从原快照到候选迁移，旧后端仅停止并唯一重命名保留。",
+        "B克隆再从原备份恢复独立数据库与旧后端，旧后端就绪后重新核对完整原快照摘要，才形成所选恢复点的数据回退证据。",
+        "候选强制 production 身份规则。先校验原表列和三目录快照，再同 ID 登记；两个保留负例分别验证 DB/upload 错配，具体身份错误退出且完整 Flyway 历史、原文件与标记不变后才启动正确候选。"
+      ],
+      "followups": [
+        {
+          "question": "直接重启A的旧后端会读什么数据库？",
+          "answer_points": [
+            "仍是A已经升级的数据库；新schema与旧image兼容性未知，不能称作数据回退。"
+          ]
+        },
+        {
+          "question": "演练留下的容器和网络何时删除？",
+          "answer_points": [
+            "工具不自动清理，报告列精确资源，只有另行授权窗口和回退依据核对后才能定向处理。"
+          ]
+        },
+        {
+          "question": "怎样避免用 development 启动或任意启动失败冒充身份保护验证？",
+          "answer_points": [
+            "显式设置 APP_ENV=production、DATASET_ENROLL_NEW=false；负例必须匹配具体 DB/卷身份错误，比较负例前后完整 Flyway history 和原文件/标记。其他失败或迁移推进均拒绝；旧 schema 真实候选验证仍由协调任务执行。"
+          ]
+        }
+      ],
+      "evidence_boundary": "当前预检使用2026-10-25恢复点，不代表最新日常数据已备份；Agent/前端恢复、真实耗时与最终CI另验。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-replica-evidence",
+      "name": "可配置副本与异机故障域边界",
+      "entry": "automated_maintenance.py backup --replica-root",
+      "source_paths": [
+        "backend/scripts/automated_maintenance.py",
+        "deploy/install-backup-task.ps1",
+        "deploy/alerts.yml"
+      ],
+      "main_question": "为什么UNC副本复制成功不直接标记为异机灾备？",
+      "answer_points": [
+        "回环IP、localhost、本机名和本机FQDN共享仍在本机。",
+        "其他UNC只证明配置了远端目标并完成字节校验，独立故障域、恢复可用性和灾备能力仍需实际证据。"
+      ],
+      "followups": [
+        {
+          "question": "能把远端复制心跳写成offhost成功吗？",
+          "answer_points": [
+            "不能；配置副本用单独语义，缺少独立异机证据时保留异机告警与外部缺口。"
+          ]
+        },
+        {
+          "question": "怎样补齐真正异机演练？",
+          "answer_points": [
+            "准备已授权的远端主机/存储与访问条件，恢复独立副本并测量，验证同机故障不影响该副本。"
+          ]
+        }
+      ],
+      "evidence_boundary": "本子任务未执行UNC复制；没有真实异机条件时不得把条目标为全部完成。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-bounded-retention",
+      "name": "任务快照与Outbox保留策略",
+      "entry": "OperationalRetention；TaskService恢复资料到期语义",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/OperationalRetention.java",
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+        "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java"
+      ],
+      "main_question": "清理历史数据时怎样保留恢复、审计和费用约束的依据？",
+      "answer_points": [
+        "分批清理过期快照和超期终态载荷，保留任务ID、终态、祖先血缘、指纹与预算账本。",
+        "Outbox保留每实体最新成功及未完成工作，删除水位和业务事实不能当作普通缓存处理。"
+      ],
+      "followups": [
+        {
+          "question": "恢复资料到期后怎样回应用户？",
+          "answer_points": [
+            "返回明确TASK_PAYLOAD_EXPIRED，引导从当前行程新建任务，不能用空请求悄悄重跑。"
+          ]
+        },
+        {
+          "question": "为什么不能按字符串是否含清理标记判断？",
+          "answer_points": [
+            "应判顶层JSON的真实标记，嵌套或false字段不能绕开保留策略。"
+          ]
+        }
+      ],
+      "evidence_boundary": "保留策略不是全系统即时删除证明，备份和独立审计有各自生命周期；默认间隔与批量边界需运行观测。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-container-budgets",
+      "name": "容器资源预算与日志轮转",
+      "entry": "docker-compose.yml；docker-compose.production.yml",
+      "source_paths": [
+        "docker-compose.yml",
+        "docker-compose.production.yml",
+        "business-backend/src/main/java/com/tripplanner/domain/BusinessMetrics.java"
+      ],
+      "main_question": "线程池与请求限流都有了，为什么还需要容器资源上限？",
+      "answer_points": [
+        "CPU、内存、PID和日志轮转限制单服务故障影响，覆盖解析、索引、模型执行和运行日志等请求配额以外的资源。",
+        "数据库连接池、队列和磁盘指标辅助定位瓶颈，不能只调大并发。"
+      ],
+      "followups": [
+        {
+          "question": "配置1GB就证明Java不会OOM吗？",
+          "answer_points": [
+            "不是，堆、非堆、线程和实际负载都占资源，需按场景验证留量。"
+          ]
+        },
+        {
+          "question": "一次本地压测能换算峰值在线人数吗？",
+          "answer_points": [
+            "不能，离线替代与固定输入只说明特定条件，真实模型与长时间运行另验。"
+          ]
+        }
+      ],
+      "evidence_boundary": "配置上限不是生产容量或长期可靠性证明；不同卷的实际容量和宿主故障范围需核对。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-alert-delivery",
+      "name": "受控告警送达、去重与健康故障演练",
+      "entry": "monitoring profile；optimization_fault_drill.py；operational_alert_receiver.py",
+      "source_paths": [
+        "deploy/prometheus.yml",
+        "deploy/alertmanager.yml",
+        "deploy/alerts.yml",
+        "backend/scripts/operational_alert_receiver.py",
+        "backend/scripts/optimization_fault_drill.py"
+      ],
+      "main_question": "告警规则正确，为什么还要验证真正送达和去重？",
+      "answer_points": [
+        "采集、规则、Alertmanager和收件箱是不同环节；故障演练需确认通知到达并持久化。",
+        "收件箱只保存必要字段且受大小与重复事件限制，不收集任意敏感注释。"
+      ],
+      "followups": [
+        {
+          "question": "受控收件箱成功就代表真人收到短信吗？",
+          "answer_points": [
+            "不代表，外部个人通知通道需要明确授权与实际送达证据。"
+          ]
+        },
+        {
+          "question": "调度器恢复如何防止误重启其他项目？",
+          "answer_points": [
+            "固定所选后端容器内部probe，外部URL不能决定任意项目重启；恢复后等待实际ready。"
+          ]
+        }
+      ],
+      "evidence_boundary": "纯收件箱测试不等于实际Prometheus故障链路已验收；最终候选故障演练记录由主任务补充。",
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Current source inspected; pure targeted tests separately recorded; actual deployment and rehearsal results remain coordinator evidence.",
+      "personal_contribution": "No personal ownership inferred from source or AI assistance."
+    },
+    {
+      "id": "ops-database-capacity",
+      "name": "数据库容量与采样失效告警",
+      "entry": "Prometheus /actuator/prometheus; deploy/alerts.yml",
+      "source_paths": [
+        "business-backend/src/main/java/com/tripplanner/domain/DatabaseCapacityMetrics.java",
+        "business-backend/src/main/java/com/tripplanner/domain/BusinessMetrics.java",
+        "deploy/alerts.yml",
+        "deploy/alerts.capacity.test.yml"
+      ],
+      "main_question": "怎样知道数据库体积变大，或者容量监控本身已经失效？",
+      "answer_points": [
+        "独立低频采集pg_database_size，设置短statement timeout；scrape只读缓存。",
+        "失败清NaN/available0，保留最后成功时间而非沿用健康旧值；过期与缺样也告警。",
+        "10GiB默认预警可配置；大小不是PG卷空闲或硬配额。"
+      ],
+      "followups": [
+        {
+          "question": "数据库文件大小与磁盘剩余空间有什么区别？",
+          "answer_points": [
+            "WAL、临时文件、其他数据库和宿主文件系统需要另行观测；不同逻辑挂载不证明物理独立。"
+          ]
+        },
+        {
+          "question": "怎么证明异常不会继续显示旧健康状态？",
+          "answer_points": [
+            "真实隔离PG先成功，再只修改测试DataSource密码触发认证失败，核对NaN/available0和未刷新的last-success age，再恢复。",
+            "Promtool用触发/不误触系列检查大小、缺样和过期规则。"
+          ]
+        }
+      ],
+      "evidence_boundary": [
+        "本轮5项PG/文件系统定向检查和6组Prom规则通过；不是数据库满盘保障、峰值容量或SLA证明。"
+      ],
+      "evidence": [
+        "database-capacity-implementation.json"
+      ],
+      "new_or_hardened_this_round": true,
+      "evidence_status": "5 targeted PG/filesystem tests and 6 Promtool rule fixtures passed; final image exposes current DB/disk sampling metrics",
+      "personal_contribution": "Implementation and automated verification facts only; no independent claim of personal authorship."
+    },
+    {
+      "id": "ops-agent-runtime-hardening",
+      "name": "Agent运行权限与原生依赖边界",
+      "entry": "docker-compose.yml; docker-compose.production.yml; backend/Dockerfile",
+      "source_paths": [
+        "backend/scripts/restrict_runtime_tools.py",
+        "backend/Dockerfile",
+        "docker-compose.yml",
+        "docker-compose.production.yml",
+        "tools/tests/test_restricted_runtime_tools.py",
+        "tools/risk_acceptance.py",
+        "tools/runtime_constraint_probe.py",
+        "tools/image_policy.py",
+        ".github/security-risk-acceptance.json",
+        ".github/workflows/security.yml"
+      ],
+      "main_question": "为什么仅设置非root用户不足以说明Agent容器安全？",
+      "answer_points": [
+        "区分当前UID、effective和bounding capabilities，以及禁止新权限的NoNewPrivs；最终实际uvicorn进程观测CapEff/CapBnd为0、NoNewPrivs为1。",
+        "镜像精确去除四个无业务用途的mount/namespace CLI，保留essential库；根目录只读，runtime与Chroma持久挂载可写，logs/tmp使用有界tmpfs。",
+        "这些措施缩小提权和写入面，不修复glibc越界写或PBDS已编译模板UAF；8个原始CVE的适用性与未知仍逐项保留。",
+        "直接人类仅暂时接受本机受控演示精确组合至11月9日；门禁机器校验源码树、全部包/native ELF、应用和现场约束，缺失/变化/到期仍阻断，不把接受改成已修复。"
+      ],
+      "followups": [
+        {
+          "question": "工具已经移除，为什么扫描仍显示漏洞？",
+          "answer_points": [
+            "包数据库和核心库被保留；组件执行入口缺失、动态分支不命中、包已修复是不同证据。",
+            "厂商Minor/no-DSA不等于补丁或人类接受风险；必须核对源绑定、精确镜像、到期时间及调用链未知。"
+          ]
+        },
+        {
+          "question": "只读根目录下的写入和恢复如何验证？",
+          "answer_points": [
+            "实际进程检查四个指定目录的写入、fsync与读回，使用独立Chroma子目录和确定性embedding做跨进程持久检索。",
+            "成套备份后三个挂载完整逐文件哈希解包，新真实uvicorn Agent在相同权限限制下读取恢复的两条Chroma数据；该演练复用Java身份，不冒充独立PG或异机灾备。"
+          ]
+        },
+        {
+          "question": "readiness通过时RAG尚未初始化说明什么？",
+          "answer_points": [
+            "readiness验证本地存储与进程可服务；独立Chroma组件检查不等于正在运行的业务检索、发布可见性或回答质量全链通过。"
+          ]
+        }
+      ],
+      "evidence_boundary": [
+        "真实uvicorn11项、四个清理反例、POI界面7项与挂载数据恢复各自独立计证。",
+        "已有受限临时人类接受，仍未修复；日常部署和最终CI尚未完成，不授公网安全、HA或容量保证。"
+      ],
+      "evidence": [
+        "hardened-runtime-probe-result.json",
+        "hardened-backup-file-restore-result.json",
+        "release-220257a-security-summary.json",
+        "unresolved-cve-deployment-matrix.md",
+        "temporary-risk-acceptance-enforcement.json",
+        "risk-mechanism-targeted-tests.json",
+        "final-secret-scan.json"
+      ],
+      "new_or_hardened_this_round": true,
+      "evidence_status": "Candidate component/process and file-snapshot restore passed; daily deployment and exact-SHA CI pending",
+      "personal_contribution": "Implementation and automated verification facts; no independent personal authorship claim."
+    }
+  ],
+  "root_final_validation": {
+    "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "browser_backend_acceptance": "browser-acceptance.json: 8 unique flows latest pass with declared fixture/static-asset provenance",
+    "http_effect": "http-comparison-summary.json: 3 fixed development cases; real paid calls 0",
+    "existing_data": "existing-data-rehearsal-result-3.json: upgrade and independent snapshot rollback pass",
+    "scheduler": "scheduler-fault-drill-3.json: pass; earlier failed observations retained",
+    "holdout": "16/17 first run retained; separate identity-representation adjudication; no new unseen rerun or human score",
+    "daily_deployment": "not executed; window not granted",
+    "ci": "not yet pushed/final CI pending",
+    "backup": "automated-backup-drill-final.json: full archive/local replica, original states/readiness and private owner history readback pass; host-platform OCI closure verified",
+    "security": "release-security-summary.json: six image policy gates and full-history/current-source secrets pass for business SHA; remaining risks retained",
+    "previous_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+    "new_runtime": "hardened-runtime-probe-result.json:actual uvicorn11 passed; no full RAG chain inference",
+    "poi_ui": "poi-ui-acceptance-result.json:7 passed; raw failures/partial report loss retained",
+    "fact_ui": "fact-ui-acceptance-result.json:6 passed on a01 planning source; changed paths separately validated",
+    "backup_current": "hardened-backup-file-restore-result.json:maintenance64.13s; full rehearsal94.716s; all3 file archives restored and actual Agent reads persisted2 rows; not PG/offhost disaster recovery",
+    "security_current": "temporary-risk-acceptance-enforcement.json:actual gate passed with accepted unfixed52/8 and original79, exact source/native/live proc; expires local2026-11-09; CI pending",
+    "policy_source_sha": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
+    "secret_scan": "final-secret-scan.json:fullhistory/current+untracked0 after narrowly verified public fingerprint allowlist"
+  },
+  "operations_handoff_review": {
+    "date": "2026-10-26",
+    "feature_count": 52,
+    "source_paths_verified": true,
+    "ordinary_function_additions": [
+      "activity-protection",
+      "capability-status"
+    ],
+    "boundary": "Implementation and pure counterexample evidence only; no personal files changed or full-function acceptance claimed.",
+    "latest_additions": [
+      "Production candidate identity enrollment plus DB/upload negative startup guards and unchanged Flyway-history assertion.",
+      "Nonblocking per-project OS process lock, persistent failure report and linked existing runbook."
+    ],
+    "pure_verification": "26 maintenance/process-lock checks and 21 identity/retention/rehearsal checks passed in separate targeted commands; these do not mean Docker restore or daily deployment executed."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "previous_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+  "current_business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "comparison": "Exact ordered Docker RootFS DiffIDs, not tag/label identity",
+  "services": {
+    "backend": {
+      "rootfs_byte_layers_identical": true,
+      "old_image_id": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+      "new_image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5"
+    },
+    "agent": {
+      "rootfs_byte_layers_identical": false,
+      "old_image_id": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "new_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8"
+    },
+    "frontend": {
+      "rootfs_byte_layers_identical": false,
+      "old_image_id": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+      "new_image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9"
+    },
+    "prometheus": {
+      "rootfs_byte_layers_identical": true,
+      "old_image_id": "sha256:cf635b57aca84a440dd87636244449ac98695b068ea1a21ff440bc28b5c07d22",
+      "new_image_id": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873"
+    },
+    "alertmanager": {
+      "rootfs_byte_layers_identical": false,
+      "old_image_id": "sha256:361e00fa2ca9944d6528eeea7ced520d0481d33532f60352495f3d0d5bad928e",
+      "new_image_id": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "application_binaries_identical": {
+        "/bin/alertmanager": "51398aa96c0e272e5af74108c8b9e2c44758decc68a8fb221e97fd49318102d3",
+        "/bin/amtool": "0242cf2d7611c97a9bfc1d6669e5133a98743df8000f5d356e93870a22e5bb4a",
+        "method": "Read-only sha256sum in old a01 and new220 running containers; both binaries matched. UI is embedded in the matched alertmanager binary. Whole RootFS identity remains false."
+      },
+      "diagnostic": "An assumed standalone /usr/share/alertmanager/web-ui.tar.gz path was absent in both images; it was not used as evidence. Dockerfile embeds the verified official UI during Go build."
+    },
+    "postgres": {
+      "rootfs_byte_layers_identical": true,
+      "old_image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "new_image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+    }
+  },
+  "interpretation": "Only services whose RootFS equality is true reuse identical filesystem-layer evidence. Alertmanager whole RootFS differs but both actual application binaries, including embedded UI, are byte-identical. New image IDs were all scanned; changed Agent/History received current acceptance. No all-features retest or new accuracy claim."
+}

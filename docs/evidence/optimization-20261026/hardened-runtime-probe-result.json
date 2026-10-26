@@ -1,0 +1,233 @@
+{
+  "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+  "started_at": "2026-10-26T13:19:18.770674+00:00",
+  "passed": true,
+  "boundary": "Container-local hardening and component checks only; no Docker, business PostgreSQL, map/model/remote embedding request or running Chroma reset.",
+  "checks": [
+    {
+      "name": "actual_uvicorn_privilege_boundary",
+      "passed": true
+    },
+    {
+      "name": "root_filesystem",
+      "passed": true
+    },
+    {
+      "name": "writable_DATA_DIR",
+      "passed": true
+    },
+    {
+      "name": "writable_CHROMA_DIR",
+      "passed": true
+    },
+    {
+      "name": "writable_LOG_DIR",
+      "passed": true
+    },
+    {
+      "name": "writable_tmp",
+      "passed": true
+    },
+    {
+      "name": "restricted_tools_aliases_copies_filecaps",
+      "passed": true
+    },
+    {
+      "name": "legacy_infocmp_known_paths",
+      "passed": true
+    },
+    {
+      "name": "actual_agent_readiness",
+      "passed": true
+    },
+    {
+      "name": "persistent_independent_chroma_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "native_ortools_small_scheduling_solve",
+      "passed": true
+    }
+  ],
+  "data": {
+    "actual_uvicorn_privilege_boundary": {
+      "pid1_cmdline": [
+        "/usr/local/bin/python3.11",
+        "/usr/local/bin/uvicorn",
+        "app.agent_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9000",
+        "--workers",
+        "1"
+      ],
+      "pid1_status": {
+        "Uid": "1000\t1000\t1000\t1000",
+        "Gid": "1000\t1000\t1000\t1000",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1"
+      },
+      "probe_status": {
+        "Uid": "1000\t1000\t1000\t1000",
+        "Gid": "1000\t1000\t1000\t1000",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1"
+      },
+      "probe_effective_uid": 1000,
+      "python_bytecode_writes_disabled": true
+    },
+    "root_filesystem": {
+      "read_only": true,
+      "read_only_required": true,
+      "mount": {
+        "target": "/",
+        "options": [
+          "ro",
+          "relatime"
+        ],
+        "filesystem": "overlay"
+      },
+      "boundary": "Observed mount flags; no write attempt to the application/root filesystem."
+    },
+    "writable_DATA_DIR": {
+      "directory": "/app/runtime",
+      "retained_file": "/app/runtime/.hardened-runtime-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3/write-readback.bin",
+      "bytes": 54,
+      "sha256": "5f983ce805a50214dadee2a507ea1d6507d72556d07e0095923daea3d214ea9e",
+      "mount": {
+        "target": "/app/runtime",
+        "options": [
+          "rw",
+          "relatime"
+        ],
+        "filesystem": "ext4"
+      },
+      "readback_verified": true
+    },
+    "writable_CHROMA_DIR": {
+      "directory": "/app/data/chroma",
+      "retained_file": "/app/data/chroma/.hardened-runtime-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3/write-readback.bin",
+      "bytes": 54,
+      "sha256": "5f983ce805a50214dadee2a507ea1d6507d72556d07e0095923daea3d214ea9e",
+      "mount": {
+        "target": "/app/data/chroma",
+        "options": [
+          "rw",
+          "relatime"
+        ],
+        "filesystem": "ext4"
+      },
+      "readback_verified": true
+    },
+    "writable_LOG_DIR": {
+      "directory": "/app/logs",
+      "retained_file": "/app/logs/.hardened-runtime-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3/write-readback.bin",
+      "bytes": 54,
+      "sha256": "5f983ce805a50214dadee2a507ea1d6507d72556d07e0095923daea3d214ea9e",
+      "mount": {
+        "target": "/app/logs",
+        "options": [
+          "rw",
+          "nosuid",
+          "nodev",
+          "noexec",
+          "relatime"
+        ],
+        "filesystem": "tmpfs"
+      },
+      "readback_verified": true
+    },
+    "writable_tmp": {
+      "directory": "/tmp",
+      "retained_file": "/tmp/.hardened-runtime-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3/write-readback.bin",
+      "bytes": 54,
+      "sha256": "5f983ce805a50214dadee2a507ea1d6507d72556d07e0095923daea3d214ea9e",
+      "mount": {
+        "target": "/tmp",
+        "options": [
+          "rw",
+          "nosuid",
+          "nodev",
+          "noexec",
+          "relatime"
+        ],
+        "filesystem": "tmpfs"
+      },
+      "readback_verified": true
+    },
+    "restricted_tools_aliases_copies_filecaps": {
+      "status": "verified_absent",
+      "checker": "/app/scripts/restrict_runtime_tools.py",
+      "manifest": "/usr/local/share/tripplanner/restricted-runtime-tools.json",
+      "manifest_sha256": "c6b4fe735b1e889876a23f71d31f01ebf1eafffe4dbcf52bf664c6d7efae8ba4",
+      "checker_result": {
+        "status": "verified_absent",
+        "remaining_entries": [],
+        "manifest": "/usr/local/share/tripplanner/restricted-runtime-tools.json",
+        "limits": "Bounded name/dpkg/exact-binary-identity inventory; does not prove absence of arbitrary recompiled helpers or vulnerability absence in retained libraries/static native consumers."
+      },
+      "boundary": "Delegates mount/umount/nsenter/unshare names, aliases, matching copies and filecap checks to the reviewed image checker; no claim about libmount/library-code absence."
+    },
+    "legacy_infocmp_known_paths": {
+      "known_paths_absent": true,
+      "boundary": "Known names/PATH only; arbitrary renamed infocmp copies require the separate component evidence, not this limited path check."
+    },
+    "actual_agent_readiness": {
+      "url": "http://127.0.0.1:9000/readyz",
+      "status": 200,
+      "service": "trip-agent",
+      "rag_status_from_running_process": "not_initialized_or_degraded",
+      "body_sha256": "115527440f04c13f53a7796c6a30705b2037aaca31d26b9b9b420e68251b4c20"
+    },
+    "persistent_independent_chroma_roundtrip": {
+      "retained_database_directory": "/app/data/chroma/.hardened-chroma-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+      "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+      "sqlite_bytes": 188416,
+      "separate_process_write_then_read": true,
+      "operations": [
+        {
+          "mode": "write",
+          "stored_count": 2,
+          "database_directory": "/app/data/chroma/.hardened-chroma-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+          "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3"
+        },
+        {
+          "mode": "read",
+          "stored_count": 2,
+          "readback_verified": true,
+          "retrieval_verified": true,
+          "collection": "hardened_probe_c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+          "database_directory": "/app/data/chroma/.hardened-chroma-probe-c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+          "probe_id": "c7e759d5eb1f4c2dbdc63803c2b3e4d3",
+          "boundary": "Explicit deterministic-embedding component snapshot readback; not full PostgreSQL disaster recovery or real-provider RAG verification."
+        }
+      ],
+      "replacement": "Explicit deterministic 3D embedding function; no model or remote embedding calls.",
+      "scope": "Real local LangChain Chroma storage/retrieval adapter with explicit deterministic embeddings. Its independent subdirectory may be snapshotted/restored; not Java publication/visibility, full PostgreSQL disaster recovery, real-provider RAG or full answer-quality verification.",
+      "network_guard": "Python socket connect/getaddrinfo forbidden in each child; not a native-code egress firewall.",
+      "retention": "No collection/database deletion; the unique hidden subdirectory remains inside the Chroma data mount, separate from the running root index."
+    },
+    "native_ortools_small_scheduling_solve": {
+      "ortools_version": "9.15.6755",
+      "native_solver_status": "OPTIMAL",
+      "intervals": [
+        [
+          5,
+          20
+        ],
+        [
+          20,
+          40
+        ]
+      ],
+      "scope": "Small actual CP-SAT scheduling solve; no route provider or full itinerary feasibility claim."
+    }
+  },
+  "finished_at": "2026-10-26T13:19:25.611808+00:00",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176"
+}

@@ -1,0 +1,193 @@
+{
+  "scope": "isolated candidate v2 only",
+  "underlying_frontend_image": "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3",
+  "static_assets_from_image": "sha256:d081d2a6ec3ace9e57fff76b9db6ed5d2cb120551f4d45d50e578260d1a282f3",
+  "static_asset_overlay": true,
+  "reason": "Preserve every existing Docker object until the shared cleanup window while verifying the Login recovery form repair.",
+  "helper_container_retained": "86025ca501b19013315f551d35b98f0f60ea9569dcf217861ab5ef7b811c5509",
+  "files": [
+    {
+      "path": "50x.html",
+      "sha256": "876766b4e80133fd490603e073d3567425b88794828a9292104244c9e40875ed"
+    },
+    {
+      "path": "index.html",
+      "sha256": "26ddfeff37ce129a20860e6233dc36fac66626cdf773b309b588b61c3701f7d8"
+    },
+    {
+      "path": "assets/AccountSecurity-B2hW6KEe.js",
+      "sha256": "aa63eeffa4d27718e6b7a55cc8137b26e1f489ef5608a7447abad85fa66fad87"
+    },
+    {
+      "path": "assets/AccountSecurity-CVnIlpin.css",
+      "sha256": "cbd1d76e5aa491e8f6ff93294d790b3941b09e2482ccb5372c2d13a65cc0b57f"
+    },
+    {
+      "path": "assets/ActivityTimeline-K4r24cHB.css",
+      "sha256": "932a408ce1ca63418fe85dd68215a57afa91e30185713eeea3cd30a3b3b338ce"
+    },
+    {
+      "path": "assets/ActivityTimeline-ZK5Kk3WS.js",
+      "sha256": "8744d1590503cbdb2ebe47958d6a04413b1bbec8d5866529e8f950c265fe7acb"
+    },
+    {
+      "path": "assets/api-JXbGpjGX.js",
+      "sha256": "7cd6b382bf6775e6a5702a6ce2583aee6d8fab456c0ba526f34950987ec11128"
+    },
+    {
+      "path": "assets/Community-BBKHTPTG.css",
+      "sha256": "1160c9ba2ac81702ed9e77e11b98e19638726fdfd3b1e21a7bc8b6c2da380935"
+    },
+    {
+      "path": "assets/Community-q-8W-Ilw.js",
+      "sha256": "59f1c7af67f4b3db91156c6416c281256fa098eaddfa5e602417b56a99bb5293"
+    },
+    {
+      "path": "assets/CommunityAdmin-D0t3Uila.js",
+      "sha256": "0153e4e1ebff02528857a081235c818f109aa3ca29857d3a23996c2d3ed0c145"
+    },
+    {
+      "path": "assets/CommunityAdmin-NFQ8qDBK.css",
+      "sha256": "35f4081109dcb58e6138429bf6b5419a8e4955725e643f3bea5039f14e95ef73"
+    },
+    {
+      "path": "assets/datetime-qk2Gjq8Z.js",
+      "sha256": "9b48402d1b8f44d6c40f0fbe76b5544a6dac6c14799855882117ea45ca1beb3b"
+    },
+    {
+      "path": "assets/Explore-DAb8svfK.js",
+      "sha256": "540bfb2c414ecd92ee61978398cb90029d670825439b2164922f55e7189de13b"
+    },
+    {
+      "path": "assets/Explore-lDAEKGbp.css",
+      "sha256": "1c33ccc4fa836eccf6bce7e7a27e7de1af093d26c4c8f4a3c94076d232141546"
+    },
+    {
+      "path": "assets/History-D-QKsX2y.css",
+      "sha256": "acb85ad571c4cc96942e6b93012d002429a07df33d8704869cc53ab1d6d1539e"
+    },
+    {
+      "path": "assets/History-VxqLmbx7.js",
+      "sha256": "91ebf45915d72a27a863e10aaeb7a99de8fb666bdefcd649ab7b79fe190b6580"
+    },
+    {
+      "path": "assets/Home-BlJQveYv.css",
+      "sha256": "b093b96e6b65e99f5c2f341b1a7076481e0393f16f7a1b57ecf9d37780ca6655"
+    },
+    {
+      "path": "assets/Home-D9yo5DhY.js",
+      "sha256": "e10b485903e4f2ec0da529fceb8e2d7222eed6e135bdd30e91f4c25015d9e842"
+    },
+    {
+      "path": "assets/html2canvas.esm-QH1iLAAe.js",
+      "sha256": "061c08e50c0dc57b8d5e6531f0b8237a52a68b233260d49ab2f2c2906ad112c4"
+    },
+    {
+      "path": "assets/index-BQ_LfSvp.css",
+      "sha256": "79e8ccd57d43626dff3f6e974a10a059a5257d213fb5b2f6a694dd249e0bdaa5"
+    },
+    {
+      "path": "assets/index-DFnesZSB.js",
+      "sha256": "2bb6179a681b548b775de37d4c98cd9e5a37c448210bd352d457cf67c0a83374"
+    },
+    {
+      "path": "assets/index.es-CseirXxa.js",
+      "sha256": "9085445195204662668833b56711a93f873e9d3e049eb67dcf5cdc44b7f930d5"
+    },
+    {
+      "path": "assets/jspdf.es.min-CGD-MNIW.js",
+      "sha256": "dfc1dcc32bcbf9a5e22f5687db5ed8a321ba7e74c86343c29d25e465131f4139"
+    },
+    {
+      "path": "assets/Knowledge-BgCsPDUl.js",
+      "sha256": "083f324b62f94086f8bff856a07fec8a57c1b30f9b88ef86531e5e8afd0132d4"
+    },
+    {
+      "path": "assets/Knowledge-C4ITgnAl.css",
+      "sha256": "818917d96b4f0721291c2c9dbb098533a8fd283fdfe12090360bfc2f919d52be"
+    },
+    {
+      "path": "assets/KnowledgeAdmin-B2RxCt__.js",
+      "sha256": "d32d8394870d8b0737dd2f95244cf19d99449cd4a08e6801231ec4d8aa47b8de"
+    },
+    {
+      "path": "assets/KnowledgeAdmin-CPR9C30A.css",
+      "sha256": "bf6b95f1ac53092c703d37b11d9fe012f9656d562cc3f394b55921602b91880c"
+    },
+    {
+      "path": "assets/Login-CYrFgXBd.css",
+      "sha256": "f5b815c4b69b5c8e151b8857bdea52278e7b1bda5a4bb2116050336901e5d0c0"
+    },
+    {
+      "path": "assets/Login-Dp4S2dC_.js",
+      "sha256": "33d610714e3edefdc72c42f2e66ad20360303ff55e5d93df7063076409260078"
+    },
+    {
+      "path": "assets/map-p3mcRZGJ.js",
+      "sha256": "9099826e9662fce0fa527e080a13cd3df3d0439f950be52d1342889f43b5d329"
+    },
+    {
+      "path": "assets/PlanningInputEditor-CHAtfXLq.css",
+      "sha256": "51492802c065f7f8b9927f948be0f3766342f3f16a5bf7124895abb0c409b309"
+    },
+    {
+      "path": "assets/PlanningInputEditor-hAgg2fJs.js",
+      "sha256": "d99c95cb1a7494110c22ec275e4230c8afb11dba72f2ff364c601178af147c97"
+    },
+    {
+      "path": "assets/purify.es-CAi2OJFm.js",
+      "sha256": "8e143ee7bcdf076d62676183aacc62568c9adb8042c57d4fef7d62e1ca7c345a"
+    },
+    {
+      "path": "assets/Research-Bq0Awj3r.js",
+      "sha256": "807a96bcc497b8193f78c22c8a692fadbe8f4c33414ecc02946b17afbd811c54"
+    },
+    {
+      "path": "assets/Research-L4G0hrIO.css",
+      "sha256": "2d1bcfac7ca3650b9f77c6bbf850ce190d4e355360613359cf626ad69dc9a075"
+    },
+    {
+      "path": "assets/Result-B_FXebnr.js",
+      "sha256": "42d963c531c192cc1fcf71ffd487bc0e179de5cffd12cc60251ad8444590d0e9"
+    },
+    {
+      "path": "assets/Result-DUY30QCx.css",
+      "sha256": "3bbb6b15f844b525f6c3c7b9a37350ed77427f31d4dbf8d7cba66dbee13dbde1"
+    },
+    {
+      "path": "assets/SharedTrip-B6zuMIGE.js",
+      "sha256": "efc2c5db6dc82a04c5b3064429127656a1ed0b65ada1428dd8918e2f3edf1241"
+    },
+    {
+      "path": "assets/SharedTrip-CHIfVyxB.css",
+      "sha256": "a8f160902e6b567926101cdda959c51a95950f0e2efe4bb409f66975b46b0997"
+    },
+    {
+      "path": "assets/TripInbox-B5nHUNAi.css",
+      "sha256": "90515e250ba76ae1b23d620a37f25d4d305c1ec4fcb1f6ad000ed7f90ef8edee"
+    },
+    {
+      "path": "assets/TripInbox-DNDj5MF7.js",
+      "sha256": "625e8eece81d878691f34cd872edc0c9db277295559ef82d2642b7d6fd15fef8"
+    },
+    {
+      "path": "assets/TripWorkspace-BqZCj6Mc.css",
+      "sha256": "ae141c8f3f466ec9f5fdaef5b0c56ebfbb6c93891aacfac77ecf81ac74036a90"
+    },
+    {
+      "path": "assets/TripWorkspace-T5Nd0P2j.js",
+      "sha256": "7f0acf367f0444f5648da31f51f8ea379a18d4a533157af4eccc49414a600428"
+    },
+    {
+      "path": "assets/UploadQuotaPanel-BS21Fs5n.css",
+      "sha256": "f01624599062645108fabccd10b213d6af3f541728a8b79a08cc282cffe74cb8"
+    },
+    {
+      "path": "assets/UploadQuotaPanel-DPAYzRud.js",
+      "sha256": "e70e3d27c8dd020d8330a12bfd157e304b875ed1728eeb9038e289a05c6380f8"
+    }
+  ],
+  "old_assets_retained": true,
+  "full_final_image_deployment_still_required": true,
+  "daily_containers_changed": false
+}

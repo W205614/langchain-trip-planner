@@ -1,0 +1,499 @@
+{
+  "status": "preview_only_pending_exact_revision",
+  "image_id": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+  "raw_high_critical": 79,
+  "counts": {
+    "chroma_context_pending_revision": 4,
+    "fixed_by_distribution_backport": 14,
+    "not_affected_component_absent": 6,
+    "fixed_by_pinned_security_upgrade": 3,
+    "still_vulnerable_vendor_minor": 52
+  },
+  "still_vulnerable_ids": [
+    "CVE-2026-102010",
+    "CVE-2026-19499",
+    "CVE-2026-5435",
+    "CVE-2026-76642",
+    "CVE-2026-78408",
+    "CVE-2026-78409",
+    "CVE-2026-78410",
+    "CVE-2026-95619"
+  ],
+  "rows": [
+    {
+      "package": "chromadb",
+      "version": "1.5.9",
+      "id": "GHSA-f4j7-r4q5-qw2c",
+      "classification_preview": "chroma_context_pending_revision"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-18798",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-63076",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-63073",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-14457",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-63072",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-84782",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-14456",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-54873",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "perl-base",
+      "version": "5.40.1-6+deb13u1",
+      "id": "CVE-2026-82560",
+      "classification_preview": "not_affected_component_absent"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-54874",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "gzip",
+      "version": "1.13",
+      "id": "CVE-2026-41992",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-84784",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-63075",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "perl-base",
+      "version": "5.40.1-6+deb13u1",
+      "id": "CVE-2026-9538",
+      "classification_preview": "not_affected_component_absent"
+    },
+    {
+      "package": "zlib1g",
+      "version": "1:1.3.dfsg+really1.3.2-4",
+      "id": "CVE-2026-85091",
+      "classification_preview": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "package": "libncursesw6",
+      "version": "6.5+20250216-2",
+      "id": "CVE-2025-69720",
+      "classification_preview": "not_affected_component_absent"
+    },
+    {
+      "package": "libtinfo6",
+      "version": "6.5+20250216-2",
+      "id": "CVE-2025-69720",
+      "classification_preview": "not_affected_component_absent"
+    },
+    {
+      "package": "ncurses-base",
+      "version": "6.5+20250216-2",
+      "id": "CVE-2025-69720",
+      "classification_preview": "not_affected_component_absent"
+    },
+    {
+      "package": "ncurses-bin",
+      "version": "6.5+20250216-2",
+      "id": "CVE-2025-69720",
+      "classification_preview": "not_affected_component_absent"
+    },
+    {
+      "package": "gcc-14",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-95619",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "gcc-14-base",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-95619",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libgcc-s1",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-95619",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libstdc++6",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-95619",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "chromadb",
+      "version": "1.5.9",
+      "id": "GHSA-36p7-vc44-83pf",
+      "classification_preview": "chroma_context_pending_revision"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-72897",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "chromadb",
+      "version": "1.5.9",
+      "id": "GHSA-2wm9-hf6c-p5cr",
+      "classification_preview": "chroma_context_pending_revision"
+    },
+    {
+      "package": "openssl",
+      "version": "3.5.7",
+      "id": "CVE-2026-75803",
+      "classification_preview": "fixed_by_distribution_backport"
+    },
+    {
+      "package": "libc-bin",
+      "version": "2.41-12+deb13u4",
+      "id": "CVE-2026-19499",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libc6",
+      "version": "2.41-12+deb13u4",
+      "id": "CVE-2026-19499",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "gcc-14",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-102010",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "gcc-14-base",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-102010",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libgcc-s1",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-102010",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libstdc++6",
+      "version": "14.2.0-19",
+      "id": "CVE-2026-102010",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "chromadb",
+      "version": "1.5.9",
+      "id": "GHSA-xph7-9rjv-w5fr",
+      "classification_preview": "chroma_context_pending_revision"
+    },
+    {
+      "package": "libc-bin",
+      "version": "2.41-12+deb13u4",
+      "id": "CVE-2026-5435",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libc6",
+      "version": "2.41-12+deb13u4",
+      "id": "CVE-2026-5435",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "bsdutils",
+      "version": "1:2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libblkid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "liblastlog2-2",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libmount1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libsmartcols1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libuuid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "login",
+      "version": "1:4.16.0-2+really2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "mount",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-76642",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "bsdutils",
+      "version": "1:2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libblkid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "liblastlog2-2",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libmount1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libsmartcols1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libuuid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "login",
+      "version": "1:4.16.0-2+really2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "mount",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78408",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "bsdutils",
+      "version": "1:2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libblkid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "liblastlog2-2",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libmount1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libsmartcols1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libuuid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "login",
+      "version": "1:4.16.0-2+really2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "mount",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78409",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "bsdutils",
+      "version": "1:2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libblkid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "liblastlog2-2",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libmount1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libsmartcols1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libuuid1",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "login",
+      "version": "1:4.16.0-2+really2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "mount",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.41.5-0+deb13u1",
+      "id": "CVE-2026-78410",
+      "classification_preview": "still_vulnerable_vendor_minor"
+    },
+    {
+      "package": "libacl1",
+      "version": "2.4.0-1",
+      "id": "CVE-2026-54369",
+      "classification_preview": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "package": "libacl1",
+      "version": "2.4.0-1",
+      "id": "CVE-2026-54370",
+      "classification_preview": "fixed_by_pinned_security_upgrade"
+    }
+  ],
+  "note": "Actual inventory and precise policy entry preview, not a passing image gate: current workingtree revision remains ineligible; final exact revision rebuild/scan required."
+}

@@ -1,0 +1,144 @@
+{
+  "passed": true,
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "policy_source_sha": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
+  "actual_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "accepted_classification": "still_vulnerable_temporarily_risk_accepted_not_fixed",
+  "original_scan_summary": {
+    "tool_pins_verified_date": "2026-10-26",
+    "results": [
+      {
+        "scanner": "grype-image",
+        "target": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "status": "pass_temporary_risk_acceptance",
+        "blocking_findings": 0,
+        "raw_high_critical_findings": 79,
+        "contextual_not_affected": 4,
+        "all_findings": 214,
+        "exit_code": 2,
+        "vex_expires_on": "2026-11-25",
+        "distribution_assessments": {
+          "fixed_by_distribution_backport": 14,
+          "fixed_by_pinned_security_upgrade": 3,
+          "still_vulnerable_vendor_minor": 52,
+          "not_affected_component_absent": 6
+        },
+        "still_vulnerable_vendor_minor_ids": [
+          "CVE-2026-102010",
+          "CVE-2026-19499",
+          "CVE-2026-5435",
+          "CVE-2026-76642",
+          "CVE-2026-78408",
+          "CVE-2026-78409",
+          "CVE-2026-78410",
+          "CVE-2026-95619"
+        ],
+        "vendor_policy_expires_on": "2026-11-09",
+        "unfixed_risk_accepted_findings": 52,
+        "risk_acceptance": {
+          "status": "effective_temporary_acceptance_still_vulnerable",
+          "effective_scope": "controlled_single_host_local_demo_only",
+          "expires_at": "2026-11-09T23:59:59+08:00",
+          "allowed_cve_ids": [
+            "CVE-2026-102010",
+            "CVE-2026-19499",
+            "CVE-2026-5435",
+            "CVE-2026-76642",
+            "CVE-2026-78408",
+            "CVE-2026-78409",
+            "CVE-2026-78410",
+            "CVE-2026-95619"
+          ],
+          "authorization": {
+            "record_path": ".github/security-risk-authorization.json",
+            "record_sha256": "2226575af1273d277c232dc3f609a648edecc852513bad0181758c95564b3a03",
+            "original_record_sha256": "1a7dcf73e06fd08b5b71f609fdc6817bdf6178c4671dc815eb5acedf3bf9f4e6"
+          },
+          "identity_proof": {
+            "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+            "current_policy_revision": "7ab62cf45e93d64d32ab620accb12bce58ea1818",
+            "image_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+            "business_trees_equal": true
+          },
+          "runtime_proof": {
+            "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+            "checked_at": "2026-10-26T14:18:28.423094+00:00",
+            "probe_source_sha256": "964b3539dc4bc4d6a1decb8ee51c537c3cfd74c6ba18e3711222c8549b7bf960",
+            "live_container_identity_verified": true
+          },
+          "components_exactly_equal": true,
+          "deployment_window_granted": false,
+          "classification": "still_vulnerable_not_fixed",
+          "scan_identity_proof": {
+            "scanner_report_time": "2026-10-26T22:26:52.1955354+08:00",
+            "database_built": "2026-10-26T06:38:44Z",
+            "database_valid": true,
+            "maximum_database_age_hours": 72,
+            "scanned_immutable_image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+            "fresh_scan_verified": true
+          }
+        },
+        "image_revision_context_verified": true
+      }
+    ]
+  },
+  "original_fresh_scan_summary_sha256": "431df90888bc6b0e30dd6f8ea078439aa8d17419c3a499d6b79b13165516fb6a",
+  "original_raw_scan_sha256": "349f7efc8b5b92bc21f3d9e4161504c97e739aa10b326000696695b3813e17c2",
+  "current_policy_commit_live_equivalence_verification": {
+    "status": "effective_temporary_acceptance_still_vulnerable",
+    "effective_scope": "controlled_single_host_local_demo_only",
+    "expires_at": "2026-11-09T23:59:59+08:00",
+    "allowed_cve_ids": [
+      "CVE-2026-102010",
+      "CVE-2026-19499",
+      "CVE-2026-5435",
+      "CVE-2026-76642",
+      "CVE-2026-78408",
+      "CVE-2026-78409",
+      "CVE-2026-78410",
+      "CVE-2026-95619"
+    ],
+    "authorization": {
+      "record_path": ".github/security-risk-authorization.json",
+      "record_sha256": "2226575af1273d277c232dc3f609a648edecc852513bad0181758c95564b3a03",
+      "original_record_sha256": "1a7dcf73e06fd08b5b71f609fdc6817bdf6178c4671dc815eb5acedf3bf9f4e6"
+    },
+    "identity_proof": {
+      "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "current_policy_revision": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
+      "image_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "business_trees_equal": true
+    },
+    "runtime_proof": {
+      "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "checked_at": "2026-10-26T14:18:28.423094+00:00",
+      "probe_source_sha256": "964b3539dc4bc4d6a1decb8ee51c537c3cfd74c6ba18e3711222c8549b7bf960",
+      "live_container_identity_verified": true
+    },
+    "components_exactly_equal": true,
+    "deployment_window_granted": false,
+    "classification": "still_vulnerable_not_fixed"
+  },
+  "equivalence_counts": {
+    "native_elf_paths": 1086,
+    "application_files": 135,
+    "os_packages": 87,
+    "business_trees": 5,
+    "compose_recipes": 4
+  },
+  "runtime_proof_file": "E:\\project\\langchain-trip-planner\\.cache\\security-report-raw\\accepted-risk-runtime-final\\runtime-proof-fc83d29c7ecf45dfb4867e8bc8e84635.json",
+  "runtime_proof_sha256": "a7c8fb3d703410da8a9c6e13d0cdc8ac5d40cbc6a3cf925575dd2925ea381217",
+  "approval_record_sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+  "new_provider_calls": 0,
+  "daily_rebuilt": false,
+  "deployment_window_granted": false,
+  "reporting_diagnostic": "First wrapper assumed image-summary was a list. Original Grype scan/results were unchanged; live equivalence verification was recomputed while correcting access to document.results.",
+  "not_proven": [
+    "public production safety",
+    "independent human answer-quality review",
+    "offhost DR",
+    "HA/SLA/capacity",
+    "business RAG full chain from readiness/component proof"
+  ]
+}

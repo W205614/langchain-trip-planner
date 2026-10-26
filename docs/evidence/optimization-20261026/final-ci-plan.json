@@ -1,0 +1,126 @@
+{
+  "state": "not_started",
+  "final_sha": null,
+  "reason": "No push until contextual security disposition and serial deployment handoff. Local committed business revision is not final remote delivery.",
+  "workflows": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "name": "CI",
+      "jobs": [
+        {
+          "id": "java-test",
+          "name": "Java business PostgreSQL tests",
+          "matrix": {},
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "backend-test",
+          "name": "Python Agent tests",
+          "matrix": {},
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "frontend-build",
+          "name": "Frontend build (vue-tsc + vite)",
+          "matrix": {},
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "docker-compose-check",
+          "name": "Docker Compose config and build",
+          "matrix": {},
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "name": "Security gates",
+      "jobs": [
+        {
+          "id": "secret-scan",
+          "name": "Secrets / full history and tracked source",
+          "matrix": {},
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "runtime-image-scan",
+          "name": "Runtime images / ${{ matrix.service }}",
+          "matrix": {
+            "include": [
+              {
+                "service": "postgres",
+                "image": "postgres:17.11-alpine"
+              },
+              {
+                "service": "prometheus",
+                "image": "trip-security-prometheus:${{ github.sha }}",
+                "dockerfile": "prometheus.Dockerfile"
+              },
+              {
+                "service": "alertmanager",
+                "image": "trip-security-alertmanager:${{ github.sha }}",
+                "dockerfile": "alertmanager.Dockerfile"
+              }
+            ]
+          },
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "dependency-scan",
+          "name": "Dependencies / Python Node and resolved Maven SBOM",
+          "matrix": {},
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "codeql",
+          "name": "CodeQL / ${{ matrix.language }}",
+          "matrix": {
+            "include": [
+              {
+                "language": "java-kotlin",
+                "build": "manual"
+              },
+              {
+                "language": "python",
+                "build": "none"
+              },
+              {
+                "language": "javascript-typescript",
+                "build": "none"
+              },
+              {
+                "language": "actions",
+                "build": "none"
+              }
+            ]
+          },
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        },
+        {
+          "id": "image-scan",
+          "name": "Images / ${{ matrix.service }}",
+          "matrix": {
+            "include": [
+              {
+                "service": "backend",
+                "context": "business-backend"
+              },
+              {
+                "service": "agent",
+                "context": "backend"
+              },
+              {
+                "service": "frontend",
+                "context": "frontend"
+              }
+            ]
+          },
+          "acceptance": "Every expected expanded job must conclude success for the exact final remote SHA; no empty combined-status or old-run substitution."
+        }
+      ]
+    }
+  ],
+  "live_provider_calls_in_local_acceptance": 0,
+  "scope": "Final GitHub CI remains full integration; local checks limited to changes and direct impact."
+}

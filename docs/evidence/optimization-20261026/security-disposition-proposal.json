@@ -1,0 +1,100 @@
+{
+  "project": "Trip",
+  "state": "DECISION_READY_NOT_DEPLOY_READY",
+  "updated_at": "2026-10-26T13:38:56.728741+00:00",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "source_changes_committed_locally": true,
+  "pushed": false,
+  "daily_environment_changed": false,
+  "images": {
+    "backend": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+    "agent": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "frontend": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+    "prometheus": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+    "alertmanager": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+    "postgres": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+  },
+  "manifest_sha256": "19f2e16271b51867b887d87a4565b80d6306f14e77a01061015629f4197f673b",
+  "implemented_before_requesting_disposition": [
+    "Explicit cap_drop ALL and no-new-privileges in base/production",
+    "Read-only Agent rootfs; existing persistent runtime/Chroma mounts; bounded tmpfs for logs/temp; exact actual uvicorn process checked",
+    "Precisely removed unused mount/umount/nsenter/unshare plus bounded aliases/hardlinks/identical copies; essential libraries and package DB retained",
+    "Fixed ready-record History reverify entry; real page failure/retry and protected replacement flow verified"
+  ],
+  "candidate_evidence": {
+    "actual_uvicorn": "hardened-runtime-probe-result.json:11/11",
+    "poi_ui": "poi-ui-acceptance-result.json:7/7; original failed attempts retained",
+    "backup_file_restore": "hardened-backup-file-restore-result.json:pass; maintenance64.13s, total94.716s; original four states restored, new actual Agent reads restored Chroma2rows; reused Java identity, not independent PostgreSQL/offhost DR",
+    "earlier_role_flows": "browser-acceptance.json:8 unique effective flows; fact-ui-acceptance-result.json:6 supplementary checks; source/RootFS reuse disclosed",
+    "exact_artifact_security": "release-220257a-security-summary.json:6 actual image IDs scanned;5 raw H/C0; Agent raw79",
+    "secrets": "Full Git history and current tracked/untracked source/evidence0 findings at scan time",
+    "matrix": "unresolved-cve-deployment-matrix.md and .json; olda01 context preserved plus new220 actual context"
+  },
+  "residuals": [
+    {
+      "ids": [
+        "CVE-2026-19499",
+        "CVE-2026-5435"
+      ],
+      "component": "glibc2.41-12+deb13u4",
+      "status": "Stable package remains vulnerable. Specific strfmon/legacy DNS debug-print trigger paths are not proven reachable or globally unreachable through all native/FFI consumers; process OOB risk not fixed by runtime permissions."
+    },
+    {
+      "ids": [
+        "CVE-2026-102010"
+      ],
+      "component": "GNU PBDS binary_heap erase_if compiled header-template consumer",
+      "status": "Consumer build headers/inlined/static instances remain unknown. Updating only dynamic libstdc++ would not necessarily repair this template UAF."
+    },
+    {
+      "ids": [
+        "CVE-2026-95619"
+      ],
+      "component": "gcc/libstdc++ aligned new",
+      "status": "Exact current dynamic-library hash matches examined POSIX posix_memalign branch without vulnerable rounding; package stays vendor-vulnerable, static/vendored/replacement runtimes not exhaustively proved."
+    },
+    {
+      "ids": [
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410"
+      ],
+      "component": "util-linux/libmount",
+      "status": "Four specific CLI entry points removed and new privilege acquisition blocked. Essential package/libmount retained; no upstream code patch or universal no-consumer claim."
+    }
+  ],
+  "raw_vendor_minor_records": 52,
+  "unique_vendor_minor_cves": 8,
+  "policy_expiry": "2026-11-09",
+  "policy_boundary": "The original strict H/C block was changed to explicit vendor-minor calibration this round. pass_vendor_policy is not a patch or human deployment-risk acceptance. New220 changes only source hashes, not advisory classifications/versions/expiry/threshold.",
+  "human_risk_acceptance": {
+    "found": false,
+    "internal_permission_to_implement_policy_is_not_acceptance": true,
+    "another_project_single_fixed_artifact_approval_does_not_apply": true
+  },
+  "decision_options": [
+    {
+      "id": "retain_block",
+      "description": "Keep deployment blocked while awaiting supported stable/native-consumer repairs or separately authorized bounded work; no blind sid libc transplant and no unbounded wheel reverse engineering."
+    },
+    {
+      "id": "accept_exact_constrained_candidate",
+      "description": "Human may explicitly accept these disclosed residuals only for this exact artifact under single-host loopback-bound daily deployment and the recorded constraints, expiring2026-11-09. This is not public-internet approval or a safety certification; serial window, daily backup/upgrade/readback and final exact-SHA CI remain mandatory."
+    }
+  ],
+  "suggested_human_question": "是否接受本项目这次精确镜像中仍未修复或未排除的原生库风险，仅限保持127.0.0.1绑定的单主机日常环境、沿用已核权限限制并于2026-11-09前重新评估，再继续串行部署与最终CI；还是保留部署阻断等待修复？",
+  "next_step_requires": "Coordinator obtains an explicit project-specific residual-risk disposition before DEPLOY_READY; deployment window still not granted.",
+  "remaining_delivery": [
+    "Daily fresh backup/enrollment/rebuild/business readback under coordinator window",
+    "Install configured Windows automated backup task in that window",
+    "Conditional exact-resource cleanup with pre/post manifest, preserving recovery/unknown/shared resources",
+    "Finalize README/evidence, push suitable branch, wait every expected final exact-SHA GitHub CI/security job"
+  ],
+  "deferred_or_unclaimed": [
+    "Offhost target/verification explicitly deferred by human; not independently verified",
+    "No independent human blind-review score, no general accuracy/HA/SLA/capacity claim",
+    "No email/SMS recovery or public TLS/outer-proxy assurance inferred"
+  ],
+  "new_real_paid_provider_calls": 0
+}

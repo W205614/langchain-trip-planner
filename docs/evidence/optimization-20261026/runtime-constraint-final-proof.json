@@ -1,0 +1,301 @@
+{
+  "schema_version": 1,
+  "probe_source_sha256": "964b3539dc4bc4d6a1decb8ee51c537c3cfd74c6ba18e3711222c8549b7bf960",
+  "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+  "passed": true,
+  "constraints": {
+    "user": "1000",
+    "cap_eff": "0000000000000000",
+    "cap_bnd": "0000000000000000",
+    "no_new_privileges": true,
+    "readonly_rootfs": true,
+    "privileged": false,
+    "cap_drop_all": true,
+    "restricted_tools_absent": true,
+    "actual_uvicorn": true
+  },
+  "data": {
+    "inspect": {
+      "container_id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "started_at": "2026-10-26T13:31:25.729687078Z",
+      "running": true,
+      "user": "appuser",
+      "cmd": [
+        "uvicorn",
+        "app.agent_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9000",
+        "--workers",
+        "1"
+      ],
+      "entrypoint": null,
+      "working_directory_is_image_default_app": true,
+      "path_matches_image_default": true,
+      "loader_environment_clear": true,
+      "loader_variable_names_checked": [
+        "LD_PRELOAD",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "PYTHONHOME",
+        "PYTHONSTARTUP"
+      ],
+      "privileged": false,
+      "readonly_rootfs": true,
+      "cap_add": null,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "namespaces": {
+        "PidMode": "",
+        "IpcMode": "private",
+        "NetworkMode": "trip-opt-hardened-20261026_default"
+      },
+      "devices": null,
+      "device_requests": null,
+      "device_cgroup_rules": null,
+      "port_bindings": {},
+      "resource_limits": {
+        "Memory": 2147483648,
+        "NanoCpus": 1000000000,
+        "PidsLimit": 256
+      },
+      "tmpfs": {
+        "/app/logs": "rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000,mode=0750",
+        "/tmp": "rw,nosuid,nodev,noexec,size=128m,uid=1000,gid=1000,mode=1777"
+      },
+      "path_environment": {
+        "DATA_DIR": "/app/runtime",
+        "CHROMA_DIR": "/app/data/chroma",
+        "LOG_DIR": "/app/logs",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "XDG_CACHE_HOME": "/tmp/cache"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_runtime",
+          "Destination": "/app/runtime",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_chroma",
+          "Destination": "/app/data/chroma",
+          "RW": true,
+          "Propagation": ""
+        }
+      ]
+    },
+    "inspect_digest": "17c20fc72b6b6e81124b9345ba46bc8f4cc129c67a4dd10aad516458e3a0b77a",
+    "source_image": {
+      "id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+      "default_cmd": [
+        "uvicorn",
+        "app.agent_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9000",
+        "--workers",
+        "1"
+      ]
+    },
+    "runtime": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "process",
+          "passed": true
+        },
+        {
+          "name": "root_mount",
+          "passed": true
+        },
+        {
+          "name": "writepaths",
+          "passed": true
+        },
+        {
+          "name": "restricted_tools",
+          "passed": true
+        },
+        {
+          "name": "readiness",
+          "passed": true
+        }
+      ],
+      "data": {
+        "process": {
+          "pid1_cmdline": [
+            "/usr/local/bin/python3.11",
+            "/usr/local/bin/uvicorn",
+            "app.agent_api.main:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "9000",
+            "--workers",
+            "1"
+          ],
+          "pid1_status": {
+            "Uid": "1000\t1000\t1000\t1000",
+            "Gid": "1000\t1000\t1000\t1000",
+            "CapEff": "0000000000000000",
+            "CapBnd": "0000000000000000",
+            "NoNewPrivs": "1",
+            "Seccomp": "2"
+          },
+          "self_status": {
+            "Uid": "1000\t1000\t1000\t1000",
+            "Gid": "1000\t1000\t1000\t1000",
+            "CapEff": "0000000000000000",
+            "CapBnd": "0000000000000000",
+            "NoNewPrivs": "1",
+            "Seccomp": "2"
+          },
+          "self_uid": 1000
+        },
+        "root_mount": {
+          "target": "/",
+          "options": [
+            "ro",
+            "relatime"
+          ],
+          "filesystem": "overlay",
+          "super_options": [
+            "rw",
+            "lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27115/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27101/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27100/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27099/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27098/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27097/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27096/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27095/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27094/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27093/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27092/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27091/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27090/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27089/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27088/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27087/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/25459/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/25458/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/25457/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/25456/fs",
+            "upperdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27117/fs",
+            "workdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/27117/work"
+          ]
+        },
+        "writepaths": [
+          {
+            "path": "/app/runtime",
+            "file": "/app/runtime/.runtime-constraint-canary-36d914a3f5894cf2b5af327912696fdb",
+            "readback": true,
+            "sha256": "783e309c55949a6d860494192b86e64234965a8a5ced5ebf63010555abafc80d",
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o755",
+            "mount": {
+              "target": "/app/runtime",
+              "options": [
+                "rw",
+                "relatime"
+              ],
+              "filesystem": "ext4",
+              "super_options": [
+                "rw"
+              ]
+            }
+          },
+          {
+            "path": "/app/data/chroma",
+            "file": "/app/data/chroma/.runtime-constraint-canary-36d914a3f5894cf2b5af327912696fdb",
+            "readback": true,
+            "sha256": "783e309c55949a6d860494192b86e64234965a8a5ced5ebf63010555abafc80d",
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o755",
+            "mount": {
+              "target": "/app/data/chroma",
+              "options": [
+                "rw",
+                "relatime"
+              ],
+              "filesystem": "ext4",
+              "super_options": [
+                "rw"
+              ]
+            }
+          },
+          {
+            "path": "/tmp",
+            "file": "/tmp/.runtime-constraint-canary-36d914a3f5894cf2b5af327912696fdb",
+            "readback": true,
+            "sha256": "783e309c55949a6d860494192b86e64234965a8a5ced5ebf63010555abafc80d",
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o1777",
+            "mount": {
+              "target": "/tmp",
+              "options": [
+                "rw",
+                "nosuid",
+                "nodev",
+                "noexec",
+                "relatime"
+              ],
+              "filesystem": "tmpfs",
+              "super_options": [
+                "rw",
+                "size=131072k",
+                "uid=1000",
+                "gid=1000"
+              ]
+            }
+          },
+          {
+            "path": "/app/logs",
+            "file": "/app/logs/.runtime-constraint-canary-36d914a3f5894cf2b5af327912696fdb",
+            "readback": true,
+            "sha256": "783e309c55949a6d860494192b86e64234965a8a5ced5ebf63010555abafc80d",
+            "uid": 1000,
+            "gid": 1000,
+            "mode": "0o750",
+            "mount": {
+              "target": "/app/logs",
+              "options": [
+                "rw",
+                "nosuid",
+                "nodev",
+                "noexec",
+                "relatime"
+              ],
+              "filesystem": "tmpfs",
+              "super_options": [
+                "rw",
+                "size=65536k",
+                "mode=750",
+                "uid=1000",
+                "gid=1000"
+              ]
+            }
+          }
+        ],
+        "restricted_tools": {
+          "status": "verified_absent",
+          "manifest_sha256": "c6b4fe735b1e889876a23f71d31f01ebf1eafffe4dbcf52bf664c6d7efae8ba4",
+          "result": {
+            "status": "verified_absent",
+            "remaining_entries": [],
+            "manifest": "/usr/local/share/tripplanner/restricted-runtime-tools.json",
+            "limits": "Bounded name/dpkg/exact-binary-identity inventory; does not prove absence of arbitrary recompiled helpers or vulnerability absence in retained libraries/static native consumers."
+          }
+        },
+        "readiness": {
+          "status": 200,
+          "service": "trip-agent",
+          "body_sha256": "115527440f04c13f53a7796c6a30705b2037aaca31d26b9b9b420e68251b4c20"
+        }
+      }
+    }
+  },
+  "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "source_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "checked_at": "2026-10-26T14:18:28.423094+00:00",
+  "resources": {
+    "borrowed_container": true,
+    "retained_by_default": true,
+    "journal": null
+  }
+}

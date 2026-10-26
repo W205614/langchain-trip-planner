@@ -1,0 +1,64 @@
+{
+  "recorded_at": "2026-10-26T07:54:24.602436+00:00",
+  "head": "d81410f6d77a8c1fcfb6cd18c2c4f239be8f3e9d",
+  "branch": "main",
+  "initial_git_status": "clean at dispatch before authorized edits",
+  "source_baseline": "d81410f6d77a8c1fcfb6cd18c2c4f239be8f3e9d",
+  "application_image_revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+  "production_source_equal_to_baseline": true,
+  "daily": {
+    "agent": {
+      "container": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+      "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "target": "/app/runtime"
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "target": "/app/data/chroma"
+        }
+      ],
+      "revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef"
+    },
+    "backend": {
+      "container": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+      "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "running": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "target": "/data/uploads"
+        }
+      ],
+      "revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef"
+    },
+    "frontend": {
+      "container": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+      "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "running": true,
+      "mounts": [],
+      "revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef"
+    },
+    "postgres": {
+      "container": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "running": true,
+      "mounts": [
+        {
+          "type": "volume",
+          "source": "langchain-trip-planner_java_business_data",
+          "target": "/var/lib/postgresql/data"
+        }
+      ],
+      "revision": null
+    }
+  },
+  "paid_provider_calls": 0,
+  "deployment_window": "not granted; no daily container or data changed"
+}

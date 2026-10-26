@@ -1,0 +1,21 @@
+{
+  "status": "passed_isolated_existing_snapshot_only",
+  "selected_report": "existing-data-rehearsal-result-3.json",
+  "sha256": "b69c5c9fbffe9d3ae5f71147d709a46ee4d95b8b1510140449cf0253b6c7b70b",
+  "failed_attempts": [
+    {
+      "report": "existing-data-rehearsal-result.json",
+      "cause": "Inherited image Compose labels caused an ad-hoc test container to be mistaken for a fifth daily service. No mutation occurred; inventory now requires positive managed-container labels and rejects real duplicates."
+    },
+    {
+      "report": "existing-data-rehearsal-result-2.json",
+      "cause": "No permission to create the requested E-drive root recovery directory. No recovery artifacts or Docker resources created by that attempt; switched to the current task output directory."
+    }
+  ],
+  "unchanged_expectations": "The original backup, original-row hashes, migration prefix, identity refusal and independent rollback requirements were unchanged.",
+  "remaining_limits": [
+    "Snapshot from 2026-10-25, not current daily predeployment recovery point",
+    "Single host and two isolated copies; actual off-host drill deferred by user",
+    "Role/Agent/frontend acceptance are separate from these Java/PostgreSQL clones"
+  ]
+}

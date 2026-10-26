@@ -1,0 +1,288 @@
+[
+  {
+    "name": "com.fasterxml.jackson.core:jackson-core",
+    "current": "2.20.2",
+    "findings": 4,
+    "severity_labels": [
+      "HIGH",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "2.18.11",
+      "2.18.6",
+      "2.18.8",
+      "2.21.1",
+      "2.21.4",
+      "2.21.7",
+      "2.22.3"
+    ]
+  },
+  {
+    "name": "tools.jackson.core:jackson-core",
+    "current": "3.0.4",
+    "findings": 6,
+    "severity_labels": [
+      "HIGH",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "3.1.0",
+      "3.1.1",
+      "3.1.4",
+      "3.1.7",
+      "3.2.2",
+      "3.2.3"
+    ]
+  },
+  {
+    "name": "com.fasterxml.jackson.core:jackson-databind",
+    "current": "2.20.2",
+    "findings": 12,
+    "severity_labels": [
+      "HIGH",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "2.18.10",
+      "2.18.11",
+      "2.18.8",
+      "2.18.9",
+      "2.21.4",
+      "2.21.5",
+      "2.21.6",
+      "2.21.7",
+      "2.22.1",
+      "2.22.2",
+      "2.22.3",
+      "3.1.4"
+    ]
+  },
+  {
+    "name": "tools.jackson.core:jackson-databind",
+    "current": "3.0.4",
+    "findings": 14,
+    "severity_labels": [
+      "HIGH",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "2.21.4",
+      "3.1.4",
+      "3.1.5",
+      "3.1.6",
+      "3.1.7",
+      "3.2.1",
+      "3.2.2",
+      "3.2.3"
+    ]
+  },
+  {
+    "name": "org.apache.logging.log4j:log4j-api",
+    "current": "2.25.3",
+    "findings": 1,
+    "severity_labels": [
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "2.25.5",
+      "2.26.1"
+    ]
+  },
+  {
+    "name": "ch.qos.logback:logback-core",
+    "current": "1.5.32",
+    "findings": 2,
+    "severity_labels": [
+      "LOW"
+    ],
+    "all_fixed_branch_versions": [
+      "1.5.33",
+      "1.5.34"
+    ]
+  },
+  {
+    "name": "io.micrometer:micrometer-core",
+    "current": "1.16.3",
+    "findings": 2,
+    "severity_labels": [
+      "HIGH"
+    ],
+    "all_fixed_branch_versions": [
+      "1.15.12",
+      "1.16.6"
+    ]
+  },
+  {
+    "name": "org.postgresql:postgresql",
+    "current": "42.7.10",
+    "findings": 2,
+    "severity_labels": [
+      "HIGH"
+    ],
+    "all_fixed_branch_versions": [
+      "42.7.11",
+      "42.7.12"
+    ]
+  },
+  {
+    "name": "org.springframework.boot:spring-boot",
+    "current": "4.0.3",
+    "findings": 2,
+    "severity_labels": [
+      "CRITICAL",
+      "HIGH"
+    ],
+    "all_fixed_branch_versions": [
+      "3.5.14",
+      "4.0.6"
+    ]
+  },
+  {
+    "name": "org.springframework.boot:spring-boot-autoconfigure",
+    "current": "4.0.3",
+    "findings": 1,
+    "severity_labels": [
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "3.5.15",
+      "4.0.7"
+    ]
+  },
+  {
+    "name": "org.springframework.boot:spring-boot-starter-actuator",
+    "current": "4.0.3",
+    "findings": 2,
+    "severity_labels": [
+      "HIGH"
+    ],
+    "all_fixed_branch_versions": [
+      "3.5.12",
+      "4.0.4"
+    ]
+  },
+  {
+    "name": "org.springframework:spring-core",
+    "current": "7.0.5",
+    "findings": 1,
+    "severity_labels": [
+      "LOW"
+    ],
+    "all_fixed_branch_versions": [
+      "6.2.19",
+      "7.0.8"
+    ]
+  },
+  {
+    "name": "org.springframework:spring-expression",
+    "current": "7.0.5",
+    "findings": 3,
+    "severity_labels": [
+      "HIGH",
+      "LOW",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "6.2.19",
+      "7.0.8"
+    ]
+  },
+  {
+    "name": "org.springframework.security:spring-security-config",
+    "current": "7.0.3",
+    "findings": 2,
+    "severity_labels": [
+      "HIGH"
+    ],
+    "all_fixed_branch_versions": [
+      "7.0.5"
+    ]
+  },
+  {
+    "name": "org.springframework.security:spring-security-core",
+    "current": "7.0.3",
+    "findings": 2,
+    "severity_labels": [
+      "LOW",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "6.5.10",
+      "7.0.5"
+    ]
+  },
+  {
+    "name": "org.springframework.security:spring-security-web",
+    "current": "7.0.3",
+    "findings": 3,
+    "severity_labels": [
+      "CRITICAL",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "6.5.11",
+      "6.5.9",
+      "7.0.4",
+      "7.0.5",
+      "7.0.6"
+    ]
+  },
+  {
+    "name": "org.springframework:spring-web",
+    "current": "7.0.5",
+    "findings": 1,
+    "severity_labels": [
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "6.2.19",
+      "7.0.8"
+    ]
+  },
+  {
+    "name": "org.springframework:spring-webmvc",
+    "current": "7.0.5",
+    "findings": 13,
+    "severity_labels": [
+      "CRITICAL",
+      "HIGH",
+      "LOW",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "6.2.17",
+      "6.2.18",
+      "6.2.19",
+      "7.0.6",
+      "7.0.7",
+      "7.0.8",
+      "7.0.9"
+    ]
+  },
+  {
+    "name": "org.apache.tomcat.embed:tomcat-embed-core",
+    "current": "11.0.18",
+    "findings": 16,
+    "severity_labels": [
+      "CRITICAL",
+      "HIGH",
+      "LOW",
+      "MODERATE"
+    ],
+    "all_fixed_branch_versions": [
+      "10.1.52",
+      "10.1.53",
+      "10.1.54",
+      "10.1.55",
+      "10.1.58",
+      "11.0.20",
+      "11.0.21",
+      "11.0.22",
+      "11.0.25",
+      "9.0.116",
+      "9.0.117",
+      "9.0.118",
+      "9.0.121"
+    ]
+  }
+]

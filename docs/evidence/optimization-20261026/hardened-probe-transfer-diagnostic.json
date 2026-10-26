@@ -1,0 +1,7 @@
+{
+  "first_transfer": "Docker cp refused because container rootfs is marked read-only; no probe or product check executed",
+  "actual_stderr": "Error response from daemon: container rootfs is marked read-only",
+  "corrected_transfer": "docker exec stdin written as actual nonroot service UID to only the preconfigured writable /tmp tmpfs",
+  "security_flags_changed": false,
+  "test_assertions_changed": false
+}

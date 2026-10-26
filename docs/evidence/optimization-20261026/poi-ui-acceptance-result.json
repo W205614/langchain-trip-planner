@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "started_at": "2026-10-26T13:21:31.750Z",
+  "project": "trip-opt-hardened-20261026",
+  "checks": [
+    {
+      "name": "isolated_fixture_marker",
+      "passed": true
+    },
+    {
+      "name": "real_cookie_owner_seed_and_nonempty_content_lock",
+      "passed": true
+    },
+    {
+      "name": "explicit_confirmation_changes_only_local_draft_preserving_server_and_locked_activity",
+      "passed": true,
+      "candidate_id": "fixture-beijing-3"
+    },
+    {
+      "name": "locked_replacement_target_is_rejected",
+      "passed": true
+    },
+    {
+      "name": "fixed_project_labels_images_and_initial_state_verified",
+      "passed": true
+    },
+    {
+      "name": "actual_uncached_map_outage_yields_new_lookup_failed_findings_without_poi_or_lock_mutation",
+      "passed": true
+    },
+    {
+      "name": "actual_retry_after_fixture_restore_obtains_new_verified_findings_and_preserves_pois_and_locks",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\poi-ui-run-3\\01-explicit-replacement-review.png",
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\poi-ui-run-3\\02-local-draft-server-unchanged.png",
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\poi-ui-run-3\\03-real-map-outage-retry-ui.png",
+    "E:\\project\\langchain-trip-planner\\.codex-optimization\\poi-ui-run-3\\04-map-retry-completed.png"
+  ],
+  "docker_mutations": [
+    {
+      "action": "restart",
+      "service": "backend",
+      "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+      "attempted_at": "2026-10-26T13:21:52.741Z"
+    },
+    {
+      "action": "stop",
+      "service": "amap-fixture",
+      "id": "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+      "attempted_at": "2026-10-26T13:22:31.850Z"
+    },
+    {
+      "action": "start",
+      "service": "amap-fixture",
+      "id": "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+      "attempted_at": "2026-10-26T13:22:39.948Z"
+    },
+    {
+      "action": "start",
+      "service": "amap-fixture",
+      "id": "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+      "attempted_at": "2026-10-26T13:23:06.481Z"
+    }
+  ],
+  "restoration": {
+    "amap_fixture_running_and_healthy": true,
+    "backend_running_and_healthy": true
+  },
+  "boundary": {
+    "real_business_http": true,
+    "cookie_ui_login": true,
+    "provider_fixture": true,
+    "real_supplier_validation": false,
+    "not_found_not_simulated": true,
+    "no_business_response_fulfill": true,
+    "direct_paid_provider_calls": 0
+  },
+  "trip_id": 1,
+  "targets": {
+    "backend": {
+      "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "running": true
+    },
+    "amap-fixture": {
+      "id": "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "running": true
+    }
+  },
+  "map_outage_started_at": "2026-10-26T13:22:33.927Z",
+  "report_phase": "finished",
+  "finished_at": "2026-10-26T13:23:07.808Z",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "driver_sha256": "7ec9c71143f5403155781a2ff3421da26959ce83d51a60ccd2874ab5b1d8d539",
+  "prior_attempts": [
+    {
+      "attempt": "run1",
+      "status": "driver_locator_failure",
+      "raw_report": ".codex-optimization/poi-ui-run-1/report.json",
+      "no_fault_injection": true,
+      "public_original_report": "poi-ui-run1-failure.json"
+    },
+    {
+      "attempt": "run2",
+      "status": "Failed before verification response; source review exposed ready-record entry gap. Original primary error/full checklist were lost to a waiter-close defect; partial stage observations are retained, not reconstructed as a full report.",
+      "diagnostic": "poi-ui-run2-process-failure-diagnostic.json",
+      "source_fix": "History.vue owner entry now applies to ready/draft; server permission/version guards unchanged"
+    }
+  ]
+}

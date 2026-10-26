@@ -1,0 +1,23 @@
+{
+  "exit_code": 0,
+  "packages": [
+    {
+      "Package": "libacl1",
+      "Version": "2.4.0-1",
+      "Architecture": "amd64",
+      "Depends": "libc6 (>= 2.38)",
+      "Filename": "pool/main/a/acl/libacl1_2.4.0-1_amd64.deb",
+      "SHA256": "e9da0e00387e31c1709b70497f1eda91389c962c3940e6d233d4c57f5ea6f635",
+      "Size": "37132"
+    },
+    {
+      "Package": "zlib1g",
+      "Version": "1:1.3.dfsg+really1.3.2-4",
+      "Architecture": "amd64",
+      "Depends": "libc6 (>= 2.14)",
+      "Filename": "pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-4_amd64.deb",
+      "SHA256": "8506ce550a81ac14b047608e0df121037d9cbb10c3cc28446f68cf8c1d9d31ce",
+      "Size": "92424"
+    }
+  ]
+}

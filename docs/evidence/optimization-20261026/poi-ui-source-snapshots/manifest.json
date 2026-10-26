@@ -1,0 +1,12 @@
+{
+  "run2": {
+    "path": "docs\\evidence\\optimization-20261026\\poi-ui-source-snapshots\\run2-before-failure-report-fix.cjs",
+    "sha256": "a23bb9af1d3da7df01d1f4baab414d511308d871e6cbcb9ee7e83d84d1d11b0e",
+    "provenance": "Captured current bytes before the next edits. Root ran this unchanged revision; no execution-time copy had been retained."
+  },
+  "run1": {
+    "path": "docs\\evidence\\optimization-20261026\\poi-ui-source-snapshots\\run1-reconstructed-before-relative-locator-fix.cjs",
+    "sha256": "729c8f7e94a45f7043c456a4d374cdfdc6dd1192a9c5d94d8a9a7aecf9bb5360",
+    "provenance": "Reconstructed by reversing the documented exact locator/comment change. Not an independently retained execution-time byte snapshot."
+  }
+}
