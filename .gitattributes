@@ -2,6 +2,6 @@
 backend/evals/improvement_cases_20261025.json -text
 backend/scripts/improvement_benchmark.py -text
 docs/evidence/improvement-20261025/*.json -text
-.github/security-risk-authorization.json -text
-.github/security-risk-acceptance.json -text
-docs/evidence/optimization-20261026/** -text
+.github/security-risk-authorization.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+.github/security-risk-acceptance.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/optimization-20261026/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
