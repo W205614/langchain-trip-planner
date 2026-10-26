@@ -57,6 +57,25 @@ class RestrictedToolsTests(unittest.TestCase):
             with self.assertRaises(RuntimeError): tools.restrict(root, lambda path: None)
             self.assertTrue((binary / 'mount').exists())
 
+    def test_dpkg_documentation_directory_is_preserved_but_bin_directory_target_is_rejected(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); binary = self.fixture(root)
+            documentation = root / 'usr/share/doc/mount'; documentation.mkdir(parents=True)
+            (documentation / 'README').write_bytes(b'keep-package-documentation')
+            (root / 'var/lib/dpkg/info/mount.list').write_text(
+                '/usr/bin/mount\n/usr/bin/umount\n/usr/share/doc/mount\n')
+            self.assertEqual('verified_absent', tools.restrict(root, lambda path: None)['status'])
+            self.assertEqual(b'keep-package-documentation', (documentation / 'README').read_bytes())
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); binary = self.fixture(root)
+            (binary / 'mount').unlink()
+            (binary / 'mount').mkdir()
+            (binary / 'mount/marker').write_bytes(b'preserve-abnormal-directory')
+            with self.assertRaisesRegex(RuntimeError, 'Refusing to remove a directory'):
+                tools.restrict(root, lambda path: None)
+            self.assertEqual(b'preserve-abnormal-directory', (binary / 'mount/marker').read_bytes())
+            self.assertTrue((binary / 'nsenter').exists())
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -12,7 +12,7 @@
     "backend/app/agent_api/main.py": "76e9a4a68f00f9a893e53f0df58509676c2582a60e4912ac4dbe72e049ba396e",
     "backend/Dockerfile": "b9ca203ac15eada54a6bc8cea438c2b1692f684a7901a1953af3d20a117aef52",
     "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
-    "backend/scripts/restrict_runtime_tools.py": "76f260c488af855521350cc7d842605c707ff3500ad4ba2105f8c688b3c66e68"
+    "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",

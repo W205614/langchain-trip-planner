@@ -53,7 +53,16 @@ def package_paths(root):
             for line in listing.read_text(encoding='utf-8').splitlines():
                 if PurePosixPath(line).name in TOOLS:
                     path = safe(root, line)
-                    result.add(path)
+                    executable_directory = path.parent in {safe(root, value) for value in BIN_DIRS}
+                    if path.is_dir():
+                        # dpkg also records /usr/share/doc/mount. That is not a
+                        # CLI. A named directory inside a bin directory remains
+                        # an abnormal target and must reach the refusal below.
+                        if executable_directory:
+                            result.add(path)
+                    elif path.is_symlink() or (path.is_file() and
+                            (executable_directory or path.stat().st_mode & 0o111)):
+                        result.add(path)
     return result
 
 
@@ -119,7 +128,7 @@ def restrict(root, capability_reader=capabilities):
     before = scan(root, fingerprints, capability_reader)
     for row in before:
         path = safe(root, row['path'])
-        if path.is_dir() and not path.is_symlink():
+        if path.is_dir():
             raise RuntimeError('Refusing to remove a directory from CLI inventory')
         path.unlink(missing_ok=True)
     remaining = scan(root, fingerprints, capability_reader)
