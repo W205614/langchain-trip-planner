@@ -24,15 +24,17 @@ class DistributionPolicyTests(unittest.TestCase):
 
     def test_minor_remains_vulnerable_and_unknown_versions_ids_or_release_are_not_allowed(self):
         policy, match, evidence = self.sample()
-        self.assertEqual('still_vulnerable_vendor_minor', image_policy.assess(policy, match, evidence))
+        self.assertIsNone(image_policy.assess(policy, match, evidence))
+        acceptance = {'status': 'effective_temporary_acceptance_still_vulnerable', 'allowed_cve_ids': ['CVE-2026-5435']}
+        self.assertEqual('still_vulnerable_vendor_minor', image_policy.assess(policy, match, evidence, acceptance))
         self.assertEqual('vulnerable', policy['assessments'][0]['vendor_status'])
         for key, value in [('id', 'CVE-2099-9999')]:
             modified = json.loads(json.dumps(match)); modified['vulnerability'][key] = value
-            self.assertIsNone(image_policy.assess(policy, modified, evidence))
+            self.assertIsNone(image_policy.assess(policy, modified, evidence, acceptance))
         modified = json.loads(json.dumps(match)); modified['artifact']['version'] = '2.41-12+deb13u5'
-        self.assertIsNone(image_policy.assess(policy, modified, evidence))
+        self.assertIsNone(image_policy.assess(policy, modified, evidence, acceptance))
         evidence['release'] = '12'
-        self.assertIsNone(image_policy.assess(policy, match, evidence))
+        self.assertIsNone(image_policy.assess(policy, match, evidence, acceptance))
         self.assertIsNone(image_policy.assess(None, match, evidence))
 
     def test_backport_requires_actual_installed_revision_and_absence_is_not_assumed(self):

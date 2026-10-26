@@ -11,9 +11,14 @@ import hashlib
 import io
 import json
 from pathlib import Path
+from pathlib import PurePosixPath
 import subprocess
 import tarfile
 import uuid
+try:
+    from . import risk_acceptance
+except ImportError:
+    import risk_acceptance
 
 
 def load_policy(path, root, today=None):
@@ -63,15 +68,98 @@ def dpkg_inventory(text):
     return packages
 
 
-def inventory(image, policy, destination, cleanup_owned_resources=False):
-    name = 'trip-security-inventory-' + uuid.uuid4().hex[:12]
-    result = subprocess.run(['docker', 'create', '--name', name, '--entrypoint', '/bin/false', image],
-                            capture_output=True, text=True, timeout=30)
-    if result.returncode:
-        raise RuntimeError('Cannot create stopped inventory object')
-    resource = {'name': name, 'container_id': result.stdout.strip(), 'image_id': image,
+def exported_file_inventory(archive_path):
+    """Stream a retained Docker rootfs tar; never extract or execute its contents."""
+    native, application, links, seen = {}, {}, {}, set()
+    def safe_path(value):
+        path = PurePosixPath('/' + value.lstrip('/'))
+        if '..' in path.parts:
+            raise RuntimeError('Unsafe image export member')
+        return str(path)
+    with tarfile.open(archive_path, mode='r|') as archive:
+        for member in archive:
+            path = safe_path(member.name)
+            if member.isdir():
+                continue
+            if path in seen:
+                raise RuntimeError('Duplicate image export member')
+            seen.add(path)
+            if member.issym() or member.islnk():
+                target = member.linkname
+                if member.issym() and not target.startswith('/'):
+                    target = str(PurePosixPath(path).parent / target)
+                # Symlink ../ is normal in an image. Normalize without following
+                # anything on the host, then resolve only names in this archive.
+                parts = []
+                for part in PurePosixPath('/' + target.lstrip('/')).parts:
+                    if part in ('/', '.'):
+                        continue
+                    if part == '..':
+                        if not parts:
+                            raise RuntimeError('Export link escapes image root')
+                        parts.pop()
+                    else:
+                        parts.append(part)
+                links[path] = '/' + '/'.join(parts)
+                continue
+            if not member.isfile():
+                continue
+            source = archive.extractfile(member)
+            prefix = source.read(4)
+            is_elf = prefix == b'\x7fELF'
+            is_application = path.startswith('/app/') and '__pycache__' not in PurePosixPath(path).parts and not path.endswith('.pyc')
+            if is_application:
+                raw = prefix + source.read()
+                application[path] = risk_acceptance.application_digest(path, raw)
+                if is_elf:
+                    native[path] = hashlib.sha256(raw).hexdigest()
+            elif is_elf:
+                hasher = hashlib.sha256(prefix)
+                while block := source.read(1024 * 1024):
+                    hasher.update(block)
+                native[path] = hasher.hexdigest()
+    def resolve(path):
+        visited = set()
+        while path in links:
+            if path in visited:
+                return None
+            visited.add(path)
+            path = links[path]
+        return path
+    for path in links:
+        target = resolve(path)
+        if target in native:
+            native[path] = native[target]
+        if path.startswith('/app/') and target in application:
+            application[path] = application[target]
+    if not native or not application:
+        raise RuntimeError('Complete native/application inventory unavailable')
+    return {'native_inventory_complete': True, 'native_elf_sha256': dict(sorted(native.items())),
+            'application_file_sha256': dict(sorted(application.items())),
+            'application_hash_algorithm': risk_acceptance.APPLICATION_HASH_ALGORITHM}
+
+
+def inventory(image, policy, destination, cleanup_owned_resources=False, include_native_elf=False, retained_container=None):
+    reused = retained_container is not None
+    if reused:
+        inspected = subprocess.run(['docker', 'inspect', retained_container], capture_output=True, text=True, timeout=30, check=True)
+        observed = json.loads(inspected.stdout)[0]
+        name = observed['Name'].lstrip('/')
+        if (not name.startswith('trip-security-inventory-') or observed.get('Image') != image
+                or observed.get('State', {}).get('Running') or observed.get('State', {}).get('StartedAt') != '0001-01-01T00:00:00Z'
+                or observed.get('Config', {}).get('Entrypoint') != ['/bin/false']):
+            raise RuntimeError('Reuse requires an exact-image UUID-owned inventory container that has never started')
+        container_id = observed['Id']
+    else:
+        name = 'trip-security-inventory-' + uuid.uuid4().hex[:12]
+        result = subprocess.run(['docker', 'create', '--name', name, '--entrypoint', '/bin/false', image],
+                                capture_output=True, text=True, timeout=30)
+        if result.returncode:
+            raise RuntimeError('Cannot create stopped inventory object')
+        container_id = result.stdout.strip()
+    resource = {'name': name, 'container_id': container_id, 'image_id': image,
                 'purpose': 'stopped image inventory extraction; no image command executed',
-                'business_data': False, 'status': 'retained', 'cleanup_explicit': cleanup_owned_resources}
+                'business_data': False, 'status': 'retained', 'cleanup_explicit': cleanup_owned_resources, 'reused': reused}
     resource_path = destination / (name + '-resource.json')
     resource_path.write_text(json.dumps(resource, indent=2) + '\n', encoding='utf-8')
     copied = {}
@@ -97,8 +185,21 @@ def inventory(image, policy, destination, cleanup_owned_resources=False):
                 if len(files) != 1:
                     raise RuntimeError('Inventory target is not exactly one regular file')
                 copied[path] = archive.extractfile(files[0]).read()
+        native_evidence = {}
+        if include_native_elf:
+            export_path = destination / (name + '-rootfs.tar')
+            exported = subprocess.run(['docker', 'export', '--output', str(export_path), container_id],
+                                      capture_output=True, timeout=900)
+            if exported.returncode:
+                raise RuntimeError('Complete stopped-image export failed; no partial inventory accepted')
+            native_evidence = exported_file_inventory(export_path)
+            hasher = hashlib.sha256()
+            with export_path.open('rb') as stream:
+                while block := stream.read(1024 * 1024):
+                    hasher.update(block)
+            native_evidence['retained_rootfs_archive'] = {'path': str(export_path), 'sha256': hasher.hexdigest(), 'bytes': export_path.stat().st_size}
     finally:
-        if cleanup_owned_resources:
+        if cleanup_owned_resources and not reused:
             cleaned = subprocess.run(['docker', 'rm', '--volumes', name], capture_output=True, timeout=30)
             resource['status'] = 'cleaned_explicit_ci' if cleaned.returncode == 0 else 'cleanup_failed'
             resource_path.write_text(json.dumps(resource, indent=2) + '\n', encoding='utf-8')
@@ -117,11 +218,12 @@ def inventory(image, policy, destination, cleanup_owned_resources=False):
                 'file_sha256': {path: hashlib.sha256(raw).hexdigest() for path, raw in copied.items()},
                 'absent_paths': absent, 'resource_manifest': str(resource_path),
                 'method': 'docker cp from exact stopped UUID-owned container; no image commands executed; retained locally by default'}
+    evidence.update(native_evidence)
     (destination / 'distribution-inventory.json').write_text(json.dumps(evidence, indent=2) + '\n', encoding='utf-8')
     return evidence
 
 
-def assess(policy, match, evidence):
+def assess(policy, match, evidence, acceptance=None):
     if not policy or not evidence:
         return None
     artifact, vulnerability = match.get('artifact', {}), match.get('vulnerability', {})
@@ -141,5 +243,9 @@ def assess(policy, match, evidence):
             continue
         if any(evidence.get('file_sha256', {}).get(path) != digest for path, digest in entry.get('file_sha256', {}).items()):
             continue
+        if entry['classification'] == 'still_vulnerable_vendor_minor':
+            if (not acceptance or acceptance.get('status') != 'effective_temporary_acceptance_still_vulnerable'
+                    or vulnerability.get('id') not in acceptance.get('allowed_cve_ids', [])):
+                continue
         return entry['classification']
     return None

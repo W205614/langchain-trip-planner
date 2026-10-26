@@ -1,0 +1,42 @@
+{
+  "project": "Trip",
+  "authorized_at": "2026-10-26T13:41:50.297840+00:00",
+  "accepted": true,
+  "human_answer": "仅限本机受控环境暂时接受（建议）",
+  "human_question": "是否暂时接受当前Agent剩余8项未修复漏洞，仅用于本机受控演示环境？原生库越界写/内存破坏未排除；保留原始52条HIGH，仅本轮相同源码、依赖、库文件和权限配置经校验的构建，11月9日到期；未知高危继续阻断，不授权公开生产部署。",
+  "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "reviewed_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "still_vulnerable_ids": [
+    "CVE-2026-102010",
+    "CVE-2026-19499",
+    "CVE-2026-5435",
+    "CVE-2026-76642",
+    "CVE-2026-78408",
+    "CVE-2026-78409",
+    "CVE-2026-78410",
+    "CVE-2026-95619"
+  ],
+  "raw_high_critical_total_preserved": 79,
+  "vulnerable_raw_high_records_preserved": 52,
+  "classification": "still_vulnerable_temporarily_risk_accepted_not_fixed",
+  "policy": {
+    "environment": "existingcontrolledsinglehostlocaldemoonly; no publicproductionclearance",
+    "artifact": "reviewed220257a andCIbuilds only after verifying identical businesssource, dependencylock, systempackage/ELFhashes, Dockerrecipe and runtimeconstraint evidence; changed combinations require new review",
+    "classification": "still_vulnerable; temporary risk acceptance, never FIXED or globalnotaffected",
+    "expires": "2026-11-09T23:59:59+08:00",
+    "others": "retainraw; newunassessedHIGH/CRITICAL ormissing/failedscanblocks; currentCVE/reportbindings mandatory",
+    "deployment_window": "stillseparateandnotgranted"
+  },
+  "review_record": "trip-residual-security-review.json (coordinator independent review)",
+  "rebuild_equivalence_required": [
+    "business application source tree",
+    "dependency lock",
+    "exact OS package versions and native ELF hashes",
+    "Docker recipe",
+    "actual runtime capability/NNP/rootfs/tool constraints"
+  ],
+  "must_not_refresh_source_or_component_fingerprints_silently": true,
+  "deployment_window_granted": false,
+  "original_authorization_sha256": "1a7dcf73e06fd08b5b71f609fdc6817bdf6178c4671dc815eb5acedf3bf9f4e6",
+  "copy_boundary": "Only the absolute local review-record path is replaced by its basename. Human answer, scope, expiry, source/image anchors and all restrictions are preserved. This public copy is evidence of the directly relayed human decision, not an upstream fix."
+}

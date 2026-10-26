@@ -197,27 +197,52 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
+          fetch-depth: 0 # The frozen 220257a business trees must remain available.
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.11'
       - name: Build the exact revision without runtime secrets
         run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --tag "$SECURITY_IMAGE" "${{ matrix.context }}"
+      - name: Prove actual Agent runtime constraints for the temporary local-demo exception
+        if: matrix.service == 'agent'
+        run: |
+          mkdir -p security-reports/runtime
+          IMAGE_ID=$(docker image inspect --format '{{.Id}}' "$SECURITY_IMAGE")
+          python tools/runtime_constraint_probe.py --image "$IMAGE_ID" --reports security-reports/runtime > security-reports/runtime/command-receipt.json
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          receipt = json.loads(Path('security-reports/runtime/command-receipt.json').read_text())
+          if receipt.get('passed') is not True:
+              raise SystemExit('Actual Agent runtime proof failed')
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('SECURITY_RUNTIME_PROOF=' + receipt['runtime_proof'] + '\n')
+          PY
       - name: Verify the changed Agent native library ABI without provider calls
         if: matrix.service == 'agent'
         run: docker run --rm --network none --read-only --memory 1g --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_runtime_security_abi.py,target=/fixture/test_runtime_security_abi.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py
-      - name: Scan without executing the image (checksum-verified Grype CLI)
+      - name: Scan the exact artifact and enforce the explicit expiring Agent exception
         env:
           MATRIX_SERVICE: ${{ matrix.service }}
         run: |
           if [ "$MATRIX_SERVICE" = agent ]; then
-            python tools/security_gate.py image --image "$SECURITY_IMAGE" --vex .github/security-vex.json --vendor-policy .github/security-vendor-policy.json --cleanup-owned-resources --reports security-reports/image
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --vex .github/security-vex.json --vendor-policy .github/security-vendor-policy.json --risk-acceptance .github/security-risk-acceptance.json --runtime-proof "$SECURITY_RUNTIME_PROOF" --cleanup-owned-resources --reports security-reports/image
           else
             python tools/security_gate.py image --image "$SECURITY_IMAGE" --reports security-reports/image
           fi
+      - name: Clean only this CI job's recorded runtime-proof resources
+        if: always() && matrix.service == 'agent'
+        run: |
+          python - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          for journal in sorted(Path('security-reports/runtime').glob('runtime-resources-*.json')):
+              subprocess.run([sys.executable, 'tools/runtime_constraint_probe.py', '--cleanup-journal', str(journal), '--cleanup-owned-resources'], check=True)
+          PY
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
           name: security-image-${{ matrix.service }}
-          path: security-reports/image/
+          path: security-reports/
           retention-days: 14

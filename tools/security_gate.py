@@ -26,12 +26,13 @@ import tempfile
 from urllib.request import Request, urlopen
 import zipfile
 try:
-    from . import image_policy
+    from . import image_policy, risk_acceptance
 except ImportError:
     try:
-        from tools import image_policy
+        from tools import image_policy, risk_acceptance
     except ModuleNotFoundError:
         import image_policy
+        import risk_acceptance
 
 ROOT = Path(__file__).resolve().parents[1]
 PINS = json.loads((ROOT / '.github/security-tool-pins.json').read_text(encoding='utf-8'))
@@ -223,7 +224,8 @@ def secrets(destination: Path, include_untracked=False):
     return records
 
 
-def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False):
+def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False,
+          approval=None, runtime_proof=None, retained_inventory=None):
     executable = tool('grype')
     inspected = subprocess.run(['docker', 'image', 'inspect', '--format', '{{json .Id}}', name], capture_output=True, text=True, timeout=30)
     if inspected.returncode:
@@ -235,10 +237,13 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
     environment = dict(os.environ)
     environment.setdefault('GRYPE_DB_CACHE_DIR', str(ROOT / '.cache/grype-db'))
     environment.setdefault('GRYPE_CHECK_FOR_APP_UPDATE', 'false')
+    scan_started = datetime.now(timezone.utc)
     code = run([executable, 'docker:' + identity, '--fail-on', 'high', '--output', 'json', '--file', str(output)], destination / 'image-scan.log', timeout=1800, env=environment)
     data = report(output)
     matches = data.get('matches', []) if isinstance(data, dict) else []
     count = sum(match.get('vulnerability', {}).get('severity', '').lower() in ('high', 'critical') for match in matches)
+    if approval and (code not in (0, 2) or not image_document(data)):
+        raise RuntimeError('Failed/missing image scan cannot establish temporary risk acceptance; raw receipt retained')
     contextual = 0
     context_verified = False
     if policy or vendor_policy:
@@ -247,6 +252,13 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         revision_info = subprocess.run(['docker', 'image', 'inspect', '--format', '{{index .Config.Labels "org.opencontainers.image.revision"}}', identity], capture_output=True, text=True, timeout=30)
         source_revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
         context_verified = embedded_entrypoint and revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision
+        if embedded_entrypoint and revision_info.returncode == 0 and approval:
+            # Reusing the approved image on a policy/doc-only HEAD requires actual
+            # git tree and working-file equality; neither label alone is proof.
+            risk_acceptance.validate_sources(approval, ROOT, revision_info.stdout.strip())
+            context_verified = True
+        if approval and not context_verified:
+            raise RuntimeError('Risk acceptance requires the exact approved embedded Agent command and business source context')
         if context_verified and policy:
             for match in matches:
                 vulnerability = match.get('vulnerability', {})
@@ -259,13 +271,20 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
     classifications = {'fixed_by_distribution_backport': 0, 'fixed_by_pinned_security_upgrade': 0,
                        'still_vulnerable_vendor_minor': 0, 'not_affected_component_absent': 0}
     assessed = []
+    acceptance_metadata = None
     if vendor_policy and context_verified:
-        evidence = image_policy.inventory(identity, vendor_policy, destination, cleanup_owned_resources)
+        scan_receipt = risk_acceptance.validate_scan_receipt(data, identity, scan_started) if approval else None
+        evidence = image_policy.inventory(identity, vendor_policy, destination, cleanup_owned_resources,
+                                          include_native_elf=approval is not None, retained_container=retained_inventory)
+        if approval:
+            acceptance_metadata = risk_acceptance.verify(approval, evidence, runtime_proof, ROOT, revision_info.stdout.strip())
+            acceptance_metadata['scan_identity_proof'] = scan_receipt
+            write(destination / 'risk-acceptance-verification.json', acceptance_metadata)
         for match in matches:
             vulnerability, artifact = match.get('vulnerability', {}), match.get('artifact', {})
             if vulnerability.get('severity', '').lower() not in ('high', 'critical'):
                 continue
-            classification = image_policy.assess(vendor_policy, match, evidence)
+            classification = image_policy.assess(vendor_policy, match, evidence, acceptance_metadata)
             if classification:
                 classifications[classification] += 1
                 assessed.append({'package': artifact.get('name'), 'version': artifact.get('version'),
@@ -277,13 +296,16 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
     # A partial JSON report on an error must never be rescued by a policy.
     state = classify(code, data if image_document(data) else None, count, valid_codes=(0, 2))
     if state == 'blocked_findings' and not remaining:
-        state = 'pass_vendor_policy' if sum(classifications.values()) else 'pass_contextual'
+        state = ('pass_temporary_risk_acceptance' if classifications['still_vulnerable_vendor_minor']
+                 else 'pass_vendor_policy' if sum(classifications.values()) else 'pass_contextual')
     return [{'scanner': 'grype-image', 'target': name, 'image_id': identity, 'status': state, 'blocking_findings': remaining,
              'raw_high_critical_findings': count, 'contextual_not_affected': contextual, 'all_findings': len(matches), 'exit_code': code,
              'vex_expires_on': policy.get('expires_on') if policy else None,
              'distribution_assessments': classifications,
              'still_vulnerable_vendor_minor_ids': sorted({item['id'] for item in assessed if item['classification'] == 'still_vulnerable_vendor_minor'}),
              'vendor_policy_expires_on': vendor_policy.get('expires_on') if vendor_policy else None,
+             'unfixed_risk_accepted_findings': classifications['still_vulnerable_vendor_minor'],
+             'risk_acceptance': acceptance_metadata,
              'image_revision_context_verified': context_verified}]
 
 
@@ -329,6 +351,9 @@ def main():
     parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
     parser.add_argument('--vex', type=Path, help='Explicit opt-in to an unexpired source-bound contextual assessment; raw findings remain in reports')
     parser.add_argument('--vendor-policy', type=Path, help='Explicit source/revision/dpkg-bound distribution backport or vendor severity assessment; vulnerable entries stay visible')
+    parser.add_argument('--risk-acceptance', type=Path, help='Explicit human-approved, expiring local-demo-only acceptance with exact business/native/package/runtime bindings; never a fix')
+    parser.add_argument('--runtime-proof', type=Path, help='Fresh actual-container proof from tools/runtime_constraint_probe.py; mandatory for residual risk acceptance')
+    parser.add_argument('--inventory-container', help='Reuse exact-image UUID-owned stopped inventory object that has never started; always retained even with CI cleanup flag')
     parser.add_argument('--cleanup-owned-resources', action='store_true', help='CI ephemeral runner only: remove only stopped UUID-owned inventory objects; local default retains them for the authorized cleanup window')
     args = parser.parse_args()
     destination = args.reports.resolve()
@@ -336,6 +361,14 @@ def main():
     try:
         policy = load_vex(args.vex) if args.vex else None
         vendor_policy = image_policy.load_policy(args.vendor_policy, ROOT) if args.vendor_policy else None
+        if args.risk_acceptance and (args.mode != 'image' or not vendor_policy or not args.runtime_proof):
+            raise RuntimeError('Explicit risk acceptance requires image scan, vendor policy and actual runtime proof')
+        if (args.runtime_proof or args.inventory_container) and not args.risk_acceptance:
+            raise RuntimeError('Runtime/inventory acceptance options require --risk-acceptance')
+        approval = risk_acceptance.load(args.risk_acceptance, ROOT) if args.risk_acceptance else None
+        runtime_proof = report(args.runtime_proof) if args.runtime_proof else None
+        if args.runtime_proof and not isinstance(runtime_proof, dict):
+            raise RuntimeError('Runtime constraint receipt missing or malformed')
         if args.mode == 'install':
             print(tool(args.tool or 'osv-scanner'))
             return 0
@@ -344,14 +377,15 @@ def main():
         elif args.mode == 'image':
             if not args.image:
                 raise RuntimeError('--image is required')
-            records = image(destination, args.image, policy, vendor_policy, args.cleanup_owned_resources)
+            records = image(destination, args.image, policy, vendor_policy, args.cleanup_owned_resources,
+                            approval, runtime_proof, args.inventory_container)
         elif args.mode == 'secrets':
             records = secrets(destination, args.include_untracked)
         else:
             records = dependencies(destination, policy)
         write(destination / (args.mode + '-summary.json'), {'tool_pins_verified_date': PINS['verified_date'], 'results': records})
         print(json.dumps(records, ensure_ascii=False))
-        return 0 if all(record['status'] in ('pass', 'pass_contextual', 'pass_vendor_policy') for record in records) else 1
+        return 0 if all(record['status'] in ('pass', 'pass_contextual', 'pass_vendor_policy', 'pass_temporary_risk_acceptance') for record in records) else 1
     except Exception as exc:
         write(destination / (args.mode + '-summary.json'), {'status': 'error', 'error_type': type(exc).__name__, 'message': str(exc)})
         print(f'Security gate unavailable: {type(exc).__name__}: {exc}', file=sys.stderr)

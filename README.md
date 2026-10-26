@@ -212,7 +212,9 @@ pwsh -File deploy/install-backup-task.ps1 -PythonPath C:\path\to\pythonw.exe
 
 CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不作为零漏洞；具体未修复条目及适用性分析须保留。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](docs/evidence/optimization-20261026/blind-review/review.html)尚无真人评分，不能用程序通过率替代真实旅行事实准确率。
 
-安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级通过不等于部署风险已获批准；当前 8 个原始 CVE 的实际组件、触发条件、已核不可命中分支及剩余未知见[部署影响矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)，其中尚未排除的风险仍待处置与决策。详见[安全供应链证据](docs/evidence/optimization-20261026/security-supply-chain.json)。
+安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级本身不能放行这 8 项：用户已明确暂时接受精确核验组合中的残余风险，**仅限本机受控演示，到北京时间 2026-11-09 23:59:59 失效，不授公开生产许可**。授权与冻结指纹分别见[原始决定的公开副本](.github/security-risk-authorization.json)和[临时例外记录](.github/security-risk-acceptance.json)。
+
+门禁逐项核对批准业务源码树、依赖锁与 Docker recipe、87 个系统包版本、1086 个原生 ELF 路径指纹、135 个应用文件指纹及现场运行约束；原生 ELF 比较原始字节，明确列出的 UTF-8 业务文本仅规范 CRLF/LF。CI 必须重新扫描精确镜像并实测默认 uvicorn 进程，不能以镜像标签或旧报告代替等价证明。过期、源码/组件/权限组合变化、额外源代码挂载、加载器覆盖、未知高危或扫描失败仍阻断，禁止自动刷新允许指纹。`pass_temporary_risk_acceptance` 保留未修复分类与 52 条记录/8 项 CVE；原始 Agent High/Critical 总数仍为 79。逐项影响和未知见[部署矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)，扫描与证据边界见[安全供应链](docs/evidence/optimization-20261026/security-supply-chain.json)。
 
 Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并禁止通过 SUID/file capabilities 获得新权限；镜像精确移除无业务用途的 mount/umount/nsenter/unshare 及已核别名/副本，保留系统依赖库。根文件系统设为只读，runtime、Chroma 使用原有持久挂载，临时目录与应用文件日志分别使用 128 MiB/64 MiB tmpfs；应用文件日志随容器停止消失，控制台日志仍由 Docker 按既定容量轮转。这些约束缩小提权与写入面，不修复进程内原生库的越界写或 UAF，实际 uvicorn 候选验收结果须与对应镜像核对。旧 Bearer 凭证继续遵守签发时的 `exp` 与 `token_version`；新会话的较短到期配置不会自动撤销全部历史凭证。
 
