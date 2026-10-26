@@ -43,6 +43,13 @@ def run(project, base_url, prometheus, output):
 
     try:
         save()
+        def monitored(query):
+            response=httpx.get(prometheus+"/api/v1/query",params={"query":query},timeout=10,trust_env=False)
+            response.raise_for_status()
+            return response.json()["data"]["result"]
+        # A prior retained incident is not evidence for this new drill.
+        wait_for(lambda: bool(monitored('trip_scheduler_owned == 1'))
+                 and not monitored('ALERTS{alertname="TripSchedulerOwnershipLost",alertstate="firing"}'),90)
         with httpx.Client(base_url=base_url, timeout=20, trust_env=False) as client:
             marker = client.get("/api/validation/fixture"); marker.raise_for_status()
             if marker.json().get("offline_fixture") is not True:
@@ -87,7 +94,10 @@ def run(project, base_url, prometheus, output):
             def delivered():
                 entries = docker("exec", receiver, "python", "-c", "from pathlib import Path; p=Path('/app/runtime/alerts.jsonl'); print(p.read_text() if p.exists() else '')").decode().splitlines()
                 return [json.loads(x) for x in entries if x.strip()]
-            wait_for(lambda: any(x["name"] == "TripSchedulerOwnershipLost" and x["status"] == "firing" for x in delivered()), 60)
+            started=datetime.fromisoformat(report["started_at"])
+            def incident(event):
+                return event["name"]=="TripSchedulerOwnershipLost" and datetime.fromisoformat(event["starts_at"].replace("Z","+00:00"))>=started
+            wait_for(lambda: any(incident(x) and x["status"] == "firing" for x in delivered()), 180)
             report["checks"]["alert_delivery"] = {"prometheus_firing": True, "durable_receiver_firing": True, "destination": "isolated local durable inbox", "external_human_notification": False}
             save()
             recovery_started = time.monotonic()
@@ -102,8 +112,8 @@ def run(project, base_url, prometheus, output):
             wait_for(lambda: fresh()["status"] in {"succeeded", "needs_attention", "failed", "cancelled"})
             assert fresh()["status"] in {"succeeded", "needs_attention"}
             report["checks"]["post_recovery"] = {"readiness": client.get("/readyz").status_code, "old_task_code": recovered.get("error_code"), "new_task_status": fresh()["status"]}
-            wait_for(lambda: any(x["name"] == "TripSchedulerOwnershipLost" and x["status"] == "resolved" for x in delivered()), 180)
-            entries = [x for x in delivered() if x["name"] == "TripSchedulerOwnershipLost"]
+            wait_for(lambda: any(incident(x) and x["status"] == "resolved" for x in delivered()), 180)
+            entries = [x for x in delivered() if incident(x)]
             assert len({x["event_id"] for x in entries}) == len(entries)
             report["checks"]["alert_delivery"].update(resolved_received=True, duplicate_event_ids=0)
         report["passed"] = True

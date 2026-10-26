@@ -102,12 +102,17 @@ def report(path: Path):
         return None
 
 
-def classify(code: int, parsed, findings: int, skipped=0):
-    if parsed is None or skipped or code not in (0, 1, 2):
+def classify(code: int, parsed, findings: int, skipped=0, valid_codes=(0, 1)):
+    if parsed is None or skipped or code not in valid_codes:
         return 'error'
     if findings:
         return 'blocked_findings'
     return 'pass' if code == 0 else 'error'
+
+
+def image_document(data):
+    return (isinstance(data, dict) and isinstance(data.get('matches'), list)
+            and isinstance(data.get('source'), dict) and data['source'].get('type') == 'image')
 
 
 def source_digest(path: Path):
@@ -181,7 +186,9 @@ def dependencies(destination: Path, policy=None):
                     '--format=json', '--output-file=' + str(output)], destination / 'osv-maven.log')
         data = report(output)
         count = sum(len(package.get('vulnerabilities', [])) for group in (data or {}).get('results', []) for package in group.get('packages', []))
-        records.append({'scanner': 'osv-maven', 'status': classify(code, data, count), 'findings': count, 'resolved_components': len(parsed_bom['components']), 'exit_code': code})
+        scanned = sum(len(group.get('packages', [])) for group in (data or {}).get('results', []))
+        records.append({'scanner': 'osv-maven', 'status': classify(code, data if scanned else None, count), 'findings': count,
+                        'resolved_components': len(parsed_bom['components']), 'scanned_packages': scanned, 'exit_code': code})
     return records
 
 
@@ -266,7 +273,9 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
                                  'classification': classification})
         write(destination / 'distribution-assessments.json', {'image_id': identity, 'expires_on': vendor_policy['expires_on'], 'assessments': assessed})
     remaining = count - contextual - sum(classifications.values())
-    state = classify(code, data, count)
+    # Grype uses 2 for the requested vulnerability threshold, and 1 for errors.
+    # A partial JSON report on an error must never be rescued by a policy.
+    state = classify(code, data if image_document(data) else None, count, valid_codes=(0, 2))
     if state == 'blocked_findings' and not remaining:
         state = 'pass_vendor_policy' if sum(classifications.values()) else 'pass_contextual'
     return [{'scanner': 'grype-image', 'target': name, 'image_id': identity, 'status': state, 'blocking_findings': remaining,

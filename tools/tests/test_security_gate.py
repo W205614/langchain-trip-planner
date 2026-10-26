@@ -17,7 +17,13 @@ class GateFailureTests(unittest.TestCase):
         self.assertEqual('error', gate.classify(0, None, 0))
         self.assertEqual('error', gate.classify(1, {}, 0))
         self.assertEqual('error', gate.classify(0, {}, 0, skipped=1))
-        self.assertEqual('blocked_findings', gate.classify(2, {}, 1))
+        self.assertEqual('blocked_findings', gate.classify(2, {}, 1, valid_codes=(0, 2)))
+        self.assertEqual('error', gate.classify(1, {'partial': True}, 3, valid_codes=(0, 2)))
+        self.assertEqual('error', gate.classify(2, {'partial': True}, 3, valid_codes=(0, 1)))
+        self.assertFalse(gate.image_document({}))
+        self.assertFalse(gate.image_document({'matches': []}))
+        self.assertFalse(gate.image_document({'matches': [], 'source': {'type': 'directory'}}))
+        self.assertTrue(gate.image_document({'matches': [], 'source': {'type': 'image'}}))
 
     def test_codeql_high_result_blocks_while_medium_is_reported_without_block(self):
         with tempfile.TemporaryDirectory() as name:
