@@ -3,6 +3,8 @@ import ast
 import copy
 import json
 import os
+import stat
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -34,6 +36,44 @@ def context():
 class RuntimeProbeGuards(unittest.TestCase):
     def test_embedded_container_code_has_valid_syntax_without_execution(self):
         ast.parse(probe.CONTAINER_PROBE)
+
+    def test_only_exact_original_windows_bind_sources_select_reflection_on_windows_host(self):
+        container, image = context()
+        for item in container['Mounts']:
+            item.update(Type='bind', Source=probe.ORIGINAL_WINDOWS_BINDS[item['Destination']].lower().replace('\\', '/'))
+        with patch.object(probe.os, 'name', 'nt'):
+            selected = probe.validate_inspect(container, image)['windows_bind_reflection']['targets']
+        self.assertEqual(set(selected), {'/app/runtime', '/app/data/chroma'})
+        with patch.object(probe.os, 'name', 'posix'):
+            self.assertEqual(probe.validate_inspect(container, image)['windows_bind_reflection']['targets'], [])
+        for item in container['Mounts']:
+            item['Type'] = 'volume'
+        with patch.object(probe.os, 'name', 'nt'):
+            self.assertEqual(probe.validate_inspect(container, image)['windows_bind_reflection']['targets'], [])
+
+    def test_arbitrary_bind_root_shadow_and_named_volume_metadata_cannot_borrow_reflection(self):
+        container, image = context()
+        for item in container['Mounts']:
+            item.update(Type='bind', Source='E:\\')
+        with patch.object(probe.os, 'name', 'nt'):
+            self.assertEqual(probe.validate_inspect(container, image)['windows_bind_reflection']['targets'], [])
+            shadow = copy.deepcopy(container)
+            shadow['Mounts'].append({'Type': 'bind', 'Source': probe.ORIGINAL_WINDOWS_BINDS['/app/runtime'], 'Destination': '/app', 'RW': False})
+            with self.assertRaises(RuntimeError):
+                probe.validate_inspect(shadow, image)
+        # Execute only the pure metadata decision function, never the embedded
+        # filesystem/HTTP probe: root:root/0777 still fails without host approval.
+        function = next(node for node in ast.parse(probe.CONTAINER_PROBE).body
+                        if isinstance(node, ast.FunctionDef) and node.name == 'directory_profile')
+        namespace = {'need': probe.require, 'stat': stat, 'reflected_targets': []}
+        exec(compile(ast.Module(body=[function], type_ignores=[]), '<pure ownership guard>', 'exec'), namespace)
+        reflected = SimpleNamespace(st_uid=0, st_gid=0, st_mode=0o40777)
+        with self.assertRaises(RuntimeError):
+            namespace['directory_profile']('/app/runtime', reflected)
+        namespace['reflected_targets'] = ['/app/runtime']
+        self.assertEqual(namespace['directory_profile']('/app/runtime', reflected), 'original_windows_bind_metadata_reflection_v1')
+        with self.assertRaises(RuntimeError):
+            namespace['directory_profile']('/tmp', reflected)
 
     def test_local_creation_tags_and_borrowed_cleanup_are_rejected_before_docker(self):
         with patch.dict(os.environ, {'CI': '', 'GITHUB_ACTIONS': ''}), patch.object(probe, 'docker') as docker:

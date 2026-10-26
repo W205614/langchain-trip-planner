@@ -12,6 +12,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import ntpath
 import os
 from pathlib import Path
 import re
@@ -26,6 +27,10 @@ PATHS = {'DATA_DIR': '/app/runtime', 'CHROMA_DIR': '/app/data/chroma', 'LOG_DIR'
 TMPFS = {'/tmp': 'rw,nosuid,nodev,noexec,size=128m,uid=1000,gid=1000,mode=1777',
          '/app/logs': 'rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000,mode=0750'}
 LOADER_VARIABLES = ('LD_PRELOAD', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'PYTHONHOME', 'PYTHONSTARTUP')
+ORIGINAL_WINDOWS_BINDS = {
+    '/app/runtime': r'E:\project\langchain-trip-planner\backend\data\agent-runtime',
+    '/app/data/chroma': r'E:\project\langchain-trip-planner\backend\data\chroma',
+}
 
 
 def require(value, message):
@@ -101,8 +106,16 @@ def validate_inspect(container, image):
     require(set(destinations) <= {'/app/runtime', '/app/data/chroma', '/tmp', '/app/logs'} and
             len(destinations) == len(set(destinations)), 'Unapproved or duplicate mount, including read-only source/library overlays')
     mounted = {item['Destination']: item for item in container.get('Mounts', [])}
+    reflected_targets = []
     for target in ('/app/runtime', '/app/data/chroma'):
         require(target in mounted and mounted[target].get('RW') is True and mounted[target].get('Type') in ('bind', 'volume'), 'Required data mount missing or read-only')
+        item = mounted[target]
+        # Only the operator's original two Windows bind sources may select this
+        # representation profile. Never trust an environment claim in the image.
+        if (os.name == 'nt' and item.get('Type') == 'bind' and
+                ntpath.normcase(ntpath.normpath(str(item.get('Source', '')).replace('/', '\\'))) ==
+                ntpath.normcase(ntpath.normpath(ORIGINAL_WINDOWS_BINDS[target]))):
+            reflected_targets.append(target)
     configured = host.get('Tmpfs') or {}
     require(set(configured) == set(TMPFS), 'Require exactly the approved tmpfs destinations')
     for target, expected in TMPFS.items():
@@ -125,6 +138,9 @@ def validate_inspect(container, image):
             'devices': host.get('Devices'), 'device_requests': host.get('DeviceRequests'),
             'device_cgroup_rules': host.get('DeviceCgroupRules'), 'port_bindings': host.get('PortBindings'),
             'resource_limits': {key: host[key] for key in ('Memory', 'NanoCpus', 'PidsLimit')},
+            'windows_bind_reflection': {'profile': 'original_windows_bind_metadata_reflection_v1',
+                'targets': sorted(reflected_targets), 'source_mapping_verified_by_host_inspect': True,
+                'boundary': 'Only exact original Windows sources; reflected 0:0/0777 metadata is not a POSIX ownership guarantee.'},
             'tmpfs': configured, 'path_environment': {key: env.get(key) for key in PATHS},
             'mounts': [{key: item.get(key) for key in ('Type', 'Name', 'Destination', 'RW', 'Propagation')}
                        for item in container.get('Mounts', [])]}
@@ -136,6 +152,12 @@ CONTAINER_PROBE = r'''
 import hashlib,json,os,pathlib,re,stat,subprocess,sys,urllib.request,uuid
 def need(x,m):
  if not x:raise RuntimeError(m)
+reflected_targets=json.loads(sys.argv[1])
+need(isinstance(reflected_targets,list) and len(set(reflected_targets))==len(reflected_targets) and set(reflected_targets)<={'/app/runtime','/app/data/chroma'},'Invalid host-controlled reflection profile')
+def directory_profile(folder,st):
+ if st.st_uid==st.st_gid==1000:return 'posix_appuser_metadata'
+ need(folder in reflected_targets and st.st_uid==st.st_gid==0 and stat.S_IMODE(st.st_mode)==0o777,'Write directory ownership differs from the approved profile')
+ return 'original_windows_bind_metadata_reflection_v1'
 def status(pid):
  out={}
  for line in pathlib.Path('/proc/'+str(pid)+'/status').read_text().splitlines():
@@ -169,7 +191,7 @@ def writepaths():
  records=[];ident=uuid.uuid4().hex
  for folder in ('/app/runtime','/app/data/chroma','/tmp','/app/logs'):
   p=pathlib.Path(folder);need(p.is_dir(),'Missing required write directory')
-  st=p.stat();need(st.st_uid==st.st_gid==1000,'Write directory not owned by actual app UID/GID')
+  st=p.stat();profile=directory_profile(folder,st)
   mount=max((x for x in mounts() if folder==x['target'] or folder.startswith(x['target'].rstrip('/')+'/')),key=lambda x:len(x['target']))
   need(mount['target']==folder and 'rw' in mount['options'],'Required dedicated writable mount absent')
   if folder in ('/tmp','/app/logs'):
@@ -179,7 +201,11 @@ def writepaths():
   fd=os.open(target,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
   with os.fdopen(fd,'wb') as out:out.write(payload);out.flush();os.fsync(out.fileno())
   need(target.read_bytes()==payload,'Actual write/readback differs')
-  records.append({'path':folder,'file':str(target),'readback':True,'sha256':hashlib.sha256(payload).hexdigest(),'uid':st.st_uid,'gid':st.st_gid,'mode':oct(stat.S_IMODE(st.st_mode)),'mount':mount})
+  file_stat=target.stat();file_mode=stat.S_IMODE(file_stat.st_mode)
+  file_posix=file_stat.st_uid==file_stat.st_gid==1000 and file_mode==0o600
+  file_reflected=profile=='original_windows_bind_metadata_reflection_v1' and file_stat.st_uid==file_stat.st_gid==0 and file_mode==0o777
+  need(file_posix or file_reflected,'Canary file metadata differs from the approved profile')
+  records.append({'path':folder,'file':str(target),'readback':True,'exclusive_create':True,'fsync':True,'actual_writer_uid':os.geteuid(),'sha256':hashlib.sha256(payload).hexdigest(),'uid':st.st_uid,'gid':st.st_gid,'mode':oct(stat.S_IMODE(st.st_mode)),'mount':mount,'metadata_profile':profile,'file_metadata':{'uid':file_stat.st_uid,'gid':file_stat.st_gid,'mode':oct(file_mode)},'posix_ownership_guarantee':profile=='posix_appuser_metadata'})
  return records
 def tools():
  manifest='/usr/local/share/tripplanner/restricted-runtime-tools.json'
@@ -214,7 +240,8 @@ def collect_existing(container_id):
         proof['data']['inspect'] = view
         proof['data']['inspect_digest'] = digest(canonical(view))
         proof['data']['source_image'] = {'id': image['Id'], 'revision': revision, 'default_cmd': image['Config']['Cmd']}
-        runtime = json.loads(docker('exec', container_id, 'python', '-c', CONTAINER_PROBE, timeout=100))
+        runtime = json.loads(docker('exec', container_id, 'python', '-c', CONTAINER_PROBE,
+                                    json.dumps(view['windows_bind_reflection']['targets']), timeout=100))
         proof['data']['runtime'] = runtime
         require(runtime.get('passed') is True, 'Actual proc/mount/writepath/tool/readiness runtime check failed')
         # Reinspect identity/state after exec; a lifecycle change invalidates the receipt.
