@@ -61,7 +61,7 @@
               <a-button v-if="!record.assistant_proposal_status" @click="$router.push(`/trips/${record.id}/operations`)">📋 行程执行</a-button>
               <a-button v-if="!record.assistant_proposal_status" @click="openAgent(record)">💬 问攻略</a-button>
               <a-button v-if="!record.assistant_proposal_status && record.outcome !== 'draft'" :loading="publishingId===record.id" @click="publishRecord(record)">🌏 投稿广场</a-button>
-              <a-button v-if="!record.assistant_proposal_status && record.outcome === 'draft'" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
+              <a-button v-if="!record.assistant_proposal_status" :loading="verifyingId===record.id" @click="reverifyRecord(record)">🧭 重新核验路线</a-button>
               <a-button type="primary" @click="viewRecord(record.id)">👁️ 查看行程</a-button>
               <a-popconfirm v-if="record.assistant_proposal_status !== 'pending'" title="确定删除这条历史记录吗?" @confirm="removeRecord(record.id)">
                 <a-button danger>🗑️ 删除</a-button>

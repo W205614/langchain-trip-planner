@@ -33,6 +33,11 @@ COPY scripts ./scripts
 # 手工维护的旅游知识随镜像发布；运行数据通过 Compose 绑定到宿主机持久化。
 COPY data/knowledge ./data/knowledge
 
+# Final root-only hardening after dependency installation: remove only unused
+# mount/namespace CLIs, their bounded aliases/copies; retain essential libraries.
+RUN TRIP_SECURITY_IMAGE_BUILD=1 python scripts/restrict_runtime_tools.py --apply \
+    --manifest /usr/local/share/tripplanner/restricted-runtime-tools.json
+
 # 3. 非 root 用户运行；显式挂载的数据目录仍可按授权权限读写。
 RUN (id -u appuser >/dev/null 2>&1 || useradd -m appuser) \
     && mkdir -p logs data/chroma runtime \

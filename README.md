@@ -212,7 +212,9 @@ pwsh -File deploy/install-backup-task.ps1 -PythonPath C:\path\to\pythonw.exe
 
 CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不作为零漏洞；具体未修复条目及适用性分析须保留。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](docs/evidence/optimization-20261026/blind-review/review.html)尚无真人评分，不能用程序通过率替代真实旅行事实准确率。
 
-安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。详见[安全供应链证据](docs/evidence/optimization-20261026/security-supply-chain.json)。
+安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级通过不等于部署风险已获批准；当前 8 个原始 CVE 的实际组件、触发条件、已核不可命中分支及剩余未知见[部署影响矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)，其中尚未排除的风险仍待处置与决策。详见[安全供应链证据](docs/evidence/optimization-20261026/security-supply-chain.json)。
+
+Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并禁止通过 SUID/file capabilities 获得新权限；镜像精确移除无业务用途的 mount/umount/nsenter/unshare 及已核别名/副本，保留系统依赖库。根文件系统设为只读，runtime、Chroma 使用原有持久挂载，临时目录与应用文件日志分别使用 128 MiB/64 MiB tmpfs；应用文件日志随容器停止消失，控制台日志仍由 Docker 按既定容量轮转。这些约束缩小提权与写入面，不修复进程内原生库的越界写或 UAF，实际 uvicorn 候选验收结果须与对应镜像核对。旧 Bearer 凭证继续遵守签发时的 `exp` 与 `token_version`；新会话的较短到期配置不会自动撤销全部历史凭证。
 
 Agent 当前对 `libacl1` 和 `zlib1g` 使用两个经过签名索引及文件哈希核验的 Debian 安全版本；安装器要求只有这两个包升级、不增删包、不升级 libc 或工具链，并检查原生消费者兼容性。构建不会保留 sid 仓库入口。这增加了版本维护责任：[包锁](backend/runtime-security-packages.json)和[供应商评估](.github/security-vendor-policy.json)于 **2026-11-09** 到期，届时须复核稳定发行版回补并更新证据，不能关闭门禁继续沿用。监控派生镜像同样固定官方源码/发布物及最小依赖修补，保留原版对照扫描。
 

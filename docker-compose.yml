@@ -47,6 +47,9 @@ services:
     environment:
       DATA_DIR: /app/runtime
       CHROMA_DIR: /app/data/chroma
+      LOG_DIR: /app/logs
+      PYTHONDONTWRITEBYTECODE: "1"
+      XDG_CACHE_HOME: /tmp/cache
       OUTBOUND_LEDGER_REQUIRED: "true"
     volumes:
       - ./backend/data/chroma:/app/data/chroma
@@ -58,6 +61,12 @@ services:
       timeout: 5s
       retries: 12
     restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=128m,uid=1000,gid=1000,mode=1777
+      - /app/logs:rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000,mode=0750
     mem_limit: 2g
     cpus: 2.0
     pids_limit: 256

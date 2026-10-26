@@ -10,8 +10,9 @@
     "backend/app/services/rag_service.py": "db415b05c6d8717cbce2cbcc8062ec2e88788000ac2f732a4d5ba6ddc9ede1c6",
     "backend/app/agent_api/rebuild.py": "7b5829d8a880d376eb7dbfb9e9fab8233d31150989b4c80d292d016962bbc8f1",
     "backend/app/agent_api/main.py": "76e9a4a68f00f9a893e53f0df58509676c2582a60e4912ac4dbe72e049ba396e",
-    "backend/Dockerfile": "e9842b640bbb9617a2b1430fa3ce51bdd3ca28bd1597801d5306bc2ba820bcf6",
-    "docker-compose.yml": "434385609907423618316e2d0f63638328f8a75fed9d3841ae11747d94d67070"
+    "backend/Dockerfile": "b9ca203ac15eada54a6bc8cea438c2b1692f684a7901a1953af3d20a117aef52",
+    "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
+    "backend/scripts/restrict_runtime_tools.py": "76f260c488af855521350cc7d842605c707ff3500ad4ba2105f8c688b3c66e68"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
