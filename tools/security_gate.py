@@ -1,0 +1,353 @@
+"""Pinned scanner CLI with explicit non-clean outcomes. Python 3.11+, no app imports.
+
+python tools/security_gate.py dependencies --reports security-reports
+python tools/security_gate.py secrets --reports security-reports
+python tools/security_gate.py image --image candidate:tag --reports security-reports
+python tools/security_gate.py sarif --directory security-reports/codeql
+No container is started, stopped, rebuilt or pruned by this script. Explicit
+--vendor-policy extracts inventory through a stopped UUID-owned container retained
+locally by default; it never executes image commands. Explicit CI cleanup only.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import date, datetime, timezone
+import hashlib
+import io
+import json
+import os
+from pathlib import Path
+import platform
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+from urllib.request import Request, urlopen
+import zipfile
+try:
+    from . import image_policy
+except ImportError:
+    try:
+        from tools import image_policy
+    except ModuleNotFoundError:
+        import image_policy
+
+ROOT = Path(__file__).resolve().parents[1]
+PINS = json.loads((ROOT / '.github/security-tool-pins.json').read_text(encoding='utf-8'))
+
+
+def write(path: Path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
+def tool(name: str) -> str:
+    system = platform.system().lower()
+    if system not in ('windows', 'linux') or platform.machine().lower() not in ('amd64', 'x86_64'):
+        raise RuntimeError('Pinned scanner assets support Windows/Linux x86_64 only')
+    config = PINS[name][system]
+    folder = ROOT / '.cache/security-tools' / name / PINS[name]['version']
+    folder.mkdir(parents=True, exist_ok=True)
+    archive = folder / config['url'].rsplit('/', 1)[-1]
+    if not archive.exists():
+        request = Request(config['url'], headers={'User-Agent': 'tripplanner-security-gate'})
+        with urlopen(request, timeout=120) as source, archive.open('wb') as target:
+            shutil.copyfileobj(source, target, length=64 * 1024)
+    raw = archive.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != config['sha256']:
+        raise RuntimeError(f'{name}: downloaded/cached asset failed pinned SHA256 verification')
+    if config.get('member'):
+        member = config['member']
+        if archive.suffix == '.zip':
+            with zipfile.ZipFile(io.BytesIO(raw)) as package:
+                binary = package.read(member)
+        else:
+            with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as package:
+                entry = package.getmember(member)
+                if not entry.isfile():
+                    raise RuntimeError('Scanner archive member is not a regular file')
+                binary = package.extractfile(entry).read()
+        executable = folder / member
+        if executable.exists() and hashlib.sha256(executable.read_bytes()).digest() != hashlib.sha256(binary).digest():
+            raise RuntimeError('Extracted scanner binary differs from pinned archive')
+        if not executable.exists():
+            executable.write_bytes(binary)
+    else:
+        executable = archive
+    if system == 'linux':
+        executable.chmod(0o755)
+    return str(executable)
+
+
+def run(command: list[str], log: Path, cwd=ROOT, timeout=1200, stdout_json: Path | None = None, env=None):
+    log.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        result = subprocess.run(command, cwd=cwd, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=timeout, env=env)
+        if stdout_json:
+            stdout_json.write_text(result.stdout, encoding='utf-8')
+            log.write_text(result.stderr, encoding='utf-8')
+        else:
+            log.write_text(result.stdout + '\n' + result.stderr, encoding='utf-8')
+        return result.returncode
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        log.write_text(type(exc).__name__ + ': scanner unavailable or timed out\n', encoding='utf-8')
+        return 125
+
+
+def report(path: Path):
+    try:
+        return json.loads(path.read_text(encoding='utf-8-sig'))
+    except (OSError, ValueError):
+        return None
+
+
+def classify(code: int, parsed, findings: int, skipped=0):
+    if parsed is None or skipped or code not in (0, 1, 2):
+        return 'error'
+    if findings:
+        return 'blocked_findings'
+    return 'pass' if code == 0 else 'error'
+
+
+def source_digest(path: Path):
+    return hashlib.sha256(path.read_text(encoding='utf-8').replace('\r\n', '\n').encode('utf-8')).hexdigest()
+
+
+def load_vex(path: Path, today=None, root=ROOT):
+    policy = report(path)
+    today = today or datetime.now(timezone.utc).date()
+    if not isinstance(policy, dict) or not policy.get('assessments') or not policy.get('source_bindings'):
+        raise RuntimeError('VEX policy is incomplete')
+    if date.fromisoformat(policy['expires_on']) < today:
+        raise RuntimeError('VEX assessment expired; reassess the actual execution path')
+    for relative, digest in policy['source_bindings'].items():
+        source = (root / relative).resolve()
+        if not source.is_relative_to(root.resolve()) or source_digest(source) != digest:
+            raise RuntimeError('VEX source binding changed: ' + relative)
+    for assessment in policy['assessments']:
+        if assessment.get('status') != 'not_affected' or not assessment.get('ids') or not assessment.get('justification') or not assessment.get('references'):
+            raise RuntimeError('VEX entry lacks an explicit reviewed not-affected assessment')
+    return policy
+
+
+def contextual_not_affected(policy, name, version, identifiers):
+    if not policy:
+        return False
+    for entry in policy['assessments']:
+        if entry.get('ecosystem') == 'PyPI' and entry['package'].lower() == name.lower() and entry['version'] == version and set(entry['ids']).intersection(identifiers):
+            return True
+    return False
+
+
+def dependencies(destination: Path, policy=None):
+    records = []
+    pip_report = destination / 'pip-audit.json'
+    code = run([sys.executable, '-m', 'pip_audit', '--no-deps', '--disable-pip', '--strict', '--timeout', '90', '--progress-spinner', 'off',
+                '-r', str(ROOT / 'backend/requirements.lock'), '--format', 'json', '--output', str(pip_report)], destination / 'pip-audit.log')
+    data = report(pip_report)
+    dependencies = data.get('dependencies', []) if isinstance(data, dict) else []
+    count = sum(len(item.get('vulns', [])) for item in dependencies)
+    contextual = sum(contextual_not_affected(policy, item.get('name', ''), item.get('version', ''), [vulnerability.get('id'), *vulnerability.get('aliases', [])])
+                     for item in dependencies for vulnerability in item.get('vulns', []))
+    skipped = sum(bool(item.get('skip_reason')) for item in dependencies)
+    state = classify(code, data if dependencies else None, count, skipped)
+    if state == 'blocked_findings' and contextual == count and policy:
+        state = 'pass_contextual'
+    records.append({'scanner': 'pip-audit', 'status': state, 'raw_findings': count, 'contextual_not_affected': contextual,
+                    'unresolved_findings': count - contextual, 'skipped': skipped, 'exit_code': code,
+                    'vex_expires_on': policy.get('expires_on') if policy else None})
+
+    npm = shutil.which('npm.cmd' if os.name == 'nt' else 'npm') or 'npm'
+    npm_report = destination / 'npm-audit.json'
+    code = run([npm, 'audit', '--package-lock-only', '--audit-level=high', '--registry=https://registry.npmjs.org', '--json', '--ignore-scripts'],
+               destination / 'npm-audit.log', cwd=ROOT / 'frontend', stdout_json=npm_report)
+    data = report(npm_report)
+    totals = data.get('metadata', {}).get('vulnerabilities', {}) if isinstance(data, dict) else {}
+    count = totals.get('high', 0) + totals.get('critical', 0)
+    records.append({'scanner': 'npm-audit', 'status': classify(code, data if totals else None, count), 'blocking_findings': count, 'all_severities': totals, 'exit_code': code})
+
+    maven = shutil.which('mvn.cmd' if os.name == 'nt' else 'mvn') or 'mvn'
+    code = run([maven, '-B', '-ntp', '-f', str(ROOT / 'business-backend/pom.xml'),
+                'org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeAggregateBom', '-DoutputFormat=json', '-DoutputName=java.cdx',
+                '-DoutputDirectory=' + str(destination), '-DincludeTestScope=false', '-Dcyclonedx.skipAttach=true'], destination / 'maven-sbom.log')
+    bom = destination / 'java.cdx.json'
+    parsed_bom = report(bom)
+    if code != 0 or not isinstance(parsed_bom, dict) or not parsed_bom.get('components'):
+        records.append({'scanner': 'osv-maven', 'status': 'error', 'reason': 'Resolved nonempty Maven SBOM unavailable', 'exit_code': code})
+    else:
+        output = destination / 'osv-maven.json'
+        code = run([tool('osv-scanner'), 'scan', 'source', '--no-resolve', '--all-packages', '--lockfile=' + str(bom),
+                    '--format=json', '--output-file=' + str(output)], destination / 'osv-maven.log')
+        data = report(output)
+        count = sum(len(package.get('vulnerabilities', [])) for group in (data or {}).get('results', []) for package in group.get('packages', []))
+        records.append({'scanner': 'osv-maven', 'status': classify(code, data, count), 'findings': count, 'resolved_components': len(parsed_bom['components']), 'exit_code': code})
+    return records
+
+
+def secrets(destination: Path, include_untracked=False):
+    executable = tool('gitleaks')
+    common = ['--redact=100', '--no-banner', '--log-level=error', '--config=' + str(ROOT / '.gitleaks.toml'), '--report-format=json']
+    history = destination / 'gitleaks-history.json'
+    code = run([executable, 'git', *common, '--report-path=' + str(history), '--log-opts=--all', str(ROOT)], destination / 'gitleaks-history.log')
+    data = report(history)
+    records = [{'scanner': 'gitleaks-history', 'status': classify(code, data, len(data or [])), 'findings': len(data or []), 'exit_code': code}]
+    # Export only tracked source. Never traverse private runtime files, ignored .env,
+    # application uploads, local database volumes or tool caches on a developer host.
+    export_root = ROOT / '.cache/security-source-exports'
+    export_root.mkdir(parents=True, exist_ok=True)
+    export = Path(tempfile.mkdtemp(prefix='tracked-', dir=export_root))
+    command = ['git', 'ls-files', '--cached', '-z']
+    if include_untracked:
+        command.extend(['--others', '--exclude-standard'])
+    tracked = subprocess.check_output(command, cwd=ROOT).decode('utf-8').split('\0')
+    for relative in filter(None, tracked):
+        source = ROOT / relative
+        target = export / relative
+        if not source.is_file() or source.is_symlink() or not source.resolve().is_relative_to(ROOT):
+            raise RuntimeError('Tracked source unavailable or unsafe: ' + relative)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    working = destination / 'gitleaks-tracked.json'
+    code = run([executable, 'dir', *common, '--report-path=' + str(working), str(export)], destination / 'gitleaks-tracked.log')
+    data = report(working)
+    records.append({'scanner': 'gitleaks-tracked', 'status': classify(code, data, len(data or [])), 'findings': len(data or []), 'exit_code': code})
+    # Retain the exact export for local review; no recursive deletion is performed.
+    return records
+
+
+def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False):
+    executable = tool('grype')
+    inspected = subprocess.run(['docker', 'image', 'inspect', '--format', '{{json .Id}}', name], capture_output=True, text=True, timeout=30)
+    if inspected.returncode:
+        raise RuntimeError('Image is not present locally; build/pull the intended revision explicitly before scanning')
+    identity = json.loads(inspected.stdout)
+    if not isinstance(identity, str) or not identity.startswith('sha256:'):
+        raise RuntimeError('Docker did not return an immutable image identity')
+    output = destination / 'image-vulnerabilities.json'
+    environment = dict(os.environ)
+    environment.setdefault('GRYPE_DB_CACHE_DIR', str(ROOT / '.cache/grype-db'))
+    environment.setdefault('GRYPE_CHECK_FOR_APP_UPDATE', 'false')
+    code = run([executable, 'docker:' + identity, '--fail-on', 'high', '--output', 'json', '--file', str(output)], destination / 'image-scan.log', timeout=1800, env=environment)
+    data = report(output)
+    matches = data.get('matches', []) if isinstance(data, dict) else []
+    count = sum(match.get('vulnerability', {}).get('severity', '').lower() in ('high', 'critical') for match in matches)
+    contextual = 0
+    context_verified = False
+    if policy or vendor_policy:
+        command_info = subprocess.run(['docker', 'image', 'inspect', '--format', '{{json .Config.Cmd}}', identity], capture_output=True, text=True, timeout=30)
+        embedded_entrypoint = command_info.returncode == 0 and json.loads(command_info.stdout) == ['uvicorn', 'app.agent_api.main:app', '--host', '0.0.0.0', '--port', '9000', '--workers', '1']
+        revision_info = subprocess.run(['docker', 'image', 'inspect', '--format', '{{index .Config.Labels "org.opencontainers.image.revision"}}', identity], capture_output=True, text=True, timeout=30)
+        source_revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+        context_verified = embedded_entrypoint and revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision
+        if context_verified and policy:
+            for match in matches:
+                vulnerability = match.get('vulnerability', {})
+                if vulnerability.get('severity', '').lower() not in ('high', 'critical'):
+                    continue
+                artifact = match.get('artifact', {})
+                ids = [vulnerability.get('id'), *[item.get('id') for item in match.get('relatedVulnerabilities', [])]]
+                if artifact.get('type') == 'python' and contextual_not_affected(policy, artifact.get('name', ''), artifact.get('version', ''), ids):
+                    contextual += 1
+    classifications = {'fixed_by_distribution_backport': 0, 'fixed_by_pinned_security_upgrade': 0,
+                       'still_vulnerable_vendor_minor': 0, 'not_affected_component_absent': 0}
+    assessed = []
+    if vendor_policy and context_verified:
+        evidence = image_policy.inventory(identity, vendor_policy, destination, cleanup_owned_resources)
+        for match in matches:
+            vulnerability, artifact = match.get('vulnerability', {}), match.get('artifact', {})
+            if vulnerability.get('severity', '').lower() not in ('high', 'critical'):
+                continue
+            classification = image_policy.assess(vendor_policy, match, evidence)
+            if classification:
+                classifications[classification] += 1
+                assessed.append({'package': artifact.get('name'), 'version': artifact.get('version'),
+                                 'id': vulnerability.get('id'), 'raw_severity': vulnerability.get('severity'),
+                                 'classification': classification})
+        write(destination / 'distribution-assessments.json', {'image_id': identity, 'expires_on': vendor_policy['expires_on'], 'assessments': assessed})
+    remaining = count - contextual - sum(classifications.values())
+    state = classify(code, data, count)
+    if state == 'blocked_findings' and not remaining:
+        state = 'pass_vendor_policy' if sum(classifications.values()) else 'pass_contextual'
+    return [{'scanner': 'grype-image', 'target': name, 'image_id': identity, 'status': state, 'blocking_findings': remaining,
+             'raw_high_critical_findings': count, 'contextual_not_affected': contextual, 'all_findings': len(matches), 'exit_code': code,
+             'vex_expires_on': policy.get('expires_on') if policy else None,
+             'distribution_assessments': classifications,
+             'still_vulnerable_vendor_minor_ids': sorted({item['id'] for item in assessed if item['classification'] == 'still_vulnerable_vendor_minor'}),
+             'vendor_policy_expires_on': vendor_policy.get('expires_on') if vendor_policy else None,
+             'image_revision_context_verified': context_verified}]
+
+
+def sarif(directory: Path):
+    files = list(directory.rglob('*.sarif'))
+    if not files:
+        raise RuntimeError('CodeQL SARIF output missing; analysis is not a passing gate')
+    records = []
+    for path in files:
+        data = report(path)
+        if not isinstance(data, dict) or not isinstance(data.get('runs'), list) or not data['runs']:
+            raise RuntimeError('Invalid CodeQL SARIF')
+        count = 0
+        for run_data in data['runs']:
+            driver = run_data.get('tool', {}).get('driver', {})
+            if driver.get('name') != 'CodeQL':
+                raise RuntimeError('SARIF was not produced by CodeQL')
+            rules = driver.get('rules', [])
+            rules_by_id = {rule.get('id'): rule for rule in rules}
+            for result in run_data.get('results', []):
+                rule = rules_by_id.get(result.get('ruleId'))
+                if rule is None and isinstance(result.get('ruleIndex'), int) and 0 <= result['ruleIndex'] < len(rules):
+                    rule = rules[result['ruleIndex']]
+                if rule is None:
+                    raise RuntimeError('SARIF result references an unavailable rule')
+                try:
+                    severity = float(rule.get('properties', {}).get('security-severity', 0))
+                except (ValueError, TypeError):
+                    raise RuntimeError('Invalid CodeQL security severity')
+                if severity >= 7 or (not severity and result.get('level') == 'error'):
+                    count += 1
+        records.append({'scanner': 'codeql-policy', 'file': path.name, 'blocking_findings': count, 'status': 'blocked_findings' if count else 'pass'})
+    return records
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('mode', choices=['dependencies', 'secrets', 'image', 'sarif', 'install'])
+    parser.add_argument('--reports', type=Path, default=Path('security-reports'))
+    parser.add_argument('--directory', type=Path)
+    parser.add_argument('--image')
+    parser.add_argument('--tool', choices=['gitleaks', 'osv-scanner', 'grype'])
+    parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
+    parser.add_argument('--vex', type=Path, help='Explicit opt-in to an unexpired source-bound contextual assessment; raw findings remain in reports')
+    parser.add_argument('--vendor-policy', type=Path, help='Explicit source/revision/dpkg-bound distribution backport or vendor severity assessment; vulnerable entries stay visible')
+    parser.add_argument('--cleanup-owned-resources', action='store_true', help='CI ephemeral runner only: remove only stopped UUID-owned inventory objects; local default retains them for the authorized cleanup window')
+    args = parser.parse_args()
+    destination = args.reports.resolve()
+    destination.mkdir(parents=True, exist_ok=True)
+    try:
+        policy = load_vex(args.vex) if args.vex else None
+        vendor_policy = image_policy.load_policy(args.vendor_policy, ROOT) if args.vendor_policy else None
+        if args.mode == 'install':
+            print(tool(args.tool or 'osv-scanner'))
+            return 0
+        if args.mode == 'sarif':
+            records = sarif(args.directory or destination)
+        elif args.mode == 'image':
+            if not args.image:
+                raise RuntimeError('--image is required')
+            records = image(destination, args.image, policy, vendor_policy, args.cleanup_owned_resources)
+        elif args.mode == 'secrets':
+            records = secrets(destination, args.include_untracked)
+        else:
+            records = dependencies(destination, policy)
+        write(destination / (args.mode + '-summary.json'), {'tool_pins_verified_date': PINS['verified_date'], 'results': records})
+        print(json.dumps(records, ensure_ascii=False))
+        return 0 if all(record['status'] in ('pass', 'pass_contextual', 'pass_vendor_policy') for record in records) else 1
+    except Exception as exc:
+        write(destination / (args.mode + '-summary.json'), {'status': 'error', 'error_type': type(exc).__name__, 'message': str(exc)})
+        print(f'Security gate unavailable: {type(exc).__name__}: {exc}', file=sys.stderr)
+        return 2
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

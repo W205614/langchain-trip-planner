@@ -1,0 +1,223 @@
+name: Security gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# No deployment credentials, package publication or repository writes.
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: Secrets / full history and tracked source
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # verified v6, Node 24
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # verified v6, Node 24
+        with:
+          python-version: '3.11'
+      - name: Verify gate failure policy
+        run: python -m unittest discover -s tools/tests -v
+      - name: Checksum-verified Gitleaks CLI (redacted reports)
+        run: python tools/security_gate.py secrets --reports security-reports/secrets
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
+        if: always()
+        with:
+          name: security-secrets
+          path: security-reports/secrets/
+          retention-days: 14
+
+  runtime-image-scan:
+    name: Runtime images / ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: postgres
+            image: postgres:17.11-alpine
+          - service: prometheus
+            image: trip-security-prometheus:${{ github.sha }}
+            dockerfile: prometheus.Dockerfile
+          - service: alertmanager
+            image: trip-security-alertmanager:${{ github.sha }}
+            dockerfile: alertmanager.Dockerfile
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.11'
+      - name: Pull current patched runtime image without starting a container
+        if: matrix.service == 'postgres'
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+        run: docker pull "$RUNTIME_IMAGE"
+      - name: Build reviewed monitor security derivative from pinned upstream artifacts
+        if: matrix.service != 'postgres'
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+          MONITOR_DOCKERFILE: ${{ matrix.dockerfile }}
+        run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --file "deploy/images/$MONITOR_DOCKERFILE" --tag "$RUNTIME_IMAGE" deploy/images
+      - name: Verify Prometheus rules with the rebuilt official binaries
+        if: matrix.service == 'prometheus'
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+        run: docker run --rm --network none --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules "$RUNTIME_IMAGE" test rules alerts.test.yml
+      - name: Verify Alertmanager config and real isolated alert webhook protocol
+        if: matrix.service == 'alertmanager'
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+        run: |
+          docker run --rm --network none --read-only --entrypoint amtool -v "$PWD/deploy:/rules:ro" "$RUNTIME_IMAGE" check-config /rules/alertmanager.yml
+          docker pull python:3.11-slim-trixie
+          python tools/monitoring_image_smoke.py --image "$RUNTIME_IMAGE" --cleanup-owned-resources
+      - name: Scan the actual pulled immutable image ID
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+        run: python tools/security_gate.py image --image "$RUNTIME_IMAGE" --reports security-reports/runtime-image
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: security-runtime-image-${{ matrix.service }}
+          path: security-reports/runtime-image/
+          retention-days: 14
+
+  dependency-scan:
+    name: Dependencies / Python Node and resolved Maven SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # verified v5, Node 24
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install pinned scanner tooling from official PyPI
+        run: python -m pip install --index-url https://pypi.org/simple -r tools/security-requirements.txt
+      - name: Audit lockfiles and all resolved production Java dependencies
+        run: python tools/security_gate.py dependencies --vex .github/security-vex.json --reports security-reports/dependencies
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: security-dependencies-and-sbom
+          path: security-reports/dependencies/
+          retention-days: 14
+
+  codeql:
+    name: CodeQL / ${{ matrix.language }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write # Only the official CodeQL SARIF uploader requires this write scope.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: java-kotlin
+            build: manual
+          - language: python
+            build: none
+          - language: javascript-typescript
+            build: none
+          - language: actions
+            build: none
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        if: matrix.language == 'java-kotlin'
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Initialize official CodeQL
+        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4 commit verified 2026-10-26; Node 24
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build }}
+          queries: security-extended
+      - name: Build Java for semantic analysis (no tests)
+        if: matrix.language == 'java-kotlin'
+        run: mvn -B -ntp -f business-backend/pom.xml -DskipTests compile
+      - name: Analyze and publish SARIF
+        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370
+        with:
+          category: /language:${{ matrix.language }}
+          output: security-reports/codeql
+          upload: always
+      - name: Fail on high/critical CodeQL results
+        run: python tools/security_gate.py sarif --directory security-reports/codeql --reports security-reports/codeql
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: security-codeql-${{ matrix.language }}
+          path: security-reports/codeql/
+          retention-days: 14
+
+  image-scan:
+    name: Images / ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: backend
+            context: business-backend
+          - service: agent
+            context: backend
+          - service: frontend
+            context: frontend
+    env:
+      SECURITY_IMAGE: trip-security-${{ matrix.service }}:${{ github.sha }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.11'
+      - name: Build the exact revision without runtime secrets
+        run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --tag "$SECURITY_IMAGE" "${{ matrix.context }}"
+      - name: Verify the changed Agent native library ABI without provider calls
+        if: matrix.service == 'agent'
+        run: docker run --rm --network none --read-only --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_runtime_security_abi.py,target=/fixture/test_runtime_security_abi.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py
+      - name: Scan without executing the image (checksum-verified Grype CLI)
+        env:
+          MATRIX_SERVICE: ${{ matrix.service }}
+        run: |
+          if [ "$MATRIX_SERVICE" = agent ]; then
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --vex .github/security-vex.json --vendor-policy .github/security-vendor-policy.json --cleanup-owned-resources --reports security-reports/image
+          else
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --reports security-reports/image
+          fi
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: security-image-${{ matrix.service }}
+          path: security-reports/image/
+          retention-days: 14

@@ -35,6 +35,7 @@ from ..models.schemas import TripPlan, TripRequest
 from .coordination import rag_lock
 from .rag_runtime import operation, budget, index_lock, EVENTS
 from .knowledge_chunks import sections, complete_excerpt, entity_excerpt
+from .chroma_boundary import embedded_settings
 
 
 def serialized(method):
@@ -107,8 +108,8 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         seconds = budget(timeout_seconds)
         async def request():
             async with asyncio.timeout(seconds), httpx.AsyncClient(timeout=seconds, follow_redirects=False) as client:
-                from .call_budget import reserve
-                reserve("embedding")
+                from .call_budget import reserve, text_token_reservation
+                reserve("embedding",reserved_tokens=text_token_reservation(texts))
                 response = await client.post(self.base_url + "/embeddings",
                     headers={"Authorization": "Bearer " + self.api_key},
                     json={"model": self.model, "input": texts, "encoding_format": "float"})
@@ -195,11 +196,13 @@ class RagService:
                 collection_name=self._collection_names.get(_KNOWLEDGE_COLLECTION, _KNOWLEDGE_COLLECTION),
                 embedding_function=self._embedding,
                 persist_directory=str(CHROMA_DIR),
+                client_settings=embedded_settings(CHROMA_DIR),
             )
             self._history_store = Chroma(
                 collection_name=self._collection_names.get(_HISTORY_COLLECTION, _HISTORY_COLLECTION),
                 embedding_function=self._embedding,
                 persist_directory=str(CHROMA_DIR),
+                client_settings=embedded_settings(CHROMA_DIR),
             )
             logger.info(
                 f"✅ RAG 知识库初始化成功 (嵌入: {self.settings.embedding_model} @ {base_url} | "
@@ -228,6 +231,7 @@ class RagService:
                     collection_name=getattr(self, "_collection_names", {}).get(name, name),
                     embedding_function=self._embedding,
                     persist_directory=str(CHROMA_DIR),
+                    client_settings=embedded_settings(CHROMA_DIR),
                 )
                 try:
                     col = store._collection
@@ -269,6 +273,7 @@ class RagService:
             collection_name=getattr(self, "_collection_names", {}).get(collection_name, collection_name),
             embedding_function=self._embedding,
             persist_directory=str(CHROMA_DIR),
+            client_settings=embedded_settings(CHROMA_DIR),
         )
 
     def _refresh_store(self, attribute: str, collection_name: str) -> None:
@@ -308,6 +313,7 @@ class RagService:
                             "source": md_path.name,
                             "chunk_id": f"{md_path.name}:{index}",
                             "source_type": "markdown",
+                            "data_classification": "demonstration" if any(marker in content for marker in ("演示数据", "示例数据", "合成数据", "离线样例")) else "live_or_curated",
                             "entity_name": section["entity_name"],
                             "heading_path": section["heading_path"],
                         },
@@ -451,6 +457,7 @@ class RagService:
                             "source": title,
                             "source_type": "multimodal",
                             "source_tier": source_tier,
+                            "data_classification": "demonstration" if any(marker in "\n".join(page_texts) for marker in ("演示数据", "示例数据", "合成数据", "离线样例")) else "live_or_curated",
                             "document_id": document_id,
                             "document_version": document_version,
                             "page": page,
@@ -638,19 +645,21 @@ class RagService:
         return "community"
 
     @serialized
-    def retrieve_research_evidence(self, query: str, city: str, k: int = 5) -> List[dict]:
+    def retrieve_research_evidence(self, query: str, city: str, k: int = 5, *, local_only: bool = False) -> List[dict]:
         """返回可直接展示的公开资料证据，不读取任何用户私有历史。"""
         if not self.enabled or not query.strip() or not city.strip():
             return []
         try:
-            self.ensure_city_index(city)
+            if not local_only:
+                self.ensure_city_index(city)
             self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
             embedding = None
-            try:
-                with observe_rag_operation("research_query_embedding"):
-                    embedding = self._embedding.embed_query(f"{city} {query}")
-            except Exception as exc:
-                logger.warning("研究查询向量生成失败，降级到关键词检索: %s", type(exc).__name__)
+            if not local_only:
+                try:
+                    with observe_rag_operation("research_query_embedding"):
+                        embedding = self._embedding.embed_query(f"{city} {query}")
+                except Exception as exc:
+                    logger.warning("研究查询向量生成失败，降级到关键词检索: %s", type(exc).__name__)
             docs = self._hybrid_public_search(
                 query, city, max(1, min(k, 8)), embedding
             )
@@ -662,6 +671,8 @@ class RagService:
                     "source_type": document.metadata.get("source_type", "unknown"),
                     "source_tier": self._source_tier_for_document(document.metadata),
                     "chunk_id": document.metadata.get("chunk_id", ""),
+                    **{key: document.metadata[key] for key in ("observed_at", "expires_at", "updated_at", "verified_at", "demo", "is_demo", "is_fixture", "data_classification") if key in document.metadata},
+                    **self._research_file_classification(document.metadata),
                 }
                 for document in self._visible_documents(docs)
             ]
@@ -669,6 +680,20 @@ class RagService:
             logger.warning("旅行资料研究检索失败: %s", type(exc).__name__)
             from ..core.exceptions import BizException
             raise BizException("资料检索暂不可用，请稍后重试", status_code=503, code="RAG_UNAVAILABLE") from exc
+
+    @staticmethod
+    def _research_file_classification(metadata):
+        # Old index chunks may predate metadata inheritance. Resolve the known
+        # source file so a demo disclaimer in its first section applies to all
+        # its chunks without needing a paid re-embedding migration.
+        if metadata.get("source_type") != "markdown":
+            return {}
+        source = str(metadata.get("source") or "")
+        path = (KNOWLEDGE_DIR / source).resolve()
+        if path.parent != KNOWLEDGE_DIR.resolve() or path.suffix != ".md" or not path.is_file():
+            return {"data_classification": "demonstration"}
+        content = path.read_text(encoding="utf-8")
+        return {"data_classification": "demonstration" if any(marker in content for marker in ("演示数据", "示例数据", "合成数据", "离线样例")) else "live_or_curated"}
 
     def build_rag_context(
         self,

@@ -6,11 +6,12 @@ const Login = () => import('../views/Login.vue')
 const Knowledge = () => import('../views/Knowledge.vue')
 const KnowledgeAdmin = () => import('../views/KnowledgeAdmin.vue')
 const Research = () => import('../views/Research.vue')
-import { isAuthenticated } from '../services/auth'
+import { isAuthenticated, setAuth } from '../services/auth'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    { path: '/account/security', component: () => import('../views/AccountSecurity.vue'), meta: { requiresAuth: true } },
     { path: '/tasks', redirect: { path: '/history', query: { tab: 'tasks' } }, meta: { requiresAuth: true } },
     { path: '/explore', component: () => import('../views/Explore.vue') },
     { path: '/community', component: () => import('../views/Community.vue') },
@@ -65,8 +66,14 @@ const router = createRouter({
 })
 
 // 路由守卫: 需登录的页面未登录 → 跳登录页 (带回跳地址)
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
+    try {
+      const { accountSecurity } = await import('../services/api')
+      const user = await accountSecurity.me()
+      setAuth(undefined, user.username, user.is_admin)
+      return true
+    } catch { /* No valid browser cookie; show login. */ }
     return { path: '/login', query: { redirect: to.fullPath } }
   }
   return true

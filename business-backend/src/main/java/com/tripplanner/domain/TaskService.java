@@ -101,6 +101,7 @@ public class TaskService {
   private ObjectNode submit(
       long uid, ObjectNode input, String key, String requestId, ObjectNode revision,String resumeParent) {
     if (closing) throw new ApiException(503, "服务正在停止，请稍后重试", "PROCESS_INTERRUPTED");
+    if(workersEnabled&&!singleInstance.owned())throw new ApiException(503,"调度器正在恢复，请稍后重试","SCHEDULER_OWNERSHIP_LOST");
     ObjectNode body = TripRequests.normalize(input);
     if (revision != null) {
       revision=revision.deepCopy();
@@ -224,6 +225,7 @@ public class TaskService {
       if (record == null)
         state.put("status", "failed").put("error_code", "RESULT_DELETED").put("message", "行程已删除");
       else {
+        record=planning.view(record);
         var result =
             state
                 .putObject("result")
@@ -275,6 +277,8 @@ public class TaskService {
   }
 
   private void requireRecoverableResult(long uid, Map<String, Object> task) {
+    if(json.readTree(task.get("request_json").toString()).path("_payload_expired").asBoolean(false))
+      throw new ApiException(409,"任务恢复资料已超过保留期，请从当前行程新建任务","TASK_PAYLOAD_EXPIRED");
     if (!"needs_attention".equals(task.get("status"))) return;
     var record = task.get("record_id") == null ? null
         : history.owned(uid, ((Number) task.get("record_id")).longValue());
@@ -439,7 +443,10 @@ public class TaskService {
                   : ex instanceof InterruptedException || !Instant.now().isBefore(deadline)
                       ? "TASK_TIMEOUT"
                       : "AGENT_CONNECTION_LOST";
-      tasks.fail(id, execution, code, "规划未完成，请查看任务状态后重试");
+      // A process that lost scheduler ownership cannot update even terminal
+      // task metadata. The controlled restart recovers its interrupted tasks.
+      if (!workersEnabled || singleInstance.owned())
+        tasks.fail(id, execution, code, "规划未完成，请查看任务状态后重试");
       metrics.recordTaskExecution("failed", System.nanoTime() - executionStarted);
       log.warn(
           "task_execution_failed task_id={} execution_id={} code={} type={} elapsed_ms={}",
@@ -512,6 +519,7 @@ public class TaskService {
     if (draft && revision != null && !assistantProposal) quality.set("revision_parent", revision);
     tx.executeWithoutResult(
         status -> {
+          if(workersEnabled&&!singleInstance.owned())throw new ApiException(503,"调度器所有权丢失，旧执行已拒绝写回","SCHEDULER_OWNERSHIP_LOST");
           if (tasks.finish(task) != 1) {
             status.setRollbackOnly();
             return;
@@ -520,6 +528,8 @@ public class TaskService {
           if(revision!=null){
             planning.checkRevision(uid,revision.path("record_id").asLong(),revision.path("planning_revision").asInt());
             planning.protect(uid,revision.path("record_id").asLong(),plan,revision.path("revision_scope"),true);
+            var changedDays=new HashSet<Integer>();revision.path("revision_scope").path("day_indices").forEach(d->changedDays.add(d.asInt()));
+            planning.bindPersisted(uid,revision.path("record_id").asLong(),plan,changedDays.isEmpty()?null:changedDays);
           }
           if (revision != null && !draft) {
             recordId = revision.path("record_id").asLong(0);
@@ -566,6 +576,10 @@ public class TaskService {
             history.insert(record);
             recordId = ((Number) record.get("id")).longValue();
             if(body.has("planning_input"))planning.saveInput(recordId,body.path("planning_input"));
+            if(revision==null){
+              planning.bindPersisted(uid,recordId,plan,null);
+              planning.storeBoundPlan(recordId,plan);
+            }
             ledger.capture(
                 uid,
                 recordId,

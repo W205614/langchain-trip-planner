@@ -43,20 +43,31 @@ def _call(method, path, payload=None):
         return response.json() if response.content else {}
 
 
-def reserve_outbound(kind):
+def reserve_outbound(kind, *, reserved_tokens=None,map_protocol="rest"):
     identity = execution_id_var.get()
     # Capabilities and indexing also require the central acceptance ledger when a
     # run is pinned. Outside controlled runs, old v1 deployments remain compatible.
     required = os.getenv("OUTBOUND_LEDGER_REQUIRED", "false").lower() in {"1","true","yes"}
-    if identity is None and not os.getenv("FINAL_ACCEPTANCE_RUN_ID") and not required:
+    if identity is None and not os.getenv("FINAL_RUN_ID") and not os.getenv("FINAL_ACCEPTANCE_RUN_ID") and not required:
         return
-    _call("POST", "/internal/v2/outbound/reserve", {"execution_id":identity, "kind":"text" if kind == "vision" else kind,
-        "run_id":os.getenv("FINAL_ACCEPTANCE_RUN_ID"), "request_key":str(uuid4())})
+    payload={"execution_id":identity,"kind":"text" if kind=="vision" else kind,"request_key":str(uuid4())}
+    if reserved_tokens is not None:
+        payload["reserved_tokens"]=reserved_tokens
+    if kind=="amap":payload["map_protocol"]=map_protocol
+    # The business service pins the campaign. Caller-provided run IDs never select a budget.
+    _call("POST", "/internal/v2/outbound/reserve",payload)
 
 
 def input_hash(request, original=None, instruction="", day_index=None):
     value = {"request":request.model_dump(mode="json"), "original":original.model_dump(mode="json") if original else None,
         "instruction":instruction, "day_index":day_index}
+    # Additive empty fact collections have the same meaning as absent collections
+    # in saved v1 inputs. Nonempty declarations always change the stage digest.
+    for item in (value["request"],value["original"]):
+        if isinstance(item,dict) and isinstance(item.get("planning_input"),dict):
+            for field in ("reservation_facts","transport_buffers","poi_relations","meal_resolutions"):
+                if item["planning_input"].get(field)==[]:
+                    item["planning_input"].pop(field)
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
 
 
@@ -114,6 +125,10 @@ def checkpoint_compatible(stage, saved, current):
         ("time-windows-v4-meal-candidates","time-windows-v7-whole-day-budget"),
         ("time-windows-v5-hotel-departure","time-windows-v7-whole-day-budget"),
         ("time-windows-v6-conflict-classification","time-windows-v7-whole-day-budget")}
+    if current.get("rules")=="time-windows-v8-fact-completion" and saved.get("rules") in {
+        "time-windows-v3-hotel-nights","time-windows-v4-meal-candidates","time-windows-v5-hotel-departure",
+        "time-windows-v6-conflict-classification","time-windows-v7-whole-day-budget"}:
+        allowed_upgrade=True
     return bool(unaffected and isinstance(saved,dict) and allowed_upgrade
         and {key:value for key,value in saved.items() if key!="rules"}=={key:value for key,value in current.items() if key!="rules"})
 

@@ -1,6 +1,7 @@
 <template>
   <main class="page-shell"><section class="panel">
     <a-button type="link" @click="router.push('/')">← 返回首页</a-button><h1>公共知识审核</h1>
+    <UploadQuotaPanel admin />
     <a-alert show-icon type="info" message="先解析，再对照原件复核后确认发布。" />
     <a-list :data-source="items" bordered class="list"><template #renderItem="{ item }"><a-list-item>
       <div><b>{{ item.title }}</b> · {{ item.city }}<br><small>{{ item.original_filename }} · 状态：{{ item.status }} · 来源等级：{{ item.source_tier }} {{ item.review_note }}</small></div>
@@ -15,6 +16,7 @@ import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { approveKnowledge, deleteKnowledge, fetchAdminKnowledge, rejectKnowledge } from '@/services/api'
 import KnowledgeReview from '@/components/KnowledgeReview.vue'
+import UploadQuotaPanel from '@/components/UploadQuotaPanel.vue'
 const reviewId = ref(0)
 const router = useRouter(); const items = ref<any[]>([])
 const load = async () => { try { items.value = (await fetchAdminKnowledge()).data || [] } catch (error: any) { message.error(error.response?.data?.detail || '需要管理员权限') } }

@@ -26,6 +26,9 @@ def test_new_config_is_normal_mode_and_private(tmp_path, monkeypatch):
     assert business["WORKERS_ENABLED"] == "true"
     assert agent["ACCEPTANCE_BUDGET_FILE"] == ""
     assert agent["INTERNAL_SERVICE_KEY"] == business["INTERNAL_SERVICE_KEY"]
+    assert agent["DATASET_ID"] == business["DATASET_ID"]
+    assert business["DATASET_ENROLL_NEW"] == "true"
+    assert business["ACCESS_TOKEN_EXPIRE_MINUTES"] == "120"
     assert not any(key in agent for key in ("JWT_SECRET_KEY", "POSTGRES_PASSWORD", "DATABASE_URL", "JDBC_DATABASE_URL"))
     before = (output / "business.env").read_bytes()
     with pytest.raises(FileExistsError):
@@ -64,4 +67,7 @@ def test_upgrade_preserves_credentials_and_adds_split_amap_keys(tmp_path, monkey
     assert agent["INTERNAL_SERVICE_KEY"] == "existing-internal"
     assert agent["LLM_API_KEY"] == "existing-model"
     assert agent["AMAP_API_KEY"] == "mcp-key"
+    assert business["ACCESS_TOKEN_EXPIRE_MINUTES"] == "120"
+    import base64
+    assert len(base64.b64decode(business["ACCOUNT_SECURITY_ENCRYPTION_KEY"])) == 32
     assert not any(key in agent for key in ("JWT_SECRET_KEY", "POSTGRES_PASSWORD", "DATABASE_URL", "JDBC_DATABASE_URL"))

@@ -4,6 +4,9 @@
 *.iml
 
 # Secrets and local runtime state
+/.cache/
+/security-reports/
+/.codex-*
 /backups/
 .env
 **/.env
@@ -27,6 +30,8 @@ __pycache__/
 .codex-*/
 backend/.codex-*/
 .pytest_cache/
+.pytest-optimization*/
+.pytest-opt-*/
 
 # Local project study and interview preparation
 /导学-智能旅行.md
@@ -36,6 +41,7 @@ backend/.codex-*/
 /docs/evidence/resume-validation-20260911/resume.md
 /business-backend/target/
 /deploy/runtime/
+/deploy/runtime-production/
 /backend/data/agent-instance.lock
 /backend/data/index-commands.sqlite3*
 /backend/data/acceptance-budget.sqlite3*

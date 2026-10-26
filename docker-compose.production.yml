@@ -1,33 +1,203 @@
-# Standalone single-host production definition. Prepare private runtime env first.
+# New environment only. Existing installations retain the base configuration and original mounts.
+name: ${TRIP_PRODUCTION_PROJECT:-trip-production}
 services:
   postgres:
-    extends: {file: docker-compose.yml, service: postgres}
-  backend:
-    extends: {file: docker-compose.yml, service: backend}
-    environment:
-      APP_ENV: production
-      VALIDATION_ALLOW_FIXTURES: "no"
-    volumes: ["production_uploads:/data/uploads"]
-  agent:
-    extends: {file: docker-compose.yml, service: agent}
-    environment:
-      APP_ENV: production
-      VALIDATION_ALLOW_FIXTURES: "no"
+    image: postgres:17.11-alpine
+    env_file: ${TRIP_PRODUCTION_RUNTIME:-./deploy/runtime-production}/postgres.env
     volumes:
-      - production_chroma:/app/data/chroma
-      - production_agent_runtime:/app/runtime
-  frontend:
-    extends: {file: docker-compose.yml, service: frontend}
-  prometheus:
-    profiles: [monitoring]
-    image: prom/prometheus:v3.2.1
-    volumes:
-      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./deploy/alerts.yml:/etc/prometheus/alerts.yml:ro
-    ports: ["127.0.0.1:9090:9090"]
+    - java_business_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U trip -d trip_java
+      interval: 5s
+      timeout: 3s
+      retries: 20
     restart: unless-stopped
+    mem_limit: 768m
+    cpus: 1.0
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+  backend:
+    build:
+      context: ./business-backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    env_file: ${TRIP_PRODUCTION_RUNTIME:-./deploy/runtime-production}/business.env
+    volumes:
+    - production_uploads:/data/uploads
+    expose:
+    - '9000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -fsS
+      - http://localhost:9000/readyz
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    mem_limit: 1g
+    cpus: 2.0
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+    environment:
+      APP_ENV: production
+      VALIDATION_ALLOW_FIXTURES: 'no'
+      ADMIN_MFA_REQUIRED: 'true'
+  agent:
+    build:
+      context: ./backend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    env_file: ${TRIP_PRODUCTION_RUNTIME:-./deploy/runtime-production}/agent.env
+    command:
+    - uvicorn
+    - app.agent_api.main:app
+    - --host
+    - 0.0.0.0
+    - --port
+    - '9000'
+    - --workers
+    - '1'
+    environment:
+      APP_ENV: production
+      VALIDATION_ALLOW_FIXTURES: 'no'
+    volumes:
+    - production_chroma:/app/data/chroma
+    - production_agent_runtime:/app/runtime
+    expose:
+    - '9000'
+    healthcheck:
+      test:
+      - CMD
+      - python
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz',timeout=5)
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    mem_limit: 2g
+    cpus: 2.0
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    ports:
+    - 127.0.0.1:${APP_PORT:-8380}:80
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -q -O /dev/null http://127.0.0.1/ || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+  prometheus:
+    profiles:
+    - monitoring
+    image: trip-planner-prometheus:3.15.1-security1
+    build:
+      context: ./deploy/images
+      dockerfile: prometheus.Dockerfile
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    volumes:
+    - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - ./deploy/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports:
+    - 127.0.0.1:9090:9090
+    restart: unless-stopped
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.retention.time=15d
+    - --storage.tsdb.retention.size=512MB
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+  alertmanager:
+    profiles:
+    - monitoring
+    image: trip-planner-alertmanager:0.34.1-security1
+    build:
+      context: ./deploy/images
+      dockerfile: alertmanager.Dockerfile
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    volumes:
+    - ./deploy/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    - production_alerts:/alertmanager
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.25
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+  alert-receiver:
+    profiles:
+    - monitoring
+    build:
+      context: ./backend
+    entrypoint:
+    - python
+    - scripts/operational_alert_receiver.py
+    environment:
+      ALERT_INBOX: /app/runtime/alerts.jsonl
+    volumes:
+    - production_alert_inbox:/app/runtime
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.25
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
 volumes:
-  java_business_data:
-  production_uploads:
-  production_chroma:
-  production_agent_runtime:
+  java_business_data: null
+  production_uploads: null
+  production_chroma: null
+  production_agent_runtime: null
+  production_alerts: null
+  production_alert_inbox: null

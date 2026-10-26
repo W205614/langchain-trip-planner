@@ -38,6 +38,8 @@ public class BusinessMetrics {
     Gauge.builder("trip.oldest.queue.age.seconds", oldestQueueAge, AtomicReference::get).register(registry);
     Gauge.builder("trip.oldest.sync.age.seconds", oldestSyncAge, AtomicReference::get).register(registry);
     Gauge.builder("trip.data.disk.free.ratio", diskFreeRatio, AtomicReference::get).register(registry);
+    Gauge.builder("trip.backup.age.seconds",this,value->value.heartbeatAge("backup")).register(registry);
+    Gauge.builder("trip.offhost.backup.age.seconds",this,value->value.heartbeatAge("offhost_backup")).register(registry);
     for (String metric : List.of("requests", "failures", "poi_cache_size", "weather_cache_size", "detail_cache_size", "route_cache_size"))
       Gauge.builder("trip.amap.rest." + metric, amap, value -> value.metrics().getOrDefault(metric, 0L))
           .register(registry);
@@ -144,5 +146,9 @@ public class BusinessMetrics {
                 + ") t(oldest)",
             Double.class);
     return value == null ? 0 : value;
+  }
+  private double heartbeatAge(String name){
+    try {Double value=jdbc.queryForObject("SELECT COALESCE(EXTRACT(EPOCH FROM(now()-max(observed_at))),2147483647) FROM operational_heartbeats WHERE name=?",Double.class,name);return value==null?2147483647d:value;}
+    catch(Exception ignored){return 2147483647d;}
   }
 }

@@ -1,0 +1,4 @@
+# Scanner tooling only; not installed in application images.
+pip-audit==2.10.1
+# Pin the cache serialization dependency explicitly on Windows and Linux.
+msgpack==1.2.3

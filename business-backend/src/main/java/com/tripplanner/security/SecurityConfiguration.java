@@ -42,12 +42,15 @@ public class SecurityConfiguration {
     config.setAllowedHeaders(
         List.of(
             "Authorization",
+            "X-Auth-Mode",
+            "X-CSRF-Token",
             "Content-Type",
             "If-Match",
             "Idempotency-Key",
             "X-Request-ID",
             "Last-Event-ID"));
     config.setExposedHeaders(List.of("X-Request-ID"));
+    config.setAllowCredentials(true);
     var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/api/**", config);
     return source;
@@ -55,7 +58,7 @@ public class SecurityConfiguration {
 
   @Bean
   SecurityFilterChain security(
-      HttpSecurity http, TokenService tokens, @Value("${trip.internal-key}") String internalKey)
+      HttpSecurity http, TokenService tokens, AccountSecurityService accounts,@Value("${trip.internal-key}") String internalKey)
       throws Exception {
     if (internalKey.getBytes(StandardCharsets.UTF_8).length < 32)
       throw new IllegalArgumentException("INTERNAL_SERVICE_KEY requires at least 32 bytes");
@@ -79,8 +82,21 @@ public class SecurityConfiguration {
                             "agent", null, List.of(new SimpleGrantedAuthority("ROLE_SERVICE"))));
               } else {
                 String bearer = req.getHeader("Authorization");
-                if (bearer != null && bearer.startsWith("Bearer ")) {
-                  var user = tokens.verify(bearer.substring(7));
+                boolean credentialEndpoint=List.of("/api/auth/login","/api/auth/register","/api/auth/recover").contains(req.getRequestURI());
+                String credential = bearer != null && bearer.startsWith("Bearer ") ? bearer.substring(7) : null;
+                if (credential == null && !credentialEndpoint) {
+                  credential = BrowserSession.cookie(req,BrowserSession.COOKIE);
+                  if(credential != null && !List.of("GET","HEAD","OPTIONS").contains(req.getMethod())) {
+                    String csrf = req.getHeader("X-CSRF-Token");
+                    if(csrf == null || !MessageDigest.isEqual(BrowserSession.csrf(credential).getBytes(StandardCharsets.UTF_8),csrf.getBytes(StandardCharsets.UTF_8))) {
+                      res.setStatus(403);res.setContentType("application/json;charset=UTF-8");
+                      res.getWriter().write("{\"detail\":\"安全校验已失效，请刷新页面\",\"code\":\"CSRF_REQUIRED\"}");return;
+                    }
+                  }
+                }
+                if(credentialEndpoint)credential=null;
+                if (credential != null) {
+                  var user = tokens.verify(credential);
                   req.setAttribute("user", user);
                   SecurityContextHolder.getContext()
                       .setAuthentication(
@@ -89,7 +105,7 @@ public class SecurityConfiguration {
                               null,
                               List.of(
                                   new SimpleGrantedAuthority(
-                                      Boolean.TRUE.equals(user.get("is_admin"))
+                                      Boolean.TRUE.equals(user.get("is_admin")) && accounts.adminReady(((Number)user.get("id")).longValue())
                                           ? "ROLE_ADMIN"
                                           : "ROLE_USER"))));
                 }
@@ -98,7 +114,9 @@ public class SecurityConfiguration {
             } catch (ApiException ex) {
               res.setStatus(ex.status);
               res.setContentType("application/json;charset=UTF-8");
-              res.getWriter().write("{\"success\":false,\"detail\":\"未登录或登录已过期\"}");
+              res.getWriter().write(ex.status>=500
+                  ? "{\"success\":false,\"detail\":\"登录校验暂不可用，请稍后重试\",\"code\":\"AUTH_STORE_UNAVAILABLE\"}"
+                  : "{\"success\":false,\"detail\":\"未登录或登录已过期\",\"code\":\"UNAUTHORIZED\"}");
             }
           }
         };
@@ -119,6 +137,7 @@ public class SecurityConfiguration {
                         "/actuator/prometheus",
                         "/api/auth/login",
                         "/api/auth/register",
+                        "/api/auth/recover",
                         "/api/capabilities",
                         "/api/validation/fixture")
                     .permitAll()

@@ -12,6 +12,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from deployment_assets import extract_safe, validate_manifest
 
 
+def test_service_inventory_ignores_inherited_image_labels_but_refuses_real_ambiguity(monkeypatch):
+    import deployment_assets as assets
+    records={name:{"Id":name,"Config":{"Labels":{"com.docker.compose.service":name,
+        "com.docker.compose.oneoff":"False","com.docker.compose.project.config_files":"fixture.compose.yml"}}}
+        for name in ("agent","backend","frontend","postgres")}
+    records["ad-hoc-test"]={"Id":"ad-hoc-test","Config":{"Labels":{"com.docker.compose.project":"daily","com.docker.compose.service":"agent"}}}
+    monkeypatch.setattr(assets,"docker",lambda *args:" ".join(records).encode())
+    monkeypatch.setattr(assets,"inspect",lambda identity:records[identity])
+    assert set(assets.services("daily"))=={"agent","backend","frontend","postgres"}
+    records["second-managed-agent"]={"Id":"second-managed-agent","Config":records["agent"]["Config"]}
+    with pytest.raises(RuntimeError,match="Multiple agent"):
+        assets.services("daily")
+
+
 def test_corrupt_dump_is_rejected_before_restoration(tmp_path):
     dump = tmp_path / "database.dump"
     dump.write_bytes(b"original database")

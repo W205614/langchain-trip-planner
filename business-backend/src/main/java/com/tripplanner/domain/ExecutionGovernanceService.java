@@ -15,6 +15,8 @@ import tools.jackson.databind.node.ObjectNode;
 /** Durable checkpoints and irrevocable pre-send reservations. Transaction contains no network I/O. */
 @Service
 public class ExecutionGovernanceService {
+  @org.springframework.beans.factory.annotation.Autowired private SingleInstance singleInstance;
+  @org.springframework.beans.factory.annotation.Autowired private CampaignBudgetService campaign;
   @Value("${OUTBOUND_DAILY_TEXT_LIMIT:1000}") private int dailyText;
   @Value("${OUTBOUND_DAILY_EMBEDDING_LIMIT:5000}") private int dailyEmbedding;
   @Value("${OUTBOUND_DAILY_AMAP_LIMIT:10000}") private int dailyAmap;
@@ -24,6 +26,7 @@ public class ExecutionGovernanceService {
   private final JdbcTemplate db;private final TransactionTemplate tx;private final TaskMapper tasks;private final JsonMapper json;private final String acceptanceRun;
   public ExecutionGovernanceService(JdbcTemplate db,TransactionTemplate tx,TaskMapper tasks,JsonMapper json,@Value("${FINAL_ACCEPTANCE_RUN_ID:}")String run){this.db=db;this.tx=tx;this.tasks=tasks;this.json=json;this.acceptanceRun=run;}
   private Map<String,Object> running(String execution,boolean lock){
+    if(!singleInstance.owned())throw new ApiException(503,"调度器所有权丢失，执行写回已停止","SCHEDULER_OWNERSHIP_LOST");
     var rows=db.queryForList("SELECT * FROM trip_tasks WHERE execution_id=? AND status='running' AND deadline_at>timezone('UTC',now())"+(lock?" FOR UPDATE":""),execution);
     if(rows.isEmpty())throw new ApiException(409,"执行已结束或已过期","EXECUTION_EXPIRED");return rows.getFirst();
   }
@@ -52,24 +55,34 @@ ORDER BY c.stage,c.input_hash,c.compatibility,a.depth,c.created_at DESC LIMIT 25
   public Object reserve(ObjectNode body){
     String kind=body.path("kind").asText("");if(!Set.of("text","embedding","amap").contains(kind))throw new ApiException(422,"调用类型无效");
     String key=body.path("request_key").asText("");if(!key.matches("[A-Za-z0-9_:/.-]{1,160}"))throw new ApiException(422,"调用编号无效");
-    String run=acceptanceRun.isBlank()?body.path("run_id").asText(""):acceptanceRun;
+    String run=campaign.runId();
+    String requestedRun=body.path("run_id").asText("");
+    if(!requestedRun.isBlank()&&!requestedRun.equals(run))throw new ApiException(422,"验收批次只能由业务服务配置，不能由调用方更换","CAMPAIGN_ID_CLIENT_CONTROLLED");
     if(run.length()>120||!run.matches("[A-Za-z0-9_.:-]*"))throw new ApiException(422,"验收批次无效");
     String execution=body.path("execution_id").asText("");
+    if(campaign.enabled()&&kind.equals("amap")&&!"rest".equals(body.path("map_protocol").asText("rest")))throw new ApiException(409,"固定验收批次仅允许可逐次计数的REST地图调用；MCP工具内部请求数不可证明","CAMPAIGN_REST_REQUIRED");
+    var tokenInput=body.path("reserved_tokens");
+    if(!tokenInput.isMissingNode()&&(!tokenInput.isIntegralNumber()||!tokenInput.canConvertToLong()||tokenInput.asLong(-1)<0))throw new ApiException(422,"Token预留必须为非负整数");
+    long reservedTokens=tokenInput.asLong(0);
     return tx.execute(s->{
       Map<String,Object> task=execution.isBlank()?null:running(execution,true);
+      if(!db.queryForList("SELECT id FROM outbound_reservations WHERE run_id=? AND request_key=?",run,key).isEmpty())throw new ApiException(409,"调用编号已使用","OUTBOUND_RESERVATION_REUSED");
+      if(task!=null&&campaign.enabled()){var root=budgetRootRow(task);campaign.workflow(root.get("id").toString(),root.get("fingerprint").toString());}
+      campaign.reserve(kind,reservedTokens);
       // Serialize all calls of a run, including calls with no task (research, ingestion, map UI).
       String runScope=run.isBlank()?"daily:"+LocalDate.now(ZoneOffset.UTC):"acceptance:"+run;
       increment(runScope,kind,run.isBlank()?switch(kind){case "text"->dailyText;case "embedding"->dailyEmbedding;default->dailyAmap;}:switch(kind){case "text"->12;case "embedding"->40;default->400;});
       if(task!=null){int days=Math.max(1,json.readTree(task.get("request_json").toString()).path("travel_days").asInt(1));increment("task:"+budgetRoot(task),kind,switch(kind){case "text"->Math.min(taskTextMax,4+2*days);case "embedding"->Math.min(taskEmbeddingMax,40+10*days);default->Math.min(taskAmapMax,100+80*days);});}
       // Reusing a reservation cannot authorize another send. Every attempt gets a fresh key.
-      var exists=db.queryForList("SELECT id FROM outbound_reservations WHERE run_id=? AND request_key=?",run,key);
-      if(!exists.isEmpty())throw new ApiException(409,"调用编号已使用","OUTBOUND_RESERVATION_REUSED");
-      db.update("INSERT INTO outbound_reservations(execution_id,kind,run_id,request_key) VALUES(?,?,?,?)",execution.isBlank()?null:execution,kind,run,key);
-      return Map.of("success",true,"reserved",true,"outcome","unknown","run_id",run);
+      if(db.update("INSERT INTO outbound_reservations(execution_id,kind,run_id,request_key,reserved_tokens) VALUES(?,?,?,?,?) ON CONFLICT(run_id,request_key) DO NOTHING",execution.isBlank()?null:execution,kind,run,key,reservedTokens)!=1)throw new ApiException(409,"调用编号已使用","OUTBOUND_RESERVATION_REUSED");
+      return Map.of("success",true,"reserved",true,"outcome","unknown","run_id",run,"reserved_tokens",reservedTokens);
     });
   }
-  private String budgetRoot(Map<String,Object> task){var current=task;var seen=new HashSet<String>();while(current.get("resumed_from")!=null&&seen.add(current.get("id").toString())){var parent=tasks.get(current.get("resumed_from").toString());if(parent==null)break;current=parent;}return current.get("id").toString();}
+  private Map<String,Object> budgetRootRow(Map<String,Object> task){var current=task;var seen=new HashSet<String>();while(current.get("resumed_from")!=null&&seen.add(current.get("id").toString())){var parent=tasks.get(current.get("resumed_from").toString());if(parent==null)break;current=parent;}return current;}
+  private String budgetRoot(Map<String,Object> task){return budgetRootRow(task).get("id").toString();}
+  public Object campaignStatus(){return campaign.status();}
+  public Object reserveWorkflow(ObjectNode body){if(!campaign.enabled())throw new ApiException(409,"服务端未启用固定验收批次","CAMPAIGN_NOT_CONFIGURED");return tx.execute(s->{var task=running(body.path("execution_id").asText(""),true);var root=budgetRootRow(task);campaign.workflow(root.get("id").toString(),root.get("fingerprint").toString());return Map.of("success",true,"run_id",campaign.runId(),"root_task_id",root.get("id"));});}
   private void increment(String scope,String kind,long limit){db.update("INSERT INTO outbound_budget_counters(scope,kind,used) VALUES(?,?,0) ON CONFLICT DO NOTHING",scope,kind);if(db.update("UPDATE outbound_budget_counters SET used=used+1 WHERE scope=? AND kind=? AND used<?",scope,kind,limit)!=1)throw new ApiException(429,"外部调用预算已用完","OUTBOUND_BUDGET_EXHAUSTED");}
-  public void reserveAmap(){var n=json.createObjectNode().put("kind","amap").put("request_key",UUID.randomUUID().toString());reserve(n);}
+  public void reserveAmap(){var n=json.createObjectNode().put("kind","amap").put("map_protocol","rest").put("request_key",UUID.randomUUID().toString());reserve(n);}
   public void linkResume(String child,String parent){if(db.update("UPDATE trip_tasks SET resumed_from=? WHERE id=? AND (resumed_from IS NULL OR resumed_from=?)",parent,child,parent)!=1)throw new ApiException(409,"恢复幂等键已用于其他任务");}
 }

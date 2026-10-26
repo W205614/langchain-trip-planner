@@ -15,4 +15,6 @@ public class PlanningController {
   @GetMapping("/internal/v2/executions/{executionId}/checkpoints") public Object checkpoints(@PathVariable String executionId){return governance.get(executionId);}
   @PostMapping("/internal/v2/executions/{executionId}/checkpoints") public Object checkpoint(@PathVariable String executionId,@RequestBody ObjectNode body){return governance.save(executionId,body);}
   @PostMapping("/internal/v2/outbound/reserve") public Object reserve(@RequestBody ObjectNode body){return governance.reserve(body);}
+  @GetMapping("/internal/v2/campaign") public Object campaign(){return governance.campaignStatus();}
+  @PostMapping("/internal/v2/campaign/workflows/reserve") public Object workflow(@RequestBody ObjectNode body){return governance.reserveWorkflow(body);}
 }

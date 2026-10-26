@@ -1,0 +1,21 @@
+{
+  "verified_date": "2026-10-26",
+  "osv-scanner": {
+    "version": "2.7.0",
+    "source": "https://github.com/google/osv-scanner/releases/tag/v2.7.0",
+    "linux": {"url": "https://github.com/google/osv-scanner/releases/download/v2.7.0/osv-scanner_linux_amd64", "sha256": "160c6253e2922e9e0a6a9771c5c4c40a4b3c6090b34a3cdd5e80c96cc2e4218b"},
+    "windows": {"url": "https://github.com/google/osv-scanner/releases/download/v2.7.0/osv-scanner_windows_amd64.exe", "sha256": "9964ed64ec9a387391eb4cc006ad5c531154821aef29b793e02c448de4686438"}
+  },
+  "gitleaks": {
+    "version": "8.30.1",
+    "source": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "linux": {"url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz", "sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb", "member": "gitleaks"},
+    "windows": {"url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_windows_x64.zip", "sha256": "d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e", "member": "gitleaks.exe"}
+  },
+  "grype": {
+    "version": "0.121.0",
+    "source": "https://github.com/anchore/grype/releases/tag/v0.121.0",
+    "linux": {"url": "https://github.com/anchore/grype/releases/download/v0.121.0/grype_0.121.0_linux_amd64.tar.gz", "sha256": "64e07133d3486115de647a66581461dccf5c732748a0a3119077395565f15519", "member": "grype"},
+    "windows": {"url": "https://github.com/anchore/grype/releases/download/v0.121.0/grype_0.121.0_windows_amd64.zip", "sha256": "f867bbdc14bd8b0d99b3fc47d839af07480a540072b16896373a8ba32b76f588", "member": "grype.exe"}
+  }
+}

@@ -953,7 +953,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
         logger.info("开始增量改排行程: city=%s day=%s", request.city, day_index + 1)
         # 复用景点检索节点。先排除其它日期的 POI，防止单日重排造成跨日重复；
         # 当前日期原有 POI 保留为候选，允许用户只调整顺序、餐饮或文案。
-        search_state: GraphState = {"request": request, "user_id": user_id or 0}
+        from ..services.time_planner import city_for_day
+        day_request=request.model_copy(deep=True)
+        day_request.city=city_for_day(request,day_index)
+        search_state: GraphState = {"request": day_request, "user_id": user_id or 0}
         fresh_pois = self._search_attractions(search_state).get("attraction_pois", [])
         restaurant_pois = self._search_restaurants(search_state).get("restaurant_pois", [])
         other_day_poi_ids = {
@@ -1004,7 +1007,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         restaurant_text = self._pois_to_text(restaurant_pois[:8])
         current_text = "、".join(item.name for item in day.attractions) or "无"
         day_query = (
-            f"城市: {request.city}\n交通方式: {request.transportation}\n"
+            f"城市: {day_request.city}\n交通方式: {request.transportation}\n"
             f"住宿偏好: {request.accommodation}\n旅行偏好: {','.join(request.preferences) or '无'}\n"
             f"这是第 {day_index + 1} 天（日期 {day.date}）的增量改排，不要改动其它日期。\n"
             f"当前景点: {current_text}\n"

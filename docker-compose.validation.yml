@@ -8,11 +8,17 @@ services:
     ports: ["127.0.0.1:19088:9088"]
     volumes: ["./backend/scripts:/app/scripts:ro"]
   alertmanager:
-    image: prom/alertmanager:v0.28.1
+    image: trip-planner-alertmanager:0.34.1-security1
+    build:
+      context: ./deploy/images
+      dockerfile: alertmanager.Dockerfile
     volumes: ["./deploy/alertmanager.validation.yml:/etc/alertmanager/alertmanager.yml:ro"]
     ports: ["127.0.0.1:19093:9093"]
   prometheus:
-    image: prom/prometheus:v3.2.1
+    image: trip-planner-prometheus:3.15.1-security1
+    build:
+      context: ./deploy/images
+      dockerfile: prometheus.Dockerfile
     volumes:
       - ./deploy/prometheus.validation.yml:/etc/prometheus/prometheus.yml:ro
       - ./deploy/alerts.yml:/etc/prometheus/alerts.yml:ro

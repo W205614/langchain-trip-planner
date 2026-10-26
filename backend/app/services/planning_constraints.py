@@ -87,32 +87,33 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         day.attractions.remove(attraction)
         repairs.append({"day_index": day.day_index, "removed_poi_id": attraction.poi_id, "reason": reason})
 
-    def route_for(left, right, city=None):
+    def route_for(left, right, city=None, mode=None):
         city = city or plan.city
+        mode = mode or route_type
         key = (left.poi_id, right.poi_id, left.location.longitude, left.location.latitude,
-               right.location.longitude, right.location.latitude, route_type, city)
+               right.location.longitude, right.location.latitude, mode, city)
         if key not in cache:
             if enhanced:
-                evidence=schedule_routes.get((left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,route_type))
+                evidence=schedule_routes.get((left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,mode))
                 # The solver has already obtained this directed route. Its
                 # persisted snapshot carries duration, not distance: do not send
                 # another paid lookup merely for the legacy quality summary.
-                cache[key]=(evidence[0],None,None,route_type) if evidence and evidence[1] else None
+                cache[key]=(evidence[0],None,None,mode) if evidence and evidence[1] else None
                 if cache[key] is not None:
                     gaps.add("route_distance_and_walking_unverified")
                 return cache[key]
             try:
                 route = route_planner.plan_route_by_locations(left.location, right.location,
-                    route_type=route_type, city=city) if route_planner else {}
+                    route_type=mode, city=city) if route_planner else {}
                 duration, meters = float(route["duration"]), float(route["distance"])
                 if not all(isfinite(v) and v >= 0 for v in (duration, meters)):
                     raise ValueError("Invalid route quantities")
-                walk = meters if route_type == "walking" else route.get("walking_distance")
+                walk = meters if mode == "walking" else route.get("walking_distance")
                 if walk is not None:
                     walk = float(walk)
                     if not isfinite(walk) or walk < 0:
                         raise ValueError("Invalid walking distance")
-                cache[key] = (duration / 60, meters, walk, route.get("route_type", route_type))
+                cache[key] = (duration / 60, meters, walk, route.get("route_type", mode))
             except Exception:
                 cache[key] = None
         return cache[key]
@@ -124,7 +125,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         original = list(day.attractions)
         best = None
         for order in permutations(original):
-            routes = [route_for(left, right, day.city or plan.city) for left, right in zip(order, order[1:])]
+            routes = [route_for(left, right, day.city or plan.city, transport_to_route_type(day.transportation or request.transportation)) for left, right in zip(order, order[1:])]
             if any(route is None for route in routes):
                 continue
             cost = (sum(route[0] for route in routes), sum(route[1] for route in routes))
@@ -140,7 +141,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         day_routes[day.day_index] = legs
         minutes, walking, distance, complete = 0.0, 0.0, 0.0, True
         for left, right in zip(day.attractions, day.attractions[1:]):
-            route = route_for(left, right, day.city or plan.city)
+            route = route_for(left, right, day.city or plan.city, transport_to_route_type(day.transportation or request.transportation))
             legs.append({"from": left.name, "to": right.name, "route_type": route[3] if route else route_type,
                          "minutes": round(route[0], 1) if route else None,
                          "distance_km": round(route[1] / 1000, 2) if route and route[1] is not None else None,
@@ -202,7 +203,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                 "planned_minutes": None if total is None else round(total, 1),
                 "inter_stop_walking_km": walking, "route_distance_km": distance})
             day_reports[-1]["routes"] = day_routes[day.day_index]
-            day_reports[-1]["walking_status"] = "not_applicable" if route_type == "driving" else (
+            day_reports[-1]["walking_status"] = "not_applicable" if transport_to_route_type(day.transportation or request.transportation) == "driving" else (
                 "unavailable" if walking is None else "available")
             break
 
@@ -255,6 +256,11 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         report["unmet_meals"]=[{"day_index":day.day_index,**meal} for day in plan.days for meal in day.feasibility.get("unmet_meals",[])]
         report["data_gaps"]=sorted(set(report["data_gaps"])|{f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"]})
         report["time_policy_version"] = RULE_VERSION
+        from .time_planner import fact_current
+        if all(any(f.get("poi_id")==a.poi_id and f.get("date")==day.date and f.get("status") in {"confirmed","not_required"} and fact_current(f,"verification") for f in request.planning_input.reservation_facts) for day in plan.days for a in day.attractions):
+            report["data_gaps"]=[gap for gap in report["data_gaps"] if gap!="reservation_unverified"]
+        if all(REQUIRED_MEALS <= ({meal.type for meal in day.meals}|{f["type"] for f in request.planning_input.meal_resolutions if f.get("day_index")==day.day_index and fact_current(f,"verification")}) for day in plan.days):
+            report["data_gaps"]=[gap for gap in report["data_gaps"] if gap!="meal_pois_unavailable"]
         statuses = {s["status"] for s in schedules}
         report["feasibility_status"] = next((s for s in ("infeasible", "not_found", "unverified") if s in statuses), "feasible")
         report["facts_complete"] = bool(schedules) and all(not s["unknown"] for s in schedules)

@@ -102,6 +102,8 @@ public class PlanRules {
     boolean routeChecked = true;
     for (int index = 0; index < days.size(); index++) {
       var day = (ObjectNode) days.get(index);
+      String dayCity=PlanningSemantics.city(request,day);
+      String dayType=routeType(day.path("transportation").asText(request.path("transportation").asText("")));
       var attrs = new ArrayList<>(list(day.path("attractions")));
       int dayIndex = day.path("day_index").asInt(0);
       for (var a : new ArrayList<>(attrs)) {
@@ -140,14 +142,14 @@ public class PlanRules {
                   + ":"
                   + right.path("location")
                   + ":"
-                  + type;
+                  + dayType+":"+dayCity;
           if (!cache.containsKey(pair)) {
             JsonNode route = null;
             try {
               route =
                   routes == null
                       ? null
-                      : routes.get(left.path("location"), right.path("location"), type, city);
+                      : routes.get(left.path("location"), right.path("location"), dayType, dayCity);
               if (route == null
                   || !quantity(route.path("duration"))
                   || !quantity(route.path("distance"))
@@ -163,18 +165,23 @@ public class PlanRules {
               legs.addObject()
                   .put("from", left.path("name").asText(""))
                   .put("to", right.path("name").asText(""))
-                  .put("route_type", route == null ? type : route.path("route_type").asText(type));
+                  .put("route_type", route == null ? dayType : route.path("route_type").asText(dayType))
+                  .put("city",dayCity);
           if (route == null) {
             complete = false;
             leg.putNull("minutes").putNull("distance_km").putNull("walking_km");
             gaps.add("route_duration_unavailable_fallback_to_straight_line");
           } else {
+            for(String field:List.of("observed_at","expires_at"))if(route.hasNonNull(field))leg.set(field,route.path(field));
+            if(route.hasNonNull("expires_at")){
+              try{var expiry=java.time.Instant.parse(route.path("expires_at").asText());String existing=day.path("route_fact_expires_at").asText("");if(existing.isBlank()||expiry.isBefore(java.time.Instant.parse(existing)))day.put("route_fact_expires_at",expiry.toString());}catch(Exception ex){day.put("route_fact_expires_at",java.time.Instant.EPOCH.toString());}
+            }
             double m = route.path("duration").asDouble() / 60,
                 dist = route.path("distance").asDouble();
             minutes += m;
             distance += dist;
             leg.put("minutes", round(m, 1)).put("distance_km", round(dist / 1000, 2));
-            if (type.equals("walking")) {
+            if (dayType.equals("walking")) {
               walking += dist;
               leg.put("walking_km", round(dist / 1000, 2));
             } else if (route.hasNonNull("walking_distance")) {
@@ -255,7 +262,7 @@ public class PlanRules {
                 ? "no_attractions"
                 : !hasInterStopLeg
                     ? "single_stop"
-                    : type.equals("driving")
+                    : dayType.equals("driving")
                         ? "not_applicable"
                         : complete && walkKnown ? "available" : "unavailable");
         if (complete) {
@@ -339,6 +346,7 @@ public class PlanRules {
     result.set("degraded_days", degraded);
     budget(plan, request);
     classify(plan, request, result);
+    if(request.path("planning_input").isObject())new TimelineVerificationService(json).apply(plan,request,routes,result);
     return result;
   }
 

@@ -9,7 +9,8 @@ test('login and task recovery preserve the saved result and quality', async ({ p
   await page.getByPlaceholder('密码', { exact: true }).fill('browser123')
   await page.getByRole('button', { name: /登\s*录/, exact: true }).click()
   await expect(page).toHaveURL(/\/$/)
-  const token = await page.evaluate(() => sessionStorage.getItem('access_token'))
+  expect(await page.evaluate(() => sessionStorage.getItem('access_token'))).toBeNull()
+  const token = (await account.json()).access_token // legacy API contract remains separate from browser Cookie login
   const body = { city: '北京', start_date: '2026-09-11', end_date: '2026-09-11', travel_days: 1,
     transportation: '公共交通', accommodation: '经济型酒店', preferences: [], free_text_input: 'fixture:invalid-json' }
   const key = `browser-${Date.now()}`
@@ -47,11 +48,12 @@ test('saved draft survives in my trips and logout revokes the server session', a
   const username = `tasks_${Date.now()}`
   const registration = await request.post('/api/auth/register', { data: { username, password: 'browser123' } })
   const token = (await registration.json()).access_token
-  await page.goto('/')
-  await page.evaluate(({ token, username }) => {
-    sessionStorage.setItem('access_token', token)
-    sessionStorage.setItem('username', username)
-  }, { token, username })
+  await page.goto('/login')
+  await page.getByPlaceholder('用户名', { exact: true }).fill(username)
+  await page.getByPlaceholder('密码', { exact: true }).fill('browser123')
+  await page.getByRole('button', { name: /登\s*录/, exact: true }).click()
+  await expect(page).toHaveURL(/\/$/)
+  expect(await page.evaluate(() => sessionStorage.getItem('access_token'))).toBeNull()
   const created = await request.post('/api/trip/tasks', { headers: { Authorization: `Bearer ${token}` }, data: {
     city: '北京', start_date: '2026-09-11', end_date: '2026-09-11', travel_days: 1,
     transportation: '步行', accommodation: '酒店', preferences: [], free_text_input: '',

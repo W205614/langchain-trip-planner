@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DataAccessException;
 
 @Service
 public class TokenService {
@@ -58,6 +59,9 @@ public class TokenService {
           || ((Number) user.get("token_version")).intValue() != (ver == null ? 0 : ver.intValue()))
         throw new IllegalArgumentException();
       return user;
+    } catch (DataAccessException ex) {
+      // A healthy credential cannot be declared invalid merely because its revocation store is down.
+      throw new ApiException(503,"登录校验暂不可用，请稍后重试","AUTH_STORE_UNAVAILABLE");
     } catch (Exception ex) {
       throw new ApiException(401, "未登录或登录已过期");
     }

@@ -11,11 +11,17 @@ _CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "�
 
 
 def _day_index(text: str) -> int | None:
-    match = re.search(r"第\s*([0-9]{1,2}|[一二三四五六七八九十])\s*天", text)
+    match = re.search(r"第\s*([0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*天", text)
     if not match:
         return None
     raw = match.group(1)
-    value = int(raw) if raw.isdigit() else _CN.get(raw)
+    if raw.isdigit():
+        value = int(raw)
+    elif "十" in raw:
+        tens, _, units = raw.partition("十")
+        value = _CN.get(tens, 1) * 10 + _CN.get(units, 0)
+    else:
+        value = _CN.get(raw)
     return value - 1 if value and value > 0 else None
 
 

@@ -29,6 +29,7 @@ def _build_llm(timeout: int) -> ChatOpenAI:
         temperature=settings.llm_temperature,
         timeout=timeout,
         max_retries=_LLM_MAX_RETRIES,
+        max_tokens=settings.llm_day_max_tokens,
         http_client=httpx.Client(event_hooks=hooks("text"), follow_redirects=False),
         http_async_client=httpx.AsyncClient(event_hooks=async_hooks("text"), follow_redirects=False),
     )

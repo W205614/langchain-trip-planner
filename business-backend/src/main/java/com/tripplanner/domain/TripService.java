@@ -20,11 +20,13 @@ public class TripService {
   private final TransactionTemplate tx;
   private final JsonMapper json;
   private final TripLedgerService ledger;
+  private final TripFactVerificationService verification;
 
   public TripService(HistoryMapper history, AmapGateway amap, PlanRules rules,
-      TransactionTemplate tx, JsonMapper json, TripLedgerService ledger) {
+      TransactionTemplate tx, JsonMapper json, TripLedgerService ledger, TripFactVerificationService verification) {
     this.history = history; this.amap = amap; this.rules = rules; this.tx = tx; this.json = json;
     this.ledger = ledger;
+    this.verification = verification;
   }
 
   public Map<String, Object> createManual(long uid, ObjectNode input, String requestId) {
@@ -50,6 +52,7 @@ public class TripService {
           .put("description", "手工编排第" + (index + 1) + "天")
           .put("transportation", request.path("transportation").asText())
           .put("accommodation", request.path("accommodation").asText());
+      String dayCity=PlanningSemantics.city(request,day);day.put("city",dayCity);
       var attractions = day.putArray("attractions"); day.putArray("meals");
       JsonNode ids = submitted.path("poi_ids");
       if (!ids.isArray() || ids.size() > 20) throw new ApiException(422, "每日景点列表无效");
@@ -58,7 +61,7 @@ public class TripService {
         if (!id.matches("[A-Za-z0-9_-]{1,64}") || !seen.add(id)) { invalid.add(id); continue; }
         try {
           ObjectNode poi = amap.detail(id);
-          if (!cityMatches(request.path("city").asText(), poi.path("city").asText())) { invalid.add(id); continue; }
+          if (!cityMatches(dayCity, poi.path("city").asText())) { invalid.add(id); continue; }
           var attraction = attractions.addObject().put("poi_id", id).put("name", poi.path("name").asText())
               .put("address", poi.path("address").asText()).put("visit_duration", 120)
               .put("description", "用户手工选择的可信高德景点").put("fact_source", "amap_rest")
@@ -102,28 +105,27 @@ public class TripService {
     ObjectNode plan = (ObjectNode) json.readTree(row.get("plan_json").toString());
     var original=plan.deepCopy();
     ObjectNode request = request(row, plan);
-    var invalid = new ArrayList<String>();
-    plan.path("days").forEach(day -> {
-      if (!(day.path("attractions") instanceof ArrayNode attractions)) return;
-      for (int index = attractions.size() - 1; index >= 0; index--) {
-        String poiId = attractions.get(index).path("poi_id").asText("");
-        try {
-          var poi = amap.detail(poiId); var target = (ObjectNode) attractions.get(index);
-          target.put("name", poi.path("name").asText()).put("address", poi.path("address").asText())
-              .put("opening_hours", poi.path("opening_hours").asText("")).put("fact_source", "amap_rest");
-          target.set("location", poi.path("location").deepCopy());
-        } catch (Exception ex) { invalid.add(poiId); attractions.remove(index); }
-      }
-    });
+    request.set("planning_input",planning.input(row));
+    var findings=verification.verify(plan);
     ObjectNode quality = rules.finish(plan, request, (left,right,type,city) -> amap.routeBetween(left,right,type,city), false);
-    if (!invalid.isEmpty()) { quality.put("outcome", "draft"); quality.withArray("data_gaps").add("pois_unverified:" + String.join(",", invalid)); }
+    quality.set("poi_verification",findings);
+    quality.put("last_reverification_at",java.time.Instant.now().toString());
+    for(var finding:findings)if(!"verified".equals(finding.path("status").asText())){
+      boolean missing="not_found".equals(finding.path("status").asText());
+      quality.put("outcome",missing?"draft":"draft".equals(quality.path("outcome").asText())?"draft":"degraded");
+      quality.withArray("data_gaps").add((missing?"poi_replacement_pending:":"poi_lookup_failed:")+finding.path("poi_id").asText());
+      quality.withArray("issues").addObject().put("code",missing?"POI_REPLACEMENT_PENDING":"POI_LOOKUP_FAILED")
+          .put("scope","day:"+finding.path("day_index").asInt()).put("reason",finding.path("message").asText())
+          .put("action",missing?"在行程详情选择替代景点并预览确认；原景点仍保留":"稍后重试核验；不需要重新创建行程")
+          .put("blocking",missing).put("retryable",!missing);
+    }
     planning.invalidateManualSchedule(original,plan,quality,null);
     tx.executeWithoutResult(s -> {
       planning.protect(uid,id,plan,json.createObjectNode(),false);
       if (history.update(Map.of("id", id, "user_id", uid, "version", version,
           "plan_json", json.writeValueAsString(plan), "quality_json", json.writeValueAsString(quality))) != 1)
         throw new ApiException(409, "行程版本冲突", "VERSION_CONFLICT");
-      history.markVerified(uid, id);
+      if(!findings.isEmpty()&&findings.valueStream().allMatch(f->"verified".equals(f.path("status").asText(""))))history.markVerified(uid, id);
       history.outbox(id, uid, quality.path("outcome").asText("").equals("draft") ? "delete" : "upsert");
       ledger.capture(uid, id, "reverify", requestId);
     });

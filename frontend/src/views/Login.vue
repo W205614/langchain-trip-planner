@@ -36,7 +36,7 @@
 
         <a-form-item
           name="password"
-          :rules="[{ required: true, min: 6, message: '密码至少6位' }]"
+          :rules="[{ required: true, min: isRegister ? 8 : 1, message: '新密码至少8字符' }]"
         >
           <a-input-password
             v-model:value="form.password"
@@ -46,6 +46,10 @@
           >
             <template #prefix>🔑</template>
           </a-input-password>
+        </a-form-item>
+
+        <a-form-item v-if="!isRegister" label="二次验证码（已启用时填写）">
+          <a-input v-model:value="form.totp_code" placeholder="验证器中的6位数字" :maxlength="6" inputmode="numeric" autocomplete="one-time-code" />
         </a-form-item>
 
         <a-form-item v-if="isRegister" name="confirmPassword">
@@ -78,6 +82,15 @@
         </a-button>
       </div>
 
+      <a-button v-if="!isRegister" type="link" @click="recovering = !recovering">使用离线恢复码重设密码</a-button>
+      <a-form v-if="recovering" :model="{ username: form.username, recoveryCode, newPassword }" layout="vertical" @finish="recoverAccount">
+        <p>使用你预先保存的一次性恢复码。恢复后旧登录、恢复码及二次验证都会失效。</p>
+        <a-form-item label="用户名" name="username"><a-input v-model:value="form.username" autocomplete="username" /></a-form-item>
+        <a-form-item label="离线恢复码" name="recoveryCode"><a-input-password v-model:value="recoveryCode" aria-label="离线恢复码" autocomplete="off" /></a-form-item>
+        <a-form-item label="新密码（至少8字符）" name="newPassword"><a-input-password v-model:value="newPassword" aria-label="恢复时的新密码" autocomplete="new-password" /></a-form-item>
+        <a-button html-type="submit" :loading="loading">重设密码</a-button>
+      </a-form>
+
       <a-button class="back-home" type="text" @click="goHome">
         ← 返回首页
       </a-button>
@@ -89,24 +102,30 @@
 import { reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { login, register } from '@/services/api'
+import { login, register, accountSecurity } from '@/services/api'
 import { setAuth } from '@/services/auth'
 
 const router = useRouter()
 const route = useRoute()
 const isRegister = ref(false)
 const loading = ref(false)
+const recovering = ref(false)
+const recoveryCode = ref('')
+const newPassword = ref('')
 
 const form = reactive({
   username: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  totp_code: ''
 })
 
 const toggleMode = () => {
   isRegister.value = !isRegister.value
   form.password = ''
   form.confirmPassword = ''
+  form.totp_code = ''
+  recovering.value = false
 }
 
 const goHome = () => {
@@ -122,17 +141,28 @@ const handleSubmit = async () => {
   try {
     const resp = isRegister.value
       ? await register(form.username, form.password)
-      : await login(form.username, form.password)
+      : await login(form.username, form.password, form.totp_code)
     setAuth(resp.access_token, resp.username, resp.is_admin)
     message.success(isRegister.value ? '注册成功!' : '登录成功!')
     // 登录后跳回来源页；直接登录或注册默认进入旅行规划首页。
-    const redirect = (route.query.redirect as string) || '/'
+    const requested = (route.query.redirect as string) || '/'
+    const redirect = resp.mfa_setup_required ? '/account/security' : requested.startsWith('/') && !requested.startsWith('//') ? requested : '/'
     router.push(redirect)
   } catch (error: any) {
     message.error(error.response?.data?.detail || error.message || '操作失败')
   } finally {
     loading.value = false
   }
+}
+
+const recoverAccount = async () => {
+  loading.value = true
+  try {
+    await accountSecurity.recover({ username: form.username, recovery_code: recoveryCode.value, new_password: newPassword.value })
+    recoveryCode.value = ''; newPassword.value = ''; form.password = ''; form.totp_code = ''; recovering.value = false
+    message.success('密码已重设，请重新登录并设置二次验证')
+  } catch (error: any) { message.error(error.response?.data?.detail || '恢复失败') }
+  finally { loading.value = false }
 }
 </script>
 

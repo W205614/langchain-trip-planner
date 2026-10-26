@@ -16,7 +16,7 @@ import time
 from uuid import uuid4
 import httpx
 from dotenv import dotenv_values
-from jose import jwt
+import jwt
 
 ROOT=Path(__file__).resolve().parents[2]
 LIMITS={"text":12,"vision":1,"embedding":50,"amap":100}

@@ -10,6 +10,7 @@ from ..services.knowledge_chunks import sections
 from ..services.rag_runtime import index_lock
 from .business_client import post
 from .indexing import _lock
+from ..services.chroma_boundary import embedded_settings
 
 
 def rebuild(rag=None):
@@ -22,7 +23,7 @@ def rebuild(rag=None):
         generation=uuid4().hex
         names={key:f"{key}_{generation}" for key in (_KNOWLEDGE_COLLECTION,_HISTORY_COLLECTION)}
         names["embedding_model"]=rag._embedding.model
-        stores={key:Chroma(collection_name=names[key],embedding_function=rag._embedding,persist_directory=str(CHROMA_DIR))
+        stores={key:Chroma(collection_name=names[key],embedding_function=rag._embedding,persist_directory=str(CHROMA_DIR),client_settings=embedded_settings(CHROMA_DIR))
                 for key in (_KNOWLEDGE_COLLECTION,_HISTORY_COLLECTION)}
         documents=rag._load_knowledge_documents()
         if rag._knowledge_store is not None:

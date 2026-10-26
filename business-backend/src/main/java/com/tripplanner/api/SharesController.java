@@ -3,6 +3,7 @@ package com.tripplanner.api;
 import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.domain.BusinessTypes;
 import com.tripplanner.domain.TripLedgerService;
+import com.tripplanner.domain.ScheduleDependencies;
 import com.tripplanner.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -20,10 +21,12 @@ public class SharesController {
   private final ShareMapper shares; private final HistoryMapper history;
   private final TransactionTemplate tx; private final JsonMapper json;
   private final TripLedgerService ledger; private final BusinessAuditService audit;
+  private final ScheduleDependencies schedules;
   private final SecureRandom random = new SecureRandom();
   public SharesController(ShareMapper shares, HistoryMapper history, TransactionTemplate tx, JsonMapper json,
-      TripLedgerService ledger, BusinessAuditService audit) {
+      TripLedgerService ledger, BusinessAuditService audit,ScheduleDependencies schedules) {
     this.shares=shares; this.history=history; this.tx=tx; this.json=json; this.ledger=ledger; this.audit=audit;
+    this.schedules=schedules;
   }
 
   @PostMapping("/api/trips/{recordId}/shares")
@@ -83,9 +86,9 @@ public class SharesController {
     record.put("source",BusinessTypes.TripSource.COPIED.wire());
     for(String field:List.of("city","start_date","end_date","transportation","accommodation")) record.put(field,snapshot.path(field).asText(""));
     record.put("travel_days",snapshot.path("travel_days").asInt(1)); record.put("preferences","[]"); record.put("free_text_input","");
-    record.put("plan_json",json.writeValueAsString(plan));
-    var quality=json.createObjectNode().put("outcome",snapshot.path("outcome").asText("draft"));
+    var quality=json.createObjectNode().put("outcome","draft");
     quality.putArray("data_gaps").add("copied_share_requires_reverification");
+    record.put("plan_json",json.writeValueAsString(schedules.invalidateCopy(plan,quality)));
     record.put("quality_json",json.writeValueAsString(quality)); record.put("last_verified_at",null);
     tx.executeWithoutResult(s->{
       history.insert(record);

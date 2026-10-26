@@ -135,13 +135,22 @@
           <div><strong>{{ activeRecord.city }}</strong><span>{{ activeRecord.start_date }} 至 {{ activeRecord.end_date }} · {{ activeRecord.travel_days }} 天</span></div>
           <a-tag color="purple">行程 #{{ activeRecord.id }}</a-tag>
         </div>
-        <p class="mode-note">Agent 会结合这条行程直接回答，并为外部事实附上当前资料来源。修改安排请先进入具体行程。</p>
+        <p class="mode-note">可问攻略或提出局部调整。日期不明确时会保留原需求继续追问；回复日期后只生成待确认方案。可回复“取消”结束调整。</p>
+        <a-alert v-if="clarificationState.status === 'pending'" type="info" show-icon :message="`正在补充：${clarificationState.original_request}`" :description="`请补充日期。状态有效至 ${clarificationState.expires_at}，不会自动修改原行程。`" />
+        <a-alert v-else-if="clarificationState.status === 'expired'" type="warning" show-icon message="上次调整澄清已过期，请重新描述完整需求。" />
+        <section v-if="agentMessages.length" class="agent-history" aria-label="当前行程对话记录">
+          <div v-for="item in agentMessages" :key="item.id" class="conversation-turn">
+            <b>{{ item.role === 'user' ? '你' : item.role === 'system_event' ? '任务' : '助手' }}</b><pre>{{ item.content }}</pre>
+            <small v-if="item.action_type === 'research'">引用校验仅检查原句支持；语义真实性未独立评估。</small>
+          </div>
+        </section>
         <div class="quick-prompts"><button v-for="prompt in quickPrompts" :key="prompt" @click="agentInput=prompt">{{ prompt }}</button></div>
         <a-textarea v-model:value="agentInput" :rows="5" :maxlength="300" show-count placeholder="例如：这份行程里的故宫如何预约？哪一天安排最合适？" />
         <div class="agent-submit"><span>{{ agentProgress || '本次问答绑定当前历史记录。' }}</span><a-button type="primary" size="large" :loading="agentSending" :disabled="agentInput.trim().length<2" @click="sendToAgent">获取直接回答</a-button></div>
         <a-alert v-if="agentError" type="error" :message="agentError" show-icon />
         <section v-if="agentReply" class="agent-answer"><strong>Agent 回答</strong><div>{{ agentReply }}</div>
-          <div v-if="agentSources.length" class="answer-sources"><b>参考来源</b><span v-for="source in agentSources" :key="source.index">[{{ source.index }}] {{ source.source }}<template v-if="source.page"> · 第 {{ source.page }} 页</template></span></div>
+          <small v-if="agentAnswerStatus">{{ agentAnswerStatus }} · 真实性未独立评估</small>
+          <div v-if="agentSources.length" class="answer-sources"><b>参考来源（等级为资料声明）</b><span v-for="source in agentSources" :key="source.index">[{{ source.index }}] {{ source.source }}<template v-if="source.page"> · 第 {{ source.page }} 页</template> · {{ source.source_tier }} · {{ source.freshness || '时效未核验' }}<template v-if="source.data_classification === 'demonstration'"> · 演示资料</template></span></div>
         </section>
       </div>
     </a-modal>
@@ -153,7 +162,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { formatDateTime } from '@/utils/datetime'
-import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, sendAssistantMessage, reverifyTrip, fetchTasks, fetchTask, cancelTask, retryTask, resumeTask, submitCommunityCard } from '@/services/api'
+import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, fetchAssistantMessages, sendAssistantMessage, reverifyTrip, fetchTasks, fetchTask, cancelTask, retryTask, resumeTask, submitCommunityCard } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -171,6 +180,9 @@ const conversationId = ref('')
 const agentInput = ref('')
 const agentReply = ref('')
 const agentSources = ref<any[]>([])
+const agentMessages = ref<any[]>([])
+const clarificationState = ref<any>({ status: 'none' })
+const agentAnswerStatus = ref('')
 const agentError = ref('')
 const agentProgress = ref('')
 const agentSending = ref(false)
@@ -323,9 +335,13 @@ const resetAgent = () => {
   agentSources.value = []
   agentError.value = ''
   agentProgress.value = ''
+  agentMessages.value = []
+  clarificationState.value = { status: 'none' }
+  agentAnswerStatus.value = ''
 }
 
 const openAgent = async (record: any) => {
+  resetAgent()
   activeRecord.value = record
   agentInput.value = ''
   agentReply.value = ''
@@ -336,8 +352,24 @@ const openAgent = async (record: any) => {
   try {
     const response = await createAssistantConversation({ active_trip_id: record.id, title: `${record.city}行程` })
     conversationId.value = response.id
+    await loadAgentConversation()
   } catch (error: any) {
     agentError.value = error?.response?.data?.message || 'Agent 会话创建失败，请稍后重试'
+  }
+}
+
+const loadAgentConversation = async (restoreReply = true) => {
+  const response = await fetchAssistantMessages(conversationId.value)
+  agentMessages.value = response.data || []
+  clarificationState.value = response.clarification || { status: 'none' }
+  const latest = [...agentMessages.value].reverse().find(item => item.role === 'assistant')
+  if (latest && restoreReply) {
+    agentReply.value = latest.content
+    try {
+      const result = JSON.parse(latest.result_json || '{}')
+      agentSources.value = result.sources || []
+      agentAnswerStatus.value = result.answer_status || ''
+    } catch { agentSources.value = []; agentAnswerStatus.value = '' }
   }
 }
 
@@ -358,7 +390,10 @@ const sendToAgent = async () => {
     } else {
       agentReply.value = result.message || result.data?.answer || 'Agent 已处理'
       agentSources.value = result.data?.sources || []
+      agentAnswerStatus.value = result.data?.answer_status || ''
     }
+    await loadAgentConversation(false)
+    agentInput.value = ''
   } catch (error: any) {
     agentError.value = error?.response?.data?.message || error?.response?.data?.detail || 'Agent 暂不可用，请稍后重试'
   } finally {
@@ -585,6 +620,9 @@ const removeRecord = async (id: number) => {
 }
 
 .agent-panel { display: flex; flex-direction: column; gap: 18px; padding-top: 8px; }
+.agent-history { max-height: 280px; overflow-y: auto; border: 1px solid #e5e7eb; padding: 12px; border-radius: 10px; }
+.conversation-turn + .conversation-turn { margin-top: 12px; }
+.conversation-turn pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; margin: 4px 0; }
 .agent-context { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 17px; border-radius: 14px; background: #f5f3ff; }
 .agent-context div { display: flex; flex-direction: column; gap: 3px; }
 .agent-context strong { color: #1d2939; font-size: 18px; }

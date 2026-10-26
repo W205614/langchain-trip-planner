@@ -11,6 +11,7 @@
     <div class="top-actions">
       <template v-if="isLoggedIn">
         <span class="user-badge">👤 {{ username }}</span>
+        <a-button class="history-entry" @click="router.push('/account/security')">账号安全</a-button>
         <a-button class="history-entry" @click="router.push('/community')">🌏 行程广场</a-button>
         <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
         <a-button class="history-entry" @click="goHistory">

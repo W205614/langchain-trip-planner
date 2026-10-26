@@ -1,13 +1,14 @@
 import axios from 'axios'
 import type { TripFormData, TripPlanResponse, PlanningInput, RevisionScope } from '@/types'
-import { getToken, clearAuth } from './auth'
+import { getToken, clearAuth, csrfToken } from './auth'
 
 // 正式构建始终使用同源 Nginx 代理，避免开发 .env 中的 localhost:9000 混入镜像。
 // Vite 开发环境仍可通过 VITE_API_BASE_URL 直连本机后端。
-const API_BASE_URL = import.meta.env.DEV ? (import.meta.env.VITE_API_BASE_URL || 'http://localhost:9000') : ''
+const API_BASE_URL = import.meta.env.DEV ? (import.meta.env.VITE_API_BASE_URL || '') : ''
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
   timeout: 300000 // 2分钟超时；由 Axios 按 JSON/FormData 自动设置 Content-Type
 })
 
@@ -18,7 +19,10 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    console.log('发送请求:', config.method?.toUpperCase(), config.url)
+    if (!['get', 'head', 'options'].includes(config.method || 'get')) {
+      const csrf = csrfToken()
+      if (csrf) config.headers['X-CSRF-Token'] = csrf
+    }
     return config
   },
   (error) => {
@@ -30,7 +34,6 @@ apiClient.interceptors.request.use(
 // 响应拦截器: 401 统一处理 (登录失效 → 清除本地 token → 跳登录页)
 apiClient.interceptors.response.use(
   (response) => {
-    console.log('收到响应:', response.status, response.config.url)
     return response
   },
   (error) => {
@@ -38,7 +41,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       clearAuth()
       // 跳转到登录页 (仅当前不在登录页时)
-      if (!window.location.pathname.startsWith('/login')) {
+      if (error.config?.url !== '/api/auth/me' && !window.location.pathname.startsWith('/login')) {
         window.location.href = '/login'
       }
     }
@@ -50,21 +53,35 @@ apiClient.interceptors.response.use(
  * 用户注册 (成功自动登录, 返回 token)
  */
 export async function register(username: string, password: string): Promise<any> {
-  const response = await apiClient.post('/api/auth/register', { username, password })
+  const response = await apiClient.post('/api/auth/register', { username, password }, { headers: { 'X-Auth-Mode': 'cookie' } })
   return response.data
 }
 
 /**
  * 用户登录
  */
-export async function login(username: string, password: string): Promise<any> {
-  const response = await apiClient.post('/api/auth/login', { username, password })
+export async function login(username: string, password: string, totp_code = ''): Promise<any> {
+  const response = await apiClient.post('/api/auth/login', { username, password, totp_code }, { headers: { 'X-Auth-Mode': 'cookie' } })
   return response.data
 }
 
 export async function logout(): Promise<void> {
   await apiClient.post('/api/auth/logout')
   clearAuth()
+}
+
+export const accountSecurity = {
+  status: async () => (await apiClient.get('/api/auth/security')).data,
+  me: async () => (await apiClient.get('/api/auth/me')).data,
+  changePassword: async (payload: any) => (await apiClient.post('/api/auth/password', payload)).data,
+  recoveryCode: async (payload: any) => (await apiClient.post('/api/auth/recovery-code', payload)).data,
+  recover: async (payload: any) => (await apiClient.post('/api/auth/recover', payload)).data,
+  enroll: async (payload: any) => (await apiClient.post('/api/auth/mfa/enroll', payload)).data,
+  confirm: async (totp_code: string) => (await apiClient.post('/api/auth/mfa/confirm', { totp_code })).data,
+  disable: async (payload: any) => (await apiClient.post('/api/auth/mfa/disable', payload)).data,
+  uploadStatus: async () => (await apiClient.get('/api/knowledge/storage')).data,
+  adminUploads: async () => (await apiClient.get('/api/knowledge/admin/uploads')).data,
+  reconcileUploads: async () => (await apiClient.post('/api/knowledge/admin/uploads/reconcile')).data,
 }
 
 export async function fetchTasks(page = 1, actionable = false): Promise<any> {
@@ -125,6 +142,7 @@ export async function generateTripPlanStream(
     sessionStorage.setItem('pendingTripTask', JSON.stringify(pending))
   }
   const response = await fetch(`${API_BASE_URL}/api/trip/tasks/${pending.id}/events`, {
+    credentials: 'include',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     signal: AbortSignal.timeout(310000)
   })
@@ -241,7 +259,11 @@ export async function saveTravelPreferences(payload: {
 }
 
 export async function researchTravel(city: string, query: string): Promise<any> {
-  return (await apiClient.post('/api/research', { city, query })).data
+  return (await apiClient.post('/api/research/retrieve', { city, query })).data
+}
+
+export async function answerTravelQuestion(city: string, query: string): Promise<any> {
+  return (await apiClient.post('/api/research/answer', { city, query })).data
 }
 
 /** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
@@ -341,6 +363,10 @@ export async function createAssistantConversation(payload: any = {}): Promise<an
   return (await apiClient.post('/api/assistant/conversations', payload)).data
 }
 
+export async function fetchAssistantMessages(id: string): Promise<any> {
+  return (await apiClient.get(`/api/assistant/conversations/${encodeURIComponent(id)}/messages`)).data
+}
+
 export async function sendAssistantMessage(id: string, payload: any, key = crypto.randomUUID()): Promise<any> {
   return (await apiClient.post(`/api/assistant/conversations/${id}/messages`, payload,
     { headers: { 'Idempotency-Key': key } })).data
@@ -354,10 +380,12 @@ export async function streamAssistantMessage(
 ): Promise<any> {
   const token = getToken()
   const response = await fetch(`${API_BASE_URL}/api/assistant/conversations/${encodeURIComponent(id)}/messages/stream`, {
+    credentials: 'include',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Idempotency-Key': key,
+      ...(csrfToken() ? { 'X-CSRF-Token': csrfToken() } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     },
     body: JSON.stringify(payload),

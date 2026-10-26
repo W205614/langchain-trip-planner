@@ -46,12 +46,15 @@ public class RequestLimits implements WebMvcConfigurer, HandlerInterceptor {
   @Override
   public boolean preHandle(
       HttpServletRequest req, HttpServletResponse res, Object handler) {
-    if ("validation".equals(environment) && "yes".equals(fixtures)) return true;
     String path = req.getRequestURI();
+    if(path.startsWith("/api/shared-trips/")||path.startsWith("/api/auth/"))res.setHeader("Cache-Control","no-store");
+    if ("validation".equals(environment) && "yes".equals(fixtures)) return true;
     int limit = 0;
     long window = 60_000;
     if (path.equals("/api/auth/register")) limit = 5;
     else if (path.equals("/api/auth/login")) limit = 10;
+    else if (path.startsWith("/api/auth/") && !req.getMethod().equals("GET")) limit = 5;
+    else if (path.equals("/api/knowledge/submissions") && req.getMethod().equals("POST")) limit = 5;
     else if (path.startsWith("/api/map/") || path.startsWith("/api/poi/")) limit = 30;
     else if (req.getMethod().equals("POST") && path.equals("/api/favorites")) limit = 30;
     else if (req.getMethod().equals("POST") && path.equals("/api/trips")) limit = 10;

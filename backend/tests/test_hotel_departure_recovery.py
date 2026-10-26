@@ -1,6 +1,7 @@
 """Saved cross-city failure; new route answers are offline test injections."""
 import json
 from copy import deepcopy
+from datetime import datetime,timedelta,timezone
 from pathlib import Path
 
 import pytest
@@ -11,8 +12,19 @@ from app.services.planning_constraints import finalize_plan
 from app.services.time_planner import _hotel_candidate_request,plan_time_windows
 
 
+def synthetic_fresh_observations(saved):
+    # This test replays a matrix as an explicitly fresh synthetic input. The
+    # historical JSON has no observation timestamps and is never edited. Runtime
+    # legacy recovery must remain unverified (covered by test_route_fact_lifetime).
+    now=datetime.now(timezone.utc)
+    for row in saved['routes']:
+        row['observed_at']=now.isoformat()
+        row['expires_at']=(now+timedelta(minutes=30)).isoformat()
+
+
 def sample(monkeypatch):
     saved=json.loads((Path(__file__).parent/'fixtures/crosscity_hotel_regression.json').read_text(encoding='utf-8'))
+    synthetic_fresh_observations(saved)
     request,plan=TripRequest.model_validate(saved['request']),TripPlan.model_validate(saved['plan'])
     hotel_rows={row['stage']:row for row in saved['hotel_checkpoints']}
     def read(stage,digest):
@@ -113,6 +125,7 @@ def test_actual_v2_crosscity_resume_reuses_original_generation_and_hotel_stage_h
     from app.agents import trip_planner_agent
     from app.services.time_planner import RULE_VERSION
     saved=json.loads((Path(__file__).parent/'fixtures/crosscity_hotel_regression.json').read_text(encoding='utf-8'))
+    synthetic_fresh_observations(saved)
     request=TripRequest.model_validate(saved['request'])
     assert durable.input_hash(request)==saved['draft_input_hash']
     monkeypatch.setattr(durable,'compatibility',lambda:{**saved['compatibility'],'rules':RULE_VERSION})

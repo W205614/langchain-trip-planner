@@ -1,6 +1,7 @@
 package com.tripplanner.api;
 
 import com.tripplanner.domain.KnowledgeService;
+import com.tripplanner.domain.UploadStorage;
 import com.tripplanner.persistence.KnowledgeMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -16,12 +17,21 @@ public class KnowledgeController {
   private final KnowledgeService service;
   private final KnowledgeMapper documents;
   private final JsonMapper json;
+  private final UploadStorage storage;
 
-  public KnowledgeController(KnowledgeService service, KnowledgeMapper documents, JsonMapper json) {
+  public KnowledgeController(KnowledgeService service, KnowledgeMapper documents, JsonMapper json,UploadStorage storage) {
     this.service = service;
     this.documents = documents;
     this.json = json;
+    this.storage=storage;
   }
+
+  @GetMapping("/api/knowledge/storage")
+  public Object storage(HttpServletRequest req){return storage.status(UsersController.uid(req),false);}
+  @GetMapping("/api/knowledge/admin/uploads")
+  public Object uploads(HttpServletRequest req){return storage.status(UsersController.uid(req),true);}
+  @PostMapping("/api/knowledge/admin/uploads/reconcile")
+  public Object reconcile(){return storage.reconcile();}
 
   @PostMapping("/api/knowledge/submissions")
   @ResponseStatus(HttpStatus.CREATED)

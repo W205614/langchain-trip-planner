@@ -89,6 +89,7 @@ public class OutboxWorker {
         if (row != null) request.set("record", json.valueToTree(row));
         agent.post("/index/history", request);
       }
+      requireOwnership();
       status(isKnowledge, id, "succeeded", attempts, "", 0);
       if (attempts > 1)
         log.info(
@@ -98,6 +99,7 @@ public class OutboxWorker {
             targetId(job, isKnowledge),
             attempts);
     } catch (Exception ex) {
+      if(workersEnabled&&singleInstance!=null&&!singleInstance.owned())return;
       String nextStatus = attempts >= 5 ? "failed" : "retry";
       int retryDelay = Math.min(300, 1 << Math.min(8, attempts - 1));
       status(
@@ -148,6 +150,7 @@ public class OutboxWorker {
       agent.post(
           "/index/document",
           Map.of("operation", "delete", "document_id", id, "document_version", version));
+      requireOwnership();
       files.removeDeletedOriginal(document);
       return;
     }
@@ -167,6 +170,7 @@ public class OutboxWorker {
               document));
       tx.executeWithoutResult(
           s -> {
+            requireOwnership();
             var current = knowledge.get(id);
             if (current == null
                 || ((Number) current.get("version")).intValue() != version
@@ -190,6 +194,7 @@ public class OutboxWorker {
                   document.get("title")));
       tx.executeWithoutResult(
           s -> {
+            requireOwnership();
             var current = knowledge.get(id);
             if (current == null
                 || ((Number) current.get("version")).intValue() != version
@@ -207,4 +212,5 @@ public class OutboxWorker {
           });
     }
   }
+  private void requireOwnership(){if(workersEnabled&&singleInstance!=null&&!singleInstance.owned())throw new com.tripplanner.api.ApiException(503,"索引处理所有权已丢失，拒绝旧作业写回","SCHEDULER_OWNERSHIP_LOST");}
 }

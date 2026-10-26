@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +26,12 @@ class FinalPlanningIntegrationTest {
   @Autowired com.tripplanner.security.TokenService tokens;
   @Autowired JdbcTemplate db;@Autowired PlanningInputService planning;@Autowired ExecutionGovernanceService governance;
   @Autowired TransactionTemplate tx;@Autowired JsonMapper json;@Autowired TaskService tasks;@MockitoBean AgentClient agent;
+  @MockitoBean SingleInstance singleInstance;
+  @BeforeEach void schedulerOwnsIsolatedTestService(){when(singleInstance.owned()).thenReturn(true);}
   long user(){return db.queryForObject("INSERT INTO users(username,hashed_password) VALUES(?, 'test-only') RETURNING id",Long.class,"final_"+UUID.randomUUID());}
   ObjectNode plan(){var p=json.createObjectNode().put("city","北京").put("start_date","2026-11-01").put("end_date","2026-11-02");var ds=p.putArray("days");
     for(int i=0;i<2;i++){var d=ds.addObject().put("day_index",i).put("date","2026-11-0"+(i+1));var a=d.putArray("attractions").addObject().put("poi_id","p"+i).put("name","景点"+i).put("visit_duration",60);d.putArray("meals");d.putArray("timeline").addObject().put("activity_id","poi:"+i+":p"+i).put("start_at","2026-11-0"+(i+1)+"T10:00:00+08:00").put("end_at","2026-11-0"+(i+1)+"T11:00:00+08:00");}return PlanningInputService.stableIds(p);}
-  long trip(long uid){return db.queryForObject("INSERT INTO trip_records(user_id,city,start_date,end_date,travel_days,plan_json,quality_json) VALUES(?,'北京','2026-11-01','2026-11-02',2,?,'{}') RETURNING id",Long.class,uid,json.writeValueAsString(plan()));}
+  long trip(long uid){var plan=plan();long id=db.queryForObject("INSERT INTO trip_records(user_id,city,start_date,end_date,travel_days,plan_json,quality_json) VALUES(?,'北京','2026-11-01','2026-11-02',2,?,'{}') RETURNING id",Long.class,uid,json.writeValueAsString(plan));tx.executeWithoutResult(s->{planning.bindPersisted(uid,id,plan,null);planning.storeBoundPlan(id,plan);});return id;}
   ObjectNode input(){return PlanningInputService.normalize(json.createObjectNode(),2);}
   ObjectNode scope(int day){var s=json.createObjectNode();s.putArray("day_indices").add(day);return s;}
 
@@ -72,12 +75,12 @@ class FinalPlanningIntegrationTest {
     db.update("UPDATE trip_records SET plan_json=? WHERE id=?",json.writeValueAsString(legacy),id);
     assertEquals("REVISION_SCOPE_VIOLATION",assertThrows(ApiException.class,()->tx.executeWithoutResult(s->planning.protect(uid,id,hydrated,scope(0),true))).code);
   }
-  @Test void durableBudgetRejectsThirteenthConcurrentSendAndDuplicateReservation()throws Exception{
-    String run="test:"+UUID.randomUUID();var latch=new CountDownLatch(1);
-    try(var pool=Executors.newFixedThreadPool(8)){var fs=new ArrayList<Future<Boolean>>();for(int i=0;i<16;i++)fs.add(pool.submit(()->{latch.await();try{governance.reserve(json.createObjectNode().put("kind","text").put("run_id",run).put("request_key",UUID.randomUUID().toString()));return true;}catch(ApiException ex){assertEquals(429,ex.status);return false;}}));latch.countDown();int sent=0;for(var f:fs)if(f.get(15,TimeUnit.SECONDS))sent++;assertEquals(12,sent);}
-    assertEquals(12L,db.queryForObject("SELECT count(*) FROM outbound_reservations WHERE run_id=?",Long.class,run));
-    var reservation=json.createObjectNode().put("kind","amap").put("run_id",run).put("request_key","duplicate");governance.reserve(reservation);assertEquals(409,assertThrows(ApiException.class,()->governance.reserve(reservation)).status);
-    assertEquals(1L,db.queryForObject("SELECT used FROM outbound_budget_counters WHERE scope=? AND kind='amap'",Long.class,"acceptance:"+run));
+  @Test void clientsCannotForgeCampaignIdsToObtainFreshCallBudgets(){
+    String run="test:"+UUID.randomUUID();
+    var request=json.createObjectNode().put("kind","text").put("run_id",run).put("request_key",UUID.randomUUID().toString());
+    assertEquals("CAMPAIGN_ID_CLIENT_CONTROLLED",assertThrows(ApiException.class,()->governance.reserve(request)).code);
+    assertEquals(0L,db.queryForObject("SELECT count(*) FROM outbound_reservations WHERE run_id=?",Long.class,run));
+    assertEquals(0L,db.queryForObject("SELECT count(*) FROM outbound_budget_counters WHERE scope=?",Long.class,"acceptance:"+run));
   }
   @Test void checkpointsRejectLateExecutionAndResumeKeepsOriginalTerminal(){
     when(agent.available()).thenReturn(true);long uid=user();String task=UUID.randomUUID().toString(),exec=UUID.randomUUID().toString();

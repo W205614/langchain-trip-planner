@@ -1,0 +1,13 @@
+global:
+  resolve_timeout: 2m
+route:
+  receiver: local-durable-inbox
+  group_by: [alertname, job]
+  group_wait: 10s
+  group_interval: 2m
+  repeat_interval: 4h
+receivers:
+  - name: local-durable-inbox
+    webhook_configs:
+      - url: http://alert-receiver:9088/alerts
+        send_resolved: true

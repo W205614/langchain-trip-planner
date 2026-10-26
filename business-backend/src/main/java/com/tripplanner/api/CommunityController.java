@@ -3,6 +3,7 @@ package com.tripplanner.api;
 import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.domain.BusinessTypes;
 import com.tripplanner.domain.TripLedgerService;
+import com.tripplanner.domain.ScheduleDependencies;
 import com.tripplanner.persistence.CommunityMapper;
 import com.tripplanner.persistence.HistoryMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ public class CommunityController {
   private final TransactionTemplate tx;
   private final TripLedgerService ledger;
   private final BusinessAuditService audit;
+  private final ScheduleDependencies schedules;
 
   public CommunityController(
       CommunityMapper community,
@@ -29,13 +31,14 @@ public class CommunityController {
       JsonMapper json,
       TransactionTemplate tx,
       TripLedgerService ledger,
-      BusinessAuditService audit) {
+      BusinessAuditService audit,ScheduleDependencies schedules) {
     this.community = community;
     this.history = history;
     this.json = json;
     this.tx = tx;
     this.ledger = ledger;
     this.audit = audit;
+    this.schedules = schedules;
   }
 
   @PostMapping("/api/community/cards")
@@ -112,9 +115,9 @@ public class CommunityController {
     record.put("budget_total", snapshot.path("budget_total").isNumber() ? snapshot.path("budget_total").asInt() : null);
     record.put("preferences", "[]");
     record.put("free_text_input", "");
-    record.put("plan_json", json.writeValueAsString(snapshot.path("plan")));
     var quality = json.createObjectNode().put("outcome", "draft");
     quality.putArray("data_gaps").add("copied_community_plan_requires_reverification");
+    record.put("plan_json",json.writeValueAsString(schedules.invalidateCopy(snapshot.path("plan"),quality)));
     record.put("quality_json", json.writeValueAsString(quality));
     record.put("last_verified_at", null);
     tx.executeWithoutResult(status -> {

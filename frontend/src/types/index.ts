@@ -72,6 +72,9 @@ export interface Budget {
 }
 
 export interface DayPlan {
+  schedule_stale?: boolean
+  route_fact_expires_at?: string | null
+  schedule_dependencies?: { planning_revision: number; input_hash: string; fact_hash: string; computed_at: string; expires_at: string }
   city?: string
   timeline?: TimelineItem[]
   feasibility?: { status: 'feasible' | 'unverified' | 'not_found' | 'infeasible'; solver_status?: string; unknown?: string[]; conflicts?: string[]; omitted_activity_ids?: string[] }
@@ -172,6 +175,10 @@ export interface PlanningInput {
   hotel_stays: { day_index: number; name: string; poi_id?: string; location?: Location | null }[]
   meal_windows: { type: string; start: string; end: string; duration_minutes: number }[]
   opening_windows: { poi_id: string; date: string; windows: { start: string; end: string }[]; last_entry?: string | null; closed: boolean; source: string; observed_at?: string; expires_at?: string; confirmed: boolean }[]
+  reservation_facts?: (TravelFact & { poi_id: string; date: string; status: 'confirmed' | 'not_required' | 'unavailable' })[]
+  transport_buffers?: (TravelFact & { commitment_id: string; minutes: number })[]
+  poi_relations?: (TravelFact & { parent_poi_id: string; child_poi_id: string; relation: 'included' | 'separate' })[]
+  meal_resolutions?: (TravelFact & { day_index: number; type: string; mode: 'self_arranged'; location: Location })[]
   locks: { activity_id: string; mode: 'content' | 'time'; start_at?: string | null; end_at?: string | null }[]
   completed_activity_ids: string[]
   arrival_at?: string | null
@@ -179,6 +186,14 @@ export interface PlanningInput {
   budget_mode: 'estimate' | 'confirmed'
   budget_cents?: number | null
   revision_scope?: RevisionScope
+}
+
+export interface TravelFact {
+  source: string
+  observed_at: string
+  expires_at: string
+  confirmed: boolean
+  authority?: 'user_declared'
 }
 
 export interface TimelineItem {

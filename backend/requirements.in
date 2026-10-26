@@ -1,3 +1,5 @@
+-c requirements-security-constraints.txt
+
 # LangChain框架
 langchain>=0.3.0
 langchain-openai>=0.3.0
@@ -16,11 +18,15 @@ mcp==1.30.0
 
 # 环境变量管理
 python-dotenv>=1.0.0
+filelock==4.2.4
+# Operator-only live acceptance uses HS256 via maintained PyJWT, never python-ecdsa.
+PyJWT==2.15.1
 
 # CORS支持
 python-multipart>=0.0.9
 pymupdf>=1.24.0
-Pillow==12.3.0
+# Pillow does not backport current image-decoder security fixes to 12.x.
+Pillow==13.0.0
 
 # 可观测性: Prometheus 指标
 prometheus-fastapi-instrumentator>=7.0.0

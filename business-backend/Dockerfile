@@ -7,6 +7,11 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn -s /tmp/maven-settings.xml -B -ntp -DskipTests package
 
 FROM eclipse-temurin:21-jre
+# Canonical's rootfs bundles this standalone orchestration binary outside dpkg.
+# This service starts java directly and never uses Pebble or its Go HTTP server.
+RUN apt-get update && apt-get upgrade -y \
+    && rm -f /usr/bin/pebble && test ! -e /usr/bin/pebble \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 RUN groupadd --system trip && useradd --system --gid trip trip && mkdir -p /data/uploads && chown -R trip:trip /data
 COPY --from=build /build/target/business-backend-1.0.0-SNAPSHOT.jar /app/app.jar

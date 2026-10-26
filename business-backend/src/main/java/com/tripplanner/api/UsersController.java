@@ -4,6 +4,7 @@ import com.tripplanner.persistence.UserMapper;
 import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.security.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.*;
@@ -18,19 +19,23 @@ public class UsersController {
   private final TokenService tokens;
   private final JsonMapper json;
   private final BusinessAuditService audit;
+  private final AccountSecurityService security;
+  private final BrowserSession browser;
 
-  public UsersController(UserMapper users, TokenService tokens, JsonMapper json, BusinessAuditService audit) {
+  public UsersController(UserMapper users, TokenService tokens, JsonMapper json, BusinessAuditService audit,
+      AccountSecurityService security,BrowserSession browser) {
     this.users = users;
     this.tokens = tokens;
     this.json = json;
     this.audit = audit;
+    this.security=security;this.browser=browser;
   }
 
   public record Registration(
       @NotNull @Size(min = 3, max = 32) String username,
       @NotNull @Size(min = 6, max = 64) String password) {}
 
-  public record Login(@NotNull String username, @NotNull String password) {}
+  public record Login(@NotNull @Size(max=64) String username, @NotNull @Size(max=128) String password,@Size(max=6) String totp_code) {}
 
   public record Preferences(
       @Size(max = 12) List<String> preferences,
@@ -48,10 +53,17 @@ public class UsersController {
     return ((Number) user(req).get("id")).longValue();
   }
 
-  private Map<String, Object> token(Map<String, Object> user) {
+  private Map<String, Object> token(Map<String, Object> user,HttpServletRequest req,HttpServletResponse res) {
+    String credential=tokens.issue(user);
+    res.setHeader("Cache-Control","no-store");
+    if(browser.browser(req)) {
+      browser.issue(req,res,credential);
+      return Map.of("token_type","cookie","username",user.get("username"),"is_admin",user.get("is_admin"),
+          "mfa_setup_required",Boolean.TRUE.equals(user.get("is_admin"))&&!security.adminReady(((Number)user.get("id")).longValue()));
+    }
     return Map.of(
         "access_token",
-        tokens.issue(user),
+        credential,
         "token_type",
         "bearer",
         "username",
@@ -61,7 +73,8 @@ public class UsersController {
   }
 
   @PostMapping("/auth/register")
-  public Object register(@Valid @RequestBody Registration input) {
+  public Object register(@Valid @RequestBody Registration input,HttpServletRequest req,HttpServletResponse res) {
+    AccountSecurityService.validatePassword(input.password(),input.username());
     var row = new HashMap<String, Object>();
     row.put("username", input.username());
     row.put("hashed_password", Passwords.hash(input.password()));
@@ -70,23 +83,21 @@ public class UsersController {
     } catch (DuplicateKeyException ex) {
       throw new ApiException(409, "用户名已存在");
     }
-    return token(users.byId(((Number) row.get("id")).longValue()));
+    return token(users.byId(((Number) row.get("id")).longValue()),req,res);
   }
 
   @PostMapping("/auth/login")
-  public Object login(@Valid @RequestBody Login input) {
-    var row = users.byName(input.username());
-    if (row == null || !Passwords.verify(input.password(), row.get("hashed_password").toString()))
-      throw new ApiException(401, "用户名或密码错误");
-    return token(row);
+  public Object login(@Valid @RequestBody Login input,HttpServletRequest req,HttpServletResponse res) {
+    return token(security.authenticate(input.username(),input.password(),input.totp_code()),req,res);
   }
 
   @PostMapping("/auth/logout")
   @org.springframework.transaction.annotation.Transactional
-  public Object logout(HttpServletRequest req) {
+  public Object logout(HttpServletRequest req,HttpServletResponse res) {
     long uid = uid(req);
     users.revoke(uid);
     audit.success(uid, "auth.logout_all", "user", uid, null, req.getHeader("X-Request-ID"));
+    browser.clear(res);
     return Map.of("success", true, "message", "该账号的所有旧登录凭证已失效");
   }
 

@@ -33,10 +33,13 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
     await expect(page.getByRole('button', { name: /^退\s*出$/ })).toBeVisible()
   })
 
-  const token = await page.evaluate(() => sessionStorage.getItem('access_token'))
-  expect(Boolean(token), 'UI login must issue a real access token').toBe(true)
+  expect(await page.evaluate(() => sessionStorage.getItem('access_token')), 'Cookie login must not expose a JWT in Storage').toBeNull()
+  const session = (await page.context().cookies()).find(cookie => cookie.name === 'trip_session')
+  expect(session?.httpOnly, 'UI login must issue an actual HttpOnly browser session').toBe(true)
+  expect(await page.evaluate(() => document.cookie.includes('trip_session='))).toBe(false)
   async function api(method: string, path: string, data?: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
-    const response = await request.fetch(path, { method, data, headers: { Authorization: `Bearer ${token}`, ...extraHeaders } })
+    const csrf = (await page.context().cookies()).find(cookie => cookie.name === 'trip_csrf')?.value || ''
+    const response = await page.request.fetch(path, { method, data, headers: { 'X-CSRF-Token': csrf, ...extraHeaders } })
     expect(response.status(), `${method} ${path}`).toBe(status)
     return response.json()
   }

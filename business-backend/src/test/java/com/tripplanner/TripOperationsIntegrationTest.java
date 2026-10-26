@@ -189,6 +189,30 @@ class TripOperationsIntegrationTest {
         Integer.class,owner));
   }
 
+  @Test void sharedAuthorizationAndTransactionsSurviveBusinessModuleSplit() {
+    long owner=user("moduleowner"),editor=user("moduleeditor"),viewer=user("moduleviewer"),id=trip(owner);
+    for(var member:List.of(Map.of("user",editor,"role","editor"),Map.of("user",viewer,"role","viewer"))) {
+      long uid=((Number)member.get("user")).longValue();
+      String username=db.queryForObject("SELECT username FROM users WHERE id=?",String.class,uid);
+      operations.invite(owner,id,json.createObjectNode().put("username",username).put("role",member.get("role").toString()),"module-split");
+      operations.accept(uid,id,"module-split");
+    }
+    int revision=db.queryForObject("SELECT planning_revision FROM trip_records WHERE id=?",Integer.class,id);
+    var booking=json.createObjectNode().put("day_index",0).put("category","ticket").put("title","待核验预订")
+        .put("status","planned").put("activity_id","owner-controlled-activity");
+    // The insert and planning-revision trigger happen before the owner-only
+    // detail check; denial must roll the entire booking transaction back.
+    assertEquals(404,assertThrows(ApiException.class,()->operations.addCommitment(editor,id,booking,"split-booking-key","module-split")).status);
+    assertEquals(0L,db.queryForObject("SELECT count(*) FROM trip_commitments WHERE trip_id=?",Long.class,id));
+    assertEquals(revision,db.queryForObject("SELECT planning_revision FROM trip_records WHERE id=?",Integer.class,id));
+    var expense=json.createObjectNode().put("day_index",0).put("category","meal").put("amount","12.30");
+    assertEquals(404,assertThrows(ApiException.class,()->operations.addExpense(viewer,id,expense,"split-expense-key","module-split")).status);
+    operations.removeMember(owner,id,editor,"module-split");
+    assertEquals(404,assertThrows(ApiException.class,()->operations.addExpense(editor,id,expense,"split-revoked-key","module-split")).status);
+    assertEquals(0L,db.queryForObject("SELECT count(*) FROM trip_expenses WHERE trip_id=?",Long.class,id));
+    assertEquals(1,db.queryForObject("SELECT version FROM trip_records WHERE id=?",Integer.class,id));
+  }
+
   @Test void httpEndpointsKeepAuthenticationAndSerializeCheckEvidence() throws Exception {
     long owner=user("http"), outsider=user("httpother"), id=trip(owner);
     String token=tokens.issue(users.byId(owner)), other=tokens.issue(users.byId(outsider));

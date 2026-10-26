@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-26",
+  "expires_on": "2026-11-09",
+  "scope": "Only the exact-revision embedded Agent image on Debian 13 with verified dpkg revisions; explicit opt-in. Vendor-minor items remain vulnerable and visible. Unknown IDs/components/versions remain blocking.",
+  "source_bindings": {
+    "backend/Dockerfile": "e9842b640bbb9617a2b1430fa3ce51bdd3ca28bd1597801d5306bc2ba820bcf6",
+    "docker-compose.yml": "434385609907423618316e2d0f63638328f8a75fed9d3841ae11747d94d67070",
+    "docker-compose.production.yml": "28047416ee4086232696ca162ff11580c520aa0a684d77190204e4ee5c59e2f8",
+    "backend/runtime-security-packages.json": "a76ac688657a37db28bec69b4bf211ee926ecf433ed75930156be7cc169d3d80",
+    "backend/scripts/install_runtime_security_patches.py": "13ed80fc2155cb33cf69d7c5cbc1ecb7dbb5c4d22a3f7b2cd2378ca7cb600655"
+  },
+  "assessments": [
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "openssl": "3.5.7"
+      },
+      "requires_dpkg": {
+        "openssl": "3.5.7-1~deb13u3",
+        "libssl3t64": "3.5.7-1~deb13u3"
+      },
+      "ids": [
+        "CVE-2026-14456",
+        "CVE-2026-14457",
+        "CVE-2026-18798",
+        "CVE-2026-54874",
+        "CVE-2026-63072",
+        "CVE-2026-63073",
+        "CVE-2026-63075",
+        "CVE-2026-63076",
+        "CVE-2026-75803",
+        "CVE-2026-54873",
+        "CVE-2026-72897",
+        "CVE-2026-84782",
+        "CVE-2026-84784"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "vendor_status": "fixed",
+      "reason": "Generic binary CPE match loses Debian revision. DSA-6465-1 u2 and DSA-6531-1 u3 fix these exact IDs; the actual immutable image must contain the exact reviewed u3 packages.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/DSA-6465-1",
+        "https://security-tracker.debian.org/tracker/DSA-6531-1"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "gzip": "1.13"
+      },
+      "requires_dpkg": {
+        "gzip": "1.13-1+deb13u1"
+      },
+      "ids": [
+        "CVE-2026-41992"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "vendor_status": "fixed",
+      "reason": "Generic binary upstream version omits fixed Debian revision; exact actual dpkg revision required.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-41992"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4",
+        "libc6": "2.41-12+deb13u4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u4"
+      },
+      "ids": [
+        "CVE-2026-19499",
+        "CVE-2026-5435"
+      ],
+      "classification": "still_vulnerable_vendor_minor",
+      "vendor_status": "vulnerable",
+      "vendor_severity": "minor_no_dsa",
+      "reason": "Debian trixie explicitly classifies these exact source advisories no-dsa Minor issue. This is a severity-policy calibration, NOT a fix or a not-affected finding. Native components remain potentially reachable; all raw scanner High records remain retained and a new vendor patch, revision or expiry requires review.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-19499",
+        "https://security-tracker.debian.org/tracker/CVE-2026-5435"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "gcc-14": "14.2.0-19",
+        "gcc-14-base": "14.2.0-19",
+        "libgcc-s1": "14.2.0-19",
+        "libstdc++6": "14.2.0-19"
+      },
+      "requires_dpkg": {
+        "gcc-14-base": "14.2.0-19",
+        "libstdc++6": "14.2.0-19",
+        "libgcc-s1": "14.2.0-19"
+      },
+      "ids": [
+        "CVE-2026-95619",
+        "CVE-2026-102010"
+      ],
+      "classification": "still_vulnerable_vendor_minor",
+      "vendor_status": "vulnerable",
+      "vendor_severity": "minor_no_dsa",
+      "reason": "Debian trixie explicitly classifies these exact source advisories no-dsa Minor issue. This is a severity-policy calibration, NOT a fix or a not-affected finding. Native components remain potentially reachable; all raw scanner High records remain retained and a new vendor patch, revision or expiry requires review.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-95619",
+        "https://security-tracker.debian.org/tracker/CVE-2026-102010"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "bsdutils": "1:2.41.5-0+deb13u1",
+        "libblkid1": "2.41.5-0+deb13u1",
+        "liblastlog2-2": "2.41.5-0+deb13u1",
+        "libmount1": "2.41.5-0+deb13u1",
+        "libsmartcols1": "2.41.5-0+deb13u1",
+        "libuuid1": "2.41.5-0+deb13u1",
+        "login": "1:4.16.0-2+really2.41.5-0+deb13u1",
+        "mount": "2.41.5-0+deb13u1",
+        "util-linux": "2.41.5-0+deb13u1"
+      },
+      "requires_dpkg": {
+        "util-linux": "2.41.5-0+deb13u1"
+      },
+      "ids": [
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410"
+      ],
+      "classification": "still_vulnerable_vendor_minor",
+      "vendor_status": "vulnerable",
+      "vendor_severity": "minor_no_dsa",
+      "reason": "Debian trixie explicitly classifies these exact source advisories no-dsa Minor issue. This is a severity-policy calibration, NOT a fix or a not-affected finding. Native components remain potentially reachable; all raw scanner High records remain retained and a new vendor patch, revision or expiry requires review.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-76642",
+        "https://security-tracker.debian.org/tracker/CVE-2026-78408",
+        "https://security-tracker.debian.org/tracker/CVE-2026-78409",
+        "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "perl-base": "5.40.1-6+deb13u1"
+      },
+      "requires_dpkg": {
+        "perl-base": "5.40.1-6+deb13u1"
+      },
+      "requires_packages_absent": [
+        "perl-modules-5.40",
+        "perl",
+        "libperl5.40"
+      ],
+      "requires_environment_absent": [
+        "PERL5LIB",
+        "PERLLIB",
+        "PERL5OPT"
+      ],
+      "absent_paths": [
+        "/etc/perl/Pod/Text.pm",
+        "/etc/perl/Archive/Tar.pm",
+        "/usr/local/lib/x86_64-linux-gnu/perl/5.40.1/Pod/Text.pm",
+        "/usr/local/lib/x86_64-linux-gnu/perl/5.40.1/Archive/Tar.pm",
+        "/usr/local/share/perl/5.40.1/Pod/Text.pm",
+        "/usr/local/share/perl/5.40.1/Archive/Tar.pm",
+        "/usr/lib/x86_64-linux-gnu/perl5/5.40/Pod/Text.pm",
+        "/usr/lib/x86_64-linux-gnu/perl5/5.40/Archive/Tar.pm",
+        "/usr/share/perl5/Pod/Text.pm",
+        "/usr/share/perl5/Archive/Tar.pm",
+        "/usr/lib/x86_64-linux-gnu/perl-base/Pod/Text.pm",
+        "/usr/lib/x86_64-linux-gnu/perl-base/Archive/Tar.pm",
+        "/usr/lib/x86_64-linux-gnu/perl/5.40/Pod/Text.pm",
+        "/usr/lib/x86_64-linux-gnu/perl/5.40/Archive/Tar.pm",
+        "/usr/share/perl/5.40/Pod/Text.pm",
+        "/usr/share/perl/5.40/Archive/Tar.pm",
+        "/usr/share/perl/5.40.1/Pod/Text.pm",
+        "/usr/share/perl/5.40.1/Archive/Tar.pm",
+        "/usr/local/lib/site_perl/Pod/Text.pm",
+        "/usr/local/lib/site_perl/Archive/Tar.pm"
+      ],
+      "ids": [
+        "CVE-2026-82560",
+        "CVE-2026-9538"
+      ],
+      "classification": "not_affected_component_absent",
+      "vendor_status": "source_package_vulnerable_components_not_installed",
+      "reason": "These exact advisories affect Pod::Text and Archive::Tar, supplied by perl-modules-5.40 rather than the installed minimal perl-base. The actual image must lack the module package and each standard/site module path and have no Perl search/option environment override. The pinned Dockerfile installs no CPAN code and the application is the embedded Python Agent; this does not assess a later Perl-enabled image or operator-supplied PERL5LIB.",
+      "references": [
+        "https://packages.debian.org/trixie/amd64/perl-base/filelist",
+        "https://packages.debian.org/trixie/all/perl-modules-5.40/filelist",
+        "https://security-tracker.debian.org/tracker/CVE-2026-82560",
+        "https://security-tracker.debian.org/tracker/CVE-2026-9538"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libncursesw6": "6.5+20250216-2",
+        "libtinfo6": "6.5+20250216-2",
+        "ncurses-base": "6.5+20250216-2",
+        "ncurses-bin": "6.5+20250216-2"
+      },
+      "requires_dpkg": {
+        "ncurses-bin": "6.5+20250216-2"
+      },
+      "absent_paths": [
+        "/usr/bin/infocmp",
+        "/bin/infocmp",
+        "/usr/local/bin/infocmp",
+        "/usr/bin/x86_64-linux-gnu-infocmp"
+      ],
+      "ids": [
+        "CVE-2025-69720"
+      ],
+      "classification": "not_affected_component_absent",
+      "vendor_status": "source_package_vulnerable_command_removed",
+      "reason": "The CVE is the infocmp -i command limit check, implemented in progs/infocmp.c rather than the libncurses/libtinfo runtime API. The final reviewed Dockerfile removes exactly /usr/bin/infocmp. Actual image absence of standard command paths is mandatory; the shared libraries remain and are not declared generally safe.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2025-69720",
+        "https://packages.debian.org/trixie/amd64/ncurses-bin/filelist",
+        "https://invisible-island.net/ncurses/NEWS.html"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libacl1": "2.4.0-1"
+      },
+      "requires_dpkg": {
+        "libacl1": "2.4.0-1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libacl.so.1.2.2400": "f8bae3fdb384de06c68660b7b67e7b76d23692a38a31b8da115178a921e3d18e"
+      },
+      "ids": [
+        "CVE-2026-54369",
+        "CVE-2026-54370"
+      ],
+      "classification": "fixed_by_pinned_security_upgrade",
+      "vendor_status": "fixed_in_exact_installed_official_package",
+      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, two-package-only APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-54369",
+        "https://security-tracker.debian.org/tracker/CVE-2026-54370"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "zlib1g": "1:1.3.dfsg+really1.3.2-4"
+      },
+      "requires_dpkg": {
+        "zlib1g": "1:1.3.dfsg+really1.3.2-4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libz.so.1.3.2": "e0d5aa725cb684e7bcc048c1cb1fbb314f7cb7b7203e8d623044bb6a043e1d61"
+      },
+      "ids": [
+        "CVE-2026-85091"
+      ],
+      "classification": "fixed_by_pinned_security_upgrade",
+      "vendor_status": "fixed_in_exact_installed_official_package",
+      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, two-package-only APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+      ]
+    }
+  ]
+}

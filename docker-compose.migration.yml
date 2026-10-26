@@ -1,7 +1,7 @@
 # Isolated offline migration verification; never loads daily credentials or data.
 services:
   postgres:
-    image: postgres:17.6-alpine
+    image: postgres:17.11-alpine
     environment:
       POSTGRES_USER: trip
       POSTGRES_PASSWORD: migration-fixture-only

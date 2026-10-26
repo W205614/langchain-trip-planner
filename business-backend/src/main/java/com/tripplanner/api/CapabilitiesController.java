@@ -92,11 +92,18 @@ public class CapabilitiesController {
     return Map.of("success", true, "message", "查询完成", "data", amap.route(body));
   }
 
-  @PostMapping("/research")
+  @PostMapping({"/research", "/research/retrieve"})
   public Object research(@RequestBody ObjectNode body) {
     com.tripplanner.domain.TripRequests.text(body, "city", 1, 64);
     com.tripplanner.domain.TripRequests.text(body, "query", 2, 300);
-    return agent.post("/capabilities/research", body);
+    return agent.post("/capabilities/research-retrieve", body);
+  }
+
+  @PostMapping("/research/answer")
+  public Object researchAnswer(@RequestBody ObjectNode body) {
+    com.tripplanner.domain.TripRequests.text(body, "city", 1, 64);
+    com.tripplanner.domain.TripRequests.text(body, "query", 2, 300);
+    return agent.post("/capabilities/research-answer", body);
   }
 
   @GetMapping("/rag/status")

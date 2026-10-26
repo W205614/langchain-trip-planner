@@ -23,6 +23,9 @@ def backup(output, project="langchain-trip-planner", archive_images=False):
         raise ValueError("Backup target must not already exist")
     output.mkdir(parents=True)
     postgres = deployed["postgres"]
+    pg_mount = next((mount for mount in postgres["Mounts"] if mount["Destination"] == "/var/lib/postgresql/data"), None)
+    if pg_mount is None:
+        raise RuntimeError("Missing PostgreSQL persistent data mount")
     pg_env = dict(value.split("=", 1) for value in postgres["Config"]["Env"] if "=" in value)
     user = pg_env.get("POSTGRES_USER", "trip")
     database = pg_env.get("POSTGRES_DB", user)
@@ -56,6 +59,7 @@ def backup(output, project="langchain-trip-planner", archive_images=False):
     manifest = {"schema": "Java/Flyway-v2", "created_at": datetime.now(timezone.utc).isoformat(),
                 "project": project, "database": database, "database_user": user, "images": images,
                 "mounts": mounts, "compose_files": deployed["backend"]["Config"]["Labels"].get("com.docker.compose.project.config_files", ""),
+                "postgres_mount": {"type": pg_mount["Type"], "source": pg_mount.get("Name") or pg_mount["Source"], "destination": pg_mount["Destination"]},
                 "sha256": {f.relative_to(output).as_posix(): digest(f) for f in output.rglob("*") if f.is_file()}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps({"backup": str(output), "files": len(manifest["sha256"]), "tables": len(summary),

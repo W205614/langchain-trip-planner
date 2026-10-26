@@ -1,0 +1,36 @@
+{
+  "version": "0.34.1",
+  "commit": "73c6bfe7393929211294c1954f30d8ed78e4d0ad",
+  "archive_url": "https://codeload.github.com/prometheus/alertmanager/tar.gz/73c6bfe7393929211294c1954f30d8ed78e4d0ad",
+  "archive_sha256": "5c5c72ec6b4c4746d523f2ed1994dfec4b94f7457e530ee6fb16cfec158e545e",
+  "archive_bytes": 819451,
+  "go_toolchain": "1.27.3",
+  "dependency_patches": {
+    "golang.org/x/net": "v0.60.0",
+    "google.golang.org/grpc": "v1.83.2"
+  },
+  "additional_minimum_version_selection": {
+    "golang.org/x/crypto": "v0.57.0",
+    "golang.org/x/mod": "v0.41.0",
+    "golang.org/x/sync": "v0.23.0",
+    "golang.org/x/sys": "v0.48.0",
+    "golang.org/x/text": "v0.42.0",
+    "go_directive": "1.26.0"
+  },
+  "lock_sha256": {
+    "alertmanager.go.mod": "b1ecabe5126d1ae65ba6640bfdf880a044a1e030f88c35cb7f318173ccba0132",
+    "alertmanager.go.sum": "9ee7df7a8bff95266e74408df2e80d032dffd8894f235a10d49d34abd9453029"
+  },
+  "prometheus": {
+    "version": "3.15.1",
+    "official_image": "prom/prometheus:v3.15.1",
+    "official_repo_digest": "sha256:d445d1806b38f85b5c394a1b87f94113fde0473b45245922c2e8b1bd41fa68ae",
+    "binary_policy": "copy unmodified official static binaries; replace only vulnerable BusyBox rootfs with signed-updated Alpine 3.24"
+  },
+  "official_web_ui": {
+    "url": "https://github.com/prometheus/alertmanager/releases/download/v0.34.1/alertmanager-web-ui-0.34.1.tar.gz",
+    "sha256": "881fe0f7beb9573f35be47dd233af6220e72c8db72c03bcd1780402eb8dc1307",
+    "size_bytes": 931784,
+    "verification": "Official release GitHub API SHA256 digest; generated assets retained unchanged"
+  }
+}

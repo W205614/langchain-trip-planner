@@ -14,8 +14,10 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v7-whole-day-budget"
-FACT_TTLS = {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600}
+RULE_VERSION = "time-windows-v8-fact-completion"
+from .planning_semantics import CONTRACT, FACT_TTLS
+from .travel_facts import boarding_minutes, relation_pairs
+from .route_facts import observation as route_observation, current as route_current, instant as route_instant, cache_expiry as route_cache_expiry, bind_day as bind_route_day, EPOCH as ROUTE_EPOCH
 
 
 def confirmed(commitment):
@@ -208,10 +210,24 @@ def _route(left, right, planner, city, route_type, cache, unknown):
             if not isfinite(seconds) or seconds < 0 or (seconds == 0 and left != right):
                 raise ValueError("Invalid route duration")
             cache[key] = (ceil(seconds / 60), True)
+            fact=route_observation(result,fresh=True)
+            cache.setdefault("_route_facts",{})[key]=fact
+            if not route_current(fact):
+                cache[key]=(cache[key][0],False)
+                cache.setdefault("_expired_route_facts",set()).add(key)
         except Exception:
-            cache[key] = (30, False)
+            cache[key] = (CONTRACT["unknown_route_minutes"], False)
+            cache.setdefault("_route_facts",{})[key]={"observed_at":None,"expires_at":ROUTE_EPOCH}
+    elif cache[key][1]:
+        fact=cache.get("_route_facts",{}).get(key)
+        if not fact:
+            fact=route_observation({},fresh=False)
+            cache.setdefault("_route_facts",{})[key]=fact
+        if not fact or not route_current(fact):
+            cache[key]=(cache[key][0],False)
+            cache.setdefault("_expired_route_facts",set()).add(key)
     if not cache[key][1]:
-        unknown.add("route_duration_estimated_30_minutes")
+        unknown.add("route_fact_expired_or_unobserved" if key in cache.get("_expired_route_facts",set()) else "route_duration_estimated_30_minutes")
         if key in cache.get("_restored_unverified",set()):
             unknown.add("route_failure_not_retried_on_resume")
     return cache[key]
@@ -234,14 +250,29 @@ def _nodes(day, inputs, low, high, zone, unknown):
                     _minutes(fact["last_entry"]) if fact.get("last_entry") else high)) for w in fact.get("windows", [])]
         else:
             unknown.add(f"opening_{'conflict' if len(valid) > 1 else 'unknown_or_stale'}:{attraction.activity_id}")
+        reservations=[fact for fact in inputs.reservation_facts if fact.get("poi_id")==attraction.poi_id and fact.get("date")==day.date and fact_current(fact,"verification")]
+        if len(reservations)!=1:
+            unknown.add(f"reservation_unverified:{attraction.activity_id}")
+        elif reservations[0]["status"]=="unavailable":
+            intervals=[]
         nodes.append(dict(activity_id=attraction.activity_id, title=attraction.name, kind="attraction", duration=duration,
             intervals=intervals, location=attraction.location, source=valid[0].get("source", "") if len(valid) == 1 else "", evidence_refs=[attraction.poi_id],
             optional=attraction.optional, priority=attraction.priority))
     defaults = {"breakfast": ("08:00", "10:00", 30), "lunch": ("11:30", "14:00", 60), "dinner": ("17:30", "21:00", 60)}
     explicit_meal_types={window.get("type") for window in inputs.meal_windows}
-    for meal_type in explicit_meal_types-{meal.type for meal in day.meals}:
+    self_meals=[fact for fact in inputs.meal_resolutions if fact.get("day_index")==day.day_index and fact_current(fact,"verification")]
+    for meal_type in explicit_meal_types-{meal.type for meal in day.meals}-{fact["type"] for fact in self_meals}:
         conflicts.append(f"required_meal_candidate_missing:{meal_type}")
+    for fact in self_meals:
+        default=defaults.get(fact["type"],("08:00","21:00",30))
+        window=next((w for w in inputs.meal_windows if w.get("type")==fact["type"]),{})
+        duration=window.get("duration_minutes",default[2]);start,end=_minutes(window.get("start",default[0])),_minutes(window.get("end",default[1]))
+        meal_label={"breakfast":"早餐","lunch":"午餐","dinner":"晚餐","snack":"加餐"}[fact["type"]]
+        nodes.append(dict(activity_id=f"self_meal:{day.day_index}:{fact['type']}",title=f"自理{meal_label}",kind="meal",duration=duration,
+            intervals=[(max(low,start),min(high,end)-duration)],optional=False,priority=10,location=_location(fact["location"]),source=f"用户声明：{fact['source']}",evidence_refs=[]))
     for meal in day.meals:
+        if meal.type in {fact["type"] for fact in self_meals}:
+            continue
         default = defaults.get(meal.type, ("08:00", "21:00", 30))
         window = next((w for w in inputs.meal_windows if w.get("type") == meal.type), {})
         duration = int(window.get("duration_minutes", default[2]))
@@ -323,6 +354,8 @@ def _hotel_anchor(inputs, request, index, day=None):
     """hotel_stays[i] denotes the night after day i, not that day's origin."""
     hotel = next((h for h in inputs.hotel_stays if h.get("day_index") == index), None)
     if hotel:
+        if hotel.get("source") and not fact_current(hotel,"verification"):
+            return None,hotel.get("city") or city_for_day(request,index)
         return _location(hotel.get("location")), hotel.get("city") or city_for_day(request,index)
     if day is not None and day.hotel:
         return day.hotel.location, city_for_day(request,index)
@@ -337,6 +370,8 @@ def _transport_buffer_gaps(timeline,inputs):
         if not confirmed(trip) or trip.get("category") not in {"transport","train","flight"}:
             continue
         identity=str(trip.get("activity_id") or f"commitment:{trip.get('id','unknown')}")
+        if boarding_minutes(inputs,trip,fact_current) is not None:
+            continue
         for row in timeline:
             if row.get("activity_id")==identity and row.get("kind")=="commitment":
                 gaps.add(f"transport_predeparture_buffer_unverified:{trip.get('id','unknown')}")
@@ -395,9 +430,10 @@ def _fit_recommended_hotels(plan,request,planner,cache,allowed_days):
                 continue
             unknown=set()
             duration,known=_route(current,station,planner,origin_city,transport_to_route_type(request.transportation),cache,unknown)
-            if not known or duration<=departure-earliest:
+            buffer=boarding_minutes(inputs,trip,fact_current) or 0
+            if not known or duration+buffer<=departure-earliest:
                 continue
-            leave=(datetime.fromisoformat(trip["start_at"])-timedelta(minutes=duration)).isoformat()
+            leave=(datetime.fromisoformat(trip["start_at"])-timedelta(minutes=duration+buffer)).isoformat()
             options[arrival_day.day_index]=[
                 {"action":"allow_earlier_departure","start_at":leave,"message":"当前住宿接驳超出最早出发边界；需用户明确允许更早出发"},
                 {"action":"choose_other_hotel","message":"选择并重新核验能赶上固定班次的前晚住宿；未自动放宽约束"}]
@@ -416,7 +452,7 @@ def _fit_recommended_hotels(plan,request,planner,cache,allowed_days):
             distance=lambda row:((row["location"]["longitude"]-station.longitude)*cos(radians(station.latitude)))**2+(row["location"]["latitude"]-station.latitude)**2
             for candidate in sorted(candidates,key=lambda row:(distance(row),row["id"]))[:3]:
                 access,verified=_route(_location(candidate["location"]),station,planner,origin_city,transport_to_route_type(request.transportation),cache,set())
-                if not verified or access>departure-earliest:
+                if not verified or access+buffer>departure-earliest:
                     continue
                 old_name=night.hotel.name if night.hotel else ""
                 night.hotel=Hotel(name=candidate["name"],address=candidate.get("address") or "",location=candidate["location"],type=request.accommodation)
@@ -443,7 +479,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         high = min(high, _local_minute(inputs.departure_at, day, zone))
     city = city_for_day(request,day.day_index)
     unknown, cache = set(), cache if cache is not None else {}
-    route_type = transport_to_route_type(request.transportation)
+    route_type = transport_to_route_type(day.transportation or request.transportation)
     night_anchor,night_city = _hotel_anchor(inputs,request,day.day_index,day)
     prior_anchor,prior_city = _hotel_anchor(inputs,request,day.day_index-1,previous_day) if day.day_index else (night_anchor,night_city)
     bridges, connections, connection_conflicts, inbound_anchor, outbound_anchor = [], [], [], None, None
@@ -455,11 +491,13 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         try:
             departure = _local_minute(commitment["start_at"],day,zone)
             arrival = _local_minute(commitment["end_at"],day,zone)
+            boarding=boarding_minutes(inputs,commitment,fact_current)
+            buffer=boarding if boarding is not None else 0
             if city in {commitment["origin_city"],commitment["destination_city"]} and departure < 1440 and arrival > 0 and (departure < hard_start or arrival > hard_end):
                 connection_conflicts.append(f"fixed_transport_outside_day_window:{commitment['id']}")
                 proven_connection_conflicts.add(connection_conflicts[-1])
             if city == commitment["origin_city"] and 0 <= departure < 1440:
-                high = min(high,departure)
+                high = min(high,departure-buffer)
                 outbound_anchor = _location(commitment.get("origin_location") or commitment.get("location"))
             if city == commitment["destination_city"] and 0 <= arrival < 1440:
                 low = max(low,arrival)
@@ -477,8 +515,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                         unknown.add("origin_station_endpoint_unknown")
                     access,known = _route(prior_anchor,origin,route_planner,commitment["origin_city"],route_type,cache,unknown)
                     midnight = datetime.fromisoformat(day.date).replace(tzinfo=zone)
-                    access_start = midnight+timedelta(minutes=departure-access)
-                    if departure-access < hard_start or departure > hard_end:
+                    access_start = midnight+timedelta(minutes=departure-buffer-access)
+                    if departure-buffer-access < hard_start or departure > hard_end:
                         connection_conflicts.append(f"origin_connection_outside_day_window:{commitment['id']}")
                         if known:
                             proven_connection_conflicts.add(connection_conflicts[-1])
@@ -492,13 +530,15 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                         except (KeyError,ValueError,TypeError):
                             unknown.add("previous_day_finish_unverified")
                     connections.append(dict(activity_id=f"connection:{commitment['id']}:origin",title="住宿前往跨城出发站",kind="travel",
-                        start_at=access_start.isoformat(),end_at=commitment["start_at"],status="confirmed" if known else "estimated",
+                        start_at=access_start.isoformat(),end_at=(midnight+timedelta(minutes=departure-buffer)).isoformat(),status="confirmed" if known else "estimated",
                         source="map" if known else "conservative_allowance",evidence_refs=[str(commitment["id"])],
                         notes=[] if known else ["住宿或站点资料不足，接驳仅为30分钟占位，尚未核验"]))
                     connection_minutes += access
                 else:
                     unknown.add("origin_hotel_connection_before_current_day_unverified")
             if city in {commitment["origin_city"],commitment["destination_city"]} and departure < 1440 and arrival > 0:
+                if buffer:
+                    bridges.append(dict(activity_id=f"boarding:{commitment['id']}",title="用户确认的提前到站时间",kind="waiting",start_at=(datetime.fromisoformat(commitment["start_at"])-timedelta(minutes=buffer)).isoformat(),end_at=commitment["start_at"],status="confirmed",source="user_declared",evidence_refs=[str(commitment["id"])],notes=["提前量来自用户提供的承运方要求，系统未代替承运方核实"]))
                 bridges.append(dict(activity_id=str(commitment.get("activity_id") or f"commitment:{commitment['id']}"),title=commitment.get("title","跨城交通"),kind="commitment",start_at=commitment["start_at"],end_at=commitment["end_at"],status="confirmed",source="user_confirmed",evidence_refs=[str(commitment["id"])],notes=[]))
         except (KeyError,ValueError,TypeError):
             pass  # Input model rejects malformed times before this point.
@@ -523,6 +563,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     if day.day_index > 0 and city_for_day(request,day.day_index-1) != city and not any(c.get("destination_city") == city and confirmed(c) and c.get("end_at") and 0 <= _local_minute(c["end_at"],day,zone) < 1440 for c in inputs.commitments):
         unknown.add("cross_city_confirmed_transport_missing")
     nodes, conflicts = _nodes(day, inputs, low, high, zone, unknown)
+    shared_visits,relationship_unknown=relation_pairs(day.attractions,inputs,fact_current)
+    unknown.update(relationship_unknown)
     # Prove window contradictions against the relaxed bound when access is
     # estimated. Closed/locked/appointment contradictions that survive it remain
     # independent of other missing facts.
@@ -552,7 +594,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     forced_omissions = [n["activity_id"] for n in nodes if not n["intervals"] and n["optional"]]
     conflicts = [c for c in conflicts if not any(c == f"no_time_window:{identity}" for identity in forced_omissions)]
     nodes = [n for n in nodes if n["activity_id"] not in forced_omissions]
-    report = {"status": "unverified", "solver_status": "NOT_RUN", "unknown": [], "conflicts": conflicts, "omitted_activity_ids": []}
+    report = {"status": "unverified", "solver_status": "NOT_RUN", "unknown": [], "conflicts": conflicts, "omitted_activity_ids": [], "contract_version": CONTRACT["version"]}
     if conflicts or low >= high or not nodes:
         model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
         proven = proven_connection_conflicts or proven_window_conflicts.intersection(conflicts) or low >= proof_high
@@ -581,6 +623,10 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             model.add(presence[index] == 1)
         arcs.append((index+1,index+1,presence[index].Not()))
     attraction_presence = [presence[i] for i,n in enumerate(nodes) if n["kind"] == "attraction"]
+    for left_id,right_id in shared_visits:
+        indices=[i for i,n in enumerate(nodes) if n["activity_id"] in {left_id,right_id}]
+        if len(indices)==2:
+            model.add(sum(presence[i] for i in indices)<=1)
     if attraction_presence:
         model.add(sum(attraction_presence) >= 1)
     for left in range(len(nodes)+1):
@@ -629,6 +675,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     solver.parameters.num_search_workers = 1
     solver.parameters.random_seed = 0
     status = solver.solve(model)
+    if any(not route_current(fact) for fact in cache.get("_route_facts",{}).values()):
+        unknown.add("route_fact_expired_or_unobserved")
     report.update(solver_status=solver.status_name(status), unknown=sorted(unknown), omitted_activity_ids=forced_omissions)
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
@@ -671,7 +719,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     timeline.sort(key=lambda item:item["start_at"])
     unknown.update(_transport_buffer_gaps(timeline,inputs))
     report["unknown"]=sorted(unknown)
-    report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes, finish_at=instant(cursor+travel))
+    report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes, finish_at=instant(cursor+travel),route_fact_expires_at=route_cache_expiry(cache))
     return timeline, report, order
 
 
@@ -687,6 +735,11 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
         for row in saved_routes.get("routes",[]):
             key=tuple(row["key"])
             cache[key] = (row["minutes"],bool(row["verified"]))
+            fact=route_observation(row,fresh=False)
+            cache.setdefault("_route_facts",{})[key]=fact
+            if not route_current(fact):
+                cache[key]=(row["minutes"],False)
+                cache.setdefault("_expired_route_facts",set()).add(key)
             if not row["verified"]:
                 cache.setdefault("_restored_unverified",set()).add(key)
     allowed_days = set(range(len(plan.days))) if allowed_days is None else allowed_days
@@ -700,7 +753,11 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
         if cached_day and all(fact_current(fact) for fact in dated_facts):
             from ..models.schemas import DayPlan
             restored=DayPlan.model_validate(cached_day["day"])
-            if restored.feasibility.get("status") in {"feasible","unverified"} and restored.timeline and not any(gap.startswith("route_") for gap in restored.feasibility.get("unknown",[])):
+            expiry=getattr(restored,"route_fact_expires_at",None)
+            try:route_fresh=bool(expiry and route_instant(expiry)>datetime.now(timezone.utc))
+            except (ValueError,TypeError):route_fresh=False
+            if any(not route_current(fact) for fact in cache.get("_route_facts",{}).values()):route_fresh=False
+            if route_fresh and restored.feasibility.get("status") in {"feasible","unverified"} and restored.timeline and not any(gap.startswith("route_") for gap in restored.feasibility.get("unknown",[])):
                 buffer_gaps=_transport_buffer_gaps(restored.timeline,request.planning_input)
                 if buffer_gaps:
                     restored.feasibility["unknown"]=sorted(set(restored.feasibility.get("unknown",[]))|buffer_gaps)
@@ -731,10 +788,11 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                 day.attractions.sort(key=lambda a:priority[a.activity_id])
                 day.meals[:] = [m for m in day.meals if m.activity_id in priority]
                 day.meals.sort(key=lambda a:priority[a.activity_id])
+        bind_route_day(day,cache)
         reports.append({"day_index":day.day_index, **day.feasibility})
         if day.timeline and day.feasibility.get("status") in {"feasible","unverified"}:
             save_checkpoint(checkpoint_stage,digest,{"day":day.model_dump(mode="json")})
-        save_checkpoint("routes",digest,{"routes":[{"key":list(key),"minutes":value[0],"verified":value[1]} for key,value in cache.items() if isinstance(key,tuple)]})
+        save_checkpoint("routes",digest,{"routes":[{"key":list(key),"minutes":value[0],"verified":value[1],**cache.get("_route_facts",{}).get(key,{"observed_at":None,"expires_at":ROUTE_EPOCH})} for key,value in cache.items() if isinstance(key,tuple)]})
     # Two bounded neighboring-day exchanges improve balance without moving any
     # fixed date, appointment or protected activity. Revision scope forbids this
     # global improvement pass even when several days were explicitly selected.
@@ -769,6 +827,7 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                         previous_day=next((d for d in [*trial,*plan.days] if d.day_index==candidate.day_index-1),None)
                         timeline,report,order = solve_day(candidate,request,route_planner,cache,min(.3,max(.01,limit-(time.monotonic()-started))),previous_day)
                         candidate.timeline,candidate.feasibility = timeline,report
+                        bind_route_day(candidate,cache)
                         if timeline and report["status"] in {"feasible","unverified"}:
                             candidate.__pydantic_extra__["schedule_stale"] = False
                         if order:
@@ -782,6 +841,26 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                         break
             if not improved:
                 break
+    # A different POI ID, or a different date, does not make a nested visit
+    # independent. Preserve out-of-scope days while flagging the changed day.
+    selected=[a for day in plan.days for a in day.attractions]
+    shared,_=relation_pairs(selected,request.planning_input,fact_current)
+    owners={a.activity_id:(day,a) for day in plan.days for a in day.attractions}
+    for left,right in shared:
+        if left not in owners or right not in owners or owners[left][0].day_index==owners[right][0].day_index:
+            continue
+        ids={owners[left][1].poi_id,owners[right][1].poi_id}
+        known=any({f.get("parent_poi_id"),f.get("child_poi_id")}==ids and f.get("relation")=="included" and fact_current(f,"verification") for f in request.planning_input.poi_relations)
+        for identity in (left,right):
+            day,_=owners[identity]
+            if day.day_index not in allowed_days:
+                continue
+            if known:
+                day.feasibility.setdefault("conflicts",[]).append("parent_child_duplicate_visit")
+                day.feasibility["status"]="infeasible"
+            else:
+                day.feasibility.setdefault("unknown",[]).append("poi_relationship_unverified:"+":".join(sorted(ids)))
+                if day.feasibility.get("status")=="feasible":day.feasibility["status"]="unverified"
     reports = [{"day_index":d.day_index,**d.feasibility} for d in plan.days if d.day_index in allowed_days]
     plan.planning_input = request.planning_input.model_copy(deep=True)
     if route_evidence is not None:

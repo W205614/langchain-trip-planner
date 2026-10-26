@@ -1,7 +1,15 @@
 # 后端服务镜像: Python 3.11 精简版
-ARG PYTHON_BASE=python:3.11-slim
+ARG PYTHON_BASE=python:3.11-slim-trixie
 FROM ${PYTHON_BASE}
 USER root
+# Refresh signed distribution security packages; --pull alone can retain packages
+# from the base image's publication date.
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+COPY runtime-security-packages.json /tmp/runtime-security-packages.json
+COPY scripts/install_runtime_security_patches.py /tmp/install_runtime_security_patches.py
+RUN TRIP_SECURITY_IMAGE_BUILD=1 python /tmp/install_runtime_security_patches.py --lock /tmp/runtime-security-packages.json \
+    && rm -f /usr/bin/infocmp && test ! -e /usr/bin/infocmp \
+    && rm -rf /var/lib/apt/lists/*
 
 # 设置工作目录
 WORKDIR /app
@@ -12,7 +20,8 @@ COPY requirements.lock .
 # 公网镜像源偶发慢速读取时重试；仍不在最终镜像保留 pip 缓存。
 RUN --mount=type=cache,target=/root/.cache/pip \
     for attempt in 1 2 3; do \
-      pip install --retries 5 --timeout 120 -r requirements.txt && pip check && exit 0; \
+      pip install --retries 5 --timeout 120 --upgrade pip==26.2.2 setuptools==80.10.2 \
+        && pip install --retries 5 --timeout 120 -r requirements.txt && pip check && exit 0; \
       if [ "$attempt" -lt 3 ]; then sleep 2; fi; \
     done; exit 1
 

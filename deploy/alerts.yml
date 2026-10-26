@@ -1,4 +1,24 @@
 groups:
+  - name: trip-operational-governance
+    rules:
+      - alert: TripSchedulerOwnershipLost
+        expr: trip_scheduler_owned == 0
+        for: 30s
+        labels: {severity: critical}
+        annotations:
+          summary: "调度所有权丢失，停止领取并拒绝旧执行；按运行手册受控重启"
+      - alert: TripBackupStale
+        expr: trip_backup_age_seconds > 86400
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "超过24小时没有已验证本机备份"
+      - alert: TripOffhostBackupStale
+        expr: trip_offhost_backup_age_seconds > 172800
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "异机备份未配置或超过48小时未核实；本机副本不计作异机"
   - name: trip-reliability
     rules:
       - alert: TripDraftRateHigh
@@ -8,7 +28,7 @@ groups:
           severity: warning
         annotations:
           summary: "未完成草稿增多，检查质量问题码和上游依赖"
-          runbook_url: "docs/operations/reliability.md#草稿与降级"
+          runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
       - alert: TripSyncStalled
         expr: trip_oldest_sync_age_seconds > 600
         for: 2m
@@ -16,7 +36,7 @@ groups:
           severity: warning
         annotations:
           summary: "索引同步停滞，检查 worker 与依赖后重放失败任务"
-          runbook_url: "docs/operations/reliability.md#同步与资源"
+          runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
       - alert: TripDiskLow
         expr: trip_data_disk_free_ratio < 0.1
         for: 2m
@@ -24,7 +44,7 @@ groups:
           severity: warning
         annotations:
           summary: "数据卷空间不足，暂停上传并检查备份和日志保留"
-          runbook_url: "docs/operations/reliability.md#同步与资源"
+          runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
       - alert: TripRagDegraded
         expr: sum(increase(trip_rag_events_total{reason=~"timeout|busy|lock_timeout|entity_rejected"}[10m])) >= 5
         for: 1m
@@ -32,7 +52,7 @@ groups:
           severity: warning
         annotations:
           summary: "攻略增强拒绝或超时增多；检查来源归属、嵌入服务和索引"
-          runbook_url: "docs/operations/reliability.md#草稿与降级"
+          runbook_url: "docs/operations/optimization-governance.md#告警容量和保留"
       - alert: TripServiceDown
         expr: up{job=~"trip|trip-agent"} == 0
         for: 1m

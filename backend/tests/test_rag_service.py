@@ -64,6 +64,7 @@ def test_ensure_collections_consistent_same_dim(rag):
 def test_ensure_collections_consistent_dim_mismatch_preserves_data(rag, tmp_path):
     """维度不一致时应清空重建"""
     from langchain_chroma import Chroma
+    from app.services.chroma_boundary import embedded_settings
     from langchain_core.documents import Document
 
     # 用 1024 维的独立 store 预写一条旧数据 (模拟旧嵌入模型写入)
@@ -71,6 +72,7 @@ def test_ensure_collections_consistent_dim_mismatch_preserves_data(rag, tmp_path
         collection_name="trip_knowledge",
         embedding_function=FakeEmbedding(dim=1024),
         persist_directory=str(tmp_path / "chroma"),
+        client_settings=embedded_settings(tmp_path / "chroma"),
     )
     old_store.add_documents([
         Document(page_content="旧维度数据", metadata={"city": "北京", "source": "old.md"})
@@ -85,6 +87,7 @@ def test_ensure_collections_consistent_dim_mismatch_preserves_data(rag, tmp_path
         collection_name="trip_knowledge",
         embedding_function=FakeEmbedding(dim=3072),
         persist_directory=str(tmp_path / "chroma"),
+        client_settings=embedded_settings(tmp_path / "chroma"),
     )
     assert fresh._collection.count() == 1
     assert rag.enabled is False

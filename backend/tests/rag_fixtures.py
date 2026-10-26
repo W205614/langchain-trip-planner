@@ -63,17 +63,20 @@ def rag(tmp_path, monkeypatch):
     svc._chroma_dir = tmp_path / "chroma"  # 供测试重连用
 
     from langchain_chroma import Chroma
+    from app.services.chroma_boundary import embedded_settings
     (tmp_path / "chroma").mkdir(parents=True, exist_ok=True)
     # store 的嵌入函数用独立实例, 避免测试里改 svc._embedding 时被 store 沿用
     svc._knowledge_store = Chroma(
         collection_name="trip_knowledge",
         embedding_function=FakeEmbedding(dim=3072),
         persist_directory=str(tmp_path / "chroma"),
+        client_settings=embedded_settings(tmp_path / "chroma"),
     )
     svc._history_store = Chroma(
         collection_name="trip_history",
         embedding_function=svc._embedding,
         persist_directory=str(tmp_path / "chroma"),
+        client_settings=embedded_settings(tmp_path / "chroma"),
     )
     svc._text_splitter = rag_mod.RecursiveCharacterTextSplitter(
         chunk_size=300, chunk_overlap=50,

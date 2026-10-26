@@ -17,8 +17,8 @@ public interface KnowledgeMapper {
 
   @Insert(
       """
-INSERT INTO knowledge_documents(submitted_by,city,title,original_filename,stored_path,sha256,media_type)
-VALUES(#{submitted_by},#{city},#{title},#{original_filename},#{stored_path},#{sha256},#{media_type})
+INSERT INTO knowledge_documents(submitted_by,city,title,original_filename,stored_path,sha256,media_type,size_bytes)
+VALUES(#{submitted_by},#{city},#{title},#{original_filename},#{stored_path},#{sha256},#{media_type},COALESCE(#{size_bytes},20971520))
 """)
   @Options(useGeneratedKeys = true, keyProperty = "id")
   int insert(Map<String, Object> row);

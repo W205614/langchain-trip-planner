@@ -3,7 +3,6 @@ package com.tripplanner.domain;
 import com.tripplanner.api.ApiException;
 import com.tripplanner.persistence.KnowledgeMapper;
 import java.nio.file.*;
-import java.security.MessageDigest;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,15 +16,18 @@ public class KnowledgeService {
   private final TransactionTemplate tx;
   private final Path uploads;
   private final BusinessAuditService audit;
+  private final UploadStorage storage;
 
   public KnowledgeService(
       KnowledgeMapper documents,
       TransactionTemplate tx,
       BusinessAuditService audit,
+      UploadStorage storage,
       @Value("${UPLOAD_DIR:../backend/data/knowledge_uploads}") String uploads) {
     this.documents = documents;
     this.tx = tx;
     this.audit = audit;
+    this.storage=storage;
     this.uploads = Path.of(uploads).toAbsolutePath().normalize();
   }
 
@@ -48,6 +50,7 @@ public class KnowledgeService {
             "review_note",
             "page_count",
             "version",
+            "size_bytes",
             "submitted_by",
             "reviewed_by",
             "created_at",
@@ -82,34 +85,13 @@ public class KnowledgeService {
     if (file.isEmpty()) throw new ApiException(400, "上传文件不能为空");
     if (file.getSize() > 20 * 1024 * 1024) throw new ApiException(413, "文件不能超过 20 MB");
     try {
-      byte[] content = file.getBytes();
-      String type = detect(content);
-      String name =
-          UUID.randomUUID()
-              + switch (type) {
-                case "application/pdf" -> ".pdf";
-                case "image/png" -> ".png";
-                case "image/jpeg" -> ".jpg";
-                case "image/gif" -> ".gif";
-                default -> ".webp";
-              };
-      Files.createDirectories(uploads);
-      Files.write(uploads.resolve(name), content, StandardOpenOption.CREATE_NEW);
-      var row = new HashMap<String, Object>();
-      row.put("submitted_by", uid);
-      row.put("city", city.strip());
-      row.put("title", title.strip());
-      String original = Objects.toString(file.getOriginalFilename(), name).replace('\\', '/');
+      byte[] signature;
+      try(var stream=file.getInputStream()){signature=stream.readNBytes(12);}
+      String type = detect(signature);
+      String original = Objects.toString(file.getOriginalFilename(), "document").replace('\\', '/');
       original = original.substring(original.lastIndexOf('/') + 1);
       if (original.length() > 255) original = original.substring(0, 255);
-      row.put("original_filename", original);
-      row.put("stored_path", name);
-      row.put("media_type", type);
-      row.put(
-          "sha256", HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(content)));
-      // On uncertain commit retain the file; a later orphan audit may safely reconcile it.
-      documents.insert(row);
-      return serialize(get(((Number) row.get("id")).longValue()));
+      return serialize(storage.store(uid,city.strip(),title.strip(),original,type,file));
     } catch (ApiException ex) {
       throw ex;
     } catch (Exception ex) {

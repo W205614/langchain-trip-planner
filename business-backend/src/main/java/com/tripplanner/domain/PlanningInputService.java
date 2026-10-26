@@ -14,7 +14,8 @@ import tools.jackson.databind.node.*;
 @Service
 public class PlanningInputService {
   private final JdbcTemplate db; private final JsonMapper json; private final TransactionTemplate tx;
-  public PlanningInputService(JdbcTemplate db, JsonMapper json, TransactionTemplate tx) {this.db=db;this.json=json;this.tx=tx;}
+  private final ScheduleDependencies schedules;
+  public PlanningInputService(JdbcTemplate db, JsonMapper json, TransactionTemplate tx, ScheduleDependencies schedules) {this.db=db;this.json=json;this.tx=tx;this.schedules=schedules;}
   public Map<String,Object> row(long uid,long id,boolean lock) {
     var rows=db.queryForList("SELECT * FROM trip_records WHERE user_id=? AND id=?"+(lock?" FOR UPDATE":""),uid,id);
     if(rows.isEmpty())throw new ApiException(404,"行程不存在");
@@ -37,6 +38,7 @@ public class PlanningInputService {
   }
   public Map<String,Object> get(long uid,long id) {return response(row(uid,id,false));}
   private Map<String,Object> response(Map<String,Object> row) {
+    row=view(row);
     return Map.of("success",true,"data",Map.of("planning_input",input(row),"planning_revision",row.get("planning_revision"),"trip_version",row.get("version"),"plan",stableIds((ObjectNode)json.readTree(row.get("plan_json").toString()))));
   }
   public Map<String,Object> put(long uid,long id,int version,int revision,JsonNode raw) {
@@ -45,8 +47,10 @@ public class PlanningInputService {
       if(!equivalent(normalized.path("commitments"),input(row).path("commitments")))
         throw new ApiException(422,"预订事项请通过预订账本修改");
       var plan=stableIds((ObjectNode)json.readTree(row.get("plan_json").toString()));
+      var quality=(ObjectNode)json.readTree(row.get("quality_json").toString());
+      schedules.changed(plan,quality,input(row),normalized);
       normalized.remove("commitments");
-      db.update("UPDATE trip_records SET planning_input=?::jsonb,planning_revision=planning_revision+1,plan_json=? WHERE id=?",json.writeValueAsString(normalized),json.writeValueAsString(plan),id);
+      db.update("UPDATE trip_records SET planning_input=?::jsonb,planning_revision=planning_revision+1,plan_json=?,quality_json=? WHERE id=?",json.writeValueAsString(normalized),json.writeValueAsString(plan),json.writeValueAsString(quality),id);
       return response(row(uid,id,false));});
   }
   public Map<String,Object> state(long uid,long id,int version,String activityId,ObjectNode body) {
@@ -54,6 +58,7 @@ public class PlanningInputService {
       if(!body.has("locked")&&!body.has("completed"))throw new ApiException(422,"请指定状态");
       for(String flag:List.of("locked","completed"))if(body.has(flag)&&!body.path(flag).isBoolean())throw new ApiException(422,"活动状态无效");
       var plan=stableIds((ObjectNode)json.readTree(row.get("plan_json").toString()));
+      schedules.refresh(plan,(ObjectNode)json.readTree(row.get("quality_json").toString()),input(row));
       if(activities(plan).get(activityId)==null)throw new ApiException(404,"活动不存在");
       var activityDay=plan.path("days").valueStream().filter(d->activitiesForDay(d).containsKey(activityId)).findFirst().orElseThrow();
       if(activityDay.path("schedule_stale").asBoolean(false)&&(body.path("completed").asBoolean(false)||body.path("locked").asBoolean(false)&&"time".equals(body.path("lock_mode").asText())))throw new ApiException(409,"时间轴已过期，请先重新规划","SCHEDULE_STALE");
@@ -96,7 +101,7 @@ public class PlanningInputService {
     try{ZoneId.of(p.path("timezone").asText());}catch(Exception ex){throw new ApiException(422,"时区无效");}
     if(!p.has("day_start"))p.put("day_start","09:00");if(!p.has("day_end"))p.put("day_end","20:00");
     interval(p,"day_start","day_end");
-    for(String name:List.of("day_windows","city_segments","commitments","hotel_stays","meal_windows","opening_windows","locks","completed_activity_ids")){
+    for(String name:List.of("day_windows","city_segments","commitments","hotel_stays","meal_windows","opening_windows","locks","completed_activity_ids","reservation_facts","transport_buffers","poi_relations","meal_resolutions")){
       if(!p.has(name))p.putArray(name);if(!p.path(name).isArray()||p.path(name).size()>300)throw new ApiException(422,name+" 无效");
     }
     for(String name:List.of("day_windows","commitments","hotel_stays"))for(var item:p.path(name)){
@@ -131,6 +136,7 @@ public class PlanningInputService {
     for(var lock:p.path("locks"))if(lock.path("activity_id").asText("").isBlank()||!Set.of("content","time").contains(lock.path("mode").asText("content")))throw new ApiException(422,"锁定事项无效");
     if(!p.has("budget_mode"))p.put("budget_mode","estimate");if(!Set.of("estimate","confirmed").contains(p.path("budget_mode").asText()))throw new ApiException(422,"预算模式无效");
     if(p.hasNonNull("budget_cents")&&(!p.path("budget_cents").isIntegralNumber()||p.path("budget_cents").asLong(-1)<0))throw new ApiException(422,"预算必须为非负整数分");
+    FactInputPolicy.validate(p,days);
     return p;
   }
   private static void interval(JsonNode p,String a,String b){try{if(!p.path(a).asText().matches("\\d{2}:\\d{2}")||!p.path(b).asText().matches("\\d{2}:\\d{2}")||!LocalTime.parse(p.path(b).asText()).isAfter(LocalTime.parse(p.path(a).asText())))throw new IllegalArgumentException();}catch(Exception ex){throw new ApiException(422,"时间窗口无效");}}
@@ -210,7 +216,12 @@ public class PlanningInputService {
     var allowed=new HashSet<String>();
     for(var day:original.path("days")){
       int index=day.path("day_index").asInt();var after=next.path("days").get(index);
-      if(!days.contains(index)){if(!day.equals(after))throw boundary();continue;}
+      if(!days.contains(index)){
+        // Bindings are server metadata, not an Agent/client authority. Preserve the
+        // original binding when an older serializer omits it; still compare every business field.
+        if(after instanceof ObjectNode obj){if(day.has("schedule_dependencies"))obj.set("schedule_dependencies",day.path("schedule_dependencies").deepCopy());else obj.remove("schedule_dependencies");}
+        if(!day.equals(after))throw boundary();continue;
+      }
       for(String f:List.of("day_index","date","city"))if(!day.path(f).equals(after.path(f)))throw boundary();
       for(var a:activitiesForDay(day).entrySet()){
         String aid=a.getKey();boolean inside=ids.isEmpty()||ids.contains(aid);
@@ -231,9 +242,13 @@ public class PlanningInputService {
     boolean stale=false;
     for(var raw:plan.path("days"))if(raw instanceof ObjectNode day){
       int index=day.path("day_index").asInt();if(restricted!=null&&!restricted.contains(index))continue;
-      var old=original.path("days").get(index);if(old==null||day.path("timeline").isEmpty())continue;
-      boolean changed=false;for(String field:List.of("date","city","attractions","meals","route_legs","hotel"))if(!old.path(field).equals(day.path(field)))changed=true;
+      var old=original.path("days").get(index);if(old==null)continue;
+      boolean changed=false;for(String field:List.of("date","city","transportation","timeline","attractions","meals","route_legs","route_fact_expires_at","hotel"))if(!old.path(field).equals(day.path(field)))changed=true;
+      // Client edits cannot mint, replace, or clear server-issued validity bindings.
+      if(old.has("schedule_dependencies"))day.set("schedule_dependencies",old.path("schedule_dependencies").deepCopy());else day.remove("schedule_dependencies");
+      day.put("schedule_stale",old.path("schedule_stale").asBoolean(false));
       if(!changed)continue;
+      day.remove("schedule_dependencies");
       stale=true;day.put("schedule_stale",true);
       var feasibility=day.path("feasibility") instanceof ObjectNode f?f:day.putObject("feasibility");feasibility.put("status","unverified").put("solver_status","MANUAL_CHANGE");feasibility.putArray("conflicts").add("手工调整或事实更新后，原时间轴仅供对照，请重新规划");
       for(var entry:day.path("timeline"))if(entry instanceof ObjectNode e){e.put("status","unverified");e.withArray("notes").add("schedule_stale_after_manual_change");}
@@ -252,6 +267,31 @@ public class PlanningInputService {
   public void validateDependencies(JsonNode quality){
     for(var fact:quality.path("planning_dependencies").path("facts"))if(!parseDate(fact.path("expires_at").asText(),"Asia/Shanghai").isAfter(Instant.now()))throw new ApiException(409,"提案依赖事实已过期，请重新核验","FACTS_EXPIRED");
   }
+  public void validateProposalValidity(JsonNode plan,JsonNode quality){
+    validateDependencies(quality);
+    var scope=quality.has("revision_scope")?quality.path("revision_scope"):quality.path("revision_parent").path("revision_scope");
+    Set<Integer> days=new HashSet<>();scope.path("day_indices").forEach(d->days.add(d.asInt()));
+    for(var day:plan.path("days")){
+      if(!days.isEmpty()&&!days.contains(day.path("day_index").asInt()))continue;
+      if(day.path("timeline").isEmpty())continue;
+      var binding=day.path("schedule_dependencies");
+      if(day.path("schedule_stale").asBoolean(false)||binding.path("input_hash").asText("").isBlank())throw new ApiException(409,"提案时间轴缺少当前依赖绑定，请重新规划","SCHEDULE_STALE");
+      try{if(!Instant.parse(binding.path("expires_at").asText("")).isAfter(Instant.now()))throw new ApiException(409,"提案路线或事实有效期已过，请重新核验","FACTS_EXPIRED");}
+      catch(ApiException ex){throw ex;}catch(Exception ex){throw new ApiException(409,"提案事实有效期未知，请重新核验","FACTS_EXPIRED");}
+    }
+  }
+  /** Refresh only derived validity. The saved itinerary content and version remain unchanged. */
+  public Map<String,Object> view(Map<String,Object> row){
+    var result=new LinkedHashMap<String,Object>(row);
+    var plan=stableIds((ObjectNode)json.readTree(row.get("plan_json").toString()));
+    var quality=(ObjectNode)json.readTree(row.get("quality_json").toString());
+    // Proposals use their parent revision and are separately guarded on confirmation.
+    if(quality.path("assistant_proposal_status").asText("").isBlank())schedules.refresh(plan,quality,input(row));
+    result.put("plan_json",json.writeValueAsString(plan));result.put("quality_json",json.writeValueAsString(quality));return result;
+  }
+  public void bindSchedule(ObjectNode plan,JsonNode input,int revision,Set<Integer> days){schedules.stamp(plan,input,revision,days);}
+  public void bindPersisted(long uid,long id,ObjectNode plan,Set<Integer> days){var current=row(uid,id,false);schedules.stamp(plan,input(current),((Number)current.get("planning_revision")).intValue(),days);}
+  public void storeBoundPlan(long id,ObjectNode plan){db.update("UPDATE trip_records SET plan_json=? WHERE id=?",json.writeValueAsString(plan),id);}
   public void saveInput(long id,JsonNode input){
     var normalized=(ObjectNode)input.deepCopy();
     for(var c:input.path("commitments")){
@@ -267,7 +307,7 @@ public class PlanningInputService {
     b.forEach((id,item)->{if(!a.containsKey(id))added.add(item);else if(!a.get(id).equals(item)){var change=modified.addObject().put("activity_id",id);change.set("before",a.get(id));change.set("after",item);}});
     a.forEach((id,item)->{if(!b.containsKey(id))removed.add(item);});
     for(int i=0;i<Math.max(before.path("days").size(),after.path("days").size());i++){
-      var old=before.path("days").get(i);var next=after.path("days").get(i);if(!Objects.equals(old,next)){
+      var old=before.path("days").get(i);var next=after.path("days").get(i);if(!sameBusinessDay(old,next)){
         var day=days.addObject().put("day_index",i);day.set("before",old);day.set("after",next);
         var names=new ArrayList<String>();if(next!=null)for(var entry:next.path("attractions"))names.add(entry.path("name").asText());
         day.put("summary","第"+(i+1)+"天安排或时间发生变化："+String.join(" → ",names));
@@ -275,5 +315,8 @@ public class PlanningInputService {
     }
     if(before.path("budget").hasNonNull("total")&&after.path("budget").hasNonNull("total"))diff.put("cost_delta_cents",(after.path("budget").path("total").asLong()-before.path("budget").path("total").asLong())*100);
     return diff;
+  }
+  private static boolean sameBusinessDay(JsonNode left,JsonNode right){
+    if(left instanceof ObjectNode a&&right instanceof ObjectNode b){a=a.deepCopy();b=b.deepCopy();a.remove("schedule_dependencies");b.remove("schedule_dependencies");return a.equals(b);}return Objects.equals(left,right);
   }
 }

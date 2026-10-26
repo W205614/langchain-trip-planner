@@ -62,7 +62,7 @@ def normalize_route(data: dict, route_type: str) -> dict:
                     complete = False
             if complete:
                 transit["distance"] = distance
-    return {"route": route}
+    return {"route": route,**{key:data[key] for key in ("observed_at","expires_at") if data.get(key)}}
 
 
 class AmapMCPService(AmapService):

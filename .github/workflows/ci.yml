@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   java-test:
     name: Java business PostgreSQL tests
@@ -16,7 +19,7 @@ jobs:
     timeout-minutes: 15
     services:
       postgres:
-        image: postgres:17.6-alpine
+        image: postgres:17.11-alpine
         env:
           POSTGRES_USER: trip
           POSTGRES_PASSWORD: isolated-test-only
@@ -26,8 +29,10 @@ jobs:
           --health-cmd "pg_isready -U trip -d trip"
           --health-interval 5s --health-timeout 5s --health-retries 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # verified v6, Node 24
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # verified v5, Node 24
         with:
           distribution: temurin
           java-version: '21'
@@ -37,7 +42,7 @@ jobs:
         env:
           TEST_DATABASE_URL: jdbc:postgresql://localhost:5432/trip
         run: sh mvnw -B -ntp test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
         with:
           name: java-tests
@@ -58,9 +63,11 @@ jobs:
       LLM_MODEL_ID: test-model
       INTERNAL_SERVICE_KEY: test-internal-service-key-for-ci-only
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # verified v6, Node 24
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # verified v6, Node 24
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -77,7 +84,7 @@ jobs:
           python -m app.evals.constraint_benchmark --output ../evidence/constraints.json
           python scripts/time_window_benchmark.py --output ../evidence/time-windows.json
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
         with:
           name: constraint-evaluation
@@ -92,11 +99,13 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # verified v6, Node 24
         with:
-          node-version: '20'
+          persist-credentials: false
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
+        with:
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
@@ -111,7 +120,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # verified v6, Node 24
+        with:
+          persist-credentials: false
 
       - name: Prepare non-secret Docker environment
         run: |
@@ -162,9 +173,9 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_scenarios.py --base-url http://frontend --output /tmp/final-scenarios.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios.json evidence/final-scenarios.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Browser recovery and isolation
         working-directory: frontend
@@ -184,7 +195,7 @@ jobs:
 
       - name: Local notification failure and recovery
         run: |
-          docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.2.1 test rules alerts.test.yml
+          docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.15.1 test rules alerts.test.yml
           python backend/scripts/notification_smoke.py
           cp docs/evidence/notifications.json evidence/notifications.json
 
@@ -205,7 +216,7 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml ps -a
           docker compose -p trip-validation -f docker-compose.validation.yml logs --no-color --tail 200 > evidence/validation-containers.log
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
         with:
           name: reliability-evidence

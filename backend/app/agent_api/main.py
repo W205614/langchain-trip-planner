@@ -49,7 +49,7 @@ class Execution(BaseModel):
     original_plan: TripPlan | None = None
     original_version: int | None = Field(default=None, ge=1)
     day_index: int | None = Field(default=None, ge=0, le=29)
-    instruction: str = Field(default="", max_length=500)
+    instruction: str = Field(default="", max_length=1000)
 
 
 class ExecutionV2(Execution):
@@ -152,6 +152,8 @@ async def lifespan(app):
     url = urlparse(os.environ.get("BUSINESS_URL", ""))
     if url.scheme not in {"http", "https"} or not url.hostname or url.username or url.password:
         raise RuntimeError("BUSINESS_URL requires a fixed service HTTP address")
+    from ..services.dataset_identity import verify_dataset
+    verify_dataset(DATA_DIR)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     instance = FileLock(str(DATA_DIR / "agent-instance.lock"), timeout=0)
     with instance:
@@ -423,20 +425,15 @@ def capability(kind: str, body: dict):
     elif kind == "eval-policy":
         from ..services.eval_budget import policy
         return policy()
-    elif kind == "research":
+    elif kind in {"research", "research-retrieve", "research-answer"}:
         with capacity("research", _slow_slots):
-            request = TravelResearchRequest.model_validate(body)
-            rag = get_rag_service()
-            if not rag.enabled:
-                raise BizException("旅行资料研究未启用或索引需要修复", status_code=503, code="RAG_DISABLED")
-            evidence = rag.retrieve_research_evidence(request.query, request.city, k=5)
-            from ..services.research_answer import build_research_answer
-            result = build_research_answer(request.query, request.city, evidence, request.trip_context)
+            from .research import run
+            result = run(kind, body)
     elif kind == "assistant-intent":
         from ..services.assistant_intent import classify_assistant_intent
         content = str(body.get("content") or "").strip()
         travel_days = body.get("travel_days", 0)
-        if len(content) < 2 or len(content) > 500 or not isinstance(travel_days, int) or not 1 <= travel_days <= 30:
+        if len(content) < 2 or len(content) > 1000 or not isinstance(travel_days, int) or not 1 <= travel_days <= 30:
             raise HTTPException(422, "Invalid assistant intent request")
         result = classify_assistant_intent(content, travel_days)
     elif kind == "poi-search":

@@ -1,0 +1,25 @@
+title = "Default Gitleaks rules with reviewed offline fixture values"
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Exact public offline test credentials; path AND value, no production files excluded"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = [
+  '''(^|/)backend/tests/''',
+  '''(^|/)backend/scripts/(final_acceptance|final_fault_acceptance|final_scenarios|assistant_proposal_acceptance|business_benchmark)\.py$''',
+  '''(^|/)frontend/e2e/'''
+]
+regexTarget = "secret"
+regexes = [
+  '''^(0123456789abcdefghijklmnopqrstuv|internal-test-key-01234567890123456789|isolated-improvement-123|isolated-final123|isolated-fault123|isolated-scenarios123|evaluation123)$'''
+]
+
+[[allowlists]]
+description = "Ascending-byte AES key used only by the isolated account integration test"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)business-backend/src/test/java/com/tripplanner/SecurityOptimizationIntegrationTest\.java$''']
+regexTarget = "secret"
+regexes = ['''^AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=$''']

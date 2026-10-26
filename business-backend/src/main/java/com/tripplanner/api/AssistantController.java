@@ -19,6 +19,7 @@ import tools.jackson.databind.node.ObjectNode;
 @RequestMapping("/api/assistant/conversations")
 public class AssistantController {
   @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
+  @org.springframework.beans.factory.annotation.Autowired private AssistantClarificationService clarifications;
   private final AssistantMapper conversations; private final HistoryMapper history;
   private final TaskService tasks; private final AgentClient agent; private final JsonMapper json;
   private final TransactionTemplate tx;
@@ -47,7 +48,7 @@ public class AssistantController {
 
   @GetMapping public Object list(HttpServletRequest req){return Map.of("success",true,"data",conversations.list(UsersController.uid(req)));}
   @GetMapping("/{id}/messages") public Object messages(HttpServletRequest req,@PathVariable String id){
-    long uid=UsersController.uid(req); owned(uid,id); return Map.of("success",true,"data",conversations.messages(uid,id));
+    long uid=UsersController.uid(req); owned(uid,id); return Map.of("success",true,"data",conversations.messages(uid,id),"clarification",clarifications.snapshot(uid,id));
   }
 
   @PostMapping("/{id}/messages")
@@ -57,21 +58,26 @@ public class AssistantController {
     String content=body.path("content").asText("").strip(),mode=body.path("mode").asText("");
     if(content.isBlank()||content.length()>500||!Set.of("research","revise","auto").contains(mode)) throw new ApiException(422,"Agent 操作无效");
     save(id,uid,"user",content,"","");
+    int clarificationRevision=0;
     if(mode.equals("auto")){
       Long activeTrip=conversation.get("active_trip_id") instanceof Number n?n.longValue():null;
       if(activeTrip==null)throw new ApiException(422,"请从我的行程中发起对话");
       var active=regularTrip(uid,activeTrip);
       if(body.path("city").asText("").isBlank()) body=((ObjectNode)body.deepCopy()).put("city",active.get("city").toString());
-      var classified=agent.post("/capabilities/assistant-intent",Map.of(
-          "content",content,"travel_days",((Number)active.get("travel_days")).intValue())).path("data");
-      if(classified.path("missing_slots").size()>0){
-        String reply=classified.path("reply").asText("请补充要调整的日期");
+      var resolved=clarifications.resolve(uid,id,active,content,key,combined->agent.post("/capabilities/assistant-intent",Map.of(
+          "content",combined,"travel_days",((Number)active.get("travel_days")).intValue())).path("data"));
+      if("accepted".equals(resolved.status()))return Map.of("success",true,"status","accepted","task_id",resolved.taskId(),"cached",true);
+      var classified=resolved.intent();
+      if(Set.of("needs_clarification","cancelled").contains(resolved.status())){
+        String reply=resolved.reply();
         save(id,uid,"assistant",reply,"clarification","");
-        return Map.of("success",true,"status","needs_clarification","message",reply,"intent",classified);
+        return Map.of("success",true,"status",resolved.status(),"message",reply,"intent",classified,"clarification",clarifications.snapshot(uid,id));
       }
       if("read_only".equals(classified.path("operation").asText())) mode="research";
       else {
         mode="revise";
+        content=resolved.content();
+        clarificationRevision=resolved.revision();
         body=body.deepCopy().put("record_id",activeTrip)
             .put("version",((Number)active.get("version")).intValue())
             .put("day_index",classified.path("target_day").asInt(-1));
@@ -90,7 +96,7 @@ public class AssistantController {
       var data=result.path("data");
       String answer=data.path("answer").asText("").strip();
       if(answer.isBlank()) answer="当前没有取得可展示的攻略回答，请稍后重试。";
-      save(id,uid,"assistant",answer,"research","");
+      saveResearch(id,uid,answer,data);
       return Map.of("success",true,"status","completed","message",answer,"data",data);
     }
     ObjectNode request;
@@ -110,7 +116,10 @@ public class AssistantController {
         .put("version",currentVersion).put("day_index",dayIndex).put("instruction",content);
     if(body.path("intent").isObject()) revision.set("intent",body.path("intent").deepCopy());
     for(String field:List.of("planning_revision","revision_scope"))if(body.has(field))revision.set(field,body.path(field).deepCopy());
-    ObjectNode created=tasks.submit(uid,request,key==null?UUID.randomUUID().toString():key,req.getHeader("X-Request-ID"),revision);
+    String taskKey=key==null?UUID.randomUUID().toString():key;
+    ObjectNode created=clarificationRevision>0
+        ?clarifications.submit(uid,id,clarificationRevision,taskKey,()->tasks.submit(uid,request,taskKey,req.getHeader("X-Request-ID"),revision))
+        :tasks.submit(uid,request,taskKey,req.getHeader("X-Request-ID"),revision);
     String taskId=created.path("data").path("id").asText(""); save(id,uid,"system_event","已创建智能规划任务","trip_task",taskId);
     conversations.touch(uid,id,activeTrip); return Map.of("success",true,"status","accepted","task_id",taskId);
   }
@@ -141,7 +150,7 @@ public class AssistantController {
               try{
                 if("result".equals(event)){
                   String answer=data.path("answer").asText("").strip();
-                  if(!answer.isBlank())save(id,uid,"assistant",answer,"research","");
+                  if(!answer.isBlank())saveResearch(id,uid,answer,data);
                 }
                 emitter.send(SseEmitter.event().name(event).data(data));
               }catch(IOException ex){throw new RuntimeException(ex);}
@@ -198,7 +207,7 @@ public class AssistantController {
         .put("applied_to",target);
     resolvedQuality.remove("revision_parent");
     tx.executeWithoutResult(s->{
-      planning.validateDependencies(quality);
+      planning.validateProposalValidity(plan,quality);
       if(parent.has("planning_revision"))planning.checkRevision(uid,target,parent.path("planning_revision").asInt());
       var scope=quality.path("revision_scope");
       if(scope.isObject())planning.protect(uid,target,plan,scope,true);
@@ -266,6 +275,12 @@ public class AssistantController {
   }
   private void save(String id,long uid,String role,String content,String action,String ref){
     conversations.message(new HashMap<>(Map.of("conversation_id",id,"user_id",uid,"role",role,"content",content,"action_type",action,"action_ref",ref)));
+  }
+  private void saveResearch(String id,long uid,String answer,tools.jackson.databind.JsonNode data){
+    var row=new HashMap<String,Object>(Map.of("conversation_id",id,"user_id",uid,"role","assistant","content",answer,"action_type","research","action_ref",""));
+    var metadata=json.createObjectNode();
+    for(String field:List.of("sources","answer_status","support_check","semantic_truth_status","data_classification"))if(data.has(field))metadata.set(field,data.path(field));
+    row.put("result_json",json.writeValueAsString(metadata));conversations.message(row);
   }
   private ObjectNode request(Map<String,Object> row){
     var body=json.createObjectNode(); for(String f:List.of("departure_city","city","start_date","end_date","travel_days","transportation","accommodation","traveler_count","room_count","budget_total","free_text_input"))body.set(f,json.valueToTree(row.get(f)));

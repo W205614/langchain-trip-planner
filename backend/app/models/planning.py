@@ -66,6 +66,10 @@ class PlanningInput(PlanningValue):
     hotel_stays: list[dict] = Field(default_factory=list, max_length=30)
     meal_windows: list[dict] = Field(default_factory=list, max_length=8)
     opening_windows: list[dict] = Field(default_factory=list, max_length=500)
+    reservation_facts: list[dict] = Field(default_factory=list, max_length=300)
+    transport_buffers: list[dict] = Field(default_factory=list, max_length=300)
+    poi_relations: list[dict] = Field(default_factory=list, max_length=300)
+    meal_resolutions: list[dict] = Field(default_factory=list, max_length=300)
     locks: list[dict] = Field(default_factory=list, max_length=300)
     completed_activity_ids: list[str] = Field(default_factory=list, max_length=300)
     arrival_at: datetime | None = None
@@ -91,6 +95,8 @@ class PlanningInput(PlanningValue):
         for value in [self.arrival_at, self.departure_at]:
             if value and value.tzinfo is None:
                 raise ValueError("Arrival/departure requires timezone")
+        from ..services.travel_facts import validate_fact_inputs
+        validate_fact_inputs(self)
         if self.arrival_at and self.departure_at and self.departure_at <= self.arrival_at:
             raise ValueError("Departure must follow arrival")
         clock = lambda value: isinstance(value,str) and re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d",value)

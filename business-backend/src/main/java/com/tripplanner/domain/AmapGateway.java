@@ -328,6 +328,8 @@ public class AmapGateway {
     }
     var result = json.createObjectNode().put("distance", distance).put("duration", duration)
         .put("route_type", type).put("description", "全程约" + String.format(Locale.ROOT, "%.1f", distance / 1000) + "公里,预计" + duration / 60 + "分钟");
+    var observed=java.time.Instant.now();
+    result.put("observed_at",observed.toString()).put("expires_at",observed.plusSeconds(PlanningSemantics.CONTRACT.path("fact_ttl_seconds").path("route").asLong(1800)).toString());
     if (type.equals("walking")) result.put("walking_distance", distance);
     else if (!text(first, "walking_distance").isBlank()) result.put("walking_distance", Double.parseDouble(text(first, "walking_distance")));
     else result.putNull("walking_distance");

@@ -150,3 +150,64 @@ docker compose up -d --wait
 - [高德 MCP 接入说明](docs/amap-mcp.md)
 - [性能与可靠性说明](docs/operations/performance-reliability.md)
 - [历史验收与交付记录](docs/evidence/java-migration/README.md)
+
+## 规划、账号与运行治理改善
+
+当前改动覆盖核验、规划有效性、多轮澄清、资料问答、上传配额和单机运行治理。验收状态逐项记录在 [0—12 范围账本](docs/evidence/optimization-20261026/scope-ledger.json)；未完成的浏览器、部署、依赖扫描或外部条件不能计作已验收。
+
+- **核验保留原内容：** 地图超时、限流和连接失败只更新核验结果；明确不存在的景点进入待替换状态。替换需先选择可信候选、预览，再保存编辑草稿，锁定和已完成安排继续受服务端保护。
+- **时间轴有依赖期限：** 每日排程绑定规划条件、旅行事实及其有效期。修改营业、住宿、预约或每日时间后，受影响日期显示待重新核验；旧时间不能继续用于新时段锁或完成操作。导出会复核权限并标明过期状态，保留的旧内容不等于重新通过检查。
+- **事实补全可操作：** 行程工作台可填写营业窗口、预约、住宿端点、提前到站、自理用餐和父子景点关系，注明来源和有效期后发起局部求解提案。用户声明始终标为用户提供，不能变成官方信息；不同 POI 编号也不直接证明可以独立游览。
+- **助手保留澄清状态：** “轻松一点 → 第2天”接续同一个修改需求，支持取消、改意和到期；原行程仍只在预览确认后更新。
+- **资料检索与问答分开：** 纯检索不发送回答模型请求；生成问答展示答案、来源和降级原因。引用校验采用保守原文支持检查，不能证明来源真实、问题相关或完全消除幻觉。演示和过期资料不作为当前旅行事实。
+- **浏览器会话：** 新浏览器登录使用 HttpOnly Cookie、SameSite 与绑定会话的 CSRF 校验，保留旧 API Bearer 兼容。账号安全页支持修改密码、一次性离线恢复码和验证器 TOTP；开启或恢复时撤销旧凭证。离线恢复码只显示一次，请私下保存。邮件/SMS 通道和真实异机演练尚需外部配置。
+- **上传有累计上限：** 持久化预留限制频率、累计字节、待审数量与剩余磁盘空间。同用户、同内容和相同元数据才复用；不确定提交保留文件及待核对记录，不凭超时删除可能已提交的原件。管理员可检查核对结果。
+
+公网使用必须经过 HTTPS 入口。`ACCOUNT_SECURITY_ENCRYPTION_KEY` 是独立的 32 字节 Base64 密钥，新配置自动生成；原配置升级时仅在缺失时生成，已有值不能随意更换。它须与数据库和私有环境一起备份，丢失会影响已启用的 TOTP。`ADMIN_MFA_REQUIRED=true` 时，未完成验证器设置的管理员只能先进入账号安全流程，不能跳过管理权限检查。
+
+### 升级与全新部署
+
+默认 `docker-compose.yml` 是既有单机环境的升级入口，必须保留原挂载。`docker-compose.production.yml` 现在是独立的新环境，默认项目名为 `trip-production`，读取 `deploy/runtime-production/*.env`，不能通过换 Compose 文件来迁移已有资料。新环境先执行：
+
+```powershell
+python backend/scripts/prepare_java_deployment.py --output deploy/runtime-production
+docker compose -f docker-compose.production.yml --profile monitoring up -d --build --wait
+```
+
+新配置会分配 `DATASET_ID`。业务数据库、上传与 Agent 持久目录的标记不匹配会拒绝启动。该标记证明环境身份，不能单独证明恢复时点一致；恢复和升级仍须核对成套备份的内容。
+
+既有数据首次启用登记时，应在维护窗口停止写入，保留 PostgreSQL 可读，先成套备份，再执行检查。以下示例路径必须替换为本次实际备份：
+
+```powershell
+python backend/scripts/backup_java_deployment.py --output backups/pre-optimization-YYYYMMDD-HHMM --archive-images
+python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime
+# 上一步校验原表原列与三套持久文件后，显式登记同一数据集：
+python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime --execute
+python backend/scripts/prepare_java_deployment.py --upgrade-existing
+docker compose up -d --build --wait
+```
+
+不要为修复登记失败切换空卷、清库或删除原目录。旧镜像连接已迁移数据库不等于完成数据回退；应从已验证备份恢复到新的隔离数据库和文件目录。恢复工具保留旧、新克隆并报告精确资源，不自动清理。
+
+### 备份、告警与有界资源
+
+容器已配置 CPU、内存、PID 与日志轮转；这些是资源预算，不是峰值容量证明。终态任务正文默认保留 90 天，过期快照延迟 24 小时分批清理；保留任务身份、恢复关联、预算账本、未完成作业与必要删除证据。超过保留期的任务需从当前行程发起新执行。
+
+生产 monitoring 配置连接 Prometheus、Alertmanager 和有界本地持久收件箱，提供分组、去重、恢复通知与重复间隔。外部人工作用通知渠道需另行配置，不能把本地收件箱称为已送达真实值班人员。
+
+自动备份在受控维护窗口短暂停写并恢复原运行状态，可复制到用户配置的 UNC 目标。默认只检查，不执行；先检查任务参数，再安装当前用户的 Windows 计划任务（依赖该用户会话与 Docker Desktop）：
+
+```powershell
+python backend/scripts/automated_maintenance.py backup
+python backend/scripts/automated_maintenance.py backup --execute --replica-root \\backup-server\private-trip-backups
+pwsh -File deploy/install-backup-task.ps1 -PythonPath C:\path\to\pythonw.exe
+# 核对参数后加 -Install 才会注册每日任务；不覆盖已有任务。
+```
+
+备份目标为 RPO 24 小时、RTO 1 小时，属于目标而非已实现承诺；实际恢复耗时和异机证据见交付记录。验证复制不等于验证故障域独立。调度器失锁后停止领取并拒绝旧执行结果，恢复脚本只检查所选容器并实施受控重启，不能据此宣称多实例高可用。
+
+### 评测和安全证据
+
+新增真实验收使用固定服务端批次和持久样本登记：模型最多 12 次、Embedding 40 次、高德 REST 120 次、Token 预留 800000，完整流程最多 4 条且开发/留出各 2 条；旧有更严格额度优先。失败和不确定发送不退额度，不能换编号、换库或清账本获得额度。该批次禁止 MCP，避免把一次工具调用当成一次 REST；浏览器地图 SDK 单列。预留不等于供应商账单。
+
+CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不作为零漏洞；具体未修复条目及适用性分析须保留。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](docs/evidence/optimization-20261026/blind-review/review.html)尚无真人评分，不能用程序通过率替代真实旅行事实准确率。

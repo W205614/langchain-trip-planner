@@ -33,6 +33,7 @@ def scenario(days=None):
             attraction.optional=False
             attraction.visit_duration=60
             request.planning_input.opening_windows.append({"poi_id":attraction.poi_id,"date":day.date,"windows":[{"start":"08:00","end":"20:00"}],"source":"official_fixture","observed_at":datetime.now(timezone.utc).isoformat(),"confirmed":True})
+            request.planning_input.reservation_facts.append({"poi_id":attraction.poi_id,"date":day.date,"status":"not_required","source":"reservation_fixture","observed_at":datetime.now(timezone.utc).isoformat(),"expires_at":(datetime.now(timezone.utc)+timedelta(hours=6)).isoformat(),"confirmed":True})
     return request,plan
 
 

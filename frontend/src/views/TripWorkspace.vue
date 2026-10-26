@@ -27,6 +27,8 @@
             <p>选择出行日期，查看天气和景点营业信息的待确认事项。</p>
           </div>
           <a-alert class="context-alert" type="info" show-icon message="地图信息仅供参考。具体日期的开放、预约及天气请以官方信息为准；核验不会自动更改行程。" />
+          <FactCompletionEditor v-if="trip.role === 'owner' && planningInput" v-model="planningInput" :plan="trip.plan" :quality="trip.quality" :busy="busy" @recheck="completeAndRecheck" @retry="retryPlaceVerification" @replace="openReplacement" />
+          <a-alert v-if="factTaskId" type="success" :message="`局部重验任务已创建：${factTaskId}，请到我的行程查看方案并确认。`" />
           <section class="check-controls" aria-label="核验操作">
             <div class="day-field">
               <label for="check-day">核验日期</label>
@@ -169,6 +171,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
 import { tripOperations, tripPlanning, clearTripCache } from '@/services/api'
 import PlanningInputEditor from '@/components/trip/PlanningInputEditor.vue'
+import FactCompletionEditor from '@/components/trip/FactCompletionEditor.vue'
+import { createAssistantConversation, sendAssistantMessage, reverifyTrip } from '@/services/api'
 import CommitmentDetailsEditor from '@/components/trip/CommitmentDetailsEditor.vue'
 import type { PlanningInput } from '@/types'
 
@@ -177,6 +181,7 @@ const router = useRouter()
 const id = Number(route.params.id)
 const loading = ref(false)
 const busy = ref(false)
+const factTaskId = ref('')
 const error = ref('')
 const tab = ref('check')
 const trip = ref<any>(null)
@@ -238,12 +243,33 @@ async function loadPlanning() {
 }
 async function savePlanning() {
   const validation = planningEditor.value?.validate()
-  if (validation) { message.warning(validation); return }
-  if (!planningInput.value || !trip.value || busy.value) return
+  if (validation) { message.warning(validation); return false }
+  if (!planningInput.value || !trip.value || busy.value) return false
   busy.value = true
-  try { const data = await tripPlanning.save(id, planningInput.value, planningRevision.value, trip.value.version); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; trip.value.version = data.trip_version; planningError.value = ''; clearTripCache(id); message.success('规划输入已保存；当前行程未自动改排') }
-  catch (e: any) { planningError.value = e?.response?.status === 409 ? '行程或输入已变化，请重新加载后检查并保存。' : e?.response?.data?.message || '保存失败'; if ([401, 403, 404].includes(e?.response?.status)) explain(e) }
+  try { const data = await tripPlanning.save(id, planningInput.value, planningRevision.value, trip.value.version); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; trip.value.version = data.trip_version; if (data.plan) trip.value.plan = data.plan; planningError.value = ''; clearTripCache(id); message.success('规划输入已保存；当前行程未自动改排'); return true }
+  catch (e: any) { planningError.value = e?.response?.status === 409 ? '行程或输入已变化，请重新加载后检查并保存。' : e?.response?.data?.message || '保存失败'; if ([401, 403, 404].includes(e?.response?.status)) explain(e); return false }
   finally { busy.value = false }
+}
+async function completeAndRecheck(dayIndex: number) {
+  if (!await savePlanning()) return
+  busy.value = true
+  try {
+    const conversation = await createAssistantConversation({ active_trip_id: id, title: `${trip.value.city}事实重验` })
+    const result = await sendAssistantMessage(conversation.id, { mode: 'revise', content: `根据已保存的营业、预约、住宿、提前到站、餐饮和景点关系事实，重新核验并求解第${dayIndex + 1}天；保留锁定和已完成安排，其他日期保持不变。`, city: trip.value.city, record_id: id, version: trip.value.version, day_index: dayIndex, planning_revision: planningRevision.value, revision_scope: { day_indices: [dayIndex], activity_ids: [] } })
+    if (!result.task_id) throw new Error(result.message || '未取得局部重验任务')
+    factTaskId.value = result.task_id
+    message.success('已创建局部重验任务，方案生成后须预览确认')
+  } catch (e) { explain(e) } finally { busy.value = false }
+}
+async function retryPlaceVerification() {
+  if (busy.value) return
+  busy.value = true
+  try { await reverifyTrip(id, trip.value.version); await load(); message.success('本次核验状态已更新，原景点仍保留') }
+  catch (e) { explain(e) } finally { busy.value = false }
+}
+function openReplacement(poiId: string) {
+  openPlan()
+  void router.replace({ path: '/result', query: { from: 'history', replace_poi: poiId } })
 }
 async function runCheck() { busy.value = true; try { await tripOperations.check(id, trip.value.version, checkDay.value); await loadCheck(); message.success('核验结果已保存') } catch (e) { explain(e) } finally { busy.value = false } }
 async function acknowledge(riskId: number) { try { await tripOperations.acknowledge(id, riskId, trip.value.version); await loadCheck() } catch (e) { explain(e) } }

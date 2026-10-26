@@ -3,6 +3,7 @@
     <section class="panel">
       <a-button type="link" @click="router.push('/')">← 返回首页</a-button>
       <h1>投稿公共旅行攻略</h1>
+      <UploadQuotaPanel ref="quota" />
       <p class="hint">支持 JPEG、PNG、GIF、WebP 和扫描 PDF（20 MB、最多 10 页）。管理员审核后，所有用户都能在旅行规划中使用。上传内容会发送至配置的视觉模型解析。</p>
       <a-form layout="vertical" @submit.prevent="submit">
         <a-form-item label="目标城市" required><a-input v-model:value="city" placeholder="例如：北京" /></a-form-item>
@@ -29,6 +30,7 @@ import { onMounted, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { fetchMyKnowledge, submitKnowledge } from '@/services/api'
+import UploadQuotaPanel from '@/components/UploadQuotaPanel.vue'
 
 const router = useRouter()
 const city = ref('')
@@ -37,6 +39,7 @@ const file = ref<File | null>(null)
 const selectedFileName = ref('')
 const items = ref<any[]>([])
 const submitting = ref(false)
+const quota = ref<InstanceType<typeof UploadQuotaPanel> | null>(null)
 const load = async () => { items.value = (await fetchMyKnowledge()).data || [] }
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 const SUPPORTED_FILE = /\.(jpe?g|png|gif|webp|pdf)$/i
@@ -60,7 +63,7 @@ const selectFile = (event: Event) => {
 const submit = async () => {
   if (!city.value.trim() || !title.value.trim() || !file.value) return message.error('请填写城市、标题并选择文件')
   submitting.value = true
-  try { await submitKnowledge(city.value.trim(), title.value.trim(), file.value); message.success('已提交审核'); title.value = ''; file.value = null; selectedFileName.value = ''; await load() }
+  try { await submitKnowledge(city.value.trim(), title.value.trim(), file.value); message.success('已提交审核（相同内容会复用原投稿）'); title.value = ''; file.value = null; selectedFileName.value = ''; await load(); await quota.value?.load() }
   catch (error: any) { message.error(readableSubmitError(error)) }
   finally { submitting.value = false }
 }

@@ -99,10 +99,13 @@ class AmapMCPClient:
                 self._last_calls[name] = slot
             await anyio.sleep(max(0, slot - anyio.current_time()))
             from .call_budget import reserve
-            reserve("amap")
+            reserve("amap",map_protocol="mcp")
             return await self._session.call_tool(name, arguments, read_timeout_seconds=timedelta(seconds=timeout))
 
     def call(self, name: str, arguments: dict) -> dict:
+        import os
+        if os.getenv("FINAL_RUN_ID") or os.getenv("FINAL_ACCEPTANCE_RUN_ID"):
+            raise AmapMCPError("固定验收批次要求 AMAP_TRANSPORT=rest；MCP工具内部REST请求数无法界定，已在连接和发送前停止")
         if not self._lock.acquire(timeout=remaining(self._timeout)):
             raise TimeoutError("高德 MCP 等待连接超时")
         try:

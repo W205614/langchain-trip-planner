@@ -3,9 +3,11 @@ import json
 import os
 import re
 import sys
+from datetime import datetime,timedelta,timezone
 from pathlib import Path
 from fastapi import Request
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 if os.environ.get("APP_ENV") != "validation" or os.environ.get("VALIDATION_ALLOW_FIXTURES") != "yes":
     raise SystemExit("Only run inside the isolated validation stack")
@@ -61,13 +63,21 @@ class FixtureMap:
     def plan_route_by_locations(self, left, right, **kwargs):
         if 118 <= left.longitude < 119:
             raise TimeoutError("fixture route failure")
-        return {"distance": 600, "duration": 600, "walking_distance":200}
+        # A new invocation is a fresh synthetic provider observation. The solver
+        # and checkpoint caches must preserve these stamps rather than renew them.
+        observed=datetime.now(timezone.utc)
+        return {"distance":600,"duration":600,"walking_distance":200,
+            "observed_at":observed.isoformat(),"expires_at":(observed+timedelta(minutes=30)).isoformat()}
     def get_poi_photo_by_name(self, name):
         return None
 
 
 def response(prompt, **kwargs):
-    text = prompt.to_messages()[-1].content
+    messages=prompt.to_messages() if hasattr(prompt,"to_messages") else prompt
+    text = messages[-1].content
+    if "公开资料：" in text:
+        from validation_research_provider import answer_from_public_excerpt
+        return AIMessage(content=answer_from_public_excerpt(messages),usage_metadata={"input_tokens":100,"output_tokens":30,"total_tokens":130})
     if "fixture:slow" in text:
         import time
         time.sleep(max(0.1, min(60.0, float(os.environ.get("VALIDATION_SLOW_SECONDS", "20")))))
@@ -115,14 +125,15 @@ trip_planner_agent.get_llm = llm_service.get_llm
 if os.environ.get("VALIDATION_AGENT_ONLY") == "yes":
     from app.agent_api.main import app
     from app.agent_api import extraction, indexing
+    from app.agent_api import research
+    from app.services import rag_service, research_answer
+    from validation_research_provider import FixtureIndex
     extraction.extract = lambda body: {"pages": [f"## {body['title']}\n来源页: 1\n摘要: 离线资料解析夹具\n- 开放时间请向官方确认"]}
-    class FixtureIndex:
-        enabled = True
-        def add_history_plan(self, *args, **kwargs): return True
-        def delete_history_plan(self, *args, **kwargs): return True
-        def replace_public_knowledge_document(self, *args, **kwargs): return True
-        def delete_public_knowledge_document(self, *args, **kwargs): return True
-    indexing.get_rag_service = lambda: FixtureIndex()
+    fixture_index=FixtureIndex()
+    indexing.get_rag_service = lambda: fixture_index
+    rag_service.get_rag_service = lambda: fixture_index
+    research.get_rag_service = lambda: fixture_index
+    research_answer.get_llm = llm_service.get_llm
 elif os.environ.get("VALIDATION_AMAP_ONLY") == "yes":
     from fastapi import FastAPI
     app = FastAPI(title="isolated-amap-rest-fixture")

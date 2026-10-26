@@ -38,7 +38,7 @@ public class HistoryController {
   private Map<String, Object> owned(long uid, long id) {
     var row = history.owned(uid, id);
     if (row == null) throw new ApiException(404, "历史记录不存在");
-    return row;
+    return planning.view(row);
   }
 
   private void requireRegularTrip(Map<String, Object> row) {
@@ -80,6 +80,7 @@ public class HistoryController {
         history.list(uid, city, (page - 1) * page_size, page_size).stream()
             .map(
                 row -> {
+                  row=planning.view(row);
                   var result = new LinkedHashMap<String, Object>();
                   for (String f :
                       List.of(
@@ -292,7 +293,7 @@ public class HistoryController {
           var plan = (ObjectNode) json.readTree(row.get("plan_json").toString());
           long target = parent.path("record_id").asLong(0);
           if(parent.has("planning_revision"))planning.checkRevision(uid,target,parent.path("planning_revision").asInt());
-          planning.validateDependencies(quality);
+          planning.validateProposalValidity(plan,quality);
           if(parent.path("revision_scope").isObject())planning.protect(uid,target,plan,parent.path("revision_scope"),true);
           save(
               uid,

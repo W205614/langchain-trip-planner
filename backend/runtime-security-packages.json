@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-26",
+  "review_expires_on": "2026-11-09",
+  "distribution": "Debian 13 amd64",
+  "scope": "Only two ABI-compatible official Debian library security updates; reviewed signed-index hashes, no new or removed packages, no libc/toolchain migration, no persistent sid source. Re-evaluate when stable backports become available.",
+  "requires_base_versions": {
+    "libc6": "2.41-12+deb13u4",
+    "libacl1": "2.3.2-2+b1",
+    "zlib1g": "1:1.3.dfsg+really1.3.1-1+b1"
+  },
+  "packages": {
+    "libacl1": {
+      "version": "2.4.0-1",
+      "sha256": "e9da0e00387e31c1709b70497f1eda91389c962c3940e6d233d4c57f5ea6f635",
+      "soname": "libacl.so.1",
+      "depends": "libc6 (>= 2.38)",
+      "source": "https://deb.debian.org/debian/pool/main/a/acl/libacl1_2.4.0-1_amd64.deb",
+      "advisories": ["CVE-2026-54369", "CVE-2026-54370"]
+    },
+    "zlib1g": {
+      "version": "1:1.3.dfsg+really1.3.2-4",
+      "sha256": "8506ce550a81ac14b047608e0df121037d9cbb10c3cc28446f68cf8c1d9d31ce",
+      "soname": "libz.so.1",
+      "depends": "libc6 (>= 2.14)",
+      "source": "https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-4_amd64.deb",
+      "advisories": ["CVE-2026-85091"]
+    }
+  },
+  "references": [
+    "https://security-tracker.debian.org/tracker/CVE-2026-54369",
+    "https://security-tracker.debian.org/tracker/CVE-2026-54370",
+    "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+  ]
+}

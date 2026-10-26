@@ -53,7 +53,7 @@ def extract(body):
     if not cfg.vision_model:
         raise ValueError("VISION_MODEL_ID is required")
     llm=ChatOpenAI(model=cfg.vision_model,api_key=cfg.vision_api_key or cfg.llm_api_key,
-        base_url=cfg.vision_base_url or cfg.llm_base_url,temperature=0,timeout=cfg.vision_timeout,max_retries=0,
+        base_url=cfg.vision_base_url or cfg.llm_base_url,temperature=0,timeout=cfg.vision_timeout,max_retries=0,max_tokens=getattr(cfg,"llm_day_max_tokens",1800),
         http_client=httpx.Client(event_hooks=hooks("vision"),follow_redirects=False),
         http_async_client=httpx.AsyncClient(event_hooks=async_hooks("vision"),follow_redirects=False))
     result=[]

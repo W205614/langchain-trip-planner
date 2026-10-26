@@ -1,0 +1,11 @@
+{
+  "version": "planning-semantics-v1",
+  "fact_ttl_seconds": {"opening": 86400, "price": 86400, "route": 1800, "weather": 3600, "verification": 21600},
+  "unknown_route_minutes": 30,
+  "daily_budget_includes": ["fixed_transport", "origin_connection", "boarding_buffer", "local_routes", "activities", "waiting"],
+  "statuses": ["feasible", "unverified", "not_found", "infeasible"],
+  "unknown_facts_prove_feasibility": false,
+  "unknown_route_proves_infeasibility": false,
+  "fact_authority": "user_declaration_unless_independently_verified",
+  "parent_child_default": "do_not_count_as_independent_visits"
+}

@@ -7,6 +7,7 @@ import argparse
 import json
 from pathlib import Path
 import secrets
+import base64
 from dotenv import dotenv_values
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,6 +37,9 @@ def prepare(output):
         "JDBC_DATABASE_URL": "jdbc:postgresql://postgres:5432/trip_java", "AGENT_URL": "http://agent:9000",
         "UPLOAD_DIR": "/data/uploads", "WORKERS_ENABLED": "true", "APP_ENV": "development",
         "AMAP_REST_API_KEY": source.get("AMAP_REST_API_KEY") or source.get("AMAP_API_KEY", "")}
+    dataset = secrets.token_hex(16)
+    business.update(DATASET_ID=dataset, DATASET_ENROLL_NEW="true", ACCESS_TOKEN_EXPIRE_MINUTES="120",
+                    ACCOUNT_SECURITY_ENCRYPTION_KEY=base64.b64encode(secrets.token_bytes(32)).decode("ascii"))
     for key in ("ACCESS_TOKEN_EXPIRE_MINUTES", "BOOTSTRAP_ADMIN_USERNAME", "LLM_REQUEST_MAX_CONCURRENCY",
         "TRIP_TASK_TIMEOUT_SECONDS", "TRIP_TASK_QUEUE_LIMIT", "TRIP_USER_ACTIVE_LIMIT", "TRIP_USER_DAILY_LIMIT", "TRIP_GLOBAL_DAILY_LIMIT",
         "AMAP_REST_BASE_URL", "AMAP_POI_CACHE_TTL_SECONDS", "AMAP_WEATHER_CACHE_TTL_SECONDS",
@@ -47,6 +51,7 @@ def prepare(output):
         AMAP_TRANSPORT="mcp", AMAP_MCP_URL=source.get("AMAP_MCP_URL", "https://mcp.amap.com/mcp"))
     agent.update(INTERNAL_SERVICE_KEY=internal, BUSINESS_URL="http://backend:9000", DATA_DIR="/app/data",
         CHROMA_DIR="/app/data/chroma", APP_ENV="development", ACCEPTANCE_BUDGET_FILE="")
+    agent.update(DATASET_ID=dataset, DATASET_ENROLL_NEW="true")
     configs = (("postgres", postgres), ("business", business), ("agent", agent))
     for _, values in configs:
         # Compose env_file supports single quoted values, without dollar expansion.
@@ -75,6 +80,8 @@ def upgrade(output):
     rest_key = source.get("AMAP_REST_API_KEY") or source.get("AMAP_API_KEY") or business.get("AMAP_REST_API_KEY", "")
     mcp_key = source.get("AMAP_MCP_API_KEY") or source.get("AMAP_API_KEY") or agent.get("AMAP_API_KEY", "")
     business["AMAP_REST_API_KEY"] = rest_key
+    business.setdefault("ACCOUNT_SECURITY_ENCRYPTION_KEY",base64.b64encode(secrets.token_bytes(32)).decode("ascii"))
+    business["ACCESS_TOKEN_EXPIRE_MINUTES"]=str(max(5,min(int(business.get("ACCESS_TOKEN_EXPIRE_MINUTES") or "120"),120)))
     for key in ("AMAP_REST_BASE_URL", "AMAP_POI_CACHE_TTL_SECONDS", "AMAP_WEATHER_CACHE_TTL_SECONDS",
                 "AMAP_DETAIL_CACHE_TTL_SECONDS", "AMAP_CACHE_MAXIMUM_SIZE"):
         if source.get(key):

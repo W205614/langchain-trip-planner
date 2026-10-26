@@ -25,7 +25,11 @@ def services(project):
         item = inspect(identity)
         labels = item["Config"].get("Labels") or {}
         name = labels.get("com.docker.compose.service")
-        if name in {"backend", "agent", "postgres", "frontend"} and labels.get("com.docker.compose.oneoff", "False").lower() != "true":
+        # Images made from an old Compose container can inherit project/service
+        # labels. Require positive container-level Compose ownership evidence;
+        # an ad-hoc test container is not a fifth daily service to stop or back up.
+        managed = labels.get("com.docker.compose.oneoff", "").lower() == "false" and bool(labels.get("com.docker.compose.project.config_files"))
+        if name in {"backend", "agent", "postgres", "frontend"} and managed:
             if name in found:
                 raise RuntimeError(f"Multiple {name} containers; select an unambiguous project")
             found[name] = item

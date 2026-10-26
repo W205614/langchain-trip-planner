@@ -3,6 +3,7 @@
 import logging
 from .execution import remaining
 from .call_budget import reserve
+from .route_facts import observation
 import time
 from copy import deepcopy
 from threading import RLock
@@ -331,7 +332,7 @@ class AmapService:
         distance = float(first["distance"])
         duration = int(first["duration"])
 
-        return {
+        result = {
             "distance": distance,
             "duration": duration,
             "walking_distance": distance if route_type == "walking" else (
@@ -339,6 +340,8 @@ class AmapService:
             "route_type": route_type,
             "description": f"全程约{distance / 1000:.1f}公里,预计{duration // 60}分钟",
         }
+        result.update(observation(data,fresh=True))
+        return result
 
     def geocode(self, address: str, city: Optional[str] = None) -> List[dict]:
         """地理编码 (地址/城市名转经纬度与adcode)
