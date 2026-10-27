@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "checked_at": "2026-10-27T01:13:14.272486+00:00",
+  "checks": [
+    "frontend realready200",
+    "existing ordinary prebackupsmoke Cookie password login200/sameidentity",
+    "existing own copied history realread200",
+    "CSRF logout200 thenprivate401",
+    "same originalfour IDs/images healthy afterquiet scheduledbackup"
+  ],
+  "services": {
+    "frontend": {
+      "id": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+      "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "running": true,
+      "health": "healthy"
+    },
+    "backend": {
+      "id": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "running": true,
+      "health": "healthy"
+    },
+    "agent": {
+      "id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "running": true,
+      "health": "healthy"
+    },
+    "postgres": {
+      "id": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "running": true,
+      "health": "healthy"
+    }
+  },
+  "new_provider_calls_issued_by_probe": 0,
+  "new_users_or_trips": 0,
+  "scope": "Necessary postcurrentrecovery/quietbackup readback; no fullfeature or modelquality retest. Intentional logout only revokes smokeidentity."
+}

@@ -1,0 +1,119 @@
+{
+  "started_at": "2026-10-26T16:10:09.801258+00:00",
+  "passed": true,
+  "project": "langchain-trip-planner",
+  "synthetic_alertname": "TripSyntheticDeliveryd62ea77c44d1",
+  "synthetic_job": "trip-local-synthetic-d62ea77c44d1",
+  "events": [
+    {
+      "name": "TripSyntheticDeliveryd62ea77c44d1",
+      "job": "trip-local-synthetic-d62ea77c44d1",
+      "status": "firing",
+      "starts_at": "2026-10-26T16:10:04Z",
+      "event_id": "8d730da7d51eb216a39d38ee14e4b728327e3b82bfdee574e4275dcf4ff69ae2",
+      "received_at": "2026-10-26T16:10:14.161094+00:00"
+    },
+    {
+      "name": "TripSyntheticDeliveryd62ea77c44d1",
+      "job": "trip-local-synthetic-d62ea77c44d1",
+      "status": "resolved",
+      "starts_at": "2026-10-26T16:10:04Z",
+      "event_id": "1345acdeb5cdbd7ed3948c72b0539e8192dbbd3b0abb07a2c584e4bd92541f73",
+      "received_at": "2026-10-26T16:12:14.151384+00:00"
+    }
+  ],
+  "checks": [
+    {
+      "phase": "synthetic_firing_and_identical_refresh_posted"
+    },
+    {
+      "phase": "firing_persisted_receiver_semantic_duplicate_accepted_zero",
+      "duplicate": {
+        "accepted": 0
+      }
+    },
+    {
+      "phase": "synthetic_resolution_posted_original_group_interval_retained"
+    },
+    {
+      "phase": "complete",
+      "passed": true,
+      "firing_duplicate_accepted": 0,
+      "resolved_duplicate_accepted": 0,
+      "inbox_path": "/inbox/alerts.jsonl",
+      "synthetic_post_count": 5
+    }
+  ],
+  "docker_lifecycle_operations": 0,
+  "direct_supplier_calls": 0,
+  "boundary": [
+    "Prometheus readiness/discovery/rule loading is checked; the test alert is injected into Alertmanager API, not through a new Prometheus rule.",
+    "Real Alertmanager v2 to durable receiver webhook firing/resolved; one unique synthetic group, original timing config unchanged.",
+    "Receiver duplicate checks directly replay equivalent synthetic event identity fields, not a captured byte-identical full Alertmanager body.",
+    "Dedup granularity is name/job/status/startsAt; no claim for cross-instance distinctions, all batch/concurrent cases or external human notifications."
+  ],
+  "services": {
+    "prometheus": {
+      "id": "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0",
+      "image_id": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "health": null
+    },
+    "alertmanager": {
+      "id": "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6",
+      "image_id": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "health": null
+    },
+    "alert-receiver": {
+      "id": "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e",
+      "image_id": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+      "health": "healthy"
+    }
+  },
+  "persistent_inbox_mount": {
+    "Type": "volume",
+    "Name": "langchain-trip-planner_daily_alert_inbox",
+    "Source": "/var/lib/docker/volumes/langchain-trip-planner_daily_alert_inbox/_data",
+    "Destination": "/inbox",
+    "RW": true
+  },
+  "prometheus": {
+    "url": "http://127.0.0.1:19090",
+    "ready": true,
+    "active_local_alertmanager_discovered": true,
+    "loaded_rule_groups": [
+      "trip-operational-governance",
+      "trip-reliability"
+    ]
+  },
+  "protocol": {
+    "receiver_code_sha256": "880384660006bf7c24f6104e22b07d1eeaa6510c618fb3cac5838d66e66fd715",
+    "alertmanager_config_sha256": "f480268771855abad7638abbb767cf804d2e1ac5c3c2bbed38071dc4ea6aa6b8",
+    "actual_mounted_config_sha256": "b327f4b4df7cc7ad89fcd2bb03ab9cbe33ad9db0bb6844164f62c51d6f125515",
+    "runtime_webhook_url_redacted": true,
+    "webhook": "http://alert-receiver:9088/alerts",
+    "send_resolved": true,
+    "group_wait": "10s",
+    "group_interval": "2m",
+    "repeat_interval": "4h"
+  },
+  "earlier_diagnostic": {
+    "report": "daily-alert-delivery-result.json",
+    "boundary": "Pre-injection harness rejected Alertmanager's redacted URL; original failure retained, zero synthetic POSTs made.",
+    "sha256": "6c07066ce9e730ee352dff2c50b0d80fd2f746b6bc62fa76d84fea499de9e567"
+  },
+  "stage": "complete",
+  "jsonl_export": "docs\\evidence\\optimization-20261026\\daily-alert-delivery-result-2-events.jsonl",
+  "jsonl_export_sha256": "b102f891d9352d637bc101f485c5f580fece3b2d9bc16ec576ac049eed7e2bee",
+  "finished_at": "2026-10-26T16:12:14.832137+00:00",
+  "runner_sha256": "5cf53291cb3c54a5f7f27437953801c4af166f66a24b2a11410505d08ad51c0e",
+  "elapsed_seconds": 125.030879,
+  "synthetic_post_counts": {
+    "alertmanager_api": 3,
+    "receiver_semantic_duplicate": 2,
+    "total": 5
+  },
+  "persistent_synthetic_event_counts": {
+    "firing": 1,
+    "resolved": 1
+  }
+}

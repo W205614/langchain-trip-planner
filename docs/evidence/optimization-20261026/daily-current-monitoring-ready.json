@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "observed_at": "2026-10-27T01:15:38.974287+00:00",
+  "prometheus_ready": true,
+  "actual_jobs": {
+    "trip": "up",
+    "trip-agent": "up"
+  },
+  "alertmanager_ready": true,
+  "receiver_health": true,
+  "synthetic_alert_injected": false,
+  "boundary": "Current dependency read only aftersameIDrestore/quietbackup. Initial diagnostic asserted nonexistent job trip-java; actual configured jobs trip/trip-agent both up, no config changed. Previous firing/resolved not repeated."
+}

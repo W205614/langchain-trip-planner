@@ -1,0 +1,961 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-10-26T15:18:49.434368+00:00",
+  "backup": "E:\\project\\langchain-trip-planner\\backups\\pre-optimization-daily-20261026T151233Z",
+  "passed": true,
+  "platform": {
+    "os": "linux",
+    "architecture": "amd64"
+  },
+  "images": [
+    {
+      "exact_image_id": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+      "id_form": "index",
+      "services": [
+        "agent"
+      ],
+      "docker_descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+        "size": 856
+      },
+      "docker_rootfs_uncompressed_diff_ids": [
+        "sha256:411a86676185cb54d695a805b238194a64e9b77e0c723f3802fbb87d333ea0b3",
+        "sha256:4d43b7f98e4c38fd2d37f37f1bf9965d2c4018b01453d3b29d924653c3275f4b",
+        "sha256:7895f75e926a456464bbd0f1285738ba25e7d70aad4aa94c32c1d274b3b9e85e",
+        "sha256:164ea7718b2462d163b7bd95ece7ebd8b669f0cdb1b094b66009aecec2f1195b",
+        "sha256:1301cd58154b84b7561f1800b2a9fa20351bb21e3b9ea1f6841dfe80c8b11666",
+        "sha256:7f0cd0fb8001b910f0e249eb4bb367b97c70c7ecddbc9b15305c9d1745466cb5",
+        "sha256:ee9c980bdd84e099c9f3fed431a7127a6d3a25dc8f62b500d7f39cd0465278da",
+        "sha256:e4aa8f129c44ea8fa8b01b7ec34ec312169ffd8093a76dd22d34be2802ed682f",
+        "sha256:6065da331185b8f542a330d0e6fd008d22ad5590c8a914f5d387c60e89ac3690",
+        "sha256:9633a022da00cde177e9a230dc0823926b96335fb1149cd7d8eb9ad9c3230cc8",
+        "sha256:3c62cebe58b01a79c1ea8e8aa3ce58e219ee41ed7ca58064519de1399e2029f8",
+        "sha256:b22aaf5e3dd974f88bafee5241155a3dca449461aa4abbc0dc68dbb820bbf40b",
+        "sha256:2a997a8e06ba2c1e1b47e5b0626eae8fcc8c75664031308a6d9fe0e182d89e4f",
+        "sha256:31f4d05901efc9cafa62ab784dc79446ea47ea3bb0139aeec85a06dc0092bb04",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:bb8d44fbfe77b1e9c13fdc2e8f5d47672f8b37e264d10cbc2deb4e12094a691d",
+        "sha256:481f9db6d199e8612e2178dc4bf4053e28d700020bd76c9c1490b7bd29a3c529",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:c6636b03d7a4a870a03f968b94d85b56de9998eb3bd06b994386f126e118275b",
+        "sha256:aaebab9baf0423d44f3addc14747dac8410ba1a487927f31d56415237ab275ad",
+        "sha256:333129308653dc1363d09816a4f462edded5ab2ebfe1116fa7f1fc50c1fa56ec",
+        "sha256:c6e9bf861f88f4b26bdfaa80e2dc5bbf8f5609b80f6a329a57213042a4db915b",
+        "sha256:eca361e7296e33039364141dd4e982efd2f9275506bf0c1a1966b39482f807d2",
+        "sha256:63a7a707269ef62847ce95ae1d2fcea4aff1bc3d002f5a0f6fde1da22741f3c1"
+      ],
+      "exact_identity_relationship_verified": true,
+      "selected_manifests": [
+        {
+          "digest": "sha256:9e34588b398c197021b02de2a27a91a1363b42f718311a11e9348578421cc875",
+          "catalog_descriptor_path": [
+            "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+            "sha256:9e34588b398c197021b02de2a27a91a1363b42f718311a11e9348578421cc875"
+          ],
+          "platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "config": "sha256:d067a8f6ff3fd5958a7127b5d769b60d184ee26def8c59b5d427935328339370",
+          "config_diff_ids_order_matches_inspect": true,
+          "layers": [
+            {
+              "digest": "sha256:6310eb16bf4251731feab01e8f633bf5e2d75a657ccad97f420b1f83cce457be",
+              "size": 29792658,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:3678bb828654fcc3752f7a5eb63c5accfa00c97047252f25405285550d74a3fd",
+              "size": 4265327,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:db840d086b65cf73e0feea3bd0cf11063818114e466846ae3f2b2fb1a8c2b143",
+              "size": 14450967,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:f9efa1b83d065a7c5a3041582875b75d63c4ab3d4413514de8e413b51f90e91a",
+              "size": 249,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:268d22919cfaeb18607913d68b71c64e65239378e6b17fe6a95ff6c08dd4282a",
+              "size": 93,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:c75ff79e39ddd62f4e6a90529f21ae1b9320b92277850a0a87e547649a2b9359",
+              "size": 214,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:4fa00d2f8f7374aa8fde7716f88f3751e9d5fc740b0d39e8f54e392833b5a035",
+              "size": 1550,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:c7b9fe8d7f43cf08737a7e57bbff171f680ac9055345d8c0d0923f276b91c6c7",
+              "size": 252669390,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:e412f3b65508e1a3d34959cb31ba846154d54974b249aced71f42cbac79f1209",
+              "size": 574192,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:1b001ac3792a7891f8f9ff621f61c42e7949afbb0fd72e4b3d323ce35f50f2d1",
+              "size": 66866,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:60b5358ed04448d5def4d403872b7deea17da6a13d354c59b760b563366ab2fe",
+              "size": 724,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:d23659310a7f1798bfbf5bb85594afd87c5549f26e5220c7d50e608280354a9f",
+              "size": 170836,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:b737b891b6d929c8b6663252bb1caeee7a8f19eee0e6443fa54cde8cad4ff1be",
+              "size": 8648,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:3765768578943afc4f9e4f482b59349a1253656abefeb2fc1b7dd5add101a665",
+              "size": 827554,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1",
+              "size": 32,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:70b91c6bbf6c0e633daf743cf0216abe5f74c7e0d401d0b2d619703de0d785be",
+              "size": 219,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:5aa162c42e4255988efd66a8e150d707540336223bc90131fd2b2fc06c2b4c94",
+              "size": 1558,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1",
+              "size": 32,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:a3e92e54119d960321d2b61a6d356240baed2d6c6405996570fc44cef2adfd56",
+              "size": 656231,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:13766b28f2574fba0736b9026d0657155af2f0709c8816606985a90ec1c6d5e5",
+              "size": 71467,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:c13e87a775fb551224f4d298efa63c811f155c847dd2695167e98e99db42eefd",
+              "size": 733,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:3e46e243b442b60423ea3b0ce82170d5701533f6ac0d3cbd507b7aaecdac4801",
+              "size": 204083,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:3da4c5e7acd5e6a223834da447f81b0fcd53c7447d02297881ddf523b4dd51c2",
+              "size": 8665,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:6023ece2f7309551deab191768805981be72a267450fc86e31b2ddc4d6fceb67",
+              "size": 943153,
+              "present": true,
+              "sha256_verified": true
+            }
+          ]
+        }
+      ],
+      "other_host_candidates_not_selected_by_actual_diffids": []
+    },
+    {
+      "exact_image_id": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "id_form": "index",
+      "services": [
+        "backend"
+      ],
+      "docker_descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+        "size": 856
+      },
+      "docker_rootfs_uncompressed_diff_ids": [
+        "sha256:f6e0e88dd8e11c81dba77d657b271e1ed7c33882e8f4dfaa7768cbaee94d94fc",
+        "sha256:f98d83061adc18abc1ffea46400be62b16d3da85c4e28563a97b3ff4cf7cca14",
+        "sha256:4d3a8b5e04458c590c1df4d75bfa09154e0b5c386ecec38a0fd80bfeb044029f",
+        "sha256:e923f7c3a8aa4a4003025f7cc3553981e40a975484af937c209f46b7be3c1d17",
+        "sha256:5d2eacea76b10f251bdbb06e19eef0336941010bbec107164dfa37cc572aaf59",
+        "sha256:c2125cb6204747c038d3aadf82c1183028fa57f25595b98180876c5aaeb5298c",
+        "sha256:268135a2f7116df60bc596d1a5a529733e1467246a76dec32eac6aa47fa16657",
+        "sha256:c60a172351e976ab207deb2d86642513a8a732f52c945f220ad4829b022f6ad3",
+        "sha256:6edbdd696cbdc25d56d255f0d4e4b5dea99bfdf46557b74241bf20cd7f6723d0",
+        "sha256:0dabc228f8d8c2645ef1327cb9d0a1b85102fe7c956b065bd4df8863c47650d7"
+      ],
+      "exact_identity_relationship_verified": true,
+      "selected_manifests": [
+        {
+          "digest": "sha256:044e5d628f1fafc218b62d2beeac54493e59c1fe45cf55fa5305127a2126d069",
+          "catalog_descriptor_path": [
+            "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+            "sha256:044e5d628f1fafc218b62d2beeac54493e59c1fe45cf55fa5305127a2126d069"
+          ],
+          "platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "config": "sha256:0c5bb8936fdb63ced9f4f62fc51930a904363f173e5ec6be56d9459f15d9c4f3",
+          "config_diff_ids_order_matches_inspect": true,
+          "layers": [
+            {
+              "digest": "sha256:4e07a0f12b2c009f98326fa391e869bd52fc63728c482400af6cb752bc16744b",
+              "size": 41837521,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:06ad70e463aa4a17833d00d6d5d346c895ebb66fee637eefd67024dc6cdc2f1c",
+              "size": 388,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:5d8dab7db2742f65eb651ddb9c472895877637821edd25947a57e6809ea99ecb",
+              "size": 23107753,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:9d8d42fbc5604c4e895096a9217ddaef21c1eb762a43acedbc9c4554b58f65bb",
+              "size": 53097666,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:3b4157e3a962cdb99242cd5b145bcc2124d0db0c9849175dd981fe78640d0a72",
+              "size": 158,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:550bcd7b9380af835ebbbf439f5ddcaebfb2af951dc75d4bcbdc261cbe3917f0",
+              "size": 2463,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:c6b1f219a692aff2681d1424060e5bdf42f6c0e059a63483c67213a3e74cbd9c",
+              "size": 93,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:e6d3265596aed154b7e948ff2be024a7b21d4b6be8eb3021587144cb2601d103",
+              "size": 1197,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:ba1e544cd62aa4dbffb2ea38a73933e7f76c134b3a16dfd678366cbeba1b4ef3",
+              "size": 35459968,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:8fc5b5c82016c8be57a51050cc548633eb1a30627a43852b3dccd8847e0cc056",
+              "size": 35460898,
+              "present": true,
+              "sha256_verified": true
+            }
+          ]
+        }
+      ],
+      "other_host_candidates_not_selected_by_actual_diffids": []
+    },
+    {
+      "exact_image_id": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+      "id_form": "index",
+      "services": [
+        "frontend"
+      ],
+      "docker_descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+        "size": 856
+      },
+      "docker_rootfs_uncompressed_diff_ids": [
+        "sha256:08000c18d16dadf9553d747a58cf44023423a9ab010aab96cf263d2216b8b350",
+        "sha256:d71eae0084c1aa823dd8fb2ecf8604d5c0f4911226c042bb1f8297e819f4b192",
+        "sha256:c56f134d380585340a68d0db2f2c170641a1c0ff72ccf2438cf2f693df756a85",
+        "sha256:e244aa659f612a80c40dd8645812301e3def6b15ec67b9e486ed2201172b51d1",
+        "sha256:b8d7d1d2263425d6044e059b2810017d062d659b9b755241f3747eda77726250",
+        "sha256:811a4dbbf4a5309e4390cf655c12db92e1a4304fb9d9731f83e7b02e95a617c6",
+        "sha256:947e805a4ac71f68e6703550c0b36c2aa2e554c4fa670ca2da6a25c6d7dccb66",
+        "sha256:0d853d50b128aa460b47e7121849463a14b18d4fd976caf5014744aae24d28aa",
+        "sha256:71b52e7ec64eb5cd45271df49045632f6e5957b9e4f37249862da0e3c47d1c9c",
+        "sha256:3716c3918805dce73216da2c4d6ad2d7fd9d4760406287b3a256e34657ad3c1e",
+        "sha256:73ded1c77efc1b65d4b12433f7aaec6d3242f86063813e5b47ed2acf4c20ed68",
+        "sha256:96532168bab538369f5413f94fa0ab297b7b67f63bd2aa2c953d0b92056bf8da"
+      ],
+      "exact_identity_relationship_verified": true,
+      "selected_manifests": [
+        {
+          "digest": "sha256:1a22cf460637d3f3f56986b9bea6694b2cd409b138fb8b41676e63f9a052a72a",
+          "catalog_descriptor_path": [
+            "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+            "sha256:1a22cf460637d3f3f56986b9bea6694b2cd409b138fb8b41676e63f9a052a72a"
+          ],
+          "platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "config": "sha256:771df973045a1815ac8c2c877de5746b859791be6a8ef5b12562f041baa73c05",
+          "config_diff_ids_order_matches_inspect": true,
+          "layers": [
+            {
+              "digest": "sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870",
+              "size": 3642247,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:61ca4f733c802afd9e05a32f0de0361b6d713b8b53292dc15fb093229f648674",
+              "size": 1791436,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:b464cfdf2a6319875aeb27359ec549790ce14d8214fcb16ef915e4530e5ed235",
+              "size": 629,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:d7e5070240863957ebb0b5a44a5729963c3462666baa2947d00628cb5f2d5773",
+              "size": 955,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:81bd8ed7ec6789b0cb7f1b47ee731c522f6dba83201ec73cd6bca1350f582948",
+              "size": 402,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:197eb75867ef4fcecd4724f17b0972ab0489436860a594a9445f8eaff8155053",
+              "size": 1209,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:34a64644b756511a2e217f0508e11d1a572085d66cd6dc9a555a082ad49a3102",
+              "size": 1397,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:39c2ddfd6010082a4a646e7ca44e95aca9bf3eaebc00f17f7ccc2954004f2a7d",
+              "size": 15522356,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:bf44e7dc926f3dc67cc57d19ed87f9cdf048852b584a67fc64bb89b56bc84f69",
+              "size": 869,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:4ef54c8a64596eaa6e341a1497281f36e755f13579e5eef260d71e7d2cf56d6f",
+              "size": 820224,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:a09f346e19f1f65f6dc93e4419f3f1d2dc604a89a0c7508658c748a7dcbe4282",
+              "size": 821618,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:27a9502ce5fb0fe82cdfd1434696f201c60c9b21fe320e503747d30d95597f3f",
+              "size": 869,
+              "present": true,
+              "sha256_verified": true
+            }
+          ]
+        }
+      ],
+      "other_host_candidates_not_selected_by_actual_diffids": []
+    },
+    {
+      "exact_image_id": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "id_form": "index",
+      "services": [
+        "postgres"
+      ],
+      "docker_descriptor": {
+        "mediaType": "application/vnd.oci.image.index.v1+json",
+        "digest": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "size": 10293
+      },
+      "docker_rootfs_uncompressed_diff_ids": [
+        "sha256:256f393e029fa2063d8c93720da36a74a032bed3355a2bc3e313ad12f8bde9d1",
+        "sha256:9a7327a98ddd7ba982480b776e8c9b12a67cc489b9da40d63b077405949a9ffb",
+        "sha256:2e6b9d28e1528ff15d59d78a1f2033350e28c19eeb50ae9f3335980fe8796442",
+        "sha256:b6028eb6926cfc2568c2a05f2d8b09c561ea7cd644aea1e70c8f3a4e05d0428f",
+        "sha256:9f684d2eb39d55094e0d81f98a3cd40e81a8e72a8b69499d6435ce7aa59863c0",
+        "sha256:a34284fcec52cfafc465f42361d01257e68a584436e77fd79ced8de0032d19c2",
+        "sha256:bc3518781056ad1368e67f863c964ad2acb3b29fcb484552ebc8793834eec842",
+        "sha256:f377aa82b1056a3a47b237f9a9d5fcfa7306408f43ee4d099d1ea959f54637c0",
+        "sha256:95993121100eb5d9b10b946f321176b42b4c4140c668066c64e863c4104d99f5",
+        "sha256:f3d1ddfd350d4ac5e3ef3fd7ac0a4e5a25fc1135de1f9deaf541f32c84c61edc"
+      ],
+      "exact_identity_relationship_verified": true,
+      "selected_manifests": [
+        {
+          "digest": "sha256:747d5ed1fdeeb124b880fbe3d7c6557d2c4064ae41d6b6297d417882effce4be",
+          "catalog_descriptor_path": [
+            "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+            "sha256:747d5ed1fdeeb124b880fbe3d7c6557d2c4064ae41d6b6297d417882effce4be"
+          ],
+          "platform": {
+            "os": "linux",
+            "architecture": "amd64"
+          },
+          "config": "sha256:d741b376874687de90374fd34f55c6b2760e8f7bd7e4ae5cd47f50757fc08cf8",
+          "config_diff_ids_order_matches_inspect": true,
+          "layers": [
+            {
+              "digest": "sha256:2d35ebdb57d9971fea0cac1582aa78935adf8058b2cc32db163c98822e5dfa1b",
+              "size": 3802452,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:82e3b18698cd7229a55eb5b7154c5d98bd2c4e3da32b6b2e4248b45659d108ae",
+              "size": 968,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:1d12e864e19a932e8093efe6464f933f09c47600a9771f14e0d1c5ac1b787f0b",
+              "size": 918287,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:10c02ef94427efa19ac1faab739dc93647b6b924c31c2129a195aae42cea643b",
+              "size": 116,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:ac28590ba4642d405c6162e2f777f1c802e29e1961fa8fa7ae1e598806d14098",
+              "size": 105873826,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:11e80b5eea539196bb1e3b6bcddaba0c4b8bdb9d0f5e1f59cf099bf5979c4b13",
+              "size": 9884,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:a5bd5a0b8636ac4b0b80a954ab0a8277d3162a5e230650b4f7788ba8e1e365f4",
+              "size": 128,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:aabce23918dc56935f94f7769d63258577fdb76659069677831ac14246ec242c",
+              "size": 171,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:3cecdd37f6f2cd8ed3ddd0e7ec4dfe12f8c506a1f8e6be8b7a0841c9eb3de34d",
+              "size": 6079,
+              "present": true,
+              "sha256_verified": true
+            },
+            {
+              "digest": "sha256:5b6f078adbb98a8561b472a9d5e16c5c6b784ebe3c792b33de80d635c8ee24d6",
+              "size": 185,
+              "present": true,
+              "sha256_verified": true
+            }
+          ]
+        }
+      ],
+      "other_host_candidates_not_selected_by_actual_diffids": []
+    }
+  ],
+  "errors": [],
+  "docker_lifecycle_operations": 0,
+  "images_loaded": 0,
+  "containers_created": 0,
+  "deletions": 0,
+  "empty_daemon_restore_tested": false,
+  "boundary": [
+    "All present OCI blobs are streamed and SHA256/size checked; protected outer images.tar bytes also checked.",
+    "Exact IDs bind through catalog/index/manifest/config references; tags or only equal layers are never identity evidence.",
+    "Config uncompressed DiffID order is compared with local Docker inspect; this is not a new layer-decompression DiffID computation.",
+    "Non-host/attestation missing descriptors remain explicit; no multi-platform or empty-daemon docker load restoration claim.",
+    "Image archive only: remaining PostgreSQL/files/config backup payload verification and runtime readback are separate evidence."
+  ],
+  "archive": "E:\\project\\langchain-trip-planner\\backups\\pre-optimization-daily-20261026T151233Z\\images.tar",
+  "archive_sha256": "437062a900965cf02c64609cc7121f27ff6803ef46fd79f1c328a4991ee7f01c",
+  "archive_size_bytes": 627687424,
+  "protected_manifest_sha256": "937f7ec9e5e9ee22cc7539f586b519e3e12fa3d1e049f86dbba35cd79df5958e",
+  "verified_blob_count": 78,
+  "all_present_blob_sha256_and_sizes_verified": true,
+  "missing_descriptors": [
+    {
+      "digest": "sha256:063e88bcc1e65185380f5b3b9de5b6b4e3033292deb1b5c45e5fc863296e2b98",
+      "platform": {
+        "architecture": "arm",
+        "os": "linux",
+        "variant": "v6"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:063e88bcc1e65185380f5b3b9de5b6b4e3033292deb1b5c45e5fc863296e2b98"
+      ]
+    },
+    {
+      "digest": "sha256:9c85816e89547cdf5f0ada33bde797fb6b2d0911d449554c4f7998d9bff12d96",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:9c85816e89547cdf5f0ada33bde797fb6b2d0911d449554c4f7998d9bff12d96"
+      ]
+    },
+    {
+      "digest": "sha256:69dd3033ea39d44c8e13d74a094c9e393757bfd8f2693e492716203443cceeaa",
+      "platform": {
+        "architecture": "arm",
+        "os": "linux",
+        "variant": "v7"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:69dd3033ea39d44c8e13d74a094c9e393757bfd8f2693e492716203443cceeaa"
+      ]
+    },
+    {
+      "digest": "sha256:f7e6f7c193b6632dfc308c61cca2c36cf99e82bf8947ab12db79279c3e1d8ff3",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:f7e6f7c193b6632dfc308c61cca2c36cf99e82bf8947ab12db79279c3e1d8ff3"
+      ]
+    },
+    {
+      "digest": "sha256:9b9fb55f7e3b2149854def33c728b781dc44d1c5e86492ad62912a527ae234b3",
+      "platform": {
+        "architecture": "arm64",
+        "os": "linux",
+        "variant": "v8"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:9b9fb55f7e3b2149854def33c728b781dc44d1c5e86492ad62912a527ae234b3"
+      ]
+    },
+    {
+      "digest": "sha256:3998d94626064ced82379e7601056c4c379ed3f3fe4690de7b5e7bd45278804f",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:3998d94626064ced82379e7601056c4c379ed3f3fe4690de7b5e7bd45278804f"
+      ]
+    },
+    {
+      "digest": "sha256:13d57decb466097d6863e9206db44caabdd4297c3abedbcf559edcb1c94c66a7",
+      "platform": {
+        "architecture": "386",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:13d57decb466097d6863e9206db44caabdd4297c3abedbcf559edcb1c94c66a7"
+      ]
+    },
+    {
+      "digest": "sha256:13a09e512b47240b8ca3ff751a77ab1a626e95eab95742660c6670320163e013",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:13a09e512b47240b8ca3ff751a77ab1a626e95eab95742660c6670320163e013"
+      ]
+    },
+    {
+      "digest": "sha256:8dbb9dbf2d02ff633767e2be0e7c0e55f83d8f4365030209bc558c9510b845fb",
+      "platform": {
+        "architecture": "ppc64le",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:8dbb9dbf2d02ff633767e2be0e7c0e55f83d8f4365030209bc558c9510b845fb"
+      ]
+    },
+    {
+      "digest": "sha256:9e3a7297f94bd05f10dfa77a6e85eae642bbc3c5fe92db7bb0a4d185227bf795",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:9e3a7297f94bd05f10dfa77a6e85eae642bbc3c5fe92db7bb0a4d185227bf795"
+      ]
+    },
+    {
+      "digest": "sha256:78394367e75092b986f9b979084e8aa36df5a8555860fae94d7edf71751cf532",
+      "platform": {
+        "architecture": "riscv64",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:78394367e75092b986f9b979084e8aa36df5a8555860fae94d7edf71751cf532"
+      ]
+    },
+    {
+      "digest": "sha256:93f460abb0dda82ad2d57b0aa57224db3e352081fe8fe0678d83eefadd951223",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:93f460abb0dda82ad2d57b0aa57224db3e352081fe8fe0678d83eefadd951223"
+      ]
+    },
+    {
+      "digest": "sha256:a92a60ab68e0b9b1f0282eb7d0e1f898b276387fefa89526d98449609c6cbc5c",
+      "platform": {
+        "architecture": "s390x",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:a92a60ab68e0b9b1f0282eb7d0e1f898b276387fefa89526d98449609c6cbc5c"
+      ]
+    },
+    {
+      "digest": "sha256:711ddfe9e40b19339f2153bc07a0873a6c4d7ec4d225bb76f09395d91212b2e9",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:711ddfe9e40b19339f2153bc07a0873a6c4d7ec4d225bb76f09395d91212b2e9"
+      ]
+    }
+  ],
+  "non_host_descriptors": [
+    {
+      "digest": "sha256:3968658558a9a80a264b5cc6e96921dac53bdc1900434242ccdfa6d5f3680523",
+      "config": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "platform": {
+        "os": "unknown",
+        "architecture": "unknown"
+      },
+      "present": true,
+      "path": [
+        "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+        "sha256:3968658558a9a80a264b5cc6e96921dac53bdc1900434242ccdfa6d5f3680523"
+      ],
+      "scope": "non-host/attestation descriptor; no availability or restoration claim"
+    },
+    {
+      "digest": "sha256:6445ce2e327f8b7abd61a252e9a9726f50277efca991cf20761f16a020d06933",
+      "config": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "platform": {
+        "os": "unknown",
+        "architecture": "unknown"
+      },
+      "present": true,
+      "path": [
+        "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+        "sha256:6445ce2e327f8b7abd61a252e9a9726f50277efca991cf20761f16a020d06933"
+      ],
+      "scope": "non-host/attestation descriptor; no availability or restoration claim"
+    },
+    {
+      "digest": "sha256:55652c9841ad6de22f73e4eee7a7f11374e8b589981f25176c59a81f15e29d8f",
+      "config": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "platform": {
+        "os": "unknown",
+        "architecture": "unknown"
+      },
+      "present": true,
+      "path": [
+        "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+        "sha256:55652c9841ad6de22f73e4eee7a7f11374e8b589981f25176c59a81f15e29d8f"
+      ],
+      "scope": "non-host/attestation descriptor; no availability or restoration claim"
+    },
+    {
+      "digest": "sha256:0a586f5bc65bd681e8b8c6bf00a164a12d3cd5e6b716b41222d9ea37c195d95a",
+      "config": "sha256:f9989be93aaf18e0f2ee8da9e8cbaedc1979c5c1aa89e1c8a0dc18524e5eb7f9",
+      "platform": {
+        "os": "unknown",
+        "architecture": "unknown"
+      },
+      "present": true,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:0a586f5bc65bd681e8b8c6bf00a164a12d3cd5e6b716b41222d9ea37c195d95a"
+      ],
+      "scope": "non-host/attestation descriptor; no availability or restoration claim"
+    },
+    {
+      "digest": "sha256:063e88bcc1e65185380f5b3b9de5b6b4e3033292deb1b5c45e5fc863296e2b98",
+      "platform": {
+        "architecture": "arm",
+        "os": "linux",
+        "variant": "v6"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:063e88bcc1e65185380f5b3b9de5b6b4e3033292deb1b5c45e5fc863296e2b98"
+      ]
+    },
+    {
+      "digest": "sha256:9c85816e89547cdf5f0ada33bde797fb6b2d0911d449554c4f7998d9bff12d96",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:9c85816e89547cdf5f0ada33bde797fb6b2d0911d449554c4f7998d9bff12d96"
+      ]
+    },
+    {
+      "digest": "sha256:69dd3033ea39d44c8e13d74a094c9e393757bfd8f2693e492716203443cceeaa",
+      "platform": {
+        "architecture": "arm",
+        "os": "linux",
+        "variant": "v7"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:69dd3033ea39d44c8e13d74a094c9e393757bfd8f2693e492716203443cceeaa"
+      ]
+    },
+    {
+      "digest": "sha256:f7e6f7c193b6632dfc308c61cca2c36cf99e82bf8947ab12db79279c3e1d8ff3",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:f7e6f7c193b6632dfc308c61cca2c36cf99e82bf8947ab12db79279c3e1d8ff3"
+      ]
+    },
+    {
+      "digest": "sha256:9b9fb55f7e3b2149854def33c728b781dc44d1c5e86492ad62912a527ae234b3",
+      "platform": {
+        "architecture": "arm64",
+        "os": "linux",
+        "variant": "v8"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:9b9fb55f7e3b2149854def33c728b781dc44d1c5e86492ad62912a527ae234b3"
+      ]
+    },
+    {
+      "digest": "sha256:3998d94626064ced82379e7601056c4c379ed3f3fe4690de7b5e7bd45278804f",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:3998d94626064ced82379e7601056c4c379ed3f3fe4690de7b5e7bd45278804f"
+      ]
+    },
+    {
+      "digest": "sha256:13d57decb466097d6863e9206db44caabdd4297c3abedbcf559edcb1c94c66a7",
+      "platform": {
+        "architecture": "386",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:13d57decb466097d6863e9206db44caabdd4297c3abedbcf559edcb1c94c66a7"
+      ]
+    },
+    {
+      "digest": "sha256:13a09e512b47240b8ca3ff751a77ab1a626e95eab95742660c6670320163e013",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:13a09e512b47240b8ca3ff751a77ab1a626e95eab95742660c6670320163e013"
+      ]
+    },
+    {
+      "digest": "sha256:8dbb9dbf2d02ff633767e2be0e7c0e55f83d8f4365030209bc558c9510b845fb",
+      "platform": {
+        "architecture": "ppc64le",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:8dbb9dbf2d02ff633767e2be0e7c0e55f83d8f4365030209bc558c9510b845fb"
+      ]
+    },
+    {
+      "digest": "sha256:9e3a7297f94bd05f10dfa77a6e85eae642bbc3c5fe92db7bb0a4d185227bf795",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:9e3a7297f94bd05f10dfa77a6e85eae642bbc3c5fe92db7bb0a4d185227bf795"
+      ]
+    },
+    {
+      "digest": "sha256:78394367e75092b986f9b979084e8aa36df5a8555860fae94d7edf71751cf532",
+      "platform": {
+        "architecture": "riscv64",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:78394367e75092b986f9b979084e8aa36df5a8555860fae94d7edf71751cf532"
+      ]
+    },
+    {
+      "digest": "sha256:93f460abb0dda82ad2d57b0aa57224db3e352081fe8fe0678d83eefadd951223",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:93f460abb0dda82ad2d57b0aa57224db3e352081fe8fe0678d83eefadd951223"
+      ]
+    },
+    {
+      "digest": "sha256:a92a60ab68e0b9b1f0282eb7d0e1f898b276387fefa89526d98449609c6cbc5c",
+      "platform": {
+        "architecture": "s390x",
+        "os": "linux"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:a92a60ab68e0b9b1f0282eb7d0e1f898b276387fefa89526d98449609c6cbc5c"
+      ]
+    },
+    {
+      "digest": "sha256:711ddfe9e40b19339f2153bc07a0873a6c4d7ec4d225bb76f09395d91212b2e9",
+      "platform": {
+        "architecture": "unknown",
+        "os": "unknown"
+      },
+      "present": false,
+      "path": [
+        "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "sha256:711ddfe9e40b19339f2153bc07a0873a6c4d7ec4d225bb76f09395d91212b2e9"
+      ]
+    }
+  ],
+  "service_count": 4,
+  "unique_image_count": 4,
+  "elapsed_seconds": 6.907,
+  "finished_at": "2026-10-26T15:18:56.346571+00:00"
+}

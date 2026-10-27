@@ -1,0 +1,103 @@
+{
+  "operation": "backup",
+  "project": "langchain-trip-planner",
+  "before": {
+    "frontend": {
+      "id": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+      "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "running": true
+    },
+    "backend": {
+      "id": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "running": true
+    },
+    "agent": {
+      "id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "running": true
+    },
+    "postgres": {
+      "id": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "running": true
+    }
+  },
+  "after": {
+    "frontend": {
+      "id": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+      "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "running": true
+    },
+    "backend": {
+      "id": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "running": true
+    },
+    "agent": {
+      "id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "running": true
+    },
+    "postgres": {
+      "id": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "running": true
+    }
+  },
+  "executed": true,
+  "image_preflight": {
+    "passed": true,
+    "images": [
+      {
+        "service": "backend",
+        "image_id": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+        "status": "verified"
+      },
+      {
+        "service": "agent",
+        "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "status": "verified"
+      },
+      {
+        "service": "postgres",
+        "image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "status": "verified"
+      },
+      {
+        "service": "frontend",
+        "image_id": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+        "status": "verified"
+      }
+    ],
+    "missing_image_ids": []
+  },
+  "execution_started": true,
+  "ready_after_restore": {
+    "backend": true,
+    "agent": true
+  },
+  "local_verified": true,
+  "elapsed_seconds": 230.8,
+  "original_running_state_restored": true,
+  "passed": true,
+  "errors": [],
+  "rpo_target_seconds": 86400,
+  "rto_target_seconds": 3600,
+  "targets_are_objectives_not_measured_guarantees": true,
+  "installed": true,
+  "task_name": "TripPlanner-AutomatedBackup",
+  "schedule": "daily03:00 China Standard Time",
+  "limited_current_user": true,
+  "task_exit_code": 0,
+  "actual_task_run": true,
+  "manifest_verified_again": true,
+  "manifest_sha256": "d5e20695891cccf5158e39979cf68785fca33681f1c9c95f9c28fb605b3bbc8c",
+  "success_marker_sha256": "a023d2afead67a0d69d64f55df049403945cb19a8601b9260a246ac827ae6301",
+  "database_success_heartbeat_recent": true,
+  "offhost": "deferred_by_user_not_verified",
+  "replica_configured": false,
+  "backup_relative_path": "backups/automated-daily/scheduled-20261026T161015Z",
+  "checked_at": "2026-10-26T16:16:52.202228+00:00",
+  "boundary": "Actual Windows Task Scheduler run, original selected4 service IDs/images/states restored and backend/Agent ready. Local complete backup only; does not verify offhost/emptydaemon restore or RPO/RTO guarantee. Retention emits review candidates; no automatic backup deletion."
+}

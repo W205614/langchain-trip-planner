@@ -1,0 +1,18 @@
+{
+  "installed": true,
+  "task_name": "TripPlanner-AutomatedBackup",
+  "task_ready": true,
+  "limited": true,
+  "interactive_current_user": true,
+  "multiple_instances_ignore_new": true,
+  "start_when_available": true,
+  "execution_time_limit": "PT2H",
+  "executable": "E:\\download\\Anaconda\\pythonw.exe",
+  "working_directory": "E:\\project\\langchain-trip-planner",
+  "daily_time": "03:00",
+  "timezone": "China Standard Time",
+  "next_run_time": "2026-10-27T03:00:00+08:00",
+  "actual_run_verified": false,
+  "off_host_target": "deferred_by_user_not_verified",
+  "principal_comparison": "Resolved SID equality; textual Windows account forms may differ"
+}

@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "daily_readiness_and_no_fixture_endpoint",
+      "passed": true
+    },
+    {
+      "name": "preupgrade_real_login_bearer_still_reads_its_own_identity",
+      "passed": true
+    },
+    {
+      "name": "real_cookie_ui_login_current_identity_admin_mfa_policy",
+      "passed": true
+    },
+    {
+      "name": "prebackup_smoke_preferences_read_only_and_csrf_rejection",
+      "passed": true
+    },
+    {
+      "name": "owned_history_version_ui_and_private_html_export_preserve_original",
+      "passed": true
+    },
+    {
+      "name": "real_ui_logout_revokes_cookie_and_preupgrade_bearer_and_blocks_private_reads",
+      "passed": true
+    }
+  ],
+  "coverage_gaps": [
+    "Legacy copy has no timeline or solver binding; per-day stale projection cannot establish solver freshness or exercise a timed schedule",
+    "Public copy has no stable timed activity; time-lock denial was not exercised"
+  ],
+  "boundary": {
+    "real_business_http": true,
+    "fixture_provider_enabled": false,
+    "jwt_injection": false,
+    "direct_provider_calls": 0,
+    "backend_paid_calls": "not_measured_here",
+    "original_private_trip_mutations": 0,
+    "original_column_sql_preservation": "operator must compare before smoke login; not established by this script",
+    "runtime_env_and_true_agent_uvicorn": "operator runtime inspection required; readiness alone is not full RAG proof"
+  },
+  "new_account_count": 0
+}

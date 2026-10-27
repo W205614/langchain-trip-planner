@@ -1,0 +1,35 @@
+{
+  "prepared": true,
+  "runtime": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\runtime",
+  "compose": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+  "dataset_id": "dcb1009ccd5b018d536b7e7eadae3322",
+  "original_database_credentials_preserved": true,
+  "original_JWT_secret_preserved": true,
+  "original_internal_secret_preserved": true,
+  "original_provider_values_preserved": true,
+  "account_security_key_prepared_without_printing": true,
+  "APP_ENV": "production",
+  "ADMIN_MFA_REQUIRED": true,
+  "fixtures_allowed": false,
+  "old_business_mounts_preserved": true,
+  "images": {
+    "backend": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+    "agent": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "frontend": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+    "prometheus": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+    "alertmanager": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+    "postgres": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+  },
+  "monitoring": {
+    "services": [
+      "prometheus",
+      "alertmanager",
+      "alert-receiver"
+    ],
+    "prometheus_port": 19090,
+    "local_durable_receiver_image": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+    "receiver_raw_high_critical": 0,
+    "agent_exception_inherited_by_receiver": false
+  },
+  "effective_compose_validated_without_printing_secrets": true
+}

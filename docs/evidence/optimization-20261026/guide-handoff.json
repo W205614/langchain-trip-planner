@@ -1876,8 +1876,8 @@
     "existing_data": "existing-data-rehearsal-result-3.json: upgrade and independent snapshot rollback pass",
     "scheduler": "scheduler-fault-drill-3.json: pass; earlier failed observations retained",
     "holdout": "16/17 first run retained; separate identity-representation adjudication; no new unseen rerun or human score",
-    "daily_deployment": "not executed; window not granted",
-    "ci": "not yet pushed/final CI pending",
+    "daily_deployment": "Executed by this project agent, not attributed to coordinator; actual daily readback6checks/2gaps, first failed oracle retained.",
+    "ci": "Final pushed exact-SHA GitHub CI/security remains pending; no local check substitutes it.",
     "backup": "automated-backup-drill-final.json: full archive/local replica, original states/readiness and private owner history readback pass; host-platform OCI closure verified",
     "security": "release-security-summary.json: six image policy gates and full-history/current-source secrets pass for business SHA; remaining risks retained",
     "previous_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
@@ -1886,12 +1886,102 @@
     "fact_ui": "fact-ui-acceptance-result.json:6 passed on a01 planning source; changed paths separately validated",
     "backup_current": "hardened-backup-file-restore-result.json:maintenance64.13s; full rehearsal94.716s; all3 file archives restored and actual Agent reads persisted2 rows; not PG/offhost disaster recovery",
     "security_current": "temporary-risk-acceptance-enforcement.json:actual gate passed with accepted unfixed52/8 and original79, exact source/native/live proc; expires local2026-11-09; CI pending",
-    "policy_source_sha": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
-    "secret_scan": "final-secret-scan.json:fullhistory/current+untracked0 after narrowly verified public fingerprint allowlist"
+    "policy_source_sha": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+    "secret_scan": "final-secret-scan.json:fullhistory/current+untracked0 after narrowly verified public fingerprint allowlist",
+    "daily_delivery_current": {
+      "window": "separately_user_authorized_executed_by_project_agent_this_chat;coordinator_release_separate",
+      "latest_backup": "daily-fresh-backup.json:passed",
+      "identity_enrollment": "daily-enrollment.json:backup/mount/database identities verified",
+      "independent_latest_restore": "latest-daily-restore.json:passed;26tables independently restored",
+      "oci_closure": "latest-daily-image-archive-closure.json:passed;not empty-daemon recovery",
+      "post_upgrade": "daily-post-upgrade.json:passed;24 original-column table hashes and original Flyway prefix preserved",
+      "smoke_readback": {
+        "report": "daily-readback-result.json",
+        "passed": true,
+        "checks": 6,
+        "coverage_gaps": [
+          "Legacy copy has no timeline or solver binding; per-day stale projection cannot establish solver freshness or exercise a timed schedule",
+          "Public copy has no stable timed activity; time-lock denial was not exercised"
+        ],
+        "first_run_failure": "daily-readback-run1-failure.json",
+        "adjudication": "daily-readback-run1-adjudication.json",
+        "first_failure_retained": true,
+        "not_full_planning_or_supplier_validation": true
+      },
+      "runtime_security": "daily-agent-security-receipt-a454bbd.json:actual gate pass_temp;still-vulnerable temporary local-demo acceptance",
+      "windows_task": {
+        "installed": true,
+        "first_actual_run_passed": true,
+        "exit_code": 0,
+        "elapsed_seconds": 230.8,
+        "original_ids_images_states_restored": true,
+        "report": "windows-backup-task-result.json"
+      },
+      "cleanup": {
+        "passed": true,
+        "all_approved_objects_removed": true,
+        "removed_counts": {
+          "container": 32,
+          "network": 7,
+          "volume": 14
+        },
+        "skips": 0,
+        "images_removed": 0,
+        "files_deleted": 0,
+        "protected_metadata_unchanged": true,
+        "report": "exact-window-cleanup-result.json"
+      },
+      "final_remote_exact_sha_ci": "External exact-SHA receipt required after push; local snapshots do not assert remote success.",
+      "alerts": "daily-alert-delivery-result-2.json:firing/resolved+dedupe;local inbox only,synthetic AM injection",
+      "post_backup_runtime": "daily-post-backup-runtime-receipt.json:actual fresh process proof passed",
+      "historical_build_inputs": "historical-build-input-restoration-receipt.json:exact12 raw bytes restored inCI;not fresh evaluation;allowmaps unchanged"
+    },
+    "historical_policy_source_sha_before_daily": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
+    "windows_task_current": {
+      "installed": true,
+      "first_actual_run_passed": true,
+      "exit_code": 0,
+      "elapsed_seconds": 230.8,
+      "original_ids_images_states_restored": true,
+      "report": "windows-backup-task-result.json"
+    },
+    "cleanup_current": {
+      "passed": true,
+      "all_approved_objects_removed": true,
+      "removed_counts": {
+        "container": 32,
+        "network": 7,
+        "volume": 14
+      },
+      "skips": 0,
+      "images_removed": 0,
+      "files_deleted": 0,
+      "protected_metadata_unchanged": true,
+      "report": "exact-window-cleanup-result.json"
+    },
+    "silent_windows_backup_current": {
+      "passed": true,
+      "actual_task_exit_code": 0,
+      "backup_and_restore_seconds": 47.88,
+      "native_children": 108,
+      "all_create_no_window": true,
+      "sampled_owned_visible_windows": 0,
+      "window_samples": 161,
+      "original_task_08_46_failure_retained": true,
+      "source_business_trees_and_risk_fingerprints_unchanged": true,
+      "reports": [
+        "windows-silent-task-actual-result.json",
+        "windows-silent-backup-validation.json",
+        "windows-backup-20261027-startup-failure.json",
+        "daily-current-stop-diagnosis.json",
+        "daily-current-recovery.json",
+        "daily-after-silent-backup-readback.json"
+      ]
+    }
   },
   "operations_handoff_review": {
     "date": "2026-10-26",
-    "feature_count": 52,
+    "feature_count": 54,
     "source_paths_verified": true,
     "ordinary_function_additions": [
       "activity-protection",
@@ -1902,6 +1992,28 @@
       "Production candidate identity enrollment plus DB/upload negative startup guards and unchanged Flyway-history assertion.",
       "Nonblocking per-project OS process lock, persistent failure report and linked existing runbook."
     ],
-    "pure_verification": "26 maintenance/process-lock checks and 21 identity/retention/rehearsal checks passed in separate targeted commands; these do not mean Docker restore or daily deployment executed."
+    "pure_verification": "Historical targeted pure checks retained; current real Windows task exit0 and exact53 cleanup receipts separately verified. No all54function new test claim.",
+    "current_daily_evidence": "See root_final_validation.daily_delivery_current; source paths/54features/2+followups were rechecked by root, not all54daily flows exercised.",
+    "silent_backup": "Hostonly tools; actualonequietScheduler task passed. No individual authorship or wholeproduct newtest claim."
+  },
+  "updated_at": "2026-10-27T01:14:06.113643+00:00",
+  "silent_windows_backup_current": {
+    "passed": true,
+    "actual_task_exit_code": 0,
+    "backup_and_restore_seconds": 47.88,
+    "native_children": 108,
+    "all_create_no_window": true,
+    "sampled_owned_visible_windows": 0,
+    "window_samples": 161,
+    "original_task_08_46_failure_retained": true,
+    "source_business_trees_and_risk_fingerprints_unchanged": true,
+    "reports": [
+      "windows-silent-task-actual-result.json",
+      "windows-silent-backup-validation.json",
+      "windows-backup-20261027-startup-failure.json",
+      "daily-current-stop-diagnosis.json",
+      "daily-current-recovery.json",
+      "daily-after-silent-backup-readback.json"
+    ]
   }
 }

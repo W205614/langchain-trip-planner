@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "historical_only": true,
+  "fresh_evaluation": false,
+  "scope": "Exact historical ignored files already present in the approved f9 image; faithful build-input reproduction only. Neither execution nor fresh quality evidence.",
+  "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "approved_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "approval_sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+  "application_hash_algorithm": "utf8-crlf-to-lf-v1",
+  "files": [
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/business-v5-fixed.json",
+      "destination": "backend/evals/results/business-v5-fixed.json",
+      "image_path": "/app/evals/results/business-v5-fixed.json",
+      "bytes": 10834,
+      "raw_sha256": "604c30a1aea66e681f43581970b91616840ecd1462c14ebca9a222e59aef7ca2",
+      "approved_application_sha256": "d910c94d45d4c17bc9753876fb10576eb5377ac683b3d7366a00b6d4b758fff3",
+      "content_type": "synthetic offline HTTP benchmark contract summary"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/business-v5.json",
+      "destination": "backend/evals/results/business-v5.json",
+      "image_path": "/app/evals/results/business-v5.json",
+      "bytes": 10958,
+      "raw_sha256": "a46f0e7d97542b2ba5f2735a106183708db0031e19cd9fd98e381731abe197d1",
+      "approved_application_sha256": "63cdcd782ca896257c63ed196920c915b923bbebf96e67805aeae3a538601110",
+      "content_type": "synthetic offline HTTP benchmark contract summary"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/java-api-v5-current.json",
+      "destination": "backend/evals/results/java-api-v5-current.json",
+      "image_path": "/app/evals/results/java-api-v5-current.json",
+      "bytes": 681,
+      "raw_sha256": "8b066d55111452e2eb1bef3f5f81c11863e0e93e5fc9a40cdcdf814342f116fa",
+      "approved_application_sha256": "b0c3e006c11017b2464b4931ff8666ff3363c77c423835f8c5340f0f382f3f32",
+      "content_type": "synthetic offline Java API check counters"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/java-api-v5.json",
+      "destination": "backend/evals/results/java-api-v5.json",
+      "image_path": "/app/evals/results/java-api-v5.json",
+      "bytes": 681,
+      "raw_sha256": "8b066d55111452e2eb1bef3f5f81c11863e0e93e5fc9a40cdcdf814342f116fa",
+      "approved_application_sha256": "b0c3e006c11017b2464b4931ff8666ff3363c77c423835f8c5340f0f382f3f32",
+      "content_type": "synthetic offline Java API check counters"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/rag-public-source-regression-2026-09-01.stderr.log",
+      "destination": "backend/evals/results/rag-public-source-regression-2026-09-01.stderr.log",
+      "image_path": "/app/evals/results/rag-public-source-regression-2026-09-01.stderr.log",
+      "bytes": 775,
+      "raw_sha256": "e46947d39e00737b493e315526606ea7661c2bc0a68848633b4e96f07dcfc4fb",
+      "approved_application_sha256": "e46947d39e00737b493e315526606ea7661c2bc0a68848633b4e96f07dcfc4fb",
+      "content_type": "historical benchmark traceback; includes project source paths and failure message; no credential observed"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/rag-public-source-regression-2026-09-01.stdout.log",
+      "destination": "backend/evals/results/rag-public-source-regression-2026-09-01.stdout.log",
+      "image_path": "/app/evals/results/rag-public-source-regression-2026-09-01.stdout.log",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "approved_application_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "empty historical stdout/stderr log"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/rag-static-v1-current-2026-09-01.json",
+      "destination": "backend/evals/results/rag-static-v1-current-2026-09-01.json",
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.json",
+      "bytes": 221930,
+      "raw_sha256": "c0d7a58a1e3f4b95b58404c2845c0b4abaf8965d0c8f05464b16b09316d55ed1",
+      "approved_application_sha256": "3ef00ee0c4c78d24573115a3e38ac1a87f07ed84f70db6bba2727aac894d9a73",
+      "content_type": "historical static public knowledge retrieval benchmark with full returned knowledge chunks"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/rag-static-v1-current-2026-09-01.md",
+      "destination": "backend/evals/results/rag-static-v1-current-2026-09-01.md",
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.md",
+      "bytes": 1781,
+      "raw_sha256": "90981495d8487bd5646e95a12bcc9fad2c64806b008f357943075caed82c71fe",
+      "approved_application_sha256": "c60bfa71bceeb0a496a3b338ca200cec1bded27286c953f943c76d4ffd147266",
+      "content_type": "aggregate retrieval evaluation metrics, dataset/source hashes and timing; no individual trip record"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/rag-static-v1-current-2026-09-01.stderr.log",
+      "destination": "backend/evals/results/rag-static-v1-current-2026-09-01.stderr.log",
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.stderr.log",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "approved_application_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content_type": "empty historical stdout/stderr log"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/rag-static-v1-current-2026-09-01.stdout.log",
+      "destination": "backend/evals/results/rag-static-v1-current-2026-09-01.stdout.log",
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.stdout.log",
+      "bytes": 1168,
+      "raw_sha256": "0f76eb78afe42785e4d39f86d9b796c90690748c07fb6fe2d0b276c70cab9d56",
+      "approved_application_sha256": "0f76eb78afe42785e4d39f86d9b796c90690748c07fb6fe2d0b276c70cab9d56",
+      "content_type": "historical aggregate retrieval metric/timing JSON stdout with relative report paths"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/travel-rag-static-v1-1-dense-chroma-2026-08-31.json",
+      "destination": "backend/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.json",
+      "image_path": "/app/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.json",
+      "bytes": 221941,
+      "raw_sha256": "1c5d26b35a35818f425b63f77bfeee55f5c7a61094e8626ed7cb310010f4c095",
+      "approved_application_sha256": "bfdf33aaf328f343a550545570218f8d5f2acb3fb7bd17b3d1f1764c0cc85f09",
+      "content_type": "historical static public knowledge retrieval benchmark with full returned knowledge chunks"
+    },
+    {
+      "source": "docs/evidence/optimization-20261026/historical-build-inputs/evals-results/travel-rag-static-v1-1-dense-chroma-2026-08-31.md",
+      "destination": "backend/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.md",
+      "image_path": "/app/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.md",
+      "bytes": 1790,
+      "raw_sha256": "2d736d82046bb4a9c86907f2470e14ddbad933bcf1d75cecab155ed2c6d90ed4",
+      "approved_application_sha256": "751417c4188cd2b81b8802e0878d78c5c2e2075c4c4ad9f1b5d666f9187e65ef",
+      "content_type": "aggregate retrieval evaluation metrics, dataset/source hashes and timing; no individual trip record"
+    }
+  ]
+}

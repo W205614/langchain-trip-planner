@@ -1,0 +1,2 @@
+{"name": "TripSyntheticDeliveryd62ea77c44d1", "job": "trip-local-synthetic-d62ea77c44d1", "status": "firing", "starts_at": "2026-10-26T16:10:04Z", "event_id": "8d730da7d51eb216a39d38ee14e4b728327e3b82bfdee574e4275dcf4ff69ae2", "received_at": "2026-10-26T16:10:14.161094+00:00"}
+{"name": "TripSyntheticDeliveryd62ea77c44d1", "job": "trip-local-synthetic-d62ea77c44d1", "status": "resolved", "starts_at": "2026-10-26T16:10:04Z", "event_id": "1345acdeb5cdbd7ed3948c72b0539e8192dbbd3b0abb07a2c584e4bd92541f73", "received_at": "2026-10-26T16:12:14.151384+00:00"}

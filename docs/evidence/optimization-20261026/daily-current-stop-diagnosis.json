@@ -1,0 +1,28 @@
+{
+  "observed_at": "2026-10-27T00:59:23.842416+00:00",
+  "project": "langchain-trip-planner",
+  "status": "preserved_current_stop_and_failed_backup_before_scoped_recovery",
+  "facts": [
+    "Host boot08:41:39+08. Task current lastRun08:46:18+08 and exit1, not previous midnight exit0.",
+    "Task failed backup CalledProcessError and finally readiness/start/snapshot/state failures, success marker stillprevious16:14Z.",
+    "PG/frontend/monitor stop00:47:33Z exit0, receiver137/OOMfalse; backend restart loop afterPGstopped; Agent stop00:47:20Z.",
+    "Docker backend APIproxy records repeated ContainerStopComposeLinux at00:47:23 and00:47:33, event EOF aroundsame time. Caller identity unavailable. No specific human stop instruction in thischat.",
+    "Automatedbackup source stops backend/Agent only whenPGinitiallyrunning; no codepath stoppingPG/frontend/monitor inthatcase. Timecorrelation alone doesnotattributeallservice stops tobackup."
+  ],
+  "private_snapshot_path": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-current-stop-20261027T005757Z",
+  "private_snapshot_files_sha256": {
+    "agent.log": "1d1d0bca5db44aeec3347c8d881ec25ba392e5306c300082fcef491777e2d081",
+    "alert-receiver.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "alertmanager.log": "0f56065fa7425822ddf0a93ed3646e2ff3a8ee00f53c52e7f944732be271c003",
+    "backend.log": "5f798a6d7e0e56d7dafeb1c2b56046ec8ddd174fb7173c337ca9d2128f560dbf",
+    "com.docker.backend.exe.log.selected-private.txt": "0596abcb6d43bd9cbf212832b9d1a03c057c6e1e95e87e230b544eb461ee78fa",
+    "docker-events.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "failed-backup-last-run.json": "daacd6a8363d85ae09fabc898b56ddef14de264aa2cbf2e6ed12c31916173d2a",
+    "frontend.log": "011792f06f532344d2217d0a046ef3de120b34c31a56b7485e85eef99f5f88f2",
+    "postgres.log": "80bc97048d7999788376d969eece9294a4e0fcaf3c0e2676c29a509166bbed5e",
+    "private-inspect.json": "0eb450d60aef5018e6280327475fdda99465f61edc8edadfbc9f51b208e13cea",
+    "prometheus.log": "0a9edc4bdf09e44f474c412d9cacaaebb56107abb695562878cf949b1c577d86",
+    "state-summary.json": "dec6977fd53b8440c7d4d936af628608141c68dfa4c7be309f0be8f692a2d1bc"
+  },
+  "scope": "Restore only approved daily7 IDs dependencies; no recreation/noimagepull/nootherproject start/stop/no deletion. Preserve raw failed backup and partial backup folder. Recheck current health and one actual task invocation before release."
+}

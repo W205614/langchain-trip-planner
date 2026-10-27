@@ -183,11 +183,9 @@ python backend/scripts/backup_java_deployment.py --output backups/pre-optimizati
 python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime
 # 上一步校验原表原列与三套持久文件后，显式登记同一数据集：
 python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime --execute
-python backend/scripts/prepare_java_deployment.py --upgrade-existing
-docker compose up -d --build --wait
 ```
 
-不要为修复登记失败切换空卷、清库或删除原目录。旧镜像连接已迁移数据库不等于完成数据回退；应从已验证备份恢复到新的隔离数据库和文件目录。恢复工具保留旧、新克隆并报告精确资源，不自动清理。
+登记后还须准备本次私有运行配置和镜像，再使用明确的 Compose 文件启动。现有 `prepare_java_deployment.py --upgrade-existing` 会优先读取 `backend/.env` 的地图配置并选择 MCP 传输，使用前必须核对这是否符合原环境；本轮日常升级从原容器的有效配置准备新的私有文件，保留原供应商、凭据、传输和预算，没有直接运行该命令。实际镜像与挂载见[脱敏部署记录](docs/evidence/optimization-20261026/daily-effective-deployment-public.json)。不要为修复登记失败切换空卷、清库或删除原目录。旧镜像连接已迁移数据库不等于完成数据回退；应从已验证备份恢复到新的隔离数据库和文件目录。恢复工具保留旧、新克隆并报告精确资源，不自动清理。
 
 ### 备份、告警与有界资源
 
@@ -220,4 +218,31 @@ Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并�
 
 Agent 当前对 `libacl1` 和 `zlib1g` 使用两个经过签名索引及文件哈希核验的 Debian 安全版本；安装器要求只有这两个包升级、不增删包、不升级 libc 或工具链，并检查原生消费者兼容性。构建不会保留 sid 仓库入口。这增加了版本维护责任：[包锁](backend/runtime-security-packages.json)和[供应商评估](.github/security-vendor-policy.json)于 **2026-11-09** 到期，届时须复核稳定发行版回补并更新证据，不能关闭门禁继续沿用。监控派生镜像同样固定官方源码/发布物及最小依赖修补，保留原版对照扫描。
 
-本轮用户暂未提供独立异机备份目标，真实异机恢复验收已明确暂缓；本机隔离恢复、可配置备份工具和本地告警验收继续执行。已有数据演练针对选定恢复点，不等于正式切换前的最新备份。首次离线留出原始结果保留为 16/17，另附身份表示评分假设的审计；不将事后解释或同样本复测改写成新的留出成绩。
+本轮用户暂未提供独立异机备份目标，真实异机恢复验收已明确暂缓。首次离线留出原始结果保留为 16/17，另附身份表示评分假设的审计；不将事后解释或同样本复测改写成新的留出成绩。
+
+2026-10-27 的日常切换保留原 PostgreSQL 卷和上传、Chroma、runtime 三处绑定目录，继续监听 `127.0.0.1:8380`。[切换前完整备份](docs/evidence/optimization-20261026/daily-fresh-backup.json)、[四镜像归档闭包](docs/evidence/optimization-20261026/latest-daily-image-archive-closure.json)和[最新旧版本独立恢复](docs/evidence/optimization-20261026/latest-daily-restore.json)均已验证。26 张原表按原字段比较，其中 24 张一致；Flyway 原记录前缀一致并追加 V11—V14，38 条过期超过 24 小时的执行检查点被保留策略清理，原件仍在备份中，详见[数据核对](docs/evidence/optimization-20261026/daily-post-upgrade.json)。
+
+[日常业务读回](docs/evidence/optimization-20261026/daily-readback-result.json)实际验证旧 Bearer、新 Cookie、CSRF 拒绝、本人历史及版本读取、页面、HTML 导出和退出撤销。使用一个升级前新建的普通验收账号及一份公开行程副本；没有冒用原私人账号。该旧副本没有时间轴，无法提供时间锁拒绝的现场证据；[首次失败与假设审计](docs/evidence/optimization-20261026/daily-readback-run1-adjudication.json)保留，不冒称日常完整规划链路已重新验证。
+
+Windows 任务 `TripPlanner-AutomatedBackup` 已注册为当前用户、有限权限、每日北京时间 03:00，禁止并行实例；[首次实际执行](docs/evidence/optimization-20261026/windows-backup-task-result.json)退出码 0，备份与服务恢复阶段约 231 秒，原四容器 ID、镜像和运行状态一致。任务依赖用户登录和 Docker Desktop，宿主机关闭时不提供连续备份保证。备份保留工具只提出待复核候选，不自动删除历史备份，需要结合磁盘告警人工处理。
+
+随后一次开机后的 [08:46 补执行失败](docs/evidence/optimization-20261026/windows-backup-20261027-startup-failure.json)，服务恢复也失败；同一时段存在来源未确定的 Compose 停止操作，不能仅按时间归因于备份。保存原始日志后，本项目按精确原 ID 恢复。现在任务改用宿主入口 `tools/windows_backup_runner.pyw`：外层仍为原 `pythonw.exe`，每个 Docker 子进程另设 `CREATE_NO_WINDOW` 和隐藏启动信息，补齐无控制台环境的标准句柄，保留二进制导出及捕获输出。失败补偿在同一维护锁内核对原容器、镜像和挂载，先恢复 PostgreSQL 再恢复原本运行的服务；失败备份仍返回失败，不更新成功标记。Docker 不可用或主机断电时不能保证自动恢复。
+
+[修复后一次实际计划任务](docs/evidence/optimization-20261026/windows-silent-task-actual-result.json)退出码 0，备份与恢复阶段约 48 秒；108 个子进程均设置无窗口标志，161 次对任务进程的采样未观察到可见窗口。原容器状态、备份清单和近期成功心跳另见[核对记录](docs/evidence/optimization-20261026/windows-silent-backup-validation.json)。两次耗时的运行条件不同，不据此计算性能提升。
+
+新安装仍先使用原安装器；现有任务用下列迁移工具预览，再显式仅更新 Action。它保留原用户、有限权限、触发器、备份路径及参数，不保存密码。后台 stdout、stderr、子进程退出码和诊断保存在实际备份根目录的 `task-logs/silent-backup-*.log` 与同名 JSON；当前任务结果也可在 Windows 任务计划程序或 `Get-ScheduledTaskInfo` 中查看。不要只读取旧的成功标记判断最近一次尝试。
+
+```powershell
+pwsh -File tools/configure_silent_backup_task.ps1
+pwsh -File tools/configure_silent_backup_task.ps1 -UpdateExistingAction
+Get-ScheduledTaskInfo -TaskName TripPlanner-AutomatedBackup
+Get-ChildItem backups/automated-daily/task-logs | Sort-Object LastWriteTime -Descending
+```
+
+日常 Prometheus 位于 `127.0.0.1:19090`。[告警实测](docs/evidence/optimization-20261026/daily-alert-delivery-result-2.json)通过 Alertmanager API 注入单个合成告警，实际本地持久收件箱收到 firing/resolved，重复事件被去重；这不代替规则触发或真实值班人员送达证明。收件箱使用[单独的固定镜像与构建配方](docs/evidence/optimization-20261026/daily-receiver-provenance.json)，本次扫描原始 High/Critical 为 0，没有沿用 Agent 的临时风险例外。
+
+[当前 Agent 现场门禁](docs/evidence/optimization-20261026/daily-agent-security-receipt-a454bbd.json)保持所有批准的包、ELF、应用指纹和实际进程约束。Windows 原目录的 `0:0/0777` 是 Docker Desktop 反射元数据；只对两条原始精确绑定路径兼容，仍验证 UID 1000 的独占写入、fsync 和读回，不能将其当作 Linux 所有权隔离证明。
+
+批准镜像原本包含 12 个未进入 Git 的历史评测输出。为复现这个既有实物，CI 在构建前从[明确归档的历史输入](docs/evidence/optimization-20261026/historical-build-inputs/README.md)按原始字节及批准应用哈希精确恢复；它们不作为本轮新成绩。允许指纹没有刷新，系统包、原生库或其他应用内容漂移仍会阻断。GitHub 的 [CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml) 与[安全门禁](https://github.com/W205614/langchain-trip-planner/actions/workflows/security.yml)合计 16 个展开任务，须核对当前确切提交，不能复用旧提交的绿灯。
+
+完整功能与源码交接见[54 项功能问答账本](docs/evidence/optimization-20261026/guide-handoff.json)；每项含主问、至少两条追问、答案要点及证据边界。源码存在和本轮定向验收不等同全部功能新测，更不构成个人贡献、线上用户或准确率证明。

@@ -1,0 +1,42 @@
+{
+  "upstream": "docker.io/library/python:3.11-alpine",
+  "upstream_image_id": "sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd",
+  "repo_digests": [
+    "python@sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd"
+  ],
+  "copied_source": "backend/scripts/operational_alert_receiver.py",
+  "copied_sha256": "880384660006bf7c24f6104e22b07d1eeaa6510c618fb3cac5838d66e66fd715",
+  "recipe_sha256": "496e8626442fc04ba5c87e00fa76a74ddf88ae92f5b80730896a16235dbabecf",
+  "scope": "Dedicated stdlib-only alert inbox; no business credentials and no use of Agent eight-CVE temporary exception; exact derivative must pass raw H/C0 scan",
+  "business_source_and_frozen_recipe_files_changed": false,
+  "actual_daily_config": "private standalone deployment receipt; retains original four business mounts",
+  "final_recipe_sha256": "60bcd1581afffac3d28f0ea0ae8a8544871872568038236595c3d542ff400c0c",
+  "runtime_image_id": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+  "final_security": {
+    "scanner": "grype-image",
+    "target": "trip-opt-local-alert-receiver:20261026-patched",
+    "image_id": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+    "status": "pass",
+    "blocking_findings": 0,
+    "raw_high_critical_findings": 0,
+    "contextual_not_affected": 0,
+    "all_findings": 12,
+    "exit_code": 0,
+    "vex_expires_on": null,
+    "distribution_assessments": {
+      "fixed_by_distribution_backport": 0,
+      "fixed_by_pinned_security_upgrade": 0,
+      "still_vulnerable_vendor_minor": 0,
+      "not_affected_component_absent": 0
+    },
+    "still_vulnerable_vendor_minor_ids": [],
+    "vendor_policy_expires_on": null,
+    "unfixed_risk_accepted_findings": 0,
+    "risk_acceptance": null,
+    "image_revision_context_verified": false
+  },
+  "earlier_failures": [
+    "FROM raw image ID build syntax failure; corrected to upstream repo@digest without changing upstream bytes",
+    "Unpatched official base bundled setuptools vendored jaraco-context5.3.0/wheel0.45.1:2HIGH retained; signed APK refresh and pinned pip26.2.2/setuptools80.10.2 rebuilt then rawH/C0"
+  ]
+}

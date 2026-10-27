@@ -1,0 +1,36 @@
+{
+  "project": "langchain-trip-planner",
+  "passed": true,
+  "stage": "complete",
+  "original_running": {
+    "agent": true,
+    "backend": true,
+    "frontend": true,
+    "postgres": true
+  },
+  "original_container_ids": {
+    "agent": "f4355a0f9683139ef269e46d0c30093574d16c51128b5ff993b5fb1581333f2b",
+    "backend": "f0aa87e3cdfe77b8c91b7c56dd90bf88875a4c1cb86ac4a2bbf7f9c3370e3651",
+    "frontend": "64d205f82fe63714af674638ac60837085350ee8796e79b432826c317bd62dc6",
+    "postgres": "854cbfd4e15c3e39dff16d50f38e32129fd97218c6fadd7130704417a2ac6cf3"
+  },
+  "original_images": {
+    "agent": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+    "backend": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+    "frontend": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+    "postgres": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+  },
+  "new_direct_paid_provider_calls": 0,
+  "smoke_registered": true,
+  "backup": "E:\\project\\langchain-trip-planner\\backups\\pre-optimization-daily-20261026T151233Z",
+  "errors": [],
+  "owned_public_card_copy_created": true,
+  "legal_old_password_and_bearer_saved_privately": true,
+  "manifest_verified": true,
+  "images_exported": true,
+  "writers_stopped_for_enrollment": true,
+  "elapsed_seconds": 76.996,
+  "manifest_file_count": 11,
+  "original_table_count": 26,
+  "report_label_correction": "Original tables field counted manifest members, not SQL tables; corrected without changing backup manifest or snapshot."
+}

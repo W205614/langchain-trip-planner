@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-10-26T16:12:00.282574+00:00",
+  "scope": "Read-only source/authorization safety review; Cleanup class not executed, no lifecycle operation.",
+  "reviewer_boundary": "Implementation agent second review, not independent human approval or a replacement for root preflight/receipt.",
+  "tool": "docs/evidence/optimization-20261026/exact-window-cleanup.py",
+  "tool_sha256": "c9cd96d6ad1c72521f7f7bbe4fee86396fe8205196f4981c6c9fb25549c5b05d",
+  "approval": {
+    "owner": "Trip",
+    "state": "granted",
+    "approved_plan_sha256": "761c9f864e0e01b98691cd29a4ab2673ab59881e8ed200929673c3a42a0e3dca",
+    "actual_plan_sha256": "761c9f864e0e01b98691cd29a4ab2673ab59881e8ed200929673c3a42a0e3dca",
+    "same_plan": true,
+    "counts": {
+      "containers": 32,
+      "networks": 7,
+      "named_synthetic_volumes": 14,
+      "images": 0
+    }
+  },
+  "material_authorization_expansion_found": false,
+  "confirmed_boundaries": [
+    "Default only prints contract; --preflight is read-only, --execute additionally needs successful root daily deployment/current-ID/readback/task receipt.",
+    "Every mutation rechecks window/plan/grant/receipt hashes and exact approved identity; protected current daily/hardened/recovery objects remain excluded.",
+    "Full batch preflight manifest is saved before the first stop/removal; every removal repeats static identity/labels/image/created/mount checks and references.",
+    "Mount order is compared by destination; only newly exposed Driver=local on a volume may be omitted. All originally recorded fields and every other actual field remain strict.",
+    "Only exact approved synthetic containers may stop then non-force rm; no -v or anonymous volume cleanup. Networks require exact ID and no active/declared refs. Named volumes require local driver/metadata and zero global-container refs.",
+    "No image lifecycle, prune, down, network disconnect or filesystem-delete operation exists. Unknown/missing/drift/rollback-protected objects skip and remain retained.",
+    "Post-removal absence and retained-object static metadata are checked; counters and all_approved_objects_removed are explicit."
+  ],
+  "limitations": [
+    "Root receipt booleans assert actual successful prerequisite work; the cleanup tool does not independently re-run private business readback or Windows scheduler installation.",
+    "Volume APIs identify a name rather than immutable UUID. Fresh metadata/reference check followed by non-force rm cannot create a cross-command atomic compare-and-delete; exclusive Trip window and no concurrent same-name lifecycle remain required.",
+    "passed denotes safe completion and can include retained skips. Do not infer all53 removals from passed alone; inspect removed_counts, skips, all_approved_objects_removed and absence receipts.",
+    "Read-only source review does not replace the actual just-before-removal preflight or grant further scope."
+  ],
+  "docker_lifecycle_operations": 0,
+  "files_deleted": 0,
+  "new_authorization_granted": false
+}

@@ -1,0 +1,284 @@
+{
+  "project": "langchain-trip-planner",
+  "source_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "services": {
+    "postgres": {
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "cpus": 1.0,
+      "mem_limit": "768m",
+      "pids_limit": 128,
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U trip -d trip_java"
+        ],
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 20
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "java_business_data",
+          "target": "/var/lib/postgresql/data",
+          "read_only": false
+        }
+      ],
+      "private_env_file_count": 1
+    },
+    "backend": {
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "cpus": 2.0,
+      "mem_limit": "1g",
+      "pids_limit": 256,
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-fsS",
+          "http://localhost:9000/readyz"
+        ],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 12
+      },
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "target": "/data/uploads",
+          "read_only": false
+        }
+      ],
+      "private_env_file_count": 1
+    },
+    "agent": {
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "tmpfs": [
+        "/tmp:rw,nosuid,nodev,noexec,size=128m,uid=1000,gid=1000,mode=1777",
+        "/app/logs:rw,nosuid,nodev,noexec,size=64m,uid=1000,gid=1000,mode=0750"
+      ],
+      "cpus": 2.0,
+      "mem_limit": "2g",
+      "pids_limit": 256,
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "command": [
+        "uvicorn",
+        "app.agent_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9000",
+        "--workers",
+        "1"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:9000/readyz',timeout=5)"
+        ],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 12
+      },
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "target": "/app/runtime",
+          "read_only": false
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "target": "/app/data/chroma",
+          "read_only": false
+        }
+      ],
+      "private_env_file_count": 1
+    },
+    "frontend": {
+      "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "cpus": 0.5,
+      "mem_limit": "128m",
+      "pids_limit": 64,
+      "ports": [
+        "127.0.0.1:8380:80"
+      ],
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1/ || exit 1"
+        ],
+        "interval": "30s",
+        "timeout": "5s",
+        "retries": 3,
+        "start_period": "10s"
+      },
+      "volumes": [],
+      "private_env_file_count": 0
+    },
+    "prometheus": {
+      "image": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "cpus": 0.5,
+      "mem_limit": "256m",
+      "pids_limit": 64,
+      "ports": [
+        "127.0.0.1:19090:9090"
+      ],
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "command": [
+        "--config.file=/etc/prometheus/prometheus.yml",
+        "--storage.tsdb.retention.time=15d",
+        "--storage.tsdb.retention.size=512MB"
+      ],
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+          "target": "/etc/prometheus/prometheus.yml",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+          "target": "/etc/prometheus/alerts.yml",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "daily_prometheus",
+          "target": "/prometheus"
+        }
+      ],
+      "private_env_file_count": 0
+    },
+    "alertmanager": {
+      "image": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "cpus": 0.25,
+      "mem_limit": "128m",
+      "pids_limit": 64,
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+          "target": "/etc/alertmanager/alertmanager.yml",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "daily_alerts",
+          "target": "/alertmanager"
+        }
+      ],
+      "private_env_file_count": 0
+    },
+    "alert-receiver": {
+      "image": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "cpus": 0.25,
+      "mem_limit": "128m",
+      "pids_limit": 64,
+      "logging": {
+        "driver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      },
+      "restart": "unless-stopped",
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request;urllib.request.urlopen('http://localhost:9088/healthz',timeout=3)"
+        ],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 12
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "daily_alert_inbox",
+          "target": "/inbox"
+        }
+      ],
+      "private_env_file_count": 0
+    }
+  },
+  "volumes": {
+    "java_business_data": {
+      "external": true,
+      "name": "langchain-trip-planner_java_business_data"
+    },
+    "daily_prometheus": {},
+    "daily_alerts": {},
+    "daily_alert_inbox": {}
+  },
+  "networks": {},
+  "private_config": "Actual env files under ignored .codex-optimization/daily-window/runtime; original daily secrets and provider/budget settings retained. Never stage those files.",
+  "reproduction": "Use exact immutable image IDs. Receiver recipe daily-receiver.Dockerfile copies backend/scripts/operational_alert_receiver.py as receiver.py. Env values must come from private complete backup, not this public receipt."
+}

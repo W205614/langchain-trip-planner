@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "same_original_four_ids_images_states": true,
+  "latest_complete_backup_manifest_verified": true,
+  "manifest_sha256": "f3b9f8bb6122cb4fda091ddc1ff04240b617b56fee2206504dd8a694be080c48",
+  "backup_tables": 36,
+  "heartbeat_recent": true,
+  "task_sections_unchanged": {
+    "Principals": true,
+    "Settings": true,
+    "Triggers": true
+  },
+  "scope": "Action path only migrated to tools/windows_backup_runner.pyw; existing pythonw/user/limited/Interactive/IgnoreNew/schedule/backup-root/output preserved. No raw Env included.",
+  "actual_result": "windows-silent-task-actual-result.json",
+  "original_failure": "windows-backup-20261027-startup-failure.json",
+  "host_recovery_tests": "3 targeted failure-compensation tests passed; first synthetic fixture lacked Env and was corrected, initial failure is not a product runtime failure.",
+  "native_runner_tests": "4 actual Windows process/handle/exit tests passed;3 mocked Action migration cases passed.",
+  "backup_relative_path": "backups/automated-daily/scheduled-20261027T011030Z",
+  "checked_at": "2026-10-27T01:12:35.966672+00:00"
+}

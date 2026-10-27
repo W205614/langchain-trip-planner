@@ -1,0 +1,3633 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-10-26T16:17:24.305970+00:00",
+  "execute": true,
+  "passed": true,
+  "preflight_complete": true,
+  "approved_plan_sha256": "761c9f864e0e01b98691cd29a4ab2673ab59881e8ed200929673c3a42a0e3dca",
+  "grant_sha256": "ed6e914cd9a2332139f8070cf0c305e59c3e9bb35861024ae6193c9560786f22",
+  "root_prerequisite_receipt": "docs\\evidence\\optimization-20261026\\cleanup-prerequisite-receipt.json",
+  "receipt_sha256": "a60de5c69ab0fb98e54ffa5d1fbead7d2625a3865944d72626800e80dcde4ca6",
+  "business_artifact_source_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "approved_counts": {
+    "containers": 32,
+    "networks": 7,
+    "named_synthetic_volumes": 14,
+    "images": 0
+  },
+  "manifest": [
+    {
+      "kind": "container",
+      "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+        "name": "trip-opt-candidate-20261026-alertmanager-1",
+        "image": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+        "labels": {
+          "com.docker.compose.config-hash": "d17d841763ac723c5d24ca3611169624017632729d14751ef154043afdba37cd",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:925934eed86047c1ab4d9a3f80d4b79bdc1f8aa3ec36015867c76bf4d76988d3",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "alertmanager",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate-monitoring",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_alerts",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_alerts/_data",
+            "Destination": "/alertmanager",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+            "Destination": "/etc/alertmanager/alertmanager.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+          "trip-opt-candidate-20261026_ingress": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026_candidate_alerts": [
+          {
+            "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+        "name": "trip-opt-candidate-20261026-amap-fixture-1",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.config-hash": "8b4ebabc209e710900724602f976b851d2d5db9fbf8424d2bb4889128a508b1c",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:43a61badd6ae15965b81a3704f824baae1838eec6e73ca04685778bebbec7a87",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "amap-fixture",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+        "name": "trip-security-inventory-8f213fe9e1a1",
+        "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+        "labels": {
+          "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "created",
+        "networks": {
+          "bridge": ""
+        },
+        "network_mode": "bridge"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+        "name": "trip-security-inventory-33baec0ce676",
+        "image": "sha256:444577029d9564696c939756299447c09507a8867ad61e6867034b5d216e0b74",
+        "labels": {
+          "org.opencontainers.image.revision": "06445e07c31a601e4a90efdc9e787087b4a2f932",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "created",
+        "networks": {
+          "bridge": ""
+        },
+        "network_mode": "bridge"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+        "name": "trip-opt-candidate-20261026-v2-agent-1",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.config-hash": "4bd057ea06238368184f953915e2cfdc0ae2c57c0e9f7b32723de8cc0b228f0a",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "backend:service_healthy:false",
+          "com.docker.compose.image": "sha256:43a61badd6ae15965b81a3704f824baae1838eec6e73ca04685778bebbec7a87",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "agent",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_runtime",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_runtime/_data",
+            "Destination": "/app/runtime",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_chroma",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_chroma/_data",
+            "Destination": "/app/data/chroma",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "/run/desktop/mnt/host/e/project/langchain-trip-planner/backend/scripts/validation_research_provider.py",
+            "Destination": "/app/scripts/validation_research_provider.py",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026-v2_candidate_runtime": [
+          {
+            "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ],
+        "trip-opt-candidate-20261026-v2_candidate_chroma": [
+          {
+            "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+        "name": "trip-opt-candidate-20261026-frontend-1",
+        "image": "sha256:b45f5e518a7fb4147bc30954452473756ff6206515cd332354f91a15a2f9bd50",
+        "labels": {
+          "com.docker.compose.config-hash": "31eb3c4f2295277d5d070f3b6f00cb767b4e873a88c81f9ed8758e6182a3c715",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "backend:service_started:false",
+          "com.docker.compose.image": "sha256:e2d64be0de5639969e3a4799245c7501347e60a8f1e373797ee731f4949c1848",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "frontend",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+          "trip-opt-candidate-20261026_ingress": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+        "name": "trip-opt-candidate-20261026-v2-amap-fixture-1",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.config-hash": "8b4ebabc209e710900724602f976b851d2d5db9fbf8424d2bb4889128a508b1c",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:43a61badd6ae15965b81a3704f824baae1838eec6e73ca04685778bebbec7a87",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "amap-fixture",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+        "name": "trip-opt-baseline-20261026-frontend-1",
+        "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+        "labels": {
+          "com.docker.compose.config-hash": "b4005b4588abda7473a28ae86bd5086a35edd5f96af74e514bd659351e6e7db2",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "backend:service_started:false",
+          "com.docker.compose.image": "sha256:1a22cf460637d3f3f56986b9bea6694b2cd409b138fb8b41676e63f9a052a72a",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\baseline.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner",
+          "com.docker.compose.service": "frontend",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "baseline",
+          "org.opencontainers.image.revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-baseline-20261026_default": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed"
+        },
+        "network_mode": "trip-opt-baseline-20261026_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+        "name": "trip-security-apt-metadata-1e2ac7f2d9e7",
+        "image": "sha256:5c88311a32848f3d718e3b64e5e99e76e9659d03d8e4c07226a0a60325626a12",
+        "labels": {
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "none": "86005cb646fc0f09208ccd41c8722299d3c04ad4e720dce963b77b751cd83dc2"
+        },
+        "network_mode": "none"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "38b12bbdf9627f616b082d1a85d97e4a431001c5f5dc7b0c5ac1d6d909d5e085",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "38b12bbdf9627f616b082d1a85d97e4a431001c5f5dc7b0c5ac1d6d909d5e085",
+        "name": "trip-opt-20261026-python-patched",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.oneoff": "True",
+          "com.docker.compose.project": "trip-opt-unit-20261026",
+          "com.docker.compose.service": "agent-test",
+          "com.tripplanner.optimization": "20261026",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\backend\\tests",
+            "Destination": "/app/tests",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "none": "86005cb646fc0f09208ccd41c8722299d3c04ad4e720dce963b77b751cd83dc2"
+        },
+        "network_mode": "none"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+        "name": "trip-opt-candidate-20261026-backend-1",
+        "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+        "labels": {
+          "com.docker.compose.config-hash": "ba0200623290c08c6564e1236a979015e44a4c26dbaca776031122d0611a5494",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "amap-fixture:service_healthy:false,postgres:service_healthy:false",
+          "com.docker.compose.image": "sha256:cf6504de17320a71759229c40dea6b13eaa2614a516a5b72d1b8286d0f7f1d06",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "backend",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+          "org.opencontainers.image.version": "24.04"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_migration_uploads",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_migration_uploads/_data",
+            "Destination": "/data/uploads",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026_migration_uploads": [
+          {
+            "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+        "name": "trip-opt-baseline-20261026-gateway-1",
+        "image": "sha256:663afd720ff6e30b1502dca74b3284f572608399efdb43bc9a0185fbf89ebf95",
+        "labels": {
+          "com.docker.compose.config-hash": "58d4d8d065782901c0ef2d7023dc9c1b9f2e131d25e4257a744fad2f50873636",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "backend:service_started:false",
+          "com.docker.compose.image": "sha256:1a22cf460637d3f3f56986b9bea6694b2cd409b138fb8b41676e63f9a052a72a",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\baseline.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner",
+          "com.docker.compose.service": "gateway",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "baseline-loopback-gateway",
+          "org.opencontainers.image.revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-baseline-20261026_default": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+          "trip-opt-baseline-20261026_ingress": "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9"
+        },
+        "network_mode": "trip-opt-baseline-20261026_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+        "name": "trip-opt-candidate-20261026-alert-receiver-1",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.config-hash": "7463503a84dfbdea567026fb48519cc60ce94d3892ac3bfc2d0618236ec18f73",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:43a61badd6ae15965b81a3704f824baae1838eec6e73ca04685778bebbec7a87",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "alert-receiver",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate-monitoring",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_alert_inbox",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_alert_inbox/_data",
+            "Destination": "/app/runtime",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026_candidate_alert_inbox": [
+          {
+            "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+        "name": "trip-opt-candidate-20261026-v2-alertmanager-1",
+        "image": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+        "labels": {
+          "com.docker.compose.config-hash": "9f7146c7376be039411ab6c952c3e79275b8e32fae5af4a6b2a72ac3fed69b3e",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:925934eed86047c1ab4d9a3f80d4b79bdc1f8aa3ec36015867c76bf4d76988d3",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "alertmanager",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate-monitoring",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_alerts",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_alerts/_data",
+            "Destination": "/alertmanager",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+            "Destination": "/etc/alertmanager/alertmanager.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+          "trip-opt-candidate-20261026-v2_ingress": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026-v2_candidate_alerts": [
+          {
+            "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+        "name": "trip-opt-candidate-20261026-v2-postgres-1",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "labels": {
+          "com.docker.compose.config-hash": "66c923b4fae6ddcf964e10d9855ca38901d45fe173d673f2ccdaf0df831dff2f",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "postgres",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_migration_database",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_migration_database/_data",
+            "Destination": "/var/lib/postgresql/data",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026-v2_migration_database": [
+          {
+            "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+        "name": "trip-opt-candidate-20261026-v2-backend-1",
+        "image": "sha256:8f0e8464527ac7c500e7d83ddccddad7053274944b9ed111316751d6ec4a28e0",
+        "labels": {
+          "com.docker.compose.config-hash": "65ac3194ebf13304fb41134e9068b36e064f7722b99f596832b9dc058fd1b601",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "postgres:service_healthy:false,amap-fixture:service_healthy:false",
+          "com.docker.compose.image": "sha256:8f684955af510190d01a6bf0a25cb7ddf8b3d2280966c8bee919ed509ece4850",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "backend",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+          "org.opencontainers.image.version": "26.04"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_migration_uploads",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_migration_uploads/_data",
+            "Destination": "/data/uploads",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026-v2_migration_uploads": [
+          {
+            "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+        "name": "trip-monitor-smoke-ccc7737ced39-receiver",
+        "image": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+        "labels": {
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\.cache\\trip-monitor-smoke-ccc7737ced39\\receiver.py",
+            "Destination": "/fixture.py",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-monitor-smoke-ccc7737ced39": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+        },
+        "network_mode": "trip-monitor-smoke-ccc7737ced39"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+        "name": "trip-monitor-smoke-ccc7737ced39-alertmanager",
+        "image": "sha256:45e7a1d524b94f4d6e27f1caa34f201dbf11e557b47a9670bc76d76ce83a7315",
+        "labels": {
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\.cache\\trip-monitor-smoke-ccc7737ced39\\alertmanager.yml",
+            "Destination": "/etc/alertmanager/alertmanager.yml",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-monitor-smoke-ccc7737ced39": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+        },
+        "network_mode": "trip-monitor-smoke-ccc7737ced39"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+        "name": "trip-opt-baseline-20261026-postgres-1",
+        "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+        "labels": {
+          "com.docker.compose.config-hash": "db1e5d8dc00302c411b07950340c559e849cfb0387cbccda27884a37b54b779e",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:747d5ed1fdeeb124b880fbe3d7c6557d2c4064ae41d6b6297d417882effce4be",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\baseline.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner",
+          "com.docker.compose.service": "postgres",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "baseline"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-baseline-20261026_migration_database",
+            "Source": "/var/lib/docker/volumes/trip-opt-baseline-20261026_migration_database/_data",
+            "Destination": "/var/lib/postgresql/data",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-baseline-20261026_default": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed"
+        },
+        "network_mode": "trip-opt-baseline-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-baseline-20261026_migration_database": [
+          {
+            "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+            "project": "trip-opt-baseline-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+        "name": "trip-opt-baseline-20261026-backend-1",
+        "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+        "labels": {
+          "com.docker.compose.config-hash": "0aaca63715be48ea9f1099ef59a52a420447e71bfba1d2f4dc1c9c97721b3d35",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "postgres:service_healthy:false,amap-fixture:service_healthy:false",
+          "com.docker.compose.image": "sha256:044e5d628f1fafc218b62d2beeac54493e59c1fe45cf55fa5305127a2126d069",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\baseline.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner",
+          "com.docker.compose.service": "backend",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "baseline",
+          "org.opencontainers.image.revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+          "org.opencontainers.image.version": "26.04"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-baseline-20261026_migration_uploads",
+            "Source": "/var/lib/docker/volumes/trip-opt-baseline-20261026_migration_uploads/_data",
+            "Destination": "/data/uploads",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-baseline-20261026_default": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed"
+        },
+        "network_mode": "trip-opt-baseline-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-baseline-20261026_migration_uploads": [
+          {
+            "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+            "project": "trip-opt-baseline-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+        "name": "trip-opt-candidate-20261026-prometheus-1",
+        "image": "sha256:229af4e1776cc48ccfcd655909cb0a074465039aa3017b7ed8377771e0718460",
+        "labels": {
+          "com.docker.compose.config-hash": "56484d1f5b6630345042f36681d1730cd71192df3545131b67f56c3b09953866",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:e818d11e745cda33426e780cb2ccdc882c37aef59881effded16b2d4e5e6fd27",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "prometheus",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate-monitoring",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "c5dbac63c385ce26617cd99fa42b4b6b00104a7c9b304b4ef0cccd32331081c6",
+            "Source": "/var/lib/docker/volumes/c5dbac63c385ce26617cd99fa42b4b6b00104a7c9b304b4ef0cccd32331081c6/_data",
+            "Destination": "/prometheus",
+            "Driver": "local",
+            "Mode": "",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+            "Destination": "/etc/prometheus/alerts.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+            "Destination": "/etc/prometheus/prometheus.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+          "trip-opt-candidate-20261026_ingress": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {
+        "c5dbac63c385ce26617cd99fa42b4b6b00104a7c9b304b4ef0cccd32331081c6": [
+          {
+            "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+        "name": "trip-security-inventory-d5bb2a85a6c5",
+        "image": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+        "labels": {
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "created",
+        "networks": {
+          "bridge": ""
+        },
+        "network_mode": "bridge"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+        "name": "trip-opt-candidate-20261026-agent-1",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.config-hash": "ff5422aa8e734531a174c32672d0ab79835e439857334d7878e54626df291062",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "backend:service_healthy:false",
+          "com.docker.compose.image": "sha256:43a61badd6ae15965b81a3704f824baae1838eec6e73ca04685778bebbec7a87",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "agent",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_runtime",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_runtime/_data",
+            "Destination": "/app/runtime",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_candidate_chroma",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_chroma/_data",
+            "Destination": "/app/data/chroma",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026_candidate_runtime": [
+          {
+            "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ],
+        "trip-opt-candidate-20261026_candidate_chroma": [
+          {
+            "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+        "name": "trip-opt-baseline-20261026-agent-1",
+        "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+        "labels": {
+          "com.docker.compose.config-hash": "10c3bc75d1347cd0522cf86545e7f4db57ca72773285625e9347738eaa276dbf",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:9e34588b398c197021b02de2a27a91a1363b42f718311a11e9348578421cc875",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\baseline.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner",
+          "com.docker.compose.service": "agent",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "baseline",
+          "org.opencontainers.image.revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-baseline-20261026_default": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed"
+        },
+        "network_mode": "trip-opt-baseline-20261026_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+        "name": "trip-security-apt-metadata-bfad86d78a6e",
+        "image": "sha256:5c88311a32848f3d718e3b64e5e99e76e9659d03d8e4c07226a0a60325626a12",
+        "labels": {
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "none": "86005cb646fc0f09208ccd41c8722299d3c04ad4e720dce963b77b751cd83dc2"
+        },
+        "network_mode": "none"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "e3ae1773c3ffe5d31b7ce525a7f73440eae3f7694db2b4689520d6662585d1b7",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "e3ae1773c3ffe5d31b7ce525a7f73440eae3f7694db2b4689520d6662585d1b7",
+        "name": "trip-opt-20261026-native-compat",
+        "image": "sha256:4cef4e60c173f6d48a3864a73d80e4ffd5d515ad64b03eae9d7015c5775ab1c1",
+        "labels": {
+          "com.docker.compose.oneoff": "True",
+          "com.docker.compose.project": "trip-opt-unit-20261026",
+          "com.docker.compose.service": "agent-test",
+          "com.tripplanner.optimization": "20261026",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\backend\\tests",
+            "Destination": "/app/tests",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "none": "86005cb646fc0f09208ccd41c8722299d3c04ad4e720dce963b77b751cd83dc2"
+        },
+        "network_mode": "none"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+        "name": "trip-opt-baseline-20261026-amap-fixture-1",
+        "image": "sha256:2501bbbd27ceaf9768d1cc9de25096b561d737492970480f562530350b37e893",
+        "labels": {
+          "com.docker.compose.config-hash": "30e419a7eb5ed9b081a0e0730c75a3a830bda8276d595db81ec1ef3e45f2ea7d",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:9e34588b398c197021b02de2a27a91a1363b42f718311a11e9348578421cc875",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\baseline.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner",
+          "com.docker.compose.service": "amap-fixture",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "baseline",
+          "org.opencontainers.image.revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-baseline-20261026_default": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed"
+        },
+        "network_mode": "trip-opt-baseline-20261026_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+        "name": "trip-opt-candidate-20261026-v2-alert-receiver-1",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.config-hash": "7463503a84dfbdea567026fb48519cc60ce94d3892ac3bfc2d0618236ec18f73",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:43a61badd6ae15965b81a3704f824baae1838eec6e73ca04685778bebbec7a87",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "alert-receiver",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate-monitoring",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_alert_inbox/_data",
+            "Destination": "/app/runtime",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026-v2_candidate_alert_inbox": [
+          {
+            "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+        "name": "trip-opt-candidate-20261026-v2-frontend-1",
+        "image": "sha256:19163413b0812978743a6ef93b5bc5f098509e81cb81357dd2c631b22f187da3",
+        "labels": {
+          "com.docker.compose.config-hash": "a555239cb401a0a670d8027f72802290da23f6143bae9047655a811a0bf8fbeb",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "backend:service_started:false",
+          "com.docker.compose.image": "sha256:0332ee568d10f5ad01c1ce1e92ae505c993c19042dd80df211ce8687102a649b",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "frontend",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+          "trip-opt-candidate-20261026-v2_ingress": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+        "name": "trip-opt-candidate-20261026-v2-prometheus-1",
+        "image": "sha256:229af4e1776cc48ccfcd655909cb0a074465039aa3017b7ed8377771e0718460",
+        "labels": {
+          "com.docker.compose.config-hash": "5074e088ce0c6cdfc067a8125147f63b34c084ab8ca5350d9c1c46c1534b012c",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:e818d11e745cda33426e780cb2ccdc882c37aef59881effded16b2d4e5e6fd27",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate-v2.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "prometheus",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate-monitoring",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "2cd6fef4eb92184744630286686656bfba84fd2e51988433b24bb806133130ab",
+            "Source": "/var/lib/docker/volumes/2cd6fef4eb92184744630286686656bfba84fd2e51988433b24bb806133130ab/_data",
+            "Destination": "/prometheus",
+            "Driver": "local",
+            "Mode": "",
+            "RW": true,
+            "Propagation": ""
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+            "Destination": "/etc/prometheus/alerts.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          },
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+            "Destination": "/etc/prometheus/prometheus.yml",
+            "Mode": "ro",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026-v2_default": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+          "trip-opt-candidate-20261026-v2_ingress": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c"
+        },
+        "network_mode": "trip-opt-candidate-20261026-v2_default"
+      },
+      "volume_references": {
+        "2cd6fef4eb92184744630286686656bfba84fd2e51988433b24bb806133130ab": [
+          {
+            "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+            "project": "trip-opt-candidate-20261026-v2"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "container",
+      "id": "f53add76f2bc1dffe3e4e55f4a8381ab6633d39439363070d0a1950451fdf417",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "f53add76f2bc1dffe3e4e55f4a8381ab6633d39439363070d0a1950451fdf417",
+        "name": "trip-opt-20261026-rag-recheck",
+        "image": "sha256:c4a30af5d1db4d8125afa030eb211d8bf8ab2e1724a22534b0a6414112f94812",
+        "labels": {
+          "com.docker.compose.oneoff": "True",
+          "com.docker.compose.project": "trip-opt-unit-20261026",
+          "com.docker.compose.service": "agent-test",
+          "com.tripplanner.optimization": "20261026",
+          "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+          "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+        },
+        "mounts": [
+          {
+            "Type": "bind",
+            "Source": "E:\\project\\langchain-trip-planner\\backend\\tests",
+            "Destination": "/app/tests",
+            "Mode": "",
+            "RW": false,
+            "Propagation": "rprivate"
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "none": "86005cb646fc0f09208ccd41c8722299d3c04ad4e720dce963b77b751cd83dc2"
+        },
+        "network_mode": "none"
+      },
+      "volume_references": {}
+    },
+    {
+      "kind": "container",
+      "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+        "name": "trip-opt-candidate-20261026-postgres-1",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "labels": {
+          "com.docker.compose.config-hash": "66c923b4fae6ddcf964e10d9855ca38901d45fe173d673f2ccdaf0df831dff2f",
+          "com.docker.compose.container-number": "1",
+          "com.docker.compose.depends_on": "",
+          "com.docker.compose.image": "sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4",
+          "com.docker.compose.oneoff": "False",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\candidate.compose.json",
+          "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+          "com.docker.compose.service": "postgres",
+          "com.docker.compose.version": "5.6.0",
+          "com.tripplanner.optimization": "20261026",
+          "com.tripplanner.validation": "candidate"
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Name": "trip-opt-candidate-20261026_migration_database",
+            "Source": "/var/lib/docker/volumes/trip-opt-candidate-20261026_migration_database/_data",
+            "Destination": "/var/lib/postgresql/data",
+            "Driver": "local",
+            "Mode": "rw",
+            "RW": true,
+            "Propagation": ""
+          }
+        ],
+        "running": false,
+        "status": "exited",
+        "networks": {
+          "trip-opt-candidate-20261026_default": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a"
+        },
+        "network_mode": "trip-opt-candidate-20261026_default"
+      },
+      "volume_references": {
+        "trip-opt-candidate-20261026_migration_database": [
+          {
+            "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+            "project": "trip-opt-candidate-20261026"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "network",
+      "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4",
+        "name": "trip-monitor-smoke-ccc7737ced39",
+        "labels": {},
+        "driver": "bridge"
+      },
+      "container_references": [
+        "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+        "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b"
+      ]
+    },
+    {
+      "kind": "network",
+      "id": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+        "name": "trip-opt-baseline-20261026_default",
+        "labels": {
+          "com.docker.compose.config-hash": "96e116d6e417d85331897a0d29b1368c676d8ed1ea61847bfc4a1a7c02a29e2e",
+          "com.docker.compose.network": "default",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "driver": "bridge"
+      },
+      "container_references": [
+        "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+        "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+        "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+        "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+        "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+        "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d"
+      ]
+    },
+    {
+      "kind": "network",
+      "id": "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9",
+        "name": "trip-opt-baseline-20261026_ingress",
+        "labels": {
+          "com.docker.compose.config-hash": "9873be5b31b81ebd63825f6f22a7fc1f4657c58b70a075c94a69e768a90d7b08",
+          "com.docker.compose.network": "ingress",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "driver": "bridge"
+      },
+      "container_references": [
+        "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae"
+      ]
+    },
+    {
+      "kind": "network",
+      "id": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+        "name": "trip-opt-candidate-20261026-v2_default",
+        "labels": {
+          "com.docker.compose.config-hash": "bc1d026e50808cc6e0300a6b75fa18fa1e6acca1d228c94607b4762170758ea8",
+          "com.docker.compose.network": "default",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "driver": "bridge"
+      },
+      "container_references": [
+        "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+        "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+        "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+        "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+        "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+        "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+        "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+        "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6"
+      ]
+    },
+    {
+      "kind": "network",
+      "id": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c",
+        "name": "trip-opt-candidate-20261026-v2_ingress",
+        "labels": {
+          "com.docker.compose.config-hash": "121a15b47763e373de2107e2c5da25b359e55ac1ec9dec7a5bf57a48a8fd03f9",
+          "com.docker.compose.network": "ingress",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "driver": "bridge"
+      },
+      "container_references": [
+        "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+        "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+        "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6"
+      ]
+    },
+    {
+      "kind": "network",
+      "id": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+        "name": "trip-opt-candidate-20261026_default",
+        "labels": {
+          "com.docker.compose.config-hash": "0aba43afaafc3b143f717f4aec1607e92f1514420cab8467fad21edefc854caf",
+          "com.docker.compose.network": "default",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "driver": "bridge"
+      },
+      "container_references": [
+        "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+        "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+        "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+        "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+        "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+        "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+        "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+        "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097"
+      ]
+    },
+    {
+      "kind": "network",
+      "id": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81",
+      "eligible_at_preflight": true,
+      "actual": {
+        "id": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81",
+        "name": "trip-opt-candidate-20261026_ingress",
+        "labels": {
+          "com.docker.compose.config-hash": "77ed5ff7022c6bc4098631a6bb78def09f0abe56184146c0712774aa768eee97",
+          "com.docker.compose.network": "ingress",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0"
+        },
+        "driver": "bridge"
+      },
+      "container_references": [
+        "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+        "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+        "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0"
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-baseline-20261026_migration_database",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-baseline-20261026_migration_database",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-baseline-20261026_migration_database/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "6b849447a74ea0016482083a10a5ed00fa5e1865c02acf21397d393f9cc46f67",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_database"
+        }
+      },
+      "container_references": [
+        {
+          "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+          "project": "trip-opt-baseline-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-baseline-20261026_migration_uploads",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-baseline-20261026_migration_uploads",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-baseline-20261026_migration_uploads/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "17dc82b93f6221985760e91727466fec84efbe81df7c9931a1a1d1e91c300fa1",
+          "com.docker.compose.project": "trip-opt-baseline-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_uploads"
+        }
+      },
+      "container_references": [
+        {
+          "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+          "project": "trip-opt-baseline-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_alert_inbox/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "5aaab839fd47dac49ede6ec0d80e0ca8d37cbb1c672da972d7b206b75996ee39",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alert_inbox"
+        }
+      },
+      "container_references": [
+        {
+          "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+          "project": "trip-opt-candidate-20261026-v2"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_alerts",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026-v2_candidate_alerts",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_alerts/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "9932db53a4311fbe1b78fa031694eec66260d65fef00acd316c5e71fe7171e7a",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alerts"
+        }
+      },
+      "container_references": [
+        {
+          "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+          "project": "trip-opt-candidate-20261026-v2"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_chroma",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026-v2_candidate_chroma",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_chroma/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "768f3dd3804b7c602900f5aaca38667b69bf91c3ce3f59031a38ddfc105aae3b",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_chroma"
+        }
+      },
+      "container_references": [
+        {
+          "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+          "project": "trip-opt-candidate-20261026-v2"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_runtime",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026-v2_candidate_runtime",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_candidate_runtime/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "4862d77fa667193315f8d300d3ce5e899dc8d51123a0c8c318257c0ce67209ca",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_runtime"
+        }
+      },
+      "container_references": [
+        {
+          "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+          "project": "trip-opt-candidate-20261026-v2"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_migration_database",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026-v2_migration_database",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_migration_database/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "3a13a2b2e6cb89584e882553beea82305d19b57a4f0c3b64dd1b59ddd8492d2a",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_database"
+        }
+      },
+      "container_references": [
+        {
+          "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+          "project": "trip-opt-candidate-20261026-v2"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_migration_uploads",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026-v2_migration_uploads",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026-v2_migration_uploads/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "6b27ec40768e7c1cafbc2604c5526bab7a8e6067fca42997c552f587f6d062f3",
+          "com.docker.compose.project": "trip-opt-candidate-20261026-v2",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_uploads"
+        }
+      },
+      "container_references": [
+        {
+          "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+          "project": "trip-opt-candidate-20261026-v2"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_alert_inbox",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026_candidate_alert_inbox",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_alert_inbox/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "989d53bda357ecb22512c369d2eb8eef3b1e9bbe03521e59c97daa870544dac0",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alert_inbox"
+        }
+      },
+      "container_references": [
+        {
+          "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+          "project": "trip-opt-candidate-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_alerts",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026_candidate_alerts",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_alerts/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "18eef779f836a628c53a6fb39e0e50e989cb6096bbe3e4f4080fecc9bc3b00cd",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_alerts"
+        }
+      },
+      "container_references": [
+        {
+          "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+          "project": "trip-opt-candidate-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_chroma",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026_candidate_chroma",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_chroma/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "c2c4ec5f3cfd1ea83e4cefd6130840d6582e75a0008e1b037e29ab5790290ae8",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_chroma"
+        }
+      },
+      "container_references": [
+        {
+          "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+          "project": "trip-opt-candidate-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_runtime",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026_candidate_runtime",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026_candidate_runtime/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "c20699d20d38f0ebcfb0c9b00ee767b30c2bf0db7441c6d88766caa931c5d7cc",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "candidate_runtime"
+        }
+      },
+      "container_references": [
+        {
+          "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+          "project": "trip-opt-candidate-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_migration_database",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026_migration_database",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026_migration_database/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "c6d65dcc760692cdd44baaa5846bc88166cf84c338f476c22d0ed1f9fecf249d",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_database"
+        }
+      },
+      "container_references": [
+        {
+          "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+          "project": "trip-opt-candidate-20261026"
+        }
+      ]
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_migration_uploads",
+      "eligible_at_preflight": true,
+      "actual": {
+        "name": "trip-opt-candidate-20261026_migration_uploads",
+        "driver": "local",
+        "scope": "local",
+        "mountpoint": "/var/lib/docker/volumes/trip-opt-candidate-20261026_migration_uploads/_data",
+        "labels": {
+          "com.docker.compose.config-hash": "fbb312405f9cb112689186a9a68ce1d1cf3301063d49063605f7d198249035d3",
+          "com.docker.compose.project": "trip-opt-candidate-20261026",
+          "com.docker.compose.version": "5.6.0",
+          "com.docker.compose.volume": "migration_uploads"
+        }
+      },
+      "container_references": [
+        {
+          "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+          "project": "trip-opt-candidate-20261026"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "kind": "container",
+      "id": "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:25.801775+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:27.115797+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:29.264812+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:31.892868+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:35.623482+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:36.964576+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:38.066988+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:39.611965+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:40.724427+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "38b12bbdf9627f616b082d1a85d97e4a431001c5f5dc7b0c5ac1d6d909d5e085",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:42.559048+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:45.358209+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:46.501489+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:48.835521+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:50.748286+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:52.903861+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:54.894545+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:55.828464+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:56.803380+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:18:58.906759+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:00.936768+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:03.650543+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:04.852622+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:08.015015+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:08.936524+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:09.934828+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "e3ae1773c3ffe5d31b7ce525a7f73440eae3f7694db2b4689520d6662585d1b7",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:10.857307+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:11.832016+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:13.785660+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:14.667062+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:16.499877+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "f53add76f2bc1dffe3e4e55f4a8381ab6633d39439363070d0a1950451fdf417",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:17.540545+00:00"
+    },
+    {
+      "kind": "container",
+      "id": "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:20.078334+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:23.376038+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:26.433024+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:29.659105+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:32.525959+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:35.281407+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:38.304027+00:00"
+    },
+    {
+      "kind": "network",
+      "id": "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:41.411619+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-baseline-20261026_migration_database",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:43.028717+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-baseline-20261026_migration_uploads",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:44.441493+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:45.921835+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_alerts",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:48.159854+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_chroma",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:50.262209+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_candidate_runtime",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:52.158512+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_migration_database",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:53.674501+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026-v2_migration_uploads",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:54.871744+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_alert_inbox",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:56.114886+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_alerts",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:57.506578+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_chroma",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:19:58.875056+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_candidate_runtime",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:20:00.313224+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_migration_database",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:20:01.591930+00:00"
+    },
+    {
+      "kind": "volume",
+      "id": "trip-opt-candidate-20261026_migration_uploads",
+      "operation": "rm",
+      "returncode": 0,
+      "at": "2026-10-26T16:20:03.017312+00:00"
+    }
+  ],
+  "skips": [],
+  "errors": [],
+  "images_removed": 0,
+  "files_deleted": 0,
+  "boundary": "Exact approved objects only; every skip retained. No image/anonymous-volume/file deletion, force, prune, down or network disconnect. Whole batch metadata is recorded before the first lifecycle operation.",
+  "private_error_log_directory": "E:\\project\\langchain-trip-planner\\.codex-optimization\\exact-cleanup-private-ef40bd99ff4c4df7a10f71c664dd6f0b",
+  "protected_present_before": {
+    "d898fdc4a0a7424d8b0d078caa11ce3c85af6c059e19176c3b7151ab6b53825b": {
+      "id": "d898fdc4a0a7424d8b0d078caa11ce3c85af6c059e19176c3b7151ab6b53825b",
+      "name": "trip-opt-final-20261026-postgres-1",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "labels": {
+        "com.docker.compose.config-hash": "0abdf839c8bd4d7350c8d596135b90caebe2a57c625452faf2916b331ce73b65",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "postgres",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-final-20261026_migration_database",
+          "Source": "/var/lib/docker/volumes/trip-opt-final-20261026_migration_database/_data",
+          "Destination": "/var/lib/postgresql/data",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062": {
+      "id": "9c57e74bd8a447e8c9760a6304edb620fbff12d17be0cb0f0c927b409ec66062",
+      "name": "trip-opt-hardened-20261026-postgres-1",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "labels": {
+        "com.docker.compose.config-hash": "0abdf839c8bd4d7350c8d596135b90caebe2a57c625452faf2916b331ce73b65",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "postgres",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_migration_database",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_migration_database/_data",
+          "Destination": "/var/lib/postgresql/data",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176": {
+      "id": "b42a4e1f266e0b8e1201bd731fe72a85e5771346927159d263fadeec67317176",
+      "name": "trip-opt-hardened-20261026-agent-1",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "com.docker.compose.config-hash": "a8d4207f95ba4c025a18647fb692e5d509178bbfa69976f86239106598090c5f",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "backend:service_healthy:false",
+        "com.docker.compose.image": "sha256:49d65d0e46f8637b641a116c3922cb2574c05836816a26e2841a56c78c64f5d6",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "agent",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_runtime",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_runtime/_data",
+          "Destination": "/app/runtime",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_chroma",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_chroma/_data",
+          "Destination": "/app/data/chroma",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0": {
+      "id": "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0",
+      "name": "langchain-trip-planner-prometheus-1",
+      "image": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "labels": {
+        "com.docker.compose.config-hash": "bf55d3210ecb46b125441c4bac11492eccdc88ecef387ae6091ee82f4ff9293b",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:6281e21e027d0bb03e999fc93be03186f52aff03866b0955d154239d063934e5",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.service": "prometheus",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "langchain-trip-planner_daily_prometheus",
+          "Source": "/var/lib/docker/volumes/langchain-trip-planner_daily_prometheus/_data",
+          "Destination": "/prometheus",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "bind",
+          "Source": "/run/desktop/mnt/host/e/project/langchain-trip-planner/deploy/alerts.yml",
+          "Destination": "/etc/prometheus/alerts.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/run/desktop/mnt/host/e/project/langchain-trip-planner/deploy/prometheus.yml",
+          "Destination": "/etc/prometheus/prometheus.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    },
+    "22f237d84ffd36a67656bde218a11818b874bca9baf9c7205ff92bc20662926c": {
+      "id": "22f237d84ffd36a67656bde218a11818b874bca9baf9c7205ff92bc20662926c",
+      "name": "trip-final-restore-guard-db-efdbc98937cf",
+      "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-backend",
+        "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "24.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\knowledge_uploads",
+          "Destination": "/data/uploads",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": false,
+      "status": "exited",
+      "networks": {
+        "trip-final-restore-efdbc98937cf": "c4c55a5274d10a86950dada088e345d151d470a66b0885128da3829c2aedcf56"
+      },
+      "network_mode": "trip-final-restore-efdbc98937cf"
+    },
+    "03b6b38867fb74d01f3565cbb9bf2ce67eb7da5e9984440850cc6576e42524aa": {
+      "id": "03b6b38867fb74d01f3565cbb9bf2ce67eb7da5e9984440850cc6576e42524aa",
+      "name": "trip-opt-final-20261026-prometheus-1",
+      "image": "sha256:cf635b57aca84a440dd87636244449ac98695b068ea1a21ff440bc28b5c07d22",
+      "labels": {
+        "com.docker.compose.config-hash": "4ea260f1369870e40c9b3aae68590cb35b734962ff9da9b647689cf0302d2de7",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:d8246c1ca5a0d42e817e30e2cc0654e24d16371c5523c0b48679fcd1f183e6a3",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "prometheus",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate-monitoring",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "8d5046c679c77c8bd0038fe62860ff30dfa1117178c6ce1a5e76d93e45fca15a",
+          "Source": "/var/lib/docker/volumes/8d5046c679c77c8bd0038fe62860ff30dfa1117178c6ce1a5e76d93e45fca15a/_data",
+          "Destination": "/prometheus",
+          "Driver": "local",
+          "Mode": "",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+          "Destination": "/etc/prometheus/alerts.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+          "Destination": "/etc/prometheus/prometheus.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9",
+        "trip-opt-final-20261026_ingress": "7af14805814e1f9ecb4d676d3c9da6149e618dbd632e03919c61eee8f47df2b9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "2b7a7559c4e7939859f537a717698ebebe698a5c2131f23a7a0fc3efc2613d57": {
+      "id": "2b7a7559c4e7939859f537a717698ebebe698a5c2131f23a7a0fc3efc2613d57",
+      "name": "trip-opt-final-20261026-alert-receiver-1",
+      "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "labels": {
+        "com.docker.compose.config-hash": "a0dee3f1ea31ae89e9d88cbcda049af3b265af38ab4d4de8d34b7b74dae4a28d",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:04445901f15f87cb20e5beab7900ecac773241eecc4621165a207fe358dc64df",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "alert-receiver",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate-monitoring",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-final-20261026_candidate_alert_inbox",
+          "Source": "/var/lib/docker/volumes/trip-opt-final-20261026_candidate_alert_inbox/_data",
+          "Destination": "/app/runtime",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6": {
+      "id": "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6",
+      "name": "langchain-trip-planner-alertmanager-1",
+      "image": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "labels": {
+        "com.docker.compose.config-hash": "937b3cb2c628d2866860a2ca28eef5be18d60b5121b52759a33aa224df7206ae",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:003466d43fcba1e4dbbcf40997db7d4523ebbd0a20451ac1e2b91dcdee975b74",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.service": "alertmanager",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "langchain-trip-planner_daily_alerts",
+          "Source": "/var/lib/docker/volumes/langchain-trip-planner_daily_alerts/_data",
+          "Destination": "/alertmanager",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+          "Destination": "/etc/alertmanager/alertmanager.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    },
+    "1a48945735ff924798d4ee754b631929fdc2ccee4ebd53b54776af095df48685": {
+      "id": "1a48945735ff924798d4ee754b631929fdc2ccee4ebd53b54776af095df48685",
+      "name": "trip-opt-hardened-20261026-agent-fixture-1",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "com.docker.compose.config-hash": "4730b9746b890562e9b78711b83ee8b430670031edaa115fd90e6572298fdb84",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "backend:service_healthy:false",
+        "com.docker.compose.image": "sha256:49d65d0e46f8637b641a116c3922cb2574c05836816a26e2841a56c78c64f5d6",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "agent-fixture",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_fixture_runtime",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_fixture_runtime/_data",
+          "Destination": "/app/runtime",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_fixture_chroma",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_fixture_chroma/_data",
+          "Destination": "/app/data/chroma",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "ccd77eb6ea766cee15cfc93ec09508536ef873b12f67207dd9ba78298cd19e17": {
+      "id": "ccd77eb6ea766cee15cfc93ec09508536ef873b12f67207dd9ba78298cd19e17",
+      "name": "trip-opt-final-20261026-backend-1",
+      "image": "sha256:ac304ab4b7a3bf9868132f48895ba69a4710f2be97385c089482e1a043be8204",
+      "labels": {
+        "com.docker.compose.config-hash": "d6fb1d9de5f7641ddce82d9444c0f1821925c59a0e9d153e708e0b4bf80b2b02",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "postgres:service_healthy:false,amap-fixture:service_healthy:false",
+        "com.docker.compose.image": "sha256:3068a39a82d749d948cfb169a1d4d31d0370539c0aa9455adaf61ef281ecffef",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "backend",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "26.04"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-final-20261026_migration_uploads",
+          "Source": "/var/lib/docker/volumes/trip-opt-final-20261026_migration_uploads/_data",
+          "Destination": "/data/uploads",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "5d2392bf73a6b72e2e88e848ba1cf92dd3a4a72984ef46e526a136c7b983a79f": {
+      "id": "5d2392bf73a6b72e2e88e848ba1cf92dd3a4a72984ef46e526a136c7b983a79f",
+      "name": "trip-final-restore-backend-81fcec811960",
+      "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-backend",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "61d983a5fe0fd103820b4a1f6930db56a7fd6cef",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "26.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-daily-original-restore-20261026T151849Z\\knowledge_uploads",
+          "Destination": "/data/uploads",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-final-restore-81fcec811960": "f15fe36b79fe3faf2e865668b3367cb6590e290f2d335f1a783f4cad696da78f"
+      },
+      "network_mode": "trip-final-restore-81fcec811960"
+    },
+    "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d": {
+      "id": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d",
+      "name": "langchain-trip-planner-postgres-1",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "labels": {
+        "com.docker.compose.config-hash": "f544569e87a466ed41989fe56de42a26cb7edc38ca69b772b013f2cef57501dc",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:e4cb93687b062cd25a0e8f672d85a7708235009d70d31f8a7698d9370092a9c4",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.replace": "postgres-1",
+        "com.docker.compose.service": "postgres",
+        "com.docker.compose.version": "5.6.0"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "langchain-trip-planner_java_business_data",
+          "Source": "/var/lib/docker/volumes/langchain-trip-planner_java_business_data/_data",
+          "Destination": "/var/lib/postgresql/data",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    },
+    "5a67d75ef9a275d2a27f410069512c005fa96da7d6fcf65350514d5c98b2ca97": {
+      "id": "5a67d75ef9a275d2a27f410069512c005fa96da7d6fcf65350514d5c98b2ca97",
+      "name": "trip-final-restore-pg-efdbc98937cf",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-postgres"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-final-restore-efdbc98937cf": "c4c55a5274d10a86950dada088e345d151d470a66b0885128da3829c2aedcf56"
+      },
+      "network_mode": "trip-final-restore-efdbc98937cf"
+    },
+    "c9b7890272e3912be2084dcc360710c469139a8c028295018b3d96a474c52b42": {
+      "id": "c9b7890272e3912be2084dcc360710c469139a8c028295018b3d96a474c52b42",
+      "name": "trip-final-restore-pg-81fcec811960",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-postgres"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-final-restore-81fcec811960": "f15fe36b79fe3faf2e865668b3367cb6590e290f2d335f1a783f4cad696da78f"
+      },
+      "network_mode": "trip-final-restore-81fcec811960"
+    },
+    "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2": {
+      "id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+      "name": "langchain-trip-planner-agent-1",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "com.docker.compose.config-hash": "88e8b944d1f1df4f40397eda20e1796b972e7457a70da17c01eb48c2626ea7b4",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:49d65d0e46f8637b641a116c3922cb2574c05836816a26e2841a56c78c64f5d6",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.replace": "agent-1",
+        "com.docker.compose.service": "agent",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\backend\\data\\agent-runtime",
+          "Destination": "/app/runtime",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\backend\\data\\chroma",
+          "Destination": "/app/data/chroma",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    },
+    "1a7d800187b7c2618fcd9c9322093bb08b4fade0928e4c20f43a6340766b74cf": {
+      "id": "1a7d800187b7c2618fcd9c9322093bb08b4fade0928e4c20f43a6340766b74cf",
+      "name": "trip-final-restore-backend-67c275bccbc3",
+      "image": "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-backend",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "e0d51a966cfe4221c248fc7b99cefc0a6b995e20",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "26.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\rollback\\knowledge_uploads",
+          "Destination": "/data/uploads",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-final-restore-67c275bccbc3": "182f367ad548fd0031fdbd2f23537a21e000e0813489b67867635c2695ce6ee1"
+      },
+      "network_mode": "trip-final-restore-67c275bccbc3"
+    },
+    "edde3423d374fa31dcd6706799407012254ab3dd41260a7cbf463803f0e7f352": {
+      "id": "edde3423d374fa31dcd6706799407012254ab3dd41260a7cbf463803f0e7f352",
+      "name": "trip-final-restore-baseline-efdbc98937cf",
+      "image": "sha256:db47c1dfc053314799eb97d913adf1373d321bad03dc1230531ab316cfc955a4",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-backend",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "e0d51a966cfe4221c248fc7b99cefc0a6b995e20",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "26.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\knowledge_uploads",
+          "Destination": "/data/uploads",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": false,
+      "status": "exited",
+      "networks": {
+        "trip-final-restore-efdbc98937cf": "c4c55a5274d10a86950dada088e345d151d470a66b0885128da3829c2aedcf56"
+      },
+      "network_mode": "trip-final-restore-efdbc98937cf"
+    },
+    "ede8bfbdd459a796adbeb241dabe5f760dd823d5f1e34d7309f6dea2f2a7694a": {
+      "id": "ede8bfbdd459a796adbeb241dabe5f760dd823d5f1e34d7309f6dea2f2a7694a",
+      "name": "trip-opt-final-20261026-alertmanager-1",
+      "image": "sha256:361e00fa2ca9944d6528eeea7ced520d0481d33532f60352495f3d0d5bad928e",
+      "labels": {
+        "com.docker.compose.config-hash": "9543edf0e4f765e12f9c455d5805172e73279346daf1cd40d660e2945e864d6b",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:759bbf6625e4a4da242a444be029e883aea692f7961016b802db63adbb9bf72e",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "alertmanager",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate-monitoring",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-final-20261026_candidate_alerts",
+          "Source": "/var/lib/docker/volumes/trip-opt-final-20261026_candidate_alerts/_data",
+          "Destination": "/alertmanager",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+          "Destination": "/etc/alertmanager/alertmanager.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9",
+        "trip-opt-final-20261026_ingress": "7af14805814e1f9ecb4d676d3c9da6149e618dbd632e03919c61eee8f47df2b9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "03494373c1dfe9d79d9cb1a6bb85dd2b926a54944e50aa98f5bc7d86261a634c": {
+      "id": "03494373c1dfe9d79d9cb1a6bb85dd2b926a54944e50aa98f5bc7d86261a634c",
+      "name": "trip-opt-final-20261026-amap-fixture-1",
+      "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "labels": {
+        "com.docker.compose.config-hash": "f00b3674ec4712cf39fb4c7b9ce986876b3f178e443a1fd5822ba0934faaf311",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:04445901f15f87cb20e5beab7900ecac773241eecc4621165a207fe358dc64df",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "amap-fixture",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "31166664d8a5d88d34f875137fe5794d5ac97367282e7260d0e8416432f2aebe": {
+      "id": "31166664d8a5d88d34f875137fe5794d5ac97367282e7260d0e8416432f2aebe",
+      "name": "trip-final-restore-pg-67c275bccbc3",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-postgres"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-final-restore-67c275bccbc3": "182f367ad548fd0031fdbd2f23537a21e000e0813489b67867635c2695ce6ee1"
+      },
+      "network_mode": "trip-final-restore-67c275bccbc3"
+    },
+    "bd0404cf890a31ba3b3a2edeb7a267ce4152e6079d357441e9777a06fa9da350": {
+      "id": "bd0404cf890a31ba3b3a2edeb7a267ce4152e6079d357441e9777a06fa9da350",
+      "name": "trip-opt-hardened-20261026-alertmanager-1",
+      "image": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "labels": {
+        "com.docker.compose.config-hash": "5129ffb3535346da2a40c884e4ded99ccc143d4ba23d091402259116c634c6a1",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:003466d43fcba1e4dbbcf40997db7d4523ebbd0a20451ac1e2b91dcdee975b74",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "alertmanager",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate-monitoring",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_alerts",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_alerts/_data",
+          "Destination": "/alertmanager",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\alertmanager.yml",
+          "Destination": "/etc/alertmanager/alertmanager.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1",
+        "trip-opt-hardened-20261026_ingress": "545b7a6de8d5ce36d12245b9dc59447da54300362a1f7c2e9ea6573738139c34"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "1e52c13b83091cda08e372b11defa8cc85019f9ddaa2d4c53cf58431b1b22871": {
+      "id": "1e52c13b83091cda08e372b11defa8cc85019f9ddaa2d4c53cf58431b1b22871",
+      "name": "trip-opt-final-20261026-frontend-1",
+      "image": "sha256:93393f91cfbc36d08f20067449c2d9a47290f22b9d0946627b7ed7e9e0d588ae",
+      "labels": {
+        "com.docker.compose.config-hash": "202781a3c2e98fa74cd3b6f4a3b71f2aa55c653e88aa30c5e1f4a01b4a169e2a",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "backend:service_started:false",
+        "com.docker.compose.image": "sha256:ec439803f034a3f25b166943c958014d14cecb7b2a4df4293dd73edc6f311bc9",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "frontend",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9",
+        "trip-opt-final-20261026_ingress": "7af14805814e1f9ecb4d676d3c9da6149e618dbd632e03919c61eee8f47df2b9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e": {
+      "id": "88a3fbba6eb1a49ad34291b0bc03e9165c19fb6922762cb78f50f81b3d1ab07e",
+      "name": "trip-opt-hardened-20261026-frontend-1",
+      "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "labels": {
+        "com.docker.compose.config-hash": "a777bcd44f01fd6f6f32df3f5ac07b8f3510ca53c72846d7724a8cca7ad5d5c2",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "backend:service_started:false",
+        "com.docker.compose.image": "sha256:f2467407e0e6f5b9a17729566f243dc9d8c076b232127dd37c426d2cac2f3229",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "frontend",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1",
+        "trip-opt-hardened-20261026_ingress": "545b7a6de8d5ce36d12245b9dc59447da54300362a1f7c2e9ea6573738139c34"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "4e5dc16d01d3cbe8d552bc525098e606b97357d6d1f6a1fdb86bf4e289d6d170": {
+      "id": "4e5dc16d01d3cbe8d552bc525098e606b97357d6d1f6a1fdb86bf4e289d6d170",
+      "name": "trip-opt-hardened-file-restore-20261026-agent",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "com.docker.compose.oneoff": "True",
+        "com.docker.compose.project": "trip-opt-hardened-file-restore-20261026",
+        "com.docker.compose.service": "agent",
+        "com.tripplanner.hardened-file-restore-run": "3a01d8cb815745ebbe2f3fb2bef59e6a",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "hardened-file-restore",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb\\agent-runtime",
+          "Destination": "/app/runtime",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-hardened-file-restore-20261026-133137-3a01d8cb\\chroma",
+          "Destination": "/app/data/chroma",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": false,
+      "status": "exited",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "025b7465ab7a7dcff5d16fd2b31df4a7f6ab584fa244bbc5cbb68c4a44bc6815": {
+      "id": "025b7465ab7a7dcff5d16fd2b31df4a7f6ab584fa244bbc5cbb68c4a44bc6815",
+      "name": "trip-opt-hardened-20261026-prometheus-1",
+      "image": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "labels": {
+        "com.docker.compose.config-hash": "d9d001a772e72229c1e0d8b7e1277e56b16727efc92bc4e7ea87c83c4f09c811",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:6281e21e027d0bb03e999fc93be03186f52aff03866b0955d154239d063934e5",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "prometheus",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate-monitoring",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "579c8deb74feecd70f5c59979a96b7b6af7e8ee53a4d2c4648f87968165b0af3",
+          "Source": "/var/lib/docker/volumes/579c8deb74feecd70f5c59979a96b7b6af7e8ee53a4d2c4648f87968165b0af3/_data",
+          "Destination": "/prometheus",
+          "Driver": "local",
+          "Mode": "",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\alerts.yml",
+          "Destination": "/etc/prometheus/alerts.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\deploy\\prometheus.yml",
+          "Destination": "/etc/prometheus/prometheus.yml",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1",
+        "trip-opt-hardened-20261026_ingress": "545b7a6de8d5ce36d12245b9dc59447da54300362a1f7c2e9ea6573738139c34"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "aa331e18095365030ddeed2bf671cb8f33d1207aa6eca6b9fd4194a42d1e0e42": {
+      "id": "aa331e18095365030ddeed2bf671cb8f33d1207aa6eca6b9fd4194a42d1e0e42",
+      "name": "trip-final-restore-backend-efdbc98937cf",
+      "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-backend",
+        "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "24.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\knowledge_uploads",
+          "Destination": "/data/uploads",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-final-restore-efdbc98937cf": "c4c55a5274d10a86950dada088e345d151d470a66b0885128da3829c2aedcf56"
+      },
+      "network_mode": "trip-final-restore-efdbc98937cf"
+    },
+    "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e": {
+      "id": "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e",
+      "name": "langchain-trip-planner-alert-receiver-1",
+      "image": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+      "labels": {
+        "com.docker.compose.config-hash": "9c28fb9c541340bc8aa61783bcde03b6e2e387e8e63975fa7ccb4332cb21e764",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:8e83420351911de0eb8026f02ea554604d86fbf30f8aee504478f92432ce5014",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.service": "alert-receiver",
+        "com.docker.compose.version": "5.6.0"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "langchain-trip-planner_daily_alert_inbox",
+          "Source": "/var/lib/docker/volumes/langchain-trip-planner_daily_alert_inbox/_data",
+          "Destination": "/inbox",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    },
+    "ccc59a4d48f0853f7e289f6270ff02801884836bd50e1e53eb3da4af5d392bea": {
+      "id": "ccc59a4d48f0853f7e289f6270ff02801884836bd50e1e53eb3da4af5d392bea",
+      "name": "trip-opt-final-20261026-agent-1",
+      "image": "sha256:0bb2ad3526cb7840b1076a52dbab91374053c874618256dc22b323e5093105aa",
+      "labels": {
+        "com.docker.compose.config-hash": "dde2ef71cacdc4de20e659768b7c4090230640f09a1019ffd65ca4bfcac5e305",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "backend:service_healthy:false",
+        "com.docker.compose.image": "sha256:04445901f15f87cb20e5beab7900ecac773241eecc4621165a207fe358dc64df",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-final-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\final.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "agent",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-final-20261026_candidate_runtime",
+          "Source": "/var/lib/docker/volumes/trip-opt-final-20261026_candidate_runtime/_data",
+          "Destination": "/app/runtime",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        },
+        {
+          "Type": "volume",
+          "Name": "trip-opt-final-20261026_candidate_chroma",
+          "Source": "/var/lib/docker/volumes/trip-opt-final-20261026_candidate_chroma/_data",
+          "Destination": "/app/data/chroma",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-final-20261026_default": "4b430ddcd6ae3b71a044deef3a37344284238eaef0305b33d76d6602847ddae9"
+      },
+      "network_mode": "trip-opt-final-20261026_default"
+    },
+    "5abc88486a9c3aa415194e641be0e798d62b05731ac8f9a778e2044279875c3a": {
+      "id": "5abc88486a9c3aa415194e641be0e798d62b05731ac8f9a778e2044279875c3a",
+      "name": "trip-final-restore-guard-upload-efdbc98937cf",
+      "image": "sha256:84c0c93b22fd893a5584d1594517c07714a67bbc0cd58cf959c57a350c14e61b",
+      "labels": {
+        "com.docker.compose.project": "trip-final-restore",
+        "com.docker.compose.service": "restore-backend",
+        "org.opencontainers.image.revision": "workingtree-optimization-20261026",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "24.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-existing-data\\upgrade\\guard-upload-mismatch",
+          "Destination": "/data/uploads",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": false,
+      "status": "exited",
+      "networks": {
+        "trip-final-restore-efdbc98937cf": "c4c55a5274d10a86950dada088e345d151d470a66b0885128da3829c2aedcf56"
+      },
+      "network_mode": "trip-final-restore-efdbc98937cf"
+    },
+    "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee": {
+      "id": "ca4d17be16a6a7e23616cb489b74b27e8650b8ffecd1831d5ed312e2ea1446ee",
+      "name": "trip-opt-hardened-20261026-amap-fixture-1",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "com.docker.compose.config-hash": "4eb8ec03fbe6de847e0d9f9c9ff7322ace9c2519860c4b86372f79fda3879716",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:49d65d0e46f8637b641a116c3922cb2574c05836816a26e2841a56c78c64f5d6",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "amap-fixture",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "6751ba5211d87fb7d68b203045d25abf051d4ee94dc9f49363e6f021a476956b": {
+      "id": "6751ba5211d87fb7d68b203045d25abf051d4ee94dc9f49363e6f021a476956b",
+      "name": "trip-opt-hardened-20261026-alert-receiver-1",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "com.docker.compose.config-hash": "38e89daca9affb9ae294eef1db2813e4041c36e433cf62559774d116a8c20b1d",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:49d65d0e46f8637b641a116c3922cb2574c05836816a26e2841a56c78c64f5d6",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "alert-receiver",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate-monitoring",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_candidate_alert_inbox",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_candidate_alert_inbox/_data",
+          "Destination": "/app/runtime",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d": {
+      "id": "907f99d6a7c66b4a8b5c8e09033ef6244412e1b962b40f196882e41bd1004d5d",
+      "name": "trip-opt-hardened-20261026-backend-1",
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "labels": {
+        "com.docker.compose.config-hash": "ff8cd0a120440c67c358327567e33713b8c7d4a07cf55ee3bf77fff1a5095d0a",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "amap-fixture:service_healthy:false,postgres:service_healthy:false",
+        "com.docker.compose.image": "sha256:8131e371bf329ae324caa67452550b055d3c95d18ef50598ea498e5dcd5c0392",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "trip-opt-hardened-20261026",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\hardened.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization",
+        "com.docker.compose.service": "backend",
+        "com.docker.compose.version": "5.6.0",
+        "com.tripplanner.optimization": "20261026",
+        "com.tripplanner.validation": "candidate",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "26.04"
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "trip-opt-hardened-20261026_migration_uploads",
+          "Source": "/var/lib/docker/volumes/trip-opt-hardened-20261026_migration_uploads/_data",
+          "Destination": "/data/uploads",
+          "Driver": "local",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": ""
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "trip-opt-hardened-20261026_default": "9d656a2c57f6f5de03fe67f9caa9c929dabcf1f5bd22ff28998cb2c173a62db1"
+      },
+      "network_mode": "trip-opt-hardened-20261026_default"
+    },
+    "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695": {
+      "id": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+      "name": "langchain-trip-planner-frontend-1",
+      "image": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+      "labels": {
+        "com.docker.compose.config-hash": "e69e8b37209d656214712a4bfb81005dd63ca3b95cbf8c19575369e58954bd0d",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "backend:service_healthy:false",
+        "com.docker.compose.image": "sha256:f2467407e0e6f5b9a17729566f243dc9d8c076b232127dd37c426d2cac2f3229",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.replace": "frontend-1",
+        "com.docker.compose.service": "frontend",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    },
+    "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3": {
+      "id": "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3",
+      "name": "trip-security-inventory-d1dcf48481a2",
+      "image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+      "labels": {
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner"
+      },
+      "mounts": [],
+      "running": false,
+      "status": "created",
+      "networks": {
+        "bridge": ""
+      },
+      "network_mode": "bridge"
+    },
+    "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617": {
+      "id": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+      "name": "langchain-trip-planner-backend-1",
+      "image": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+      "labels": {
+        "com.docker.compose.config-hash": "930aedf58b3cbb0d719c0887ac40eff9e3ff36a5a6640b0c9bd880d8ad45153b",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "postgres:service_healthy:false",
+        "com.docker.compose.image": "sha256:8131e371bf329ae324caa67452550b055d3c95d18ef50598ea498e5dcd5c0392",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "langchain-trip-planner",
+        "com.docker.compose.project.config_files": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window\\daily-release.compose.json",
+        "com.docker.compose.project.working_dir": "E:\\project\\langchain-trip-planner\\.codex-optimization\\daily-window",
+        "com.docker.compose.replace": "backend-1",
+        "com.docker.compose.service": "backend",
+        "com.docker.compose.version": "5.6.0",
+        "org.opencontainers.image.revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "org.opencontainers.image.source": "https://github.com/W205614/langchain-trip-planner",
+        "org.opencontainers.image.version": "26.04"
+      },
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "E:\\project\\langchain-trip-planner\\backend\\data\\knowledge_uploads",
+          "Destination": "/data/uploads",
+          "Mode": "rw",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ],
+      "running": true,
+      "status": "running",
+      "networks": {
+        "langchain-trip-planner_default": "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1"
+      },
+      "network_mode": "langchain-trip-planner_default"
+    }
+  },
+  "preflight_saved_before_any_lifecycle_operation": true,
+  "post_removal_absence_verified": {
+    "container": [
+      "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+      "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+      "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+      "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+      "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+      "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+      "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+      "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+      "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+      "38b12bbdf9627f616b082d1a85d97e4a431001c5f5dc7b0c5ac1d6d909d5e085",
+      "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+      "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+      "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+      "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+      "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+      "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+      "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+      "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+      "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+      "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+      "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+      "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+      "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+      "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+      "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+      "e3ae1773c3ffe5d31b7ce525a7f73440eae3f7694db2b4689520d6662585d1b7",
+      "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+      "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+      "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+      "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+      "f53add76f2bc1dffe3e4e55f4a8381ab6633d39439363070d0a1950451fdf417",
+      "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097"
+    ],
+    "network": [
+      "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+      "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+      "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c",
+      "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+      "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81",
+      "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9",
+      "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+    ],
+    "volume": [
+      "trip-opt-baseline-20261026_migration_database",
+      "trip-opt-baseline-20261026_migration_uploads",
+      "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+      "trip-opt-candidate-20261026-v2_candidate_alerts",
+      "trip-opt-candidate-20261026-v2_candidate_chroma",
+      "trip-opt-candidate-20261026-v2_candidate_runtime",
+      "trip-opt-candidate-20261026-v2_migration_database",
+      "trip-opt-candidate-20261026-v2_migration_uploads",
+      "trip-opt-candidate-20261026_candidate_alert_inbox",
+      "trip-opt-candidate-20261026_candidate_alerts",
+      "trip-opt-candidate-20261026_candidate_chroma",
+      "trip-opt-candidate-20261026_candidate_runtime",
+      "trip-opt-candidate-20261026_migration_database",
+      "trip-opt-candidate-20261026_migration_uploads"
+    ]
+  },
+  "removed_identity_or_name_now_present_again": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "protected_present_metadata_unchanged": true,
+  "removed": {
+    "container": [
+      "03baad7ffbaecef778f0e09409c68d90908cfc0208233d07d8abc0e0d2014ef2",
+      "070fbd87f5745773020532b8d2a92f993d475749ca17807364c0864a2e51986d",
+      "0e425aa5d2b40c5052004ea629c012aeb0ebf28f042b48ebd5f9493c12dddf74",
+      "1401fe96f146467d6c220bb465dda19dd747b08876404ba048c90de958ebbb85",
+      "143e2c82f1f53c5aef7496894516d39a3fc05e7074dd2ae63755ba2105153dae",
+      "17e9542881ac65f84771c71ca1d32e1b356916b14990eb61aa5dc71d39d9b0ba",
+      "1eeb7a450d77f5580d0e5325b7ced9b129d07ff6823fcb9eeb3273f843627e7e",
+      "2633077f61120317d3594c988e67d75092043ecf4406aac1db198288c1fd80d3",
+      "3101817b853ab141e3709f136c4657860a907888f176b1dca2f55f48cf416b92",
+      "38b12bbdf9627f616b082d1a85d97e4a431001c5f5dc7b0c5ac1d6d909d5e085",
+      "5bede79341be0fec414cb0a2e609e71ccd819da5fe8b56f3ff8af487b6b4b27f",
+      "5f95253b7a5e6789f1db976b954e08d1f2d326e7a58e459651e821cab03c77ae",
+      "6356b4ff49514b1adad1e4c122dcdf1d521b67343933edd9f924b4ed90de1345",
+      "6da9d1a171d3692b4ce337b602a76cef3b8416800e7c28f46d79ccdf75485d5a",
+      "6de957ce65f478e0a1bf73cb11512ee34e4ae491cf8523de2398549d4c8fe700",
+      "9551d6b17b27851458b7a35c589d9019baa63f1e8f5df777b03af8080261cbed",
+      "b16b3b4e7f382c5b9a88e6bc4478888f4145a3254fcaddf63633e3bb4edad097",
+      "b48eb9c8f42690535525bcfcd8f9184c77f08106ee196a809612f76107a4d51b",
+      "bc1c63309728f77460bcd6466848f143cd75a2f4d192970f905103effbb9f4d2",
+      "c43d2a32da7206ca4b0a74a2170bbfe828346ad91c01e0b1b420703eaafd84fd",
+      "c515f857e5beb60a9a0973f53c080039d9e53ab281a157263c2e4859d2e1fdf0",
+      "c6a065fb9f49d3206b9dc3f32791d9d25a13e0a0437a32ab04bf8b2bc74d2013",
+      "c7f91384cac4356c17b7a03a91473261090b4abe523bec45da10ac0facca3196",
+      "ca43f6072cb39ca44ed5ac89cdecb15aefe58b65b6d48ea50904fbd023e487fe",
+      "dcd939ab38b8feb841d688084401f7ca990402efd4d4ffb5d9f1abb1dd9959d4",
+      "e3ae1773c3ffe5d31b7ce525a7f73440eae3f7694db2b4689520d6662585d1b7",
+      "e7090675930fe04dc9240962435e36c7ed27d3aa9f7110634cd41344d16ba69d",
+      "ec98eca1ceb7c73ffb918075ea71ecae8f31d6886704da8874b5c6a26d4fa1b8",
+      "ef212cd89db171d526572b5055589becb820c1af78ba57dc04daaf80f4f99748",
+      "f112fb4e78d9b29084ee480d256599afb4f151e41a45e48f62c623226d3ecce6",
+      "f53add76f2bc1dffe3e4e55f4a8381ab6633d39439363070d0a1950451fdf417",
+      "f746e2f6528e1ce2b2055208872b12ab8499a8386d234d53323e5778d1d6b097"
+    ],
+    "network": [
+      "0c480c93485ed60d8bfa9a4c91612b0ba761ddf826af294b2702311e9e25e2ed",
+      "45d4e9e9dd9de9227f1ecd76a88ad7ba9baadb6310e1d6da3f71817bb1f223d3",
+      "8a909ea3d909db7a1afcac8eaddfbb9deff3413f0efb474705553cf657374b1c",
+      "c63a09d89e2fa3ceb53536fbcd56e94a21167bf06e7339c87e9182ee206a8f4a",
+      "ca4a3999161358bedfb8c328d97e880eadaa7c5f05d463489103f4ba3b9e7c81",
+      "f3a5bb8d9576b159ea0abe41067b899fb47dbbdbd33c66d68d4a53a7c4eba8d9",
+      "ff31eb4cf7666ee76ffac96f3ba48803de2d2dfff85670017a5b368655684be4"
+    ],
+    "volume": [
+      "trip-opt-baseline-20261026_migration_database",
+      "trip-opt-baseline-20261026_migration_uploads",
+      "trip-opt-candidate-20261026-v2_candidate_alert_inbox",
+      "trip-opt-candidate-20261026-v2_candidate_alerts",
+      "trip-opt-candidate-20261026-v2_candidate_chroma",
+      "trip-opt-candidate-20261026-v2_candidate_runtime",
+      "trip-opt-candidate-20261026-v2_migration_database",
+      "trip-opt-candidate-20261026-v2_migration_uploads",
+      "trip-opt-candidate-20261026_candidate_alert_inbox",
+      "trip-opt-candidate-20261026_candidate_alerts",
+      "trip-opt-candidate-20261026_candidate_chroma",
+      "trip-opt-candidate-20261026_candidate_runtime",
+      "trip-opt-candidate-20261026_migration_database",
+      "trip-opt-candidate-20261026_migration_uploads"
+    ]
+  },
+  "removed_counts": {
+    "container": 32,
+    "network": 7,
+    "volume": 14
+  },
+  "all_approved_objects_removed": true,
+  "status": "executed_with_exact_results_and_retained_skips",
+  "finished_at": "2026-10-26T16:20:12.683650+00:00"
+}

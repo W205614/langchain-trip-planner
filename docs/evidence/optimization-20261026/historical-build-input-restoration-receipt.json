@@ -1,0 +1,39 @@
+{
+  "status": "implemented_faithful_reproduction_pending_final_ci",
+  "checked_at_utc": "2026-10-26T16:15:09.158626+00:00",
+  "review_authority": "Root reviewed bounded content/privacy facts and explicitly authorized faithful reproduction, not expanded acceptance.",
+  "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "current_policy_revision": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+  "approved_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "frozen_approval_sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+  "business_trees_unchanged": 5,
+  "compose_recipes_unchanged": 4,
+  "historical_files": 12,
+  "historical_raw_bytes": 472539,
+  "rawcopy_hashes_verified": true,
+  "unit_test_command": ".cache/improvement-venv/Scripts/python.exe -m unittest tools.tests.test_historical_build_inputs -v",
+  "unit_test_cases": 3,
+  "unit_test_passed": true,
+  "actual_read_only_validation": {
+    "status": "read_only_inputs_verified",
+    "historical_only": true,
+    "fresh_evaluation": false,
+    "files_verified": 12,
+    "files_restored": 0,
+    "existing_byte_identical": 12,
+    "missing_destination_before_check": 0,
+    "approval_sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+    "fingerprints_changed": false,
+    "boundary": "Faithful historical build-input reproduction only; original artifact inclusion disclosed. No benchmark/provider execution and no new quality claim."
+  },
+  "ci_restore_before_agent_build_verified": true,
+  "workflow_check_boundary": "Targeted step order/condition text check plus git diff --check; no YAML parser dependency installed or claimed.",
+  "git_attributes_preserve_exact_input_bytes": true,
+  "fingerprints_refreshed": false,
+  "docker_build_or_lifecycle_performed": false,
+  "boundaries": [
+    "Historical reports are exact build inputs, not fresh quality evidence.",
+    "Final fresh CI build still must pass 87-package/1086-native-ELF/135-app fingerprints and actual runtime expiry guard.",
+    "OS/base drift must block; no automatic acceptance update."
+  ]
+}

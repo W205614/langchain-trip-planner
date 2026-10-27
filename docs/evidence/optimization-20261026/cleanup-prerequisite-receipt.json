@@ -1,0 +1,62 @@
+{
+  "project": "langchain-trip-planner",
+  "business_artifact_source_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "created_at": "2026-10-26T16:17:23.661985+00:00",
+  "daily_deployment": {
+    "passed": true,
+    "current_container_ids": {
+      "frontend": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+      "backend": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+      "agent": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+      "postgres": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d"
+    },
+    "fresh_backup_verified": true,
+    "rollback_archive_closure_verified": true,
+    "original_mounts_preserved": true
+  },
+  "daily_readback": {
+    "passed": true,
+    "result": "daily-readback-result.json",
+    "first_failure_retained": "daily-readback-run1-failure.json",
+    "gaps": [
+      "Legacy copied record contains no timeline/binding, no current stale-time-lock denial tested on it.",
+      "No paid model, map, embedding integration exercised by readback."
+    ]
+  },
+  "windows_backup_task": {
+    "passed": true,
+    "installed": true,
+    "actual_scheduler_execution_exit_code": 0,
+    "result": "windows-backup-task-result.json"
+  },
+  "rollback_required_resources": {
+    "container": [
+      "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0",
+      "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6",
+      "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e",
+      "c9b7890272e3912be2084dcc360710c469139a8c028295018b3d96a474c52b42",
+      "5d2392bf73a6b72e2e88e848ba1cf92dd3a4a72984ef46e526a136c7b983a79f",
+      "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3"
+    ],
+    "network": [
+      "890a193ba087c2f26b1b251e5d79e847b0dfd98300cdcb6938f5a116da9a4ee1",
+      "f15fe36b79fe3faf2e865668b3367cb6590e290f2d335f1a783f4cad696da78f"
+    ],
+    "volume": [
+      "langchain-trip-planner_daily_alert_inbox",
+      "langchain-trip-planner_daily_alerts",
+      "langchain-trip-planner_daily_prometheus"
+    ]
+  },
+  "receipts": {
+    "daily-fresh-backup.json": "afa17ef40129cbea15ec5cea5e37e59600d520d1b13471f4d7823d95a414ddd7",
+    "latest-daily-image-archive-closure.json": "63ab15819bacec5ceb53bdcfacb9d7d6341c9b393e321d974202f4ece9be58bd",
+    "latest-daily-restore.json": "0a021f7cefabc8dba36856bff6f98a4d8843e3c8645a2b2f60cb85af30907c4d",
+    "daily-post-upgrade.json": "c2b57b278cda6f6fcf08f0e59efc529fa3ea2e3a82e5165a195b803c9e603aac",
+    "daily-readback-result.json": "4d159c3a790d3bec131c4b3b8ab28758d21c60a3db0329b9ac6d2840b86b64cb",
+    "windows-backup-task-result.json": "9de04ca7ee81b8063e9dcd2cbcb86bdab844de8059fdfa8624d94befb64d80e3",
+    "daily-agent-security-receipt-a454bbd.json": "ee5368996a0b34a43fd127f73e8167408ad10455b9926b2ea6ec363cf5a5b81e",
+    "daily-alert-delivery-result-2.json": "2571f2c5a8fefe530ae7bc7bb719ef4bd0ab9311349fab75815ffe1ad86bb2c8"
+  },
+  "boundary": "Only exact already granted32containers7networks14named syntheticvolumes; images/files0. First failures and known coverage gaps retained; no public-production or offhost clearance."
+}

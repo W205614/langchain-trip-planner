@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "scope": "Fresh borrowed actual daily Agent runtime observation after Windows backup task restoration; no scan or lifecycle action by this probe.",
+  "checked_at": "2026-10-26T16:18:01.491374+00:00",
+  "source_policy_revision": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+  "business_image_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "container_id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+  "same_image_and_container_as_pre_backup_receipt": true,
+  "runtime_proof_passed": true,
+  "probe_source_sha256": "56662588e49d69f741623ad268bcc4bfb712bcf17dd4ac0ac58d5f61c478bb2c",
+  "actual_process": {
+    "pid1_cmdline": [
+      "/usr/local/bin/python3.11",
+      "/usr/local/bin/uvicorn",
+      "app.agent_api.main:app",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "9000",
+      "--workers",
+      "1"
+    ],
+    "pid1_status": {
+      "Uid": "1000\t1000\t1000\t1000",
+      "Gid": "1000\t1000\t1000\t1000",
+      "CapEff": "0000000000000000",
+      "CapBnd": "0000000000000000",
+      "NoNewPrivs": "1",
+      "Seccomp": "2"
+    },
+    "self_status": {
+      "Uid": "1000\t1000\t1000\t1000",
+      "Gid": "1000\t1000\t1000\t1000",
+      "CapEff": "0000000000000000",
+      "CapBnd": "0000000000000000",
+      "NoNewPrivs": "1",
+      "Seccomp": "2"
+    },
+    "self_uid": 1000
+  },
+  "constraints": {
+    "user": "1000",
+    "cap_eff": "0000000000000000",
+    "cap_bnd": "0000000000000000",
+    "no_new_privileges": true,
+    "readonly_rootfs": true,
+    "privileged": false,
+    "cap_drop_all": true,
+    "restricted_tools_absent": true,
+    "actual_uvicorn": true
+  },
+  "root_mount": {
+    "target": "/",
+    "options": [
+      "ro",
+      "relatime"
+    ],
+    "filesystem": "overlay"
+  },
+  "windows_bind_reflection": {
+    "profile": "original_windows_bind_metadata_reflection_v1",
+    "targets": [
+      "/app/data/chroma",
+      "/app/runtime"
+    ],
+    "source_mapping_verified_by_host_inspect": true,
+    "boundary": "Only exact original Windows sources; reflected 0:0/0777 metadata is not a POSIX ownership guarantee."
+  },
+  "writepaths": [
+    {
+      "path": "/app/runtime",
+      "readback": true,
+      "exclusive_create": true,
+      "fsync": true,
+      "actual_writer_uid": 1000,
+      "sha256": "28a97d0697163c74532473ae51f42a6b83b39c53efa17256d946b7b823d25ed1",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0o777",
+      "metadata_profile": "original_windows_bind_metadata_reflection_v1",
+      "file_metadata": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o600"
+      },
+      "posix_ownership_guarantee": false
+    },
+    {
+      "path": "/app/data/chroma",
+      "readback": true,
+      "exclusive_create": true,
+      "fsync": true,
+      "actual_writer_uid": 1000,
+      "sha256": "28a97d0697163c74532473ae51f42a6b83b39c53efa17256d946b7b823d25ed1",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0o777",
+      "metadata_profile": "original_windows_bind_metadata_reflection_v1",
+      "file_metadata": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o600"
+      },
+      "posix_ownership_guarantee": false
+    },
+    {
+      "path": "/tmp",
+      "readback": true,
+      "exclusive_create": true,
+      "fsync": true,
+      "actual_writer_uid": 1000,
+      "sha256": "28a97d0697163c74532473ae51f42a6b83b39c53efa17256d946b7b823d25ed1",
+      "uid": 1000,
+      "gid": 1000,
+      "mode": "0o1777",
+      "metadata_profile": "posix_appuser_metadata",
+      "file_metadata": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o600"
+      },
+      "posix_ownership_guarantee": true
+    },
+    {
+      "path": "/app/logs",
+      "readback": true,
+      "exclusive_create": true,
+      "fsync": true,
+      "actual_writer_uid": 1000,
+      "sha256": "28a97d0697163c74532473ae51f42a6b83b39c53efa17256d946b7b823d25ed1",
+      "uid": 1000,
+      "gid": 1000,
+      "mode": "0o750",
+      "metadata_profile": "posix_appuser_metadata",
+      "file_metadata": {
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o600"
+      },
+      "posix_ownership_guarantee": true
+    }
+  ],
+  "readiness": {
+    "status": 200,
+    "service": "trip-agent",
+    "body_sha256": "115527440f04c13f53a7796c6a30705b2037aaca31d26b9b9b420e68251b4c20"
+  },
+  "container_started_at": "2026-10-26T16:13:31.49689815Z",
+  "inspect_digest": "ef025eea6cda6af9a79e7beecfd4996cf5d92e8edef942e7b0d3ccdc8b83f5fb",
+  "raw_proof": {
+    "path": ".cache/security-report-raw/daily-a454bbd/post-backup-runtime/runtime-proof-f1bf69ba9dbe4951a4c9d77cb2722e93.json",
+    "sha256": "d9a6ebc36405e4a533d6bede8ff66996c2d92e66d2ff9fb2a7307de98c92dfde",
+    "bytes": 13499
+  },
+  "existing_security_gate_receipt": "docs/evidence/optimization-20261026/daily-agent-security-receipt-a454bbd.json",
+  "risk_boundary": "Prior raw79/52records/8CVE and local-demo-only acceptance remain unchanged. Fresh runtime constraints do not fix native memory risks or authorize production/cleanup.",
+  "actions": {
+    "borrowed_container": true,
+    "new_docker_objects": false,
+    "lifecycle_or_cleanup": false,
+    "image_scan_or_export_repeated": false,
+    "retained_canaries": 4
+  }
+}

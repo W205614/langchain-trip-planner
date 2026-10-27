@@ -1,0 +1,55 @@
+{
+  "started_at": "2026-10-26T16:06:35.859791+00:00",
+  "passed": false,
+  "project": "langchain-trip-planner",
+  "synthetic_alertname": "TripSyntheticDelivery4a246df34a82",
+  "synthetic_job": "trip-local-synthetic-4a246df34a82",
+  "events": [],
+  "checks": [],
+  "docker_lifecycle_operations": 0,
+  "direct_supplier_calls": 0,
+  "boundary": [
+    "Prometheus readiness/discovery/rule loading is checked; the test alert is injected into Alertmanager API, not through a new Prometheus rule.",
+    "Real Alertmanager v2 to durable receiver webhook firing/resolved; one unique synthetic group, original timing config unchanged.",
+    "Receiver duplicate checks directly replay equivalent synthetic event identity fields, not a captured byte-identical full Alertmanager body.",
+    "Dedup granularity is name/job/status/startsAt; no claim for cross-instance distinctions, all batch/concurrent cases or external human notifications."
+  ],
+  "services": {
+    "prometheus": {
+      "id": "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0",
+      "image_id": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+      "health": null
+    },
+    "alertmanager": {
+      "id": "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6",
+      "image_id": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+      "health": null
+    },
+    "alert-receiver": {
+      "id": "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e",
+      "image_id": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517",
+      "health": "healthy"
+    }
+  },
+  "persistent_inbox_mount": {
+    "Type": "volume",
+    "Name": "langchain-trip-planner_daily_alert_inbox",
+    "Source": "/var/lib/docker/volumes/langchain-trip-planner_daily_alert_inbox/_data",
+    "Destination": "/inbox",
+    "RW": true
+  },
+  "prometheus": {
+    "url": "http://127.0.0.1:19090",
+    "ready": true,
+    "active_local_alertmanager_discovered": true,
+    "loaded_rule_groups": [
+      "trip-operational-governance",
+      "trip-reliability"
+    ]
+  },
+  "error": {
+    "type": "RuntimeError",
+    "reason": "unexpected_webhook_protocol_or_resolved_disabled"
+  },
+  "finished_at": "2026-10-26T16:06:37.808637+00:00"
+}

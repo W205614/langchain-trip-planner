@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-26T16:02:35.460293+00:00",
+  "scope": "Borrowed actual daily Agent runtime and immutable-image residual security gate; local controlled demo only. No production clearance or cleanup/deployment window is granted by this receipt.",
+  "policy_source_revision": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+  "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "container_id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+  "runtime_proof": {
+    "passed": true,
+    "checked_at": "2026-10-26T15:57:00.527008+00:00",
+    "probe_source_sha256": "56662588e49d69f741623ad268bcc4bfb712bcf17dd4ac0ac58d5f61c478bb2c",
+    "constraints": {
+      "user": "1000",
+      "cap_eff": "0000000000000000",
+      "cap_bnd": "0000000000000000",
+      "no_new_privileges": true,
+      "readonly_rootfs": true,
+      "privileged": false,
+      "cap_drop_all": true,
+      "restricted_tools_absent": true,
+      "actual_uvicorn": true
+    },
+    "inspect_digest": "9d78b9d639073bb96395aed9ab05a5c5f879e693ece465d76b8f1e14eea32d45",
+    "actual_process": {
+      "pid1_cmdline": [
+        "/usr/local/bin/python3.11",
+        "/usr/local/bin/uvicorn",
+        "app.agent_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9000",
+        "--workers",
+        "1"
+      ],
+      "pid1_status": {
+        "Uid": "1000\t1000\t1000\t1000",
+        "Gid": "1000\t1000\t1000\t1000",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1",
+        "Seccomp": "2"
+      },
+      "self_status": {
+        "Uid": "1000\t1000\t1000\t1000",
+        "Gid": "1000\t1000\t1000\t1000",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1",
+        "Seccomp": "2"
+      },
+      "self_uid": 1000
+    },
+    "guarded_context": {
+      "working_directory_is_image_default_app": true,
+      "path_matches_image_default": true,
+      "loader_environment_clear": true,
+      "loader_variable_names_checked": [
+        "LD_PRELOAD",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "PYTHONHOME",
+        "PYTHONSTARTUP"
+      ],
+      "privileged": false,
+      "readonly_rootfs": true,
+      "cap_add": null,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "devices": null,
+      "device_requests": null,
+      "device_cgroup_rules": null,
+      "port_bindings": {},
+      "resource_limits": {
+        "Memory": 2147483648,
+        "NanoCpus": 2000000000,
+        "PidsLimit": 256
+      },
+      "windows_bind_reflection": {
+        "profile": "original_windows_bind_metadata_reflection_v1",
+        "targets": [
+          "/app/data/chroma",
+          "/app/runtime"
+        ],
+        "source_mapping_verified_by_host_inspect": true,
+        "boundary": "Only exact original Windows sources; reflected 0:0/0777 metadata is not a POSIX ownership guarantee."
+      }
+    },
+    "root_mount": {
+      "target": "/",
+      "options": [
+        "ro",
+        "relatime"
+      ],
+      "filesystem": "overlay"
+    },
+    "writepaths": [
+      {
+        "path": "/app/runtime",
+        "readback": true,
+        "exclusive_create": true,
+        "fsync": true,
+        "actual_writer_uid": 1000,
+        "sha256": "f39fb4577949901bf1d0daf8ee85b0c6ce718943741615cce30df15d5051bf0c",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o777",
+        "metadata_profile": "original_windows_bind_metadata_reflection_v1",
+        "file_metadata": {
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o600"
+        },
+        "posix_ownership_guarantee": false
+      },
+      {
+        "path": "/app/data/chroma",
+        "readback": true,
+        "exclusive_create": true,
+        "fsync": true,
+        "actual_writer_uid": 1000,
+        "sha256": "f39fb4577949901bf1d0daf8ee85b0c6ce718943741615cce30df15d5051bf0c",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o777",
+        "metadata_profile": "original_windows_bind_metadata_reflection_v1",
+        "file_metadata": {
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o600"
+        },
+        "posix_ownership_guarantee": false
+      },
+      {
+        "path": "/tmp",
+        "readback": true,
+        "exclusive_create": true,
+        "fsync": true,
+        "actual_writer_uid": 1000,
+        "sha256": "f39fb4577949901bf1d0daf8ee85b0c6ce718943741615cce30df15d5051bf0c",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o1777",
+        "metadata_profile": "posix_appuser_metadata",
+        "file_metadata": {
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o600"
+        },
+        "posix_ownership_guarantee": true
+      },
+      {
+        "path": "/app/logs",
+        "readback": true,
+        "exclusive_create": true,
+        "fsync": true,
+        "actual_writer_uid": 1000,
+        "sha256": "f39fb4577949901bf1d0daf8ee85b0c6ce718943741615cce30df15d5051bf0c",
+        "uid": 1000,
+        "gid": 1000,
+        "mode": "0o750",
+        "metadata_profile": "posix_appuser_metadata",
+        "file_metadata": {
+          "uid": 1000,
+          "gid": 1000,
+          "mode": "0o600"
+        },
+        "posix_ownership_guarantee": true
+      }
+    ],
+    "readiness": {
+      "status": 200,
+      "service": "trip-agent",
+      "body_sha256": "115527440f04c13f53a7796c6a30705b2037aaca31d26b9b9b420e68251b4c20"
+    },
+    "runtime_checks": [
+      {
+        "name": "process",
+        "passed": true
+      },
+      {
+        "name": "root_mount",
+        "passed": true
+      },
+      {
+        "name": "writepaths",
+        "passed": true
+      },
+      {
+        "name": "restricted_tools",
+        "passed": true
+      },
+      {
+        "name": "readiness",
+        "passed": true
+      }
+    ],
+    "boundary": "Windows original-source bind 0:0/0777 directory metadata reflection is recorded, not a POSIX ownership guarantee. Actual writer UID1000 plus exclusive create/fsync/readback/file1000:1000 mode0600 passed. Other mounts retain strict POSIX profile. No Chroma, provider or general capacity/HA test was run by this security probe."
+  },
+  "gate": {
+    "scanner": "grype-image",
+    "target": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "status": "pass_temporary_risk_acceptance",
+    "blocking_findings": 0,
+    "raw_high_critical_findings": 79,
+    "contextual_not_affected": 4,
+    "all_findings": 214,
+    "exit_code": 2,
+    "vex_expires_on": "2026-11-25",
+    "distribution_assessments": {
+      "fixed_by_distribution_backport": 14,
+      "fixed_by_pinned_security_upgrade": 3,
+      "still_vulnerable_vendor_minor": 52,
+      "not_affected_component_absent": 6
+    },
+    "still_vulnerable_vendor_minor_ids": [
+      "CVE-2026-102010",
+      "CVE-2026-19499",
+      "CVE-2026-5435",
+      "CVE-2026-76642",
+      "CVE-2026-78408",
+      "CVE-2026-78409",
+      "CVE-2026-78410",
+      "CVE-2026-95619"
+    ],
+    "vendor_policy_expires_on": "2026-11-09",
+    "unfixed_risk_accepted_findings": 52,
+    "risk_acceptance": {
+      "status": "effective_temporary_acceptance_still_vulnerable",
+      "effective_scope": "controlled_single_host_local_demo_only",
+      "expires_at": "2026-11-09T23:59:59+08:00",
+      "allowed_cve_ids": [
+        "CVE-2026-102010",
+        "CVE-2026-19499",
+        "CVE-2026-5435",
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410",
+        "CVE-2026-95619"
+      ],
+      "authorization": {
+        "record_path": ".github/security-risk-authorization.json",
+        "record_sha256": "2226575af1273d277c232dc3f609a648edecc852513bad0181758c95564b3a03",
+        "original_record_sha256": "1a7dcf73e06fd08b5b71f609fdc6817bdf6178c4671dc815eb5acedf3bf9f4e6"
+      },
+      "identity_proof": {
+        "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "current_policy_revision": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+        "image_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+        "business_trees_equal": true
+      },
+      "runtime_proof": {
+        "container_id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+        "checked_at": "2026-10-26T15:57:00.527008+00:00",
+        "probe_source_sha256": "56662588e49d69f741623ad268bcc4bfb712bcf17dd4ac0ac58d5f61c478bb2c",
+        "live_container_identity_verified": true
+      },
+      "components_exactly_equal": true,
+      "deployment_window_granted": false,
+      "classification": "still_vulnerable_not_fixed",
+      "scan_identity_proof": {
+        "scanner_report_time": "2026-10-26T23:58:51.4777858+08:00",
+        "database_built": "2026-10-26T06:38:44Z",
+        "database_valid": true,
+        "maximum_database_age_hours": 72,
+        "scanned_immutable_image": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+        "fresh_scan_verified": true
+      }
+    },
+    "image_revision_context_verified": true
+  },
+  "frozen_approval": {
+    "path": ".github/security-risk-acceptance.json",
+    "sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+    "unchanged": true,
+    "component_counts": {
+      "installed_dpkg_packages": 87,
+      "native_elf_paths": 1086,
+      "application_paths": 135,
+      "business_trees": 5,
+      "compose_recipes": 4
+    },
+    "all_component_fingerprints_equal": true
+  },
+  "residual_risk": {
+    "classification": "still_vulnerable_temporarily_risk_accepted_not_fixed",
+    "raw_high_critical": 79,
+    "still_vulnerable_records": 52,
+    "unique_cves": [
+      "CVE-2026-102010",
+      "CVE-2026-19499",
+      "CVE-2026-5435",
+      "CVE-2026-76642",
+      "CVE-2026-78408",
+      "CVE-2026-78409",
+      "CVE-2026-78410",
+      "CVE-2026-95619"
+    ],
+    "expires_at": "2026-11-09T23:59:59+08:00",
+    "effective_scope": "controlled_single_host_local_demo_only",
+    "native_unknowns_retained": [
+      "Full native/FFI monetary formatting and legacy DNS debug-printer call reachability unknown.",
+      "GNU PBDS binary_heap erase_if embedded consumer/header provenance unknown.",
+      "CLI entrypoint removal does not fix retained libmount or other consumers.",
+      "Specific hash-bound dynamic POSIX aligned-new branch evidence is narrower than whole-package absence."
+    ],
+    "not_zero_risk": true
+  },
+  "resource_actions": {
+    "borrowed_daily_container": true,
+    "reused_never_started_inventory_container": "16133a4092bb232d1717638fae016ee0b143d340de03d0daa743b35cedc6b9a3",
+    "docker_created": false,
+    "docker_deleted": false,
+    "docker_stopped": false,
+    "fingerprints_refreshed": false,
+    "canary_files": "Each fresh runtime observation retains four UUID canaries; initial receipt plus gate live recheck retain eight tiny files. No user files removed.",
+    "inventory_archive": {
+      "path": "E:\\project\\langchain-trip-planner\\.cache\\security-report-raw\\daily-a454bbd\\agent\\trip-security-inventory-d1dcf48481a2-rootfs.tar",
+      "sha256": "616d0b59099e81f0e326aa2250defd313e6f76660becfe1362bebc12cfb95673",
+      "bytes": 942409728
+    }
+  },
+  "evidence_files": {
+    ".cache/security-report-raw/daily-a454bbd/runtime/runtime-proof-65f713b52ab249c089842d9fec5172ce.json": {
+      "sha256": "e8314e9040ba866ffb14ece04ae832ffe16c9db22565b621d5f3d43feb2a2a5b",
+      "bytes": 13500
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/distribution-assessments.json": {
+      "sha256": "7005b0fd44f6c75cece2306c8e28c64d6dc4389ed7308ebeb8476a7f7da23f31",
+      "bytes": 15211
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/distribution-inventory.json": {
+      "sha256": "8684d6ff4c8dfb2b3a8b0a389adec0d0e0d1a8a9ae5b30734ae636c7d941f220",
+      "bytes": 158137
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/image-summary.json": {
+      "sha256": "8f139a6ba99fdd8691a02b03899059d87f5b3a8943a3212628d3044f715cb30a",
+      "bytes": 3228
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/image-vulnerabilities.json": {
+      "sha256": "51c53d9f837f55792e1a90e3bddd2f6ca876aa020f655b4753dc11bb2028ef45",
+      "bytes": 1017536
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/risk-acceptance-verification.json": {
+      "sha256": "f9cb072fe38d6e21236adba1439c747eb452d83127295a3e9703695fad2d7e5b",
+      "bytes": 1752
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/trip-security-inventory-d1dcf48481a2-resource.json": {
+      "sha256": "6bdf850bc07ecbcb90ed88d21c9b587fb1a770ef29ef7044ae6de56fc89af5b3",
+      "bytes": 413
+    },
+    ".cache/security-report-raw/daily-a454bbd/agent/image-scan.log": {
+      "sha256": "837a93f6eae43ae89e031ea0095e852e0e29721e59968137bd5ddc98a8f1c3fe",
+      "bytes": 78
+    }
+  }
+}

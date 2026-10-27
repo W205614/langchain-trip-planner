@@ -1,0 +1,92 @@
+{
+  "project": "langchain-trip-planner",
+  "started_at": "2026-10-27T01:02:18.934376+00:00",
+  "passed": true,
+  "actions": [
+    {
+      "service": "postgres",
+      "id": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d",
+      "action": "start",
+      "at": "2026-10-27T01:02:19.543934+00:00"
+    },
+    {
+      "service": "agent",
+      "id": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+      "action": "start",
+      "at": "2026-10-27T01:02:55.020854+00:00"
+    },
+    {
+      "service": "frontend",
+      "id": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+      "action": "start",
+      "at": "2026-10-27T01:03:07.528018+00:00"
+    },
+    {
+      "service": "alert-receiver",
+      "id": "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e",
+      "action": "start",
+      "at": "2026-10-27T01:03:08.782308+00:00"
+    },
+    {
+      "service": "alertmanager",
+      "id": "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6",
+      "action": "start",
+      "at": "2026-10-27T01:03:09.707335+00:00"
+    },
+    {
+      "service": "prometheus",
+      "id": "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0",
+      "action": "start",
+      "at": "2026-10-27T01:03:10.643679+00:00"
+    }
+  ],
+  "errors": [],
+  "current_ids": {
+    "frontend": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+    "backend": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+    "agent": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+    "postgres": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d",
+    "prometheus": "bcc18c6ec3f3fde36716e5cec65f12098f388fe02cdaa6fbcfd9316778adc8a0",
+    "alertmanager": "02c8cd9bb010562c121ef73288e4a86ae9ef91da959ca4b2cfb48ce2a089d6c6",
+    "alert-receiver": "06a57145fceb10c76786e8dd6a9dcb8b6d22178fd841a04e07c169d9e53e6f2e"
+  },
+  "scope": "Start only same approved daily7 IDs after preserved outage; no recreation,delete,pull or otherproject lifecycle. API stop caller unestablished; current usercontinue authorizes original daily restoration.",
+  "final": {
+    "frontend": {
+      "running": true,
+      "health": "healthy",
+      "restart_count": 0
+    },
+    "backend": {
+      "running": true,
+      "health": "healthy",
+      "restart_count": 31
+    },
+    "agent": {
+      "running": true,
+      "health": "healthy",
+      "restart_count": 0
+    },
+    "postgres": {
+      "running": true,
+      "health": "healthy",
+      "restart_count": 0
+    },
+    "prometheus": {
+      "running": true,
+      "health": null,
+      "restart_count": 0
+    },
+    "alertmanager": {
+      "running": true,
+      "health": null,
+      "restart_count": 0
+    },
+    "alert-receiver": {
+      "running": true,
+      "health": "healthy",
+      "restart_count": 0
+    }
+  },
+  "finished_at": "2026-10-27T01:03:22.454960+00:00"
+}

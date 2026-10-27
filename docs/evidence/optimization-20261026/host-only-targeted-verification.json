@@ -1,0 +1,36 @@
+{
+  "scope": "Only changed hostentry/childpolicy/taskaction/failurecompensation and CI historicalinput reconstruction. No repeat wholeproductlocal tests.",
+  "verified_at": "2026-10-27T01:17:42.931563+00:00",
+  "windows_recovery": {
+    "command": "E:/download/Anaconda/python.exe -m unittest tools.tests.test_windows_backup_recovery -v",
+    "tests": 3,
+    "passed": true,
+    "first_attempt": "One synthetic fixture omitted Config.Env; fixture corrected, initial onefailure not represented as product runtime failure."
+  },
+  "windows_process": {
+    "tests": 4,
+    "passed": true,
+    "evidence": "Security subagent actual nativeWindows child CreateProcess/GetConsoleWindow/pipe/exit tests; exact command supplied separately if available."
+  },
+  "task_action": {
+    "mocked_cases": 3,
+    "passed": true,
+    "real_scheduler_mutations_in_test": 0
+  },
+  "historical_inputs": {
+    "meaningful_negative_tests": 3,
+    "passed": true,
+    "receipt": "historical-build-input-restoration-receipt.json"
+  },
+  "actual_scheduled_backup": "windows-silent-task-actual-result.json:one actualnewquiettask only,108nativechildren/161samples,originalstates restored",
+  "actual_post_recovery_readback": "daily-after-silent-backup-readback.json:5 necessarychecks",
+  "failed_actual_startup_task_retained": "windows-backup-20261027-startup-failure.json",
+  "frozen_approval_raw_sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+  "source_files": {
+    "tools/windows_backup_runner.pyw": "182e72b0837c46c5803d018a724d6d3a113e893e2644edf43eca77e380f1e202",
+    "tools/windows_backup_recovery.py": "8bbc068c6de37d815052c34e813b8279a9c5e5f9cb833cdc1fb0176baab3f3be",
+    "tools/configure_silent_backup_task.ps1": "cbf3f0364456e96a5bbc548f50c326865453aa978c9b356796b218d1d3aa7860",
+    "tools/restore_historical_build_inputs.py": "eb70bf5bbb680605a5950d4b638e534b1752ed9985b3a9a96bdc5864e4bf8251"
+  },
+  "remote_final_ci": "All16 jobs required on finalpushedSHA; not inferred from localresults."
+}

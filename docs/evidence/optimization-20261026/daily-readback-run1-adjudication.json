@@ -1,0 +1,103 @@
+{
+  "classification": "acceptance_oracle_overstrong_for_legacy_untimed_days",
+  "first_run_result_retained": "daily-readback-run1-failure.json",
+  "first_run_remains_failed": true,
+  "business_source_changed": false,
+  "observed_source": "copied",
+  "observed_day_shapes": [
+    {
+      "day_index": 0,
+      "timeline_field_present": true,
+      "timeline_count": 0,
+      "timed_item_count": 0,
+      "kind_counts": {},
+      "binding_field_present": false,
+      "binding_type": "NoneType",
+      "binding_keys": [],
+      "schedule_stale_field_present": true,
+      "schedule_stale_value": false,
+      "feasibility_status": null,
+      "attraction_count": 2
+    },
+    {
+      "day_index": 1,
+      "timeline_field_present": true,
+      "timeline_count": 0,
+      "timed_item_count": 0,
+      "kind_counts": {},
+      "binding_field_present": false,
+      "binding_type": "NoneType",
+      "binding_keys": [],
+      "schedule_stale_field_present": true,
+      "schedule_stale_value": false,
+      "feasibility_status": null,
+      "attraction_count": 3
+    },
+    {
+      "day_index": 2,
+      "timeline_field_present": true,
+      "timeline_count": 0,
+      "timed_item_count": 0,
+      "kind_counts": {},
+      "binding_field_present": false,
+      "binding_type": "NoneType",
+      "binding_keys": [],
+      "schedule_stale_field_present": true,
+      "schedule_stale_value": false,
+      "feasibility_status": null,
+      "attraction_count": 3
+    },
+    {
+      "day_index": 3,
+      "timeline_field_present": true,
+      "timeline_count": 0,
+      "timed_item_count": 0,
+      "kind_counts": {},
+      "binding_field_present": false,
+      "binding_type": "NoneType",
+      "binding_keys": [],
+      "schedule_stale_field_present": true,
+      "schedule_stale_value": false,
+      "feasibility_status": null,
+      "attraction_count": 3
+    },
+    {
+      "day_index": 4,
+      "timeline_field_present": true,
+      "timeline_count": 0,
+      "timed_item_count": 0,
+      "kind_counts": {},
+      "binding_field_present": false,
+      "binding_type": "NoneType",
+      "binding_keys": [],
+      "schedule_stale_field_present": true,
+      "schedule_stale_value": false,
+      "feasibility_status": null,
+      "attraction_count": 3
+    }
+  ],
+  "original_private_plan_contents_published": false,
+  "source_contract": [
+    {
+      "file": "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java",
+      "line": 156,
+      "fact": "stableIds defaults missing legacy schedule_stale to false and timeline to an empty array"
+    },
+    {
+      "file": "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+      "line": 117,
+      "fact": "refresh invalidates only a nonempty existing timeline whose dependencies are not current"
+    },
+    {
+      "file": "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java",
+      "line": 121,
+      "fact": "invalidateCopy applies to newly copied records, not an automatic rewrite of preserved old rows"
+    }
+  ],
+  "correction": "Require stale only for days with a timeline, solver binding or explicit schedule invalidation. Report no-axis days/timed-lock coverage as unexercised, not as fresh or feasible. No synthetic schedule or provider call used.",
+  "limits": [
+    "This adjudication does not prove stale behavior for actual timed schedules in this daily legacy record.",
+    "Original-owner preservation remains separately established by root SQL original-column/hash comparison.",
+    "A later continuation result is separate; it cannot turn the first run into all-pass."
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "project": "langchain-trip-planner",
+  "business_artifact_source_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "observed_at": "2026-10-26T16:00:46.302808+00:00",
+  "current_container_ids": {
+    "frontend": "8d7cd5935ddb52665211a192af1e38db5279794f01ca8e271047dc61f9bbf695",
+    "backend": "c17e872ceb11f74dcbe4e5fb9877c44316f32be7d4b36b3597cbc30cde325617",
+    "agent": "1e433b8d90eadad857660426ba95ab604724e40675047776928fe02df7efd2a2",
+    "postgres": "276c84310c5774e20f13957f377908634522601e858a435104f3252281b4909d"
+  },
+  "current_image_ids": {
+    "frontend": "sha256:48fd3fd9967610896f38732dd5b57035c5b29fe5105d3cc8ce415178b9e7afa9",
+    "backend": "sha256:f5fdf24925d43a4f5b4b9f51b431a193b23a170434060dc6cf96c2662e125ea5",
+    "agent": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+    "postgres": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+  },
+  "all_original_services_running_and_healthy": true,
+  "original_column_tables_compared": 26,
+  "unchanged_original_tables": [
+    "assistant_conversations",
+    "assistant_messages",
+    "business_audit_events",
+    "community_trip_cards",
+    "evidence_revision",
+    "favorite_pois",
+    "knowledge_documents",
+    "knowledge_ingest_jobs",
+    "outbound_budget_counters",
+    "outbound_reservations",
+    "rag_sync_jobs",
+    "trip_checks",
+    "trip_commitments",
+    "trip_expenses",
+    "trip_members",
+    "trip_notifications",
+    "trip_record_versions",
+    "trip_records",
+    "trip_risks",
+    "trip_shares",
+    "trip_tasks",
+    "trip_usage_policies",
+    "user_travel_preferences",
+    "users"
+  ],
+  "changed_original_tables": [
+    "execution_checkpoints",
+    "flyway_schema_history"
+  ],
+  "original_credential_hashes_users_preferences_trips_versions_unchanged": true,
+  "original_migration_prefix_unchanged": true,
+  "expired_checkpoint_retention": {
+    "original_count": 38,
+    "eligible_count_in_restored_snapshot": 38,
+    "remaining_count": 0,
+    "explained_by_24_hour_grace_policy": true,
+    "originals_retained_in_complete_backup": true
+  },
+  "mounts": [
+    {
+      "role": "postgres",
+      "target": "/var/lib/postgresql/data",
+      "original_identity_preserved": true
+    },
+    {
+      "role": "backend",
+      "target": "/data/uploads",
+      "original_identity_preserved": true
+    },
+    {
+      "role": "agent",
+      "target": "/app/runtime",
+      "original_identity_preserved": true
+    },
+    {
+      "role": "agent",
+      "target": "/app/data/chroma",
+      "original_identity_preserved": true
+    }
+  ],
+  "configuration": {
+    "agent": {
+      "original_provider_and_budget_values_preserved": true,
+      "checked_key_count": 9,
+      "production": true
+    },
+    "backend": {
+      "original_provider_and_budget_values_preserved": true,
+      "checked_key_count": 1,
+      "production": true
+    }
+  },
+  "admin_mfa_required": true,
+  "fixture_provider_not_enabled": true,
+  "frontend_loopback_8380": true,
+  "new_schema_tables": [
+    "account_login_attempts",
+    "account_security",
+    "assistant_clarifications",
+    "deployment_identity",
+    "operational_heartbeats",
+    "outbound_campaign_binding",
+    "outbound_campaign_samples",
+    "outbound_campaign_workflows",
+    "outbound_campaigns",
+    "upload_reservations"
+  ],
+  "boundary": "Before smoke login/logout. All 26 original-column tables compared; 24 equal, Flyway appends and expiry-qualified checkpoints disclosed. No original human password login was attempted.",
+  "passed": true
+}

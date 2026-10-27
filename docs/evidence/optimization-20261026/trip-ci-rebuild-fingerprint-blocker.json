@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-26T16:07:48.773987+00:00",
+  "status": "ci_clean_checkout_exact_application_fingerprint_blocker",
+  "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+  "current_policy_revision": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+  "approved_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "facts": {
+    "root_docs_evidence_copied": false,
+    "docker_copy_sources": [
+      "backend/app",
+      "backend/evals",
+      "backend/run.py",
+      "backend/scripts",
+      "backend/data/knowledge",
+      "backend/requirements.txt",
+      "backend/requirements.lock"
+    ],
+    "cause": "COPY evals ./evals includes locally gitignored evals/results; backend/.dockerignore does not exclude it. The reviewed artifact froze these bytes but clean checkout lacks them.",
+    "approved_application_paths": 135,
+    "tracked_source_paths_verified_against_approved_app_hash": 123,
+    "untracked_ignored_input_count": 12,
+    "untracked_input_bytes": 472539,
+    "all_input_files_match_existing_approval": true,
+    "full_retrieval_results_inspected": 640,
+    "retrieval_sources": [
+      "beijing.md",
+      "guangzhou.md",
+      "shanghai.md",
+      "shenzhen.md"
+    ],
+    "all_retrieved_chunk_texts_substrings_of_existing_repository_public_demo_knowledge": true,
+    "secret_scan": {
+      "tool": "checksum-pinned gitleaks 8.30.1",
+      "directory": "backend/evals/results",
+      "redacted": true,
+      "exit_code": 0,
+      "findings": 0,
+      "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "privacy_review": "Reviewed JSON schemas/results, all retrieval chunks, aggregate MD/log content. No actual credential or individual human itinerary observed. Synthetic business/API cases and public demo knowledge routes are not claimed as human private trips. This is bounded content review, not a universal privacy guarantee."
+  },
+  "files": [
+    {
+      "image_path": "/app/evals/results/business-v5-fixed.json",
+      "repository_source_path": "backend/evals/results/business-v5-fixed.json",
+      "bytes": 10834,
+      "raw_sha256": "604c30a1aea66e681f43581970b91616840ecd1462c14ebca9a222e59aef7ca2",
+      "approved_application_sha256": "d910c94d45d4c17bc9753876fb10576eb5377ac683b3d7366a00b6d4b758fff3",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "synthetic offline HTTP benchmark contract summary",
+      "crlf_lines": 417
+    },
+    {
+      "image_path": "/app/evals/results/business-v5.json",
+      "repository_source_path": "backend/evals/results/business-v5.json",
+      "bytes": 10958,
+      "raw_sha256": "a46f0e7d97542b2ba5f2735a106183708db0031e19cd9fd98e381731abe197d1",
+      "approved_application_sha256": "63cdcd782ca896257c63ed196920c915b923bbebf96e67805aeae3a538601110",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "synthetic offline HTTP benchmark contract summary",
+      "crlf_lines": 417
+    },
+    {
+      "image_path": "/app/evals/results/java-api-v5-current.json",
+      "repository_source_path": "backend/evals/results/java-api-v5-current.json",
+      "bytes": 681,
+      "raw_sha256": "8b066d55111452e2eb1bef3f5f81c11863e0e93e5fc9a40cdcdf814342f116fa",
+      "approved_application_sha256": "b0c3e006c11017b2464b4931ff8666ff3363c77c423835f8c5340f0f382f3f32",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "synthetic offline Java API check counters",
+      "crlf_lines": 26
+    },
+    {
+      "image_path": "/app/evals/results/java-api-v5.json",
+      "repository_source_path": "backend/evals/results/java-api-v5.json",
+      "bytes": 681,
+      "raw_sha256": "8b066d55111452e2eb1bef3f5f81c11863e0e93e5fc9a40cdcdf814342f116fa",
+      "approved_application_sha256": "b0c3e006c11017b2464b4931ff8666ff3363c77c423835f8c5340f0f382f3f32",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "synthetic offline Java API check counters",
+      "crlf_lines": 26
+    },
+    {
+      "image_path": "/app/evals/results/rag-public-source-regression-2026-09-01.stderr.log",
+      "repository_source_path": "backend/evals/results/rag-public-source-regression-2026-09-01.stderr.log",
+      "bytes": 775,
+      "raw_sha256": "e46947d39e00737b493e315526606ea7661c2bc0a68848633b4e96f07dcfc4fb",
+      "approved_application_sha256": "e46947d39e00737b493e315526606ea7661c2bc0a68848633b4e96f07dcfc4fb",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "historical benchmark traceback; includes project source paths and failure message; no credential observed",
+      "crlf_lines": 12
+    },
+    {
+      "image_path": "/app/evals/results/rag-public-source-regression-2026-09-01.stdout.log",
+      "repository_source_path": "backend/evals/results/rag-public-source-regression-2026-09-01.stdout.log",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "approved_application_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "empty historical stdout/stderr log",
+      "crlf_lines": 0
+    },
+    {
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.json",
+      "repository_source_path": "backend/evals/results/rag-static-v1-current-2026-09-01.json",
+      "bytes": 221930,
+      "raw_sha256": "c0d7a58a1e3f4b95b58404c2845c0b4abaf8965d0c8f05464b16b09316d55ed1",
+      "approved_application_sha256": "3ef00ee0c4c78d24573115a3e38ac1a87f07ed84f70db6bba2727aac894d9a73",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "historical static public knowledge retrieval benchmark with full returned knowledge chunks",
+      "crlf_lines": 3057
+    },
+    {
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.md",
+      "repository_source_path": "backend/evals/results/rag-static-v1-current-2026-09-01.md",
+      "bytes": 1781,
+      "raw_sha256": "90981495d8487bd5646e95a12bcc9fad2c64806b008f357943075caed82c71fe",
+      "approved_application_sha256": "c60bfa71bceeb0a496a3b338ca200cec1bded27286c953f943c76d4ffd147266",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "aggregate retrieval evaluation metrics, dataset/source hashes and timing; no individual trip record",
+      "crlf_lines": 46
+    },
+    {
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.stderr.log",
+      "repository_source_path": "backend/evals/results/rag-static-v1-current-2026-09-01.stderr.log",
+      "bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "approved_application_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "empty historical stdout/stderr log",
+      "crlf_lines": 0
+    },
+    {
+      "image_path": "/app/evals/results/rag-static-v1-current-2026-09-01.stdout.log",
+      "repository_source_path": "backend/evals/results/rag-static-v1-current-2026-09-01.stdout.log",
+      "bytes": 1168,
+      "raw_sha256": "0f76eb78afe42785e4d39f86d9b796c90690748c07fb6fe2d0b276c70cab9d56",
+      "approved_application_sha256": "0f76eb78afe42785e4d39f86d9b796c90690748c07fb6fe2d0b276c70cab9d56",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "historical aggregate retrieval metric/timing JSON stdout with relative report paths",
+      "crlf_lines": 1
+    },
+    {
+      "image_path": "/app/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.json",
+      "repository_source_path": "backend/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.json",
+      "bytes": 221941,
+      "raw_sha256": "1c5d26b35a35818f425b63f77bfeee55f5c7a61094e8626ed7cb310010f4c095",
+      "approved_application_sha256": "bfdf33aaf328f343a550545570218f8d5f2acb3fb7bd17b3d1f1764c0cc85f09",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "historical static public knowledge retrieval benchmark with full returned knowledge chunks",
+      "crlf_lines": 3057
+    },
+    {
+      "image_path": "/app/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.md",
+      "repository_source_path": "backend/evals/results/travel-rag-static-v1-1-dense-chroma-2026-08-31.md",
+      "bytes": 1790,
+      "raw_sha256": "2d736d82046bb4a9c86907f2470e14ddbad933bcf1d75cecab155ed2c6d90ed4",
+      "approved_application_sha256": "751417c4188cd2b81b8802e0878d78c5c2e2075c4c4ad9f1b5d666f9187e65ef",
+      "matches_approved_algorithm": true,
+      "tracked_in_approved_tree": false,
+      "ignored_by_git": true,
+      "type": "aggregate retrieval evaluation metrics, dataset/source hashes and timing; no individual trip record",
+      "crlf_lines": 46
+    }
+  ],
+  "candidate_reconstruction": {
+    "feasible_subject_to_review": true,
+    "method": "Preserve these exact original files as explicitly labelled historical build-input evidence outside the five frozen business trees; CI validates raw SHA and approved application SHA then copies only the exact allowlisted files to ignored backend/evals/results before Docker build. Never run the historical reports or present them as fresh test evidence.",
+    "required_controls": [
+      "Review each publication input for sensitive data before committing; Gitleaks zero and manual bounded content review recorded.",
+      "Preserve raw bytes including CRLF/GB18030 logs, preferably -text attributes or an exact archive with SHA; no decoding/reserializing.",
+      "Fail if any file missing, extra destination file exists, raw SHA differs, approved normalized application SHA differs, or source escapes allowlisted paths.",
+      "Keep frozen five business trees, four recipes, approval/source fingerprints and all existing accepted image hashes unchanged.",
+      "Actual fresh CI build must still pass exact 87 dpkg versions and 1086 raw native ELF hashes; mutable FROM/apt can legitimately drift and must block pending a new reviewed combination."
+    ],
+    "not_done": [
+      "No input copies into public evidence or ignored destination performed by this review.",
+      "No Docker build, retag, lifecycle operation, fingerprint update or risk-scope expansion."
+    ]
+  },
+  "other_reproducibility_limit": "A fresh --pull and apt update build can receive newer OS content even with identical source. Exact package/native validation intentionally blocks that changed combination; preserving 12 files alone does not guarantee all CI equivalence."
+}

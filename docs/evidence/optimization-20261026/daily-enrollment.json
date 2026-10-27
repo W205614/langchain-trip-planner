@@ -1,0 +1,16 @@
+{
+  "project": "langchain-trip-planner",
+  "dataset_id": "dcb1009ccd5b018d536b7e7eadae3322",
+  "backup_verified": true,
+  "mounts_match": true,
+  "persistent_file_inventory_match": true,
+  "database_evidence": {
+    "original_tables_and_columns_content_match": true,
+    "database_name_and_user_match": true,
+    "postgres_mount_identity_compared": true,
+    "postgres_mount_evidence": "manifest_identity_and_original_content",
+    "extra_tables_not_in_original_backup": [],
+    "extra_columns_not_in_original_backup": {}
+  },
+  "executed": true
+}

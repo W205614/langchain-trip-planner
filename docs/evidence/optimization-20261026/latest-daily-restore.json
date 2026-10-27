@@ -1,0 +1,44 @@
+{
+  "checksums_verified": true,
+  "passed": true,
+  "stage": "complete",
+  "production_configuration_changed": false,
+  "containers": [
+    "trip-final-restore-pg-81fcec811960",
+    "trip-final-restore-backend-81fcec811960"
+  ],
+  "network": "trip-final-restore-81fcec811960",
+  "network_created": true,
+  "files": "C:\\Users\\25452\\.codex\\visualizations\\2026\\10\\26\\01a176e2-8174-7042-8567-4a3b00affe90\\trip-daily-original-restore-20261026T151849Z",
+  "resources": [
+    {
+      "role": "isolated_postgres",
+      "name": "trip-final-restore-pg-81fcec811960",
+      "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+      "created": true,
+      "creation_attempted": true
+    },
+    {
+      "role": "baseline_backend",
+      "name": "trip-final-restore-backend-81fcec811960",
+      "original_name": "trip-final-restore-backend-81fcec811960",
+      "preserved_name": "trip-final-restore-baseline-81fcec811960",
+      "image": "sha256:e3ffa2b671a94744214de6a3df71733e66e793b14425749a8de20e085747dafa",
+      "created": true,
+      "creation_attempted": true,
+      "state": "running"
+    }
+  ],
+  "mount_archives": [
+    "knowledge_uploads",
+    "chroma",
+    "agent-runtime"
+  ],
+  "automatic_cleanup": false,
+  "resource_retention": "All created clone containers and the isolated network are retained until separately authorized cleanup.",
+  "tables_verified": 26,
+  "rows_verified": 1050,
+  "restored_java_ready": true,
+  "baseline_ready_before_upgrade": true,
+  "active_backend_ready": true
+}

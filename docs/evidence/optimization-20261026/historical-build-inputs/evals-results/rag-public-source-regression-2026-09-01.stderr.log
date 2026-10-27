@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "E:\project\langchain-trip-planner\backend\app\evals\rag_benchmark.py", line 326, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "E:\project\langchain-trip-planner\backend\app\evals\rag_benchmark.py", line 307, in main
+    report["comparison"] = compare_reports(baseline, report)
+                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "E:\project\langchain-trip-planner\backend\app\evals\rag_benchmark.py", line 206, in compare_reports
+    raise ValueError("基线与当前报告的数据快照不一致，拒绝生成不可比结论")
+ValueError: 基线与当前报告的数据快照不一致，拒绝生成不可比结论

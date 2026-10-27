@@ -1,16 +1,16 @@
 {
-  "phase": "DEPLOY_READY",
+  "phase": "LOCAL_ACCEPTANCE_COMPLETE_REMOTE_EXACT_SHA_GATE_REQUIRED",
   "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
   "source_committed_locally": true,
   "pushed": false,
-  "daily_environment_replaced": false,
+  "daily_environment_replaced": true,
   "role_flows_latest_passed": 8,
   "additional_fact_ui_flow": "fact-ui-acceptance-result.json:6 checks passed on exact final business image",
   "backup": "hardened-backup-file-restore-result.json:pass, maintenance64.13s, total94.716s; full3 file archive inventory equality; actual restored Agent reads2Chroma rows; source4 identities/states/mounts unchanged; reuses Java identity, not independent PG/offhost DR",
   "restoration": "existing-data-rehearsal-result-3.json:pass; original historical snapshot only",
-  "scheduler": "scheduler-fault-drill-3.json:pass with firing/resolved/new task success",
+  "scheduler": "Latestquiettask09:10Shanghaiexit0/47.88s/108nativechildrenNOWINDOW/161samples0visible; earlier08:46failure and midnight success retained separately.",
   "holdout": "first 16/17 retained; source/ID representation adjudication separate",
-  "cleanup_plan": "cleanup-plan.json:delete_now=[]; window still not granted",
+  "cleanup_plan": "Approved exact53 completed:32containers7networks14named syntheticvolumes,0skips/images/files;protected metadata unchanged.",
   "security_gate": "release-220257a-security-summary.json:6 fixed artifacts scanned,5 raw H/C0; Agent raw79 incl52vendorMinor/8IDs, policy classification not patch/permission",
   "security_risk_acceptance": {
     "direct_human_approval_found": true,
@@ -26,14 +26,16 @@
     "deployment_window_granted": false,
     "machine_equivalence_required": true,
     "fingerprints_automatically_refreshed": false,
-    "enforcement": "temporary-risk-acceptance-enforcement.json"
+    "enforcement": "temporary-risk-acceptance-enforcement.json",
+    "separate_daily_deployment_window_granted": true,
+    "deployment_window_field_semantics": "The frozen risk record itself granted no deployment window; a separate later user-authorized daily window was executed. Public-production permission remains false.",
+    "actual_daily_gate": "daily-agent-security-receipt-a454bbd.json:pass_temp"
   },
   "offhost": "deferred_by_user_not_verified; user has no target and asked to finish other work",
   "remaining": [
-    "Coordinator serial deployment/cleanup window; not yet granted",
-    "Fresh daily backup/enrollment/rebuild/business readback and Windows backup task installation",
-    "Conditional exact-resource cleanup retaining all required recovery/unknown/shared objects",
-    "Push and all expected final exact-SHA GitHub CI/security jobs, then finalize delivery evidence"
+    "Push final exactSHA and all16CI/Security",
+    "Coordinator separate final-retention review/window afterbothprojects pass",
+    "Final delivery.json and personalhandoff coordinator reserved"
   ],
   "human_blind_review": "pending; no general accuracy/HA/SLA claim",
   "previous_committed_business_sha": "a01a0d7ce35cac97918969157ce8bfcac8b9d506",
@@ -51,10 +53,78 @@
     "current": "poi-ui-acceptance-result.json:7/7 passed on final220, own backend/mapfixture restored",
     "original_failures": "run1 retained; run2 primary error/full checklist lost, post-run diagnostic and recovered waiter excerpt retained"
   },
-  "updated_at": "2026-10-26T14:36:48.772728+00:00",
+  "updated_at": "2026-10-27T01:14:06.113643+00:00",
   "actual_runtime_probe": "hardened-runtime-probe-result.json:11 passed; actual uvicorn PID1; CapBnd/Eff0;NNP1;ROroot;boundedtmpfs;native component checks",
   "new_candidate": "trip-opt-hardened-20261026; canonical Agent actual uvicorn, separate agent-fixture supplies browser providers explicitly",
   "backup_previous_a01": "automated-backup-drill-final.json:pass/full archive/local copy/private owner history unchanged",
-  "policy_source_sha": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
-  "secrets": "final-secret-scan.json:fullhistory/current+untracked0; actual negative fixture validates narrow public fingerprints"
+  "policy_source_sha": "a454bbd41df1a287e3d615e800a9ebc3089352e4",
+  "secrets": "final-secret-scan.json:fullhistory/current+untracked0; actual negative fixture validates narrow public fingerprints",
+  "daily_delivery_current": {
+    "window": "separately_user_authorized_executed_by_project_agent_this_chat;coordinator_release_separate",
+    "latest_backup": "daily-fresh-backup.json:passed",
+    "identity_enrollment": "daily-enrollment.json:backup/mount/database identities verified",
+    "independent_latest_restore": "latest-daily-restore.json:passed;26tables independently restored",
+    "oci_closure": "latest-daily-image-archive-closure.json:passed;not empty-daemon recovery",
+    "post_upgrade": "daily-post-upgrade.json:passed;24 original-column table hashes and original Flyway prefix preserved",
+    "smoke_readback": {
+      "report": "daily-readback-result.json",
+      "passed": true,
+      "checks": 6,
+      "coverage_gaps": [
+        "Legacy copy has no timeline or solver binding; per-day stale projection cannot establish solver freshness or exercise a timed schedule",
+        "Public copy has no stable timed activity; time-lock denial was not exercised"
+      ],
+      "first_run_failure": "daily-readback-run1-failure.json",
+      "adjudication": "daily-readback-run1-adjudication.json",
+      "first_failure_retained": true,
+      "not_full_planning_or_supplier_validation": true
+    },
+    "runtime_security": "daily-agent-security-receipt-a454bbd.json:actual gate pass_temp;still-vulnerable temporary local-demo acceptance",
+    "windows_task": {
+      "installed": true,
+      "first_actual_run_passed": true,
+      "exit_code": 0,
+      "elapsed_seconds": 230.8,
+      "original_ids_images_states_restored": true,
+      "report": "windows-backup-task-result.json"
+    },
+    "cleanup": {
+      "passed": true,
+      "all_approved_objects_removed": true,
+      "removed_counts": {
+        "container": 32,
+        "network": 7,
+        "volume": 14
+      },
+      "skips": 0,
+      "images_removed": 0,
+      "files_deleted": 0,
+      "protected_metadata_unchanged": true,
+      "report": "exact-window-cleanup-result.json"
+    },
+    "final_remote_exact_sha_ci": "External exact-SHA receipt required after push; local snapshots do not assert remote success.",
+    "alerts": "daily-alert-delivery-result-2.json:firing/resolved+dedupe;local inbox only,synthetic AM injection",
+    "post_backup_runtime": "daily-post-backup-runtime-receipt.json:actual fresh process proof passed",
+    "historical_build_inputs": "historical-build-input-restoration-receipt.json:exact12 raw bytes restored inCI;not fresh evaluation;allowmaps unchanged"
+  },
+  "historical_policy_source_sha_before_daily": "631a68bc64b043dfdad8e7f8b44d5be6efd5327a",
+  "silent_windows_backup_current": {
+    "passed": true,
+    "actual_task_exit_code": 0,
+    "backup_and_restore_seconds": 47.88,
+    "native_children": 108,
+    "all_create_no_window": true,
+    "sampled_owned_visible_windows": 0,
+    "window_samples": 161,
+    "original_task_08_46_failure_retained": true,
+    "source_business_trees_and_risk_fingerprints_unchanged": true,
+    "reports": [
+      "windows-silent-task-actual-result.json",
+      "windows-silent-backup-validation.json",
+      "windows-backup-20261027-startup-failure.json",
+      "daily-current-stop-diagnosis.json",
+      "daily-current-recovery.json",
+      "daily-after-silent-backup-readback.json"
+    ]
+  }
 }
