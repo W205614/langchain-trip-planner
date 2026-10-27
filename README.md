@@ -216,6 +216,31 @@ CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全�
 
 [第三轮 CI](docs/evidence/optimization-20261026/third-ci-e44acfb-results.json)通过 15/16 项任务，浏览器为 51 项通过、7 项失败，原失败和 trace 保留。[逐项核对](docs/evidence/optimization-20261026/ci-browser-contract-review.json)确认旧夹具缺少会话历史和额度读取、仍拦截旧检索地址，或在主动令时间轴过期后要求锁定。CI 仅在显式准备的完整测试副本中修订五份原测试，全部 58 个原测试名称、超时及跳过标记保持不变；角色锁定/完成正例保留，并增加过期后的界面禁用、真实 HTTP 拒绝及状态不变检查。移动端验证完整七个入口及原有几何约束。四项副本守卫测试与五份 TypeScript 语法检查通过，新的浏览器结果仍待最终 CI。恢复、发布、通知和重启检查在隔离栈启动成功后独立收集结果，前序步骤失败仍使整个任务失败。
 
+当前 CI 使用下列明确的契约迁移层。未经适配的冻结原脚本与适配后的执行是两份证据，原始失败仍成立；直接运行原 `pytest`、时间窗口基准或浏览器套件不等同当前 CI 流程，也不能宣称原套件全部通过。
+
+| 入口 | 精确适配范围 | 结果与保留边界 |
+|---|---|---|
+| `tools/ci_contract_fixture_overlay.py` | 两个旧 Python 测试的每日交通、缓存观察时间与有效期 | 原行为断言保留；只写 CI 临时检出目录中的两份测试文件，映射前后哈希写入 `evidence/ci-fixture-overlay.json` |
+| `tools/ci_time_window_benchmark.py` | 原六场景只补三条合成“不需预约”声明 | 原 `run`、期待结果和断言不改；输出标记 `current-contract-fixture-20261027`、输入已变且不可与原冻结评测比较，留出 16/17 记录不变 |
+| `tools/ci_excluded_day_contract.py` | 原 HTTP 场景中两个已审的派生失效原因码 | 两份日期必须明确过期、未核实，其他字段、类型、顺序全部严格相等；诊断模式仍执行原整份 JSON 相等断言 |
+| `tools/ci_browser_contract_overlay.py` | 五份原测试中的七个旧前提，完整复制后执行全部 58 项 | 原文件、测试名称、超时和跳过标记不改；精确替换见 `tools/ci_browser_contract_replacements.json`，保留副本哈希和浏览器 trace |
+
+[第四轮实际结果](docs/evidence/optimization-20261026/fourth-ci-478da94-results.json)为浏览器 57 项通过、1 项失败，四段后续恢复检查均通过。剩余浏览器失败是新增名称断言遗漏组件在“退 出”中插入的空格，已按实际可访问名称精确修正；全部几何检查仍保留，完整布局结果须等下一轮。密钥门禁的两条记录已重新计算为公开源码指纹，[窄例外和负例](docs/evidence/optimization-20261026/ci-secrets-public-source-hash-review.json)只覆盖指定凭据文件中的两个确切值；其他值或路径仍阻断，完整历史扫描仍须由最终提交通过。
+
+这些入口默认只核对源码哈希，不执行应用、不创建测试副本。以下只读检查可从仓库根目录复现；它们通过仅代表适配前提匹配：
+
+```powershell
+python tools/ci_contract_fixture_overlay.py
+python tools/ci_time_window_benchmark.py
+python tools/ci_excluded_day_contract.py
+python tools/ci_browser_contract_overlay.py
+docker compose -p trip-validation -f docker-compose.validation.yml config --quiet
+```
+
+完整执行复用 [CI 工作流](.github/workflows/ci.yml) 的 `Python Agent tests` 与 `Docker Compose config and build` 任务，后者使用[既有隔离 Compose](docker-compose.validation.yml)、专用项目/数据卷、离线供应商和测试账号，不读取日常业务挂载。工作流向 `main` 的提交或 PR 触发；在 Actions 中对同一提交重跑全部任务，可复现包含测试前提、管理员环境、完整浏览器套件及后续恢复的实际顺序。写入/执行开关只在 `GITHUB_ACTIONS=true` 的临时 CI 检出目录中使用，完整命令以工作流为准；单独调用其中一条不能代表整条验收。镜像构建另按既有归档恢复 12 个历史输入，并固定已审基础镜像，以复现既有受控演示产物，不将历史输出当作新成绩。
+
+这些迁移层服务于本次冻结版本的审查可追溯性。后续若确认真实应用缺陷，应修正应用及原测试、重新审查对应契约并逐步移除过时适配，保留旧失败与修订依据。源码、系统包、ELF、应用文件或运行权限变化后，须重新评估受影响风险和验证证据；现有精确组合的临时接受不会自动覆盖新组合，允许指纹不能自动重算求绿。最终交付要求同一替换提交全部 16 项 CI/安全任务实际成功。
+
 安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级本身不能放行这 8 项：用户已明确暂时接受精确核验组合中的残余风险，**仅限本机受控演示，到北京时间 2026-11-09 23:59:59 失效，不授公开生产许可**。授权与冻结指纹分别见[原始决定的公开副本](.github/security-risk-authorization.json)和[临时例外记录](.github/security-risk-acceptance.json)。
 
 门禁逐项核对批准业务源码树、依赖锁与 Docker recipe、87 个系统包版本、1086 个原生 ELF 路径指纹、135 个应用文件指纹及现场运行约束；原生 ELF 比较原始字节，明确列出的 UTF-8 业务文本仅规范 CRLF/LF。CI 必须重新扫描精确镜像并实测默认 uvicorn 进程，不能以镜像标签或旧报告代替等价证明。过期、源码/组件/权限组合变化、额外源代码挂载、加载器覆盖、未知高危或扫描失败仍阻断，禁止自动刷新允许指纹。`pass_temporary_risk_acceptance` 保留未修复分类与 52 条记录/8 项 CVE；原始 Agent High/Critical 总数仍为 79。逐项影响和未知见[部署矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)，扫描与证据边界见[安全供应链](docs/evidence/optimization-20261026/security-supply-chain.json)。
@@ -235,6 +260,12 @@ Windows 任务 `TripPlanner-AutomatedBackup` 已注册为当前用户、有限�
 随后一次开机后的 [08:46 补执行失败](docs/evidence/optimization-20261026/windows-backup-20261027-startup-failure.json)，服务恢复也失败；用户随后确认这些容器由本人手动停止；不能把这次停机或受其影响的失败归因于项目自行停机。保存原始日志后，本项目按精确原 ID 恢复。现在任务改用宿主入口 `tools/windows_backup_runner.pyw`：外层仍为原 `pythonw.exe`，每个 Docker 子进程另设 `CREATE_NO_WINDOW` 和隐藏启动信息，补齐无控制台环境的标准句柄，保留二进制导出及捕获输出。失败补偿在同一维护锁内核对原容器、镜像和挂载，确认依赖可用后仅恢复本次备份会停止、且原本运行的后端与 Agent；PostgreSQL 或前端被外部停止时保留停止状态并报告失败，不反向覆盖操作者。失败备份仍返回失败，不更新成功标记。Docker 不可用或主机断电时不能保证自动恢复。
 
 [修复后一次实际计划任务](docs/evidence/optimization-20261026/windows-silent-task-actual-result.json)退出码 0，备份与恢复阶段约 48 秒；108 个子进程均设置无窗口标志，161 次对任务进程的采样未观察到可见窗口。原容器状态、备份清单和近期成功心跳另见[核对记录](docs/evidence/optimization-20261026/windows-silent-backup-validation.json)。两次耗时的运行条件不同，不据此计算性能提升。
+
+[私有文件 ACL 收尾](docs/evidence/optimization-20261026/windows-private-acl-result.json)覆盖 `backups/`、`.codex-optimization/`、`deploy/runtime/` 三个私有包和 `backend/.env` 单文件：原 377 个对象仅允许当前用户、SYSTEM、Administrators，309 份文件约 7 GiB 的内容哈希、所有者及创建标识未变。原 SDDL、精确清单和前后哈希保留在本机私有审计目录，公开摘要不含凭据。继承 canary、父代理独立权限核对及真实 PowerShell 5.1 无窗口预检均通过。首次权限接口和模块加载失败保留；没有接管所有权、提权或整仓库修改 ACL。
+
+Windows 定时备份仍使用 `tools/windows_backup_runner.pyw`，新增入口在创建日志和调用维护逻辑前，核对本项目 `backups/` 下目录的三主体私有继承；核对失败则退出 1。只读预览为 `pwsh -NoProfile -File tools/windows_private_acl.ps1 -Mode Preview`，它只盘点，不修改 ACL。当前任务未配置外部副本，UNC/异机目标权限须独立配置并核验；原后端 Python 命令不负责设置 Windows ACL，文件 `mode 0600` 也不能代替 NTFS 权限。上述 09:10 完整静默任务早于这个新入口：新入口只有三项定向测试、实际无窗口预检和继承证据，按本轮范围没有再触发完整备份或任务。
+
+本次 ACL 减少枚举私有文件的直接读写，仍依赖可信的工作区、当前账号和管理员。执行源码的 ACL 在本次四个目标之外，仍观察到普通本机用户修改权限；因此不能声称已抵抗恶意本机用户修改代码后影响计划任务，也不是磁盘加密、当前账号失陷防护或多用户强隔离。需要更强隔离时，应把任务入口及完整调用链发布到受保护的独立执行目录，再单独审查任务迁移和访问策略。
 
 新安装仍先使用原安装器；现有任务用下列迁移工具预览，再显式仅更新 Action。它保留原用户、有限权限、触发器、备份路径及参数，不保存密码。后台 stdout、stderr、子进程退出码和诊断保存在实际备份根目录的 `task-logs/silent-backup-*.log` 与同名 JSON；当前任务结果也可在 Windows 任务计划程序或 `Get-ScheduledTaskInfo` 中查看。不要只读取旧的成功标记判断最近一次尝试。
 

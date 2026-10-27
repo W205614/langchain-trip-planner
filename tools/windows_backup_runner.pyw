@@ -24,6 +24,42 @@ from uuid import uuid4
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def ensure_private_backup_root(backup_root):
+    """Fail closed before logs; verify local private inheritance without elevation.
+
+    This bootstrap is outside silent_processes, so it applies the native hidden
+    process policy itself. External replica destinations are not covered here.
+    """
+    if os.name != 'nt':
+        raise RuntimeError('Private backup ACL preflight is Windows-only')
+    helper = ROOT / 'tools/windows_private_acl.ps1'
+    executable = os.path.join(os.environ.get('SystemRoot', r'C:\Windows'),
+                              'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe')
+    if not helper.is_file() or not os.path.isfile(executable):
+        raise RuntimeError('Private backup ACL preflight is unavailable')
+    options = silent_options({'stdin': subprocess.DEVNULL, 'stdout': subprocess.PIPE,
+                              'stderr': subprocess.PIPE, 'text': True,
+                              'encoding': 'utf-8', 'errors': 'replace', 'timeout': 30}, subprocess.DEVNULL)
+    # A parent PowerShell 7 session can otherwise inject its incompatible module
+    # path into Windows PowerShell 5.1. Use only the selected system engine's modules.
+    environment = dict(os.environ)
+    environment['PSModulePath'] = os.path.join(os.path.dirname(executable), 'Modules')
+    options['env'] = environment
+    result = subprocess.run([executable, '-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden',
+                             '-File', str(helper), '-Mode', 'EnsureBackupRoot',
+                             '-BackupRoot', str(backup_root.resolve())], **options)
+    if result.returncode:
+        raise RuntimeError('Private backup ACL preflight failed; no backup or log was started')
+    try:
+        proof = json.loads(result.stdout)
+    except (TypeError, ValueError):
+        raise RuntimeError('Private backup ACL preflight returned invalid proof') from None
+    if (proof.get('passed') is not True or proof.get('allowed_principals') != 3
+            or proof.get('before_log_creation') is not True):
+        raise RuntimeError('Private backup ACL preflight did not establish the required access boundary')
+    return proof
+
+
 def silent_options(options, log):
     """Add native Windows policy without replacing input/capture/binary pipes."""
     result = dict(options)
@@ -131,6 +167,12 @@ def run_main(argv=None):
     preliminary = argparse.ArgumentParser(add_help=False)
     preliminary.add_argument('--backup-root', type=Path, default=ROOT / 'backups')
     options, _ = preliminary.parse_known_args(argv)
+    try:
+        private_acl = ensure_private_backup_root(options.backup_root)
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError):
+        # A failed private boundary must precede mkdir/open and maintenance. With
+        # pythonw no safe private log exists yet; the task still receives exit1.
+        return 1
     log_dir = options.backup_root.resolve() / 'task-logs'
     log_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ') + '-' + str(os.getpid()) + '-' + uuid4().hex[:8]
@@ -138,7 +180,8 @@ def run_main(argv=None):
     report_path = log_dir / ('silent-backup-' + stamp + '.json')
     report = {'started_at': datetime.now(timezone.utc).isoformat(), 'log': str(log_path),
               'entry': str(Path(__file__).resolve()), 'runner_pid': os.getpid(), 'exit_code': 1,
-              'boundary': 'Private inherited-user log ACLs; Windows mode0600 alone is not a POSIX ACL guarantee.'}
+              'private_acl_preflight': private_acl,
+              'boundary': 'Verified local current-user/SYSTEM/Administrators inheritance before logging; not external replica ACL or disk encryption proof.'}
     fd = os.open(log_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd, 'w', encoding='utf-8', buffering=1) as log:
         with redirect_stdout(log), redirect_stderr(log):

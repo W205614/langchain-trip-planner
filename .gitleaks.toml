@@ -32,3 +32,11 @@ targetRules = ["generic-api-key"]
 paths = ['''(^|/)\.github/security-risk-acceptance\.json$''']
 regexTarget = "secret"
 regexes = ['''^(1c61e59033a52b767630dfd1ea8b91e402bb8d28319a8fc4d82301a26a94b5c8|40de09860e5df1b00bbf432eb68632465125a3efaa074f85972f3ea000c06dfc|524cc01225dd013ca5ca001a4673955eb3543d807733f8b63b70a275dc4213ee|58131b1a88b30a8ae483661ac3b8dbecd8601c41c9e8355a13e887d53c97b319|82ce310b8906439a78e727301145819b5ba2be71a9316c4eed8ef06940b72c11|a70f5278cdd61914df5426ad09dabc53bb16dbebb574ee538a03325785fa71b1|b0c3e006c11017b2464b4931ff8666ff3363c77c423835f8c5340f0f382f3f32|ba6fedb706e2375b8f2873815159baa6bfba652e611687aff5432a0e88c2902e|d0274c0e50f83ee538cd0ee78b4c13739106075fe837e80be713ac38e6f37574|e4902f55784fc0942ffefc4544f30baf527b9b413affe3d3d4a4bbdf3e22d5fb|f13f26658dba575573652f61d2004d1d52ea1a05c03a10b5d86feacc924a583c)$''']
+
+[[allowlists]]
+description = "Two recomputed public source fingerprints in the exact browser review receipt; path AND literal value only"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/evidence/optimization-20261026/ci-browser-contract-review\.json$''']
+regexTarget = "secret"
+regexes = ['''^(c70142c2f343f0215a3d4a6f54d1f7744c488594c8f30dccb0f4352ec932068c|3e8b5d56f4cec301d6047e72c1605be570be5971ac53b8b527238a5fba804c51)$''']

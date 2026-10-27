@@ -119,11 +119,12 @@
     {
       "id": "mobile-current-named-action-set",
       "before": "  await expect(buttons).toHaveCount(6)",
-      "after": "  const expectedActions = [\n    '账号安全', '🌏 行程广场', '🧭 景点发现', '✨ 我的行程 · 问答与修改',\n    '📚 投稿攻略', '🔎 旅行资料研究', '退出'\n  ]\n  await expect(buttons).toHaveCount(expectedActions.length)\n  for (const name of expectedActions) {\n    await expect(actions.getByRole('button', { name, exact: true })).toBeVisible()\n  }",
+      "after": "  const expectedActions = [\n    '账号安全', '🌏 行程广场', '🧭 景点发现', '✨ 我的行程 · 问答与修改',\n    '📚 投稿攻略', '🔎 旅行资料研究', '退 出'\n  ]\n  await expect(buttons).toHaveCount(expectedActions.length)\n  for (const name of expectedActions) {\n    await expect(actions.getByRole('button', { name, exact: true })).toBeVisible()\n  }",
       "exact_occurrences": 1,
       "reason": "Account security adds the seventh current signed-in non-admin action. Count plus all exact accessible names validates the complete expected set. Every original button bounding-box and navigation/header non-overlap assertion remains unchanged; the first failed CI never reached those geometry checks.",
       "source_path": "frontend/e2e/responsive.spec.ts",
-      "source_lf_sha256": "46f32cbc13f4eb258811953cc6df393d198ea688b8ea04371a6b9bdce8f12567"
+      "source_lf_sha256": "46f32cbc13f4eb258811953cc6df393d198ea688b8ea04371a6b9bdce8f12567",
+      "fourth_ci_followup": "478da94 browser57passed1failed; actual error-context accessible logout name is 退 出 (component inserted space). Keep exact name matching and all geometry checks; no new browser pass inferred."
     },
     {
       "id": "mobile-no-horizontal-overflow",

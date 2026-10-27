@@ -11,6 +11,7 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+from uuid import uuid4
 
 PATH = Path(__file__).resolve().parents[1] / 'windows_backup_runner.pyw'
 loader = importlib.machinery.SourceFileLoader('tested_quiet_backup_runner', str(PATH))
@@ -80,8 +81,10 @@ print('captured stderr',file=sys.stderr)
                 self.assertIn(expected, text)
 
     def test_pythonw_none_streams_get_private_report_and_maintenance_return_or_exception_survives(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+        proof = {'passed': True, 'allowed_principals': 3, 'before_log_creation': True}
+        with patch.object(runner, 'ensure_private_backup_root', return_value=proof):
+            root = runner.ROOT / '.cache/windows-backup-main-guards' / uuid4().hex
+            root.mkdir(parents=True)
             original = subprocess.Popen
             def fake_main(argv):
                 print('{"passed":false,"synthetic_only":true}'); return 11
@@ -95,6 +98,42 @@ print('captured stderr',file=sys.stderr)
                 self.assertEqual(1, runner.run_main(['backup', '--backup-root', str(root)]))
             logs = '\n'.join(p.read_text(encoding='utf-8') for p in (root / 'task-logs').glob('*.log'))
             self.assertIn('host synthetic failure', logs); self.assertIn('synthetic_only', logs)
+
+
+class PrivatePrelogGuards(unittest.TestCase):
+    def test_acl_failure_precedes_log_creation_and_maintenance(self):
+        root = runner.ROOT / '.cache/windows-private-prelog-guards' / uuid4().hex
+        with patch.object(runner, 'ensure_private_backup_root', side_effect=RuntimeError('synthetic denied ACL')), \
+             patch.object(runner, 'load_maintenance') as maintenance:
+            self.assertEqual(1, runner.run_main(['backup', '--backup-root', str(root)]))
+        maintenance.assert_not_called()
+        self.assertFalse(root.exists())
+
+    def test_bootstrap_is_hidden_before_monkeypatch_and_rejects_invalid_proof(self):
+        root = runner.ROOT / 'backups'
+        constants = {'CREATE_NEW_CONSOLE': 16, 'DETACHED_PROCESS': 8, 'CREATE_NO_WINDOW': 0x08000000,
+                     'STARTF_USESHOWWINDOW': 1, 'SW_HIDE': 0,
+                     'STARTUPINFO': lambda: SimpleNamespace(dwFlags=0, wShowWindow=0)}
+        proof = {'passed': True, 'allowed_principals': 3, 'before_log_creation': True}
+        with patch.object(runner.os, 'name', 'nt'), patch.object(runner.os.path, 'isfile', return_value=True), \
+             patch.multiple(runner.subprocess, create=True, **constants), \
+             patch.object(runner.subprocess, 'run', return_value=SimpleNamespace(returncode=0, stdout=json.dumps(proof))) as native:
+            self.assertEqual(proof, runner.ensure_private_backup_root(root))
+            options = native.call_args.kwargs
+            self.assertTrue(options['creationflags'] & 0x08000000)
+            self.assertTrue(options['startupinfo'].dwFlags & 1)
+            self.assertEqual(0, options['startupinfo'].wShowWindow)
+            self.assertEqual(subprocess.DEVNULL, options['stdin'])
+            self.assertEqual(subprocess.PIPE, options['stdout']); self.assertEqual(subprocess.PIPE, options['stderr'])
+            self.assertEqual(os.path.join(os.path.dirname(native.call_args.args[0][0]), 'Modules'), options['env']['PSModulePath'])
+            command = native.call_args.args[0]
+            self.assertEqual('EnsureBackupRoot', command[command.index('-Mode') + 1])
+            self.assertEqual('Hidden', command[command.index('-WindowStyle') + 1])
+            for response in (SimpleNamespace(returncode=1, stdout=''),
+                             SimpleNamespace(returncode=0, stdout='not-json'),
+                             SimpleNamespace(returncode=0, stdout='{"passed":false}')):
+                native.return_value = response
+                with self.assertRaises(RuntimeError): runner.ensure_private_backup_root(root)
 
 
 if __name__ == '__main__':

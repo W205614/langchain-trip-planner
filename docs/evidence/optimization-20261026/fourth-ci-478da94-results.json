@@ -1,0 +1,201 @@
+{
+  "source_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+  "expected_jobs": 16,
+  "passed": 14,
+  "failed": 2,
+  "jobs": [
+    {
+      "run_id": 40443466690,
+      "workflow": "CI",
+      "jobs": [
+        {
+          "id": 121989036751,
+          "name": "Python Agent tests",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466690/job/121989036751"
+        },
+        {
+          "id": 121989036916,
+          "name": "Docker Compose config and build",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466690/job/121989036916"
+        },
+        {
+          "id": 121989036995,
+          "name": "Frontend build (vue-tsc + vite)",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466690/job/121989036995"
+        },
+        {
+          "id": 121989037094,
+          "name": "Java business PostgreSQL tests",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466690/job/121989037094"
+        }
+      ]
+    },
+    {
+      "run_id": 40443466627,
+      "workflow": "Security gates",
+      "jobs": [
+        {
+          "id": 121989036973,
+          "name": "Runtime images / postgres",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989036973"
+        },
+        {
+          "id": 121989037100,
+          "name": "Secrets / full history and tracked source",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037100"
+        },
+        {
+          "id": 121989037136,
+          "name": "Images / frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037136"
+        },
+        {
+          "id": 121989037140,
+          "name": "Images / agent",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037140"
+        },
+        {
+          "id": 121989037142,
+          "name": "CodeQL / javascript-typescript",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037142"
+        },
+        {
+          "id": 121989037157,
+          "name": "Images / backend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037157"
+        },
+        {
+          "id": 121989037188,
+          "name": "Dependencies / Python Node and resolved Maven SBOM",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037188"
+        },
+        {
+          "id": 121989037195,
+          "name": "CodeQL / actions",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037195"
+        },
+        {
+          "id": 121989037196,
+          "name": "Runtime images / alertmanager",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037196"
+        },
+        {
+          "id": 121989037207,
+          "name": "CodeQL / python",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037207"
+        },
+        {
+          "id": 121989037247,
+          "name": "Runtime images / prometheus",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037247"
+        },
+        {
+          "id": 121989037267,
+          "name": "CodeQL / java-kotlin",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "478da94f0073172c4d577b27e7902ece5ee541a7",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40443466627/job/121989037267"
+        }
+      ]
+    }
+  ],
+  "original_failures_retained": true,
+  "browser": {
+    "job_id": 121989036916,
+    "passed": 57,
+    "failed": 1,
+    "all58cases_executed": true,
+    "failed_test": "responsive.spec.ts:3 mobile home named actions",
+    "actual_cause": "Test adapter introduced exact name 退出, while actual component accessible name is 退 出 (automatic two-character spacing). No application change; update exact expected name and retain all geometry checks.",
+    "followup_matcher_corrected_not_rerun_locally": true,
+    "actual_geometry_checks_not_yet_reached": true,
+    "original_seven_failures": "third-ci-e44acfb-results.json retained, six corresponding cases now passed; original failed statuses not rewritten",
+    "artifact": {
+      "id": 12707801432,
+      "bytes": 5604193,
+      "sha256": "e6002da73078bfb5e3e1be57ec06a6f3149949d84a7cb46a0a9cc96f9032f77b",
+      "full_zip_digest_verified": true,
+      "all26members_crc_read": true,
+      "error_context_sha256": "99f4f4ce9c8cb83867a634f596e546774405dc04487fd3362883aa51d53cd297"
+    }
+  },
+  "independent_postbrowser_steps": [
+    {
+      "name": "Isolated recovery drill",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Java review and publication lifecycle",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Local notification failure and recovery",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Generation interrupted by container restart",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "postbrowser_evidence_boundary": "Recovery script default development dataset does not establish production identity restore or offhost DR; business publication/notification/restart evidence is isolated offline integration only.",
+  "secrets": {
+    "job_id": 121989037100,
+    "history_findings": 2,
+    "tracked_findings": 2,
+    "source_fingerprints_recomputed": true,
+    "review": "ci-secrets-public-source-hash-review.json",
+    "original_failure_preserved": true,
+    "narrow_config_correction_awaits_next_exactSHA_CI": true
+  },
+  "boundary": "Fourth candidate is not final green delivery. All other11security and3CI jobs passed; current Docker job remains failed despite all4postchecks passing. No app/frozen risk maps/runtime changes for this fixture round."
+}

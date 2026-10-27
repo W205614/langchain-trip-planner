@@ -1,5 +1,5 @@
 {
-  "phase": "THIRD_CI_15_PASS_1_BROWSER_FAIL_REPLACEMENT_READY",
+  "phase": "FINAL_CI_CORRECTIONS_AND_AUTHORIZED_HOST_ACL_COMPLETE_PENDING_NEXT_SHA",
   "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
   "source_committed_locally": true,
   "pushed": true,
@@ -53,7 +53,7 @@
     "current": "poi-ui-acceptance-result.json:7/7 passed on final220, own backend/mapfixture restored",
     "original_failures": "run1 retained; run2 primary error/full checklist lost, post-run diagnostic and recovered waiter excerpt retained"
   },
-  "updated_at": "2026-10-27T03:17:51.747071+00:00",
+  "updated_at": "2026-10-27T04:01:35.637385+00:00",
   "actual_runtime_probe": "hardened-runtime-probe-result.json:11 passed; actual uvicorn PID1; CapBnd/Eff0;NNP1;ROroot;boundedtmpfs;native component checks",
   "new_candidate": "trip-opt-hardened-20261026; canonical Agent actual uvicorn, separate agent-fixture supplies browser providers explicitly",
   "backup_previous_a01": "automated-backup-drill-final.json:pass/full archive/local copy/private owner history unchanged",
@@ -133,7 +133,21 @@
     "first": "first-ci-d323a44-results.json:11passed5failed retained",
     "second": "second-ci-5485f8a-results.json:13passed3failed retained; all4CodeQL passed;416 Python unit pass2skip;remaining benchmark/HTTP contract/native drift corrections",
     "third": "third-ci-e44acfb-results.json:15passed1failed;Security12/12passed;Browser51pass7fail original traces retained;five-file current-contract CI testcopy reviewed, next replacement required",
-    "fourth": "pending exactSHA push and all16; four independent postbrowser steps now collect failures without masking the original failed step"
+    "fourth": "fourth-ci-478da94-results.json:14passed2failed;Browser57pass1 exactlogoutCJKspacingmatcher failure;all4downstream recovery/publication/notification/restart steps passed;secrets2 recomputed publicsource hashes require exactpath+literal correction",
+    "fifth": "next exactSHA after precise matcher + narrow publichashpolicy + README reproducibility and host-only sensitive-file ACL closure;all16 still required"
   },
-  "browser_fixture_review": "ci-browser-contract-review.json:parent and two agent source/actual-trace review;not human blind review;4guards/5TSsyntax only;new browser results pending"
+  "browser_fixture_review": "ci-browser-contract-review.json:parent and two agent source/actual-trace review;not human blind review;4guards/5TSsyntax only;new browser results pending",
+  "host_only_private_acl": {
+    "report": "windows-private-acl-result.json",
+    "verified_original_objects": 377,
+    "verified_original_files": 309,
+    "content_owner_creation_unchanged": true,
+    "three_principal_ACL_verified": true,
+    "parent_independent_QA": true,
+    "targeted_unique_tests": 3,
+    "actual_native_prelog_and_inheritance_passed": true,
+    "full_backup_or_task_rerun": false,
+    "scope": "three private package directories and backend/.env only; no entire repository ACL or runtime change",
+    "remaining_boundary": "Workspace executable source still broadly writable; trust boundary required; not multiuser isolation or encryption/UNC proof."
+  }
 }

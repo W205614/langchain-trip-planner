@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-27T03:59:14.060792+00:00",
+  "status": "host_only_private_ACL_hardening_and_prelog_guards_passed",
+  "scope": {
+    "private_directory_roots": 3,
+    "single_config_files": 1,
+    "original_objects": 377,
+    "original_directories": 68,
+    "original_files": 309,
+    "original_content_bytes": 7431259844,
+    "tracked_files_in_private_scope": 0,
+    "reparse_points": 0,
+    "repository_wide_recursive_ACL_change": false
+  },
+  "ACL_result": {
+    "allowed_principals": [
+      "current_user",
+      "SYSTEM",
+      "Administrators"
+    ],
+    "all_original_owners_unchanged": true,
+    "all309_file_content_hashes_unchanged": true,
+    "current_user_full_content_read_verified": true,
+    "all377_original_creation_ticks_unchanged": true,
+    "native_DACL_information_flags": "0x80000004",
+    "owner_group_SACL_not_requested": true,
+    "no_privilege_enable_or_ownership_takeover": true,
+    "first_Set_Acl_failure_retained": true,
+    "first_failed_attempt_scope_SDDL_drift_count": 0
+  },
+  "hardlink_postcheck": {
+    "current_regular_files_checked": 310,
+    "link_count_other_than_1": 0,
+    "tool_now_rejects_hardlinks_before_scope_operations": true,
+    "snapshot_linkcount_limitation": "Initial snapshot predates the added hard-link metadata guard; the completed postcheck found no hard links. The original snapshot was not rewritten."
+  },
+  "private_audit": {
+    "location": "Current task visualization/private-acl-20261027; local private artifact only",
+    "original_manifest_sha256": "763303289717f08243ed117fc5fddd489d12dd6000b23419cbe68de694f86ff7",
+    "apply_result_sha256": "7e7eb8febecd0dc9d39d11565bab233b6601279b8b67b80ff949cbb097633432",
+    "records_contain_original_SDDL_owner_exact_paths_and_file_hashes": true,
+    "raw_private_records_published": false
+  },
+  "parent_independent_QA": {
+    "passed": true,
+    "original_objects_metadata_verified": 377,
+    "recorded_all309_content_hash_chain_verified": true,
+    "fresh_critical_env_hashes_checked": 7,
+    "full_7GiB_hash_repeated": false,
+    "receipt": "root-independent-verification.json in the private audit directory"
+  },
+  "future_backup_prelog": {
+    "entry": "tools/windows_backup_runner.pyw",
+    "helper": "tools/windows_private_acl.ps1 -Mode EnsureBackupRoot",
+    "preflight_before_log_directory_or_file_creation": true,
+    "failure_returns1_before_maintenance": true,
+    "new_backup_children_inherit_verified_local_private_parent": true,
+    "selected_engine": "system Windows PowerShell5.1",
+    "actual_final_native_spawn_count": 1,
+    "CREATE_NO_WINDOW_and_STARTF_USESHOWWINDOW_SW_HIDE_verified": true,
+    "module_lookup_pinned_to_selected_system_engine_modules": true,
+    "original_PowerShell7_to5_module_lookup_failure_retained": true,
+    "outside_project_backup_root_denied": true,
+    "replica_root_configured_in_current_task": false,
+    "external_or_UNC_replica_ACLs_verified": false
+  },
+  "bounded_verification": {
+    "targeted_unique_unit_tests_passed": 3,
+    "single_changed_module_environment_guard_rerun_passed": 1,
+    "actual_retained_inheritance_canary_objects": 2,
+    "canary_inherits_exact_private_three_principals": true,
+    "canary_deleted": false,
+    "actual_complete_backup_or_business_or_scheduled_task_rerun": false,
+    "earlier_0910_complete_silent_task_predates_this_ACL_hook": true,
+    "task_parameters_schedule_principal_changed": false,
+    "Docker_lifecycle_or_resource_cleanup": false,
+    "approved_five_business_trees_four_recipes_or_risk_fingerprints_changed": false
+  },
+  "code": [
+    {
+      "file": "tools/windows_private_acl.ps1",
+      "lf_sha256": "91fba5f61e991658f4ad1a4e546f3853a14d3b9634de42226cc380dad02ffb0a"
+    },
+    {
+      "file": "tools/windows_backup_runner.pyw",
+      "lf_sha256": "74777fa109b12bed3b38a979a23a681a14ee5450fa8d9e6a494ae13ce869e6da"
+    },
+    {
+      "file": "tools/tests/test_windows_backup_runner.py",
+      "lf_sha256": "4daaa334f471758c029d3ab78de8b8aae2456b9bd699bbaaa0969c56641985aa"
+    }
+  ],
+  "limits": [
+    "This protects direct access to the enumerated local private packages/configuration. It is not disk encryption, protection against the current account or administrators, offhost recovery or remote replica ACL proof.",
+    "Repository source ACLs remain outside the four authorized targets. The workspace and code executed by the current user remain trusted; these private-file ACLs alone are not a strong boundary against malicious local users who can modify executable project code.",
+    "The 09:10 full quiet backup task remains earlier evidence. This hook has only targeted unit/native-preflight/inheritance checks and has not been used in a newly rerun complete backup."
+  ]
+}
