@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-27T01:53:32.091584+00:00",
+  "status": "initial_context_policy_implemented_pending_root_review_and_fresh_ci",
+  "source_sarif_run": 40432045888,
+  "source_sarif_revision": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+  "review_file": "docs/evidence/optimization-20261026/codeql-independent-source-review-24.json",
+  "context_policy": {
+    "path": ".github/codeql-context-assessments.json",
+    "sha256": "ffc5d4333ac6a91dc77d61935517d0f22736eee7878a77e415435ea1d400e6a0",
+    "classification": "not_affected_context",
+    "exact_reviewed_entries": 22,
+    "supporting_source_hashes": 29,
+    "business_trees": 5,
+    "expires_at": "2026-11-09T23:59:59+08:00",
+    "algorithm": "sarif-semantic-flow-v1",
+    "projection": "Actual repository URI/regions/snippet/message and ordered causal steps, optional state/taxa. Resolve artifact indexes and validate URI consistency; exclude opaque flow/thread IDs, numeric related labels and SRCROOT display labels. Unresolved roots/graph traversals block.",
+    "no_auto_refresh": true
+  },
+  "default_scan_boundary": "Without --codeql-context all24 original highs block. Explicit context retains all original severities and raw records; only the exact22 source-reviewed false positives are classified.",
+  "actual_old_sarif_replay": {
+    "exit_code": 1,
+    "raw_highs": 24,
+    "not_affected_context": 22,
+    "remaining_blocking": 2,
+    "by_file": [
+      {
+        "file": "java.sarif",
+        "status": "pass_codeql_context",
+        "raw_high_critical_findings": 18,
+        "not_affected_context_findings": 18,
+        "blocking_findings": 0
+      },
+      {
+        "file": "javascript.sarif",
+        "status": "pass_codeql_context",
+        "raw_high_critical_findings": 2,
+        "not_affected_context_findings": 2,
+        "blocking_findings": 0
+      },
+      {
+        "file": "python.sarif",
+        "status": "blocked_findings",
+        "raw_high_critical_findings": 4,
+        "not_affected_context_findings": 2,
+        "blocking_findings": 2
+      }
+    ]
+  },
+  "tools_name_heuristic": {
+    "changed_internal_function": "secrets -> scan_repository",
+    "cli_mode_unchanged": "secrets",
+    "exceptions_added": 0,
+    "boundary": "Old SARIF still contains2 tool alerts and remains blocked; only new CodeQL CI analysis can establish disappearance."
+  },
+  "targeted_tests": {
+    "cases": 10,
+    "passed": true,
+    "projection_refinement_retested_cases": 4,
+    "command": ".cache/improvement-venv/Scripts/python.exe -m unittest tools.tests.test_codeql_context tools.tests.test_sarif_rules tools.tests.test_security_gate.GateFailureTests.test_codeql_high_result_blocks_while_medium_is_reported_without_block tools.tests.test_security_gate.GateFailureTests.test_missing_or_malformed_codeql_output_is_failure -v",
+    "counterexamples": [
+      "No default suppression; raw severity8.8 remains.",
+      "Changed source/tree/review/expiry/missing flow proof blocks.",
+      "Changed flow/query/score or duplicate finding remains blocking.",
+      "Artifact renumbering/opaqueIDs normalize, but realURI/index mismatch blocks."
+    ]
+  },
+  "eight_cve_risk_acceptance_unchanged_sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+  "business_and_recipes_equal_to_approved": true,
+  "no_model_docker_or_host_task_operations": true,
+  "raw_replay_summary": {
+    "path": "E:\\project\\langchain-trip-planner\\.cache\\security-report-raw\\codeql-40432045888\\context-replay\\sarif-summary.json",
+    "sha256": "b269350a5db33663036251aab0b6df531e6c481f1b26bf4a49bc352a511d9245"
+  }
+}

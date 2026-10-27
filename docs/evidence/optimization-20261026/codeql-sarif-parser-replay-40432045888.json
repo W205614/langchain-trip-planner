@@ -1,0 +1,559 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-27T01:29:57.046177+00:00",
+  "original_workflow_run": 40432045888,
+  "original_source_revision": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+  "parser_revision_working_head": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+  "change": "Support official component-local reportingDescriptorReference and toolComponentReference for driver/extensions. Retain exact threshold and reject ambiguous/mismatched/unknown severity references.",
+  "original_failure": "SARIF result references an unavailable rule; exit2 parser error because driver.rules was empty and official query rules lived in extensions.",
+  "replay_result": "blocked_findings exit1; parsing fixed but 24 reported security findings remain subject to source review, not declared proven exploit or dismissed.",
+  "targeted_tests": {
+    "command": ".cache/improvement-venv/Scripts/python.exe -m unittest tools.tests.test_sarif_rules tools.tests.test_security_gate.GateFailureTests.test_codeql_high_result_blocks_while_medium_is_reported_without_block tools.tests.test_security_gate.GateFailureTests.test_missing_or_malformed_codeql_output_is_failure -v",
+    "cases": 6,
+    "passed": true
+  },
+  "reports": [
+    {
+      "language": "java-kotlin",
+      "artifact_id": 12702417158,
+      "artifact_sha256": "0b9c4c7eee5f5c9fb145fe46d4f8a656c4d1dfdc81c148e448c543218408ead6",
+      "sarif_path": ".cache/security-report-raw/codeql-40432045888/java-kotlin/java.sarif",
+      "sarif_sha256": "eec7e034ba675d8f123488e1490149c13a9761f30f98baa9d1f06fcfd9745655",
+      "original_driver_rules": 0,
+      "blocking_findings": 18,
+      "findings": [
+        {
+          "rule_id": "java/spring-disabled-csrf-protection",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/spring-disabled-csrf-protection",
+            "rule": {
+              "id": "java/spring-disabled-csrf-protection",
+              "index": 31,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+              "line": 124
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 128
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 123
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 115
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 110
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 86
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 81
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 75
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 66
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 61
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+              "line": 35
+            }
+          ]
+        },
+        {
+          "rule_id": "java/csrf-unprotected-request-type",
+          "security_severity": "8.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/csrf-unprotected-request-type",
+            "rule": {
+              "id": "java/csrf-unprotected-request-type",
+              "index": 79,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+              "line": 18
+            }
+          ]
+        },
+        {
+          "rule_id": "java/tainted-arithmetic",
+          "security_severity": "8.6",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/tainted-arithmetic",
+            "rule": {
+              "id": "java/tainted-arithmetic",
+              "index": 93,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+              "line": 184
+            }
+          ]
+        },
+        {
+          "rule_id": "java/tainted-arithmetic",
+          "security_severity": "8.6",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/tainted-arithmetic",
+            "rule": {
+              "id": "java/tainted-arithmetic",
+              "index": 93,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+              "line": 74
+            }
+          ]
+        },
+        {
+          "rule_id": "java/tainted-arithmetic",
+          "security_severity": "8.6",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/tainted-arithmetic",
+            "rule": {
+              "id": "java/tainted-arithmetic",
+              "index": 93,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+              "line": 75
+            }
+          ]
+        },
+        {
+          "rule_id": "java/tainted-arithmetic",
+          "security_severity": "8.6",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/tainted-arithmetic",
+            "rule": {
+              "id": "java/tainted-arithmetic",
+              "index": 93,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+              "line": 100
+            }
+          ]
+        },
+        {
+          "rule_id": "java/tainted-arithmetic",
+          "security_severity": "8.6",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/tainted-arithmetic",
+            "rule": {
+              "id": "java/tainted-arithmetic",
+              "index": 93,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+              "line": 101
+            }
+          ]
+        },
+        {
+          "rule_id": "java/uncontrolled-arithmetic",
+          "security_severity": "8.6",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "java/uncontrolled-arithmetic",
+            "rule": {
+              "id": "java/uncontrolled-arithmetic",
+              "index": 94,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+              "line": 51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "javascript-typescript",
+      "artifact_id": 12702476943,
+      "artifact_sha256": "e71f18fd3ca8d63ad9193560339edacc7a48462d3b52ae4a67fa94a04ca686ea",
+      "sarif_path": ".cache/security-report-raw/codeql-40432045888/javascript-typescript/javascript.sarif",
+      "sarif_sha256": "cd94bee3503a2359dc01fee5e5d2f9848ec5008368f46546386b52a429575912",
+      "original_driver_rules": 0,
+      "blocking_findings": 2,
+      "findings": [
+        {
+          "rule_id": "js/insecure-randomness",
+          "security_severity": "7.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "js/insecure-randomness",
+            "rule": {
+              "id": "js/insecure-randomness",
+              "index": 31,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "frontend/e2e/operations.spec.ts",
+              "line": 9
+            }
+          ]
+        },
+        {
+          "rule_id": "js/insecure-randomness",
+          "security_severity": "7.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "js/insecure-randomness",
+            "rule": {
+              "id": "js/insecure-randomness",
+              "index": 31,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "frontend/e2e/operations.spec.ts",
+              "line": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "python",
+      "artifact_id": 12702383075,
+      "artifact_sha256": "1fd58670e41979ff3f4a0b450d65588a87c9a8271eeda2462ee5f30cfb324b78",
+      "sarif_path": ".cache/security-report-raw/codeql-40432045888/python/python.sarif",
+      "sarif_sha256": "c2f2bbd7d99a974977d5cb539ab06a354905273c2f7513986f4b12c768364894",
+      "original_driver_rules": 0,
+      "blocking_findings": 4,
+      "findings": [
+        {
+          "rule_id": "py/clear-text-storage-sensitive-data",
+          "security_severity": "7.5",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "py/clear-text-storage-sensitive-data",
+            "rule": {
+              "id": "py/clear-text-storage-sensitive-data",
+              "index": 19,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "tools/security_gate.py",
+              "line": 43
+            }
+          ]
+        },
+        {
+          "rule_id": "py/clear-text-logging-sensitive-data",
+          "security_severity": "7.5",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "py/clear-text-logging-sensitive-data",
+            "rule": {
+              "id": "py/clear-text-logging-sensitive-data",
+              "index": 20,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "backend/scripts/optimization_seed_admin.py",
+              "line": 70
+            }
+          ]
+        },
+        {
+          "rule_id": "py/clear-text-logging-sensitive-data",
+          "security_severity": "7.5",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "py/clear-text-logging-sensitive-data",
+            "rule": {
+              "id": "py/clear-text-logging-sensitive-data",
+              "index": 20,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "tools/security_gate.py",
+              "line": 387
+            }
+          ]
+        },
+        {
+          "rule_id": "py/overly-permissive-file",
+          "security_severity": "7.8",
+          "blocking": true,
+          "rule_reference": {
+            "ruleId": "py/overly-permissive-file",
+            "rule": {
+              "id": "py/overly-permissive-file",
+              "index": 45,
+              "toolComponent": {
+                "index": 0
+              }
+            }
+          },
+          "locations": [
+            {
+              "path": "backend/scripts/install_runtime_security_patches.py",
+              "line": 70
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "primary_references": [
+    "https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/sarif-v2.1.0-os.html",
+    "https://docs.github.com/en/code-security/reference/code-scanning/sarif-files/sarif-support"
+  ],
+  "scope": "Tools parser/tests and this evidence only; no Docker or host task operations, no approval/recipe/business fingerprint refresh."
+}

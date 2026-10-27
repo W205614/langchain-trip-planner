@@ -26,13 +26,15 @@ import tempfile
 from urllib.request import Request, urlopen
 import zipfile
 try:
-    from . import image_policy, risk_acceptance
+    from . import image_policy, risk_acceptance, sarif_rules, codeql_context
 except ImportError:
     try:
-        from tools import image_policy, risk_acceptance
+        from tools import image_policy, risk_acceptance, sarif_rules, codeql_context
     except ModuleNotFoundError:
         import image_policy
         import risk_acceptance
+        import sarif_rules
+        import codeql_context
 
 ROOT = Path(__file__).resolve().parents[1]
 PINS = json.loads((ROOT / '.github/security-tool-pins.json').read_text(encoding='utf-8'))
@@ -193,7 +195,7 @@ def dependencies(destination: Path, policy=None):
     return records
 
 
-def secrets(destination: Path, include_untracked=False):
+def scan_repository(destination: Path, include_untracked=False):
     executable = tool('gitleaks')
     common = ['--redact=100', '--no-banner', '--log-level=error', '--config=' + str(ROOT / '.gitleaks.toml'), '--report-format=json']
     history = destination / 'gitleaks-history.json'
@@ -309,35 +311,42 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
              'image_revision_context_verified': context_verified}]
 
 
-def sarif(directory: Path):
+def sarif(directory: Path, context=None):
     files = list(directory.rglob('*.sarif'))
     if not files:
         raise RuntimeError('CodeQL SARIF output missing; analysis is not a passing gate')
     records = []
+    used_context = set()
     for path in files:
         data = report(path)
         if not isinstance(data, dict) or not isinstance(data.get('runs'), list) or not data['runs']:
             raise RuntimeError('Invalid CodeQL SARIF')
         count = 0
+        contextual = []
         for run_data in data['runs']:
             driver = run_data.get('tool', {}).get('driver', {})
             if driver.get('name') != 'CodeQL':
                 raise RuntimeError('SARIF was not produced by CodeQL')
-            rules = driver.get('rules', [])
-            rules_by_id = {rule.get('id'): rule for rule in rules}
-            for result in run_data.get('results', []):
-                rule = rules_by_id.get(result.get('ruleId'))
-                if rule is None and isinstance(result.get('ruleIndex'), int) and 0 <= result['ruleIndex'] < len(rules):
-                    rule = rules[result['ruleIndex']]
-                if rule is None:
-                    raise RuntimeError('SARIF result references an unavailable rule')
-                try:
-                    severity = float(rule.get('properties', {}).get('security-severity', 0))
-                except (ValueError, TypeError):
-                    raise RuntimeError('Invalid CodeQL security severity')
-                if severity >= 7 or (not severity and result.get('level') == 'error'):
+            results = run_data.get('results', [])
+            if not isinstance(results, list):
+                raise RuntimeError('Invalid CodeQL SARIF results array')
+            for result in results:
+                rule = sarif_rules.resolve_rule(run_data['tool'], result)
+                if sarif_rules.is_blocking(rule, result):
                     count += 1
-        records.append({'scanner': 'codeql-policy', 'file': path.name, 'blocking_findings': count, 'status': 'blocked_findings' if count else 'pass'})
+                    assessed = codeql_context.assess(context, rule, result, run_data)
+                    if assessed:
+                        identity = codeql_context.canonical({k: assessed[k] for k in ('query', 'path', 'region', 'semantic_flow_sha256')})
+                        if identity not in used_context:
+                            used_context.add(identity)
+                            contextual.append(assessed)
+        remaining = count - len(contextual)
+        records.append({'scanner': 'codeql-policy', 'file': path.name,
+                        'raw_high_critical_findings': count, 'not_affected_context_findings': len(contextual),
+                        'context_assessments': contextual,
+                        'context_expires_at': context.get('expires_at') if context else None,
+                        'blocking_findings': remaining,
+                        'status': 'blocked_findings' if remaining else 'pass_codeql_context' if contextual else 'pass'})
     return records
 
 
@@ -346,6 +355,7 @@ def main():
     parser.add_argument('mode', choices=['dependencies', 'secrets', 'image', 'sarif', 'install'])
     parser.add_argument('--reports', type=Path, default=Path('security-reports'))
     parser.add_argument('--directory', type=Path)
+    parser.add_argument('--codeql-context', type=Path, help='Explicit exact query/location/source/semantic-flow false-positive review; raw severity/findings are preserved, not vulnerability acceptance')
     parser.add_argument('--image')
     parser.add_argument('--tool', choices=['gitleaks', 'osv-scanner', 'grype'])
     parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
@@ -369,23 +379,26 @@ def main():
         runtime_proof = report(args.runtime_proof) if args.runtime_proof else None
         if args.runtime_proof and not isinstance(runtime_proof, dict):
             raise RuntimeError('Runtime constraint receipt missing or malformed')
+        if args.codeql_context and args.mode != 'sarif':
+            raise RuntimeError('--codeql-context applies only to SARIF source-context review')
+        context = codeql_context.load(args.codeql_context, ROOT) if args.codeql_context else None
         if args.mode == 'install':
             print(tool(args.tool or 'osv-scanner'))
             return 0
         if args.mode == 'sarif':
-            records = sarif(args.directory or destination)
+            records = sarif(args.directory or destination, context)
         elif args.mode == 'image':
             if not args.image:
                 raise RuntimeError('--image is required')
             records = image(destination, args.image, policy, vendor_policy, args.cleanup_owned_resources,
                             approval, runtime_proof, args.inventory_container)
         elif args.mode == 'secrets':
-            records = secrets(destination, args.include_untracked)
+            records = scan_repository(destination, args.include_untracked)
         else:
             records = dependencies(destination, policy)
         write(destination / (args.mode + '-summary.json'), {'tool_pins_verified_date': PINS['verified_date'], 'results': records})
         print(json.dumps(records, ensure_ascii=False))
-        return 0 if all(record['status'] in ('pass', 'pass_contextual', 'pass_vendor_policy', 'pass_temporary_risk_acceptance') for record in records) else 1
+        return 0 if all(record['status'] in ('pass', 'pass_contextual', 'pass_vendor_policy', 'pass_temporary_risk_acceptance', 'pass_codeql_context') for record in records) else 1
     except Exception as exc:
         write(destination / (args.mode + '-summary.json'), {'status': 'error', 'error_type': type(exc).__name__, 'message': str(exc)})
         print(f'Security gate unavailable: {type(exc).__name__}: {exc}', file=sys.stderr)

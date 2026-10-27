@@ -67,6 +67,14 @@ def restore_original(maintenance, original, project, *, inspect=None, wait_ready
     except Exception as error:
         result['errors'].append({'step': 'identity_preflight', 'error_type': type(error).__name__})
         return result
+    # The backup itself only stops backend/Agent. A stopped PostgreSQL or
+    # frontend may be an operator's explicit stop, so never countermand it.
+    for role in ('postgres', 'frontend'):
+        if original[role]['State']['Running'] and not inspect(original[role]['Id'])['State']['Running']:
+            result['errors'].append({'step': 'external_dependency_stopped', 'service': role,
+                                     'error_type': 'OperatorOrExternalStopNotOverridden'})
+            result['external_stop_preserved'] = True
+            return result
     for role in ('postgres', 'backend', 'agent', 'frontend'):
         item = original[role]
         if not item['State']['Running']:
@@ -75,6 +83,8 @@ def restore_original(maintenance, original, project, *, inspect=None, wait_ready
             current = inspect(item['Id'])
             _identity(item, current, project, role)
             if not current['State']['Running']:
+                if role not in {'backend', 'agent'}:
+                    raise RuntimeError('External dependency stop is not overridden')
                 maintenance.docker('start', item['Id'])
                 result['actions'].append({'service': role, 'id': item['Id'], 'operation': 'start'})
             ready(role, item)

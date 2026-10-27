@@ -1,0 +1,147 @@
+{
+  "source_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+  "expected_jobs": 16,
+  "jobs": [
+    {
+      "run_id": 40432045888,
+      "workflow": "Security gates",
+      "jobs": [
+        {
+          "id": 121951820109,
+          "name": "Dependencies / Python Node and resolved Maven SBOM",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820109"
+        },
+        {
+          "id": 121951820237,
+          "name": "Runtime images / alertmanager",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820237"
+        },
+        {
+          "id": 121951820241,
+          "name": "CodeQL / java-kotlin",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820241"
+        },
+        {
+          "id": 121951820284,
+          "name": "Secrets / full history and tracked source",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820284"
+        },
+        {
+          "id": 121951820294,
+          "name": "Runtime images / postgres",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820294"
+        },
+        {
+          "id": 121951820304,
+          "name": "CodeQL / javascript-typescript",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820304"
+        },
+        {
+          "id": 121951820313,
+          "name": "CodeQL / python",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820313"
+        },
+        {
+          "id": 121951820338,
+          "name": "Runtime images / prometheus",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820338"
+        },
+        {
+          "id": 121951820369,
+          "name": "Images / frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820369"
+        },
+        {
+          "id": 121951820506,
+          "name": "Images / backend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820506"
+        },
+        {
+          "id": 121951820513,
+          "name": "Images / agent",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820513"
+        },
+        {
+          "id": 121951820591,
+          "name": "CodeQL / actions",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045888/job/121951820591"
+        }
+      ]
+    },
+    {
+      "run_id": 40432045866,
+      "workflow": "CI",
+      "jobs": [
+        {
+          "id": 121951819434,
+          "name": "Frontend build (vue-tsc + vite)",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045866/job/121951819434"
+        },
+        {
+          "id": 121951819638,
+          "name": "Python Agent tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045866/job/121951819638"
+        },
+        {
+          "id": 121951819740,
+          "name": "Java business PostgreSQL tests",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045866/job/121951819740"
+        },
+        {
+          "id": 121951819864,
+          "name": "Docker Compose config and build",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045866/job/121951819864"
+        }
+      ]
+    }
+  ],
+  "boundary": "First exactSHA run retained; failures not replaced by later source correction or rerun. Agent immutable artifact source/component/runtime gate passed; no production or quality inference."
+}

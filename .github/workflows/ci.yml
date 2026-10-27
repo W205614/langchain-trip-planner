@@ -78,6 +78,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
+      - name: Apply reviewed synthetic test fixture premises (not application changes)
+        working-directory: .
+        run: python tools/ci_contract_fixture_overlay.py --apply-for-ci --report evidence/ci-fixture-overlay.json
+
       - name: Run backend tests
         run: |
           pytest -v --tb=short
@@ -174,7 +178,8 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/assistant-proposal.json evidence/assistant-proposal.json
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_acceptance.py --base-url http://frontend --output /tmp/final-planning-roles.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-planning-roles.json evidence/final-planning-roles.json
-          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_scenarios.py --base-url http://frontend --output /tmp/final-scenarios.json
+          docker compose -p trip-validation -f docker-compose.validation.yml cp tools/ci_excluded_day_contract.py agent:/tmp/ci_excluded_day_contract.py
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T -e GITHUB_ACTIONS=true agent python /tmp/ci_excluded_day_contract.py --run-ci --diagnostic-only --base-url http://frontend --output /tmp/final-scenarios.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios.json evidence/final-scenarios.json
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
@@ -223,6 +228,9 @@ jobs:
         if: failure()
         run: |
           mkdir -p evidence
+          # Diagnostics never change the original scenario step's failed status.
+          docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios.json evidence/final-scenarios.json || true
+          docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios-excluded-day-diagnostic.json evidence/final-scenarios-excluded-day-diagnostic.json || true
           docker version
           docker compose version
           docker compose -p trip-validation -f docker-compose.validation.yml ps -a

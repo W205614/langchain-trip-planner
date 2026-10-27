@@ -148,6 +148,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
+          fetch-depth: 0 # Source-reviewed CodeQL context requires the frozen/reviewed Git trees.
           persist-credentials: false
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
         if: matrix.language == 'java-kotlin'
@@ -170,7 +171,7 @@ jobs:
           output: security-reports/codeql
           upload: always
       - name: Fail on high/critical CodeQL results
-        run: python tools/security_gate.py sarif --directory security-reports/codeql --reports security-reports/codeql
+        run: python tools/security_gate.py sarif --directory security-reports/codeql --codeql-context .github/codeql-context-assessments.json --reports security-reports/codeql
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:

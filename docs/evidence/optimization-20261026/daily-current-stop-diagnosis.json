@@ -24,5 +24,11 @@
     "prometheus.log": "0a9edc4bdf09e44f474c412d9cacaaebb56107abb695562878cf949b1c577d86",
     "state-summary.json": "dec6977fd53b8440c7d4d936af628608141c68dfa4c7be309f0be8f692a2d1bc"
   },
-  "scope": "Restore only approved daily7 IDs dependencies; no recreation/noimagepull/nootherproject start/stop/no deletion. Preserve raw failed backup and partial backup folder. Recheck current health and one actual task invocation before release."
+  "scope": "Restore only approved daily7 IDs dependencies; no recreation/noimagepull/nootherproject start/stop/no deletion. Preserve raw failed backup and partial backup folder. Recheck current health and one actual task invocation before release.",
+  "subsequent_direct_human_clarification": {
+    "confirmed": true,
+    "statement": "The two project containers were manually stopped by the user; user explicitly authorized restarting current daily services and continuing.",
+    "consequence": "Previous caller-unknown statements describe the earlier observation boundary, now superseded. Do not attribute the whole stop to backup/application defect.08:46failedtask remains actual evidence affected by manual stopping."
+  },
+  "updated_at": "2026-10-27T01:30:11.306049+00:00"
 }

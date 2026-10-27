@@ -16,9 +16,9 @@ def containers():
 
 class RecoveryTests(unittest.TestCase):
     def test_failed_dependency_restores_exact_ids_in_order_without_starting_originally_stopped(self):
-        original = containers(); original['agent']['State']['Running'] = False
+        original = containers(); original['frontend']['State']['Running'] = False
         current = copy.deepcopy(original)
-        for item in current.values(): item['State']['Running'] = False
+        for role in ('backend', 'agent'): current[role]['State']['Running'] = False
         calls = []
         def docker(*args):
             self.assertEqual(args[0], 'start'); calls.append(args[1])
@@ -26,7 +26,7 @@ class RecoveryTests(unittest.TestCase):
         result = restore_original(SimpleNamespace(docker=docker), original, 'trip',
             inspect=lambda identity: next(x for x in current.values() if x['Id'] == identity), wait_ready=lambda *_: None)
         self.assertTrue(result['passed'])
-        self.assertEqual(calls, [original[x]['Id'] for x in ('postgres', 'backend', 'frontend')])
+        self.assertEqual(calls, [original[x]['Id'] for x in ('backend', 'agent')])
 
     def test_changed_mount_or_project_aborts_before_any_start_and_pg_failure_blocks_dependents(self):
         original = containers()
@@ -44,7 +44,7 @@ class RecoveryTests(unittest.TestCase):
         def fail(*args): calls.append(args); raise RuntimeError('daemon unavailable')
         result=restore_original(SimpleNamespace(docker=fail),original,'trip',
             inspect=lambda identity:next(x for x in current.values() if x['Id']==identity),wait_ready=lambda *_:None)
-        self.assertFalse(result['passed']); self.assertEqual(calls,[('start',original['postgres']['Id'])])
+        self.assertFalse(result['passed']); self.assertTrue(result['external_stop_preserved']); self.assertEqual(calls,[])
 
     def test_failed_backup_stays_failed_and_compensation_remains_inside_lock(self):
         original=containers(); active=[]

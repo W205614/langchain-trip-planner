@@ -1,0 +1,70 @@
+{
+  "checked_at": "2026-10-27T01:32:25.058926+00:00",
+  "original_failure": {
+    "revision": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+    "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40432045866/job/121951819638",
+    "failed": 2,
+    "passed": 414,
+    "skipped": 2,
+    "unchanged_local_reproduction": "Exactly the two failed tests reproduced:2failed/2.01s; no other localtests run."
+  },
+  "classifications": [
+    {
+      "test": "test_beijing_driving_saved_plan_is_corrected_without_regeneration",
+      "finding": "Synthetic fixture leaves per-day transportation walking while changing only global request to driving; daily transport now correctly takes precedence.",
+      "source": [
+        "backend/app/evals/constraint_benchmark.py:18",
+        "backend/app/evals/constraint_benchmark.py:21",
+        "backend/app/services/planning_constraints.py:144",
+        "backend/app/services/planning_constraints.py:206"
+      ],
+      "premise_correction": "Pass driving transportation into fixture factory so both request and day are consistently driving; retain all existing assertions."
+    },
+    {
+      "test": "test_cached_day_transport_buffer_gap_reaches_final_quality_without_resolving",
+      "finding": "Synthetic saved routes omit observed_at/expires_at and saved days omit route_fact_expires_at. Missing durable route provenance is deliberately expired, so solver reuse must be refused.",
+      "source": [
+        "backend/app/services/route_facts.py:15",
+        "backend/app/services/route_facts.py:27",
+        "backend/app/services/time_planner.py:756",
+        "backend/app/services/time_planner.py:760"
+      ],
+      "premise_correction": "Synthetic current observation +60second expiry on route row and cached day, preserving forbidden solve/provider call and all gap/quality assertions."
+    }
+  ],
+  "verification": {
+    "in_memory_original_assertions_with_consistent_premises": {
+      "passed": 2,
+      "provider_calls": 0,
+      "source_files_written": 0
+    },
+    "actual_reviewed_overlay_payloads_compiled_in_memory": {
+      "passed": 2,
+      "assertions_unchanged": true,
+      "provider_calls": 0,
+      "source_files_written": 0
+    },
+    "overlay_guard_tests": {
+      "command": "E:/download/Anaconda/python.exe -m unittest tools.tests.test_ci_contract_fixture_overlay -v",
+      "passed": 3,
+      "coverage": [
+        "readonly default / explicitCI optin / exact bytes / unchanged assertions",
+        "secondfile drift aborts before anyfirstfilewrite",
+        "manifestpath/assertion modifications refuse automatic rebaseline"
+      ]
+    },
+    "actual_local_overlay_cli": {
+      "command": "E:/download/Anaconda/python.exe tools/ci_contract_fixture_overlay.py",
+      "files_verified": 2,
+      "files_written": 0
+    }
+  },
+  "scope": "Only explicit ephemeral Python-test-job overlay. No application source, dependency, Docker recipe, frozen business tree or native/risk fingerprint edited. Original CI failure remains failed; no skip, xfail or weakened behavior assertion. Not new model/provider quality evidence.",
+  "artifacts": {
+    "tools/ci_contract_fixture_overlay.py": "eafe7c0516b37aa377c2ebc3a8e0d21bca11a3eda6ae0326df9eef26d8947069",
+    "tools/tests/test_ci_contract_fixture_overlay.py": "af7c7cf5d0f97c39dfcfe4315d6fa45f1eca7ab242eabe77eb9373c1814a1472",
+    "docs/evidence/optimization-20261026/ci-fixture-contract-overlay.json": "be04516a65b31606ee251307cb7f1512c4c614632b594ec57d641092aeb1a566",
+    "docs/evidence/optimization-20261026/ci-fixture-contract.patch": "f2f53eb496d9b545f554192b6a46f5dddae164d5063bf44c883b2889cbadac05"
+  },
+  "committed_business_tree_worktree_changes": []
+}

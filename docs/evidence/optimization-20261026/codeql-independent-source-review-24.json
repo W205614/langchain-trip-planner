@@ -1,0 +1,607 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-27T01:42:11.121953+00:00",
+  "review_scope": "Independent read-only source/dataflow review of exact24 reported results; not a general safety certificate or proof of all program paths. No tests rerun, model calls or Docker/host-task operations.",
+  "sarif_source_revision": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+  "current_head": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+  "finding_count": 24,
+  "group_assessments": {
+    "java/spring-disabled-csrf-protection": {
+      "decision": "contextual_false_positive_custom_csrf_guard",
+      "confirmed": [
+        "Cookie-authenticated non-GET/HEAD/OPTIONS requests are checked against token-bound X-CSRF-Token with constant-time comparison before authentication/dispatch.",
+        "Explicit Authorization Bearer and /internal X-Service-Key use non-ambient credentials; credential submission endpoints do not inherit cookie identity."
+      ],
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java:74-107",
+        "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java:24-45",
+        "business-backend/src/test/java/com/tripplanner/SecurityOptimizationIntegrationTest.java:64-79"
+      ],
+      "existing_counterexample": "SecurityOptimizationIntegrationTest.browserCookieIsHttpOnlyCsrfBoundAndLogoutRevokesBearerToo: missing/wrong CSRF403, valid200, revoked401. Test source reviewed; not rerun here.",
+      "limits": [
+        "Not a blanket exemption for disabling Spring CSRF in other applications or future routes."
+      ]
+    },
+    "java/csrf-unprotected-request-type": {
+      "decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "confirmed": [
+        "Actual SARIF traces merge UpstreamGuard.Operation.run receivers from GET available/post lambdas into the separate AgentClient.stream lambda and AssistantController/TaskService BiConsumer callbacks.",
+        "UpstreamGuard.execute invokes the specific Operation object supplied by the call site. The GET sites do not pass the streaming callbacks or user task/conversation state.",
+        "Agent fixed capability kind dispatch is separately enumerated; actual mutation routes index/executions/research are distinct."
+      ],
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474"
+      ],
+      "existing_counterexample": "AgentClientTest and PhotoContractTest cover separate ordinary post/stream/proxy outcomes; backend/tests/test_amap_mcp.py covers named read tools/cache/failure. No dedicated automated negative proving all11 GETs cannot call streaming callback was located.",
+      "limits": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    "java/tainted-arithmetic": {
+      "decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "confirmed": [
+        "All five expected/version+1 expressions execute only after an atomic PostgreSQL version=version+1 WHERE version=expected update returned exactly1.",
+        "Both trip_records and trip_commitments version columns are PostgreSQL INTEGER. Out-of-range SQL integer storage/update fails before Java success response/notification/audit expressions.",
+        "History update uses transaction.executeWithoutResult before constructing response; operation services keep update and following sinks inside TransactionTemplate."
+      ],
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-184,195-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:67-75",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-101",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "existing_counterexample": "TripOperationsIntegrationTest invitedEditorMustAcceptAndReorderUsesTripVersion (source lines106-110) rejects stale expected version409 after valid update. No dedicated Integer.MAX_VALUE transaction test located; reasoning here uses reviewed SQL integer semantics and control-flow.",
+      "limits": [
+        "Changing version column type, removing the predicate/rowcount check, or moving arithmetic before update requires reassessment.",
+        "Eventual INT version exhaustion can cause a failed update; this review does not claim an unlimited version lifetime or absence of500 at that theoretical boundary."
+      ]
+    },
+    "java/uncontrolled-arithmetic": {
+      "decision": "contextual_false_positive_fixed_server_generated_totp_plaintext",
+      "confirmed": [
+        "Only production caller is AccountSecurityService.enroll -> Totp.newSecret() -> Totp.encrypt; no HTTP-controlled plaintext length reaches encrypt.",
+        "newSecret generates20 bytes, base32 yields32 ASCII characters. AES-GCM128 tag adds16 bytes; nonce12 makes the actual allocation60 bytes."
+      ],
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/security/Totp.java:14-16,46-51",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:119-125"
+      ],
+      "existing_counterexample": "TotpTest.encryptedSeedRoundTripsAndTamperingAndWrongKeyFailClosed; production enrollment path additionally exercised by SecurityOptimizationIntegrationTest. Existing tests not rerun here.",
+      "limits": [
+        "Public helper API accepts arbitrary String if new Java callers are added; decision is for current full source/call-site bindings only."
+      ]
+    },
+    "js/insecure-randomness": {
+      "decision": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
+      "confirmed": [
+        "Math.random only contributes to the synthetic username/idempotency suffix in frontend/e2e/operations.spec.ts.",
+        "Both registration passwords are the explicit fixture constant browser123; actual Bearer tokens come from server responses, not Math.random.",
+        "Vite build entry imports application source; this Playwright e2e module is not a production application bundle entry."
+      ],
+      "evidence": [
+        "frontend/e2e/operations.spec.ts:3-20",
+        "frontend/playwright.config.ts:1-8",
+        "frontend/vite.config.ts",
+        "frontend/package.json"
+      ],
+      "existing_counterexample": "The affected file is itself an offline fixture e2e scenario; not rerun in this read-only review. No dedicated PRNG-security unit test is claimed.",
+      "limits": [
+        "Test file itself has no positive fixture marker check; configured E2E_BASE_URL can be overridden. Default loopback/CI isolated target does not make arbitrary operator-selected production targets safe.",
+        "This is not approval to use Math.random for sessions, credentials or production entropy."
+      ]
+    },
+    "py/clear-text-storage-sensitive-data": {
+      "decision": "contextual_false_positive_scanner_function_name_taint",
+      "confirmed": [
+        "Actual SARIF source is return of the function named secrets(), not a loaded application credential.",
+        "Returned objects contain scanner name, classify status, finding count and exitcode only; raw Gitleaks entries are not returned. Gitleaks also runs with --redact=100."
+      ],
+      "evidence": [
+        "tools/security_gate.py:secrets",
+        "tools/security_gate.py:write/main"
+      ],
+      "existing_counterexample": "GateFailureTests checks missing/failed/skipped scans block; content/schema reasoning directly verifies secrets() builds an aggregate allowlist.",
+      "limits": [
+        "No exception should be installed for these two tools findings. Neutral internal rename scan_repository can remove name-heuristic ambiguity; only fresh CI can establish alert disappearance."
+      ]
+    },
+    "py/clear-text-logging-sensitive-data": {
+      "decision": "contextual_false_positive_specific_boolean_or_aggregate_flow",
+      "confirmed": [
+        "Seed SARIF source is security.json()[admin_mfa_required] -> required -> returned metadata -> print. AccountSecurityService.status emits the configured boolean field, not a password.",
+        "Synthetic username/password/TOTP seed are written only to the guarded ignored fixture output; they are not in prepare returned metadata.",
+        "The tools gate finding follows secrets() aggregate-return name taint, independently of actual application secret sources."
+      ],
+      "evidence": [
+        "backend/scripts/optimization_seed_admin.py:25-70",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:84-91",
+        "tools/security_gate.py:secrets/main"
+      ],
+      "existing_counterexample": "Existing isolated seed requires correct validation project ownership, APP_ENV/allowfixtures and fixture marker before account creation; source reviewed, no new account created or test run.",
+      "limits": [
+        "This conclusion does not declare fixture credential files public or exempt arbitrary prepare() response fields.",
+        "No tools logging exception proposed; neutral function rename may address those two tool-only results."
+      ]
+    },
+    "py/overly-permissive-file": {
+      "decision": "contextual_not_security_sensitive_public_build_download_directory",
+      "confirmed": [
+        "chmod0755 applies only to a fresh root-owned tempfile directory in explicitly opted-in POSIX root Docker build.",
+        "Directory contains official public .deb library downloads, not user credentials or private business payloads. Other users receive read/traverse, not write permission.",
+        "Signed APT metadata, exact package/version/architecture/SHA and bounded installed-delta checks remain before installation."
+      ],
+      "evidence": [
+        "backend/scripts/install_runtime_security_patches.py:45-101",
+        "backend/runtime-security-packages.json",
+        "backend/Dockerfile:1-14"
+      ],
+      "existing_counterexample": "RuntimePackageLockTests.test_exact_two_upgrade_plan_is_accepted_but_new_removed_or_core_packages_fail. Exact container/native inventory receipts independently bind actual installed libraries. No new build performed.",
+      "limits": [
+        "0755 is not recommended for secret files/directories. Do not reuse this decision for another chmod site or arbitrary contents."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "query": "java/spring-disabled-csrf-protection",
+      "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+      "region": {
+        "startLine": 124,
+        "startColumn": 20,
+        "endColumn": 31
+      },
+      "review_decision": "contextual_false_positive_custom_csrf_guard",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "3e5b56fbc691e17f8e112554e87ffad29682dc447b68c0dc45c9fc8d00f10095",
+      "source_sha256_current_worktree_lf": "3e5b56fbc691e17f8e112554e87ffad29682dc447b68c0dc45c9fc8d00f10095",
+      "raw_trace_sha256": "2d4d4a4ad99b186477ecb4c737eed7bbfd2f7891a9bfd08e4501fbeb69e54e28",
+      "group_evidence": "java/spring-disabled-csrf-protection"
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "e8b26e1497185c87eee3ad0395ff5bcfe4cf163584ea32f8d976103fe8821cc7",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/capabilities",
+        "actual_target": "AgentClient.available and fixed /capabilities/status",
+        "side_effect_boundary": "Service observations and possible RAG initialization, not task/conversation callback."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "e11c14c295eddbfd9f3cfed9e68f19d293a6800679f80a2d6ba116ef7cbe06c3",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/trip/health",
+        "actual_target": "AgentClient.available -> /readyz HTTP GET",
+        "side_effect_boundary": "Availability cache/circuit metrics only; no stream call."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "43964f9a5dc41ce298af042094f0677fd7b437709697bc65bd6a001a2e89fd5d",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/map/health",
+        "actual_target": "Agent.readyz availability plus fixed /capabilities/status",
+        "side_effect_boundary": "Service observations/lazy RAG state, not task/conversation callback."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "10d37e9095a69deb10a8ef4e0af4e9f67c9a22633e8534d5f2d3b3058a1fc50e",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/rag/status",
+        "actual_target": "/internal/v1/capabilities/rag-status -> get_rag_service and property reads",
+        "side_effect_boundary": "Lazy Chroma collection setup and dimension embedding probe possible; no history upsert/admin rebuild."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "6267d0c918fd0945f47cfd6b25051fd573e3270542f726f1e1db13b0f78885dd",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/map/weather",
+        "actual_target": "AmapGateway.weather -> bounded REST GET/cache/governance.reserveAmap",
+        "side_effect_boundary": "No Agent capability here; may write global outbound counters/reservations. Not claimed side-effect-free."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "da6855e037bf2af72db08d4bac6ffce1c8969948d4cda35bd36d03568dae482b",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/poi/detail/{id}",
+        "actual_target": "/internal/v1/capabilities/poi-detail -> named maps_search_detail",
+        "side_effect_boundary": "Read tool/cache/quota, no business record mutation."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "b380851b1053ae4c0c69c3646b1c2cd903332a62cfe25dcd4887fddffdbb3d42",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/poi/search",
+        "actual_target": "Delegates poi() -> poi-search branch",
+        "side_effect_boundary": "Same read/query/budget boundary."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "060ada8eca98019bea5b22ea355ec0bff9b349b9d836c7ca3d385d56ef59736f",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/map/poi",
+        "actual_target": "/internal/v1/capabilities/poi-search -> named MCP maps_text_search/details",
+        "side_effect_boundary": "Read tools/cache and outbound quota reservations; no user plan/task write."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "fe756510d10dae194d9135bfe8bcb6e5cbb9a1e41430bfa2b29a8494fb79e640",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/trip/eval-policy",
+        "actual_target": "/internal/v1/capabilities/eval-policy -> eval_budget.policy",
+        "side_effect_boundary": "Returns configuration/current counters; not reserve()."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "2635a76e0e5aa5881bdaef508e910e88635b141f4f6acb6c04792e5a1e84192f",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/poi/photo/image",
+        "actual_target": "Optional /internal/v1/capabilities/poi-detail; constrained Amap image fetch",
+        "side_effect_boundary": "Read tool/image proxy/cache; no stream consumer."
+      }
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+      "source_sha256_current_worktree_lf": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+      "raw_trace_sha256": "209276406de7d6e851496ff1856e38c2eacf80fe36e01063513d1b32a9174bc8",
+      "group_evidence": "java/csrf-unprotected-request-type",
+      "endpoint_review": {
+        "entry": "GET /api/validation/fixture",
+        "actual_target": "/capabilities/validation -> APP_ENV validation + allowfixtures guard",
+        "side_effect_boundary": "Returns fixture boolean only; Java controller itself conditional APP_ENV=validation."
+      }
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+      "region": {
+        "startLine": 184,
+        "startColumn": 9,
+        "endColumn": 20
+      },
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+      "source_sha256_current_worktree_lf": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+      "raw_trace_sha256": "7df8dd0332b1af2188f8e3f67e7b4607f5b5898c7c298157f3b4e7b44a5b5046",
+      "group_evidence": "java/tainted-arithmetic"
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 74,
+        "startColumn": 81,
+        "endColumn": 91
+      },
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "source_sha256_current_worktree_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "raw_trace_sha256": "8ec1308fefa88cb26a433c959d7a7304f469dace7021ef7fcd30872abea34e37",
+      "group_evidence": "java/tainted-arithmetic"
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 46,
+        "endColumn": 56
+      },
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "source_sha256_current_worktree_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "raw_trace_sha256": "a7a19f366732132cd21aae1679a8d47d85d440dca9b3d94c69493df425ac3b40",
+      "group_evidence": "java/tainted-arithmetic"
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 100,
+        "startColumn": 60,
+        "endColumn": 70
+      },
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "source_sha256_current_worktree_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "raw_trace_sha256": "46bfb445e282337e4163fcbf68e735bcced0625e66627360bc187ac383d765fd",
+      "group_evidence": "java/tainted-arithmetic"
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 101,
+        "startColumn": 54,
+        "endColumn": 64
+      },
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "source_sha256_current_worktree_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "raw_trace_sha256": "16332ffbbf2fbb7f380a76dcb32076dc018dc1b081b1216105de7f059a477b8b",
+      "group_evidence": "java/tainted-arithmetic"
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+      "region": {
+        "startLine": 51,
+        "startColumn": 69,
+        "endColumn": 98
+      },
+      "review_decision": "contextual_false_positive_fixed_server_generated_totp_plaintext",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+      "source_sha256_current_worktree_lf": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+      "raw_trace_sha256": "b31b17a7a42f009bcb59ec92a5c55f3340feea983978d7533ae951869a0d6685",
+      "group_evidence": "java/uncontrolled-arithmetic"
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 9,
+        "startColumn": 23,
+        "endColumn": 32
+      },
+      "review_decision": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "source_sha256_current_worktree_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "raw_trace_sha256": "5d9331484c47b2393722a4eed5d907defdd24d3ad070446775a89dc240487c76",
+      "group_evidence": "js/insecure-randomness"
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 23,
+        "endColumn": 33
+      },
+      "review_decision": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "source_sha256_current_worktree_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "raw_trace_sha256": "62ebe32c2f64c4c12fa8db8468e4e8607f3ba910a6c4dadc17461681c06b5238",
+      "group_evidence": "js/insecure-randomness"
+    },
+    {
+      "query": "py/clear-text-storage-sensitive-data",
+      "path": "tools/security_gate.py",
+      "region": {
+        "startLine": 43,
+        "startColumn": 21,
+        "endColumn": 75
+      },
+      "review_decision": "contextual_false_positive_scanner_function_name_taint",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "003a235d56b9e79dbddfbb08c5255647cbc7d498165468f1d0411e45111469cf",
+      "source_sha256_current_worktree_lf": "e719b2447f3db36013e2e8c85eed14a414eafde0d490205d7e03ed4b295cf7ff",
+      "raw_trace_sha256": "c216586741fc6ef6273285894543bfcbae6600e3346ef8cbc95b0143545c7189",
+      "group_evidence": "py/clear-text-storage-sensitive-data"
+    },
+    {
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "backend/scripts/optimization_seed_admin.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 31,
+        "endColumn": 110
+      },
+      "review_decision": "contextual_false_positive_specific_boolean_or_aggregate_flow",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+      "source_sha256_current_worktree_lf": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+      "raw_trace_sha256": "7449c65cc2166cf5a94848987b5111c76a04906b0c01e718b7538213a38c82a0",
+      "group_evidence": "py/clear-text-logging-sensitive-data"
+    },
+    {
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "tools/security_gate.py",
+      "region": {
+        "startLine": 387,
+        "startColumn": 15,
+        "endColumn": 54
+      },
+      "review_decision": "contextual_false_positive_scanner_function_name_taint",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "003a235d56b9e79dbddfbb08c5255647cbc7d498165468f1d0411e45111469cf",
+      "source_sha256_current_worktree_lf": "e719b2447f3db36013e2e8c85eed14a414eafde0d490205d7e03ed4b295cf7ff",
+      "raw_trace_sha256": "abd19a087cfd639bbc829951c59b48ba9cc0eb024545ed06d7db98a9a6bffbfa",
+      "group_evidence": "py/clear-text-logging-sensitive-data"
+    },
+    {
+      "query": "py/overly-permissive-file",
+      "path": "backend/scripts/install_runtime_security_patches.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "review_decision": "contextual_not_security_sensitive_public_build_download_directory",
+      "policy_exception_installed": false,
+      "source_sha256_at_sarif_revision_lf": "13ed80fc2155cb33cf69d7c5cbc1ecb7dbb5c4d22a3f7b2cd2378ca7cb600655",
+      "source_sha256_current_worktree_lf": "13ed80fc2155cb33cf69d7c5cbc1ecb7dbb5c4d22a3f7b2cd2378ca7cb600655",
+      "raw_trace_sha256": "2d4d4a4ad99b186477ecb4c737eed7bbfd2f7891a9bfd08e4501fbeb69e54e28",
+      "group_evidence": "py/overly-permissive-file"
+    }
+  ],
+  "supporting_source_bindings_lf": {
+    "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java": "3e5b56fbc691e17f8e112554e87ffad29682dc447b68c0dc45c9fc8d00f10095",
+    "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java": "10f8d492cf59da62b4146a0924b76da88e2464152816b56710187d82bde8336d",
+    "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java": "1564cc4870acf5d8d65ed5bb1df0b8eb535577d191f44c02e4175e5dde9f498f",
+    "business-backend/src/main/java/com/tripplanner/security/Totp.java": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+    "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+    "business-backend/src/main/java/com/tripplanner/api/ValidationController.java": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+    "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java": "6c6c37528993501d002d36c856c2b0bc8565bd0fd1279b3805ccadf646d9978b",
+    "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java": "0a8e916fcf132ec8ee89455f24804ab7be675fab6bd68c8490923f2bc1e7cbd7",
+    "business-backend/src/main/java/com/tripplanner/api/HistoryController.java": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+    "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java": "c64be9522964eb7e59173ca47fbe541bd0f6de85ecbd1b7c388a013b580dcbae",
+    "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+    "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+    "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java": "0803fca14b39b02c98d1e1cf0d7cf7d829121bff78ec9611969e9febd400d7a5",
+    "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java": "23dab73928c51b77af2c38dd144d268ca4bae040dcfdd6f6b895beff4c1f317f",
+    "business-backend/src/main/resources/db/migration/V1__business_schema.sql": "fc7971e035f633b8bc46e8ae2cc3c5e2953b7ee4042ae51633bc57448e1ff66f",
+    "business-backend/src/main/resources/db/migration/V6__trip_operations.sql": "07648808addbec6627ac6534e105b930d15b38a9d7774a2dc4a0f0265c98e73c",
+    "backend/app/agent_api/main.py": "76e9a4a68f00f9a893e53f0df58509676c2582a60e4912ac4dbe72e049ba396e",
+    "backend/app/services/rag_service.py": "db415b05c6d8717cbce2cbcc8062ec2e88788000ac2f732a4d5ba6ddc9ede1c6",
+    "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+    "backend/app/services/amap_mcp_service.py": "9cb9d15d54757a8a9764ef58f70107c109af8f91f2bda818001d57bdf65ee9df",
+    "backend/app/services/call_budget.py": "ede9055c95fb12b883a4d406af23638ff00442d42924f511e803f39c20f273c9",
+    "backend/scripts/install_runtime_security_patches.py": "13ed80fc2155cb33cf69d7c5cbc1ecb7dbb5c4d22a3f7b2cd2378ca7cb600655",
+    "backend/runtime-security-packages.json": "a76ac688657a37db28bec69b4bf211ee926ecf433ed75930156be7cc169d3d80",
+    "backend/Dockerfile": "b9ca203ac15eada54a6bc8cea438c2b1692f684a7901a1953af3d20a117aef52",
+    "backend/scripts/optimization_seed_admin.py": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+    "frontend/e2e/operations.spec.ts": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+    "frontend/vite.config.ts": "1e5c0a108092df0955d2ca813f2cadbbf29e8765457a9bb1d7d94b2c5c2f63b2",
+    "frontend/playwright.config.ts": "43b8d4f2601b86523807ddc881b839ce4b99f0da02441224959eba77acf77b7d",
+    "frontend/package.json": "8d4b920a7b5279a0fda6c41adc26d2f7dd99b18c182289778f3533ab70140d32",
+    "tools/security_gate.py": "e719b2447f3db36013e2e8c85eed14a414eafde0d490205d7e03ed4b295cf7ff"
+  },
+  "primary_references": [
+    "https://www.postgresql.org/docs/17/datatype-numeric.html",
+    "https://codeql.github.com/codeql-query-help/java/java-csrf-unprotected-request-type/",
+    "https://codeql.github.com/codeql-query-help/python/py-overly-permissive-file/"
+  ],
+  "next_step_boundary": "Root review may authorize exact source/query/location/flow-bound contextual assessments for22 frozen business/test/build results. The two tools name-heuristic results should be handled by a neutral internal name and re-analysis, not exceptions. This record itself adds no ignore/assessment and is unrelated to eight-CVE temporary risk acceptance."
+}

@@ -1,0 +1,90 @@
+{
+  "verified_at": "2026-10-27T01:53:44.756846+00:00",
+  "classification": "derived_read_projection_cause_code_distinction_not_excluded_day_rescheduling",
+  "original_failed_ci": {
+    "revision": "d323a44d6560412e6fb2890386701bdc88aea7c5",
+    "run_id": 40432045866,
+    "job_id": 121951819864,
+    "check": "multi-day authorization preserves excluded middle day exactly",
+    "failure_retained": true,
+    "raw_failed_day_payload_obtained": false
+  },
+  "source_cause": [
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java:51",
+      "observation": "PUT persists schedule invalidation reason PLANNING_INPUT_CHANGED via schedules.changed."
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java:117",
+      "observation": "History read refresh also invalidates an already-stale day, projecting SCHEDULE_DEPENDENCIES_CHANGED without storing it."
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java:379",
+      "observation": "Agent original_plan receives raw stored parent plan, not the history read projection."
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java:289",
+      "observation": "Proposal view deliberately skips parent-dependent refresh; it retains raw protected middle day."
+    }
+  ],
+  "pure_java_reproduction": {
+    "passed": true,
+    "fixture_source": "projection-contract/ProjectionReview.java",
+    "actual_methods": [
+      "PlanningInputService.stableIds",
+      "ScheduleDependencies.stamp",
+      "ScheduleDependencies.changed",
+      "PlanningInputService.view",
+      "PlanningInputService.bindSchedule"
+    ],
+    "compiled_current_sources": {
+      "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java": "00132e6dfe9f4498414c464a0b72681154c19abfe1cca08b57f83a33ecb78b02",
+      "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java": "4e44df84cc3a5cda5a002bed11d35a0c3cb069442ce80a696b9c7ef971f911ff",
+      "business-backend/src/main/java/com/tripplanner/domain/PlanningSemantics.java": "837881e45297400d1dfc35347c5ed1fc14d2bd35da1b5cb6e14dd229fe79e4b6"
+    },
+    "dependency_classpath": "Offline Maven dependency:build-classpath against current Spring Boot4.0.9 pom, no network; exact3current sources compiled to ignored .cache classes.",
+    "selected_local_dependency_libraries": [
+      "jackson-databind-3.1.7.jar",
+      "spring-jdbc-7.0.10.jar",
+      "jackson-databind-2.21.7.jar"
+    ],
+    "jdbc": "JdbcTemplate queryForList overridden only for empty commitments; no DataSource or SQL connection.",
+    "database_calls": 0,
+    "http_calls": 0,
+    "provider_calls": 0,
+    "both_schedule_stale": true,
+    "both_feasibility_unverified": true,
+    "all_other_day_fields_exact": true,
+    "stored_parent_not_mutated_by_view": true,
+    "observed_diff": [
+      {
+        "path": "/feasibility/solver_status",
+        "parent_read_projection": "SCHEDULE_DEPENDENCIES_CHANGED",
+        "proposal_read": "PLANNING_INPUT_CHANGED"
+      }
+    ],
+    "boundary": "Minimal faithful actual-method reproduction, not a replay of captured failed CI day payload or full business HTTP."
+  },
+  "separate_conservative_invalidation": {
+    "source": "ScheduleDependencies.GLOBAL/effective lines16,22",
+    "observed": true,
+    "meaning": "Global day_end changes fingerprint even when middle day has its own day_windows end; conservative invalidation is separate from the projected reason distinction and no source change is made."
+  },
+  "reviewed_ci_contract": {
+    "default": "Read-only source checksum verification; no HTTP/Docker execution.",
+    "source_lf_sha256": "46d6cd9761f0166c9c283eebaf49ca8d23858936b58b70fb0890c0bf2c416d6b",
+    "execution": "Only --run-ci with GITHUB_ACTIONS=true, copied wrapper and owned temporary scenario source under Agent /tmp; original /app source and Git five business trees remain unchanged.",
+    "normalization": "Only the two differing reviewed solver_status values, only while both stale=true and feasibility.status=unverified. Every other full day field/type/order/value must match.",
+    "explicit_additional_check": "Original scenario now also checks both days remain stale/unverified; every other original check is unchanged.",
+    "diagnostics": "At most40 JSON pointer paths, not full private payloads. Unexpected differences fail and are retained in original scenario output.",
+    "test_result": "4 targeted guard tests passed; time/order/POI/location/meals/binding/locks/facts/other feasibility differences, fresh/missing/nonboolflags/unknownreason, source drift all rejected.",
+    "not_yet_verified": "Next actual CI must still prove there are no additional original-day differences; no pass inferred for the failed HTTP case."
+  },
+  "artifacts": {
+    "tools/ci_excluded_day_contract.py": "27830f43938016a7bcb0810fe31d1cb7cc9d579e1c7a2c190c8a1e6dcec066ac",
+    "tools/tests/test_ci_excluded_day_contract.py": "448d8b4176251c9cd326df0178aea7ea6ce2d5d6517825dd19f73f4a216027ac",
+    "docs/evidence/optimization-20261026/projection-contract/ProjectionReview.java": "a273c167d4977aa27cf1b6bf6c9890da26c5a78d6cfe72de2322b2328e366c9c",
+    "docs/evidence/optimization-20261026/ci-excluded-day-contract.patch": "29dd7083a35ba6a23c7e05a249545533b8a06ad31faefa7cd07d5ad533886d34"
+  },
+  "frozen_business_tree_worktree_changes": []
+}

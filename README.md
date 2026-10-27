@@ -210,6 +210,10 @@ pwsh -File deploy/install-backup-task.ps1 -PythonPath C:\path\to\pythonw.exe
 
 CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不作为零漏洞；具体未修复条目及适用性分析须保留。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](docs/evidence/optimization-20261026/blind-review/review.html)尚无真人评分，不能用程序通过率替代真实旅行事实准确率。
 
+首次完整 CI 的[失败结果](docs/evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](docs/evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报只作内部改名并交给新 CI 验证，不加例外。原始 SARIF 继续上传，门禁通过不代表 GitHub 没有原始告警。
+
+CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全部原断言保留](docs/evidence/optimization-20261026/ci-fixture-contract-review.json)。一份 HTTP 场景的[纯 Java 复现](docs/evidence/optimization-20261026/scope-projection-contract-review.json)只发现存储与读取投影的过期原因码不同，两边仍都过期、未核实，其余日期字段一致；这不代替原 CI 数据抓取。当前诊断包装器记录实际两份日期与逐字段差异，仍执行原整天 JSON 相等断言，尚未采用原因码规范化结果放行。夹具及诊断显式发生在临时 CI 测试副本中，批准的业务源码与镜像文件未改；首轮失败不改写成新一轮通过结果。
+
 安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级本身不能放行这 8 项：用户已明确暂时接受精确核验组合中的残余风险，**仅限本机受控演示，到北京时间 2026-11-09 23:59:59 失效，不授公开生产许可**。授权与冻结指纹分别见[原始决定的公开副本](.github/security-risk-authorization.json)和[临时例外记录](.github/security-risk-acceptance.json)。
 
 门禁逐项核对批准业务源码树、依赖锁与 Docker recipe、87 个系统包版本、1086 个原生 ELF 路径指纹、135 个应用文件指纹及现场运行约束；原生 ELF 比较原始字节，明确列出的 UTF-8 业务文本仅规范 CRLF/LF。CI 必须重新扫描精确镜像并实测默认 uvicorn 进程，不能以镜像标签或旧报告代替等价证明。过期、源码/组件/权限组合变化、额外源代码挂载、加载器覆盖、未知高危或扫描失败仍阻断，禁止自动刷新允许指纹。`pass_temporary_risk_acceptance` 保留未修复分类与 52 条记录/8 项 CVE；原始 Agent High/Critical 总数仍为 79。逐项影响和未知见[部署矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)，扫描与证据边界见[安全供应链](docs/evidence/optimization-20261026/security-supply-chain.json)。
@@ -226,7 +230,7 @@ Agent 当前对 `libacl1` 和 `zlib1g` 使用两个经过签名索引及文件�
 
 Windows 任务 `TripPlanner-AutomatedBackup` 已注册为当前用户、有限权限、每日北京时间 03:00，禁止并行实例；[首次实际执行](docs/evidence/optimization-20261026/windows-backup-task-result.json)退出码 0，备份与服务恢复阶段约 231 秒，原四容器 ID、镜像和运行状态一致。任务依赖用户登录和 Docker Desktop，宿主机关闭时不提供连续备份保证。备份保留工具只提出待复核候选，不自动删除历史备份，需要结合磁盘告警人工处理。
 
-随后一次开机后的 [08:46 补执行失败](docs/evidence/optimization-20261026/windows-backup-20261027-startup-failure.json)，服务恢复也失败；同一时段存在来源未确定的 Compose 停止操作，不能仅按时间归因于备份。保存原始日志后，本项目按精确原 ID 恢复。现在任务改用宿主入口 `tools/windows_backup_runner.pyw`：外层仍为原 `pythonw.exe`，每个 Docker 子进程另设 `CREATE_NO_WINDOW` 和隐藏启动信息，补齐无控制台环境的标准句柄，保留二进制导出及捕获输出。失败补偿在同一维护锁内核对原容器、镜像和挂载，先恢复 PostgreSQL 再恢复原本运行的服务；失败备份仍返回失败，不更新成功标记。Docker 不可用或主机断电时不能保证自动恢复。
+随后一次开机后的 [08:46 补执行失败](docs/evidence/optimization-20261026/windows-backup-20261027-startup-failure.json)，服务恢复也失败；用户随后确认这些容器由本人手动停止；不能把这次停机或受其影响的失败归因于项目自行停机。保存原始日志后，本项目按精确原 ID 恢复。现在任务改用宿主入口 `tools/windows_backup_runner.pyw`：外层仍为原 `pythonw.exe`，每个 Docker 子进程另设 `CREATE_NO_WINDOW` 和隐藏启动信息，补齐无控制台环境的标准句柄，保留二进制导出及捕获输出。失败补偿在同一维护锁内核对原容器、镜像和挂载，确认依赖可用后仅恢复本次备份会停止、且原本运行的后端与 Agent；PostgreSQL 或前端被外部停止时保留停止状态并报告失败，不反向覆盖操作者。失败备份仍返回失败，不更新成功标记。Docker 不可用或主机断电时不能保证自动恢复。
 
 [修复后一次实际计划任务](docs/evidence/optimization-20261026/windows-silent-task-actual-result.json)退出码 0，备份与恢复阶段约 48 秒；108 个子进程均设置无窗口标志，161 次对任务进程的采样未观察到可见窗口。原容器状态、备份清单和近期成功心跳另见[核对记录](docs/evidence/optimization-20261026/windows-silent-backup-validation.json)。两次耗时的运行条件不同，不据此计算性能提升。
 
