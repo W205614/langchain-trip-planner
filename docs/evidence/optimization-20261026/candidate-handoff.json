@@ -1,5 +1,5 @@
 {
-  "phase": "SECOND_CI_13_PASS_3_FAIL_REPLACEMENT_REQUIRED",
+  "phase": "THIRD_CI_15_PASS_1_BROWSER_FAIL_REPLACEMENT_READY",
   "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
   "source_committed_locally": true,
   "pushed": true,
@@ -53,7 +53,7 @@
     "current": "poi-ui-acceptance-result.json:7/7 passed on final220, own backend/mapfixture restored",
     "original_failures": "run1 retained; run2 primary error/full checklist lost, post-run diagnostic and recovered waiter excerpt retained"
   },
-  "updated_at": "2026-10-27T02:47:34.991378+00:00",
+  "updated_at": "2026-10-27T03:17:51.747071+00:00",
   "actual_runtime_probe": "hardened-runtime-probe-result.json:11 passed; actual uvicorn PID1; CapBnd/Eff0;NNP1;ROroot;boundedtmpfs;native component checks",
   "new_candidate": "trip-opt-hardened-20261026; canonical Agent actual uvicorn, separate agent-fixture supplies browser providers explicitly",
   "backup_previous_a01": "automated-backup-drill-final.json:pass/full archive/local copy/private owner history unchanged",
@@ -127,11 +127,13 @@
       "daily-after-silent-backup-readback.json"
     ]
   },
-  "current_pushed_candidate": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+  "current_pushed_candidate": "e44acfb720376676049cfed38b3dfaa8d8acebc0",
   "final_ci_passed": false,
   "ci_history": {
     "first": "first-ci-d323a44-results.json:11passed5failed retained",
     "second": "second-ci-5485f8a-results.json:13passed3failed retained; all4CodeQL passed;416 Python unit pass2skip;remaining benchmark/HTTP contract/native drift corrections",
-    "third": "pending exact replacement SHA push and all16CI; no success inferred"
-  }
+    "third": "third-ci-e44acfb-results.json:15passed1failed;Security12/12passed;Browser51pass7fail original traces retained;five-file current-contract CI testcopy reviewed, next replacement required",
+    "fourth": "pending exactSHA push and all16; four independent postbrowser steps now collect failures without masking the original failed step"
+  },
+  "browser_fixture_review": "ci-browser-contract-review.json:parent and two agent source/actual-trace review;not human blind review;4guards/5TSsyntax only;new browser results pending"
 }

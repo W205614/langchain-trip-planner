@@ -154,6 +154,7 @@ jobs:
           docker tag langchain-trip-planner-frontend:latest trip-validation-frontend:latest
 
       - name: Start isolated validation stack
+        id: validation_start
         run: |
           validation_mfa_key=$(python -c 'import base64,secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())')
           echo "::add-mask::$validation_mfa_key"
@@ -192,31 +193,36 @@ jobs:
           python -m pip install httpx==0.28.1
           python ../backend/scripts/optimization_seed_admin.py --project trip-validation --base-url http://127.0.0.1:18080 --output ../.codex-optimization/admin-ci.json --allow-optional-admin-mfa
           npm ci
+          python ../tools/ci_browser_contract_overlay.py --prepare-ci --report ../evidence/browser-fixture-adaptation.json
           npx playwright install --with-deps chromium
           python - <<'PY'
           import json,os,subprocess
           from pathlib import Path
           environment=dict(os.environ)
           environment.update(json.loads(Path('../.codex-optimization/admin-ci.json').read_text(encoding='utf-8')))
-          subprocess.run(['npx','playwright','test'],env=environment,check=True)
+          subprocess.run(['npx','playwright','test','--config','.ci-reviewed-playwright.config.ts'],env=environment,check=True)
           PY
 
       - name: Isolated recovery drill
+        if: ${{ !cancelled() && steps.validation_start.outcome == 'success' }}
         run: python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
 
       - name: Java review and publication lifecycle
+        if: ${{ !cancelled() && steps.validation_start.outcome == 'success' }}
         run: |
           python -m pip install httpx==0.28.1
           python backend/scripts/java_knowledge_smoke.py --output evidence/knowledge.json
           python backend/scripts/java_api_contract_smoke.py --output evidence/public-api.json
 
       - name: Local notification failure and recovery
+        if: ${{ !cancelled() && steps.validation_start.outcome == 'success' }}
         run: |
           docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.15.1 test rules alerts.test.yml alerts.capacity.test.yml
           python backend/scripts/notification_smoke.py
           cp docs/evidence/notifications.json evidence/notifications.json
 
       - name: Generation interrupted by container restart
+        if: ${{ !cancelled() && steps.validation_start.outcome == 'success' }}
         run: |
           python -m pip install httpx==0.28.1
           python backend/scripts/lifecycle_smoke.py

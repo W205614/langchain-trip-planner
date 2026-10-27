@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "fixture_revision": "current-browser-contract-20261027",
+  "original_failed_revision": "e44acfb720376676049cfed38b3dfaa8d8acebc0",
+  "original_failed_job": 121979733367,
+  "full_original_artifact_sha256": "bd6a32fae89d00a6c2c828665909487d2e38cfc1d82ec06a1044a5ac6a156e19",
+  "review_record": "docs/evidence/optimization-20261026/ci-browser-contract-review.json",
+  "scope": "Five hashpinned original test files, seven failed cases only; all58 original cases run in an explicit temporary suite copy. Application files and original suite unchanged.",
+  "replacements": [
+    {
+      "id": "legacy-stale-status-and-warning",
+      "source_path": "frontend/e2e/final-planning.spec.ts",
+      "source_lf_sha256": "8a3f5798750d8283083ca60cf89920cea1744cebb4404032a90f7cd0a68091d4",
+      "before": "  await expect(page.locator('.timeline')).toContainText('部分条件待核实')",
+      "after": "  await expect(page.locator('.timeline')).toContainText('时间轴待重新核验')\n  await expect(page.locator('.timeline')).toContainText('此时间轴的条件或事实已过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。')",
+      "evidence": [
+        "ActivityTimeline.vue:36,41 selects the stronger stale status when scheduleCurrent is false.",
+        "scheduleValidity.ts:3-6 requires current hashes and unexpired binding; legacy fixture has none.",
+        "Actual error-context SHA ca14a0ce93661638944445f6d3069a6f7b8a021794e3ec18570da2e8527f4a30 has both current stale label and full warning."
+      ],
+      "preserved_assertions": "Original translated stale reason, global warning, raw-code absence, and no feasible label remain unchanged."
+    },
+    {
+      "id": "defer-owner-input-change-until-after-positive-state-actions",
+      "source_path": "frontend/e2e/final-roles-live.spec.ts",
+      "source_lf_sha256": "408d45a17442543322df638ff204a58390b192ef392582f2dec952669694b9b3",
+      "before": "      if (role === 'owner') {\n        await page.getByRole('tab', { name: '时间与约束' }).click()\n        await page.getByLabel('每日最早出发', { exact: true }).fill('08:30')\n        await page.getByTestId('planning-save').click()\n        await expect(page.getByText('规划输入已保存；当前行程未自动改排')).toBeVisible()\n        await page.getByRole('tab', { name: '行前核验' }).click()\n      } else {",
+      "after": "      if (role !== 'owner') {",
+      "evidence": [
+        "Original test mutates day_start at lines41-45 before positive time lock at67/completion69.",
+        "Actual trace GET rev1 day_start09:00/stalefalse; PUT rev2 day_start08:30/staletrue for both days.",
+        "PlanningInputService.java:51 and ScheduleDependencies.java:16,132-143 intentionally invalidate changed global inputs."
+      ],
+      "preserved_assertions": "The exact original owner edit actions are reinserted after fresh positive lock/completion in replacement4; all other role checks remain."
+    },
+    {
+      "id": "prove-real-current-binding-before-owner-positive",
+      "source_path": "frontend/e2e/final-roles-live.spec.ts",
+      "source_lf_sha256": "408d45a17442543322df638ff204a58390b192ef392582f2dec952669694b9b3",
+      "before": "      if (role === 'owner') {\n        const activityTestId = await page.locator('[data-testid^=\"activity-\"]').filter({ has: page.getByRole('button', { name: '锁定时段', exact: true }) }).first().getAttribute('data-testid')",
+      "after": "      if (role === 'owner') {\n        // Query the actual generated record; never synthesize or overwrite a solver binding.\n        const currentResponse = await request.get(`/api/trips/${tripId}/planning-input`, { headers: headers('owner') })\n        expect(currentResponse.ok()).toBe(true)\n        const currentData = (await currentResponse.json()).data\n        expect(currentData.planning_input.day_start).toBe('09:00')\n        expect(currentData.plan.days).toHaveLength(2)\n        for (const day of currentData.plan.days) {\n          expect(day.schedule_stale).toBe(false)\n          expect(day.schedule_dependencies.input_hash).toMatch(/^[a-f0-9]{64}$/)\n          expect(day.schedule_dependencies.fact_hash).toMatch(/^[a-f0-9]{64}$/)\n          expect(Date.parse(day.schedule_dependencies.expires_at)).toBeGreaterThan(Date.now())\n        }\n        const activityTestId = await page.locator('[data-testid^=\"activity-\"]').filter({ has: page.getByRole('button', { name: '锁定时段', exact: true }) }).first().getAttribute('data-testid')",
+      "evidence": [
+        "Actual original generated record had current bindings expiring03:25:03Z while feasibility remained unverified; this does not mean official facts are complete.",
+        "UI time actions depend on schedule currentness, not a fabricated feasible label."
+      ],
+      "preserved_assertions": "Original actual UI time lock, locked tag, completion action and completed tag are unchanged, and must now succeed before any planning mutation."
+    },
+    {
+      "id": "retain-owner-input-edit-and-verify-stale-denials",
+      "source_path": "frontend/e2e/final-roles-live.spec.ts",
+      "source_lf_sha256": "408d45a17442543322df638ff204a58390b192ef392582f2dec952669694b9b3",
+      "before": "        await expect(activity.getByText('已完成', { exact: true })).toBeVisible()",
+      "after": "        await expect(activity.getByText('已完成', { exact: true })).toBeVisible()\n        const completedActivityId = activityTestId!.slice('activity-'.length)\n        // Re-enter the actual workspace to obtain revisions after both successful state writes.\n        const reloadPlanning = page.waitForResponse(response => new URL(response.url()).pathname === `/api/trips/${tripId}/planning-input` && response.request().method() === 'GET')\n        await page.goto(`/trips/${tripId}/operations`)\n        const reloadedResponse = await reloadPlanning\n        expect(reloadedResponse.ok()).toBe(true)\n        const reloadedData = (await reloadedResponse.json()).data\n        expect(reloadedData.planning_revision).toBeGreaterThan(currentData.planning_revision)\n        expect(reloadedData.planning_input.completed_activity_ids).toContain(completedActivityId)\n        expect(reloadedData.planning_input.locks.some((lock: any) => lock.activity_id === completedActivityId && lock.mode === 'time')).toBe(true)\n        await page.getByRole('tab', { name: '时间与约束' }).click()\n        await page.getByLabel('每日最早出发', { exact: true }).fill('08:30')\n        const savePlanning = page.waitForResponse(response => new URL(response.url()).pathname === `/api/trips/${tripId}/planning-input` && response.request().method() === 'PUT')\n        await page.getByTestId('planning-save').click()\n        const savedResponse = await savePlanning\n        expect(savedResponse.ok()).toBe(true)\n        const savedData = (await savedResponse.json()).data\n        expect(savedData.planning_input.day_start).toBe('08:30')\n        expect(savedData.planning_revision).toBe(reloadedData.planning_revision + 1)\n        expect(savedData.plan.days).toHaveLength(2)\n        for (const day of savedData.plan.days) {\n          expect(day.schedule_stale).toBe(true)\n          expect(day.feasibility.status).toBe('unverified')\n        }\n        await expect(page.getByText('规划输入已保存；当前行程未自动改排')).toBeVisible()\n        await page.getByRole('tab', { name: '行前核验' }).click()\n        await page.getByRole('button', { name: '打开行程并按日改排' }).click()\n        await expect(page.getByText('北京旅行计划')).toBeVisible()\n        await expect(page.locator('.timeline').first()).toContainText('时间轴待重新核验')\n        const staleCompletedActivity = page.getByTestId(activityTestId!)\n        await expect(staleCompletedActivity.getByText('已完成', { exact: true })).toBeVisible()\n        await expect(staleCompletedActivity.getByText('已锁定', { exact: true })).toBeVisible()\n        await expect(staleCompletedActivity.getByRole('button', { name: '解除锁定', exact: true })).toBeDisabled()\n        await expect(staleCompletedActivity.getByRole('button', { name: '撤销完成', exact: true })).toBeEnabled()\n        const staleActivity = page.locator('[data-testid^=\"activity-\"]').filter({ has: page.getByRole('button', { name: '锁定时段', exact: true }) }).first()\n        const staleActivityTestId = await staleActivity.getAttribute('data-testid')\n        expect(staleActivityTestId).toBeTruthy()\n        const staleActivityId = staleActivityTestId!.slice('activity-'.length)\n        expect(staleActivityId).not.toBe(completedActivityId)\n        await expect(staleActivity.getByRole('button', { name: '锁定时段', exact: true })).toBeDisabled()\n        await expect(staleActivity.getByRole('button', { name: '标记完成', exact: true })).toBeDisabled()\n        for (const operation of [{ locked: true, lock_mode: 'time' }, { completed: true }]) {\n          // Read actual latest versions for every attempt; a VERSION_CONFLICT cannot satisfy this check.\n          const latestResponse = await request.get(`/api/trips/${tripId}/planning-input`, { headers: headers('owner') })\n          expect(latestResponse.ok()).toBe(true)\n          const latestData = (await latestResponse.json()).data\n          const denied = await request.post(`/api/trips/${tripId}/activities/${encodeURIComponent(staleActivityId)}/state`, {\n            headers: { ...headers('owner'), 'If-Match': String(latestData.trip_version) },\n            data: { ...operation, planning_revision: latestData.planning_revision },\n          })\n          expect(denied.status()).toBe(409)\n          expect(await denied.json()).toMatchObject({ success: false, error_code: 'SCHEDULE_STALE', code: 'SCHEDULE_STALE' })\n          const afterResponse = await request.get(`/api/trips/${tripId}/planning-input`, { headers: headers('owner') })\n          expect(afterResponse.ok()).toBe(true)\n          const afterData = (await afterResponse.json()).data\n          expect(afterData.planning_revision).toBe(latestData.planning_revision)\n          expect(afterData.trip_version).toBe(latestData.trip_version)\n          expect(afterData.planning_input.completed_activity_ids).toEqual(latestData.planning_input.completed_activity_ids)\n          expect(afterData.planning_input.locks).toEqual(latestData.planning_input.locks)\n        }",
+      "evidence": [
+        "Actual original PUT was200, both dates became staletrue/unverified before disabled click.",
+        "PlanningInputService.java:59-64 checks actual revision then rejects stale time=true/completed=true as409 SCHEDULE_STALE.",
+        "ApiErrors.java:18-33 returns both error_code and code fields.",
+        "ActivityTimeline.vue:17-19 disables completed lock changes and stale unfinished time/completion actions, while allowing undo completion."
+      ],
+      "preserved_assertions": "Original owner input editing and success message remain; positive real UI lock/completion remain, and stale backend denial plus nonmutation checks are added."
+    },
+    {
+      "id": "verify-actual-undo-completion-remains-allowed-when-stale",
+      "source_path": "frontend/e2e/final-roles-live.spec.ts",
+      "source_lf_sha256": "408d45a17442543322df638ff204a58390b192ef392582f2dec952669694b9b3",
+      "before": "      } else await expect(page.getByRole('button', { name: /锁定安排|锁定时段|标记完成|AI 重新安排|编辑行程/ })).toHaveCount(0)",
+      "after": "        // Undoing completion is allowed even when an old timeline can no longer authorize new completion.\n        const undoCompletion = page.waitForResponse(response => new URL(response.url()).pathname === `/api/trips/${tripId}/activities/${encodeURIComponent(completedActivityId)}/state` && response.request().method() === 'POST')\n        await staleCompletedActivity.getByRole('button', { name: '撤销完成', exact: true }).click()\n        const undoResponse = await undoCompletion\n        expect(undoResponse.ok()).toBe(true)\n        const undoData = (await undoResponse.json()).data\n        expect(undoData.planning_revision).toBeGreaterThan(savedData.planning_revision)\n        expect(undoData.planning_input.completed_activity_ids).not.toContain(completedActivityId)\n        expect(undoData.planning_input.locks.some((lock: any) => lock.activity_id === completedActivityId && lock.mode === 'time')).toBe(true)\n        for (const day of undoData.plan.days) {\n          expect(day.schedule_stale).toBe(true)\n          expect(day.feasibility.status).toBe('unverified')\n        }\n        await expect(staleCompletedActivity.getByText('已完成', { exact: true })).toHaveCount(0)\n        await expect(staleCompletedActivity.getByText('已锁定', { exact: true })).toBeVisible()\n      } else await expect(page.getByRole('button', { name: /锁定安排|锁定时段|标记完成|AI 重新安排|编辑行程/ })).toHaveCount(0)",
+      "evidence": [
+        "ActivityTimeline.vue:19 intentionally permits completed=false while stale.",
+        "PlanningInputService.java:64 rejects only completed=true or time locked=true; completed=false updates the original actual persisted input without restamping a schedule."
+      ],
+      "preserved_assertions": "All original nonowner action absence checks and subsequent revoked cached itinerary checks remain unchanged."
+    },
+    {
+      "id": "assistant-history-method-split",
+      "before": "  await page.route('**/api/assistant/conversations/conversation-1/messages', async route => {\n    expect(route.request().postDataJSON()).toMatchObject({ mode: 'auto', city: '北京' })",
+      "after": "  await page.route('**/api/assistant/conversations/conversation-1/messages', async route => {\n    if (route.request().method() === 'GET') {\n      return route.fulfill({ json: { success: true, data: [], clarification: { status: 'none' } } })\n    }\n    expect(route.request().method()).toBe('POST')\n    expect(route.request().postDataJSON()).toMatchObject({ mode: 'auto', city: '北京' })",
+      "exact_occurrences": 1,
+      "reason": "Opening and refreshing the persistent conversation uses GET on the same messages path. The original POST body, answer, sources and visible-answer assertions remain unchanged.",
+      "source_path": "frontend/e2e/assistant-explore.spec.ts",
+      "source_lf_sha256": "8f9572ab042ff8f1db511e154f89335bbc97b534c956a8c5196a60aa22950966"
+    },
+    {
+      "id": "assistant-context-history-get",
+      "before": "  await page.route('**/api/assistant/conversations', route => route.fulfill({ json: { success: true, id: 'conversation-2' } }))",
+      "after": "  await page.route('**/api/assistant/conversations', route => route.fulfill({ json: { success: true, id: 'conversation-2' } }))\n  await page.route('**/api/assistant/conversations/conversation-2/messages', route => {\n    expect(route.request().method()).toBe('GET')\n    return route.fulfill({ json: { success: true, data: [], clarification: { status: 'none' } } })\n  })",
+      "exact_occurrences": 1,
+      "reason": "The contextual dialog now loads durable conversation history before interaction; the synthetic empty GET avoids an unintended real request with a fake token.",
+      "source_path": "frontend/e2e/assistant-explore.spec.ts",
+      "source_lf_sha256": "8f9572ab042ff8f1db511e154f89335bbc97b534c956a8c5196a60aa22950966"
+    },
+    {
+      "id": "assistant-current-confirmation-disclosure",
+      "before": "  await expect(page.getByText('修改安排请先进入具体行程。')).toBeVisible()",
+      "after": "  await expect(page.getByText('可问攻略或提出局部调整。日期不明确时会保留原需求继续追问；回复日期后只生成待确认方案。可回复“取消”结束调整。')).toBeVisible()",
+      "exact_occurrences": 1,
+      "reason": "The current product supports durable date clarification and pending proposals. The original bound-date, no duplicate revision entry and no direct modify-button assertions remain unchanged.",
+      "source_path": "frontend/e2e/assistant-explore.spec.ts",
+      "source_lf_sha256": "8f9572ab042ff8f1db511e154f89335bbc97b534c956a8c5196a60aa22950966"
+    },
+    {
+      "id": "research-retrieval-endpoint",
+      "before": "  await page.route('**/api/research', route => route.fulfill(fail\n    ? { status: 503, json: { message: '资料检索暂不可用，请稍后重试' } }\n    : { json: { data: { evidence: [{ content: '旧证据内容', source: '资料' }] } } }))",
+      "after": "  await page.route('**/api/research/retrieve', route => {\n    expect(route.request().method()).toBe('POST')\n    expect(route.request().postDataJSON()).toEqual({ city: '北京', query: '博物馆预约' })\n    return route.fulfill(fail\n      ? { status: 503, json: { message: '资料检索暂不可用，请稍后重试' } }\n      : { json: { data: { evidence: [{ content: '旧证据内容', source: '资料' }] } } })\n  })",
+      "exact_occurrences": 1,
+      "reason": "Retrieval-only research calls /api/research/retrieve. The original evidence-then-503 response and every stale-evidence/no-match assertion remain unchanged, with strict request method and body checks added.",
+      "source_path": "frontend/e2e/completion.spec.ts",
+      "source_lf_sha256": "a0efb2a8d2bdab75ec3add1da1ad0068ca2a8ac4f3aec55e5f1b75e9ec80004a"
+    },
+    {
+      "id": "knowledge-admin-read-only-quota",
+      "before": "  await page.route('**/api/knowledge/admin/submissions**', async route => {",
+      "after": "  // Synthetic UI quota fixture; no storage reconciliation is exercised.\n  await page.route('**/api/knowledge/admin/uploads', route => {\n    expect(route.request().method()).toBe('GET')\n    return route.fulfill({ json: {\n      used_bytes: 0, reserved_bytes: 0, user_limit_bytes: 104857600,\n      pending_limit: 10, uploads_per_minute: 10, reservations: [],\n      minimum_free_bytes: 0, global_limit_bytes: 1073741824\n    } })\n  })\n  await page.route('**/api/knowledge/admin/submissions**', async route => {",
+      "exact_occurrences": 1,
+      "reason": "The mounted quota panel issues the exact read-only admin uploads GET. Synthetic quota values are UI assumptions, not observed storage facts. The original submissions handlers, original-file visibility, edit-before-publish disabling, version-2 save and version-3 publication assertions remain unchanged. No reconcile endpoint is intercepted or called.",
+      "source_path": "frontend/e2e/completion.spec.ts",
+      "source_lf_sha256": "a0efb2a8d2bdab75ec3add1da1ad0068ca2a8ac4f3aec55e5f1b75e9ec80004a"
+    },
+    {
+      "id": "mobile-current-named-action-set",
+      "before": "  await expect(buttons).toHaveCount(6)",
+      "after": "  const expectedActions = [\n    '账号安全', '🌏 行程广场', '🧭 景点发现', '✨ 我的行程 · 问答与修改',\n    '📚 投稿攻略', '🔎 旅行资料研究', '退出'\n  ]\n  await expect(buttons).toHaveCount(expectedActions.length)\n  for (const name of expectedActions) {\n    await expect(actions.getByRole('button', { name, exact: true })).toBeVisible()\n  }",
+      "exact_occurrences": 1,
+      "reason": "Account security adds the seventh current signed-in non-admin action. Count plus all exact accessible names validates the complete expected set. Every original button bounding-box and navigation/header non-overlap assertion remains unchanged; the first failed CI never reached those geometry checks.",
+      "source_path": "frontend/e2e/responsive.spec.ts",
+      "source_lf_sha256": "46f32cbc13f4eb258811953cc6df393d198ea688b8ea04371a6b9bdce8f12567"
+    },
+    {
+      "id": "mobile-no-horizontal-overflow",
+      "before": "    return !!navigation && !!badge && navigation.y + navigation.height <= badge.y\n  }).toBe(true)",
+      "after": "    return !!navigation && !!badge && navigation.y + navigation.height <= badge.y\n  }).toBe(true)\n  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)",
+      "exact_occurrences": 1,
+      "reason": "Adds a document-width overflow check after all original per-action bounds and header separation checks. Actual layout acceptance remains pending the next real CI browser execution.",
+      "source_path": "frontend/e2e/responsive.spec.ts",
+      "source_lf_sha256": "46f32cbc13f4eb258811953cc6df393d198ea688b8ea04371a6b9bdce8f12567"
+    }
+  ],
+  "evidence_boundary": "Synthetic UI fixtures are not live facts or backend authorization proof. Reordered role case still uses actual isolated Java/PG requests and existing generated bindings. No new success claimed before CI."
+}

@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-27T03:16:48.632033+00:00",
+  "status": "parent_and_two_agent_source_and_actual_trace_review_complete_fresh_CI_pending",
+  "not_human_blind_review": true,
+  "original_failed_revision": "e44acfb720376676049cfed38b3dfaa8d8acebc0",
+  "original_failed_job": 121979733367,
+  "original_browser_result": {
+    "passed": 51,
+    "failed": 7,
+    "original_status_remains_failed": true
+  },
+  "artifact": {
+    "id": 12705724720,
+    "zip_bytes": 73672926,
+    "zip_sha256": "bd6a32fae89d00a6c2c828665909487d2e38cfc1d82ec06a1044a5ac6a156e19",
+    "full_zip_digest_verified": true,
+    "all26entries_read_crc_checked": true,
+    "roles_trace_sha256": "c2a63a439a6d24c07a0dc77667127dfa0c625d3a1ddcc154abe79db6f1579cd8"
+  },
+  "actual_five_UI_traces": [
+    {
+      "case_folder": "assistant-explore-history--2bb3f-ith-a-direct-sourced-answer",
+      "api_network": [
+        {
+          "method": "GET",
+          "path": "/api/history",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/api/assistant/conversations",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/assistant/conversations/conversation-1/messages",
+          "status": -1
+        }
+      ],
+      "login_page_snapshot": false
+    },
+    {
+      "case_folder": "assistant-explore-history--6ca72-he-duplicate-revision-entry",
+      "api_network": [
+        {
+          "method": "GET",
+          "path": "/api/history",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/api/assistant/conversations",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/assistant/conversations/conversation-2/messages",
+          "status": 401
+        }
+      ],
+      "login_page_snapshot": true
+    },
+    {
+      "case_folder": "completion-knowledge-revie-d79f5-ublishing-the-exact-version",
+      "api_network": [
+        {
+          "method": "GET",
+          "path": "/api/knowledge/admin/uploads",
+          "status": 401
+        },
+        {
+          "method": "GET",
+          "path": "/api/knowledge/admin/submissions",
+          "status": -1
+        }
+      ],
+      "login_page_snapshot": true
+    },
+    {
+      "case_folder": "completion-research-depend-d8885-nd-is-not-shown-as-no-match",
+      "api_network": [
+        {
+          "method": "POST",
+          "path": "/api/research/retrieve",
+          "status": 401
+        }
+      ],
+      "login_page_snapshot": true
+    },
+    {
+      "case_folder": "responsive-mobile-home-kee-21db0-navigation-action-on-screen",
+      "api_network": [
+        {
+          "method": "GET",
+          "path": "/api/capabilities",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/preferences/me",
+          "status": 200
+        }
+      ],
+      "login_page_snapshot": false
+    }
+  ],
+  "legacy_actual_DOM": "时间轴待重新核验 plus complete stale warning and original translated cause; old expected 部分条件待核实 is the valid-but-unverified label and inappropriate without a binding.",
+  "role_actual_trace": {
+    "before": {
+      "planning_revision": 1,
+      "day_start": "09:00",
+      "two_day_stale": [
+        false,
+        false
+      ],
+      "status": "unverified",
+      "solver_status": "OPTIMAL",
+      "binding_expires_at": "2026-10-27T03:25:03Z"
+    },
+    "saved": {
+      "http_status": 200,
+      "planning_revision": 2,
+      "day_start": "08:30",
+      "two_day_stale": [
+        true,
+        true
+      ],
+      "status": "unverified",
+      "solver_status": "SCHEDULE_DEPENDENCIES_CHANGED"
+    },
+    "old_next_action": "click disabled time-lock control; this is expected protection, not evidence to enable stale actions"
+  },
+  "reviewed_replacements": {
+    "path": "tools/ci_browser_contract_replacements.json",
+    "files": 5,
+    "replacements": 12,
+    "failed_cases": 7,
+    "all58original_test_cases_preserved": true,
+    "declarations_timeouts_skip_markers_unchanged": true,
+    "unchanged_files_copy_raw_bytes_equal": true,
+    "original_sources_overwritten": false,
+    "role_positive_lock_and_completion_preserved": true,
+    "role_added_assertions": [
+      "real current binding",
+      "edit after positive actions with reloaded real revision",
+      "stale UI time/completion disabled",
+      "actual latest-version HTTP409 SCHEDULE_STALE for both writes",
+      "versions locks completed values unchanged on rejected writes",
+      "existing lock and completion retained; stale completion undo allowed"
+    ],
+    "mobile_geometry": "Seven named nonadmin actions; all original bbox/header-separation assertions plus no-horizontal-overflow. Screenshot visually reviewed, actual geometry still requires next CI.",
+    "knowledge_quota": "Exact synthetic read-only GET fixture only; original save-before-publish/version checks preserved.",
+    "mocked_UI_not_backend_authorization_proof": true
+  },
+  "reviewed_application_LF_source_bindings": {
+    "frontend/src/views/History.vue": "ac538909eb6ffb5969c298e097a01df0881e6040bdd20c0cbb990573a5c9f306",
+    "frontend/src/views/Research.vue": "3aa9244d933db0111533feba1197338371db8938bf790cda709cb514b64e33d1",
+    "frontend/src/views/KnowledgeAdmin.vue": "452b54af94a8c60a9bd15ee3994dceae0ca02ef007cd7705372aac5c4057e5af",
+    "frontend/src/components/UploadQuotaPanel.vue": "4345c4c6d5050eb644e4753de1918af85f2f05bedcc131e2e735104e991b7e70",
+    "frontend/src/views/Home.vue": "29cd53f45d6096ac581cc10c3d316790b5d4800605e29667c0540d09b549b942",
+    "frontend/src/components/trip/ActivityTimeline.vue": "6ce2a49e96edb44cb85124761bf808984dfde56c8b05aea6b00c438a73667941",
+    "frontend/src/utils/scheduleValidity.ts": "78007b9100a68626facc96709abd2de64b031d325fa87901429a7f997211c440",
+    "frontend/src/services/api.ts": "c70142c2f343f0215a3d4a6f54d1f7744c488594c8f30dccb0f4352ec932068c",
+    "business-backend/src/main/java/com/tripplanner/domain/PlanningInputService.java": "a74350f94fdaeae780a022f5ff338b6a3a29e181282a285bc063ebee91d3e3ac",
+    "business-backend/src/main/java/com/tripplanner/domain/ScheduleDependencies.java": "5657bff821412012f5c2710de7af2714d8cb11a7ebdcbe29f88f8210efe039c1",
+    "business-backend/src/main/java/com/tripplanner/api/ApiErrors.java": "3e8b5d56f4cec301d6047e72c1605be570be5971ac53b8b527238a5fba804c51"
+  },
+  "bounded_verification": {
+    "guard_tests_passed": 4,
+    "suite_rerun": false,
+    "typescript_copies_syntax_checked": 5,
+    "typescript_errors": 0,
+    "browser_executed": false,
+    "new_HTTP_success_claimed": false
+  },
+  "CI_observability": "After isolated validation stack starts successfully, four independent later recovery/publication/notification/restart steps run even if a prior browser step fails. No continue-on-error; original failed step and job remain failed. Cancelled or never-started stacks do not run these steps.",
+  "business_trees_recipes_frozen_risk_maps_changed": false,
+  "evidence_boundary": "Fixture migration only, not live travel facts, general quality improvement, vulnerability fix, new provider run or new successful remote CI.",
+  "helper_LF_sha256": {
+    "tools/ci_browser_contract_overlay.py": "584c4992f415ca868f37b058e474e7195ab79dbd6a0890921b0c723a955348c5",
+    "tools/ci_browser_contract_replacements.json": "0fc7e2c8d147618dc3d086378cf885080296d15d81ecda175fc978bfcdd9660d",
+    "tools/tests/test_ci_browser_contract_overlay.py": "e57d8edc6fe083e1472e0130ff169d7714727b209f86f67db41ca79288a0ce72"
+  }
+}
