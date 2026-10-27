@@ -155,6 +155,15 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - name: Require fresh job-owned CodeQL output
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          output = Path('security-reports/codeql')
+          if output.exists() and any(output.iterdir()):
+              raise SystemExit('CodeQL output must start empty; historical SARIF is not current evidence')
+          output.mkdir(parents=True, exist_ok=True)
+          PY
       - name: Initialize official CodeQL
         uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4 commit verified 2026-10-26; Node 24
         with:
@@ -165,13 +174,22 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: mvn -B -ntp -f business-backend/pom.xml -DskipTests compile
       - name: Analyze and publish SARIF
+        id: codeql_analyze
         uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370
         with:
           category: /language:${{ matrix.language }}
           output: security-reports/codeql
           upload: always
+      # Prepared wiring remains blocked until the separately reviewed activation
+      # digest is explicitly pinned. These flags cannot grant authorization.
+      - name: Bind current successful language analysis to immutable raw SARIF
+        env:
+          TRIP_CODEQL_ANALYZE_OUTCOME: ${{ steps.codeql_analyze.outcome }}
+        run: python tools/source_equivalence_delta.py --record-codeql-job --directory security-reports/codeql --language ${{ matrix.language }}
       - name: Fail on high/critical CodeQL results
-        run: python tools/security_gate.py sarif --directory security-reports/codeql --codeql-context .github/codeql-context-assessments.json --reports security-reports/codeql
+        env:
+          TRIP_CODEQL_ANALYZE_OUTCOME: ${{ steps.codeql_analyze.outcome }}
+        run: python tools/security_gate.py sarif --directory security-reports/codeql --codeql-context .github/codeql-context-assessments.json --source-equivalence restore-response-v1 --codeql-language ${{ matrix.language }} --reports security-reports/codeql
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
@@ -237,7 +255,7 @@ jobs:
           MATRIX_SERVICE: ${{ matrix.service }}
         run: |
           if [ "$MATRIX_SERVICE" = agent ]; then
-            python tools/security_gate.py image --image "$SECURITY_IMAGE" --vex .github/security-vex.json --vendor-policy .github/security-vendor-policy.json --risk-acceptance .github/security-risk-acceptance.json --runtime-proof "$SECURITY_RUNTIME_PROOF" --cleanup-owned-resources --reports security-reports/image
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --vex .github/security-vex.json --vendor-policy .github/security-vendor-policy.json --risk-acceptance .github/security-risk-acceptance.json --runtime-proof "$SECURITY_RUNTIME_PROOF" --source-equivalence restore-response-v1 --cleanup-owned-resources --reports security-reports/image
           else
             python tools/security_gate.py image --image "$SECURITY_IMAGE" --reports security-reports/image
           fi

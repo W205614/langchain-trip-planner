@@ -405,6 +405,11 @@ class BusinessIntegrationTest {
   @Test
   void immutableVersionsRestoreAsANewVersionAndRemainOwnerScoped() {
     long uid = userId(), other = userId();
+    String legacyPlan = """
+        {"marker":"v1","city":"北京","days":[{"day_index":0,"date":"2026-10-01",
+          "attractions":[{"poi_id":"legacy-poi","name":"故宫"}],
+          "meals":[{"type":"lunch","poi_id":"legacy-meal","name":"餐厅"}]}]}
+        """;
     var row = new HashMap<String, Object>();
     row.put("user_id", uid);
     row.put("city", "北京");
@@ -415,7 +420,7 @@ class BusinessIntegrationTest {
     row.put("accommodation", "经济");
     row.put("preferences", "[]");
     row.put("free_text_input", "");
-    row.put("plan_json", "{\"marker\":\"v1\",\"days\":[]}");
+    row.put("plan_json", legacyPlan);
     row.put("quality_json", "{\"outcome\":\"complete\"}");
     row.put("title", "版本测试");
     row.put("source", "manual");
@@ -437,6 +442,19 @@ class BusinessIntegrationTest {
     assertEquals(3, restored.get("version"));
     assertEquals(3, history.owned(uid, id).get("version"));
     assertTrue(history.owned(uid, id).get("plan_json").toString().contains("v1"));
+    var persistedPlan = json.readTree(history.owned(uid, id).get("plan_json").toString());
+    var capturedPlan = json.readTree(tripVersions.owned(uid, id, 3).get("plan_json").toString());
+    assertEquals(persistedPlan, restored.get("data"), "restore response must describe the persisted new version");
+    assertEquals(persistedPlan, capturedPlan, "captured version must contain the same restored plan");
+    var restoredDay = persistedPlan.path("days").path(0);
+    assertEquals("北京", restoredDay.path("city").asText());
+    assertEquals("poi:0:legacy-poi", restoredDay.path("attractions").path(0).path("activity_id").asText());
+    assertEquals("meal:0:lunch:legacy-meal", restoredDay.path("meals").path(0).path("activity_id").asText());
+    assertTrue(restoredDay.path("timeline").isArray());
+    assertTrue(restoredDay.path("feasibility").isObject());
+    assertEquals(json.readTree(legacyPlan),
+        json.readTree(tripVersions.owned(uid, id, 1).get("plan_json").toString()),
+        "normalizing a restore must not rewrite its immutable source snapshot");
     assertEquals(3, tripVersions.count(uid, id));
     assertThrows(
         org.springframework.dao.DataAccessException.class,

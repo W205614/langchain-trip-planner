@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "classification": "prepared_integration_not_activated",
+  "repository": "W205614/langchain-trip-planner",
+  "scope_sha256": "55b491a230a4868ebe8744ff217889cfb684c0aba553ba06a7a57ef814690428",
+  "preparation_review_sha256": "0c8b9746df08aa62d3899b381c939bbc6aab921aa64bb3ad45dab5416b96dfdf",
+  "integration_file_sha256_lf": {
+    ".gitattributes": "bfd79505e14ed041fb1a822aa1200a7af0e9b9857cd0bb204b4637897c390ce3",
+    ".github/workflows/security.yml": "e11cdad7bfcc3306fdc5e840970b441b2b26b8ac9cfb6df192309e3a34fd8275",
+    "tools/codeql_context.py": "c37bcf3d444aec5f28e4447d34fadea76aaf63db3075968a10338d8fc7c541b3",
+    "tools/risk_acceptance.py": "dea318ddffc00eaa7f303789d5775f728466684f820bb5a948936d2567000964",
+    "tools/security_gate.py": "545e41d4c618a13b47bd7efef1fbcfb848d474a2eb938a50a1897fd8f4fe0e95",
+    "tools/source_equivalence_delta.py": "111f244e64045f6069f06042865bf8e01d8dc58e7dc0c350df6b297a28741e6a",
+    "tools/tests/test_source_equivalence_delta.py": "bbdaf33dcb071704260b8a96503b2d747bedda111b8ae2e50a25cfbaecde80bb",
+    "tools/tests/test_source_equivalence_integration.py": "d16bcbce60afe6839ae17bdc049c2d991c600ce00b4ccfd81c37ec742caba831"
+  },
+  "activation_loader_boundary": "The tiny loader is independently reviewed outside its own hash pin to avoid circular binding; ACTIVATION_SHA256 remains None. No JSON/environ/CLI grants activation.",
+  "CodeQL_language_scope": {
+    "java-kotlin": 18,
+    "python": 2,
+    "javascript-typescript": 2,
+    "actions": 0
+  },
+  "whole_22_requirement": "All four complete language jobs must pass at the same exact SHA, Security workflow run and attempt. Each job proof explicitly whole_22_verified=false; no partial job claims whole set.",
+  "original_policy_and_native_maps_refreshed": false,
+  "business_trees_equal": false,
+  "Agent_inputs_unchanged": true,
+  "expires_at": "2026-11-09T23:59:59+08:00"
+}

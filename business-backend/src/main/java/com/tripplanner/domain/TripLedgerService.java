@@ -101,7 +101,7 @@ public class TripLedgerService {
               "id", recordId,
               "version", currentVersion + 1,
               "restored_from", sourceVersion,
-              "data", json.readTree(source.get("plan_json").toString()),
+              "data", restored,
               "quality", quality,
               "rag_sync_pending", true);
         });

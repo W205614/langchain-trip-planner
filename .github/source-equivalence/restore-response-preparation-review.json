@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-27T07:17:48.138018+00:00",
+  "project": "Trip",
+  "kind": "Independent source/disabled-draft review and permission to prepare explicit integration, not final security-gate activation",
+  "reviewed_files": {
+    "tools/source_equivalence_delta.py": "e17b22527a27f3f894ea7d8a22ba0b666d501f7eb3a31b2e8166d62a8979be82",
+    "tools/tests/test_source_equivalence_delta.py": "bbdaf33dcb071704260b8a96503b2d747bedda111b8ae2e50a25cfbaecde80bb",
+    ".github/source-equivalence/restore-response-v1.json": "55b491a230a4868ebe8744ff217889cfb684c0aba553ba06a7a57ef814690428"
+  },
+  "production_and_test_exact_reviewed_patch_applied": true,
+  "root_actual_source_preview": {
+    "status": "prepared_not_activated",
+    "effective_security_acceptance": false,
+    "source_mode": "working_tree_preview_not_final_commit",
+    "projected_business_tree": "52f13c3d4862c0f45f6303d80a562085e11969a2",
+    "exact_changed_files": [
+      "business-backend/src/main/java/com/tripplanner/domain/TripLedgerService.java",
+      "business-backend/src/test/java/com/tripplanner/BusinessIntegrationTest.java"
+    ],
+    "original_records_unchanged": true,
+    "agent_component_comparison": "pending_fresh_inventory_and_runtime",
+    "sarif_context_comparison_count": null,
+    "sarif_revision_provenance_verified": false,
+    "required_before_any_activation": [
+      "independent delta/guard review and any required human security decision",
+      "fresh complete Agent image inventory, live runtime proof and vulnerability scan under original rules",
+      "complete current-revision raw CodeQL SARIF and all final-commit CI/Security"
+    ],
+    "expires_at": "2026-11-09T23:59:59+08:00"
+  },
+  "six_owner_focused_tests_reexecuted_by_root": false,
+  "source_review_findings": [
+    "Draft explicitly inactive, does not replace revisions or old risk/CodeQL verdict; pure source preview output accurately distinguishes missing fresh runtime/SARIF.",
+    "Exact2path/mode/blob working diff, original3historic5trees,4Compose names, frozen policy bytes, old29context sources and projected Java tree checked. Negative source includes extra file/blob/mode/tree/map/permission/expiry/flow/severity drift.",
+    "Current observation is working-tree preview. An active release verifier must independently bind HEAD commit, index and working bytes, require clean5business/Compose scope and actual ancestor relation; do not let committed drift be hidden by restored unstaged bytes.",
+    "Manifest is mutable in draft. Active integration must pin canonical exact scope and reviewed activation evidence, not rely only on enabled boolean or an env/CLI flag.",
+    "New complete raw SARIF must bind current SHA/job/languages before applying old exact22context verdicts; partial per-language result collections cannot claim whole22set. Existing source29/query/location/severity/semanticflow/expiry still exact.",
+    "Actual original Agent source/locks/recipe,135app/87OS/1086native and runtime proof stay exact. Java one-line response correction is outside Agent image inputs; no new CVEs or native fingerprints are approved here."
+  ],
+  "authorized_next_implementation": [
+    "Prepare minimum explicit source-equivalence integration in existing source-validation call sites, with named new provenance mode. Preserve original risk/CodeQL approval and historical SARIF/review/maps bytes, original anchors and original22finding boundaries.",
+    "Original validator implementation may receive narrowly reviewed routing hooks; disclose exact new tool hashes/diff and distinguish baseline preserved evidence from current code. No substitution of old commit for actual HEAD and no business_trees_equal=True for changed Java.",
+    "Keep actual activation disabled until root reviews complete integration/targeted negatives and verifies actual scope does not expand existing Agent residual risk. No commit/push/newCI/Docker yet.",
+    "Retain actual DB regression pending. Prefer execute the changed method once as part of final exact newSHA cloud Java integration CI, verifying Surefire tests executed/skipped0 and method result. No duplicate local DB/full suite or host window violation solely to get an early green."
+  ],
+  "human_scope_change_approval_by_this_record": false,
+  "native_map_refresh": false,
+  "source_gate_activation": false,
+  "root_DB_or_Docker_tests": false
+}

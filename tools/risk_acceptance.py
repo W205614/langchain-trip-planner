@@ -91,7 +91,7 @@ def collect_source_bindings(root, revision=None):
     return {'git_tree_bindings': trees, 'source_bindings': files}
 
 
-def validate_sources(approval, root, image_revision):
+def validate_sources(approval, root, image_revision, source_mode=None):
     if approval.get('approved_business_revision') != APPROVED_REVISION:
         raise RuntimeError('Risk acceptance business revision outside human approval')
     head = git(root, 'rev-parse', 'HEAD')
@@ -104,6 +104,13 @@ def validate_sources(approval, root, image_revision):
     actual_recipes = {p.name for p in root.iterdir() if p.name.startswith('docker-compose') and p.suffix in ('.yml', '.yaml')}
     if current['source_bindings'] != expected['source_bindings'] or actual_recipes != set(expected['source_bindings']):
         raise RuntimeError('Compose recipe set or content changed since explicit approval')
+    if source_mode is not None:
+        try:
+            from . import source_equivalence_delta
+        except ImportError:
+            import source_equivalence_delta
+        identity = source_equivalence_delta.validate_release(root, source_mode)
+        return {**identity, 'image_revision': image_revision}
     for path, oid in expected['git_tree_bindings'].items():
         if git(root, 'rev-parse', head + ':' + path) != oid:
             raise RuntimeError('Business source/lock/recipe tree changed: ' + path)
@@ -221,11 +228,11 @@ def validate_runtime(approval, proof, image_id, root, now=None):
             'probe_source_sha256': proof['probe_source_sha256'], 'live_container_identity_verified': True}
 
 
-def verify(approval, evidence, proof, root, image_revision, now=None):
+def verify(approval, evidence, proof, root, image_revision, now=None, source_mode=None):
     now = now or datetime.now(timezone.utc)
     if now > timestamp(approval['expires_at']):
         raise RuntimeError('Human acceptance expired while scan was running')
-    identity = validate_sources(approval, root, image_revision)
+    identity = validate_sources(approval, root, image_revision, source_mode=source_mode)
     validate_components(approval, evidence)
     runtime = validate_runtime(approval, proof, evidence['image_id'], root, now)
     if proof.get('source_revision') != image_revision:

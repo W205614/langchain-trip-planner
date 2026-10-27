@@ -132,7 +132,7 @@ def finding_identity(rule, result, run):
             'semantic_flow_sha256': semantic_flow_hash(result, run)}
 
 
-def load(path, root, now=None):
+def load(path, root, now=None, source_mode=None):
     now = now or datetime.now(timezone.utc)
     policy = json.loads(Path(path).read_text(encoding='utf-8'))
     try:
@@ -153,8 +153,18 @@ def load(path, root, now=None):
     review = json.loads(review_path.read_text(encoding='utf-8'))
     head = git(root, 'rev-parse', 'HEAD')
     revision = policy['reviewed_business_revision']
+    source_identity = None
+    if source_mode is not None:
+        try:
+            from . import source_equivalence_delta
+        except ImportError:
+            import source_equivalence_delta
+        source_identity = source_equivalence_delta.validate_release(root, source_mode, now)
+        if source_identity['current_policy_revision'] != head:
+            raise RuntimeError('CodeQL delta proof does not bind actual HEAD')
     for name, oid in policy['business_tree_bindings'].items():
-        if (git(root, 'rev-parse', revision + ':' + name) != oid or git(root, 'rev-parse', head + ':' + name) != oid
+        if (git(root, 'rev-parse', revision + ':' + name) != oid
+                or (source_identity is None and git(root, 'rev-parse', head + ':' + name) != oid)
                 or git(root, 'rev-parse', review['sarif_source_revision'] + ':' + name) != oid):
             raise RuntimeError('CodeQL business source tree changed: ' + name)
     if git(root, 'status', '--porcelain', '--untracked-files=all', '--', *BUSINESS_DIRECTORIES):
@@ -176,7 +186,7 @@ def load(path, root, now=None):
                 or reviewed[0]['source_sha256_current_worktree_lf'] != entry.get('source_sha256')):
             raise RuntimeError('CodeQL entry lacks exact independent source/trace review')
         seen.add(key)
-    return policy
+    return {**policy, 'source_equivalence_identity': source_identity} if source_identity is not None else policy
 
 
 def assess(policy, rule, result, run, now=None):

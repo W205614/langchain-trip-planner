@@ -227,7 +227,13 @@ def scan_repository(destination: Path, include_untracked=False):
 
 
 def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False,
-          approval=None, runtime_proof=None, retained_inventory=None):
+          approval=None, runtime_proof=None, retained_inventory=None, source_mode=None):
+    if source_mode is not None:
+        try:
+            from . import source_equivalence_delta
+        except ImportError:
+            import source_equivalence_delta
+        source_equivalence_delta.validate_release(ROOT, source_mode)
     executable = tool('grype')
     inspected = subprocess.run(['docker', 'image', 'inspect', '--format', '{{json .Id}}', name], capture_output=True, text=True, timeout=30)
     if inspected.returncode:
@@ -255,9 +261,9 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         source_revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
         context_verified = embedded_entrypoint and revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision
         if embedded_entrypoint and revision_info.returncode == 0 and approval:
-            # Reusing the approved image on a policy/doc-only HEAD requires actual
-            # git tree and working-file equality; neither label alone is proof.
-            risk_acceptance.validate_sources(approval, ROOT, revision_info.stdout.strip())
+            # Default requires complete tree equality. The explicit delta mode
+            # requires its separate pinned activation and real clean HEAD proof.
+            risk_acceptance.validate_sources(approval, ROOT, revision_info.stdout.strip(), source_mode=source_mode)
             context_verified = True
         if approval and not context_verified:
             raise RuntimeError('Risk acceptance requires the exact approved embedded Agent command and business source context')
@@ -279,7 +285,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         evidence = image_policy.inventory(identity, vendor_policy, destination, cleanup_owned_resources,
                                           include_native_elf=approval is not None, retained_container=retained_inventory)
         if approval:
-            acceptance_metadata = risk_acceptance.verify(approval, evidence, runtime_proof, ROOT, revision_info.stdout.strip())
+            acceptance_metadata = risk_acceptance.verify(approval, evidence, runtime_proof, ROOT, revision_info.stdout.strip(), source_mode=source_mode)
             acceptance_metadata['scan_identity_proof'] = scan_receipt
             write(destination / 'risk-acceptance-verification.json', acceptance_metadata)
         for match in matches:
@@ -311,7 +317,16 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
              'image_revision_context_verified': context_verified}]
 
 
-def sarif(directory: Path, context=None):
+def sarif(directory: Path, context=None, source_mode=None, language=None):
+    delta_proof = None
+    if source_mode is not None:
+        try:
+            from . import source_equivalence_delta
+        except ImportError:
+            import source_equivalence_delta
+        if not context:
+            raise RuntimeError('Explicit delta CodeQL mode requires original exact contextual policy')
+        delta_proof = source_equivalence_delta.verify_codeql_job(ROOT, directory, context, source_mode, language)
     files = list(directory.rglob('*.sarif'))
     if not files:
         raise RuntimeError('CodeQL SARIF output missing; analysis is not a passing gate')
@@ -347,6 +362,8 @@ def sarif(directory: Path, context=None):
                         'context_expires_at': context.get('expires_at') if context else None,
                         'blocking_findings': remaining,
                         'status': 'blocked_findings' if remaining else 'pass_codeql_context' if contextual else 'pass'})
+        if delta_proof is not None:
+            records[-1]['source_equivalence_job_proof'] = delta_proof
     return records
 
 
@@ -356,6 +373,8 @@ def main():
     parser.add_argument('--reports', type=Path, default=Path('security-reports'))
     parser.add_argument('--directory', type=Path)
     parser.add_argument('--codeql-context', type=Path, help='Explicit exact query/location/source/semantic-flow false-positive review; raw severity/findings are preserved, not vulnerability acceptance')
+    parser.add_argument('--source-equivalence', choices=['restore-response-v1'], help='Named exact delta; disabled until separate pinned activation, never a CLI grant')
+    parser.add_argument('--codeql-language', choices=['java-kotlin', 'python', 'javascript-typescript', 'actions'])
     parser.add_argument('--image')
     parser.add_argument('--tool', choices=['gitleaks', 'osv-scanner', 'grype'])
     parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
@@ -376,22 +395,24 @@ def main():
         if (args.runtime_proof or args.inventory_container) and not args.risk_acceptance:
             raise RuntimeError('Runtime/inventory acceptance options require --risk-acceptance')
         approval = risk_acceptance.load(args.risk_acceptance, ROOT) if args.risk_acceptance else None
+        if args.source_equivalence and not ((args.mode == 'image' and approval) or (args.mode == 'sarif' and args.codeql_context and args.codeql_language)):
+            raise RuntimeError('Source equivalence applies only to explicit Agent acceptance or current CodeQL language context')
         runtime_proof = report(args.runtime_proof) if args.runtime_proof else None
         if args.runtime_proof and not isinstance(runtime_proof, dict):
             raise RuntimeError('Runtime constraint receipt missing or malformed')
         if args.codeql_context and args.mode != 'sarif':
             raise RuntimeError('--codeql-context applies only to SARIF source-context review')
-        context = codeql_context.load(args.codeql_context, ROOT) if args.codeql_context else None
+        context = codeql_context.load(args.codeql_context, ROOT, source_mode=args.source_equivalence) if args.codeql_context else None
         if args.mode == 'install':
             print(tool(args.tool or 'osv-scanner'))
             return 0
         if args.mode == 'sarif':
-            records = sarif(args.directory or destination, context)
+            records = sarif(args.directory or destination, context, args.source_equivalence, args.codeql_language)
         elif args.mode == 'image':
             if not args.image:
                 raise RuntimeError('--image is required')
             records = image(destination, args.image, policy, vendor_policy, args.cleanup_owned_resources,
-                            approval, runtime_proof, args.inventory_container)
+                            approval, runtime_proof, args.inventory_container, args.source_equivalence)
         elif args.mode == 'secrets':
             records = scan_repository(destination, args.include_untracked)
         else:

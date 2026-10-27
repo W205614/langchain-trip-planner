@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "classification": "exact_source_equivalence_draft_not_risk_acceptance",
+  "baseline_revision": "c7b4a22e5acde87a727b94bf18ee443a1b740885",
+  "historical_revisions": [
+    "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "c7b4a22e5acde87a727b94bf18ee443a1b740885",
+    "d323a44d6560412e6fb2890386701bdc88aea7c5"
+  ],
+  "expires_at": "2026-11-09T23:59:59+08:00",
+  "proposed_business_tree": "52f13c3d4862c0f45f6303d80a562085e11969a2",
+  "original_business_trees": {
+    "backend": "20b83ffd0d403a0461521cc1c0fbdef93387195d",
+    "business-backend": "4b6858601ae28a516672757b9fc59d31d3f7ab42",
+    "frontend": "83b518a71d07fd567dffe38cabbfcc9d63f50f4f",
+    "deploy": "878fda6f02eed79f24102e66b0ccbf703d143c0d",
+    "contracts": "5e052ae2aec47d8b4dbbd6dc2445d3099c170b20"
+  },
+  "compose_paths": [
+    "docker-compose.migration.yml",
+    "docker-compose.production.yml",
+    "docker-compose.validation.yml",
+    "docker-compose.yml"
+  ],
+  "files": {
+    "business-backend/src/main/java/com/tripplanner/domain/TripLedgerService.java": {
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "old_blob": "659cfea238bfc8a2f0706c86e20568cb4a0718b9",
+      "new_blob": "60240cfdb59a5fd3751512c3e41a0099969088a5",
+      "status": "M"
+    },
+    "business-backend/src/test/java/com/tripplanner/BusinessIntegrationTest.java": {
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "old_blob": "51dd9120e3b7a648db1794fca618ebfaa3405c55",
+      "new_blob": "5aa9ca85e5855a7ad56ecb8f71ec4fc932fb01ba",
+      "status": "M"
+    }
+  },
+  "frozen_files": {
+    ".github/security-risk-acceptance.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f"
+    },
+    ".github/security-risk-authorization.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "2226575af1273d277c232dc3f609a648edecc852513bad0181758c95564b3a03"
+    },
+    ".github/codeql-context-assessments.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "ffc5d4333ac6a91dc77d61935517d0f22736eee7878a77e415435ea1d400e6a0"
+    },
+    ".github/security-vex.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "7f85dd724a8be04919dbbde501d6cc990aa7591989c213e5a247cce5071b8639",
+      "exact_checkout_sha256": [
+        "7f85dd724a8be04919dbbde501d6cc990aa7591989c213e5a247cce5071b8639",
+        "f6a945cf6d0689b5fe8416009b3df1cafa52cdc25acd3e0652730a85e39fd635"
+      ],
+      "checkout_boundary": "Only exact original Git LF bytes or original Windows CRLF checkout bytes; no content fingerprint refresh."
+    },
+    ".github/security-vendor-policy.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "a81da5b6d0a695ff177264309853ba3fab99ff44bcf010dfab9c5bab8b2fc476",
+      "exact_checkout_sha256": [
+        "a81da5b6d0a695ff177264309853ba3fab99ff44bcf010dfab9c5bab8b2fc476",
+        "1e0f2824dad214c56019c917d3c46750651ca66bdcee8fbde83dc2f6c42bdbfd"
+      ],
+      "checkout_boundary": "Only exact original Git LF bytes or original Windows CRLF checkout bytes; no content fingerprint refresh."
+    },
+    ".github/security-tool-pins.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "46f7c204c830b249d014927a08957d689715931f9d7f489a93329d16afa11d39"
+    },
+    "docs/evidence/optimization-20261026/codeql-independent-source-review-24.json": {
+      "algorithm": "sha256-raw-v1",
+      "sha256": "ee4a92a963330d11fd61fa465f2f042c795fce4e51d2c1a11ceefca1c2189acd"
+    },
+    "tools/risk_acceptance.py": {
+      "algorithm": "utf8-crlf-to-lf-v1",
+      "sha256": "0d098bbf4b71df47d4715ead71cc841e52eb543e48e9ad359e4304f5240c76bb"
+    },
+    "tools/codeql_context.py": {
+      "algorithm": "utf8-crlf-to-lf-v1",
+      "sha256": "2b530bcdfa89bbbfffe5fdb33cbcc5106138560103b4c431d31a00b45b21c891"
+    },
+    "tools/security_gate.py": {
+      "algorithm": "utf8-crlf-to-lf-v1",
+      "sha256": "9588eeb575ef08555428c9e07a8855f576602c3abb49a3f909d471a88ae8bca6"
+    },
+    "tools/image_policy.py": {
+      "algorithm": "utf8-crlf-to-lf-v1",
+      "sha256": "5fc2b1e3143e79968e7dc2f2a1a5f74475bdca26982bd71e3fbdd1a652de579a"
+    },
+    "tools/runtime_constraint_probe.py": {
+      "algorithm": "utf8-crlf-to-lf-v1",
+      "sha256": "56662588e49d69f741623ad268bcc4bfb712bcf17dd4ac0ac58d5f61c478bb2c"
+    },
+    "tools/sarif_rules.py": {
+      "algorithm": "utf8-crlf-to-lf-v1",
+      "sha256": "3289d7cd8cd5e297f24ccca06867270e5cbfb262a0c1e44a5fd32fde9414307b"
+    }
+  },
+  "review_boundary": "One return value uses already protected/persisted restored ObjectNode, plus exactly one existing integration method fixture/assertion extension. No owner/version/transaction/outbox/immutable history or Agent change. This draft does not extend original human authorization; original validators still fail until separately reviewed integration."
+}
