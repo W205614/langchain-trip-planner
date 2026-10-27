@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "fixture_revision": "current-browser-contract-20261027",
+  "fixture_revision": "current-browser-contract-20261027-r2",
   "original_failed_revision": "e44acfb720376676049cfed38b3dfaa8d8acebc0",
   "original_failed_job": 121979733367,
   "full_original_artifact_sha256": "bd6a32fae89d00a6c2c828665909487d2e38cfc1d82ec06a1044a5ac6a156e19",
   "review_record": "docs/evidence/optimization-20261026/ci-browser-contract-review.json",
-  "scope": "Five hashpinned original test files, seven failed cases only; all58 original cases run in an explicit temporary suite copy. Application files and original suite unchanged.",
+  "scope": "Six hashpinned original test files, eight distinct failed cases; all58 original cases run in an explicit copied suite. Original application/tests unchanged; all failed runs preserved.",
   "replacements": [
     {
       "id": "legacy-stale-status-and-warning",
@@ -134,7 +134,22 @@
       "reason": "Adds a document-width overflow check after all original per-action bounds and header separation checks. Actual layout acceptance remains pending the next real CI browser execution.",
       "source_path": "frontend/e2e/responsive.spec.ts",
       "source_lf_sha256": "46f32cbc13f4eb258811953cc6df393d198ea688b8ea04371a6b9bdce8f12567"
+    },
+    {
+      "id": "owner-ui-datepicker-visible-panel-lifecycle",
+      "before": "  for (const [index, value] of [start, end].entries()) {\n    await dateInputs.nth(index).click()\n    const calendar = page.locator('.ant-picker-dropdown:visible')\n    for (let next = 0; next < 3 && !await calendar.getByTitle(value, { exact: true }).count(); next++)\n      await calendar.locator('.ant-picker-header-next-btn').click()\n    await calendar.getByTitle(value, { exact: true }).click()\n  }",
+      "after": "  for (const [index, value] of [start, end].entries()) {\n    const input = dateInputs.nth(index)\n    const visiblePopups = page.locator('.ant-picker-dropdown:visible')\n    await expect(visiblePopups).toHaveCount(0)\n    await input.click()\n    await expect(visiblePopups).toHaveCount(1)\n    const calendar = page.locator('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden):not(.ant-slide-up-leave):not(.ant-slide-up-leave-active):visible')\n    await expect(calendar).toHaveCount(1)\n    const day = calendar.locator(`td.ant-picker-cell-in-view[title=\"${value}\"]:visible`)\n    for (let next = 0; next < 3 && !await day.count(); next++) {\n      const header = calendar.locator('.ant-picker-header-view')\n      const previousMonth = await header.textContent()\n      await calendar.locator('.ant-picker-header-next-btn').click()\n      await expect(header).not.toHaveText(previousMonth || '')\n    }\n    await expect(day).toHaveCount(1)\n    await expect(day).toBeVisible()\n    await day.click()\n    await expect(input).toHaveValue(value)\n    await expect(visiblePopups).toHaveCount(0)\n  }",
+      "exact_occurrences": 1,
+      "source_path": "frontend/e2e/optimization-flows.spec.ts",
+      "source_lf_sha256": "6f2a2529c6f1996020f900fb6eb42c4fd7294862bd06bf4b4465446449f8b8ae",
+      "reason": "Original CI trace shows closing old start popup matched by count before new end popup displayed. Synchronize physical panel lifecycle; keep real UI clicks."
     }
   ],
-  "evidence_boundary": "Synthetic UI fixtures are not live facts or backend authorization proof. Reordered role case still uses actual isolated Java/PG requests and existing generated bindings. No new success claimed before CI."
+  "evidence_boundary": "Synthetic UI fixtures are not live facts or backend authorization proof. Reordered role case still uses actual isolated Java/PG requests and existing generated bindings. No new success claimed before CI.",
+  "review_records": [
+    "docs/evidence/optimization-20261026/ci-browser-contract-review.json",
+    "docs/evidence/optimization-20261026/ci-calendar-picker-review-6167590.json"
+  ],
+  "additional_failed_revision": "6167590717b43489ea989bbce74bf5fe4860e316",
+  "additional_failed_job": 122002159902
 }

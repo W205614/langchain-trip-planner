@@ -1,0 +1,359 @@
+{
+  "source_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+  "expected_jobs": 16,
+  "passed": 15,
+  "failed": 1,
+  "jobs": [
+    {
+      "run_id": 40447501693,
+      "workflow": "CI",
+      "jobs": [
+        {
+          "id": 122002159902,
+          "name": "Docker Compose config and build",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501693/job/122002159902"
+        },
+        {
+          "id": 122002160106,
+          "name": "Python Agent tests",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501693/job/122002160106"
+        },
+        {
+          "id": 122002160145,
+          "name": "Frontend build (vue-tsc + vite)",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501693/job/122002160145"
+        },
+        {
+          "id": 122002160246,
+          "name": "Java business PostgreSQL tests",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501693/job/122002160246"
+        }
+      ]
+    },
+    {
+      "run_id": 40447501510,
+      "workflow": "Security gates",
+      "jobs": [
+        {
+          "id": 122002159567,
+          "name": "Secrets / full history and tracked source",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159567"
+        },
+        {
+          "id": 122002159677,
+          "name": "Images / backend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159677"
+        },
+        {
+          "id": 122002159681,
+          "name": "CodeQL / java-kotlin",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159681"
+        },
+        {
+          "id": 122002159725,
+          "name": "Runtime images / prometheus",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159725"
+        },
+        {
+          "id": 122002159734,
+          "name": "Images / agent",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159734"
+        },
+        {
+          "id": 122002159738,
+          "name": "CodeQL / python",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159738"
+        },
+        {
+          "id": 122002159749,
+          "name": "CodeQL / javascript-typescript",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159749"
+        },
+        {
+          "id": 122002159783,
+          "name": "CodeQL / actions",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159783"
+        },
+        {
+          "id": 122002159787,
+          "name": "Runtime images / alertmanager",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159787"
+        },
+        {
+          "id": 122002159816,
+          "name": "Images / frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159816"
+        },
+        {
+          "id": 122002159831,
+          "name": "Dependencies / Python Node and resolved Maven SBOM",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159831"
+        },
+        {
+          "id": 122002159844,
+          "name": "Runtime images / postgres",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159844"
+        }
+      ]
+    }
+  ],
+  "original_failures_retained": true,
+  "browser": {
+    "job_id": 122002159902,
+    "passed": 57,
+    "failed": 1,
+    "all58cases_executed": true,
+    "failed_test": "optimization-flows.spec.ts:108 owner planning/clarification scenario",
+    "failure_stage": "Date selection before trip request; no trip/tasks POST occurred",
+    "scope": "Actual trace proves old popup lifecycle/locator race, not general application datepicker correctness or downstream business success.",
+    "review": "ci-calendar-picker-review-6167590.json",
+    "mobile_all_named_actions_original_geometry_and_nooverflow": "passed in this run",
+    "artifact": {
+      "id": 12709537252,
+      "bytes": 12657604,
+      "sha256": "b0c0ce76f0c3f4d3c22802abe416274ea0bf5233c300e8c251f0d87c553e400d",
+      "full_digest_verified": true,
+      "error_context_sha256": "866f88b4c82bf039f51cf152b39db66ebb8fb3443224d23bab4f8e8800a52fa0"
+    }
+  },
+  "independent_postbrowser_steps": [
+    {
+      "name": "Isolated recovery drill",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Java review and publication lifecycle",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Local notification failure and recovery",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Generation interrupted by container restart",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "verified_log_summaries": [
+    {
+      "job_id": 122002160106,
+      "name": "Python Agent tests",
+      "conclusion": "success",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501693/job/122002160106",
+      "summary": [
+        "2026-10-27T04:03:14.5277729Z ======================= 416 passed, 2 skipped in 13.24s ========================",
+        "2026-10-27T04:03:15.8695252Z {\"passed\": true, \"cases\": 6, \"synthetic_reservation_premises\": true, \"live_reservation_evidence\": false}"
+      ]
+    },
+    {
+      "job_id": 122002159567,
+      "name": "Secrets / full history and tracked source",
+      "conclusion": "success",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159567",
+      "summary": [
+        {
+          "scanner": "gitleaks-history",
+          "status": "pass",
+          "findings": 0,
+          "exit_code": 0
+        },
+        {
+          "scanner": "gitleaks-tracked",
+          "status": "pass",
+          "findings": 0,
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "job_id": 122002159681,
+      "name": "CodeQL / java-kotlin",
+      "conclusion": "success",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159681",
+      "summary": [
+        {
+          "file": "java.sarif",
+          "status": "pass_codeql_context",
+          "raw_high_critical_findings": 18,
+          "not_affected_context_findings": 18,
+          "blocking_findings": 0
+        }
+      ]
+    },
+    {
+      "job_id": 122002159738,
+      "name": "CodeQL / python",
+      "conclusion": "success",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159738",
+      "summary": [
+        {
+          "file": "python.sarif",
+          "status": "pass_codeql_context",
+          "raw_high_critical_findings": 2,
+          "not_affected_context_findings": 2,
+          "blocking_findings": 0
+        }
+      ]
+    },
+    {
+      "job_id": 122002159749,
+      "name": "CodeQL / javascript-typescript",
+      "conclusion": "success",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159749",
+      "summary": [
+        {
+          "file": "javascript.sarif",
+          "status": "pass_codeql_context",
+          "raw_high_critical_findings": 2,
+          "not_affected_context_findings": 2,
+          "blocking_findings": 0
+        }
+      ]
+    },
+    {
+      "job_id": 122002159783,
+      "name": "CodeQL / actions",
+      "conclusion": "success",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40447501510/job/122002159783",
+      "summary": [
+        {
+          "file": "actions.sarif",
+          "status": "pass",
+          "raw_high_critical_findings": 0,
+          "not_affected_context_findings": 0,
+          "blocking_findings": 0
+        }
+      ]
+    }
+  ],
+  "fresh_agent_scan": [
+    {
+      "scanner": "grype-image",
+      "target": "trip-security-agent:6167590717b43489ea989bbce74bf5fe4860e316",
+      "image_id": "sha256:37247e18f24c0447a5b483cb30210e857323028fed191f0d6d953bb2b8015d92",
+      "status": "pass_temporary_risk_acceptance",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 59,
+      "contextual_not_affected": 4,
+      "all_findings": 172,
+      "exit_code": 2,
+      "vex_expires_on": "2026-11-25",
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 3,
+        "still_vulnerable_vendor_minor": 46,
+        "not_affected_component_absent": 6
+      },
+      "still_vulnerable_vendor_minor_ids": [
+        "CVE-2026-102010",
+        "CVE-2026-19499",
+        "CVE-2026-5435",
+        "CVE-2026-76642",
+        "CVE-2026-78408",
+        "CVE-2026-78409",
+        "CVE-2026-78410",
+        "CVE-2026-95619"
+      ],
+      "vendor_policy_expires_on": "2026-11-09",
+      "unfixed_risk_accepted_findings": 46,
+      "risk_acceptance": {
+        "status": "effective_temporary_acceptance_still_vulnerable",
+        "effective_scope": "controlled_single_host_local_demo_only",
+        "expires_at": "2026-11-09T23:59:59+08:00",
+        "allowed_cve_ids": [
+          "CVE-2026-102010",
+          "CVE-2026-19499",
+          "CVE-2026-5435",
+          "CVE-2026-76642",
+          "CVE-2026-78408",
+          "CVE-2026-78409",
+          "CVE-2026-78410",
+          "CVE-2026-95619"
+        ],
+        "authorization": {
+          "record_path": ".github/security-risk-authorization.json",
+          "record_sha256": "2226575af1273d277c232dc3f609a648edecc852513bad0181758c95564b3a03",
+          "original_record_sha256": "1a7dcf73e06fd08b5b71f609fdc6817bdf6178c4671dc815eb5acedf3bf9f4e6"
+        },
+        "identity_proof": {
+          "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+          "current_policy_revision": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "image_revision": "6167590717b43489ea989bbce74bf5fe4860e316",
+          "business_trees_equal": true
+        },
+        "runtime_proof": {
+          "container_id": "5d15872fa195c82c1c5cd59c52402946c8ed1ffbfa7438a6a72018f7cecd11d9",
+          "checked_at": "2026-10-27T04:03:29.931522+00:00",
+          "probe_source_sha256": "56662588e49d69f741623ad268bcc4bfb712bcf17dd4ac0ac58d5f61c478bb2c",
+          "live_container_identity_verified": true
+        },
+        "components_exactly_equal": true,
+        "deployment_window_granted": false,
+        "classification": "still_vulnerable_not_fixed",
+        "scan_identity_proof": {
+          "scanner_report_time": "2026-10-27T04:04:40.691795072Z",
+          "database_built": "2026-10-26T06:38:44Z",
+          "database_valid": true,
+          "maximum_database_age_hours": 72,
+          "scanned_immutable_image": "sha256:37247e18f24c0447a5b483cb30210e857323028fed191f0d6d953bb2b8015d92",
+          "fresh_scan_verified": true
+        }
+      },
+      "image_revision_context_verified": true
+    }
+  ],
+  "host_private_ACL": "windows-private-acl-result.json; actual local closure unchanged; trusted workspace/local-account/admin and no offhost/full-task-rerun boundaries retained",
+  "boundary": "Fifth candidate is not final green. One exact sixth copied fixture selection loop will synchronize visible popup lifecycle; no application tree/native map refresh, force/retry/timeout/assertion weakening or new provider evaluation. Next sameSHA all16 still required."
+}

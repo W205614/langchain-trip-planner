@@ -28,7 +28,7 @@ class BrowserFixturePreparationGuards(unittest.TestCase):
     def test_read_only_review_preserves_all_original_sources_and_test_contracts(self):
         original = self.snapshot()
         plan = overlay.reviewed_plan(self.root, self.manifest)
-        self.assertEqual(len(plan), 5)
+        self.assertEqual(len(plan), 6)
         self.assertEqual(original, self.snapshot())
         self.assertFalse((self.root / overlay.COPY_RELATIVE).exists())
         for item in plan.values():
@@ -43,7 +43,7 @@ class BrowserFixturePreparationGuards(unittest.TestCase):
         shutil.copyfile(overlay.ROOT / relative, source)
         changed = copy.deepcopy(self.manifest)
         changed['replacements'][0]['source_path'] = '../unreviewed.spec.ts'
-        with self.assertRaisesRegex(RuntimeError, 'Exactly the five'):
+        with self.assertRaisesRegex(RuntimeError, 'Exactly the six'):
             overlay.reviewed_plan(self.root, changed)
         changed = copy.deepcopy(self.manifest)
         changed['replacements'][0]['before'] = 'THIS_REVIEWED_ANCHOR_DOES_NOT_EXIST'
@@ -71,7 +71,7 @@ class BrowserFixturePreparationGuards(unittest.TestCase):
         self.assertFalse((self.root / overlay.COPY_RELATIVE).exists())
         with patch.dict(os.environ, {'GITHUB_ACTIONS': 'true'}):
             copied = overlay.prepare(self.root, plan)
-            self.assertEqual(len(copied), 5)
+            self.assertEqual(len(copied), 6)
             self.assertEqual(original, self.snapshot())
             with self.assertRaisesRegex(RuntimeError, 'existing copied suite'):
                 overlay.prepare(self.root, plan)

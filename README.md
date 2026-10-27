@@ -223,9 +223,11 @@ CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全�
 | `tools/ci_contract_fixture_overlay.py` | 两个旧 Python 测试的每日交通、缓存观察时间与有效期 | 原行为断言保留；只写 CI 临时检出目录中的两份测试文件，映射前后哈希写入 `evidence/ci-fixture-overlay.json` |
 | `tools/ci_time_window_benchmark.py` | 原六场景只补三条合成“不需预约”声明 | 原 `run`、期待结果和断言不改；输出标记 `current-contract-fixture-20261027`、输入已变且不可与原冻结评测比较，留出 16/17 记录不变 |
 | `tools/ci_excluded_day_contract.py` | 原 HTTP 场景中两个已审的派生失效原因码 | 两份日期必须明确过期、未核实，其他字段、类型、顺序全部严格相等；诊断模式仍执行原整份 JSON 相等断言 |
-| `tools/ci_browser_contract_overlay.py` | 五份原测试中的七个旧前提，完整复制后执行全部 58 项 | 原文件、测试名称、超时和跳过标记不改；精确替换见 `tools/ci_browser_contract_replacements.json`，保留副本哈希和浏览器 trace |
+| `tools/ci_browser_contract_overlay.py` | 六份原测试中的八个已审失败前提，完整复制后执行全部 58 项 | 原文件、测试名称、超时和跳过标记不改；精确替换见 `tools/ci_browser_contract_replacements.json`，保留副本哈希和浏览器 trace |
 
 [第四轮实际结果](docs/evidence/optimization-20261026/fourth-ci-478da94-results.json)为浏览器 57 项通过、1 项失败，四段后续恢复检查均通过。剩余浏览器失败是新增名称断言遗漏组件在“退 出”中插入的空格，已按实际可访问名称精确修正；全部几何检查仍保留，完整布局结果须等下一轮。密钥门禁的两条记录已重新计算为公开源码指纹，[窄例外和负例](docs/evidence/optimization-20261026/ci-secrets-public-source-hash-review.json)只覆盖指定凭据文件中的两个确切值；其他值或路径仍阻断，完整历史扫描仍须由最终提交通过。
+
+[第五轮](docs/evidence/optimization-20261026/fifth-ci-6167590-results.json)实际通过全部安全门禁，移动端完整七个入口、原几何约束和无横向溢出均通过；浏览器总体仍为 57/58。唯一失败发生在新行程提交前：[原始 trace](docs/evidence/optimization-20261026/ci-calendar-picker-review-6167590.json)显示旧开始日期弹层尚在退出，新结束日期弹层尚未显示，`count()` 命中旧隐藏日期并跳过翻月。第六份测试副本只补可见面板、翻月和关闭的状态等待，保留最多三次翻月、实际日期点击及全部生成/澄清/确认断言；没有 force、retry、延长超时或业务响应替代。四项适配守卫及这一份 TypeScript 语法检查通过，完整新结果仍以最终提交全部 CI 为准。
 
 这些入口默认只核对源码哈希，不执行应用、不创建测试副本。以下只读检查可从仓库根目录复现；它们通过仅代表适配前提匹配：
 

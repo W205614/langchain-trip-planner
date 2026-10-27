@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "mode": "review_proposal_ignored_cache_only_original_source_unchanged",
+  "source": "frontend/e2e/optimization-flows.spec.ts",
+  "source_raw_sha256": "6f2a2529c6f1996020f900fb6eb42c4fd7294862bd06bf4b4465446449f8b8ae",
+  "source_lf_sha256": "6f2a2529c6f1996020f900fb6eb42c4fd7294862bd06bf4b4465446449f8b8ae",
+  "replacements": [
+    {
+      "id": "owner-ui-datepicker-visible-panel-lifecycle",
+      "before": "  for (const [index, value] of [start, end].entries()) {\n    await dateInputs.nth(index).click()\n    const calendar = page.locator('.ant-picker-dropdown:visible')\n    for (let next = 0; next < 3 && !await calendar.getByTitle(value, { exact: true }).count(); next++)\n      await calendar.locator('.ant-picker-header-next-btn').click()\n    await calendar.getByTitle(value, { exact: true }).click()\n  }",
+      "after": "  for (const [index, value] of [start, end].entries()) {\n    const input = dateInputs.nth(index)\n    const visiblePopups = page.locator('.ant-picker-dropdown:visible')\n    await expect(visiblePopups).toHaveCount(0)\n    await input.click()\n    await expect(visiblePopups).toHaveCount(1)\n    const calendar = page.locator('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden):not(.ant-slide-up-leave):not(.ant-slide-up-leave-active):visible')\n    await expect(calendar).toHaveCount(1)\n    const day = calendar.locator(`td.ant-picker-cell-in-view[title=\"${value}\"]:visible`)\n    for (let next = 0; next < 3 && !await day.count(); next++) {\n      const header = calendar.locator('.ant-picker-header-view')\n      const previousMonth = await header.textContent()\n      await calendar.locator('.ant-picker-header-next-btn').click()\n      await expect(header).not.toHaveText(previousMonth || '')\n    }\n    await expect(day).toHaveCount(1)\n    await expect(day).toBeVisible()\n    await day.click()\n    await expect(input).toHaveValue(value)\n    await expect(visiblePopups).toHaveCount(0)\n  }",
+      "exact_occurrences": 1
+    }
+  ],
+  "preserved_assertions": [
+    "Original start/end input value assertions remain byte-identical after LF normalization.",
+    "Original maximum of three next-month clicks remains unchanged.",
+    "Before opening and after selecting, all visible dropdowns must be absent; while selecting, exactly one visible popup exists and the target popup explicitly excludes hidden and leave/leave-active classes.",
+    "All original task-generation, real-cookie identity, durable clarification, proposal ownership, original unchanged and discard assertions remain byte-identical after LF normalization.",
+    "All four other tests and all original test names remain unchanged; no force, retry, timeout changes, business mocks, storage injection or providers are added.",
+    "No fresh browser pass is claimed; the original failed run remains failed and the complete flow must execute in the next CI."
+  ],
+  "trace_evidence": {
+    "head_short": "6167590",
+    "run_id": 40447501693,
+    "job_id": 122002159902,
+    "artifact_id": 12709537252,
+    "artifact_zip_bytes": 12657604,
+    "artifact_zip_sha256": "b0c0ce76f0c3f4d3c22802abe416274ea0bf5233c300e8c251f0d87c553e400d",
+    "error_context_sha256": "866f88b4c82bf039f51cf152b39db66ebb8fb3443224d23bab4f8e8800a52fa0",
+    "trace_path": ".cache/ci-browser-40447501693/extracted/frontend/test-results/optimization-flows-owner-U-189d9-e-original-until-a-decision/trace.zip",
+    "trace_stream": "2-trace.trace",
+    "start_date_click": {
+      "call_id": "call@3087",
+      "start_ms": 158750.598,
+      "after_snapshot_ms": 158871.509,
+      "selected_date": "2026-11-06",
+      "old_popup_header": "Nov2026",
+      "old_popup_class_contains": [
+        "ant-slide-up-leave",
+        "ant-slide-up-leave-active"
+      ],
+      "old_popup_style": "left: 498px; top: 614px; pointer-events: none;"
+    },
+    "end_input_click": {
+      "call_id": "call@3089",
+      "start_ms": 158872.494,
+      "after_snapshot_ms": 159159.247,
+      "old_nov_popup": "leaving and pointer-events:none",
+      "new_oct_popup": "pointer-events: none; display: none;"
+    },
+    "end_date_count": {
+      "call_id": "call@3091",
+      "start_ms": 159160.602,
+      "end_ms": 159167.209,
+      "result": 1,
+      "selected_old_popup_title": "2026-11-07"
+    },
+    "failed_end_date_click": {
+      "call_id": "call@3093",
+      "start_ms": 159170.95,
+      "after_snapshot_ms": 174180.159,
+      "resolved_cell": "td.ant-picker-cell.ant-picker-cell-in-view[title=2026-11-07] in leaving old start-date popup",
+      "result": "element is not visible for original 15000ms click timeout"
+    },
+    "final_snapshot": {
+      "start_input": "2026-11-06",
+      "end_input": "",
+      "old_start_popup_style": "left: -501px; top: -385px; display: none;",
+      "visible_end_popup_header": "Oct2026",
+      "visible_end_popup_style": "left: 729px; top: 614px;"
+    },
+    "business_requests": {
+      "successful": [
+        "GET /api/validation/fixture 200",
+        "POST /api/auth/register 200",
+        "POST /api/auth/login 200",
+        "GET /api/capabilities 200",
+        "GET /api/preferences/me 200"
+      ],
+      "trip_tasks_post_count": 0
+    },
+    "conclusion": "Verified test locator/lifecycle race. No evidence that current Home.vue prevents date selection; no downstream business outcome has been observed for this failed flow.",
+    "full_artifact_digest_verified_by_parent": true
+  },
+  "proposed_lf_sha256": "b41c0208a59f5df2d67f9b343c7312ea2d5accf04893ec4ad43051807e237e7a",
+  "status": "parent_and_agent_independent_source_and_original_trace_reviewed; next_exactSHA_CI_pending",
+  "not_human_blind_review": true,
+  "source_original_unchanged": true,
+  "test_declarations_original_count": 5,
+  "actual_new_flow_execution": false,
+  "original_failed_run_preserved": true,
+  "application_defect_evidence": "This failure is a locator/lifecycle race; it does not prove general date-selection correctness or downstream business behavior.",
+  "manifest": "tools/ci_browser_contract_replacements.json",
+  "scope_expansion": "Sixth exact copied test file; five original optimization flow names and all58 suite cases preserved. No app/native/frozen-risk binding change.",
+  "initial_local_assembly_attempt": {
+    "manifest_written": false,
+    "reason": "Unanchored word test() count included two RegExp.test() calls and rejected expected declaration count. Following four guard tests safely rejected still-incomplete five-file manifest after six-file guard update (2errors2failures).",
+    "correction": "Count anchored actual test declarations (5), assemble sixth source before dependent checks; declaration guard now distinguishes RegExp.test from test declarations.",
+    "application_or_browser_executed": false,
+    "original_failure_not_rewritten": true
+  },
+  "bounded_local_verification": {
+    "six_file_guard_tests_passed": 4,
+    "changed_calendar_TypeScript_syntax_checked": true,
+    "independent_agent_proposed_copy_hash_equal": true,
+    "browser_executed": false,
+    "unchanged_function_tests_rerun": false
+  },
+  "current_helper_LF_sha256": {
+    "tools/ci_browser_contract_overlay.py": "64aa0a4c660036a31f04b965137c99313e6582c98eb2f448c2257fce40af0964",
+    "tools/ci_browser_contract_replacements.json": "27789374b5b351f657485729d6ae37e2dfd129d2ff331ec01474d36198d3afcd",
+    "tools/tests/test_ci_browser_contract_overlay.py": "87d52b728cb465ebb0c3f296aeed78d842da7815e6df6f754cc0df284c0cc87c"
+  },
+  "reviewed_at": "2026-10-27T04:25:57.178225+00:00"
+}

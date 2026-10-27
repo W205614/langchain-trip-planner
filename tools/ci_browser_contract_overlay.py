@@ -18,7 +18,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / 'tools/ci_browser_contract_replacements.json'
 REVIEWED_FILES = frozenset('frontend/e2e/' + name + '.spec.ts' for name in (
-    'assistant-explore', 'completion', 'final-planning', 'final-roles-live', 'responsive'))
+    'assistant-explore', 'completion', 'final-planning', 'final-roles-live', 'responsive', 'optimization-flows'))
 COPY_RELATIVE = 'frontend/.ci-reviewed-e2e'
 CONFIG_RELATIVE = 'frontend/.ci-reviewed-playwright.config.ts'
 CONFIG = """import { defineConfig } from '@playwright/test'
@@ -38,7 +38,7 @@ def digest(raw):
 def test_contract(text):
     """Keep declarations, test timeouts and every existing expectation count."""
     return {
-        'declarations': re.findall(r'\btest\s*\([^\n]*', text),
+        'declarations': re.findall(r'(?m)^[ \t]*test\s*\([^\n]*', text),
         'timeouts': re.findall(r'\btest\.setTimeout\([^\n]*', text),
         'skip_markers': Counter(re.findall(r'\btest\.(?:skip|fixme|only|fail)\b', text)),
         'expectations': len(re.findall(r'\bexpect(?:\.poll)?\s*\(', text)),
@@ -51,7 +51,7 @@ def reviewed_plan(root=ROOT, manifest=None):
         manifest = json.loads(MANIFEST.read_text(encoding='utf-8-sig'))
     changes = manifest.get('replacements', [])
     if {item.get('source_path') for item in changes} != REVIEWED_FILES:
-        raise RuntimeError('Exactly the five independently reviewed source files are required')
+        raise RuntimeError('Exactly the six independently reviewed source files are required')
     if len({item.get('id') for item in changes}) != len(changes):
         raise RuntimeError('Duplicate migration identifier')
     outputs = {}
@@ -132,7 +132,9 @@ def main(argv=None):
     copied = prepare(ROOT, plan)
     report = {'status': 'reviewed_fixture_copy_prepared_not_test_results',
         'original_failed_revision': 'e44acfb720376676049cfed38b3dfaa8d8acebc0',
-        'original_failed_job': 121979733367, 'fixture_revision': 'current-browser-contract-20261027',
+        'original_failed_job': 121979733367, 'fixture_revision': 'current-browser-contract-20261027-r2',
+        'additional_failed_revision': '6167590717b43489ea989bbce74bf5fe4860e316',
+        'additional_failed_job': 122002159902,
         'original_sources_overwritten': False, 'original_suite_all_files_copied': True,
         'test_names_timeouts_skip_markers_unchanged': True, 'all_original_tests_still_run': True,
         'new_browser_pass_inferred': False, 'live_provider_evidence': False,

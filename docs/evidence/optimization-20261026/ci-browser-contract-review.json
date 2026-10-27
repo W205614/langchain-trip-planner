@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "checked_at": "2026-10-27T03:16:48.632033+00:00",
-  "status": "parent_and_two_agent_review_plus_actual_fourth_CI_57pass1matcher_failure; final_replacement_CI_pending",
+  "status": "actual_fifth_CI57pass1calendar_race; sixth copied source reviewed; next exactSHA CI pending",
   "not_human_blind_review": true,
   "original_failed_revision": "e44acfb720376676049cfed38b3dfaa8d8acebc0",
   "original_failed_job": 121979733367,
@@ -133,9 +133,9 @@
   },
   "reviewed_replacements": {
     "path": "tools/ci_browser_contract_replacements.json",
-    "files": 5,
-    "replacements": 12,
-    "failed_cases": 7,
+    "files": 6,
+    "replacements": 13,
+    "failed_cases": 8,
     "all58original_test_cases_preserved": true,
     "declarations_timeouts_skip_markers_unchanged": true,
     "unchanged_files_copy_raw_bytes_equal": true,
@@ -149,7 +149,7 @@
       "versions locks completed values unchanged on rejected writes",
       "existing lock and completion retained; stale completion undo allowed"
     ],
-    "mobile_geometry": "Seven named nonadmin actions; all original bbox/header-separation assertions plus no-horizontal-overflow. Screenshot visually reviewed, actual geometry still requires next CI.",
+    "mobile_geometry": "Actual fifth CI passed all seven named actions, original per-button bounds/header separation and no-horizontal-overflow; original fourth matcher failure remains recorded.",
     "knowledge_quota": "Exact synthetic read-only GET fixture only; original save-before-publish/version checks preserved.",
     "mocked_UI_not_backend_authorization_proof": true
   },
@@ -178,9 +178,9 @@
   "business_trees_recipes_frozen_risk_maps_changed": false,
   "evidence_boundary": "Fixture migration only, not live travel facts, general quality improvement, vulnerability fix, new provider run or new successful remote CI.",
   "helper_LF_sha256": {
-    "tools/ci_browser_contract_overlay.py": "584c4992f415ca868f37b058e474e7195ab79dbd6a0890921b0c723a955348c5",
-    "tools/ci_browser_contract_replacements.json": "8c26d9ca3c45583513b3d1d8e7e32bf41974012954c2608280d871251661c3c5",
-    "tools/tests/test_ci_browser_contract_overlay.py": "e57d8edc6fe083e1472e0130ff169d7714727b209f86f67db41ca79288a0ce72"
+    "tools/ci_browser_contract_overlay.py": "64aa0a4c660036a31f04b965137c99313e6582c98eb2f448c2257fce40af0964",
+    "tools/ci_browser_contract_replacements.json": "27789374b5b351f657485729d6ae37e2dfd129d2ff331ec01474d36198d3afcd",
+    "tools/tests/test_ci_browser_contract_overlay.py": "87d52b728cb465ebb0c3f296aeed78d842da7815e6df6f754cc0df284c0cc87c"
   },
   "fourth_ci_followup": {
     "revision": "478da94f0073172c4d577b27e7902ece5ee541a7",
@@ -202,5 +202,33 @@
     "precise_followup": "Use exact actual accessible name 退 出; keep named-seven set, bbox/header separation and horizontal overflow checks. Those geometry checks remain unexecuted until the next CI reaches them.",
     "no_additional_local_functional_tests": true,
     "fresh58_browser_result_pending": true
-  }
+  },
+  "before_calendar_followup_LF_sha256": {
+    "tools/ci_browser_contract_overlay.py": "584c4992f415ca868f37b058e474e7195ab79dbd6a0890921b0c723a955348c5",
+    "tools/ci_browser_contract_replacements.json": "8c26d9ca3c45583513b3d1d8e7e32bf41974012954c2608280d871251661c3c5",
+    "tools/tests/test_ci_browser_contract_overlay.py": "e57d8edc6fe083e1472e0130ff169d7714727b209f86f67db41ca79288a0ce72"
+  },
+  "initial_five_file_reviewed_replacements": {
+    "path": "tools/ci_browser_contract_replacements.json",
+    "files": 5,
+    "replacements": 12,
+    "failed_cases": 7,
+    "all58original_test_cases_preserved": true,
+    "declarations_timeouts_skip_markers_unchanged": true,
+    "unchanged_files_copy_raw_bytes_equal": true,
+    "original_sources_overwritten": false,
+    "role_positive_lock_and_completion_preserved": true,
+    "role_added_assertions": [
+      "real current binding",
+      "edit after positive actions with reloaded real revision",
+      "stale UI time/completion disabled",
+      "actual latest-version HTTP409 SCHEDULE_STALE for both writes",
+      "versions locks completed values unchanged on rejected writes",
+      "existing lock and completion retained; stale completion undo allowed"
+    ],
+    "mobile_geometry": "Seven named nonadmin actions; all original bbox/header-separation assertions plus no-horizontal-overflow. Screenshot visually reviewed, actual geometry still requires next CI.",
+    "knowledge_quota": "Exact synthetic read-only GET fixture only; original save-before-publish/version checks preserved.",
+    "mocked_UI_not_backend_authorization_proof": true
+  },
+  "calendar_supplement": "ci-calendar-picker-review-6167590.json"
 }

@@ -1,5 +1,5 @@
 {
-  "phase": "FINAL_CI_CORRECTIONS_AND_AUTHORIZED_HOST_ACL_COMPLETE_PENDING_NEXT_SHA",
+  "phase": "FIFTH_15_PASS_1_CALENDAR_FIXTURE_FAIL_SIXTH_SOURCE_REVIEWED",
   "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
   "source_committed_locally": true,
   "pushed": true,
@@ -53,7 +53,7 @@
     "current": "poi-ui-acceptance-result.json:7/7 passed on final220, own backend/mapfixture restored",
     "original_failures": "run1 retained; run2 primary error/full checklist lost, post-run diagnostic and recovered waiter excerpt retained"
   },
-  "updated_at": "2026-10-27T04:01:35.637385+00:00",
+  "updated_at": "2026-10-27T04:25:57.189930+00:00",
   "actual_runtime_probe": "hardened-runtime-probe-result.json:11 passed; actual uvicorn PID1; CapBnd/Eff0;NNP1;ROroot;boundedtmpfs;native component checks",
   "new_candidate": "trip-opt-hardened-20261026; canonical Agent actual uvicorn, separate agent-fixture supplies browser providers explicitly",
   "backup_previous_a01": "automated-backup-drill-final.json:pass/full archive/local copy/private owner history unchanged",
@@ -127,14 +127,15 @@
       "daily-after-silent-backup-readback.json"
     ]
   },
-  "current_pushed_candidate": "e44acfb720376676049cfed38b3dfaa8d8acebc0",
+  "current_pushed_candidate": "6167590717b43489ea989bbce74bf5fe4860e316",
   "final_ci_passed": false,
   "ci_history": {
     "first": "first-ci-d323a44-results.json:11passed5failed retained",
     "second": "second-ci-5485f8a-results.json:13passed3failed retained; all4CodeQL passed;416 Python unit pass2skip;remaining benchmark/HTTP contract/native drift corrections",
     "third": "third-ci-e44acfb-results.json:15passed1failed;Security12/12passed;Browser51pass7fail original traces retained;five-file current-contract CI testcopy reviewed, next replacement required",
     "fourth": "fourth-ci-478da94-results.json:14passed2failed;Browser57pass1 exactlogoutCJKspacingmatcher failure;all4downstream recovery/publication/notification/restart steps passed;secrets2 recomputed publicsource hashes require exactpath+literal correction",
-    "fifth": "next exactSHA after precise matcher + narrow publichashpolicy + README reproducibility and host-only sensitive-file ACL closure;all16 still required"
+    "fifth": "fifth-ci-6167590-results.json:15passed1failed;Security12/12passed;Browser57pass1calendar stale-popup locator race; mobile actualgeometry passed;all4postchecks passed",
+    "sixth": "next exactSHA after exact sixth hashpinned copied date-selection loop waits; all58tests and same16jobs still required"
   },
   "browser_fixture_review": "ci-browser-contract-review.json:parent and two agent source/actual-trace review;not human blind review;4guards/5TSsyntax only;new browser results pending",
   "host_only_private_acl": {
