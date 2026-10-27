@@ -1,0 +1,95 @@
+{
+  "verified_at": "2026-10-27T02:25:48.902148+00:00",
+  "original_failed_revision": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+  "source_script": "backend/scripts/time_window_benchmark.py",
+  "source_lf_sha256": "c6ca40088e756f06f407659d43b95f6d71f1f822d95fb1e958f80e1b1350d7c6",
+  "original_failure_reproduced": {
+    "case": "time_windows_change_shortest_order",
+    "expected": "feasible",
+    "actual": "unverified",
+    "unknown": [
+      "reservation_unverified:poi:0:A",
+      "reservation_unverified:poi:0:B",
+      "reservation_unverified:poi:0:C"
+    ]
+  },
+  "source_cause": [
+    "Frozen benchmark request only contains opening_windows and hotel_stays, no reservation_facts.",
+    "time_planner._nodes:253-255 treats missing current reservation status as an explicit unknown, as required by the existing reservation contract."
+  ],
+  "premise_adapter": {
+    "path": "tools/ci_time_window_benchmark.py",
+    "scope": "Load exact hashpinned original module and adapt only its TripRequest constructor; no replacement of module.run, expected outcomes or assertions.",
+    "declarations": 3,
+    "poi_ids": [
+      "A",
+      "B",
+      "C"
+    ],
+    "status": "not_required",
+    "source": "frozen-synthetic-no-reservation-v1",
+    "observed_at": "Current UTC synthetic fixture construction time",
+    "ttl_seconds": 3600,
+    "confirmation": "Explicit synthetic input, not live reservation evidence; standard model marks declarations as user_declared."
+  },
+  "bounded_local_verification": {
+    "original_unmodified_run_body_with_only_consistent_constructor_premises": {
+      "passed": true,
+      "cases": [
+        {
+          "name": "time_windows_change_shortest_order",
+          "status": "feasible",
+          "passed": true
+        },
+        {
+          "name": "missing_routes_stay_unverified",
+          "status": "unverified",
+          "passed": true
+        },
+        {
+          "name": "expired_opening_stays_unverified",
+          "status": "unverified",
+          "passed": true
+        },
+        {
+          "name": "closed_mandatory_visit",
+          "status": "infeasible",
+          "passed": true
+        },
+        {
+          "name": "closed_optional_visit",
+          "status": "feasible",
+          "passed": true
+        },
+        {
+          "name": "arrival_after_daily_end",
+          "status": "infeasible",
+          "passed": true
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "adapter_guards": {
+      "passed": 3,
+      "command": "E:/download/Anaconda/python.exe -m unittest tools.tests.test_ci_time_window_benchmark -v",
+      "includes": "Missing source/observation/expiry, explicit reservation overwrite, source drift, nonCI execution blocked; readonly default does not run benchmark."
+    },
+    "existing_416_test_suite_rerun": false
+  },
+  "application_frozen_tree_modifications": [],
+  "artifacts": {
+    "tools/ci_time_window_benchmark.py": "a5197327e0f392e5d34c15af51a1eb1a07cce9b871d627b9279b7abd6998dc11",
+    "tools/tests/test_ci_time_window_benchmark.py": "0176b28cf294bff7961dc81bb659177bf7328eac2295c7819a301d9db2768705"
+  },
+  "evidence_boundary": "Reservation declarations changed the synthetic input premises. Current output is a new current-contract fixture, not a directly comparable frozen-evaluation score or an accuracy improvement. Original failed case is retained; first heldout16/17 remains unchanged. No live evaluation, budget reset, six-case rerun or original run/expected/assertion changes were performed for this metadata correction.",
+  "updated_at": "2026-10-27T02:47:30.043153+00:00",
+  "current_output_labels": {
+    "dataset": "current-contract-fixture-20261027",
+    "fixture_revision": "current-contract-fixture-20261027",
+    "original_dataset": "Preserved only if the original report contains a dataset field; legacy mode is retained as original_mode.",
+    "input_fixture_changed": true,
+    "not_comparable_to_original_frozen_evaluation": true,
+    "heldout16of17_unchanged": true,
+    "purpose": "Functional CI fixture contract migration only. Explicit synthetic no-reservation assumptions are not real reservation facts and cannot establish an accuracy improvement over the original frozen input."
+  }
+}

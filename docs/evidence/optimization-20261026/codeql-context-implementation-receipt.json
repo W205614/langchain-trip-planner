@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "checked_at_utc": "2026-10-27T01:53:32.091584+00:00",
-  "status": "initial_context_policy_implemented_pending_root_review_and_fresh_ci",
+  "status": "coordinator_reviewed_and_fresh_5485_CodeQL_four_jobs_passed; final_replacement_SHA_still_required",
   "source_sarif_run": 40432045888,
   "source_sarif_revision": "d323a44d6560412e6fb2890386701bdc88aea7c5",
   "review_file": "docs/evidence/optimization-20261026/codeql-independent-source-review-24.json",
@@ -71,5 +71,22 @@
   "raw_replay_summary": {
     "path": "E:\\project\\langchain-trip-planner\\.cache\\security-report-raw\\codeql-40432045888\\context-replay\\sarif-summary.json",
     "sha256": "b269350a5db33663036251aab0b6df531e6c481f1b26bf4a49bc352a511d9245"
-  }
+  },
+  "original_implementation_status": "initial_context_policy_implemented_pending_root_review_and_fresh_ci",
+  "fresh_ci_verification": {
+    "revision": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+    "security_run": 40436685294,
+    "all_four_languages_passed": true,
+    "actual_raw_highs": 22,
+    "actual_context_classified": 22,
+    "blocking": 0,
+    "python_raw": 2,
+    "javascript_raw": 2,
+    "java_raw": 18,
+    "actions_raw": 0,
+    "tools_two_original_named_return_findings_not_whitelisted": true,
+    "source": "second-ci-5485f8a-results.json",
+    "note": "Raw SARIF and original severities remain; notCVE riskacceptance or zero rawalerts."
+  },
+  "updated_at": "2026-10-27T02:35:57.922289+00:00"
 }

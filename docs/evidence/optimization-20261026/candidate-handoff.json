@@ -1,8 +1,8 @@
 {
-  "phase": "LOCAL_ACCEPTANCE_COMPLETE_REMOTE_EXACT_SHA_GATE_REQUIRED",
+  "phase": "SECOND_CI_13_PASS_3_FAIL_REPLACEMENT_REQUIRED",
   "business_sha": "220257ad32e50d08cb987d565882f8a038e36c6f",
   "source_committed_locally": true,
-  "pushed": false,
+  "pushed": true,
   "daily_environment_replaced": true,
   "role_flows_latest_passed": 8,
   "additional_fact_ui_flow": "fact-ui-acceptance-result.json:6 checks passed on exact final business image",
@@ -53,7 +53,7 @@
     "current": "poi-ui-acceptance-result.json:7/7 passed on final220, own backend/mapfixture restored",
     "original_failures": "run1 retained; run2 primary error/full checklist lost, post-run diagnostic and recovered waiter excerpt retained"
   },
-  "updated_at": "2026-10-27T01:14:06.113643+00:00",
+  "updated_at": "2026-10-27T02:47:34.991378+00:00",
   "actual_runtime_probe": "hardened-runtime-probe-result.json:11 passed; actual uvicorn PID1; CapBnd/Eff0;NNP1;ROroot;boundedtmpfs;native component checks",
   "new_candidate": "trip-opt-hardened-20261026; canonical Agent actual uvicorn, separate agent-fixture supplies browser providers explicitly",
   "backup_previous_a01": "automated-backup-drill-final.json:pass/full archive/local copy/private owner history unchanged",
@@ -126,5 +126,12 @@
       "daily-current-recovery.json",
       "daily-after-silent-backup-readback.json"
     ]
+  },
+  "current_pushed_candidate": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+  "final_ci_passed": false,
+  "ci_history": {
+    "first": "first-ci-d323a44-results.json:11passed5failed retained",
+    "second": "second-ci-5485f8a-results.json:13passed3failed retained; all4CodeQL passed;416 Python unit pass2skip;remaining benchmark/HTTP contract/native drift corrections",
+    "third": "pending exact replacement SHA push and all16CI; no success inferred"
   }
 }

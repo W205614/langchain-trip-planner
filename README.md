@@ -210,9 +210,9 @@ pwsh -File deploy/install-backup-task.ps1 -PythonPath C:\path\to\pythonw.exe
 
 CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不作为零漏洞；具体未修复条目及适用性分析须保留。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](docs/evidence/optimization-20261026/blind-review/review.html)尚无真人评分，不能用程序通过率替代真实旅行事实准确率。
 
-首次完整 CI 的[失败结果](docs/evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](docs/evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报只作内部改名并交给新 CI 验证，不加例外。原始 SARIF 继续上传，门禁通过不代表 GitHub 没有原始告警。
+首次完整 CI 的[失败结果](docs/evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](docs/evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报仅作内部改名，不加例外。[第二轮 CI](docs/evidence/optimization-20261026/second-ci-5485f8a-results.json)实际验证四种语言门禁通过，原始高危 22 项、已审上下文 22 项、阻断 0 项；替换提交仍须重新验证。原始 SARIF 继续上传，门禁通过不代表 GitHub 没有原始告警。
 
-CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全部原断言保留](docs/evidence/optimization-20261026/ci-fixture-contract-review.json)。一份 HTTP 场景的[纯 Java 复现](docs/evidence/optimization-20261026/scope-projection-contract-review.json)只发现存储与读取投影的过期原因码不同，两边仍都过期、未核实，其余日期字段一致；这不代替原 CI 数据抓取。当前诊断包装器记录实际两份日期与逐字段差异，仍执行原整天 JSON 相等断言，尚未采用原因码规范化结果放行。夹具及诊断显式发生在临时 CI 测试副本中，批准的业务源码与镜像文件未改；首轮失败不改写成新一轮通过结果。
+CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全部原断言保留](docs/evidence/optimization-20261026/ci-fixture-contract-review.json)。一份 HTTP 场景的[纯 Java 复现](docs/evidence/optimization-20261026/scope-projection-contract-review.json)只发现存储与读取投影的过期原因码不同，两边仍都过期、未核实，其余日期字段一致；这不代替原 CI 数据抓取。第二轮 CI 保留原整天相等断言并[抓取实际两份日期](docs/evidence/optimization-20261026/ci-excluded-day-actual-review-5485f8a.json)，逐字段确认唯一差异确为该原因码。此后只对这两个已审代码作表示比较，两边必须明确过期、未核实，其他全部字段、类型和数组顺序仍严格相等；额外差异继续失败。夹具及诊断显式发生在临时 CI 测试副本中，批准的业务源码与镜像文件未改；首轮失败不改写成新一轮通过结果。时间窗口基准也只补足三条明确的[合成预约事实](docs/evidence/optimization-20261026/time-window-benchmark-fixture-review.json)，原六个期待结果和断言未改。输出明确标记输入夹具已修订，不能与原冻结评测直接比较，也不改变此前 16/17 留出集记录；这些声明不是真实景点事实。
 
 安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级本身不能放行这 8 项：用户已明确暂时接受精确核验组合中的残余风险，**仅限本机受控演示，到北京时间 2026-11-09 23:59:59 失效，不授公开生产许可**。授权与冻结指纹分别见[原始决定的公开副本](.github/security-risk-authorization.json)和[临时例外记录](.github/security-risk-acceptance.json)。
 
@@ -250,3 +250,5 @@ Get-ChildItem backups/automated-daily/task-logs | Sort-Object LastWriteTime -Des
 批准镜像原本包含 12 个未进入 Git 的历史评测输出。为复现这个既有实物，CI 在构建前从[明确归档的历史输入](docs/evidence/optimization-20261026/historical-build-inputs/README.md)按原始字节及批准应用哈希精确恢复；它们不作为本轮新成绩。允许指纹没有刷新，系统包、原生库或其他应用内容漂移仍会阻断。GitHub 的 [CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml) 与[安全门禁](https://github.com/W205614/langchain-trip-planner/actions/workflows/security.yml)合计 16 个展开任务，须核对当前确切提交，不能复用旧提交的绿灯。
 
 完整功能与源码交接见[54 项功能问答账本](docs/evidence/optimization-20261026/guide-handoff.json)；每项含主问、至少两条追问、答案要点及证据边界。源码存在和本轮定向验收不等同全部功能新测，更不构成个人贡献、线上用户或准确率证明。
+
+Agent 的后续 CI 重建曾被[基础镜像漂移检查](docs/evidence/optimization-20261026/ci-agent-native-drift-40436685294.json)阻断：上游浮动标签从 CPython 3.11.17 变为 3.11.18，87 个系统包和 135 个应用指纹一致，但 12 个 CPython ELF 字节改变。CI 现在显式使用此前已完整核验的 `python@sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377` 重建已批准组合，允许指纹未刷新；仍须通过新的全量组件核对与新鲜扫描。此固定用于复现现有受控演示产物，不代表修复八项 CVE，或已审查并接受新解释器组合。

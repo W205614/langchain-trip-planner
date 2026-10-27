@@ -207,7 +207,13 @@ jobs:
         if: matrix.service == 'agent'
         run: python tools/restore_historical_build_inputs.py --restore-for-ci --report security-reports/historical-build-inputs.json
       - name: Build the exact revision without runtime secrets
-        run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --tag "$SECURITY_IMAGE" "${{ matrix.context }}"
+        run: |
+          build_options=(--pull --build-arg VCS_REF=${{ github.sha }} --tag "$SECURITY_IMAGE")
+          if [ "${{ matrix.service }}" = agent ]; then
+            # Reproduce the already reviewed CPython artifact; moving tags do not inherit its exception.
+            build_options+=(--build-arg PYTHON_BASE=python@sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377)
+          fi
+          docker build "${build_options[@]}" "${{ matrix.context }}"
       - name: Prove actual Agent runtime constraints for the temporary local-demo exception
         if: matrix.service == 'agent'
         run: |

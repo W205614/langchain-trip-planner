@@ -1,0 +1,343 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-27T02:27:34.175340+00:00",
+  "status": "strict_gate_correctly_blocked_cpython_base_patch_drift_no_fingerprint_change",
+  "failed_workflow_run": 40436685294,
+  "failed_job": 121966912065,
+  "failed_source_revision": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+  "artifact_id": 12704343635,
+  "approved_image_id": "sha256:f9a0a0deb768b350c504f0be04e6cdfcc8c1c3aca54f319feecbab0cc54f9ab8",
+  "observed_image_id": "sha256:de687cd63be34db1a7e27b42b7b1a7e60f5ba3303f4cf686d1696ee995b48235",
+  "approval_sha256_unchanged": "1882516ae1b258e1019768b1d011b76774f184da905ac3c4b4970697736e260f",
+  "comparison": {
+    "dpkg_versions_equal": true,
+    "installed_dpkg_packages": 87,
+    "application_hashes_equal": true,
+    "application_paths": 135,
+    "native_path_count_approved": 1086,
+    "native_path_count_observed": 1086,
+    "native_paths_added": 0,
+    "native_paths_removed": 0,
+    "native_paths_changed": 12,
+    "native_diff": {
+      "added": [],
+      "removed": [],
+      "changed": [
+        {
+          "path": "/usr/local/lib/libpython3.11.so",
+          "approved": "65c515be5a2e692e17b2ae33fa501249a7b00869c9f79e64086a8aa804396f1d",
+          "observed": "5e00e538ba94c76da526165ff9722a5b955bfc2c10ef07613468ca813410ef3f"
+        },
+        {
+          "path": "/usr/local/lib/libpython3.11.so.1.0",
+          "approved": "65c515be5a2e692e17b2ae33fa501249a7b00869c9f79e64086a8aa804396f1d",
+          "observed": "5e00e538ba94c76da526165ff9722a5b955bfc2c10ef07613468ca813410ef3f"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/config-3.11-x86_64-linux-gnu/python.o",
+          "approved": "d4d9f3dca28187fd18ca692666d28dd9787a21ac5951c09dea9d3ec7176d4abe",
+          "observed": "97b7946d9beff924eb7b25c928d278e7197c31bf70091dab6aaca65a1a9438b8"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_blake2.cpython-311-x86_64-linux-gnu.so",
+          "approved": "d55a3975b4eaac55c8462891c726f4ded1ceae3588f315cdbd9debe58ccfbfdb",
+          "observed": "8c6897208e782f8a905e91615527f7ed9ca67b9c6dfa4434f99a408e2404c59d"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_decimal.cpython-311-x86_64-linux-gnu.so",
+          "approved": "bb790c5704b29d341ef0040ebad148475239e7c2d7107e0d9847eac3b2dd93db",
+          "observed": "16f5c2802861afe1a84368cb68e8d902e6457b899db3d29715751372353ba7ea"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_elementtree.cpython-311-x86_64-linux-gnu.so",
+          "approved": "5c9b06e7828ab210c0f2733db525a4648e75c4878c2f18b8a65d435a216b52c0",
+          "observed": "70b49946f2c09eccfcaf4db2ea40ac81b05574488c5e94bfc700c8392ac27f0b"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_heapq.cpython-311-x86_64-linux-gnu.so",
+          "approved": "bbf65808530f48117bffbc40bf9b9310886dd8db3c38527c7088c1df0daf8622",
+          "observed": "3c8b62f817f05c7830d4f5d6a197dc428d33f293ec577e20429f891f0df093c5"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_pickle.cpython-311-x86_64-linux-gnu.so",
+          "approved": "341c8af4c8eb4fd6886338854c31e8063cb104de700e5c29afd49d422d8f4b68",
+          "observed": "ef0cd225992823be0ffb63e77f23921df69dfb735ecda1273c37aca5020274da"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_random.cpython-311-x86_64-linux-gnu.so",
+          "approved": "d72ae0b4607b9ace7a8b776eb3163d4cb4d5ed965d0c144127655252709f016f",
+          "observed": "951869c5a6ae989b7e45675f462269c939b3bce27b42eae38b70e22968c5ab37"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/_ssl.cpython-311-x86_64-linux-gnu.so",
+          "approved": "cb6823bbd1345f9e6e6a2591ad26f07c9c357294b18e24256c588dac926f4e7f",
+          "observed": "f29f5520d13c5c15674d58aa1c9da2ca1f0dc254df9b5bd1945a3aee6cb892ff"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/pyexpat.cpython-311-x86_64-linux-gnu.so",
+          "approved": "f9a82d9828f3ddc7983523f3468727ddda72b36eb946b329618a9c6a9792d212",
+          "observed": "4a29bf0e64c9cd0dc317a8d752ff52dbfa062e564ea799fedf5e4332845d7364"
+        },
+        {
+          "path": "/usr/local/lib/python3.11/lib-dynload/select.cpython-311-x86_64-linux-gnu.so",
+          "approved": "b9674484f51f3b18b3694f732f310b93b612ca0fae3c5808ff64856b979634d6",
+          "observed": "392ded2ddf75f3cc4c708a51bb94b62c18c4dcba2fb1d173337970daff84e171"
+        }
+      ]
+    },
+    "boundary": "ELF inventory paths include symlink aliases and python.o object file; this is byte equivalence evidence, not a claim all12 paths are mapped by the running process."
+  },
+  "base_provenance": [
+    {
+      "label": "approved",
+      "official_registry": "registry-1.docker.io/library/python",
+      "index_digest": "sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377",
+      "amd64_manifest_digest": "sha256:b95327ce1439e687237841b0210677aeadd62d55a060a5f6bcb9c15bf6251dd3",
+      "config_digest": "sha256:b4403f3b7acf5e0700a5dd4e7ab01456d62b557a208a04f8a42d3470d93b5730",
+      "payload_digests_verified": true,
+      "python_version": "3.11.17",
+      "python_source_sha256": "bfb74ad39efae27cda510f134ab408e00f9992c56851cfc0b1cdb5646da11599",
+      "created": "2026-10-21T01:09:58.372959533Z",
+      "rootfs_diff_ids": [
+        "sha256:a70f6272827f64e1427d048ced77491aab5d64ab95725e56920802ff391197d7",
+        "sha256:535a5d38abecfac4fa49da33fa942b53c53c463bd0d39a860967e46eb03faafe",
+        "sha256:6972161a9a77e7c1afb997daac15abc54f5b70c7b40b814601f53e038d8c398c",
+        "sha256:d86e9bd004831a6069b9a02e5caac80b73526315f52719079b4017b099956ed2"
+      ],
+      "final_image_rootfs_prefix_matches_base_config": true
+    },
+    {
+      "label": "failed",
+      "official_registry": "registry-1.docker.io/library/python",
+      "index_digest": "sha256:9635410349cba3531fabde484e07f14e625abb40e1bc8b23fffa046cb497ce2d",
+      "amd64_manifest_digest": "sha256:0451b9eeed3e5a9523d8958cc33262eb5843c7af3114c50f45d99f56e2b883ac",
+      "config_digest": "sha256:1ba42ef4e94c8e45e52e3a68e4c42245a30e50936d02e4722872b9343be7b531",
+      "payload_digests_verified": true,
+      "python_version": "3.11.18",
+      "python_source_sha256": "9120e0a653868f6e3698d36cdd99e5a58903ec9469e448f21d98f7b16d8fa290",
+      "created": "2026-10-26T22:58:53.584181767Z",
+      "rootfs_diff_ids": [
+        "sha256:a70f6272827f64e1427d048ced77491aab5d64ab95725e56920802ff391197d7",
+        "sha256:cc28e9b8727bd558eb76d69889c971452f06f6f6c91bb2e56b786e46e276de0f",
+        "sha256:c8624fffa1d06e06d3bc5dcc16e8da97838cd0279166bda3a2086e48d9d6c5bc",
+        "sha256:95e5c677aa457a1c20a4e8cebe2559c1d572003dfb9ad923e260ae20c09a9195"
+      ],
+      "final_image_rootfs_prefix_matches_base_config": true
+    }
+  ],
+  "build_logs": {
+    "prior_passed_job": 121951820513,
+    "prior_from": "python:3.11-slim-trixie@sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377",
+    "failed_from": "python:3.11-slim-trixie@sha256:9635410349cba3531fabde484e07f14e625abb40e1bc8b23fffa046cb497ce2d",
+    "failure_message": "Accepted image component set changed: native_elf_sha256",
+    "boundary": "Selected provenance/failure lines downloaded through GitHub job log connector; full original failure remains in the original workflow/artifact. No retroactive pass."
+  },
+  "attribution": {
+    "confirmed": "Official base config and final image base-layer prefixes agree: approved base uses CPython3.11.17, failed base uses3.11.18, source archive SHA differs; only12 CPython-native paths differ while all87 OS package versions and135 application hashes remain equal.",
+    "inference": "The mutable Python base tag patch update explains the CPython-only identity drift. No application source/lock fingerprint change is needed to explain this failure.",
+    "not_claimed": [
+      "No per-file extraction of official base layers was performed to independently map each12 ELF digest to a specific base layer member.",
+      "No conclusion that either changed ELF is malicious or that the old/new CPython patch is globally safe.",
+      "No claim that pinning the reviewed base fixes vulnerabilities or guarantees all future apt/native package equivalence."
+    ]
+  },
+  "artifact_download": {
+    "artifact_id": 12704343635,
+    "workflow_run": 40436685294,
+    "zip_size": 290752918,
+    "github_reported_whole_zip_digest": "sha256:ca79566ccff25660818555b6c06289c2e35dc888b2a643c6a0a55bd97a0487a6",
+    "whole_zip_digest_verified": false,
+    "method": "Selective HTTP206 ZIP metadata extraction; full ZIP not downloaded/hashed. Stored entry sizes/CRC rechecked against freshly ranged central directory. Individual extracted-file SHA256 below.",
+    "initial_attempt_boundary": "First attempt extracted four complete metadata JSONs with ZipFile.read CRC verification, then a later nonessential entry request failed SSLEOF. No incomplete JSON accepted.",
+    "fetched_bytes_this_central_directory_recheck": 898,
+    "range_requests_this_recheck": [
+      {
+        "start": 290752896,
+        "end": 290752917,
+        "bytes": 22,
+        "sha256": "9aed45207f7739c8454b5a6dacda1ed466375015dca1135c38bf012af7a2116f"
+      },
+      {
+        "start": 290752876,
+        "end": 290752895,
+        "bytes": 20,
+        "sha256": "3ce308db88b4f99b0874c6ddca9edf50bb934e9d170bb3151bf34f1f5d03f7cd"
+      },
+      {
+        "start": 290752040,
+        "end": 290752895,
+        "bytes": 856,
+        "sha256": "7065ac9ef71ab61c0b5931072d5a282df46132b1e4f264e7ad90d8d399bd1294"
+      }
+    ],
+    "total_bytes_first_attempt": "not captured after the process exception; not claimed",
+    "index": [
+      {
+        "name": "historical-build-inputs.json",
+        "bytes": 516,
+        "compressed_bytes": 323,
+        "CRC32": "a8fb0dfb"
+      },
+      {
+        "name": "image/distribution-inventory.json",
+        "bytes": 156768,
+        "compressed_bytes": 55467,
+        "CRC32": "5be6f8bf"
+      },
+      {
+        "name": "image/image-scan.log",
+        "bytes": 76,
+        "compressed_bytes": 74,
+        "CRC32": "75ce5d00"
+      },
+      {
+        "name": "image/image-summary.json",
+        "bytes": 128,
+        "compressed_bytes": 107,
+        "CRC32": "b33dfd61"
+      },
+      {
+        "name": "image/image-vulnerabilities.json",
+        "bytes": 800318,
+        "compressed_bytes": 67174,
+        "CRC32": "aff4e332"
+      },
+      {
+        "name": "image/trip-security-inventory-73a68ac56558-resource.json",
+        "bytes": 414,
+        "compressed_bytes": 268,
+        "CRC32": "0bd23b63"
+      },
+      {
+        "name": "image/trip-security-inventory-73a68ac56558-rootfs.tar",
+        "bytes": 940509184,
+        "compressed_bytes": 290624011,
+        "CRC32": "8eb1f74f"
+      },
+      {
+        "name": "runtime/command-receipt.json",
+        "bytes": 301,
+        "compressed_bytes": 178,
+        "CRC32": "99540962"
+      },
+      {
+        "name": "runtime/runtime-proof-1a2e83fdf3e94779beef3d7d82fd3d76.json",
+        "bytes": 12375,
+        "compressed_bytes": 3139,
+        "CRC32": "3bab8785"
+      },
+      {
+        "name": "runtime/runtime-resources-1a2e83fdf3e94779beef3d7d82fd3d76.json",
+        "bytes": 938,
+        "compressed_bytes": 443,
+        "CRC32": "603430fd"
+      }
+    ],
+    "selected": [
+      {
+        "entry": "historical-build-inputs.json",
+        "path": ".cache\\security-report-raw\\agent-drift-40436685294\\historical-build-inputs.json",
+        "bytes": 516,
+        "sha256": "883f6e08a8fa0309af71840395bb03053032f21331a0860acb99ff8684fd65fd",
+        "zip_entry_crc_and_size_verified": true
+      },
+      {
+        "entry": "image/distribution-inventory.json",
+        "path": ".cache\\security-report-raw\\agent-drift-40436685294\\distribution-inventory.json",
+        "bytes": 156768,
+        "sha256": "3ff4e0cf40fa60ef89cd002795bbef0b51e3e8ab6e9433c06fc440905bcc1f68",
+        "zip_entry_crc_and_size_verified": true
+      },
+      {
+        "entry": "image/image-summary.json",
+        "path": ".cache\\security-report-raw\\agent-drift-40436685294\\image-summary.json",
+        "bytes": 128,
+        "sha256": "42c64c88d710a3e6b1d6a495413ed6fe098e812ac00ada6178fe1d462a33bf24",
+        "zip_entry_crc_and_size_verified": true
+      },
+      {
+        "entry": "image/image-vulnerabilities.json",
+        "path": ".cache\\security-report-raw\\agent-drift-40436685294\\image-vulnerabilities.json",
+        "bytes": 800318,
+        "sha256": "434fdd5e34ee8299f45677137fec9a6d2f16a2c5eb6b5649cfb5ae437ef3fbd7",
+        "zip_entry_crc_and_size_verified": true
+      }
+    ]
+  },
+  "proposed_next_step_boundary": "Root will explicitly pin the Agent CI PYTHON_BASE to the independently verified approved b7a9e5 index only in the workflow. All existing source/recipe/approval fingerprints remain unchanged. A fresh CI still must enforce exact87/1086/135 equivalence plus actual runtime proof and fresh known/unknown advisory gates. This receipt does not modify workflow or whitelist.",
+  "source_equivalence": {
+    "approved_business_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "current_policy_revision": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+    "image_revision": "220257ad32e50d08cb987d565882f8a038e36c6f",
+    "business_trees_equal": true
+  },
+  "actions": {
+    "docker_lifecycle": false,
+    "docker_build_pull_relabel": false,
+    "host_task_operations": false,
+    "approval_or_fingerprint_refresh": false,
+    "workflow_modified_by_this_review": false
+  },
+  "raw_evidence_hashes": {
+    ".cache/security-report-raw/agent-drift-40436685294/distribution-inventory.json": {
+      "sha256": "3ff4e0cf40fa60ef89cd002795bbef0b51e3e8ab6e9433c06fc440905bcc1f68",
+      "bytes": 156768
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/exact-native-diff.json": {
+      "sha256": "349ae0c190d2e43f3346f7566e4c43d4c2b810cc1c93ceec8345de5f1ae2ad03",
+      "bytes": 3367
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/historical-build-inputs.json": {
+      "sha256": "883f6e08a8fa0309af71840395bb03053032f21331a0860acb99ff8684fd65fd",
+      "bytes": 516
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/image-summary.json": {
+      "sha256": "42c64c88d710a3e6b1d6a495413ed6fe098e812ac00ada6178fe1d462a33bf24",
+      "bytes": 128
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/image-vulnerabilities.json": {
+      "sha256": "434fdd5e34ee8299f45677137fec9a6d2f16a2c5eb6b5649cfb5ae437ef3fbd7",
+      "bytes": 800318
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/job-121951820513.selected.log": {
+      "sha256": "f5093cce3540a3c8007309eedf6624c6ad320f94cfadcba36cf556952f3ccd9c",
+      "bytes": 326
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/job-121966912065.selected.log": {
+      "sha256": "c0536c355507bfcd1d7c5e51ee1852cec23b1152893e73821cb491a58b2391e2",
+      "bytes": 453
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/range-receipt.json": {
+      "sha256": "783dc2cc3b42841c429dcea0dd5187e669862cf5ec617d43650e619bcc9f0aa0",
+      "bytes": 4226
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/approved-config.json": {
+      "sha256": "b4403f3b7acf5e0700a5dd4e7ab01456d62b557a208a04f8a42d3470d93b5730",
+      "bytes": 5485
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/approved-index.json": {
+      "sha256": "b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377",
+      "bytes": 10373
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/approved-manifest.json": {
+      "sha256": "b95327ce1439e687237841b0210677aeadd62d55a060a5f6bcb9c15bf6251dd3",
+      "bytes": 1746
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/failed-config.json": {
+      "sha256": "1ba42ef4e94c8e45e52e3a68e4c42245a30e50936d02e4722872b9343be7b531",
+      "bytes": 5484
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/failed-index.json": {
+      "sha256": "9635410349cba3531fabde484e07f14e625abb40e1bc8b23fffa046cb497ce2d",
+      "bytes": 10373
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/failed-manifest.json": {
+      "sha256": "0451b9eeed3e5a9523d8958cc33262eb5843c7af3114c50f45d99f56e2b883ac",
+      "bytes": 1746
+    },
+    ".cache/security-report-raw/agent-drift-40436685294/base-provenance/summary.json": {
+      "sha256": "86f1fea1e85cc5581ef2d9d061e9c9ea8386dbcae6136392f7fdc17cf5ca38c4",
+      "bytes": 1963
+    }
+  }
+}

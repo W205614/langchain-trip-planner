@@ -1,0 +1,153 @@
+{
+  "verified_at": "2026-10-27T02:25:48.887198+00:00",
+  "source": {
+    "repository": "W205614/langchain-trip-planner",
+    "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+    "workflow_run_id": 40436685278,
+    "job_id": 121966911993,
+    "job_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685278/job/121966911993",
+    "artifact_id": 12704651914,
+    "artifact_name": "reliability-evidence",
+    "artifact_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685278/artifacts/12704651914",
+    "artifact_zip_bytes": 23413,
+    "github_api_digest": "sha256:54ed907bfa7bc9739cfa089a87ad5939afac3707c4ea9fe887086e183058da19",
+    "downloaded_zip_sha256": "54ed907bfa7bc9739cfa089a87ad5939afac3707c4ea9fe887086e183058da19",
+    "downloaded_zip_matches_api_digest": true,
+    "retrieval": "Connected GitHub artifact API; returned ZIP bytes fetched from its temporary file reference, no signed URL persisted."
+  },
+  "actual_original_enforcement": {
+    "mode": "original_equality_enforced",
+    "fixture_only": true,
+    "source_script_lf_sha256": "46d6cd9761f0166c9c283eebaf49ca8d23858936b58b70fb0890c0bf2c416d6b",
+    "job_log_confirms_diagnostic_only_and_source_sha": true,
+    "original_whole_day_equal": false,
+    "original_job_remains_failed": true,
+    "original_error": "AssertionError: multi-day authorization preserves excluded middle day exactly",
+    "prior_checks_passed": 44
+  },
+  "independent_exact_field_review": {
+    "all_diff_paths_and_values": [
+      {
+        "path": "/feasibility/solver_status",
+        "before": "SCHEDULE_DEPENDENCIES_CHANGED",
+        "after": "PLANNING_INPUT_CHANGED"
+      }
+    ],
+    "both_schedule_stale_true_with_boolean_type": true,
+    "before_feasibility_status": "unverified",
+    "proposed_feasibility_status": "unverified",
+    "strict_projection_contract_passed_on_actual_payloads": true,
+    "all_other_entire_day_values_types_and_array_orders_equal": true,
+    "top_level_fields": [
+      {
+        "field": "accommodation",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "activities",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "attractions",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "city",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "date",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "day_index",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "description",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "fallback_reason",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "feasibility",
+        "raw_equal": false,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "generation_mode",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "hotel",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "meals",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "route_fact_expires_at",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "schedule_dependencies",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "schedule_stale",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "theme",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "timeline",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      },
+      {
+        "field": "transportation",
+        "raw_equal": true,
+        "equal_after_only_reviewed_cause_normalization": true
+      }
+    ],
+    "before_day_canonical_sha256": "666455c5b5aeca59121329d7eac7a243dea08b23d0e2eb7f34c1444787e02f72",
+    "proposed_day_canonical_sha256": "2de2613b1e2aa724301fbb4668b3597ce48e71e1c4cd762c41d7126ddf930d03",
+    "reviewed_normalized_day_canonical_sha256": "c0c598b50739bb18fe03b0170cd8662692063dfffa8d2a8cd80a83c05a52bcfc",
+    "raw_day_originals": "Exact fixture-only before/proposed JSON remain in ignored local cache member named below; original artifact is unchanged."
+  },
+  "retained_raw_evidence": {
+    "reliability-evidence.zip": {
+      "repository_relative_cache_path": ".cache/ci-projection-actual-40436685278/reliability-evidence.zip",
+      "sha256": "54ed907bfa7bc9739cfa089a87ad5939afac3707c4ea9fe887086e183058da19"
+    },
+    "final-scenarios-excluded-day-diagnostic.json": {
+      "repository_relative_cache_path": ".cache/ci-projection-actual-40436685278/final-scenarios-excluded-day-diagnostic.json",
+      "sha256": "29c5a204c1ea8978d9302a1fe93fd91d46524348215e386b6b8b0085cb3f986b"
+    },
+    "final-scenarios.json": {
+      "repository_relative_cache_path": ".cache/ci-projection-actual-40436685278/final-scenarios.json",
+      "sha256": "f9c983c9e96cf5f1874d366933f7b6e6cb1edfbbd40bb3142439912e1c4d7c42"
+    }
+  },
+  "interpretation": "Actual source-bound CI data confirms the pure-method projection distinction. It does not turn either prior whole-JSON failure green. Enabling the reviewed presentation-layer comparison only tolerates that single code pair while retaining stale/unverified guards and strict comparison of all other fields. Remaining scenario flow and final all-job CI still require a new successful run."
+}

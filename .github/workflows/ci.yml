@@ -86,7 +86,7 @@ jobs:
         run: |
           pytest -v --tb=short
           python -m app.evals.constraint_benchmark --output ../evidence/constraints.json
-          python scripts/time_window_benchmark.py --output ../evidence/time-windows.json
+          python ../tools/ci_time_window_benchmark.py --run-ci --output ../evidence/time-windows.json
 
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
@@ -179,7 +179,7 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_acceptance.py --base-url http://frontend --output /tmp/final-planning-roles.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-planning-roles.json evidence/final-planning-roles.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp tools/ci_excluded_day_contract.py agent:/tmp/ci_excluded_day_contract.py
-          docker compose -p trip-validation -f docker-compose.validation.yml exec -T -e GITHUB_ACTIONS=true agent python /tmp/ci_excluded_day_contract.py --run-ci --diagnostic-only --base-url http://frontend --output /tmp/final-scenarios.json
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T -e GITHUB_ACTIONS=true agent python /tmp/ci_excluded_day_contract.py --run-ci --base-url http://frontend --output /tmp/final-scenarios.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios.json evidence/final-scenarios.json
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24

@@ -78,13 +78,27 @@
     "explicit_additional_check": "Original scenario now also checks both days remain stale/unverified; every other original check is unchanged.",
     "diagnostics": "At most40 JSON pointer paths, not full private payloads. Unexpected differences fail and are retained in original scenario output.",
     "test_result": "4 targeted guard tests passed; time/order/POI/location/meals/binding/locks/facts/other feasibility differences, fresh/missing/nonboolflags/unknownreason, source drift all rejected.",
-    "not_yet_verified": "Next actual CI must still prove there are no additional original-day differences; no pass inferred for the failed HTTP case."
+    "not_yet_verified": "The third exact-SHA CI must execute remaining HTTP scenarios and all checks; actual two-day comparison is verified, neither previous failed job is rewritten.",
+    "diagnostic_only_mode": "--diagnostic-only keeps original wholeJSON equality assertion, captures originalfixturedaypayloads+allpaths; mode original_equality_enforced. Actual5485f8a diagnostic job failed originalcheck and artifact retained. Sourcehashes refreshed for this addedmode without rerunning unrelatedchecks.",
+    "current_mode": "reviewed_projection_contract_enabled_after_actual_CI_field_review",
+    "diagnostic_only_mode_retained": "--diagnostic-only still enforces original equality and writes raw fixture diagnostics; second job used it and remained failed."
   },
   "artifacts": {
-    "tools/ci_excluded_day_contract.py": "27830f43938016a7bcb0810fe31d1cb7cc9d579e1c7a2c190c8a1e6dcec066ac",
-    "tools/tests/test_ci_excluded_day_contract.py": "448d8b4176251c9cd326df0178aea7ea6ce2d5d6517825dd19f73f4a216027ac",
+    "tools/ci_excluded_day_contract.py": "8635d312b0c0583db5cdf144aa9d0c5680ffd389440b5c5cfeeeadb6f6636a2c",
+    "tools/tests/test_ci_excluded_day_contract.py": "b18e393e15801299a33505a2a00b8331c36c2abf7f420aa58ee2f4b506f0c4fb",
     "docs/evidence/optimization-20261026/projection-contract/ProjectionReview.java": "a273c167d4977aa27cf1b6bf6c9890da26c5a78d6cfe72de2322b2328e366c9c",
-    "docs/evidence/optimization-20261026/ci-excluded-day-contract.patch": "29dd7083a35ba6a23c7e05a249545533b8a06ad31faefa7cd07d5ad533886d34"
+    "docs/evidence/optimization-20261026/ci-excluded-day-contract.patch": "29dd7083a35ba6a23c7e05a249545533b8a06ad31faefa7cd07d5ad533886d34",
+    "docs/evidence/optimization-20261026/ci-excluded-day-actual-review-5485f8a.json": "01cd69c973f8e12893adccaced2a959ed7ec0e91fcba327fd221d674ebe589b1"
   },
-  "frozen_business_tree_worktree_changes": []
+  "frozen_business_tree_worktree_changes": [],
+  "updated_at": "2026-10-27T02:25:48.895723+00:00",
+  "actual_ci_field_verification": {
+    "report": "ci-excluded-day-actual-review-5485f8a.json",
+    "artifact_digest": "sha256:54ed907bfa7bc9739cfa089a87ad5939afac3707c4ea9fe887086e183058da19",
+    "original_whole_day_equal": false,
+    "original_second_job_failed_preserved": true,
+    "strict_projection_contract_passed_on_actual_payloads": true,
+    "only_field": "/feasibility/solver_status",
+    "all_other_day_fields_types_orders_equal": true
+  }
 }

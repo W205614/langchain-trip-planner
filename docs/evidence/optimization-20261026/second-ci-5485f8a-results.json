@@ -1,0 +1,215 @@
+{
+  "source_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+  "expected_jobs": 16,
+  "passed": 13,
+  "failed": 3,
+  "jobs": [
+    {
+      "run_id": 40436685278,
+      "workflow": "CI",
+      "jobs": [
+        {
+          "id": 121966911694,
+          "name": "Frontend build (vue-tsc + vite)",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685278/job/121966911694"
+        },
+        {
+          "id": 121966911839,
+          "name": "Python Agent tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685278/job/121966911839"
+        },
+        {
+          "id": 121966911966,
+          "name": "Java business PostgreSQL tests",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685278/job/121966911966"
+        },
+        {
+          "id": 121966911993,
+          "name": "Docker Compose config and build",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685278/job/121966911993"
+        }
+      ]
+    },
+    {
+      "run_id": 40436685294,
+      "workflow": "Security gates",
+      "jobs": [
+        {
+          "id": 121966911893,
+          "name": "Dependencies / Python Node and resolved Maven SBOM",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966911893"
+        },
+        {
+          "id": 121966912065,
+          "name": "Images / agent",
+          "status": "completed",
+          "conclusion": "failure",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912065"
+        },
+        {
+          "id": 121966912066,
+          "name": "Runtime images / prometheus",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912066"
+        },
+        {
+          "id": 121966912197,
+          "name": "Secrets / full history and tracked source",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912197"
+        },
+        {
+          "id": 121966912207,
+          "name": "Runtime images / postgres",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912207"
+        },
+        {
+          "id": 121966912215,
+          "name": "CodeQL / python",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912215"
+        },
+        {
+          "id": 121966912216,
+          "name": "Images / backend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912216"
+        },
+        {
+          "id": 121966912229,
+          "name": "CodeQL / javascript-typescript",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912229"
+        },
+        {
+          "id": 121966912247,
+          "name": "Images / frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912247"
+        },
+        {
+          "id": 121966912359,
+          "name": "CodeQL / actions",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912359"
+        },
+        {
+          "id": 121966912360,
+          "name": "CodeQL / java-kotlin",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912360"
+        },
+        {
+          "id": 121966912598,
+          "name": "Runtime images / alertmanager",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5485f8a7e79ede3484a18f11ae261b407f50c7f2",
+          "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912598"
+        }
+      ]
+    }
+  ],
+  "verified_codeql": [
+    {
+      "job_id": 121966912215,
+      "name": "CodeQL / python",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912215",
+      "conclusion": "success",
+      "records": [
+        {
+          "file": "python.sarif",
+          "status": "pass_codeql_context",
+          "raw_high_critical_findings": 2,
+          "not_affected_context_findings": 2,
+          "blocking_findings": 0,
+          "context_expires_at": "2026-11-09T23:59:59+08:00"
+        }
+      ]
+    },
+    {
+      "job_id": 121966912229,
+      "name": "CodeQL / javascript-typescript",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912229",
+      "conclusion": "success",
+      "records": [
+        {
+          "file": "javascript.sarif",
+          "status": "pass_codeql_context",
+          "raw_high_critical_findings": 2,
+          "not_affected_context_findings": 2,
+          "blocking_findings": 0,
+          "context_expires_at": "2026-11-09T23:59:59+08:00"
+        }
+      ]
+    },
+    {
+      "job_id": 121966912359,
+      "name": "CodeQL / actions",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912359",
+      "conclusion": "success",
+      "records": [
+        {
+          "file": "actions.sarif",
+          "status": "pass",
+          "raw_high_critical_findings": 0,
+          "not_affected_context_findings": 0,
+          "blocking_findings": 0,
+          "context_expires_at": "2026-11-09T23:59:59+08:00"
+        }
+      ]
+    },
+    {
+      "job_id": 121966912360,
+      "name": "CodeQL / java-kotlin",
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/40436685294/job/121966912360",
+      "conclusion": "success",
+      "records": [
+        {
+          "file": "java.sarif",
+          "status": "pass_codeql_context",
+          "raw_high_critical_findings": 18,
+          "not_affected_context_findings": 18,
+          "blocking_findings": 0,
+          "context_expires_at": "2026-11-09T23:59:59+08:00"
+        }
+      ]
+    }
+  ],
+  "boundary": "Second run retained. 416 Python unit tests passed and 2 skipped, benchmark still failed from missing synthetic reservation premises. Excluded-day original equality was deliberately retained and failed, with actual payload saved. Agent rebuild native drift was blocked without fingerprint refresh."
+}
