@@ -8,6 +8,7 @@ import re
 import unittest
 from unittest.mock import patch
 
+from tools.tests.legacy_review_fixture import checkout
 from tools import source_equivalence_activation as activation
 from tools import source_equivalence_delta as delta
 from tools import codeql_context as context, risk_acceptance as risk, security_gate as gate
@@ -18,7 +19,8 @@ NOW = datetime(2026, 10, 27, 8, tzinfo=timezone.utc)
 class SourceEquivalenceIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.manifest = json.loads((delta.ROOT / delta.MANIFEST).read_text(encoding='utf-8'))
+        cls.root = checkout(cls, delta.ROOT)
+        cls.manifest = json.loads((cls.root / delta.MANIFEST).read_text(encoding='utf-8'))
 
     def observation(self):
         entry = {'source.java': ['100644', 'a' * 40]}
@@ -32,9 +34,9 @@ class SourceEquivalenceIntegrationTests(unittest.TestCase):
     @patch.object(activation, 'ACTIVATION_SHA256', None)
     def test_disabled_hooks_cannot_be_enabled_by_mode_or_manifest_and_no_scanner_runs(self):
         with self.assertRaisesRegex(RuntimeError, 'disabled'):
-            activation.require(delta.ROOT, activation.MODE, NOW)
+            activation.require(self.root, activation.MODE, NOW)
         with self.assertRaisesRegex(RuntimeError, 'disabled'):
-            delta.validate_release(delta.ROOT, activation.MODE, NOW)
+            delta.validate_release(self.root, activation.MODE, NOW)
         with patch.object(gate, 'tool') as scanner:
             with self.assertRaisesRegex(RuntimeError, 'disabled'):
                 gate.image(Path('unused'), 'no-image', source_mode=activation.MODE)
@@ -42,10 +44,10 @@ class SourceEquivalenceIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'disabled'):
             gate.sarif(Path('unused'), {'entries': []}, source_mode=activation.MODE, language='python')
         with self.assertRaisesRegex(RuntimeError, 'disabled'):
-            context.load(delta.ROOT / '.github/codeql-context-assessments.json', delta.ROOT, NOW, source_mode=activation.MODE)
-        approval = risk.load(delta.ROOT / '.github/security-risk-acceptance.json', delta.ROOT, NOW)
+            context.load(self.root / '.github/codeql-context-assessments.json', self.root, NOW, source_mode=activation.MODE)
+        approval = risk.load(self.root / '.github/security-risk-acceptance.json', self.root, NOW)
         with self.assertRaisesRegex(RuntimeError, 'disabled'):
-            risk.validate_sources(approval, delta.ROOT, risk.APPROVED_REVISION, source_mode=activation.MODE)
+            risk.validate_sources(approval, self.root, risk.APPROVED_REVISION, source_mode=activation.MODE)
 
     def test_real_head_index_and_worktree_are_separate_and_restoration_cannot_hide_drift(self):
         observation = self.observation()
@@ -64,7 +66,7 @@ class SourceEquivalenceIntegrationTests(unittest.TestCase):
                 delta.validate_release_observation(self.manifest, variant)
 
     def test_preparation_pin_and_actual_current_hook_hashes_reject_mutation(self):
-        scope, plan = activation.preparation(delta.ROOT)
+        scope, plan = activation.preparation(self.root)
         self.assertEqual(self.manifest, scope)
         self.assertEqual(activation.INTEGRATION_FILES, set(plan['integration_file_sha256_lf']))
         original_read = activation.read
@@ -79,7 +81,7 @@ class SourceEquivalenceIntegrationTests(unittest.TestCase):
                     raw = original_read(root, path)
                     return raw.replace(b'"repository":', b'"changed_repository":', 1) if path == activation.PLAN_PATH else raw
             with self.subTest(relative=relative), patch.object(activation, 'read', side_effect=altered), self.assertRaises(RuntimeError):
-                activation.preparation(delta.ROOT)
+                activation.preparation(self.root)
 
     def test_synthetic_activation_pin_cannot_broaden_scope_review_plan_or_expiry(self):
         import hashlib
@@ -95,7 +97,7 @@ class SourceEquivalenceIntegrationTests(unittest.TestCase):
             def fixture_read(root, relative):
                 return raw if relative == activation.ACTIVATION_PATH else original_read(root, relative)
             with patch.object(activation, 'ACTIVATION_SHA256', pinned), patch.object(activation, 'read', side_effect=fixture_read):
-                return activation.require(delta.ROOT, activation.MODE, now)
+                return activation.require(self.root, activation.MODE, now)
         self.assertEqual(activation.SCOPE_SHA256, attempt(decision)['scope_sha256'])
         for key, value in [('mode', 'unknown'), ('scope_sha256', '0' * 64), ('preparation_review_sha256', '0' * 64),
                            ('integration_plan_sha256', '0' * 64), ('activation_granted', False),
@@ -168,7 +170,7 @@ class SourceEquivalenceIntegrationTests(unittest.TestCase):
                 delta.validate_codeql_receipt(variant, identity, hashes, plan, NOW)
 
     def test_workflow_prepares_same_job_receipt_and_exact_fixed_mode_without_extra_jobs(self):
-        workflow = (delta.ROOT / '.github/workflows/security.yml').read_text(encoding='utf-8')
+        workflow = (self.root / '.github/workflows/security.yml').read_text(encoding='utf-8')
         job = workflow.split('  codeql:\n', 1)[1].split('\n  image-scan:', 1)[0]
         self.assertLess(job.index('id: codeql_analyze'), job.index('--record-codeql-job'))
         self.assertLess(job.index('--record-codeql-job'), job.index('security_gate.py sarif'))

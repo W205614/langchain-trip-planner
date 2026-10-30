@@ -1,5 +1,19 @@
 # 后端服务镜像: Python 3.11 精简版
-ARG PYTHON_BASE=python:3.11-slim-trixie
+ARG PYTHON_BASE=python:3.11.18-slim-trixie@sha256:ffe4b0c76963e64f05484d74dbb3f67fad1effcf3c5c22c2235f0fafc8a9c98f
+FROM ${PYTHON_BASE} AS native-build-inputs
+USER root
+COPY security/native-backports /patches
+RUN bash /patches/build-inputs.sh
+
+FROM native-build-inputs AS glibc-backport
+RUN bash /patches/build-glibc.sh
+
+FROM native-build-inputs AS libstdcxx-backport
+RUN bash /patches/build-libstdcxx.sh
+
+FROM native-build-inputs AS util-linux-backport
+RUN bash /patches/build-util-linux.sh
+
 FROM ${PYTHON_BASE}
 USER root
 # Refresh signed distribution security packages; --pull alone can retain packages
@@ -10,6 +24,11 @@ COPY scripts/install_runtime_security_patches.py /tmp/install_runtime_security_p
 RUN TRIP_SECURITY_IMAGE_BUILD=1 python /tmp/install_runtime_security_patches.py --lock /tmp/runtime-security-packages.json \
     && rm -f /usr/bin/infocmp && test ! -e /usr/bin/infocmp \
     && rm -rf /var/lib/apt/lists/*
+COPY --from=glibc-backport /out/ /tmp/native-backports/
+COPY --from=libstdcxx-backport /out/ /tmp/native-backports/
+COPY --from=util-linux-backport /out/ /tmp/native-backports/
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-remove /tmp/native-backports/*.deb \
+    && rm -rf /tmp/native-backports
 
 # 设置工作目录
 WORKDIR /app

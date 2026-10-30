@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from tools import source_equivalence_delta as delta
+from tools.tests.legacy_review_fixture import checkout
 
 NOW = datetime(2026, 10, 27, 8, tzinfo=timezone.utc)
 
@@ -13,16 +14,18 @@ NOW = datetime(2026, 10, 27, 8, tzinfo=timezone.utc)
 class SourceEquivalenceDeltaTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.manifest = json.loads((delta.ROOT / delta.MANIFEST).read_text(encoding='utf-8'))
-        cls.observed = delta.observe_sources(delta.ROOT, cls.manifest)
-        cls.approval = json.loads((delta.ROOT / '.github/security-risk-acceptance.json').read_text(encoding='utf-8'))
+        # This fixture describes the old two-file approval, not later application revisions.
+        cls.root = checkout(cls, delta.ROOT)
+        cls.manifest = json.loads((cls.root / delta.MANIFEST).read_text(encoding='utf-8'))
+        cls.observed = delta.observe_sources(cls.root, cls.manifest)
+        cls.approval = json.loads((cls.root / '.github/security-risk-acceptance.json').read_text(encoding='utf-8'))
 
     def test_default_disabled_and_source_preview_never_grants_acceptance(self):
         with patch.object(delta, 'observe_sources') as observation:
             with self.assertRaisesRegex(RuntimeError, 'disabled'):
                 delta.review_draft()
             observation.assert_not_called()
-        result = delta.review_draft(review_only=True, now=NOW)
+        result = delta.review_draft(root=self.root, review_only=True, now=NOW)
         self.assertEqual('prepared_not_activated', result['status'])
         self.assertIs(False, result['effective_security_acceptance'])
         self.assertIs(False, result['sarif_revision_provenance_verified'])
@@ -31,7 +34,7 @@ class SourceEquivalenceDeltaTests(unittest.TestCase):
         self.assertEqual(self.manifest['proposed_business_tree'], result['projected_business_tree'])
         with patch.object(delta, 'ACTIVATED', True):
             with self.assertRaisesRegex(RuntimeError, 'Activation'):
-                delta.review_draft(review_only=True, now=NOW)
+                delta.review_draft(root=self.root, review_only=True, now=NOW)
 
     def test_exact_blob_scope_rejects_extra_file_same_file_bytes_modes_and_renames(self):
         delta.validate_observation(self.manifest, self.observed)

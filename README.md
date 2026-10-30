@@ -6,7 +6,7 @@
 
 当前本机维护状态（2026-10-30）：自动备份及恢复入口已停用，先前备份已按维护决定回收，目前没有有效的本地恢复集。数据库、上传资料、知识索引和运行配置属于使用中的数据，不能作为清理缓存删除。下文交付记录中的备份演练仅证明对应历史时点。
 
-日常运行范围为受控单机使用。既有 8 项未修复 CVE 的临时授权只绑定受审组合，并于北京时间 2026-11-09 23:59:59 到期；源码或构建组合变化须重新复核，不能把历史绿灯当成当前部署通过。
+日常运行范围为受控单机使用。当前源码采用 Debian 13 稳定基座、固定的 CPython 3.11.18 和上游原生库安全回补；旧 8 项 CVE 的临时风险接受不再作为新构建的放行依据。具体补丁、两项运行时适用性结论和限制见[原生安全回补说明](backend/security/native-backports/README.md)。源码或构建变化仍须通过当前提交的 CI 和安全检查，不能沿用历史绿灯。
 
 当前源码仅对模型 JSON／候选选择错误最多纠正一次，对明确的供应商失败使用可见降级；内部行程构造错误、任务取消和总超时直接失败。缺失温度显示“温度未知”，实际零度仍显示 `0°C`；非法温度不再补成零度。
 
@@ -213,7 +213,7 @@ python backend/scripts/automated_maintenance.py backup
 
 CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不作为零漏洞；具体未修复条目及适用性分析须保留。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](docs/evidence/optimization-20261026/blind-review/review.html)尚无真人评分，不能用程序通过率替代真实旅行事实准确率。
 
-首次完整 CI 的[失败结果](docs/evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](docs/evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报仅作内部改名，不加例外。[第二轮 CI](docs/evidence/optimization-20261026/second-ci-5485f8a-results.json)实际验证四种语言门禁通过，原始高危 22 项、已审上下文 22 项、阻断 0 项；替换提交仍须重新验证。原始 SARIF 继续上传，门禁通过不代表 GitHub 没有原始告警。
+首次完整 CI 的[失败结果](docs/evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](docs/evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与当时 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报仅作内部改名，不加例外。[第二轮 CI](docs/evidence/optimization-20261026/second-ci-5485f8a-results.json)实际验证四种语言门禁通过，原始高危 22 项、已审上下文 22 项、阻断 0 项；替换提交仍须重新验证。原始 SARIF 继续上传，门禁通过不代表 GitHub 没有原始告警。
 
 CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全部原断言保留](docs/evidence/optimization-20261026/ci-fixture-contract-review.json)。一份 HTTP 场景的[纯 Java 复现](docs/evidence/optimization-20261026/scope-projection-contract-review.json)只发现存储与读取投影的过期原因码不同，两边仍都过期、未核实，其余日期字段一致；这不代替原 CI 数据抓取。第二轮 CI 保留原整天相等断言并[抓取实际两份日期](docs/evidence/optimization-20261026/ci-excluded-day-actual-review-5485f8a.json)，逐字段确认唯一差异确为该原因码。此后只对这两个已审代码作表示比较，两边必须明确过期、未核实，其他全部字段、类型和数组顺序仍严格相等；额外差异继续失败。夹具及诊断显式发生在临时 CI 测试副本中，批准的业务源码与镜像文件未改；首轮失败不改写成新一轮通过结果。时间窗口基准也只补足三条明确的[合成预约事实](docs/evidence/optimization-20261026/time-window-benchmark-fixture-review.json)，原六个期待结果和断言未改。输出明确标记输入夹具已修订，不能与原冻结评测直接比较，也不改变此前 16/17 留出集记录；这些声明不是真实景点事实。
 
@@ -242,19 +242,21 @@ python tools/ci_browser_contract_overlay.py
 docker compose -p trip-validation -f docker-compose.validation.yml config --quiet
 ```
 
-完整执行复用 [CI 工作流](.github/workflows/ci.yml) 的 `Python Agent tests` 与 `Docker Compose config and build` 任务，后者使用[既有隔离 Compose](docker-compose.validation.yml)、专用项目/数据卷、离线供应商和测试账号，不读取日常业务挂载。工作流向 `main` 的提交或 PR 触发；在 Actions 中对同一提交重跑全部任务，可复现包含测试前提、管理员环境、完整浏览器套件及后续恢复的实际顺序。写入/执行开关只在 `GITHUB_ACTIONS=true` 的临时 CI 检出目录中使用，完整命令以工作流为准；单独调用其中一条不能代表整条验收。镜像构建另按既有归档恢复 12 个历史输入，并固定已审基础镜像，以复现既有受控演示产物，不将历史输出当作新成绩。
+完整执行复用 [CI 工作流](.github/workflows/ci.yml) 的 `Python Agent tests` 与 `Docker Compose config and build` 任务，后者使用[既有隔离 Compose](docker-compose.validation.yml)、专用项目/数据卷、离线供应商和测试账号，不读取日常业务挂载。工作流向 `main` 的提交或 PR 触发；在 Actions 中对同一提交重跑全部任务，可复现包含测试前提、管理员环境、完整浏览器套件及后续恢复的实际顺序。写入/执行开关只在 `GITHUB_ACTIONS=true` 的临时 CI 检出目录中使用，完整命令以工作流为准；单独调用其中一条不能代表整条验收。镜像构建按既有归档恢复 12 个历史评测输入；它们仍是历史输出。原生运行时按当前安全回补流程重新构建，不再复用旧原生组件的临时风险授权。
 
 这些迁移层服务于本次冻结版本的审查可追溯性。后续若确认真实应用缺陷，应修正应用及原测试、重新审查对应契约并逐步移除过时适配，保留旧失败与修订依据。源码、系统包、ELF、应用文件或运行权限变化后，须重新评估受影响风险和验证证据；现有精确组合的临时接受不会自动覆盖新组合，允许指纹不能自动重算求绿。最终交付要求同一替换提交全部 16 项 CI/安全任务实际成功。
 
-安全门禁允许明确记录的情境评估，不能读作“零风险”。Chroma 的四项无补丁上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用评估；Debian 已回补条目、缺失的漏洞组件和仍受影响但供应商评级 Minor 的条目分开记录，后者仍未修复。未知条目、扫描器错误、版本或指纹不匹配均阻断门禁。供应商评级本身不能放行这 8 项：用户已明确暂时接受精确核验组合中的残余风险，**仅限本机受控演示，到北京时间 2026-11-09 23:59:59 失效，不授公开生产许可**。授权与冻结指纹分别见[原始决定的公开副本](.github/security-risk-authorization.json)和[临时例外记录](.github/security-risk-acceptance.json)。
+安全门禁允许有证据的适用性评估，不能读作“零风险”。Chroma 的四项上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用[当前评估](.github/security-vex-remediated.json)。原 8 项原生 CVE 中，6 项采用上游安全代码回补；PBDS 头文件问题仅对实际匹配的 Debian 运行时包作组件不包含判定，2.42 才引入的 util-linux 子目录路径不适用于当前 2.41 分支。预编译 Python wheel 没有在此流程中全部重编，不能把共享库更新说成修复了所有已内联模板。
 
-门禁逐项核对批准业务源码树、依赖锁与 Docker recipe、87 个系统包版本、1086 个原生 ELF 路径指纹、135 个应用文件指纹及现场运行约束；原生 ELF 比较原始字节，明确列出的 UTF-8 业务文本仅规范 CRLF/LF。CI 必须重新扫描精确镜像并实测默认 uvicorn 进程，不能以镜像标签或旧报告代替等价证明。过期、源码/组件/权限组合变化、额外源代码挂载、加载器覆盖、未知高危或扫描失败仍阻断，禁止自动刷新允许指纹。`pass_temporary_risk_acceptance` 保留未修复分类与 52 条记录/8 项 CVE；原始 Agent High/Critical 总数仍为 79。逐项影响和未知见[部署矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)，扫描与证据边界见[安全供应链](docs/evidence/optimization-20261026/security-supply-chain.json)。
+新镜像使用[安全回补及组件适用性记录](.github/security-vendor-remediated.json)，核对实际包版本、相关 ELF 字节和绑定源码，并保留完整原始扫描；未知高危、扫描错误或不匹配仍阻断。CI 不再传入旧的 `--risk-acceptance` 或 `restore-response-v1` 参数。[原始授权](.github/security-risk-authorization.json)、[冻结指纹](.github/security-risk-acceptance.json)和[旧部署矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)保留为历史证据，不是本轮组件更新的放行票据。历史两文件授权测试在对应 Git 快照上运行，不要求未来业务源码永远等于旧快照。
 
 Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并禁止通过 SUID/file capabilities 获得新权限；镜像精确移除无业务用途的 mount/umount/nsenter/unshare 及已核别名/副本，保留系统依赖库。根文件系统设为只读，runtime、Chroma 使用原有持久挂载，临时目录与应用文件日志分别使用 128 MiB/64 MiB tmpfs；应用文件日志随容器停止消失，控制台日志仍由 Docker 按既定容量轮转。这些约束缩小提权与写入面，不修复进程内原生库的越界写或 UAF，实际 uvicorn 候选验收结果须与对应镜像核对。旧 Bearer 凭证继续遵守签发时的 `exp` 与 `token_version`；新会话的较短到期配置不会自动撤销全部历史凭证。
 
-Agent 当前对 `libacl1` 和 `zlib1g` 使用两个经过签名索引及文件哈希核验的 Debian 安全版本；安装器要求只有这两个包升级、不增删包、不升级 libc 或工具链，并检查原生消费者兼容性。构建不会保留 sid 仓库入口。这增加了版本维护责任：[包锁](backend/runtime-security-packages.json)和[供应商评估](.github/security-vendor-policy.json)于 **2026-11-09** 到期，届时须复核稳定发行版回补并更新证据，不能关闭门禁继续沿用。监控派生镜像同样固定官方源码/发布物及最小依赖修补，保留原版对照扫描。
+Agent 先安装既有 `libacl1` 和 `zlib1g` 官方安全版本，再安装基于稳定源构建的 glibc、libstdc++ 与 util-linux 回补包；APT 按真实依赖顺序安装，最终镜像保留包管理记录，移除编译器、开发头文件及临时 sid 源。原生运行回归覆盖越界写反例、旧解析器输出和实际消费者加载。既有[两库包锁](backend/runtime-security-packages.json)、供应商适用性和 CodeQL 上下文复核仍保留各自期限，其中部分为 **2026-11-09**；它们是后续构建/门禁的复核期限，不是程序启动或已部署容器的使用期限。监控派生镜像仍固定官方源码/发布物及必要依赖修补。
 
 本轮用户暂未提供独立异机备份目标，真实异机恢复验收已明确暂缓。首次离线留出原始结果保留为 16/17，另附身份表示评分假设的审计；不将事后解释或同样本复测改写成新的留出成绩。
+
+以下为 2026-10-27 的历史部署、备份与权限审计。相关备份已于 2026-10-29 退役，计划任务目前停用；这些记录不表示仍有可用恢复集，也不是重新启用任务的指引。
 
 2026-10-27 的日常切换保留原 PostgreSQL 卷和上传、Chroma、runtime 三处绑定目录，继续监听 `127.0.0.1:8380`。[切换前完整备份](docs/evidence/optimization-20261026/daily-fresh-backup.json)、[四镜像归档闭包](docs/evidence/optimization-20261026/latest-daily-image-archive-closure.json)和[最新旧版本独立恢复](docs/evidence/optimization-20261026/latest-daily-restore.json)均已验证。26 张原表按原字段比较，其中 24 张一致；Flyway 原记录前缀一致并追加 V11—V14，38 条过期超过 24 小时的执行检查点被保留策略清理，原件仍在备份中，详见[数据核对](docs/evidence/optimization-20261026/daily-post-upgrade.json)。
 
@@ -262,31 +264,29 @@ Agent 当前对 `libacl1` 和 `zlib1g` 使用两个经过签名索引及文件�
 
 Windows 任务 `TripPlanner-AutomatedBackup` 已注册为当前用户、有限权限、每日北京时间 03:00，禁止并行实例；[首次实际执行](docs/evidence/optimization-20261026/windows-backup-task-result.json)退出码 0，备份与服务恢复阶段约 231 秒，原四容器 ID、镜像和运行状态一致。任务依赖用户登录和 Docker Desktop，宿主机关闭时不提供连续备份保证。备份保留工具只提出待复核候选，不自动删除历史备份，需要结合磁盘告警人工处理。
 
-随后一次开机后的 [08:46 补执行失败](docs/evidence/optimization-20261026/windows-backup-20261027-startup-failure.json)，服务恢复也失败；用户随后确认这些容器由本人手动停止；不能把这次停机或受其影响的失败归因于项目自行停机。保存原始日志后，本项目按精确原 ID 恢复。现在任务改用宿主入口 `tools/windows_backup_runner.pyw`：外层仍为原 `pythonw.exe`，每个 Docker 子进程另设 `CREATE_NO_WINDOW` 和隐藏启动信息，补齐无控制台环境的标准句柄，保留二进制导出及捕获输出。失败补偿在同一维护锁内核对原容器、镜像和挂载，确认依赖可用后仅恢复本次备份会停止、且原本运行的后端与 Agent；PostgreSQL 或前端被外部停止时保留停止状态并报告失败，不反向覆盖操作者。失败备份仍返回失败，不更新成功标记。Docker 不可用或主机断电时不能保证自动恢复。
+随后一次开机后的 [08:46 补执行失败](docs/evidence/optimization-20261026/windows-backup-20261027-startup-failure.json)，服务恢复也失败；用户随后确认这些容器由本人手动停止；不能把这次停机或受其影响的失败归因于项目自行停机。保存原始日志后，本项目按精确原 ID 恢复。当时任务改用宿主入口 `tools/windows_backup_runner.pyw`：外层仍为原 `pythonw.exe`，每个 Docker 子进程另设 `CREATE_NO_WINDOW` 和隐藏启动信息，补齐无控制台环境的标准句柄，保留二进制导出及捕获输出。失败补偿在同一维护锁内核对原容器、镜像和挂载，确认依赖可用后仅恢复本次备份会停止、且原本运行的后端与 Agent；PostgreSQL 或前端被外部停止时保留停止状态并报告失败，不反向覆盖操作者。失败备份仍返回失败，不更新成功标记。Docker 不可用或主机断电时不能保证自动恢复。
 
 [修复后一次实际计划任务](docs/evidence/optimization-20261026/windows-silent-task-actual-result.json)退出码 0，备份与恢复阶段约 48 秒；108 个子进程均设置无窗口标志，161 次对任务进程的采样未观察到可见窗口。原容器状态、备份清单和近期成功心跳另见[核对记录](docs/evidence/optimization-20261026/windows-silent-backup-validation.json)。两次耗时的运行条件不同，不据此计算性能提升。
 
 [私有文件 ACL 收尾](docs/evidence/optimization-20261026/windows-private-acl-result.json)覆盖 `backups/`、`.codex-optimization/`、`deploy/runtime/` 三个私有包和 `backend/.env` 单文件：原 377 个对象仅允许当前用户、SYSTEM、Administrators，309 份文件约 7 GiB 的内容哈希、所有者及创建标识未变。原 SDDL、精确清单和前后哈希保留在本机私有审计目录，公开摘要不含凭据。继承 canary、父代理独立权限核对及真实 PowerShell 5.1 无窗口预检均通过。首次权限接口和模块加载失败保留；没有接管所有权、提权或整仓库修改 ACL。
 
-Windows 定时备份仍使用 `tools/windows_backup_runner.pyw`，新增入口在创建日志和调用维护逻辑前，核对本项目 `backups/` 下目录的三主体私有继承；核对失败则退出 1。只读预览为 `pwsh -NoProfile -File tools/windows_private_acl.ps1 -Mode Preview`，它只盘点，不修改 ACL。当前任务未配置外部副本，UNC/异机目标权限须独立配置并核验；原后端 Python 命令不负责设置 Windows ACL，文件 `mode 0600` 也不能代替 NTFS 权限。上述 09:10 完整静默任务早于这个新入口：新入口只有三项定向测试、实际无窗口预检和继承证据，按本轮范围没有再触发完整备份或任务。
+当时 Windows 定时备份使用 `tools/windows_backup_runner.pyw`，新增入口在创建日志和调用维护逻辑前，核对本项目 `backups/` 下目录的三主体私有继承；核对失败则退出 1。只读预览为 `pwsh -NoProfile -File tools/windows_private_acl.ps1 -Mode Preview`，它只盘点，不修改 ACL。当前任务未配置外部副本，UNC/异机目标权限须独立配置并核验；原后端 Python 命令不负责设置 Windows ACL，文件 `mode 0600` 也不能代替 NTFS 权限。上述 09:10 完整静默任务早于这个新入口：新入口只有三项定向测试、实际无窗口预检和继承证据，按本轮范围没有再触发完整备份或任务。
 
 本次 ACL 减少枚举私有文件的直接读写，仍依赖可信的工作区、当前账号和管理员。执行源码的 ACL 在本次四个目标之外，仍观察到普通本机用户修改权限；因此不能声称已抵抗恶意本机用户修改代码后影响计划任务，也不是磁盘加密、当前账号失陷防护或多用户强隔离。需要更强隔离时，应把任务入口及完整调用链发布到受保护的独立执行目录，再单独审查任务迁移和访问策略。
 
-新安装仍先使用原安装器；现有任务用下列迁移工具预览，再显式仅更新 Action。它保留原用户、有限权限、触发器、备份路径及参数，不保存密码。后台 stdout、stderr、子进程退出码和诊断保存在实际备份根目录的 `task-logs/silent-backup-*.log` 与同名 JSON；当前任务结果也可在 Windows 任务计划程序或 `Get-ScheduledTaskInfo` 中查看。不要只读取旧的成功标记判断最近一次尝试。
+当前只需查看任务是否仍停用。重新启用备份须先确定新的备份目标并完成恢复验收；历史迁移工具和日志格式仍保留在源码及审计记录中。`Get-ScheduledTaskInfo` 的旧成功结果不能证明现在仍在备份。
 
 ```powershell
-pwsh -File tools/configure_silent_backup_task.ps1
-pwsh -File tools/configure_silent_backup_task.ps1 -UpdateExistingAction
+Get-ScheduledTask -TaskName TripPlanner-AutomatedBackup | Select-Object TaskName, State
 Get-ScheduledTaskInfo -TaskName TripPlanner-AutomatedBackup
-Get-ChildItem backups/automated-daily/task-logs | Sort-Object LastWriteTime -Descending
 ```
 
 日常 Prometheus 位于 `127.0.0.1:19090`。[告警实测](docs/evidence/optimization-20261026/daily-alert-delivery-result-2.json)通过 Alertmanager API 注入单个合成告警，实际本地持久收件箱收到 firing/resolved，重复事件被去重；这不代替规则触发或真实值班人员送达证明。收件箱使用[单独的固定镜像与构建配方](docs/evidence/optimization-20261026/daily-receiver-provenance.json)，本次扫描原始 High/Critical 为 0，没有沿用 Agent 的临时风险例外。
 
-[当前 Agent 现场门禁](docs/evidence/optimization-20261026/daily-agent-security-receipt-a454bbd.json)保持所有批准的包、ELF、应用指纹和实际进程约束。Windows 原目录的 `0:0/0777` 是 Docker Desktop 反射元数据；只对两条原始精确绑定路径兼容，仍验证 UID 1000 的独占写入、fsync 和读回，不能将其当作 Linux 所有权隔离证明。
+[历史 Agent 现场门禁](docs/evidence/optimization-20261026/daily-agent-security-receipt-a454bbd.json)保持所有批准的包、ELF、应用指纹和实际进程约束。Windows 原目录的 `0:0/0777` 是 Docker Desktop 反射元数据；只对两条原始精确绑定路径兼容，仍验证 UID 1000 的独占写入、fsync 和读回，不能将其当作 Linux 所有权隔离证明。
 
-批准镜像原本包含 12 个未进入 Git 的历史评测输出。为复现这个既有实物，CI 在构建前从[明确归档的历史输入](docs/evidence/optimization-20261026/historical-build-inputs/README.md)按原始字节及批准应用哈希精确恢复；它们不作为本轮新成绩。允许指纹没有刷新，系统包、原生库或其他应用内容漂移仍会阻断。GitHub 的 [CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml) 与[安全门禁](https://github.com/W205614/langchain-trip-planner/actions/workflows/security.yml)合计 16 个展开任务，须核对当前确切提交，不能复用旧提交的绿灯。
+批准镜像原本包含 12 个未进入 Git 的历史评测输出。为复现这个既有实物，CI 在构建前从[明确归档的历史输入](docs/evidence/optimization-20261026/historical-build-inputs/README.md)按原始字节及批准应用哈希精确恢复；它们不作为本轮新成绩。这些历史输入的字节没有改写；新的源码和原生安全回补按当前记录单独核验，不自动刷新旧风险授权。GitHub 的 [CI](https://github.com/W205614/langchain-trip-planner/actions/workflows/ci.yml) 与[安全门禁](https://github.com/W205614/langchain-trip-planner/actions/workflows/security.yml)合计 16 个展开任务，须核对当前确切提交，不能复用旧提交的绿灯。
 
 完整功能与源码交接见[54 项功能问答账本](docs/evidence/optimization-20261026/guide-handoff.json)；每项含主问、至少两条追问、答案要点及证据边界。源码存在和本轮定向验收不等同全部功能新测，更不构成个人贡献、线上用户或准确率证明。
 
-Agent 的后续 CI 重建曾被[基础镜像漂移检查](docs/evidence/optimization-20261026/ci-agent-native-drift-40436685294.json)阻断：上游浮动标签从 CPython 3.11.17 变为 3.11.18，87 个系统包和 135 个应用指纹一致，但 12 个 CPython ELF 字节改变。CI 现在显式使用此前已完整核验的 `python@sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377` 重建已批准组合，允许指纹未刷新。第三轮实际通过全部受审组件核对和新鲜扫描，原始 High/Critical 为 59 条，其中 46 条按同一批八项未修复 CVE 的限时授权处理；早先日常镜像的 79/52 条是另一份扫描快照，不能据此推断漏洞减少。每个替换提交仍须重新核对。此固定用于复现现有受控演示产物，不代表修复八项 CVE，或已审查并接受新解释器组合。
+Agent 的历史 CI 重建曾被[基础镜像漂移检查](docs/evidence/optimization-20261026/ci-agent-native-drift-40436685294.json)阻断：CPython 3.11.17 变为 3.11.18 时，12 个解释器 ELF 字节改变，因此当时固定旧镜像复现临时授权组合。该记录中的 59/46 条以及更早的 79/52 条属于不同历史扫描快照，不能据此推断漏洞减少。本轮使用固定的 CPython 3.11.18 安全版本和稳定发行版原生回补，重新扫描实际产物，退出旧八项 CVE 的临时风险接受流程。

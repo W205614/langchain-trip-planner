@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "assessment_date": "2026-10-30",
+  "expires_on": "2026-11-25",
+  "product": "langchain-trip-planner internal Agent embedded derived index",
+  "assessment_kind": "contextual_not_affected_not_upstream_fixed",
+  "application": "Explicit --vex opt-in only; raw scanner findings are preserved. Unknown advisory IDs, other versions, expired assessment or changed bound source fail closed. Image application additionally requires the embedded Agent CMD and the exact checked-out revision label.",
+  "source_bindings": {
+    "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
+    "backend/app/services/rag_service.py": "0e3db20b8e973cd301d49806ac76d847a149472e7dbed316e5f4a1c033c44064",
+    "backend/app/agent_api/rebuild.py": "7b5829d8a880d376eb7dbfb9e9fab8233d31150989b4c80d292d016962bbc8f1",
+    "backend/app/agent_api/main.py": "76e9a4a68f00f9a893e53f0df58509676c2582a60e4912ac4dbe72e049ba396e",
+    "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
+    "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
+    "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b"
+  },
+  "assumptions_tests": [
+    "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
+    "backend/tests/test_chroma_boundary.py::test_embedded_roundtrip_uses_supplied_embeddings_without_network",
+    "backend/tests/test_chroma_boundary.py::test_agent_does_not_expose_chroma_server_collection_routes"
+  ],
+  "assessments": [
+    {
+      "ecosystem": "PyPI",
+      "package": "chromadb",
+      "version": "1.5.9",
+      "ids": [
+        "PYSEC-2026-311",
+        "CVE-2026-45829",
+        "GHSA-f4j7-r4q5-qw2c"
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "affected_upstream_capability": "Unauthenticated collection-create endpoint can load a remote repository with trust_remote_code.",
+      "impact_statement": "Only an embedded RustBindingsAPI persistent index is constructed, with operator-supplied bounded embeddings and no Chroma HTTP server, tenant API, SimpleRBAC provider or attacker-controlled embedding configuration. Explicit client settings override remote/server environment selection. Java performs authorization before internal index work. This assessment does not fix the upstream library and ceases to apply if the entrypoint, client settings or source bindings change.",
+      "references": [
+        "https://github.com/advisories/GHSA-f4j7-r4q5-qw2c"
+      ]
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "chromadb",
+      "version": "1.5.9",
+      "ids": [
+        "PYSEC-2026-3814",
+        "CVE-2026-45833",
+        "GHSA-36p7-vc44-83pf"
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "affected_upstream_capability": "Authenticated server collection-update endpoint can load a remote repository with trust_remote_code.",
+      "impact_statement": "Only an embedded RustBindingsAPI persistent index is constructed, with operator-supplied bounded embeddings and no Chroma HTTP server, tenant API, SimpleRBAC provider or attacker-controlled embedding configuration. Explicit client settings override remote/server environment selection. Java performs authorization before internal index work. This assessment does not fix the upstream library and ceases to apply if the entrypoint, client settings or source bindings change.",
+      "references": [
+        "https://github.com/advisories/GHSA-36p7-vc44-83pf"
+      ]
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "chromadb",
+      "version": "1.5.9",
+      "ids": [
+        "PYSEC-2026-3815",
+        "CVE-2026-45831",
+        "GHSA-xph7-9rjv-w5fr"
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "affected_upstream_capability": "Chroma HTTP server SimpleRBAC provider fails to scope permissions to tenant resources.",
+      "impact_statement": "Only an embedded RustBindingsAPI persistent index is constructed, with operator-supplied bounded embeddings and no Chroma HTTP server, tenant API, SimpleRBAC provider or attacker-controlled embedding configuration. Explicit client settings override remote/server environment selection. Java performs authorization before internal index work. This assessment does not fix the upstream library and ceases to apply if the entrypoint, client settings or source bindings change.",
+      "references": [
+        "https://github.com/advisories/GHSA-xph7-9rjv-w5fr"
+      ]
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "chromadb",
+      "version": "1.5.9",
+      "ids": [
+        "PYSEC-2026-3813",
+        "CVE-2026-45830",
+        "GHSA-2wm9-hf6c-p5cr"
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "affected_upstream_capability": "Chroma HTTP server tenant collection authorization permits cross-tenant actions.",
+      "impact_statement": "Only an embedded RustBindingsAPI persistent index is constructed, with operator-supplied bounded embeddings and no Chroma HTTP server, tenant API, SimpleRBAC provider or attacker-controlled embedding configuration. Explicit client settings override remote/server environment selection. Java performs authorization before internal index work. This assessment does not fix the upstream library and ceases to apply if the entrypoint, client settings or source bindings change.",
+      "references": [
+        "https://github.com/advisories/GHSA-2wm9-hf6c-p5cr"
+      ]
+    }
+  ]
+}
