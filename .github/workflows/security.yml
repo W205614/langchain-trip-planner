@@ -27,7 +27,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # verified v6, Node 24
         with:
-          python-version: '3.11'
+          python-version: '3.11.18'
       - name: Verify gate failure policy
         run: python -m unittest discover -s tools/tests -v
       - name: Checksum-verified Gitleaks CLI (redacted reports)
@@ -61,7 +61,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
-          python-version: '3.11'
+          python-version: '3.11.18'
       - name: Pull current patched runtime image without starting a container
         if: matrix.service == 'postgres'
         env:
@@ -107,7 +107,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
-          python-version: '3.11'
+          python-version: '3.11.18'
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
         with:
           node-version: '22'
@@ -214,7 +214,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
-          python-version: '3.11'
+          python-version: '3.11.18'
       - name: Restore exact historical Agent build inputs (not fresh evaluation)
         if: matrix.service == 'agent'
         run: python tools/restore_historical_build_inputs.py --restore-for-ci --report security-reports/historical-build-inputs.json

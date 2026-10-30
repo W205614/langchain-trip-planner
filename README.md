@@ -248,6 +248,8 @@ docker compose -p trip-validation -f docker-compose.validation.yml config --quie
 
 安全门禁允许有证据的适用性评估，不能读作“零风险”。Chroma 的四项上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用[当前评估](.github/security-vex-remediated.json)。原 8 项原生 CVE 中，6 项采用上游安全代码回补；PBDS 头文件问题仅对实际匹配的 Debian 运行时包作组件不包含判定，2.42 才引入的 util-linux 子目录路径不适用于当前 2.41 分支。预编译 Python wheel 没有在此流程中全部重编，不能把共享库更新说成修复了所有已内联模板。
 
+Python 依赖同时固定 LangGraph `1.2.14` 与 SDK `0.4.6`，处理[上游 v3 流式标识符路径编码漏洞](https://github.com/langchain-ai/langgraph/security/advisories/GHSA-3fx2-cqw9-xr3c)；锁文件通过原有 uv `0.13.5` 重新生成，Python 3.11 的 Linux/Windows 有效依赖只变化这两个包。
+
 新镜像使用[安全回补及组件适用性记录](.github/security-vendor-remediated.json)，核对实际包版本、相关 ELF 字节和绑定源码，并保留完整原始扫描；未知高危、扫描错误或不匹配仍阻断。CI 不再传入旧的 `--risk-acceptance` 或 `restore-response-v1` 参数。[原始授权](.github/security-risk-authorization.json)、[冻结指纹](.github/security-risk-acceptance.json)和[旧部署矩阵](docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)保留为历史证据，不是本轮组件更新的放行票据。历史两文件授权测试在对应 Git 快照上运行，不要求未来业务源码永远等于旧快照。
 
 Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并禁止通过 SUID/file capabilities 获得新权限；镜像精确移除无业务用途的 mount/umount/nsenter/unshare 及已核别名/副本，保留系统依赖库。根文件系统设为只读，runtime、Chroma 使用原有持久挂载，临时目录与应用文件日志分别使用 128 MiB/64 MiB tmpfs；应用文件日志随容器停止消失，控制台日志仍由 Docker 按既定容量轮转。这些约束缩小提权与写入面，不修复进程内原生库的越界写或 UAF，实际 uvicorn 候选验收结果须与对应镜像核对。旧 Bearer 凭证继续遵守签发时的 `exp` 与 `token_version`；新会话的较短到期配置不会自动撤销全部历史凭证。

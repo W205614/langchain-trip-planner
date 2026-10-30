@@ -13,3 +13,6 @@ opentelemetry-exporter-otlp-common==0.66b1
 opentelemetry-proto==1.45.1
 opentelemetry-semantic-conventions==0.66b1
 urllib3==2.8.0
+# CVE-2026-118667: encode identifiers in the SDK v3 stream request paths.
+langgraph==1.2.14
+langgraph-sdk==0.4.6
