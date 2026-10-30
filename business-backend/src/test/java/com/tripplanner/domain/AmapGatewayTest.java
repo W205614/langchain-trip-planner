@@ -10,6 +10,28 @@ import org.junit.jupiter.api.*;
 import tools.jackson.databind.json.JsonMapper;
 
 class AmapGatewayTest {
+  @org.junit.jupiter.params.ParameterizedTest
+  @org.junit.jupiter.params.provider.CsvSource({"503,image/png", "200,text/plain"})
+  void rejectedPhotoResponseClosesItsInputStream(int status, String media) throws Exception {
+    var gateway = new AmapGateway("http://127.0.0.1:" + server.getAddress().getPort(), "fixture",
+        0, 0, 0, 10, "test", "no", JsonMapper.builder().build());
+    var input = org.mockito.Mockito.spy(new java.io.ByteArrayInputStream(new byte[] {1}));
+    var transport = org.mockito.Mockito.mock(java.net.http.HttpClient.class);
+    @SuppressWarnings("unchecked")
+    var response = (java.net.http.HttpResponse<java.io.InputStream>) org.mockito.Mockito.mock(java.net.http.HttpResponse.class);
+    org.mockito.Mockito.when(response.statusCode()).thenReturn(status);
+    org.mockito.Mockito.when(response.body()).thenReturn(input);
+    org.mockito.Mockito.when(response.headers()).thenReturn(java.net.http.HttpHeaders.of(
+        java.util.Map.of("Content-Type", java.util.List.of(media)), (name, value) -> true));
+    org.mockito.Mockito.when(transport.send(org.mockito.Mockito.any(java.net.http.HttpRequest.class),
+        org.mockito.ArgumentMatchers.<java.net.http.HttpResponse.BodyHandler<java.io.InputStream>>any())).thenReturn(response);
+    org.springframework.test.util.ReflectionTestUtils.setField(gateway, "http", transport);
+    var poi = JsonMapper.builder().build().createObjectNode();
+    poi.putArray("photos").add("https://photos.amap.com/photo.png");
+    assertTrue(gateway.imageFromPoi("景点", poi).placeholder());
+    org.mockito.Mockito.verify(input).close();
+  }
+
   @Test
   void exhaustedDurableBudgetPreventsPhotoNetworkRequest() {
     var gateway=new AmapGateway("http://127.0.0.1:"+server.getAddress().getPort(),"fixture",

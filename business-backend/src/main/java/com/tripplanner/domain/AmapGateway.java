@@ -367,10 +367,10 @@ public class AmapGateway {
           if(governance!=null)governance.reserveAmap();
           var response = http.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(8)).GET().build(),
               HttpResponse.BodyHandlers.ofInputStream());
-          String media = response.headers().firstValue("Content-Type").orElse("").split(";", 2)[0].strip().toLowerCase(Locale.ROOT);
-          if (response.statusCode() / 100 != 2 || !Set.of("image/jpeg", "image/png", "image/webp", "image/gif").contains(media))
-            throw new ApiException(503, "景点图片暂不可用", "MAP_UPSTREAM_ERROR");
           try (var input = response.body(); var output = new ByteArrayOutputStream()) {
+            String media = response.headers().firstValue("Content-Type").orElse("").split(";", 2)[0].strip().toLowerCase(Locale.ROOT);
+            if (response.statusCode() / 100 != 2 || !Set.of("image/jpeg", "image/png", "image/webp", "image/gif").contains(media))
+              throw new ApiException(503, "景点图片暂不可用", "MAP_UPSTREAM_ERROR");
             byte[] buffer = new byte[8192]; int read, total = 0;
             while ((read = input.read(buffer)) >= 0) {
               total += read; if (total > 5 * 1024 * 1024) throw new ApiException(413, "景点图片过大");
