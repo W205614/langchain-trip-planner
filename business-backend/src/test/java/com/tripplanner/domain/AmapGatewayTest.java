@@ -42,6 +42,8 @@ class AmapGatewayTest {
             : "{\"status\":\"1\",\"route\":{\"paths\":[{\"distance\":\"600\",\"duration\":\"600\"}]}}"));
     server.createContext("/v3/direction/transit/integrated", exchange -> respond(exchange,
         "{\"status\":\"1\",\"route\":{\"transits\":[]}}"));
+    server.createContext("/v3/geocode/geo", exchange -> respond(exchange,
+        "{\"status\":\"1\",\"geocodes\":[{\"adcode\":\"110000\"}]}"));
     server.start();
   }
 
@@ -96,6 +98,28 @@ class AmapGatewayTest {
         0, 0, 0, 10, "test", "no", JsonMapper.builder().build());
     var image = gateway.image("无图景点", "fixture-1", "北京");
     assertTrue(image.placeholder()); assertEquals("image/svg+xml", image.mediaType());
+  }
+
+  @Test
+  void missingTemperatureIsUnknownAndRealZeroIsPreserved() {
+    server.createContext("/v3/weather/weatherInfo", exchange -> respond(exchange,
+        "{\"status\":\"1\",\"forecasts\":[{\"casts\":[{\"date\":\"2026-10-30\",\"nighttemp\":\"0\"}]}]}"));
+    var gateway = new AmapGateway("http://127.0.0.1:" + server.getAddress().getPort(), "fixture",
+        0, 0, 0, 10, "test", "no", JsonMapper.builder().build());
+    var weather = gateway.weather("北京").get(0);
+    assertTrue(weather.path("day_temp").isNull());
+    assertEquals(0, weather.path("night_temp").asInt());
+  }
+
+  @Test
+  void malformedTemperatureHasExplicitUpstreamError() {
+    server.createContext("/v3/weather/weatherInfo", exchange -> respond(exchange,
+        "{\"status\":\"1\",\"forecasts\":[{\"casts\":[{\"date\":\"2026-10-30\",\"daytemp\":\"invalid\"}]}]}"));
+    var gateway = new AmapGateway("http://127.0.0.1:" + server.getAddress().getPort(), "fixture",
+        0, 0, 0, 10, "test", "no", JsonMapper.builder().build());
+    var error = assertThrows(com.tripplanner.api.ApiException.class, () -> gateway.weather("北京"));
+    assertEquals(503, error.status);
+    assertEquals("WEATHER_UNVERIFIED", error.code);
   }
 
   private void respond(com.sun.net.httpserver.HttpExchange exchange, String body) throws java.io.IOException {

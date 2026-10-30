@@ -228,7 +228,7 @@ class RagService:
 
             for name in (_KNOWLEDGE_COLLECTION, _HISTORY_COLLECTION):
                 store = Chroma(
-                    collection_name=getattr(self, "_collection_names", {}).get(name, name),
+                    collection_name=self._collection_names.get(name, name),
                     embedding_function=self._embedding,
                     persist_directory=str(CHROMA_DIR),
                     client_settings=embedded_settings(CHROMA_DIR),
@@ -263,14 +263,14 @@ class RagService:
     @property
     def enabled(self) -> bool:
         """RAG 是否可用"""
-        return self._embedding is not None and not getattr(self, "_degraded", False)
+        return self._embedding is not None and not self._degraded
 
     def _new_store(self, collection_name: str):
         """(重建用) 创建新的 Chroma 实例"""
         from langchain_chroma import Chroma
 
         return Chroma(
-            collection_name=getattr(self, "_collection_names", {}).get(collection_name, collection_name),
+            collection_name=self._collection_names.get(collection_name, collection_name),
             embedding_function=self._embedding,
             persist_directory=str(CHROMA_DIR),
             client_settings=embedded_settings(CHROMA_DIR),

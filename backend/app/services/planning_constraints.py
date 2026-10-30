@@ -5,9 +5,12 @@ not verified appointments. Missing upstream facts never become zero distances.
 """
 from itertools import permutations
 from math import isfinite
+import httpx
 
 from ..models.schemas import TripPlan, TripRequest
 from .plan_quality import REQUIRED_MEALS, evaluate_plan, recalculate_budget, transport_to_route_type
+from .amap_mcp_client import AmapMCPError
+from .execution import remaining
 
 POLICY_VERSION = "constraints-v2"
 MEAL_MINUTES = 90
@@ -102,9 +105,15 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                 if cache[key] is not None:
                     gaps.add("route_distance_and_walking_unverified")
                 return cache[key]
+            remaining()
             try:
                 route = route_planner.plan_route_by_locations(left.location, right.location,
                     route_type=mode, city=city) if route_planner else {}
+            except (httpx.HTTPError, AmapMCPError, TimeoutError, ValueError):
+                remaining()
+                cache[key] = None
+                return None
+            try:
                 duration, meters = float(route["duration"]), float(route["distance"])
                 if not all(isfinite(v) and v >= 0 for v in (duration, meters)):
                     raise ValueError("Invalid route quantities")
@@ -114,7 +123,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                     if not isfinite(walk) or walk < 0:
                         raise ValueError("Invalid walking distance")
                 cache[key] = (duration / 60, meters, walk, route.get("route_type", mode))
-            except Exception:
+            except (KeyError, TypeError, ValueError):
                 cache[key] = None
         return cache[key]
 

@@ -11,7 +11,9 @@ from datetime import datetime, timedelta
 from typing import Callable, List
 from langgraph.graph import StateGraph, START, END
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.messages import AIMessageChunk
+from openai import APIError, APITimeoutError
+import httpx
 from ..services.llm_service import get_llm
 from ..services.amap_service import get_amap_service
 from ..core.exceptions import BizException
@@ -25,7 +27,6 @@ from ..models.schemas import (
     Meal,
     Location,
     Hotel,
-    Budget,
     WeatherInfo,
     POIInfo,
 )
@@ -60,7 +61,7 @@ def _restaurant_open_for_meal(opening_hours: str | None, meal_type: str) -> bool
             return True
     return False
 
-from .prompts import PLANNER_SYSTEM_PROMPT, DAY_PLANNER_SYSTEM_PROMPT
+from .prompts import DAY_PLANNER_SYSTEM_PROMPT
 from .state import GraphState
 from .data_nodes import TravelDataNodes
 
@@ -215,10 +216,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             )
             self._emit_progress(state, "generate_trip_plan", 82, "每日行程已生成，正在校验")
             logger.info("   ✅ 行程计划生成成功")
-            return {"trip_plan": trip_plan, "error": False}
-        except Exception as e:
-            logger.warning(f"   ⚠️ LLM 生成行程失败: {e}")
-            return {"error": True}
+            return {"trip_plan": trip_plan}
         finally:
             self._emit_trace(state, "stage_duration", stage="plan_generation", seconds=time.perf_counter() - started_at)
 
@@ -248,82 +246,40 @@ class MultiAgentTripPlanner(TravelDataNodes):
         每一天只让模型生成选择与文案，真实 POI 事实字段由候选集回填。
         """
         day_started_at = time.perf_counter()
-        try:
-            # 每个线程独立构建 (独立 LLM 实例 + bind max_tokens)
-            prompt_template = ChatPromptTemplate.from_messages([
-                ("system", DAY_PLANNER_SYSTEM_PROMPT),
-                ("human", "{query}"),
-            ])
-            from ..config import get_settings
+        # 每个线程独立构建 (独立 LLM 实例 + bind max_tokens)
+        prompt_template = ChatPromptTemplate.from_messages([
+            ("system", DAY_PLANNER_SYSTEM_PROMPT),
+            ("human", "{query}"),
+        ])
+        from ..config import get_settings
 
-            settings = get_settings()
-            day_timeout = min(settings.llm_timeout, settings.llm_day_timeout)
-            day_chain = prompt_template | get_llm(timeout=day_timeout).bind(
-                max_tokens=settings.llm_day_max_tokens
-            )
+        settings = get_settings()
+        day_timeout = min(settings.llm_timeout, settings.llm_day_timeout)
+        day_chain = prompt_template | get_llm(timeout=day_timeout).bind(
+            max_tokens=settings.llm_day_max_tokens
+        )
 
-            day_deadline = time.monotonic() + remaining(day_timeout)
-            last_parse_error_type = ""
-            for attempt in range(2):
-                started_at = time.perf_counter()
-                try:
-                    from ..services.eval_budget import reserve
-                    reserve(day_query, settings.llm_day_max_tokens)
-                    from ..services.execution import record_usage
-                    record_usage()
-                    response = self._stream_day_response(
-                        day_chain,
-                        {"query": day_query},
-                        lambda: self._on_day_first_token(state, day_index, started_at),
-                        timeout=max(0.001, min(day_deadline - time.monotonic(), remaining(day_timeout))),
-                    )
-                except Exception as exc:
-                    invoke_seconds = time.perf_counter() - started_at
-                    total_seconds = time.perf_counter() - day_started_at
-                    error_type = type(exc).__name__
-                    self._emit_trace(
-                        state,
-                        "stage_duration",
-                        stage="per_day_llm_call",
-                        day_index=day_index,
-                        attempt=attempt + 1,
-                        seconds=invoke_seconds,
-                    )
-                    reason = "timeout" if self._is_timeout_error(exc) else "llm_error"
-                    self._emit_trace(
-                        state,
-                        "llm_day_result",
-                        day_index=day_index,
-                        attempt=attempt + 1,
-                        seconds=invoke_seconds,
-                        total_seconds=total_seconds,
-                        outcome="fallback",
-                        reason=reason,
-                        error_type=error_type,
-                    )
-                    observe_daily_llm(invoke_seconds, reason)
-                    observe_model_call(
-                        "trip_day",
-                        invoke_seconds,
-                        outcome="error",
-                        input_price_per_million_usd=settings.llm_input_price_per_million_usd,
-                        output_price_per_million_usd=settings.llm_output_price_per_million_usd,
-                    )
-                    logger.warning(
-                        "daily_llm_result day=%s attempt=%s outcome=fallback reason=%s "
-                        "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
-                        day_index + 1,
-                        attempt + 1,
-                        reason,
-                        invoke_seconds,
-                        total_seconds,
-                        error_type,
-                    )
-                    return self._fallback_day(
-                        request, day_index, current_date, state, fallback_reason=reason
-                    )
+        day_deadline = time.monotonic() + remaining(day_timeout)
+        last_parse_error_type = ""
+        for attempt in range(2):
+            started_at = time.perf_counter()
+            from ..services.eval_budget import reserve
+            reserve(day_query, settings.llm_day_max_tokens)
+            from ..services.execution import record_usage
+            record_usage()
+            remaining()
+            try:
+                response = self._stream_day_response(
+                    day_chain,
+                    {"query": day_query},
+                    lambda: self._on_day_first_token(state, day_index, started_at),
+                    timeout=max(0.001, min(day_deadline - time.monotonic(), remaining(day_timeout))),
+                )
+            except (APIError, httpx.HTTPError, TimeoutError) as exc:
+                remaining()
                 invoke_seconds = time.perf_counter() - started_at
                 total_seconds = time.perf_counter() - day_started_at
+                error_type = type(exc).__name__
                 self._emit_trace(
                     state,
                     "stage_duration",
@@ -332,26 +288,71 @@ class MultiAgentTripPlanner(TravelDataNodes):
                     attempt=attempt + 1,
                     seconds=invoke_seconds,
                 )
-                observe_daily_llm(invoke_seconds)
-                content = response.content if hasattr(response, "content") else str(response)
-                usage = getattr(response, "usage_metadata", None) or {}
-                record_usage(usage)
+                reason = "timeout" if self._is_timeout_error(exc) else "llm_error"
+                self._emit_trace(
+                    state,
+                    "llm_day_result",
+                    day_index=day_index,
+                    attempt=attempt + 1,
+                    seconds=invoke_seconds,
+                    total_seconds=total_seconds,
+                    outcome="fallback",
+                    reason=reason,
+                    error_type=error_type,
+                )
+                observe_daily_llm(invoke_seconds, reason)
                 observe_model_call(
                     "trip_day",
                     invoke_seconds,
-                    usage,
+                    outcome="error",
                     input_price_per_million_usd=settings.llm_input_price_per_million_usd,
                     output_price_per_million_usd=settings.llm_output_price_per_million_usd,
                 )
-                try:
-                    # 解析紧凑草稿，再由可信 POI 候选构造完整 DayPlan。
-                    data = self._extract_json(content)
-                    draft = DayPlanDraft.model_validate(data)
-                    day_plan = self._build_day_plan_from_draft(
-                        draft, day_index, current_date, request, state
-                    )
-                    if not day_plan.attractions:
-                        raise ValueError("没有可验证的高德 POI 景点")
+                logger.warning(
+                    "daily_llm_result day=%s attempt=%s outcome=fallback reason=%s "
+                    "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
+                    day_index + 1,
+                    attempt + 1,
+                    reason,
+                    invoke_seconds,
+                    total_seconds,
+                    error_type,
+                )
+                return self._fallback_day(
+                    request, day_index, current_date, state, fallback_reason=reason
+                )
+            remaining()
+            invoke_seconds = time.perf_counter() - started_at
+            total_seconds = time.perf_counter() - day_started_at
+            self._emit_trace(
+                state,
+                "stage_duration",
+                stage="per_day_llm_call",
+                day_index=day_index,
+                attempt=attempt + 1,
+                seconds=invoke_seconds,
+            )
+            observe_daily_llm(invoke_seconds)
+            content = response.content
+            usage = response.usage_metadata or {}
+            record_usage(usage)
+            observe_model_call(
+                "trip_day",
+                invoke_seconds,
+                usage,
+                input_price_per_million_usd=settings.llm_input_price_per_million_usd,
+                output_price_per_million_usd=settings.llm_output_price_per_million_usd,
+            )
+            try:
+                data = self._extract_json(content)
+                draft = DayPlanDraft.model_validate(data)
+            except ValueError as exc:
+                parse_error = exc
+            else:
+                day_plan = self._build_day_plan_from_draft(
+                    draft, day_index, current_date, request, state
+                )
+                if day_plan.attractions:
                     logger.info(
                         "daily_llm_result day=%s attempt=%s outcome=success "
                         "elapsed_seconds=%.2f total_seconds=%.2f error_type=none tokens=%s",
@@ -373,70 +374,47 @@ class MultiAgentTripPlanner(TravelDataNodes):
                         error_type="",
                     )
                     return day_plan
-                except Exception as e:
-                    last_parse_error_type = type(e).__name__
-                    logger.warning(
-                        "daily_llm_parse_failed day=%s attempt=%s elapsed_seconds=%.2f "
-                        "total_seconds=%.2f error_type=%s",
-                        day_index + 1,
-                        attempt + 1,
-                        invoke_seconds,
-                        total_seconds,
-                        last_parse_error_type,
-                    )
-                    # 自纠错: 把错误反馈给 LLM 重新生成
-                    day_query = (
-                        f"你上一次输出的 JSON 不符合要求, 错误: {e}\n"
-                        f"上一次输出: {content[:1500]}\n"
-                        f"请重新输出该天的一个合法 JSON。\n原始需求:\n{day_query}"
-                    )
-            total_seconds = time.perf_counter() - day_started_at
+                parse_error = ValueError("没有可验证的高德 POI 景点")
+            last_parse_error_type = type(parse_error).__name__
             logger.warning(
-                "daily_llm_result day=%s attempt=2 outcome=fallback reason=invalid_response "
-                "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
+                "daily_llm_parse_failed day=%s attempt=%s elapsed_seconds=%.2f "
+                "total_seconds=%.2f error_type=%s",
                 day_index + 1,
+                attempt + 1,
                 invoke_seconds,
                 total_seconds,
                 last_parse_error_type,
             )
-            self._emit_trace(
-                state,
-                "llm_day_result",
-                day_index=day_index,
-                attempt=2,
-                seconds=invoke_seconds,
-                total_seconds=total_seconds,
-                outcome="fallback",
-                reason="invalid_response",
-                error_type=last_parse_error_type,
+            # 自纠错: 把错误反馈给 LLM 重新生成
+            day_query = (
+                f"你上一次输出的 JSON 不符合要求, 错误: {parse_error}\n"
+                f"上一次输出: {content[:1500]}\n"
+                f"请重新输出该天的一个合法 JSON。\n原始需求:\n{day_query}"
             )
-            return self._fallback_day(
-                request, day_index, current_date, state, fallback_reason="invalid_response"
-            )
-        except Exception as e:
-            total_seconds = time.perf_counter() - day_started_at
-            logger.warning(
-                "daily_llm_result day=%s attempt=0 outcome=fallback reason=llm_error "
-                "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
-                day_index + 1,
-                total_seconds,
-                total_seconds,
-                type(e).__name__,
-            )
-            self._emit_trace(
-                state,
-                "llm_day_result",
-                day_index=day_index,
-                attempt=0,
-                seconds=total_seconds,
-                total_seconds=total_seconds,
-                outcome="fallback",
-                reason="llm_error",
-                error_type=type(e).__name__,
-            )
-            return self._fallback_day(
-                request, day_index, current_date, state, fallback_reason="llm_error"
-            )
+
+        total_seconds = time.perf_counter() - day_started_at
+        logger.warning(
+            "daily_llm_result day=%s attempt=2 outcome=fallback reason=invalid_response "
+            "elapsed_seconds=%.2f total_seconds=%.2f error_type=%s",
+            day_index + 1,
+            invoke_seconds,
+            total_seconds,
+            last_parse_error_type,
+        )
+        self._emit_trace(
+            state,
+            "llm_day_result",
+            day_index=day_index,
+            attempt=2,
+            seconds=invoke_seconds,
+            total_seconds=total_seconds,
+            outcome="fallback",
+            reason="invalid_response",
+            error_type=last_parse_error_type,
+        )
+        return self._fallback_day(
+            request, day_index, current_date, state, fallback_reason="invalid_response"
+        )
 
     @staticmethod
     def _stream_day_response(day_chain, payload: dict, on_first_token: Callable[[], None], timeout=45):
@@ -454,7 +432,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 finally:
                     await stream.aclose()
             if response is None:
-                raise RuntimeError("LLM returned no content")
+                return AIMessageChunk(content="")
             return response
         return asyncio.run(consume())
 
@@ -466,10 +444,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
 
     @staticmethod
     def _is_timeout_error(exc: Exception) -> bool:
-        """兼容 httpx、SDK 和字符串化后的超时错误。"""
-        import httpx
-
-        return isinstance(exc, (httpx.TimeoutException, TimeoutError)) or "timeout" in str(exc).lower()
+        """识别传输层与模型 SDK 的明确超时类型。"""
+        return isinstance(exc, (httpx.TimeoutException, TimeoutError, APITimeoutError))
 
     @staticmethod
     def _validate_attractions_against_pois(day_plan: DayPlan, state: GraphState) -> None:
@@ -671,6 +647,8 @@ class MultiAgentTripPlanner(TravelDataNodes):
     @staticmethod
     def _extract_json(content: str) -> dict:
         """从 LLM 输出提取 JSON 对象"""
+        if not isinstance(content, str):
+            raise ValueError("LLM 响应必须是 JSON 文本")
         if "```" in content:
             import re as _re
             match = _re.search(r"```(?:json)?\s*([\s\S]*?)```", content)
@@ -753,15 +731,6 @@ class MultiAgentTripPlanner(TravelDataNodes):
             subsets[min(days - 1, idx * days // len(pois))].append(poi)
         return subsets
 
-    def _fallback_plan(self, state: GraphState) -> dict:
-        """节点5: 备用计划 (LLM失败时兜底)"""
-        logger.info("   🛟 使用备用计划")
-        return {"trip_plan": self._create_fallback_plan(state["request"], state), "error": False}
-
-    def _should_fallback(self, state: GraphState) -> str:
-        """条件路由: LLM生成失败则走备用计划, 否则结束"""
-        return "fallback_plan" if state.get("error") else "end"
-
     # ============ 图构建 ============
 
     def _build_graph(self):
@@ -775,7 +744,6 @@ class MultiAgentTripPlanner(TravelDataNodes):
         graph.add_node("search_restaurants", self._search_restaurants)
         graph.add_node("build_rag_context", self._build_rag_context)
         graph.add_node("generate_trip_plan", self._generate_trip_plan)
-        graph.add_node("fallback_plan", self._fallback_plan)
         
         # 3. 数据节点彼此无依赖，扇出并行后在生成节点汇合；降低高德 I/O 等待时间。
         graph.add_edge(START, "search_attractions")
@@ -787,13 +755,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             ["search_attractions", "get_weather", "search_hotels", "search_restaurants", "build_rag_context"],
             "generate_trip_plan",
         )
-        # 4. 铺设智能分拣闸门 (条件边: 失败走兜底，成功则结束)
-        graph.add_conditional_edges(
-            "generate_trip_plan",
-            self._should_fallback,
-            {"fallback_plan": "fallback_plan", "end": END},
-        )
-        graph.add_edge("fallback_plan", END)
+        graph.add_edge("generate_trip_plan", END)
         return graph.compile()
 
     # ============ 对外接口 ============
@@ -1072,8 +1034,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
         """天气信息列表转为可读文本"""
         lines = []
         for w in weather_list:
+            day_temp = f"{w.day_temp}°C" if w.day_temp is not None else "温度未知"
+            night_temp = f"{w.night_temp}°C" if w.night_temp is not None else "温度未知"
             lines.append(
-                f"{w.date}: 白天{w.day_weather} {w.day_temp}°C / 夜间{w.night_weather} {w.night_temp}°C, 风向{w.wind_direction} {w.wind_power}"
+                f"{w.date}: 白天{w.day_weather} {day_temp} / 夜间{w.night_weather} {night_temp}, 风向{w.wind_direction} {w.wind_power}"
             )
         return "\n".join(lines)
 
@@ -1090,41 +1054,6 @@ class MultiAgentTripPlanner(TravelDataNodes):
         """基于当前行程重算预算，供局部改排后避免保留过期总额。"""
         trip_plan.budget = None
         return self._ensure_budget(trip_plan, request)
-
-    def _create_fallback_plan(self, request: TripRequest, state: GraphState) -> TripPlan:
-        """创建备用计划，仅复用本次请求已获得的真实 POI。"""
-        start_date = datetime.strptime(request.start_date, "%Y-%m-%d")
-
-        days = []
-        subsets = self._split_pois_for_days(state.get("attraction_pois", []), request.travel_days)
-        for i in range(request.travel_days):
-            current_date = start_date + timedelta(days=i)
-            days.append(self._fallback_day(request, i, current_date.strftime("%Y-%m-%d"),
-                {**state, "attraction_pois": subsets[i]}))
-
-        total_attractions = sum(attr.ticket_price for day in days for attr in day.attractions) or 200
-        total_meals = sum(meal.estimated_cost for day in days for meal in day.meals) or 150 * request.travel_days
-        total_hotels = 400 * request.travel_days
-        total_transportation = 50 * request.travel_days
-
-        return TripPlan(
-            city=request.city,
-            departure_city=request.departure_city,
-            traveler_count=request.traveler_count,
-            room_count=request.room_count,
-            start_date=request.start_date,
-            end_date=request.end_date,
-            days=days,
-            weather_info=[],
-            overall_suggestions=f"这是为您规划的{request.city}{request.travel_days}日游行程,建议提前查看各景点的开放时间。",
-            budget=Budget(
-                total_attractions=total_attractions,
-                total_hotels=total_hotels,
-                total_meals=total_meals,
-                total_transportation=total_transportation,
-                total=total_attractions + total_hotels + total_meals + total_transportation,
-            ),
-        )
 
 
 # 全局多智能体系统实例

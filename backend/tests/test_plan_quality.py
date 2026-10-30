@@ -56,7 +56,7 @@ class _RoutePlanner:
     def plan_route_by_locations(self, *_args, **_kwargs):
         self.calls += 1
         if self.fails:
-            raise RuntimeError("AMap unavailable")
+            raise TimeoutError("AMap unavailable")
         return {"distance": 2_000, "duration": self.duration * 60}
 
 

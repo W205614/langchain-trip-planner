@@ -143,7 +143,7 @@ class AmapMCPService(AmapService):
         forecasts = data.get("forecasts", [])
         casts = [cast for entry in forecasts for cast in entry.get("casts", [entry])]
         weather = [WeatherInfo(date=cast["date"], day_weather=cast["dayweather"], night_weather=cast["nightweather"],
-            day_temp=cast["daytemp"], night_temp=cast["nighttemp"], wind_direction=cast["daywind"], wind_power=cast["daypower"])
+            day_temp=cast.get("daytemp"), night_temp=cast.get("nighttemp"), wind_direction=cast["daywind"], wind_power=cast["daypower"])
             for cast in casts]
         self._write_fact_cache(self._weather_cache, cache_key, weather, self._weather_cache_ttl_seconds)
         return weather

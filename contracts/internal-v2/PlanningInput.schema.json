@@ -180,6 +180,42 @@
       "title": "Opening Windows",
       "type": "array"
     },
+    "reservation_facts": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 300,
+      "title": "Reservation Facts",
+      "type": "array"
+    },
+    "transport_buffers": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 300,
+      "title": "Transport Buffers",
+      "type": "array"
+    },
+    "poi_relations": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 300,
+      "title": "Poi Relations",
+      "type": "array"
+    },
+    "meal_resolutions": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "maxItems": 300,
+      "title": "Meal Resolutions",
+      "type": "array"
+    },
     "locks": {
       "items": {
         "additionalProperties": true,

@@ -234,15 +234,20 @@ public class AmapGateway {
       forecasts.forEach(f -> f.path("casts").forEach(c -> result.addObject()
           .put("date", text(c, "date")).put("day_weather", text(c, "dayweather"))
           .put("night_weather", text(c, "nightweather"))
-          .put("day_temp", parseInt(text(c, "daytemp"))).put("night_temp", parseInt(text(c, "nighttemp")))
+          .put("day_temp", parseTemperature(text(c, "daytemp"))).put("night_temp", parseTemperature(text(c, "nighttemp")))
           .put("wind_direction", text(c, "daywind")).put("wind_power", text(c, "daypower"))));
     }
     weatherCache.put(city.toLowerCase(Locale.ROOT), result.deepCopy());
     return result;
   }
 
-  private static int parseInt(String value) {
-    try { return Integer.parseInt(value); } catch (Exception ignored) { return 0; }
+  private static Integer parseTemperature(String value) {
+    String normalized = value.replace("°C", "").replace("℃", "").replace("°", "").strip();
+    if (normalized.isEmpty()) return null;
+    try { return Integer.parseInt(normalized); }
+    catch (NumberFormatException ex) {
+      throw new ApiException(503, "天气温度数据无效", "WEATHER_UNVERIFIED");
+    }
   }
 
   public ObjectNode route(JsonNode body) {

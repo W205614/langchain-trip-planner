@@ -32,8 +32,6 @@ def test_data_nodes_run_in_parallel_before_generation():
         ),
         "error": False,
     }
-    planner._fallback_plan = lambda _state: {"error": False}
-    planner._should_fallback = lambda state: "fallback_plan" if state.get("error") else "end"
     graph = planner._build_graph()
     request = TripRequest(
         city="北京", start_date="2026-08-01", end_date="2026-08-01", travel_days=1,

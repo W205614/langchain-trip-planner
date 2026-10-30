@@ -2,6 +2,8 @@
 
 from app.agents.trip_planner_agent import MultiAgentTripPlanner
 from app.models.schemas import TripRequest, WeatherInfo
+from pydantic import ValidationError
+import pytest
 
 
 def _request(start_date: str, end_date: str, days: int) -> TripRequest:
@@ -33,3 +35,20 @@ def test_weather_has_no_notice_when_all_trip_dates_are_covered():
     )
     assert len(relevant) == 3
     assert notice == ""
+
+
+@pytest.mark.parametrize("temperature", [None, "", "   "])
+def test_missing_temperature_stays_unknown_in_json_and_prompt(temperature):
+    weather = WeatherInfo(date="2026-10-30", day_temp=temperature, night_temp="0°C")
+    assert weather.model_dump()["day_temp"] is None
+    assert weather.night_temp == 0
+    text = MultiAgentTripPlanner._weather_to_text([weather])
+    assert "白天 温度未知" in text
+    assert "夜间 0°C" in text
+    assert "None" not in text
+
+
+@pytest.mark.parametrize("temperature", ["unknown", "27C", "not-a-temperature"])
+def test_invalid_temperature_is_rejected(temperature):
+    with pytest.raises(ValidationError):
+        WeatherInfo(date="2026-10-30", day_temp=temperature)

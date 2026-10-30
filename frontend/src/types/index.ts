@@ -94,8 +94,8 @@ export interface WeatherInfo {
   date: string
   day_weather: string
   night_weather: string
-  day_temp: number
-  night_temp: number
+  day_temp: number | null
+  night_temp: number | null
   wind_direction: string
   wind_power: string
 }

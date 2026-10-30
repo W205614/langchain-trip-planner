@@ -261,24 +261,21 @@ class WeatherInfo(BaseModel):
     date: str = Field(..., description="日期 YYYY-MM-DD")
     day_weather: str = Field(default="", description="白天天气")
     night_weather: str = Field(default="", description="夜间天气")
-    day_temp: Union[int, str] = Field(default=0, description="白天温度")
-    night_temp: Union[int, str] = Field(default=0, description="夜间温度")
+    day_temp: Optional[int] = Field(default=None, description="白天温度；缺失时为未知")
+    night_temp: Optional[int] = Field(default=None, description="夜间温度；缺失时为未知")
     wind_direction: str = Field(default="", description="风向")
     wind_power: str = Field(default="", description="风力")
 
     @field_validator('day_temp', 'night_temp', mode='before')
     @classmethod
     def parse_temperature(cls, v):
-        """解析温度,移除°C等单位; None(无天气数据)转0"""
+        """解析温度单位；缺失保持未知，非法温度交由边界校验拒绝。"""
         if v is None:
-            return 0
+            return None
         if isinstance(v, str):
             # 移除°C, ℃等单位符号
             v = v.replace('°C', '').replace('℃', '').replace('°', '').strip()
-            try:
-                return int(v)
-            except ValueError:
-                return 0
+            return int(v) if v else None
         return v
 
 

@@ -9,8 +9,11 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from math import asin, cos, radians, sin, sqrt
 from typing import Any, Iterable, Protocol
+import httpx
 
 from ..models.schemas import Attraction, DayPlan, TripPlan
+from .amap_mcp_client import AmapMCPError
+from .execution import remaining
 
 
 REQUIRED_MEALS = {"breakfast", "lunch", "dinner"}
@@ -148,7 +151,7 @@ def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
         missing_meals = REQUIRED_MEALS - meal_types
         # 餐饮只能来自可信 POI。上游无候选时宁可暴露数据缺口，也不能为了让
         # 质量门禁通过而编造餐厅；这不会破坏景点路线本身的可执行性。
-        if missing_meals or any(not getattr(meal, "poi_id", "") for meal in day.meals):
+        if missing_meals or any(not meal.poi_id for meal in day.meals):
             if "meal_pois_unavailable" not in data_gaps:
                 data_gaps.append("meal_pois_unavailable")
         visit_minutes = sum(max(0, item.visit_duration) for item in day.attractions)
@@ -171,7 +174,7 @@ def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
         data_gaps=data_gaps,
         degraded_days=[
             day.day_index for day in plan.days
-            if getattr(day, "generation_mode", "llm") == "fallback"
+            if day.generation_mode == "fallback"
         ],
     )
 
@@ -200,6 +203,7 @@ def repair_plan_routes(plan: TripPlan, route_planner: RoutePlanner, transportati
 
     for day in plan.days:
         while len(day.attractions) >= 2:
+            remaining()
             route_distance_m = 0.0
             route_seconds = 0
             try:
@@ -208,10 +212,11 @@ def repair_plan_routes(plan: TripPlan, route_planner: RoutePlanner, transportati
                         left.location, right.location, route_type=route_type, city=plan.city
                     )
                     if not route or route.get("duration") is None:
-                        raise RuntimeError("AMap route response is empty")
+                        raise ValueError("AMap route response is empty")
                     route_distance_m += float(route.get("distance", 0))
                     route_seconds += int(route["duration"])
-            except Exception:
+            except (httpx.HTTPError, AmapMCPError, TimeoutError, KeyError, TypeError, ValueError):
+                remaining()
                 route_available = False
                 if "route_duration_unavailable_fallback_to_straight_line" not in data_gaps:
                     data_gaps.append("route_duration_unavailable_fallback_to_straight_line")

@@ -1138,11 +1138,11 @@
               "type": "integer"
             },
             {
-              "type": "string"
+              "type": "null"
             }
           ],
-          "default": 0,
-          "description": "白天温度",
+          "default": null,
+          "description": "白天温度；缺失时为未知",
           "title": "Day Temp"
         },
         "night_temp": {
@@ -1151,11 +1151,11 @@
               "type": "integer"
             },
             {
-              "type": "string"
+              "type": "null"
             }
           ],
-          "default": 0,
-          "description": "夜间温度",
+          "default": null,
+          "description": "夜间温度；缺失时为未知",
           "title": "Night Temp"
         },
         "wind_direction": {

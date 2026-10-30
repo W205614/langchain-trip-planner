@@ -220,8 +220,8 @@ class AmapService:
                     date=cast.get("date", ""),
                     day_weather=cast.get("dayweather", ""),
                     night_weather=cast.get("nightweather", ""),
-                    day_temp=cast.get("daytemp", 0),
-                    night_temp=cast.get("nighttemp", 0),
+                    day_temp=cast.get("daytemp"),
+                    night_temp=cast.get("nighttemp"),
                     wind_direction=cast.get("daywind", ""),
                     wind_power=cast.get("daypower", ""),
                 ))

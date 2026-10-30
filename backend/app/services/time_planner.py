@@ -141,8 +141,7 @@ def protect_revision(plan, original, request, fallback):
             setattr(day, field, merged)
         if partial:
             for field in ("description", "theme", "activities", "hotel"):
-                if hasattr(old_day, field):
-                    setattr(day, field, getattr(old_day, field))
+                setattr(day, field, getattr(old_day, field))
         # Existing timeline fixes immutable activities at their original times.
         fixed_ids = protected | ({a.activity_id for a in [*old_day.attractions, *old_day.meals]} - eligible if partial else set())
         outside_ids={a.activity_id for a in [*old_day.attractions,*old_day.meals]}-eligible if partial else set()
@@ -192,6 +191,11 @@ def _location(value):
 
 
 def _route(left, right, planner, city, route_type, cache, unknown):
+    from .execution import remaining
+    from .amap_mcp_client import AmapMCPError
+    import httpx
+
+    remaining()
     if not left or not right:
         unknown.add("route_endpoint_unknown")
         return 30, False
@@ -199,25 +203,28 @@ def _route(left, right, planner, city, route_type, cache, unknown):
         return 0, True
     key = (left.longitude, left.latitude, right.longitude, right.latitude, city, route_type)
     if key not in cache:
-        try:
-            from .execution import remaining
-            remaining()
-            if cache.get("_lookups",0) >= max(1,int(os.getenv("PLANNER_ROUTE_LOOKUPS","120"))) or time.monotonic() >= cache.get("_deadline",float("inf")):
-                raise ValueError("Route lookup budget exhausted")
+        result = {}
+        if planner and cache.get("_lookups",0) < max(1,int(os.getenv("PLANNER_ROUTE_LOOKUPS","120"))) and time.monotonic() < cache.get("_deadline",float("inf")):
             cache["_lookups"] = cache.get("_lookups",0) + 1
-            result = planner.plan_route_by_locations(left, right, route_type=route_type, city=city) if planner else {}
+            try:
+                result = planner.plan_route_by_locations(left, right, route_type=route_type, city=city)
+            except (httpx.HTTPError, AmapMCPError, TimeoutError, ValueError):
+                remaining()
+        remaining()
+        try:
             seconds = float(result["duration"])
             if not isfinite(seconds) or seconds < 0 or (seconds == 0 and left != right):
                 raise ValueError("Invalid route duration")
+        except (KeyError, TypeError, ValueError):
+            cache[key] = (CONTRACT["unknown_route_minutes"], False)
+            cache.setdefault("_route_facts",{})[key]={"observed_at":None,"expires_at":ROUTE_EPOCH}
+        else:
             cache[key] = (ceil(seconds / 60), True)
             fact=route_observation(result,fresh=True)
             cache.setdefault("_route_facts",{})[key]=fact
             if not route_current(fact):
                 cache[key]=(cache[key][0],False)
                 cache.setdefault("_expired_route_facts",set()).add(key)
-        except Exception:
-            cache[key] = (CONTRACT["unknown_route_minutes"], False)
-            cache.setdefault("_route_facts",{})[key]={"observed_at":None,"expires_at":ROUTE_EPOCH}
     elif cache[key][1]:
         fact=cache.get("_route_facts",{}).get(key)
         if not fact:

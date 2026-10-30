@@ -59,6 +59,8 @@ def rag(tmp_path, monkeypatch):
     # 复用真实 Chroma + 假嵌入, 不调网络
     svc = rag_mod.RagService.__new__(rag_mod.RagService)  # 跳过 __init__ 的真实初始化
     svc.settings = MagicMock()
+    svc._collection_names = {}
+    svc._degraded = False
     svc._embedding = FakeEmbedding(dim=3072)
     svc._chroma_dir = tmp_path / "chroma"  # 供测试重连用
 
