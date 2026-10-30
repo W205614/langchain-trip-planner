@@ -183,7 +183,7 @@ jobs:
       - name: Fail on high/critical CodeQL results
         env:
           TRIP_CODEQL_ANALYZE_OUTCOME: ${{ steps.codeql_analyze.outcome }}
-        run: python tools/security_gate.py sarif --directory security-reports/codeql --codeql-context .github/codeql-context-assessments.json --reports security-reports/codeql
+        run: python tools/security_gate.py sarif --directory security-reports/codeql --codeql-context .github/codeql-context-remediated.json --reports security-reports/codeql
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
