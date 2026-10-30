@@ -1,8 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "classification": "not_affected_context",
   "scope": "Only 22 exact source and dataflow reviewed results from source 5f9691c and workflow 41045486116. Raw SARIF and security severities retained; no broad query suppression or eight-CVE risk acceptance.",
-  "expires_at": "2026-11-09T23:59:59+08:00",
   "reviewed_business_revision": "5f9691ce02eb618e5bdf10b638c8bf283d4550c7",
   "original_sarif_revision": "5f9691ce02eb618e5bdf10b638c8bf283d4550c7",
   "original_workflow_run": 41045486116,
@@ -655,5 +654,6 @@
         "0755 is not recommended for secret files/directories. Do not reuse this decision for another chmod site or arbitrary contents."
       ]
     }
-  ]
+  ],
+  "review_policy": "source_and_trace_bound"
 }

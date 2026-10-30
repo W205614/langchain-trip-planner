@@ -298,7 +298,8 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
                 assessed.append({'package': artifact.get('name'), 'version': artifact.get('version'),
                                  'id': vulnerability.get('id'), 'raw_severity': vulnerability.get('severity'),
                                  'classification': classification})
-        write(destination / 'distribution-assessments.json', {'image_id': identity, 'expires_on': vendor_policy['expires_on'], 'assessments': assessed})
+        write(destination / 'distribution-assessments.json', {'image_id': identity, 'expires_on': vendor_policy.get('expires_on'),
+              'review_policy': vendor_policy.get('review_policy', 'time_limited'), 'assessments': assessed})
     remaining = count - contextual - sum(classifications.values())
     # Grype uses 2 for the requested vulnerability threshold, and 1 for errors.
     # A partial JSON report on an error must never be rescued by a policy.
@@ -312,6 +313,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
              'distribution_assessments': classifications,
              'still_vulnerable_vendor_minor_ids': sorted({item['id'] for item in assessed if item['classification'] == 'still_vulnerable_vendor_minor'}),
              'vendor_policy_expires_on': vendor_policy.get('expires_on') if vendor_policy else None,
+             'vendor_policy_review_policy': vendor_policy.get('review_policy', 'time_limited') if vendor_policy else None,
              'unfixed_risk_accepted_findings': classifications['still_vulnerable_vendor_minor'],
              'risk_acceptance': acceptance_metadata,
              'image_revision_context_verified': context_verified}]
@@ -360,6 +362,7 @@ def sarif(directory: Path, context=None, source_mode=None, language=None):
                         'raw_high_critical_findings': count, 'not_affected_context_findings': len(contextual),
                         'context_assessments': contextual,
                         'context_expires_at': context.get('expires_at') if context else None,
+                        'context_review_policy': context.get('review_policy', 'time_limited') if context else None,
                         'blocking_findings': remaining,
                         'status': 'blocked_findings' if remaining else 'pass_codeql_context' if contextual else 'pass'})
         if delta_proof is not None:

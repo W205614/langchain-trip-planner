@@ -59,7 +59,7 @@ class DistributionPolicyTests(unittest.TestCase):
         policy, _, _ = self.sample()
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder); (root / 'Dockerfile').write_bytes(b'FROM reviewed\n')
-            policy.update({'expires_on': '2026-11-09', 'source_bindings': {'Dockerfile': hashlib.sha256(b'FROM reviewed\n').hexdigest()}})
+            policy.update({'schema_version': 1, 'expires_on': '2026-11-09', 'source_bindings': {'Dockerfile': hashlib.sha256(b'FROM reviewed\n').hexdigest()}})
             path = root / 'policy.json'; path.write_text(json.dumps(policy))
             self.assertTrue(image_policy.load_policy(path, root, today=date(2026, 10, 26)))
             with self.assertRaises(RuntimeError): image_policy.load_policy(path, root, today=date(2026, 11, 10))
@@ -67,6 +67,33 @@ class DistributionPolicyTests(unittest.TestCase):
             with self.assertRaises(RuntimeError): image_policy.load_policy(path, root, today=date(2026, 10, 26))
             (root / 'Dockerfile').write_bytes(b'FROM changed\n')
             with self.assertRaises(RuntimeError): image_policy.load_policy(path, root, today=date(2026, 10, 26))
+
+    def test_source_bound_review_survives_calendar_but_new_cve_version_or_elf_still_blocks(self):
+        policy, match, evidence = self.sample()
+        entry = policy['assessments'][0]
+        entry.update(classification='fixed_by_pinned_security_upgrade', vendor_status='fixed',
+                     file_sha256={'/lib/reviewed.so': hashlib.sha256(b'patched ELF').hexdigest()})
+        evidence['file_sha256'] = dict(entry['file_sha256'])
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); (root/'Dockerfile').write_bytes(b'FROM reviewed\n')
+            policy.update(schema_version=2, review_policy='source_and_artifact_bound',
+                          source_bindings={'Dockerfile': hashlib.sha256(b'FROM reviewed\n').hexdigest()})
+            path = root/'policy.json'; path.write_text(json.dumps(policy))
+            verified = image_policy.load_policy(path, root, today=date(2040, 1, 1))
+            self.assertEqual('fixed_by_pinned_security_upgrade', image_policy.assess(verified, match, evidence))
+            for field, value in [('id', 'CVE-2040-NEW'), ('version', 'new-package-version')]:
+                changed = json.loads(json.dumps(match))
+                changed['vulnerability' if field=='id' else 'artifact'][field] = value
+                self.assertIsNone(image_policy.assess(verified, changed, evidence))
+            evidence['file_sha256']['/lib/reviewed.so'] = 'different ELF'
+            self.assertIsNone(image_policy.assess(verified, match, evidence))
+            entry['classification'] = 'still_vulnerable_vendor_minor'; path.write_text(json.dumps(policy))
+            with self.assertRaisesRegex(RuntimeError, 'cannot accept an unfixed'):
+                image_policy.load_policy(path, root, today=date(2040, 1, 1))
+            entry['classification'] = 'fixed_by_pinned_security_upgrade'; path.write_text(json.dumps(policy))
+            (root/'Dockerfile').write_bytes(b'FROM changed\n')
+            with self.assertRaisesRegex(RuntimeError, 'source binding changed'):
+                image_policy.load_policy(path, root, today=date(2040, 1, 1))
 
 
 if __name__ == '__main__':

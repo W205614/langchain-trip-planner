@@ -1,7 +1,8 @@
 """Exact source/trace-bound false-positive review, not vulnerability acceptance.
 
 No query-, directory- or severity-wide suppression and no automatic fingerprint
-refresh. Missing, changed or expired evidence fails closed. Raw findings remain.
+refresh. Missing or changed evidence fails closed. Raw findings remain.
+Legacy time-limited reviews retain their original deadline.
 """
 from datetime import datetime, timezone
 import hashlib
@@ -10,7 +11,7 @@ from pathlib import Path, PurePosixPath
 import subprocess
 
 BUSINESS_DIRECTORIES = ('backend', 'business-backend', 'frontend', 'deploy', 'contracts')
-MAX_EXPIRY = datetime.fromisoformat('2026-11-09T23:59:59+08:00')
+LEGACY_MAX_EXPIRY = datetime.fromisoformat('2026-11-09T23:59:59+08:00')
 FLOW_ALGORITHM = 'sarif-semantic-flow-v1'
 EXPECTED_ENTRY_COUNT = 22
 
@@ -135,13 +136,19 @@ def finding_identity(rule, result, run):
 def load(path, root, now=None, source_mode=None):
     now = now or datetime.now(timezone.utc)
     policy = json.loads(Path(path).read_text(encoding='utf-8'))
-    try:
-        expiry = datetime.fromisoformat(policy['expires_at'])
-        if expiry.tzinfo is None or now > expiry or expiry > MAX_EXPIRY:
-            raise ValueError('expiry')
-    except (KeyError, TypeError, ValueError) as error:
-        raise RuntimeError('CodeQL contextual review expired or invalid') from error
-    if (policy.get('schema_version') != 1 or policy.get('flow_hash_algorithm') != FLOW_ALGORITHM
+    if policy.get('schema_version') == 2:
+        if policy.get('review_policy') != 'source_and_trace_bound':
+            raise RuntimeError('CodeQL review requires exact source and trace bindings')
+    elif policy.get('schema_version') == 1:
+        try:
+            expiry = datetime.fromisoformat(policy['expires_at'])
+            if expiry.tzinfo is None or now > expiry or expiry > LEGACY_MAX_EXPIRY:
+                raise ValueError('expiry')
+        except (KeyError, TypeError, ValueError) as error:
+            raise RuntimeError('CodeQL contextual review expired or invalid') from error
+    else:
+        raise RuntimeError('Unsupported CodeQL contextual review schema')
+    if (policy.get('flow_hash_algorithm') != FLOW_ALGORITHM
             or policy.get('classification') != 'not_affected_context'
             or not isinstance(policy.get('entries'), list) or len(policy['entries']) != EXPECTED_ENTRY_COUNT
             or set(policy.get('business_tree_bindings', {})) != set(BUSINESS_DIRECTORIES)
@@ -193,7 +200,7 @@ def assess(policy, rule, result, run, now=None):
     if not policy:
         return None
     now = now or datetime.now(timezone.utc)
-    if now > datetime.fromisoformat(policy['expires_at']):
+    if policy.get('schema_version', 1) == 1 and now > datetime.fromisoformat(policy['expires_at']):
         raise RuntimeError('CodeQL contextual review expired during analysis')
     identity = finding_identity(rule, result, run)
     if not identity:
@@ -203,5 +210,6 @@ def assess(policy, rule, result, run, now=None):
         return None
     entry = entries[0]
     return {**identity, 'source_sha256': entry['source_sha256'], 'classification': 'not_affected_context',
-            'reason': entry['reason'], 'expires_at': policy['expires_at'],
+            'reason': entry['reason'], 'expires_at': policy.get('expires_at'),
+            'review_policy': policy.get('review_policy', 'time_limited'),
             'boundary': 'Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance.'}

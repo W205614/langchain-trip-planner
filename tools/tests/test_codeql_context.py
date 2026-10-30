@@ -2,6 +2,7 @@
 import copy
 from datetime import datetime, timezone
 import json
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -103,6 +104,35 @@ class CodeqlContextTests(unittest.TestCase):
             self.assertEqual(before, context.semantic_flow_hash(moved['results'][0], moved))
             bad = copy.deepcopy(result); bad['codeFlows'][0]['threadFlows'][0]['locations'][0]['location']['physicalLocation']['artifactLocation']['index'] = 1
             with self.assertRaises(RuntimeError): context.semantic_flow_hash(bad, run)
+
+    def test_source_bound_review_uses_real_git_and_still_blocks_new_flow_and_source_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); path, policy, run, source, directory = self.fixture(root)
+            for name in context.BUSINESS_DIRECTORIES:
+                folder = root/name; folder.mkdir(exist_ok=True); (folder/'tracked.txt').write_text('reviewed\n')
+            def git(*args):
+                return subprocess.check_output(['git', *args], cwd=root, text=True, stderr=subprocess.PIPE).strip()
+            git('init', '--quiet'); git('add', *context.BUSINESS_DIRECTORIES)
+            git('-c', 'user.name=Policy test', '-c', 'user.email=policy@example.invalid',
+                '-c', 'commit.gpgsign=false', 'commit', '--quiet', '-m', 'Reviewed source fixture')
+            revision = git('rev-parse', 'HEAD')
+            record = root/'review.json'; review = json.loads(record.read_text())
+            review['sarif_source_revision'] = revision; record.write_text(json.dumps(review))
+            policy.update(schema_version=2, review_policy='source_and_trace_bound',
+                          reviewed_business_revision=revision,
+                          review_record_sha256=context.digest(record.read_bytes()),
+                          business_tree_bindings={name:git('rev-parse', revision+':'+name) for name in context.BUSINESS_DIRECTORIES})
+            del policy['expires_at']; path.write_text(json.dumps(policy))
+            with patch.object(context, 'EXPECTED_ENTRY_COUNT', 1):
+                verified = context.load(path, root, datetime(2040,1,1,tzinfo=timezone.utc))
+                self.assertEqual('pass_codeql_context', gate.sarif(directory, verified)[0]['status'])
+                changed = copy.deepcopy(run)
+                changed['results'][0]['codeFlows'][0]['threadFlows'][0]['locations'][0]['location']['message']['text'] = 'new unreviewed receiver'
+                (directory/'test.sarif').write_text(json.dumps({'runs':[changed]}))
+                self.assertEqual(1, gate.sarif(directory, verified)[0]['blocking_findings'])
+                source.write_bytes(b'changed source\n')
+                with self.assertRaisesRegex(RuntimeError, 'working tree changed'):
+                    context.load(path, root, datetime(2040,1,1,tzinfo=timezone.utc))
 
 
 if __name__ == '__main__':

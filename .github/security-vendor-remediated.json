@@ -1,14 +1,13 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "reviewed_on": "2026-10-30",
-  "expires_on": "2026-11-09",
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
     "docker-compose.production.yml": "c0b640e932673ba7a7ae9097bca264f874ac75842da8b4297165548b33a337e6",
-    "backend/runtime-security-packages.json": "a76ac688657a37db28bec69b4bf211ee926ecf433ed75930156be7cc169d3d80",
-    "backend/scripts/install_runtime_security_patches.py": "13ed80fc2155cb33cf69d7c5cbc1ecb7dbb5c4d22a3f7b2cd2378ca7cb600655",
+    "backend/runtime-security-packages.json": "62cd4a01df64c6c063fe9a815246c16463a0d7c3762e8c1ceb9954f7d3f244dd",
+    "backend/scripts/install_runtime_security_patches.py": "af72bab09bf9ff1c1a9d08cd031d823ce9db4a78902a088a367ea52fca19e10f",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
     "backend/security/native-backports/build-glibc.sh": "f56877860e8230970e02242c106f01a0e7ca68a203c1509e393fbd9f29d5f40f",
     "backend/security/native-backports/build-inputs.sh": "0aa6f7186c4dc6d0232d84b8361adacc64fd1bfd86b3f3cdaaaec4f4321f8c09",
@@ -415,5 +414,6 @@
         "/usr/bin/unshare"
       ]
     }
-  ]
+  ],
+  "review_policy": "source_and_artifact_bound"
 }

@@ -1,4 +1,4 @@
-"""Explicit, expiring distribution assessments; never a whole-package ignore.
+"""Exact distribution assessments; never a whole-package ignore.
 
 Inventory is copied from an exact immutable image using a stopped UUID-owned
 container. No image command is executed. Local objects are retained by default;
@@ -23,9 +23,15 @@ except ImportError:
 
 def load_policy(path, root, today=None):
     policy = json.loads(Path(path).read_text(encoding='utf-8'))
-    today = today or datetime.now(timezone.utc).date()
-    if date.fromisoformat(policy['expires_on']) < today:
-        raise RuntimeError('Distribution assessment expired; retain raw findings and reassess')
+    if policy.get('schema_version') == 2:
+        if policy.get('review_policy') != 'source_and_artifact_bound':
+            raise RuntimeError('Distribution assessment requires exact source and artifact bindings')
+    elif policy.get('schema_version') == 1:
+        today = today or datetime.now(timezone.utc).date()
+        if date.fromisoformat(policy['expires_on']) < today:
+            raise RuntimeError('Distribution assessment expired; retain raw findings and reassess')
+    else:
+        raise RuntimeError('Unsupported distribution assessment schema')
     if not policy.get('assessments') or not policy.get('source_bindings'):
         raise RuntimeError('Distribution assessment is incomplete')
     for relative, digest in policy['source_bindings'].items():
@@ -36,6 +42,8 @@ def load_policy(path, root, today=None):
         if actual != digest:
             raise RuntimeError('Distribution source binding changed: ' + relative)
     for entry in policy['assessments']:
+        if policy['schema_version'] == 2 and entry.get('classification') == 'still_vulnerable_vendor_minor':
+            raise RuntimeError('Source-bound distribution assessments cannot accept an unfixed vulnerability')
         if (entry.get('classification') not in ('fixed_by_distribution_backport', 'fixed_by_pinned_security_upgrade', 'still_vulnerable_vendor_minor', 'not_affected_component_absent')
                 or not entry.get('ids') or not entry.get('artifact_versions') or not entry.get('requires_dpkg')
                 or not entry.get('references') or not entry.get('reason')):

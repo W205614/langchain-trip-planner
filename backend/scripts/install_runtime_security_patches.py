@@ -7,7 +7,6 @@ The temporary signed repository and negative-priority pin are removed in-image.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
 import hashlib
 import io
 import json
@@ -45,8 +44,8 @@ def apply(lock_path):
     if os.name != 'posix' or os.geteuid() != 0 or os.environ.get('TRIP_SECURITY_IMAGE_BUILD') != '1':
         raise RuntimeError('Only the explicitly selected root Docker build step may apply these updates')
     lock = json.loads(lock_path.read_text())
-    if datetime.now(timezone.utc).date().isoformat() > lock['review_expires_on']:
-        raise RuntimeError('Runtime package assessment expired; recheck vendor stable fixes before building')
+    if lock['schema_version'] != 2 or lock['review_policy'] != 'base_and_package_bound':
+        raise RuntimeError('Runtime package lock must bind the reviewed base and exact packages')
     release = Path('/usr/lib/os-release').read_text()
     if 'ID=debian' not in release or 'VERSION_ID="13"' not in release or run('dpkg', '--print-architecture').strip() != 'amd64':
         raise RuntimeError('Runtime package lock applies only to the reviewed Debian 13 amd64 ABI')

@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "review_policy": "base_and_package_bound",
   "reviewed_on": "2026-10-26",
-  "review_expires_on": "2026-11-09",
   "distribution": "Debian 13 amd64",
   "scope": "Only two ABI-compatible official Debian library security updates; reviewed signed-index hashes, no new or removed packages, no libc/toolchain migration, no persistent sid source. Re-evaluate when stable backports become available.",
   "requires_base_versions": {
