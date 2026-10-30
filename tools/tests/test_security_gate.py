@@ -55,7 +55,7 @@ class GateFailureTests(unittest.TestCase):
             source.write_text('embedded_only = True\n', encoding='utf-8')
             assessment = {'ecosystem': 'PyPI', 'package': 'chromadb', 'version': '1.5.9', 'ids': ['CVE-fixture'],
                           'status': 'not_affected', 'justification': 'vulnerable_code_not_in_execute_path', 'references': ['https://example.invalid/advisory']}
-            policy = {'expires_on': '2026-11-25', 'source_bindings': {'client.py': gate.source_digest(source)}, 'assessments': [assessment]}
+            policy = {'schema_version': 1, 'expires_on': '2026-11-25', 'source_bindings': {'client.py': gate.source_digest(source)}, 'assessments': [assessment]}
             path = root / 'vex.json'
             path.write_text(json.dumps(policy), encoding='utf-8')
             verified = gate.load_vex(path, today=date(2026, 10, 26), root=root)
@@ -68,6 +68,25 @@ class GateFailureTests(unittest.TestCase):
             source.write_text('embedded_only = False\n', encoding='utf-8')
             with self.assertRaises(RuntimeError):
                 gate.load_vex(path, today=date(2026, 10, 26), root=root)
+
+    def test_source_bound_vex_survives_calendar_but_new_cve_version_or_source_is_rejected(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name); source = root/'client.py'
+            source.write_text('embedded_only = True\n', encoding='utf-8')
+            assessment = {'ecosystem':'PyPI', 'package':'chromadb', 'version':'1.5.9', 'ids':['CVE-fixture'],
+                          'status':'not_affected', 'justification':'vulnerable_code_not_in_execute_path',
+                          'references':['https://example.invalid/advisory']}
+            policy = {'schema_version':2, 'review_policy':'source_and_execution_path_bound',
+                      'source_bindings':{'client.py':gate.source_digest(source)}, 'assessments':[assessment]}
+            path = root/'vex.json'; path.write_text(json.dumps(policy), encoding='utf-8')
+            verified = gate.load_vex(path, today=date(2040,1,1), root=root)
+            self.assertTrue(gate.contextual_not_affected(verified,'chromadb','1.5.9',['CVE-fixture']))
+            self.assertFalse(gate.contextual_not_affected(verified,'chromadb','1.5.9',['CVE-new']))
+            self.assertFalse(gate.contextual_not_affected(verified,'chromadb','new-version',['CVE-fixture']))
+            self.assertFalse(gate.contextual_not_affected(None,'chromadb','1.5.9',['CVE-fixture']))
+            source.write_text('remote_server = True\n', encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError,'source binding changed'):
+                gate.load_vex(path, today=date(2040,1,1), root=root)
 
 
 if __name__ == '__main__':

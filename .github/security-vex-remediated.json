@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "review_policy": "source_and_execution_path_bound",
   "assessment_date": "2026-10-30",
-  "expires_on": "2026-11-25",
   "product": "langchain-trip-planner internal Agent embedded derived index",
   "assessment_kind": "contextual_not_affected_not_upstream_fixed",
-  "application": "Explicit --vex opt-in only; raw scanner findings are preserved. Unknown advisory IDs, other versions, expired assessment or changed bound source fail closed. Image application additionally requires the embedded Agent CMD and the exact checked-out revision label.",
+  "application": "Explicit --vex opt-in only; raw scanner findings are preserved. New unassessed vulnerabilities, other versions or changed bound source require review and remain blocking. No fixed calendar expiry. Image application additionally requires the embedded Agent CMD and the exact checked-out revision label.",
   "source_bindings": {
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
     "backend/app/services/rag_service.py": "0e3db20b8e973cd301d49806ac76d847a149472e7dbed316e5f4a1c033c44064",

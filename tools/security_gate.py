@@ -124,11 +124,17 @@ def source_digest(path: Path):
 
 def load_vex(path: Path, today=None, root=ROOT):
     policy = report(path)
-    today = today or datetime.now(timezone.utc).date()
     if not isinstance(policy, dict) or not policy.get('assessments') or not policy.get('source_bindings'):
         raise RuntimeError('VEX policy is incomplete')
-    if date.fromisoformat(policy['expires_on']) < today:
-        raise RuntimeError('VEX assessment expired; reassess the actual execution path')
+    if policy.get('schema_version') == 2:
+        if policy.get('review_policy') != 'source_and_execution_path_bound':
+            raise RuntimeError('VEX assessment requires exact source and execution-path bindings')
+    elif policy.get('schema_version') == 1:
+        today = today or datetime.now(timezone.utc).date()
+        if date.fromisoformat(policy['expires_on']) < today:
+            raise RuntimeError('VEX assessment expired; reassess the actual execution path')
+    else:
+        raise RuntimeError('Unsupported VEX assessment schema')
     for relative, digest in policy['source_bindings'].items():
         source = (root / relative).resolve()
         if not source.is_relative_to(root.resolve()) or source_digest(source) != digest:
@@ -164,7 +170,8 @@ def dependencies(destination: Path, policy=None):
         state = 'pass_contextual'
     records.append({'scanner': 'pip-audit', 'status': state, 'raw_findings': count, 'contextual_not_affected': contextual,
                     'unresolved_findings': count - contextual, 'skipped': skipped, 'exit_code': code,
-                    'vex_expires_on': policy.get('expires_on') if policy else None})
+                    'vex_expires_on': policy.get('expires_on') if policy else None,
+                    'vex_review_policy': policy.get('review_policy', 'time_limited') if policy else None})
 
     npm = shutil.which('npm.cmd' if os.name == 'nt' else 'npm') or 'npm'
     npm_report = destination / 'npm-audit.json'
@@ -310,6 +317,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
     return [{'scanner': 'grype-image', 'target': name, 'image_id': identity, 'status': state, 'blocking_findings': remaining,
              'raw_high_critical_findings': count, 'contextual_not_affected': contextual, 'all_findings': len(matches), 'exit_code': code,
              'vex_expires_on': policy.get('expires_on') if policy else None,
+             'vex_review_policy': policy.get('review_policy', 'time_limited') if policy else None,
              'distribution_assessments': classifications,
              'still_vulnerable_vendor_minor_ids': sorted({item['id'] for item in assessed if item['classification'] == 'still_vulnerable_vendor_minor'}),
              'vendor_policy_expires_on': vendor_policy.get('expires_on') if vendor_policy else None,
@@ -381,7 +389,7 @@ def main():
     parser.add_argument('--image')
     parser.add_argument('--tool', choices=['gitleaks', 'osv-scanner', 'grype'])
     parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
-    parser.add_argument('--vex', type=Path, help='Explicit opt-in to an unexpired source-bound contextual assessment; raw findings remain in reports')
+    parser.add_argument('--vex', type=Path, help='Explicit opt-in to an exact source/component-bound contextual assessment; raw findings remain in reports')
     parser.add_argument('--vendor-policy', type=Path, help='Explicit source/revision/dpkg-bound distribution backport or vendor severity assessment; vulnerable entries stay visible')
     parser.add_argument('--risk-acceptance', type=Path, help='Explicit human-approved, expiring local-demo-only acceptance with exact business/native/package/runtime bindings; never a fix')
     parser.add_argument('--runtime-proof', type=Path, help='Fresh actual-container proof from tools/runtime_constraint_probe.py; mandatory for residual risk acceptance')

@@ -254,7 +254,7 @@ Python 依赖同时固定 LangGraph `1.2.14` 与 SDK `0.4.6`，处理[上游 v3 
 
 Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并禁止通过 SUID/file capabilities 获得新权限；镜像精确移除无业务用途的 mount/umount/nsenter/unshare 及已核别名/副本，保留系统依赖库。根文件系统设为只读，runtime、Chroma 使用原有持久挂载，临时目录与应用文件日志分别使用 128 MiB/64 MiB tmpfs；应用文件日志随容器停止消失，控制台日志仍由 Docker 按既定容量轮转。这些约束缩小提权与写入面，不修复进程内原生库的越界写或 UAF，实际 uvicorn 候选验收结果须与对应镜像核对。旧 Bearer 凭证继续遵守签发时的 `exp` 与 `token_version`；新会话的较短到期配置不会自动撤销全部历史凭证。
 
-Agent 先安装既有 `libacl1` 和 `zlib1g` 官方安全版本，再安装基于稳定源构建的 glibc、libstdc++ 与 util-linux 回补包；APT 按真实依赖顺序安装，最终镜像保留包管理记录，移除编译器、开发头文件及临时 sid 源。原生运行回归覆盖越界写反例、旧解析器输出和实际消费者加载。当前[两库包锁](backend/runtime-security-packages.json)、[供应商适用性](.github/security-vendor-remediated.json)和 [CodeQL 上下文复核](.github/codeql-context-remediated.json)取消固定日历到期，按相关源码、基座、包版本、补丁、镜像文件或告警数据流变化触发重新复核。签名、SHA256、包变更范围、实际镜像和原始告警校验继续保留；每次 CI 仍真实扫描，新漏洞、未评估告警或不匹配继续阻断。旧临时风险接受文件及其期限仅作为历史证据保留，不再参与当前放行；Chroma VEX 的独立适用性审查范围和期限未改变。监控派生镜像仍固定官方源码/发布物及必要依赖修补。
+Agent 先安装既有 `libacl1` 和 `zlib1g` 官方安全版本，再安装基于稳定源构建的 glibc、libstdc++ 与 util-linux 回补包；APT 按真实依赖顺序安装，最终镜像保留包管理记录，移除编译器、开发头文件及临时 sid 源。原生运行回归覆盖越界写反例、旧解析器输出和实际消费者加载。当前[两库包锁](backend/runtime-security-packages.json)、[供应商适用性](.github/security-vendor-remediated.json)和 [CodeQL 上下文复核](.github/codeql-context-remediated.json)取消固定日历到期，按相关源码、基座、包版本、补丁、镜像文件或告警数据流变化触发重新复核。签名、SHA256、包变更范围、实际镜像和原始告警校验继续保留；每次 CI 仍真实扫描，新增高危／严重漏洞、未评估的阻断级别告警或不匹配继续阻断。旧临时风险接受文件及其期限仅作为历史证据保留，不再参与当前放行；[Chroma VEX](.github/security-vex-remediated.json)也取消固定日历到期，继续绑定精确版本、漏洞 ID、源码与嵌入式执行路径。当前四份复核配置均按变化重新审查；完整清点及保留的业务有效期、历史授权和扫描新鲜度要求见[安全复核与有效期清点](docs/operations/security-review-policy.md)。监控派生镜像仍固定官方源码/发布物及必要依赖修补。
 
 本轮用户暂未提供独立异机备份目标，真实异机恢复验收已明确暂缓。首次离线留出原始结果保留为 16/17，另附身份表示评分假设的审计；不将事后解释或同样本复测改写成新的留出成绩。
 
