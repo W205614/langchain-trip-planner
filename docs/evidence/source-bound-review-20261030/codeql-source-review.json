@@ -1,0 +1,704 @@
+{
+  "schema_version": 2,
+  "review_policy": "source_and_trace_bound",
+  "checked_at_utc": "2026-10-30T12:08:05.438557+00:00",
+  "reviewer": "Codex exact source and SARIF dataflow review; no claim of independent human approval",
+  "sarif_source_revision": "6c920d051d225831af7cae4b52678dc502db716c",
+  "workflow_run": 41052400989,
+  "workflow_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/41052400989",
+  "analysis_status": "All four official Analyze and publish SARIF steps succeeded. Subsequent gate correctly rejected the prior backend tree binding. The source collection workflow is not described as all-green.",
+  "review_scope": "Fresh four-language CodeQL output for the date-removal change. All 22 exact results compared with the previous source review; the installer chmod primary location moved from line 70 to 69 with identical query, severity and semantic flow. No new broad suppression or CVE risk acceptance.",
+  "calendar_policy_change": "User explicitly requested removing the three calendar cutoffs while retaining source, package, native ELF and dataflow validation and blocking new vulnerabilities. Legacy schema-1 risk/time-limited records and Chroma VEX remain separate and unchanged.",
+  "finding_count": 22,
+  "raw_trace_hash_algorithm": "SHA256 of UTF-8 JSON result with sorted keys, compact separators and ensure_ascii=false; exact original SARIF files retained below",
+  "source_review": [
+    "Business source changes from a2636ac are limited to the two-library package lock schema/review mode and its build-only installer date check. Package versions, signed repository metadata, SHA256 values, SONAME, expected base versions, APT simulation and installed package delta checks are unchanged.",
+    "The chmod call at installer line 69 still sets 0755 only on a fresh root-owned temporary directory holding public Debian packages. Root plus explicit image-build opt-in remains required, followed by exact base/architecture/package validation. No user secret directory is involved.",
+    "The other 21 exact query/path/region/severity/semantic-flow identities match the retained prior review. All their primary and supporting business source bytes remain unchanged except the reviewed package lock and installer.",
+    "Security gate schema 2 binds exact sources and artifacts/traces, rejects still-vulnerable vendor-minor entries, and does not use the wall clock. Legacy schema 1 retains its original deadline. The real-Git future-date test and new-CVE/version/ELF/flow counterexamples pass; existing scan failure, missing proof and legacy approval checks remain in the 83 passing tool tests."
+  ],
+  "prior_source_review": "docs/evidence/security-remediation-20261030/codeql-source-review.json",
+  "unchanged_business_context_reasoning": [
+    "SecurityConfiguration still checks token-derived X-CSRF-Token for ambient browser-cookie mutations before dispatch; Bearer and internal service-key requests have explicit credentials.",
+    "All 11 GET traces still conflate UpstreamGuard.Operation receivers with a distinct AgentClient streaming operation. execute calls the supplied Operation instance. Capability dispatch cannot supply assistant/task BiConsumer callbacks. Public map quotas, cache writes, metrics and lazy RAG initialization remain real bounded side effects, not assistant conversation mutations.",
+    "Changed photoImage trace now goes through AmapGateway.imageFromPoi at lines 357/366. Its supplied operation only reserves map quota, sends image HTTP GET and reads a bounded body within try-with-resources. No assistant/task mutation callback is supplied. The other branch still uses the ordinary AgentClient.post operation. Four fresh trace paths and their original severities are retained.",
+    "Five reported version response/audit expressions remain dominated by successful atomic SQL INTEGER version=version+1 and rowcount checks inside the corresponding transaction. INT exhaustion would fail the SQL update; this is not a claim of unlimited version lifetime.",
+    "Totp.encrypt production caller remains AccountSecurityService.enroll with server-generated 20-byte base32 seed (32 ASCII characters), 12-byte nonce and 16-byte GCM tag. No HTTP-controlled plaintext length reaches the allocation.",
+    "Two Math.random results remain test-username uniqueness in the Playwright operations fixture. Server-issued bearer tokens and production credentials do not use that PRNG.",
+    "optimization_seed_admin prints only the returned status/boolean aggregate; synthetic passwords and TOTP seed are written to its guarded ignored fixture file, not returned metadata."
+  ],
+  "limitations": [
+    "Only exact reviewed queries, primary locations, severities, source trees/hashes and semantic flows are classified. New or changed unreviewed findings remain blocking.",
+    "Calendar expiry is removed for current schema-2 reviews, not for historical risk acceptance or independent Chroma VEX.",
+    "Public GET quota/cache/metric and lazy RAG initialization side effects remain; this review only excludes the reported assistant/task callback receiver overapproximation.",
+    "No new paid model/provider quality evaluation or complete glibc/GCC test suite is claimed."
+  ],
+  "supporting_source_bindings_lf": {
+    "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java": "3e5b56fbc691e17f8e112554e87ffad29682dc447b68c0dc45c9fc8d00f10095",
+    "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java": "10f8d492cf59da62b4146a0924b76da88e2464152816b56710187d82bde8336d",
+    "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java": "1564cc4870acf5d8d65ed5bb1df0b8eb535577d191f44c02e4175e5dde9f498f",
+    "business-backend/src/main/java/com/tripplanner/security/Totp.java": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+    "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+    "business-backend/src/main/java/com/tripplanner/api/ValidationController.java": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+    "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java": "6c6c37528993501d002d36c856c2b0bc8565bd0fd1279b3805ccadf646d9978b",
+    "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java": "0a8e916fcf132ec8ee89455f24804ab7be675fab6bd68c8490923f2bc1e7cbd7",
+    "business-backend/src/main/java/com/tripplanner/api/HistoryController.java": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+    "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java": "c64be9522964eb7e59173ca47fbe541bd0f6de85ecbd1b7c388a013b580dcbae",
+    "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+    "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+    "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java": "0803fca14b39b02c98d1e1cf0d7cf7d829121bff78ec9611969e9febd400d7a5",
+    "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java": "724031c9e0c24ac97e9e3898e40626f707ce3f68f1c06c30db02685518bee934",
+    "business-backend/src/main/resources/db/migration/V1__business_schema.sql": "fc7971e035f633b8bc46e8ae2cc3c5e2953b7ee4042ae51633bc57448e1ff66f",
+    "business-backend/src/main/resources/db/migration/V6__trip_operations.sql": "07648808addbec6627ac6534e105b930d15b38a9d7774a2dc4a0f0265c98e73c",
+    "backend/app/agent_api/main.py": "76e9a4a68f00f9a893e53f0df58509676c2582a60e4912ac4dbe72e049ba396e",
+    "backend/app/services/rag_service.py": "0e3db20b8e973cd301d49806ac76d847a149472e7dbed316e5f4a1c033c44064",
+    "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+    "backend/app/services/amap_mcp_service.py": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+    "backend/app/services/call_budget.py": "ede9055c95fb12b883a4d406af23638ff00442d42924f511e803f39c20f273c9",
+    "backend/scripts/install_runtime_security_patches.py": "af72bab09bf9ff1c1a9d08cd031d823ce9db4a78902a088a367ea52fca19e10f",
+    "backend/runtime-security-packages.json": "62cd4a01df64c6c063fe9a815246c16463a0d7c3762e8c1ceb9954f7d3f244dd",
+    "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
+    "backend/scripts/optimization_seed_admin.py": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+    "frontend/e2e/operations.spec.ts": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+    "frontend/vite.config.ts": "1e5c0a108092df0955d2ca813f2cadbbf29e8765457a9bb1d7d94b2c5c2f63b2",
+    "frontend/playwright.config.ts": "43b8d4f2601b86523807ddc881b839ce4b99f0da02441224959eba77acf77b7d",
+    "frontend/package.json": "8d4b920a7b5279a0fda6c41adc26d2f7dd99b18c182289778f3533ab70140d32"
+  },
+  "sarif_artifacts": [
+    {
+      "language": "javascript",
+      "github_artifact_id": 12974399944,
+      "github_artifact_archive_digest": "sha256:b431e364870e9139d3f1157528b59deeedc0a6b37c62405b34afc326f53a4a25",
+      "path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/javascript.sarif",
+      "file_sha256": "d44cf2602ee09864be506f85da9fae89432c02aefd4505ef198156565fdda91c"
+    },
+    {
+      "language": "java",
+      "github_artifact_id": 12974798950,
+      "github_artifact_archive_digest": "sha256:31fd6ac78ccefb49e906de987b6e878de41f277690e35a4ca642e5b3b18a7602",
+      "path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "file_sha256": "8f086f03c635d75387a46aa75a118b07b0f1cd8599a5343485107ea1590834a7"
+    },
+    {
+      "language": "actions",
+      "github_artifact_id": 12975242232,
+      "github_artifact_archive_digest": "sha256:e8aadb74ab786010923536e3cbedaf35300ac9db7eafd983edd26c02a5c01a00",
+      "path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/actions.sarif",
+      "file_sha256": "a56a586ae119dabc34b986302893dd408217d43b7c25eb85bcf0e5fe19dfbde0"
+    },
+    {
+      "language": "python",
+      "github_artifact_id": 12975317018,
+      "github_artifact_archive_digest": "sha256:997d1dd74246224a8b5602234945461a22978105d3631a266a00b58334dba567",
+      "path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/python.sarif",
+      "file_sha256": "16ca83852a625626c41c2416cec63c8d6ea680cf861819ecd978efe2c4453fb1"
+    }
+  ],
+  "findings": [
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 9,
+        "startColumn": 23,
+        "endColumn": 32
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
+      "review_decision": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
+      "source_sha256_current_worktree_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "raw_trace_sha256": "fb60b135e89424eac7d17ebdbd1eae0f5fd9a78ecaf67b47ba3af1592bf611d0",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/javascript.sarif",
+      "evidence": [
+        "frontend/e2e/operations.spec.ts:3-20",
+        "frontend/playwright.config.ts:1-8",
+        "frontend/vite.config.ts",
+        "frontend/package.json"
+      ],
+      "limitations": [
+        "Test file itself has no positive fixture marker check; configured E2E_BASE_URL can be overridden. Default loopback/CI isolated target does not make arbitrary operator-selected production targets safe.",
+        "This is not approval to use Math.random for sessions, credentials or production entropy."
+      ]
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 23,
+        "endColumn": 33
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
+      "review_decision": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
+      "source_sha256_current_worktree_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "raw_trace_sha256": "02dc48c140e1ff2185255f9ed2371fcc74289352189f93421dd0072e35fb91b0",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/javascript.sarif",
+      "evidence": [
+        "frontend/e2e/operations.spec.ts:3-20",
+        "frontend/playwright.config.ts:1-8",
+        "frontend/vite.config.ts",
+        "frontend/package.json"
+      ],
+      "limitations": [
+        "Test file itself has no positive fixture marker check; configured E2E_BASE_URL can be overridden. Default loopback/CI isolated target does not make arbitrary operator-selected production targets safe.",
+        "This is not approval to use Math.random for sessions, credentials or production entropy."
+      ]
+    },
+    {
+      "query": "java/spring-disabled-csrf-protection",
+      "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+      "region": {
+        "startLine": 124,
+        "startColumn": 20,
+        "endColumn": 31
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "review_decision": "contextual_false_positive_custom_csrf_guard",
+      "source_sha256_current_worktree_lf": "3e5b56fbc691e17f8e112554e87ffad29682dc447b68c0dc45c9fc8d00f10095",
+      "raw_trace_sha256": "6b25e85f679b5895b7f495cbb3798c4a6d6704ffc168be0746d0cd6c00d9f3cd",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java:74-107",
+        "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java:24-45",
+        "business-backend/src/test/java/com/tripplanner/SecurityOptimizationIntegrationTest.java:64-79"
+      ],
+      "limitations": [
+        "Not a blanket exemption for disabling Spring CSRF in other applications or future routes."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "4727bd5042ced4316485c83ce516b3d9651cb1ef120d43c4a29695dffe7f0c6c",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "cea5829f48cfc85aefa2194555f504d3e97c6742656acf22c0f2fd0cb51dcfc8",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "99372bda750105f744e7a579ba456c138c2926df0e8e66a118d7872ba16aa1fa",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "a22fba0f1d40ee1fb2944e7f2b9a9b1d1fda6cd7b5c91b04ed7d863974f91730",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "379cfbc765a1ad4a308cde306d07286450e2e26f6ea5b86e28233af77c4fcb22",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "1b3f5dc22e18b12c570ecb46e1497c7a6b55052319b6f8978436ea2545b28cfd",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "84ede0ca2ae303440473c3d67033185bb3596e6767ce7168ae8790387023e493",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "ab5a358115961b092aa54e5558cd7fc41a0f2a315185db4a488d7ba6f1bae573",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "70d72ce40a0464ef3dd203275c30695abd42fedc6549158e9710deca8d505c7e",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "8d32f5de9c738e911b3cc266672cf926b2672f02dcae8048b7f1be84f04e866d",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "6f82819376dc5fd34d07f1c3032b7963511f128a694af0495de9c4e140ed0ce4",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "b5a393218b41b5373f4dd675df545b1a447d3abef1766b62776326f71b2a36c2",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "3e788b91337c921e04797f9d6af87a83ac93bfa686bb9d65e724d8aa11705074",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "508e3a8f95109404ee7fa0c150fd8354e33a0f44ce6ff6f103530e053a274954",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "1eb6f60bb69d7f33fe2268e7e07ebafb1509dedca3e32e9ff9393a378773cbed",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "dcc71e2fb0aad31d1bc87e61f8a5bb536dbf6b155f0ff6f5b5433f652adac131",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "9cd7abc984d20aaeb16524550193838fc3780baa1f782394ad8ef9e652210187",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "b74914927e3003b2941e26642c0dddfa25ed7cc1c862a3314d46261a7446e3ff",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "c27a26afcf09d2b2a5ba9bf6987c476c644f1b193fe2b23a851f1c692f30d180",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "raw_trace_sha256": "f9e6e26d1c3d2e55aeef65a141de2691f29c05e77f5a1c67e272c1bc680847ce",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "535f98dc6db437d98d9102251111073b1563cc878266423520e2fbe367b407d0",
+      "review_decision": "contextual_false_positive_callback_receiver_overapproximation",
+      "source_sha256_current_worktree_lf": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+      "raw_trace_sha256": "57c433645dbea805a756b41b4532cd9ed379730ec5edbb8f0c6d4f4d3d213e31",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java:34-150",
+        "business-backend/src/main/java/com/tripplanner/api/ValidationController.java:10-20",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:88-158",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-88",
+        "backend/app/agent_api/main.py:417-474",
+        "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java:357-391"
+      ],
+      "limitations": [
+        "Not literally side-effect-free: map request counters/reservations/caches, availability metrics and lazy RAG initialization can write service/derived state and consume bounded provider quota.",
+        "RagService lazy init can create Chroma collections and probe existing dimensions with embedding. These are not the SARIF-claimed assistant-message/task-progress mutation callbacks.",
+        "Public query quota exhaustion is a separate governance boundary, not excluded by the word readonly."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+      "region": {
+        "startLine": 184,
+        "startColumn": 9,
+        "endColumn": 20
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "source_sha256_current_worktree_lf": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+      "raw_trace_sha256": "73ed299fffb2156c4339dbd435d90f5ebd6fc347c444db3f738fb8796a072e3e",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-184,195-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:67-75",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-101",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Changing version column type, removing the predicate/rowcount check, or moving arithmetic before update requires reassessment.",
+        "Eventual INT version exhaustion can cause a failed update; this review does not claim an unlimited version lifetime or absence of500 at that theoretical boundary."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 74,
+        "startColumn": 81,
+        "endColumn": 91
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "source_sha256_current_worktree_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "raw_trace_sha256": "eaebb1ac0ab28449dc45760fc18734289de14639477bc34e8fd3d0077b277a0d",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-184,195-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:67-75",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-101",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Changing version column type, removing the predicate/rowcount check, or moving arithmetic before update requires reassessment.",
+        "Eventual INT version exhaustion can cause a failed update; this review does not claim an unlimited version lifetime or absence of500 at that theoretical boundary."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 46,
+        "endColumn": 56
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "source_sha256_current_worktree_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "raw_trace_sha256": "3312fad2543858f802b414494adabe5a7acae28879488d17098ac1fc50ddb3be",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-184,195-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:67-75",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-101",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Changing version column type, removing the predicate/rowcount check, or moving arithmetic before update requires reassessment.",
+        "Eventual INT version exhaustion can cause a failed update; this review does not claim an unlimited version lifetime or absence of500 at that theoretical boundary."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 100,
+        "startColumn": 60,
+        "endColumn": 70
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "source_sha256_current_worktree_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "raw_trace_sha256": "890e72da23606655e3aff38a54cc37be4b68a5b27b78b861fa7c6a2c1a93ce98",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-184,195-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:67-75",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-101",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Changing version column type, removing the predicate/rowcount check, or moving arithmetic before update requires reassessment.",
+        "Eventual INT version exhaustion can cause a failed update; this review does not claim an unlimited version lifetime or absence of500 at that theoretical boundary."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 101,
+        "startColumn": 54,
+        "endColumn": 64
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
+      "review_decision": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
+      "source_sha256_current_worktree_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "raw_trace_sha256": "b2b8f66b064eefde204354c44e8767e6166dee1a4aa147dc0a5c4e48c82eaee7",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-184,195-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:67-75",
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-101",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Changing version column type, removing the predicate/rowcount check, or moving arithmetic before update requires reassessment.",
+        "Eventual INT version exhaustion can cause a failed update; this review does not claim an unlimited version lifetime or absence of500 at that theoretical boundary."
+      ]
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+      "region": {
+        "startLine": 51,
+        "startColumn": 69,
+        "endColumn": 98
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
+      "review_decision": "contextual_false_positive_fixed_server_generated_totp_plaintext",
+      "source_sha256_current_worktree_lf": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+      "raw_trace_sha256": "2cba0238ed42155f0b25f97a3aa350136fe334a37e1b260d7dcf233d5e10cbdf",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/java.sarif",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/security/Totp.java:14-16,46-51",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:119-125"
+      ],
+      "limitations": [
+        "Public helper API accepts arbitrary String if new Java callers are added; decision is for current full source/call-site bindings only."
+      ]
+    },
+    {
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "backend/scripts/optimization_seed_admin.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 31,
+        "endColumn": 110
+      },
+      "security_severity": "7.5",
+      "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
+      "review_decision": "contextual_false_positive_specific_boolean_or_aggregate_flow",
+      "source_sha256_current_worktree_lf": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+      "raw_trace_sha256": "5cbc300c96fbccbf067d32efc1c537d45b4926365e5f7c9953fe48bb4c7cfbef",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/python.sarif",
+      "evidence": [
+        "backend/scripts/optimization_seed_admin.py:25-70",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:84-91",
+        "tools/security_gate.py:secrets/main"
+      ],
+      "limitations": [
+        "This conclusion does not declare fixture credential files public or exempt arbitrary prepare() response fields.",
+        "No tools logging exception proposed; neutral function rename may address those two tool-only results."
+      ]
+    },
+    {
+      "query": "py/overly-permissive-file",
+      "path": "backend/scripts/install_runtime_security_patches.py",
+      "region": {
+        "startLine": 69,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "review_decision": "contextual_not_security_sensitive_public_build_download_directory",
+      "source_sha256_current_worktree_lf": "af72bab09bf9ff1c1a9d08cd031d823ce9db4a78902a088a367ea52fca19e10f",
+      "raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
+      "raw_sarif_path": "docs/evidence/source-bound-review-20261030/codeql-source-6c920d0/python.sarif",
+      "evidence": [
+        "backend/scripts/install_runtime_security_patches.py:43-100",
+        "backend/runtime-security-packages.json",
+        "backend/Dockerfile:1-80"
+      ],
+      "limitations": [
+        "0755 is not recommended for secret files/directories. Do not reuse this decision for another chmod site or arbitrary contents."
+      ]
+    }
+  ],
+  "reviewed_location_changes": [
+    {
+      "previous": {
+        "startLine": 70,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "current": {
+        "query": "py/overly-permissive-file",
+        "path": "backend/scripts/install_runtime_security_patches.py",
+        "region": {
+          "startLine": 69,
+          "startColumn": 13,
+          "endColumn": 36
+        },
+        "security_severity": "7.8",
+        "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675"
+      }
+    }
+  ]
+}

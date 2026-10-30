@@ -14,3 +14,4 @@ backend/security/native-backports/*.txt text eol=lf
 backend/security/native-backports/patches/*.patch -text -whitespace
 .github/codeql-context-remediated.json -text
 docs/evidence/security-remediation-20261030/** -text
+docs/evidence/source-bound-review-20261030/** -text
