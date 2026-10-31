@@ -31,7 +31,7 @@
     </div>
     <label class="confirm"><input v-model="confirmed" type="checkbox" />我已核对以上信息，了解这是我的声明，系统不会代订票或确认官方真实性</label>
     <p v-if="error" role="alert" class="error">{{ error }}</p>
-    <a-space wrap><a-button :disabled="busy" @click="addFact">加入待保存事实</a-button><a-button type="primary" :loading="busy" @click="emit('recheck', dayIndex)">保存已补充事实并局部重验求解</a-button></a-space>
+    <a-space wrap class="fact-actions"><a-button :disabled="busy" @click="addFact">加入待保存事实</a-button><a-button type="primary" :loading="busy" @click="emit('recheck', dayIndex)">保存已补充事实并局部重验求解</a-button></a-space>
     <p>已补充 {{ factCount }} 项。重验会生成待确认方案；先查看差异再应用，锁定和已完成安排继续受保护。</p>
     <details v-if="savedFacts.length"><summary>检查已加入的补充事实、来源与有效期</summary><ul><li v-for="entry in savedFacts" :key="`${entry.group}:${entry.index}`"><strong>{{ entry.label }}</strong> · {{ entry.source }} · 有效至 {{ entry.expiry }} · 用户声明 <button type="button" :disabled="busy" @click="removeFact(entry.group, entry.index)">移除待保存事实</button></li></ul></details>
   </section>
@@ -123,5 +123,6 @@ function addFact() {
 }
 </script>
 <style scoped>
+.fact-actions{display:flex;margin:12px 0}
 .fact-completion{border:1px solid #dbe1ea;border-radius:10px;padding:20px;margin:20px 0;background:#fafbfc}.fact-completion p,.fact-completion li{font-size:13px;line-height:1.7;color:#58677d}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:14px 0}label{display:flex;flex-direction:column;gap:6px;font-size:13px}select,input{padding:8px;border:1px solid #cbd5e1;border-radius:5px;max-width:100%;box-sizing:border-box}.confirm{flex-direction:row;align-items:center;margin:15px 0}.error{color:#b42318!important}.finding{padding:12px;border-left:3px solid #d69e2e;margin:10px 0}
 </style>
