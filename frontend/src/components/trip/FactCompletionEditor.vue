@@ -4,6 +4,11 @@
     <p>由行程所有者按景区、承运方或自己的安排补充。系统记录为用户声明；填写来源不代表系统已验证官方信息。</p>
     <label>处理日期<select v-model.number="dayIndex"><option v-for="day in plan.days" :key="day.day_index" :value="day.day_index">第 {{ day.day_index + 1 }} 天 · {{ day.city || plan.city }}</option></select></label>
     <ul v-if="gaps.length"><li v-for="gap in gaps" :key="gap">{{ gap }}</li></ul>
+    <section aria-label="本日待补充事实" data-testid="fact-checklist">
+      <p>以下按本日地点和已确认交通列出待补充信息。已填写的声明仍须保存并由服务端重验；清单为空不代表行程已核实可行。</p>
+      <ul v-if="checklist.length"><li v-for="gap in checklist" :key="gap.key"><strong>{{ gap.label }}</strong> · {{ gap.status }} <button type="button" :disabled="busy" @click="editGap(gap)">补充或更新</button></li></ul>
+      <p v-else>本日地点和跨城交通的基础声明已填写，请保存并重新核验。</p>
+    </section>
     <article v-for="finding in findings" :key="finding.activity_id || finding.poi_id" class="finding">
       <strong>{{ finding.status === 'not_found' ? '地点明确不存在，待替换确认' : '本次地点核验失败，可重试' }}</strong><p>{{ finding.message }}</p>
       <a-button v-if="finding.retryable" :disabled="busy" @click="emit('retry')">重试地图核验</a-button>
@@ -32,8 +37,9 @@
   </section>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import type { PlanningInput, TripPlan, TravelFact } from '@/types'
+import { factChecklist, factTimeError, type FactGap } from '@/utils/factChecklist'
 const props = defineProps<{ modelValue: PlanningInput; plan: TripPlan; quality?: any; busy?: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: PlanningInput]; recheck: [day: number]; retry: []; replace: [poiId: string] }>()
 const dayIndex = ref(0), kind = ref('opening'), poiId = ref(''), childPoiId = ref(''), relation = ref<'included' | 'separate'>('included')
@@ -42,14 +48,19 @@ const reservationStatus = ref<'confirmed' | 'not_required' | 'unavailable'>('not
 const longitude = ref<number | undefined>(), latitude = ref<number | undefined>(), source = ref(''), confirmed = ref(false), error = ref('')
 const localDateTime = (value: Date) => new Intl.DateTimeFormat('sv-SE', { timeZone: props.modelValue.timezone || 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(value).replace(' ', 'T')
 const observed = ref(localDateTime(new Date())), expiry = ref(localDateTime(new Date(Date.now() + 6 * 3600000)))
+const now = ref(Date.now())
+let clock: ReturnType<typeof setInterval> | undefined
+onMounted(() => { clock = setInterval(() => { now.value = Date.now() }, 30_000) })
+onBeforeUnmount(() => { clearInterval(clock) })
+const checklist = computed(() => factChecklist(props.plan, props.modelValue, dayIndex.value, now.value))
 const date = computed(() => props.plan.days.find(d => d.day_index === dayIndex.value)?.date || props.plan.start_date)
 const places = computed(() => { const day = props.plan.days.find(d => d.day_index === dayIndex.value); return [...(day?.attractions || []), ...(day?.meals || [])].filter(p => p.poi_id) })
-const transports = computed(() => props.modelValue.commitments.filter(c => c.category === 'transport' && c.status === 'confirmed'))
+const transports = computed(() => props.modelValue.commitments.filter(c => ['transport', 'train', 'flight'].includes(c.category) && c.status === 'confirmed'))
 const findings = computed(() => (props.quality?.poi_verification || []).filter((f: any) => f.day_index === dayIndex.value && f.status !== 'verified'))
 const factCount = computed(() => ['reservation_facts', 'transport_buffers', 'poi_relations', 'meal_resolutions', 'opening_windows', 'hotel_stays'].reduce((n, key) => n + ((props.modelValue as any)[key]?.length || 0), 0))
 const savedFacts = computed(() => {
-  const labels: Record<string, string> = { reservation_facts: '预约核对', transport_buffers: '提前到站', poi_relations: '父子景点', meal_resolutions: '自理用餐' }
-  return Object.entries(labels).flatMap(([group, label]) => ((props.modelValue as any)[group] || []).map((item: any, index: number) => ({ group, index, label: `${label} · ${item.poi_id || item.commitment_id || item.parent_poi_id || `第${item.day_index + 1}天`}`, source: item.source, expiry: item.expires_at })))
+  const labels: Record<string, string> = { opening_windows: '营业核对', hotel_stays: '住宿地点', reservation_facts: '预约核对', transport_buffers: '提前到站', poi_relations: '父子景点', meal_resolutions: '自理用餐' }
+  return Object.entries(labels).flatMap(([group, label]) => ((props.modelValue as any)[group] || []).map((item: any, index: number) => ({ group, index, label: `${label} · ${item.name || item.poi_id || item.commitment_id || item.parent_poi_id || `第${item.day_index + 1}天`}${item.date ? ` · ${item.date}` : ''}`, source: item.source || '未填写来源', expiry: item.expires_at || '未填写' })))
 })
 const gaps = computed(() => {
   const day = props.plan.days.find(d => d.day_index === dayIndex.value), unknown: string[] = day?.feasibility?.unknown || []
@@ -62,19 +73,37 @@ const gaps = computed(() => {
   if (unknown.some(x => x.includes('relationship'))) result.push('父子景点：核对是否属于同一景区、是否已包含游览；不同地图编号不代表可以重复安排。')
   return result
 })
-watch(dayIndex, () => { poiId.value = ''; childPoiId.value = ''; error.value = '' })
+watch(dayIndex, () => { poiId.value = ''; childPoiId.value = ''; commitmentId.value = ''; confirmed.value = false; error.value = '' })
+function editGap(gap: FactGap) {
+  kind.value = gap.kind; poiId.value = gap.poiId || ''; commitmentId.value = gap.commitmentId || ''
+  const input = props.modelValue
+  const fact = gap.kind === 'opening' ? input.opening_windows.find(f => f.poi_id === gap.poiId && f.date === date.value)
+    : gap.kind === 'reservation' ? input.reservation_facts?.find(f => f.poi_id === gap.poiId && f.date === date.value)
+    : input.transport_buffers?.find(f => f.commitment_id === gap.commitmentId || f.commitment_id === input.commitments.find(c => String(c.id) === gap.commitmentId)?.input_commitment_id)
+  source.value = fact?.source || ''; confirmed.value = false; error.value = ''
+  observed.value = localDateTime(new Date()); expiry.value = localDateTime(new Date(Date.now() + 6 * 3600000))
+  openingStart.value = '09:00'; openingEnd.value = '17:00'; lastEntry.value = ''; closed.value = false
+  reservationStatus.value = 'not_required'; minutes.value = 30
+  if (gap.kind === 'opening' && fact && 'windows' in fact) {
+    openingStart.value = fact.windows[0]?.start || '09:00'; openingEnd.value = fact.windows[0]?.end || '17:00'
+    lastEntry.value = fact.last_entry || ''; closed.value = fact.closed
+  } else if (gap.kind === 'reservation' && fact && 'status' in fact) reservationStatus.value = fact.status
+  else if (gap.kind === 'boarding' && fact && 'minutes' in fact) minutes.value = fact.minutes
+}
 function removeFact(group: string, index: number) { const next = JSON.parse(JSON.stringify(props.modelValue)); next[group].splice(index, 1); emit('update:modelValue', next) }
 function addFact() {
   error.value = ''
   const offset = props.modelValue.timezone === 'Asia/Shanghai' ? '+08:00' : ''
   if (!offset) { error.value = '本补充入口目前仅支持国内时区，请在时间与约束中使用 Asia/Shanghai。'; return }
   const stamp = (value: string) => `${value}:00${offset}`
-  if (!source.value.trim() || !confirmed.value || !observed.value || !expiry.value || Date.parse(stamp(expiry.value)) <= Date.parse(stamp(observed.value))) { error.value = '请填写来源、有效的获取时间与有效期，并明确核对声明。'; return }
+  if (!source.value.trim() || !confirmed.value) { error.value = '请填写来源，并明确核对声明。'; return }
+  error.value = factTimeError(stamp(observed.value), stamp(expiry.value), Date.now())
+  if (error.value) return
   const next: PlanningInput = JSON.parse(JSON.stringify(props.modelValue)), fact: TravelFact = { source: source.value.trim(), confirmed: true, observed_at: stamp(observed.value), expires_at: stamp(expiry.value), authority: 'user_declared' }
   if (['opening', 'reservation', 'relation'].includes(kind.value) && !poiId.value) { error.value = '请选择要补充的地点。'; return }
   const upsert = (key: string, match: (entry: any) => boolean, value: any) => { const list = (next as any)[key] || []; (next as any)[key] = [...list.filter((entry: any) => !match(entry)), value] }
   if (kind.value === 'opening') {
-    if (!closed.value && openingStart.value >= openingEnd.value) { error.value = '营业结束须晚于开始。'; return }
+    if (!closed.value && (!openingStart.value || !openingEnd.value || openingStart.value >= openingEnd.value)) { error.value = '请填写有效营业时间，结束须晚于开始。'; return }
     upsert('opening_windows', x => x.poi_id === poiId.value && x.date === date.value, { ...fact, poi_id: poiId.value, date: date.value, windows: closed.value ? [] : [{ start: openingStart.value, end: openingEnd.value }], last_entry: lastEntry.value || null, closed: closed.value })
   } else if (kind.value === 'reservation') upsert('reservation_facts', x => x.poi_id === poiId.value && x.date === date.value, { ...fact, poi_id: poiId.value, date: date.value, status: reservationStatus.value })
   else if (kind.value === 'boarding') {

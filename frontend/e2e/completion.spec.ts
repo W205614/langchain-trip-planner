@@ -38,9 +38,13 @@ test('research dependency failure clears stale evidence and is not shown as no-m
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
   await page.route('**/api/auth/me', route => route.fulfill({ json: { username: 'fixture', id: 1 } }))
   let fail = false
-  await page.route('**/api/research', route => route.fulfill(fail
-    ? { status: 503, json: { message: '资料检索暂不可用，请稍后重试' } }
-    : { json: { data: { evidence: [{ content: '旧证据内容', source: '资料' }] } } }))
+  await page.route('**/api/research/retrieve', route => {
+    expect(route.request().method()).toBe('POST')
+    expect(route.request().postDataJSON()).toEqual({ city: '北京', query: '博物馆预约' })
+    return route.fulfill(fail
+      ? { status: 503, json: { message: '资料检索暂不可用，请稍后重试' } }
+      : { json: { data: { evidence: [{ content: '旧证据内容', source: '资料' }] } } })
+  })
   await page.goto('/research')
   await page.getByPlaceholder('例如：北京').fill('北京')
   await page.getByPlaceholder(/例如：带孩子/).fill('博物馆预约')
@@ -58,6 +62,15 @@ test('knowledge review must save revisions before publishing the exact version',
     original_filename: 'test.png', source_tier: 'community', pages: ['### 故宫\n预约说明'] }
   let publishedVersion = 0
   await page.addInitScript(() => sessionStorage.setItem('access_token', 'fixture-browser-token'))
+  // Synthetic UI quota fixture; no storage reconciliation is exercised.
+  await page.route('**/api/knowledge/admin/uploads', route => {
+    expect(route.request().method()).toBe('GET')
+    return route.fulfill({ json: {
+      used_bytes: 0, reserved_bytes: 0, user_limit_bytes: 104857600,
+      pending_limit: 10, uploads_per_minute: 10, reservations: [],
+      minimum_free_bytes: 0, global_limit_bytes: 1073741824
+    } })
+  })
   await page.route('**/api/knowledge/admin/submissions**', async route => {
     const url = new URL(route.request().url()).pathname
     if (url.endsWith('/original')) return route.fulfill({ contentType: 'image/png', body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=', 'base64') })

@@ -33,8 +33,11 @@ def run():
     facts=[{"poi_id":p,"date":"2026-11-01","windows":[{"start":start,"end":end}],
             "source":"frozen-synthetic-v1","observed_at":now.isoformat(),"expires_at":(now+timedelta(hours=1)).isoformat(),"confirmed":True}
            for p,start,end in (("A","11:00","13:00"),("B","09:00","10:30"),("C","09:00","20:00"))]
+    reservations=[{"poi_id":poi,"date":"2026-11-01","status":"not_required",
+                   "source":"synthetic-no-reservation-v1","observed_at":now.isoformat(),
+                   "expires_at":(now+timedelta(hours=1)).isoformat(),"confirmed":True} for poi in "ABC"]
     req=TripRequest(city="北京",start_date="2026-11-01",end_date="2026-11-01",travel_days=1,transportation="公共交通",accommodation="酒店",
-                    planning_input={"day_start":"09:00","day_end":"20:00","opening_windows":facts,
+                    planning_input={"day_start":"09:00","day_end":"20:00","opening_windows":facts,"reservation_facts":reservations,
                                     "hotel_stays":[{"day_index":0,"name":"固定起点","location":{"longitude":116.30,"latitude":39.9}}]})
     day=DayPlan(day_index=0,date=req.start_date,description="冻结时间窗口样本",transportation=req.transportation,accommodation=req.accommodation,
                 attractions=[Attraction(activity_id=f"poi:0:{p}",poi_id=p,name="景点"+p,address="冻结地址",location=Location(longitude=116.30+i*.01,latitude=39.9),
@@ -82,7 +85,7 @@ def run():
         cases.append({"name":name,"passed":True,"status":actual,"solver_status":result["solver_status"],
                       "seconds":round(time.perf_counter()-started,4),"fixture_route_queries":routes.calls,
                       "unknown":result.get("unknown",[]),"conflicts":result.get("conflicts",[])})
-    return {"mode":"frozen_time_windows_v1","passed":True,"cases":cases,"baseline":{"method":"shortest directed travel over same candidates",
+    return {"mode":"current_contract_time_windows_v2","input_fixture_changed":True,"not_comparable_to_original_frozen_evaluation":True,"heldout16of17_unchanged":True,"passed":True,"cases":cases,"baseline":{"method":"shortest directed travel over same candidates",
             "order":[chr(64+i) for i in baseline],"opening_window_violations":violations},
             "real_provider_calls":0,"boundary":"Six synthetic development scenarios, not live itinerary accuracy or production SLA."}
 

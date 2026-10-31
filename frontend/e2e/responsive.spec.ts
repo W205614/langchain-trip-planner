@@ -12,7 +12,14 @@ test('mobile home keeps every signed-in navigation action on screen', async ({ p
   await page.goto('/')
   const actions = page.locator('.top-actions')
   const buttons = actions.getByRole('button')
-  await expect(buttons).toHaveCount(6)
+  const expectedActions = [
+    '账号安全', '🌏 行程广场', '🧭 景点发现', '✨ 我的行程 · 问答与修改',
+    '📚 投稿攻略', '🔎 旅行资料研究', '退 出'
+  ]
+  await expect(buttons).toHaveCount(expectedActions.length)
+  for (const name of expectedActions) {
+    await expect(actions.getByRole('button', { name, exact: true })).toBeVisible()
+  }
   for (const button of await buttons.all()) {
     const box = await button.boundingBox()
     expect(box).not.toBeNull()
@@ -24,6 +31,7 @@ test('mobile home keeps every signed-in navigation action on screen', async ({ p
     const badge = await page.locator('.page-header .brand-badge').boundingBox()
     return !!navigation && !!badge && navigation.y + navigation.height <= badge.y
   }).toBe(true)
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
 test('itinerary details fit tablet and phone widths without horizontal clipping', async ({ page }) => {

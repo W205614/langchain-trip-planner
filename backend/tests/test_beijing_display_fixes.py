@@ -39,7 +39,7 @@ def test_ambiguous_branches_and_service_pois_are_not_silently_accepted():
 
 
 def test_beijing_driving_saved_plan_is_corrected_without_regeneration():
-    request,plan,routes=fixture({'days':[['故宫博物院','天安门广场']], 'constraints':{'must_visit':['北京故宫博物馆,天安门']}})
+    request,plan,routes=fixture({'transportation':'自驾', 'days':[['故宫博物院','天安门广场']], 'constraints':{'must_visit':['北京故宫博物馆,天安门']}})
     request.city=plan.city='北京'
     request.transportation='自驾'
     routes.plan_route_by_locations=lambda *a,**kw: {'duration':600,'distance':2000,'route_type':'driving'}

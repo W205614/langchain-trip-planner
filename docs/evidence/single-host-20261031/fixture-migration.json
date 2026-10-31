@@ -1,0 +1,60 @@
+{
+  "classification": "reviewed_fixture_migration_not_new_holdout",
+  "baseline": "056ecb1fd7761e56b3a6e5c8d12880f26c4c5a4b",
+  "files": [
+    {
+      "path": "backend/tests/test_beijing_display_fixes.py",
+      "before": "fe9940f7a5ea8637c5b8dfdf34e14af6ab138f339cfb062ff804532a313b5fb8",
+      "after": "564224c67bbd8bc84b512a5904eb96c131dfac4d6a691f73e23ff3308ae2adda",
+      "assertions_unchanged": true
+    },
+    {
+      "path": "backend/tests/test_time_planner.py",
+      "before": "6105b1dcc4092d447dc051aea7ffb86054e36be6294e8733733b0bc3630d7395",
+      "after": "b11ca629ede95c804a78a25a2192c7964464c08b9835ae8963b82263df3a9b9d",
+      "assertions_unchanged": true
+    },
+    {
+      "path": "frontend/e2e/assistant-explore.spec.ts",
+      "before": "d46d48e4c7e167e5e7458d4dcdfb9b3ba7b6b9bbc2781d2ef3e04727c7c46c16",
+      "after": "b38a7deeffeabeaba6f551341b96c64415be9d6e6700deed7548ee4d32577ae5",
+      "original_expectations": 32,
+      "revised_expectations": 34
+    },
+    {
+      "path": "frontend/e2e/completion.spec.ts",
+      "before": "a0efb2a8d2bdab75ec3add1da1ad0068ca2a8ac4f3aec55e5f1b75e9ec80004a",
+      "after": "3e5d17221e45bdcb33e5824aff7b7a099160d4f0fe0be8df73100020919e65bd",
+      "original_expectations": 19,
+      "revised_expectations": 22
+    },
+    {
+      "path": "frontend/e2e/final-planning.spec.ts",
+      "before": "fbbe0cb3df8dae74a5dbaf4cfa24b74f988e8666459570d7cc8af744c682f8ed",
+      "after": "c5615324ff507889c23f6b9e1d9f55003698a3accffa7723f2cb1cfed1dd6ae2",
+      "original_expectations": 28,
+      "revised_expectations": 29
+    },
+    {
+      "path": "frontend/e2e/final-roles-live.spec.ts",
+      "before": "90f99d64fdb84351f8a6b39ad2444f6ab3f92835c504e3289043c1912d40ed50",
+      "after": "e2d1433fa6be1e342588bf2efa9a6493f8d1f65086c1718d1819ff40a3098f39",
+      "original_expectations": 27,
+      "revised_expectations": 70
+    },
+    {
+      "path": "frontend/e2e/optimization-flows.spec.ts",
+      "before": "6f2a2529c6f1996020f900fb6eb42c4fd7294862bd06bf4b4465446449f8b8ae",
+      "after": "b41c0208a59f5df2d67f9b343c7312ea2d5accf04893ec4ad43051807e237e7a",
+      "original_expectations": 142,
+      "revised_expectations": 150
+    },
+    {
+      "path": "frontend/e2e/responsive.spec.ts",
+      "before": "fc0408dd904476a70b93b3c4109f0ea1359703ffbf2375cad8e6ba4699669357",
+      "after": "b8c8f13c89ac7faab89e70b87b48df97514b54c51656be7817fbfdd2e15e0749",
+      "original_expectations": 7,
+      "revised_expectations": 9
+    }
+  ]
+}

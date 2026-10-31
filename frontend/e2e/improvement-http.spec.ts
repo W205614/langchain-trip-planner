@@ -144,7 +144,7 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
     expect(named).toBeTruthy()
     const time = new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(named.start_at))
     const downloading = page.waitForEvent('download')
-    await page.getByRole('button', { name: /导出行程/ }).hover()
+    await page.getByRole('button', { name: /导出行程/ }).click()
     await page.getByRole('menuitem', { name: /导出离线网页/ }).click()
     const download = await downloading
     expect(download.suggestedFilename()).toMatch(/\.html$/)

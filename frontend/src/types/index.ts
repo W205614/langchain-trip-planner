@@ -143,6 +143,7 @@ export interface RevisionScope {
 }
 
 export interface PlanningCommitment {
+  input_commitment_id?: string
   time_mode?: 'fixed' | 'entry_window'
   duration_minutes?: number
   id: string | number
@@ -217,5 +218,44 @@ export interface TripPlanResponse {
   success: boolean
   message: string
   data?: TripPlan
+}
+
+export interface ProposalActivity {
+  id?: string | number
+  activity_id?: string
+  title?: string
+  name?: string
+  visit_duration?: number
+  start_at?: string
+}
+
+export interface AssistantProposal {
+  stale: boolean
+  invalidation_reason?: string
+  dependencies?: { planning_revision?: number; trip_version?: number; version?: number }
+  revision_scope?: RevisionScope
+  diff: {
+    summary?: string
+    cost_delta_cents?: number | null
+    added?: ProposalActivity[]
+    removed?: ProposalActivity[]
+    moved?: ProposalActivity[]
+    changed?: ProposalActivity[]
+    preserved?: ProposalActivity[]
+    modified?: { activity_id: string; before: ProposalActivity; after: ProposalActivity }[]
+    days?: { day_index: number; summary?: string }[]
+    unresolved?: string[]
+  }
+}
+
+export interface AssistantDecision {
+  id: number
+  version: number
+  quality: Record<string, unknown>
+  message: string
+}
+
+export interface AssistantConfirmation extends AssistantDecision {
+  data: TripPlan
 }
 

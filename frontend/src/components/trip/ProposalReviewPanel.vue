@@ -19,7 +19,8 @@
 </template>
 <script setup lang="ts">
 import { proposalConflictMessage } from '@/utils/proposalConflict'
-defineProps<{ details: any; detailsError: string; confirmError: string; changes: string[]; busy: boolean }>()
+import type { AssistantProposal } from '@/types'
+defineProps<{ details: AssistantProposal | null; detailsError: string; confirmError: string; changes: string[]; busy: boolean }>()
 const emit = defineEmits<{ refresh: [] }>()
 </script>
 <style scoped>

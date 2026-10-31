@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 # 单日只需选择 2-3 个景点。候选、酒店和 RAG 上下文均限制在足以
 # 做出选择的范围，避免无意义地放大全部 prompt 与首 Token 等待时间。
-_MAX_DAILY_POI_CANDIDATES = 4
+from .candidates import DAILY_CANDIDATES, select_day_candidates, split_pois_for_days
 _MAX_DAILY_HOTEL_CANDIDATES = 2
 _DAY_RAG_TOP_K = 2
 _DAY_RAG_MAX_CHUNK_CHARS = 600
@@ -135,12 +135,11 @@ class MultiAgentTripPlanner(TravelDataNodes):
                         subset[:] = [p for p in subset if p.id != reserved.id]
                     subsets[index].insert(0, reserved)
 
+            subsets = [select_day_candidates(pois, request, i) for i, pois in enumerate(subsets)]
+
             def _make_query(i: int) -> str:
                 current_date = (start + timedelta(days=i)).strftime("%Y-%m-%d")
-                required = {n.casefold() for n in request.constraints.must_visit}
-                fixed = {c.get("poi_id") for c in request.planning_input.commitments if c.get("day_index") == i}
-                sub = sorted(subsets[i] if i < len(subsets) else [],
-                             key=lambda p: not (p.id in fixed or p.name.casefold() in required or p.requested_names))[:_MAX_DAILY_POI_CANDIDATES]
+                sub = subsets[i]
                 sub_text = "\n".join(
                     f"{j + 1}. poi_id={p.id} | {p.name} | {p.address or ''} | "
                     f"{p.location.longitude},{p.location.latitude}"
@@ -150,7 +149,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
                     f"{base_info}\n"
                     f"**本天可选景点(仅从这些里选, 勿选其他):**\n{sub_text}\n"
                     f"请生成第 {i + 1} 天的行程 (日期 {current_date}, 天序号 day_index={i})。\n"
-                    f"每天安排 2-3 个景点、3 餐(breakfast/lunch/dinner), "
+                    f"通常每天安排 2-3 个景点，必去与已确认预约不得因数量省略；时间冲突交由后续求解明确报告。安排3餐(breakfast/lunch/dinner)，"
                     f"给出行程概述 description。\n"
                     f"只输出这一天的一个 JSON 对象。"
                 )
@@ -166,7 +165,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             logger.info(
                 "   单日并发=%s, 每日候选上限=%s, 输出上限=%s tokens, 超时=%ss",
                 max_workers,
-                _MAX_DAILY_POI_CANDIDATES,
+                DAILY_CANDIDATES,
                 settings.llm_day_max_tokens,
                 min(settings.llm_timeout, settings.llm_day_timeout),
             )
@@ -713,23 +712,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             observe_agent_stage("rag_context", elapsed, outcome)
             self._emit_trace(state, "stage_duration", stage="rag_context", seconds=elapsed)
 
-    @staticmethod
-    def _split_pois_for_days(pois: List[POIInfo], days: int) -> List[List[POIInfo]]:
-        """把景点按天均分, 保证并行生成时每天选不同的景点"""
-        if not pois:
-            return [[] for _ in range(days)]
-        # Spatial sweep creates contiguous geographic groups without extra API calls.
-        pois = list({p.id: p for p in pois if p.id}.values())
-        if not pois:
-            return [[] for _ in range(days)]
-        lon_span = max(p.location.longitude for p in pois) - min(p.location.longitude for p in pois)
-        lat_span = max(p.location.latitude for p in pois) - min(p.location.latitude for p in pois)
-        pois.sort(key=lambda p: (p.location.longitude, p.location.latitude, p.id) if lon_span >= lat_span
-                  else (p.location.latitude, p.location.longitude, p.id))
-        subsets: List[List[POIInfo]] = [[] for _ in range(days)]
-        for idx, poi in enumerate(pois):
-            subsets[min(days - 1, idx * days // len(pois))].append(poi)
-        return subsets
+    _split_pois_for_days = staticmethod(split_pois_for_days)
 
     # ============ 图构建 ============
 
@@ -961,10 +944,14 @@ class MultiAgentTripPlanner(TravelDataNodes):
         evidence = trusted_evidence_var.get()
         if evidence is not None:
             evidence.update({p.id: p.model_dump() for p in candidates})
+        protected = set(request.planning_input.completed_activity_ids) | {
+            lock.get("activity_id") for lock in request.planning_input.locks}
+        protected_pois = {a.poi_id for a in day.attractions if a.activity_id in protected}
+        candidates = select_day_candidates(candidates, request, day_index, protected_pois)
         candidate_text = "\n".join(
             f"{index + 1}. poi_id={poi.id} | {poi.name} | {poi.address or ''} | "
             f"{poi.location.longitude},{poi.location.latitude}"
-            for index, poi in enumerate(candidates[:_MAX_DAILY_POI_CANDIDATES])
+            for index, poi in enumerate(candidates)
         )
         restaurant_text = self._pois_to_text(restaurant_pois[:8])
         current_text = "、".join(item.name for item in day.attractions) or "无"
@@ -979,7 +966,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             f"{candidate_text}\n"
             "本天可选餐厅（每餐只能返回其中的 poi_id）：\n"
             f"{restaurant_text or '无'}\n"
-            "请输出该天的一个 JSON 对象，安排 2-3 个景点与 breakfast/lunch/dinner。"
+            "请输出该天的一个 JSON 对象，通常安排2-3个景点与breakfast/lunch/dinner；必去和受保护安排不得因数量省略，时间冲突须留给后续求解明确报告。"
         )
         revised_day = self._generate_one_day(
             day_query,

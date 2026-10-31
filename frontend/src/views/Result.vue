@@ -22,7 +22,7 @@
         <a-button v-if="!editMode && historyRecordId && !quality.assistant_proposal_status" @click="$router.push(`/trips/${historyRecordId}/operations`)">📋 行程执行</a-button>
 
         <!-- 导出按钮 -->
-        <a-dropdown v-if="!editMode" :disabled="exportBusy">
+        <a-dropdown v-if="!editMode" :disabled="exportBusy" :trigger="['click']">
           <template #overlay>
             <a-menu>
               <a-menu-item key="image" @click="exportAsImage">
@@ -438,7 +438,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
-import { proposalConflictMessage } from '@/utils/proposalConflict'
+import { useAssistantProposal } from '@/composables/useAssistantProposal'
 import { useTripMap } from '@/composables/useTripMap'
 import { isAuthenticated } from '@/services/auth'
 import AttractionPicker from '@/components/trip/AttractionPicker.vue'
@@ -449,7 +449,7 @@ import RevisionScopeEditor from '@/components/trip/RevisionScopeEditor.vue'
 import { useTripExport } from '@/composables/useTripExport'
 import { refreshScheduleValidity } from '@/utils/scheduleValidity'
 import type { TripPlan, POIInfo, PlanningInput, RevisionScope, TimelineItem, Attraction } from '@/types'
-import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, confirmAssistantProposal, discardAssistantProposal, tripOperations, tripPlanning, fetchAssistantProposal, clearTripCache } from '@/services/api'
+import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, tripOperations, tripPlanning, clearTripCache } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -460,32 +460,11 @@ const planLoading = ref(true)
 const planError = ref('')
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
-const proposalBusy = ref(false)
 const planningInput = ref<PlanningInput>()
 const planningRevision = ref(0)
 const activityBusy = ref(false)
-const proposalDetails = ref<any>(null)
-const proposalDetailsError = ref('')
-const proposalConfirmError = ref('')
 const scopeEditor = ref<InstanceType<typeof RevisionScopeEditor>>()
 const revisionScope = ref<RevisionScope>({ day_indices: [], activity_ids: [] })
-const describeChange = (value: any) => typeof value === 'string' ? value : value.title || value.name || value.activity_id || value.id || '活动安排变化'
-const proposalChanges = computed(() => {
-  const diff = proposalDetails.value?.diff
-  if (!diff) return []
-  if (Array.isArray(diff)) return diff.map(describeChange)
-  const values: string[] = []
-  for (const [key, label] of Object.entries({ added: '新增', removed: '移除', moved: '移动', changed: '调整', preserved: '保留' })) for (const item of diff[key] || []) values.push(`${label}：${describeChange(item)}`)
-  for (const item of diff.modified || []) { const before = item.before || {}, after = item.after || {}; const details: string[] = []; if (before.name !== after.name) details.push(`${before.name || '原活动'} → ${after.name || '新活动'}`); if (before.visit_duration !== after.visit_duration) details.push(`游览 ${before.visit_duration ?? '未知'} → ${after.visit_duration ?? '未知'} 分钟`); if (before.start_at !== after.start_at) details.push(`开始时间 ${before.start_at || '待定'} → ${after.start_at || '待定'}`); values.push(`调整：${describeChange(after)}${details.length ? `（${details.join('；')}）` : '（内容或顺序变化）'}`) }
-  for (const day of diff.days || []) values.push(`第 ${Number(day.day_index) + 1} 天：${day.summary || '安排已调整'}`)
-  return values
-})
-async function loadProposalDetails() {
-  proposalConfirmError.value = ''
-  if (!historyRecordId.value || !quality.value.assistant_conversation_id || quality.value.assistant_proposal_status !== 'pending') { proposalDetails.value = null; return }
-  try { proposalDetails.value = await fetchAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value); proposalDetailsError.value = '' }
-  catch (e: any) { proposalDetails.value = null; proposalDetailsError.value = e?.response?.data?.message || '提案依赖读取失败，请刷新后确认。'; revokeAccess(e) }
-}
 async function loadPlanningInput() {
   if (readOnlyPlan.value || !historyRecordId.value || quality.value.assistant_proposal_status || !isAuthenticated()) return
   try { const data = await tripPlanning.get(historyRecordId.value); planningInput.value = data.planning_input; planningRevision.value = data.planning_revision; recordVersion.value = data.trip_version }
@@ -509,41 +488,6 @@ async function refreshAccess() {
 }
 onMounted(() => { window.addEventListener('focus', refreshAccess); document.addEventListener('visibilitychange', refreshAccess) })
 onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); document.removeEventListener('visibilitychange', refreshAccess) })
-async function confirmAssistant() {
-  if (!historyRecordId.value || !quality.value.assistant_conversation_id || proposalBusy.value) return
-  proposalBusy.value = true
-  proposalConfirmError.value = ''
-  try {
-    const response = await confirmAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value, recordVersion.value)
-    historyRecordId.value = response.id; recordVersion.value = response.version; quality.value = response.quality; tripPlan.value = response.data
-    sessionStorage.setItem('tripPlanId', String(response.id)); sessionStorage.setItem('tripPlanVersion', String(response.version))
-    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); sessionStorage.setItem('tripPlan', JSON.stringify(response.data)); message.success(response.message)
-    proposalDetails.value = null
-    await loadPlanningInput()
-  } catch (e: any) {
-    if (e.response?.status === 409) {
-      const reason = proposalConflictMessage(e.response?.data?.code, e.response?.data?.message)
-      await loadProposalDetails()
-      proposalConfirmError.value = reason
-      message.error(reason)
-    } else { revokeAccess(e); message.error(e.response?.data?.message || '确认失败，请重新打开方案') }
-  } finally { proposalBusy.value = false }
-}
-async function discardAssistant() {
-  if (!historyRecordId.value || !quality.value.assistant_conversation_id || proposalBusy.value) return
-  proposalBusy.value = true
-  try {
-    const response = await discardAssistantProposal(quality.value.assistant_conversation_id, historyRecordId.value, recordVersion.value)
-    recordVersion.value = response.version; quality.value = response.quality
-    sessionStorage.setItem('tripPlanVersion', String(response.version))
-    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality))
-    message.success(response.message)
-    await router.push('/history')
-  } catch (e: any) {
-    if (e.response?.status === 409) { message.error('方案版本已变化，请重新打开行程记录'); await router.push('/history') }
-    else message.error(e.response?.data?.message || '放弃方案失败')
-  } finally { proposalBusy.value = false }
-}
 async function applyRevisionDraft() {
   try {
     const { default: api } = await import('@/services/api')
@@ -670,6 +614,28 @@ const attractionPhotos = ref<Record<string, string>>({})
 const activeSection = ref('overview')
 const activeDays = ref<number[]>([0]) // 默认展开第一天
 const historyRecordId = ref<number>(0) // 从历史打开时的记录 id (0=新规划)
+const {
+  details: proposalDetails, detailsError: proposalDetailsError, confirmError: proposalConfirmError,
+  busy: proposalBusy, changes: proposalChanges, load: loadProposalDetails,
+  confirm: confirmAssistant, discard: discardAssistant,
+} = useAssistantProposal({
+  recordId: historyRecordId, version: recordVersion, quality, accessError: revokeAccess,
+  reopen: () => router.push('/history'),
+  confirmed: async response => {
+    historyRecordId.value = response.id; recordVersion.value = response.version
+    quality.value = response.quality; tripPlan.value = response.data
+    sessionStorage.setItem('tripPlanId', String(response.id)); sessionStorage.setItem('tripPlanVersion', String(response.version))
+    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
+    message.success(response.message)
+    await loadPlanningInput()
+  },
+  discarded: async response => {
+    recordVersion.value = response.version; quality.value = response.quality
+    sessionStorage.setItem('tripPlanVersion', String(response.version)); sessionStorage.setItem('tripQuality', JSON.stringify(response.quality))
+    message.success(response.message)
+    await router.push('/history')
+  },
+})
 async function shareTrip() {
   try {
     const response = await createTripShare(historyRecordId.value, 7)

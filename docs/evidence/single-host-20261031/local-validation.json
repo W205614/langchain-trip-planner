@@ -1,0 +1,63 @@
+{
+  "scope": "single-host source and isolated development regression",
+  "base_revision": "056ecb1fd7761e56b3a6e5c8d12880f26c4c5a4b",
+  "python_full": {
+    "passed": 444,
+    "skipped": 8,
+    "skip_boundary": "Native image ABI tests require explicit actual-image mode; run separately below"
+  },
+  "native_image_tests": {
+    "passed": 8,
+    "skipped": 0,
+    "runtime_image": "sha256:dd01a5e2b30cc83e800a20ba4695e6335fb999f918098e1432f346af33e17a99"
+  },
+  "python_targeted": {
+    "passed": 58
+  },
+  "new_frontend_contracts": {
+    "passed": 5
+  },
+  "frontend_build": {
+    "passed": true,
+    "existing_large_chunk_warning": true
+  },
+  "time_window_development_cases": 6,
+  "http_scenario_checks": 66,
+  "tools_first_run": {
+    "tests": 74,
+    "errors": 1,
+    "sole_error": "CodeQL business source working tree changed; correct invalidation of prior source-bound assessment. Fresh exact-source SARIF and review required before completion."
+  },
+  "external_paid_calls": 0,
+  "independent_human_review": "pending",
+  "daily_services_started": false,
+  "backup_reenabled": false,
+  "browser_final": "local first full 61/63; all failed and directly affected flows now pass 3/3; final full rerun delegated to exact-commit GitHub CI",
+  "ci_final": "pending",
+  "boundaries": [
+    "Local integration uses existing runtime images with readonly current source and dist mounts. GitHub exact-revision rebuild is still required.",
+    "Offline fixture checks do not establish current travel truth, live model quality or production capacity.",
+    "Read soak preserves all 22 observed 503 responses; it is not an error-free run."
+  ],
+  "browser_first_full": {
+    "passed": 61,
+    "failed": 2,
+    "total": 63,
+    "failures": [
+      "hover export menu closed before normal click; product changed to explicit click trigger",
+      "new fact-form exact wrapping-label locator failed before submission; corrected to combobox role/name"
+    ],
+    "raw_junit": "ignored local browser-first-junit.xml",
+    "not_rewritten_as_pass": true
+  },
+  "browser_targeted_after_fix": {
+    "passed": 3,
+    "failed": 0,
+    "tests": [
+      "all PNG/PDF/offline HTML downloads, all days and offline toggles",
+      "real proposal and ordinary-draft separation plus HTML export",
+      "fact checklist, invalid-expiry refusal, staging preserves authoritative revision, stale timeline protections and HTML warning"
+    ],
+    "raw_junit": "ignored local browser-targeted-junit.xml"
+  }
+}

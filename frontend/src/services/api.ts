@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { TripFormData, TripPlanResponse, PlanningInput, RevisionScope } from '@/types'
+import type { TripFormData, TripPlanResponse, PlanningInput, RevisionScope, AssistantProposal, AssistantConfirmation, AssistantDecision } from '@/types'
 import { getToken, clearAuth, csrfToken } from './auth'
 
 // 正式构建始终使用同源 Nginx 代理，避免开发 .env 中的 localhost:9000 混入镜像。
@@ -9,7 +9,7 @@ const API_BASE_URL = import.meta.env.DEV ? (import.meta.env.VITE_API_BASE_URL ||
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
-  timeout: 300000 // 2分钟超时；由 Axios 按 JSON/FormData 自动设置 Content-Type
+  timeout: 300000 // 5分钟超时；由 Axios 按 JSON/FormData 自动设置 Content-Type
 })
 
 // 请求拦截器: 自动附带 JWT
@@ -426,17 +426,17 @@ export async function streamAssistantMessage(
   throw new Error('攻略问答连接意外关闭')
 }
 
-export async function confirmAssistantProposal(conversationId: string, recordId: number, version: number): Promise<any> {
+export async function confirmAssistantProposal(conversationId: string, recordId: number, version: number): Promise<AssistantConfirmation> {
   return (await apiClient.post(`/api/assistant/conversations/${conversationId}/proposals/${recordId}/confirm`, {},
     { headers: { 'If-Match': String(version) } })).data
 }
 
-export async function discardAssistantProposal(conversationId: string, recordId: number, version: number): Promise<any> {
+export async function discardAssistantProposal(conversationId: string, recordId: number, version: number): Promise<AssistantDecision> {
   return (await apiClient.post(`/api/assistant/conversations/${conversationId}/proposals/${recordId}/discard`, {},
     { headers: { 'If-Match': String(version) } })).data
 }
 
-export async function fetchAssistantProposal(conversationId: string, recordId: number): Promise<any> {
+export async function fetchAssistantProposal(conversationId: string, recordId: number): Promise<AssistantProposal> {
   return (await apiClient.get(`/api/assistant/conversations/${conversationId}/proposals/${recordId}`)).data.data
 }
 

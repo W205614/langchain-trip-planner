@@ -8,11 +8,14 @@ from copy import deepcopy
 from datetime import datetime,timezone
 import json
 from pathlib import Path
+import sys
 import time
 from urllib.parse import quote,urlparse
 from uuid import uuid4
 
 import httpx
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from app.evals.scenario_contracts import compare_excluded_day
 
 
 def run(base_url,output,cross_city_only=False):
@@ -144,7 +147,10 @@ def run(base_url,output,cross_city_only=False):
             check("stale confirmation does not change trip version",history(identity)["version"]==before["version"])
 
             conversation,proposal,before=propose(identity,0,{"day_indices":[0,2]},"仅调整第1天和第3天 fixture:replace，第2天及所有预约保持不变")
-            check("multi-day authorization preserves excluded middle day exactly",proposal["plan"]["days"][1]==before["plan"]["days"][1])
+            excluded_contract=compare_excluded_day(before["plan"]["days"][1],proposal["plan"]["days"][1])
+            report["excluded_middle_day_projection_contract"]=excluded_contract
+            check("excluded middle day remains stale and unverified in both records",excluded_contract["stale_unverified_on_both"])
+            check("multi-day authorization preserves excluded middle day exactly",excluded_contract["passed"])
             for index in (0,2):
                 check(f"authorized day {index} actually changes its selected activities",{a["activity_id"] for a in proposal["plan"]["days"][index]["attractions"]}!={a["activity_id"] for a in before["plan"]["days"][index]["attractions"]})
             confirmed_before=next(row for row in before["plan"]["days"][2]["timeline"] if row["activity_id"]==booked["activity_id"])

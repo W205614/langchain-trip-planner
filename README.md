@@ -4,7 +4,7 @@
 
 它把景点查询、路线安排、预算整理和出行记录集中到一个应用中，帮助你从“到处查攻略”走到“有一份可以继续调整的旅行计划”。
 
-当前本机维护状态（2026-10-30）：自动备份及恢复入口已停用，先前备份已按维护决定回收，目前没有有效的本地恢复集。数据库、上传资料、知识索引和运行配置属于使用中的数据，不能作为清理缓存删除。下文交付记录中的备份演练仅证明对应历史时点。
+当前本机维护状态（2026-10-31）：自动备份及恢复入口已停用，先前备份已按维护决定回收，目前没有有效的本地恢复集。数据库、上传资料、知识索引和运行配置属于使用中的数据，不能作为清理缓存删除。下文交付记录中的备份演练仅证明对应历史时点。
 
 日常运行范围为受控单机使用。当前源码采用 Debian 13 稳定基座、固定的 CPython 3.11.18 和上游原生库安全回补；旧 8 项 CVE 的临时风险接受不再作为新构建的放行依据。具体补丁、两项运行时适用性结论和限制见[原生安全回补说明](backend/security/native-backports/README.md)。源码或构建变化仍须通过当前提交的 CI 和安全检查，不能沿用历史绿灯。
 
@@ -215,36 +215,37 @@ CodeQL、依赖、密钥与镜像检查按精确提交运行，扫描失败不�
 
 首次完整 CI 的[失败结果](docs/evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](docs/evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与当时 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报仅作内部改名，不加例外。[第二轮 CI](docs/evidence/optimization-20261026/second-ci-5485f8a-results.json)实际验证四种语言门禁通过，原始高危 22 项、已审上下文 22 项、阻断 0 项；替换提交仍须重新验证。原始 SARIF 继续上传，门禁通过不代表 GitHub 没有原始告警。
 
-CI 中两份旧 Python 夹具补齐每日交通和合成事实有效期，[全部原断言保留](docs/evidence/optimization-20261026/ci-fixture-contract-review.json)。一份 HTTP 场景的[纯 Java 复现](docs/evidence/optimization-20261026/scope-projection-contract-review.json)只发现存储与读取投影的过期原因码不同，两边仍都过期、未核实，其余日期字段一致；这不代替原 CI 数据抓取。第二轮 CI 保留原整天相等断言并[抓取实际两份日期](docs/evidence/optimization-20261026/ci-excluded-day-actual-review-5485f8a.json)，逐字段确认唯一差异确为该原因码。此后只对这两个已审代码作表示比较，两边必须明确过期、未核实，其他全部字段、类型和数组顺序仍严格相等；额外差异继续失败。夹具及诊断显式发生在临时 CI 测试副本中，批准的业务源码与镜像文件未改；首轮失败不改写成新一轮通过结果。时间窗口基准也只补足三条明确的[合成预约事实](docs/evidence/optimization-20261026/time-window-benchmark-fixture-review.json)，原六个期待结果和断言未改。输出明确标记输入夹具已修订，不能与原冻结评测直接比较，也不改变此前 16/17 留出集记录；这些声明不是真实景点事实。
+### 单机质量与维护收敛（2026-10-31）
 
-[第三轮 CI](docs/evidence/optimization-20261026/third-ci-e44acfb-results.json)通过 15/16 项任务，浏览器为 51 项通过、7 项失败，原失败和 trace 保留。[逐项核对](docs/evidence/optimization-20261026/ci-browser-contract-review.json)确认旧夹具缺少会话历史和额度读取、仍拦截旧检索地址，或在主动令时间轴过期后要求锁定。CI 仅在显式准备的完整测试副本中修订五份原测试，全部 58 个原测试名称、超时及跳过标记保持不变；角色锁定/完成正例保留，并增加过期后的界面禁用、真实 HTTP 拒绝及状态不变检查。移动端验证完整七个入口及原有几何约束。四项副本守卫测试与五份 TypeScript 语法检查通过，新的浏览器结果仍待最终 CI。恢复、发布、通知和重启检查在隔离栈启动成功后独立收集结果，前序步骤失败仍使整个任务失败。
+- 每日普通景点候选维持4个的预算；已确认预约、必去及改排中的锁定／已完成景点优先保留，不再被普通候选截断。模型输入与校验白名单使用同一候选集。保留要求不代表时间一定可行，后续求解继续明确报告冲突或未知。
+- 行前核验按日期、景点和已确认跨城交通列出缺失、声明过期、未确认、冲突、闭馆及无可用预约等事项，可直接定位补录。补录仍属于用户声明，须保存并局部重验；清单为空不代表当前行程已核实可行。营业、住宿及其余补充事实均可检查来源、有效期并移除待保存项。
+- 结果页的提案加载、确认、放弃及错误状态集中到 `useAssistantProposal`，提案响应与差异使用显式 TypeScript 类型。服务端仍负责权限、版本、事实依赖和范围保护。
+- 已审的两份 Python 夹具、六份浏览器夹具及时间窗口前提已迁入正式测试源码，CI 与本地执行相同入口，不再改写测试检出目录或生成另一套浏览器副本。HTTP 场景仍只允许两种已审失效原因码的表示差异，双方必须明确过期、未核实，其余字段、类型及数组顺序严格相等；[回归测试](backend/tests/test_scenario_projection.py)继续覆盖额外差异的拒绝。
 
-当前 CI 使用下列明确的契约迁移层。未经适配的冻结原脚本与适配后的执行是两份证据，原始失败仍成立；直接运行原 `pytest`、时间窗口基准或浏览器套件不等同当前 CI 流程，也不能宣称原套件全部通过。
+[迁移记录与单机验证](docs/evidence/single-host-20261031/README.md)保留测试迁移前后指纹、实际结果与限制。[旧适配工具](docs/evidence/single-host-20261031/retired-ci-adapters/)仅作历史审计，不是当前运行入口。此前的失败、留出16/17及人工评审待完成状态保持原记录；修订后的开发回归不作为新留出集或真实旅行准确率。
 
-| 入口 | 精确适配范围 | 结果与保留边界 |
-|---|---|---|
-| `tools/ci_contract_fixture_overlay.py` | 两个旧 Python 测试的每日交通、缓存观察时间与有效期 | 原行为断言保留；只写 CI 临时检出目录中的两份测试文件，映射前后哈希写入 `evidence/ci-fixture-overlay.json` |
-| `tools/ci_time_window_benchmark.py` | 原六场景只补三条合成“不需预约”声明 | 原 `run`、期待结果和断言不改；输出标记 `current-contract-fixture-20261027`、输入已变且不可与原冻结评测比较，留出 16/17 记录不变 |
-| `tools/ci_excluded_day_contract.py` | 原 HTTP 场景中两个已审的派生失效原因码 | 两份日期必须明确过期、未核实，其他字段、类型、顺序全部严格相等；诊断模式仍执行原整份 JSON 相等断言 |
-| `tools/ci_browser_contract_overlay.py` | 六份原测试中的八个已审失败前提，完整复制后执行全部 58 项 | 原文件、测试名称、超时和跳过标记不改；精确替换见 `tools/ci_browser_contract_replacements.json`，保留副本哈希和浏览器 trace |
-
-[第四轮实际结果](docs/evidence/optimization-20261026/fourth-ci-478da94-results.json)为浏览器 57 项通过、1 项失败，四段后续恢复检查均通过。剩余浏览器失败是新增名称断言遗漏组件在“退 出”中插入的空格，已按实际可访问名称精确修正；全部几何检查仍保留，完整布局结果须等下一轮。密钥门禁的两条记录已重新计算为公开源码指纹，[窄例外和负例](docs/evidence/optimization-20261026/ci-secrets-public-source-hash-review.json)只覆盖指定凭据文件中的两个确切值；其他值或路径仍阻断，完整历史扫描仍须由最终提交通过。
-
-[第五轮](docs/evidence/optimization-20261026/fifth-ci-6167590-results.json)实际通过全部安全门禁，移动端完整七个入口、原几何约束和无横向溢出均通过；浏览器总体仍为 57/58。唯一失败发生在新行程提交前：[原始 trace](docs/evidence/optimization-20261026/ci-calendar-picker-review-6167590.json)显示旧开始日期弹层尚在退出，新结束日期弹层尚未显示，`count()` 命中旧隐藏日期并跳过翻月。第六份测试副本只补可见面板、翻月和关闭的状态等待，保留最多三次翻月、实际日期点击及全部生成/澄清/确认断言；没有 force、retry、延长超时或业务响应替代。四项适配守卫及这一份 TypeScript 语法检查通过，完整新结果仍以最终提交全部 CI 为准。
-
-这些入口默认只核对源码哈希，不执行应用、不创建测试副本。以下只读检查可从仓库根目录复现；它们通过仅代表适配前提匹配：
+本地检查从仓库根目录执行：
 
 ```powershell
-python tools/ci_contract_fixture_overlay.py
-python tools/ci_time_window_benchmark.py
-python tools/ci_excluded_day_contract.py
-python tools/ci_browser_contract_overlay.py
-docker compose -p trip-validation -f docker-compose.validation.yml config --quiet
+cd backend
+python -m pytest -q
+python scripts/time_window_benchmark.py --output ../.codex-optimization/time-windows.json
+cd ../frontend
+npm run build
+npx playwright test --config playwright.config.ts
 ```
 
-完整执行复用 [CI 工作流](.github/workflows/ci.yml) 的 `Python Agent tests` 与 `Docker Compose config and build` 任务，后者使用[既有隔离 Compose](docker-compose.validation.yml)、专用项目/数据卷、离线供应商和测试账号，不读取日常业务挂载。工作流向 `main` 的提交或 PR 触发；在 Actions 中对同一提交重跑全部任务，可复现包含测试前提、管理员环境、完整浏览器套件及后续恢复的实际顺序。写入/执行开关只在 `GITHUB_ACTIONS=true` 的临时 CI 检出目录中使用，完整命令以工作流为准；单独调用其中一条不能代表整条验收。镜像构建按既有归档恢复 12 个历史评测输入；它们仍是历史输出。原生运行时按当前安全回补流程重新构建，不再复用旧原生组件的临时风险授权。
+Python 需要安装锁定依赖，完整浏览器测试需要隔离验证栈和测试管理员配置。可复用 [CI 工作流](.github/workflows/ci.yml) 中的完整准备与执行顺序；单独通过构建或一条脚本不代表整体验收。隔离环境使用专用项目／数据卷和离线供应商，不读取日常业务挂载。构建中的12个归档评测输入仍是历史输出。
 
-这些迁移层服务于本次冻结版本的审查可追溯性。后续若确认真实应用缺陷，应修正应用及原测试、重新审查对应契约并逐步移除过时适配，保留旧失败与修订依据。源码、系统包、ELF、应用文件或运行权限变化后，须重新评估受影响风险和验证证据；现有精确组合的临时接受不会自动覆盖新组合，允许指纹不能自动重算求绿。最终交付要求同一替换提交全部 16 项 CI/安全任务实际成功。
+宿主容量可单独只读检查，无需启动日常服务：
+
+```powershell
+python tools/single_host_inspection.py --path E:/project/langchain-trip-planner --path E:/Docker --project langchain-trip-planner --output .codex-optimization/host-inspection.json
+```
+
+路径须替换为本机实际项目／Docker数据位置；可重复传入 `--path`，也可指定现有VHDX文件以同时记录文件大小。默认剩余空间低于10%返回非零，路径不存在或Docker读取失败也明确失败。该检查观测宿主文件系统，不等同于Linux卷剩余空间、数据库WAL大小、应用健康或外部通知送达，不自动安装任务、启动服务或启用备份。
+
+源码变化后须使用新SARIF重新复核精确查询、位置、源码和数据流；旧绿灯不沿用到新源码树。最终提交的CI与安全检查仍须全部实际成功。
 
 安全门禁允许有证据的适用性评估，不能读作“零风险”。Chroma 的四项上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用[当前评估](.github/security-vex-remediated.json)。原 8 项原生 CVE 中，6 项采用上游安全代码回补；PBDS 头文件问题仅对实际匹配的 Debian 运行时包作组件不包含判定，2.42 才引入的 util-linux 子目录路径不适用于当前 2.41 分支。预编译 Python wheel 没有在此流程中全部重编，不能把共享库更新说成修复了所有已内联模板。
 

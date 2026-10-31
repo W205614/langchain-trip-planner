@@ -1,0 +1,7 @@
+{
+  "classification": "test_locator_failure_retained",
+  "test": "changed planning input disables obsolete time actions and real HTML export retains the stale warning",
+  "phase": "read selected venue after clicking actionable fact gap",
+  "error": "getByLabel exact text did not match a wrapping select label containing option text; no fact submission occurred",
+  "fix": "Use the real combobox accessible role/name; retain selected POI, invalid-expiry, staged-declaration and unchanged server-revision assertions."
+}

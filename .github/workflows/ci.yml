@@ -78,15 +78,11 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Apply reviewed synthetic test fixture premises (not application changes)
-        working-directory: .
-        run: python tools/ci_contract_fixture_overlay.py --apply-for-ci --report evidence/ci-fixture-overlay.json
-
       - name: Run backend tests
         run: |
           pytest -v --tb=short
           python -m app.evals.constraint_benchmark --output ../evidence/constraints.json
-          python ../tools/ci_time_window_benchmark.py --run-ci --output ../evidence/time-windows.json
+          python scripts/time_window_benchmark.py --output ../evidence/time-windows.json
 
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
@@ -183,8 +179,7 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/assistant-proposal.json evidence/assistant-proposal.json
           docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_acceptance.py --base-url http://frontend --output /tmp/final-planning-roles.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-planning-roles.json evidence/final-planning-roles.json
-          docker compose -p trip-validation -f docker-compose.validation.yml cp tools/ci_excluded_day_contract.py agent:/tmp/ci_excluded_day_contract.py
-          docker compose -p trip-validation -f docker-compose.validation.yml exec -T -e GITHUB_ACTIONS=true agent python /tmp/ci_excluded_day_contract.py --run-ci --base-url http://frontend --output /tmp/final-scenarios.json
+          docker compose -p trip-validation -f docker-compose.validation.yml exec -T agent python scripts/final_scenarios.py --base-url http://frontend --output /tmp/final-scenarios.json
           docker compose -p trip-validation -f docker-compose.validation.yml cp agent:/tmp/final-scenarios.json evidence/final-scenarios.json
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
@@ -197,14 +192,13 @@ jobs:
           python -m pip install httpx==0.28.1
           python ../backend/scripts/optimization_seed_admin.py --project trip-validation --base-url http://127.0.0.1:18080 --output ../.codex-optimization/admin-ci.json --allow-optional-admin-mfa
           npm ci
-          python ../tools/ci_browser_contract_overlay.py --prepare-ci --report ../evidence/browser-fixture-adaptation.json
           npx playwright install --with-deps chromium
           python - <<'PY'
           import json,os,subprocess
           from pathlib import Path
           environment=dict(os.environ)
           environment.update(json.loads(Path('../.codex-optimization/admin-ci.json').read_text(encoding='utf-8')))
-          subprocess.run(['npx','playwright','test','--config','.ci-reviewed-playwright.config.ts'],env=environment,check=True)
+          subprocess.run(['npx','playwright','test','--config','playwright.config.ts'],env=environment,check=True)
           PY
 
       - name: Isolated recovery drill

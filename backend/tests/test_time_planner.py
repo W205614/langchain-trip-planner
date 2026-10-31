@@ -476,6 +476,9 @@ def test_cached_day_transport_buffer_gap_reaches_final_quality_without_resolving
     from app.services import durable_execution as durable,time_planner
     from app.services.plan_quality import transport_to_route_type
     request,plan=intercity_hotel_scenario()
+    # Synthetic current checkpoint metadata, not a newly queried route fact.
+    observed_at=datetime.now(timezone.utc)
+    route_expiry=(observed_at+timedelta(seconds=60)).isoformat()
     cached={}
     for day in plan.days:
         row={'activity_id':day.attractions[0].activity_id,'kind':'attraction','title':day.attractions[0].name,
@@ -486,10 +489,11 @@ def test_cached_day_transport_buffer_gap_reaches_final_quality_without_resolving
             cached_day.timeline.insert(0,{'activity_id':'commitment:bridge','kind':'commitment','title':'已输入班次',
                 'start_at':day.date+'T08:00:00+08:00','end_at':day.date+'T12:00:00+08:00','notes':[]})
         cached_day.feasibility={'status':'feasible','unknown':[],'conflicts':[],'omitted_activity_ids':[]}
+        cached_day.__pydantic_extra__['route_fact_expires_at']=route_expiry
         cached[day.day_index]={'day':cached_day.model_dump(mode='json')}
     def read(stage,digest):
         if stage=='routes':
-            return {'routes':[{'key':[116.01,39.01,116.5,39.5,'北京',transport_to_route_type(request.transportation)],'minutes':10,'verified':True}]}
+            return {'routes':[{'key':[116.01,39.01,116.5,39.5,'北京',transport_to_route_type(request.transportation)],'minutes':10,'verified':True,'observed_at':observed_at.isoformat(),'expires_at':route_expiry}]}
         return cached[int(stage.split(':')[1])] if stage.startswith('schedule_day:') else None
     monkeypatch.setattr(durable,'read_checkpoint',read)
     monkeypatch.setattr(durable,'save_checkpoint',lambda *args,**kwargs:None)

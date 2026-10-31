@@ -1,0 +1,8 @@
+{
+  "classification": "original_failure_retained",
+  "test": "PNG and PDF download all days and offline HTML toggles without a network",
+  "phase": "opening first export menu item before any download",
+  "error": "Hover dropdown became hidden while Playwright performed a normal menu-item click; result-container intercepted pointer events, then download wait timed out at the original 45000ms limit.",
+  "raw_trace": "ignored local export-first-failure-trace.zip; not published because browser traces may contain synthetic authentication state",
+  "proposed_fix": "Explicit click-triggered export menu, including touch and keyboard activation; keep original downloads, file signatures, all-days and offline assertions."
+}

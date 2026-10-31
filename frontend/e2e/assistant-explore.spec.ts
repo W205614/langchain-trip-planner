@@ -12,6 +12,10 @@ test('history record opens contextual Agent Q&A with a direct sourced answer', a
     return route.fulfill({ json: { success: true, id: 'conversation-1' } })
   })
   await page.route('**/api/assistant/conversations/conversation-1/messages', async route => {
+    if (route.request().method() === 'GET') {
+      return route.fulfill({ json: { success: true, data: [], clarification: { status: 'none' } } })
+    }
+    expect(route.request().method()).toBe('POST')
     expect(route.request().postDataJSON()).toMatchObject({ mode: 'auto', city: '北京' })
     return route.fulfill({ json: { success: true, status: 'completed', data: {
       answer: '故宫建议提前预约，并预留半天参观。[1]',
@@ -34,13 +38,17 @@ test('history list keeps contextual Q&A but removes the duplicate revision entry
     id: 42, version: 3, city: '北京', start_date: '2026-10-01', end_date: '2026-10-03', travel_days: 3
   }], total: 1 } }))
   await page.route('**/api/assistant/conversations', route => route.fulfill({ json: { success: true, id: 'conversation-2' } }))
+  await page.route('**/api/assistant/conversations/conversation-2/messages', route => {
+    expect(route.request().method()).toBe('GET')
+    return route.fulfill({ json: { success: true, data: [], clarification: { status: 'none' } } })
+  })
 
   await page.goto('/history')
   await expect(page.getByRole('button', { name: '✨ AI 修改' })).toHaveCount(0)
   await page.getByRole('button', { name: '💬 问攻略' }).click()
   await expect(page.getByText(/2026-10-01 至 2026-10-03 · 3 天/)).toBeVisible()
   await expect(page.getByRole('button', { name: '修改行程' })).toHaveCount(0)
-  await expect(page.getByText('修改安排请先进入具体行程。')).toBeVisible()
+  await expect(page.getByText('可问攻略或提出局部调整。日期不明确时会保留原需求继续追问；回复日期后只生成待确认方案。可回复“取消”结束调整。')).toBeVisible()
 })
 
 test('legacy tasks route opens only actionable task states inside my trips', async ({ page }) => {

@@ -1,0 +1,95 @@
+{
+  "mode": "current_contract_time_windows_v2",
+  "input_fixture_changed": true,
+  "not_comparable_to_original_frozen_evaluation": true,
+  "heldout16of17_unchanged": true,
+  "passed": true,
+  "cases": [
+    {
+      "name": "time_windows_change_shortest_order",
+      "passed": true,
+      "status": "feasible",
+      "solver_status": "OPTIMAL",
+      "seconds": 3.001,
+      "fixture_route_queries": 12,
+      "unknown": [],
+      "conflicts": []
+    },
+    {
+      "name": "missing_routes_stay_unverified",
+      "passed": true,
+      "status": "unverified",
+      "solver_status": "OPTIMAL",
+      "seconds": 0.0115,
+      "fixture_route_queries": 12,
+      "unknown": [
+        "route_duration_estimated_30_minutes",
+        "route_fact_expired_or_unobserved"
+      ],
+      "conflicts": []
+    },
+    {
+      "name": "expired_opening_stays_unverified",
+      "passed": true,
+      "status": "unverified",
+      "solver_status": "OPTIMAL",
+      "seconds": 0.0056,
+      "fixture_route_queries": 12,
+      "unknown": [
+        "opening_unknown_or_stale:poi:0:A",
+        "opening_unknown_or_stale:poi:0:B",
+        "opening_unknown_or_stale:poi:0:C"
+      ],
+      "conflicts": []
+    },
+    {
+      "name": "closed_mandatory_visit",
+      "passed": true,
+      "status": "infeasible",
+      "solver_status": "INVALID_WINDOWS",
+      "seconds": 0.0003,
+      "fixture_route_queries": 0,
+      "unknown": [],
+      "conflicts": [
+        "no_time_window:poi:0:B"
+      ]
+    },
+    {
+      "name": "closed_optional_visit",
+      "passed": true,
+      "status": "feasible",
+      "solver_status": "OPTIMAL",
+      "seconds": 0.006,
+      "fixture_route_queries": 6,
+      "unknown": [],
+      "conflicts": []
+    },
+    {
+      "name": "arrival_after_daily_end",
+      "passed": true,
+      "status": "infeasible",
+      "solver_status": "INVALID_WINDOWS",
+      "seconds": 0.0003,
+      "fixture_route_queries": 0,
+      "unknown": [],
+      "conflicts": [
+        "no_time_window:poi:0:A",
+        "no_time_window:poi:0:B",
+        "no_time_window:poi:0:C"
+      ]
+    }
+  ],
+  "baseline": {
+    "method": "shortest directed travel over same candidates",
+    "order": [
+      "A",
+      "B",
+      "C"
+    ],
+    "opening_window_violations": [
+      "B"
+    ]
+  },
+  "real_provider_calls": 0,
+  "boundary": "Six synthetic development scenarios, not live itinerary accuracy or production SLA."
+}
