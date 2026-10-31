@@ -6,6 +6,8 @@
 
 当前本机维护状态（2026-10-31）：自动备份及恢复入口已停用，先前备份已按维护决定回收，目前没有有效的本地恢复集。数据库、上传资料、知识索引和运行配置属于使用中的数据，不能作为清理缓存删除。下文交付记录中的备份演练仅证明对应历史时点。
 
+现有本机日常部署包含 `frontend`、`backend`、`agent`、`postgres`、`prometheus`、`alertmanager`、`alert-receiver` 七个服务，当前均保持停止。它使用私有的 `.codex-optimization/daily-window/daily-release.compose.json` 和同目录 `runtime/` 配置；查看、启动、停止及配置更新按[七服务运行手册](docs/operations/java-migration.md#现有七服务部署操作)执行。下文快速部署使用仓库根目录的四核心服务模板，适用于首次创建环境。
+
 日常运行范围为受控单机使用。当前源码采用 Debian 13 稳定基座、固定的 CPython 3.11.18 和上游原生库安全回补；旧 8 项 CVE 的临时风险接受不再作为新构建的放行依据。具体补丁、两项运行时适用性结论和限制见[原生安全回补说明](backend/security/native-backports/README.md)。源码或构建变化仍须通过当前提交的 CI 和安全检查，不能沿用历史绿灯。
 
 当前源码仅对模型 JSON／候选选择错误最多纠正一次，对明确的供应商失败使用可见降级；内部行程构造错误、任务取消和总超时直接失败。缺失温度显示“温度未知”，实际零度仍显示 `0°C`；非法温度不再补成零度。
@@ -49,7 +51,7 @@
 
 ## 快速部署
 
-下面使用 Docker 在本机启动。命令以 **Windows PowerShell** 为例，均在项目根目录执行；已有部署升级请先看[运行与迁移手册](docs/operations/java-migration.md)，不要覆盖原配置。
+下面使用 Docker 首次创建四核心服务环境。命令以 **Windows PowerShell** 为例，均在项目根目录执行；已有七服务部署沿用[运行手册](docs/operations/java-migration.md)中的原 Compose 文件和私有配置，不执行这里的配置生成或首次构建命令。
 
 ### 1. 准备环境并下载项目
 
@@ -109,7 +111,7 @@ docker compose ps
 
 ## 常用操作与配置更新
 
-以下命令仍在项目根目录执行：
+以下命令用于上文根目录 `docker-compose.yml` 的四核心服务环境，仍在项目根目录执行。本机现有七服务环境使用[显式指定私有 Compose 文件的命令](docs/operations/java-migration.md#现有七服务部署操作)，配置修改位置也沿用其 `runtime/` 目录。
 
 ```powershell
 # 查看启动问题与最近日志
@@ -122,7 +124,7 @@ docker compose stop
 docker compose up -d --wait
 ```
 
-首次生成配置后，Compose 实际读取的是 `deploy/runtime/*.env`，后续修改 `backend/.env` 不会自动同步到运行配置：
+上文首次生成配置后，根目录 Compose 实际读取的是 `deploy/runtime/*.env`；本机七服务读取 `.codex-optimization/daily-window/runtime/*.env`。后续修改 `backend/.env` 不会自动同步到运行配置，下表路径仅对应根目录四服务模板：
 
 | 修改内容 | 修改位置 | 生效命令 |
 |---|---|---|
@@ -135,18 +137,18 @@ docker compose up -d --wait
 
 ## 常见问题
 
-- **页面打不开或启动失败？** 先确认 Docker Desktop 正在运行、已生成 `deploy/runtime`，再查看 `docker compose ps` 和日志。端口冲突可按上文修改 `APP_PORT`；若首次构建失败，先检查镜像和依赖下载网络。
+- **页面打不开或启动失败？** 先确认 Docker Desktop、所选部署的私有配置和容器状态；本机七服务目前按维护要求停止，需要使用时按[运行手册](docs/operations/java-migration.md#现有七服务部署操作)启动已有容器。根目录首次部署使用 `deploy/runtime`，查看 `docker compose ps` 和日志；端口冲突可修改 `APP_PORT`，首次构建失败时检查镜像和依赖下载网络。
 - **能登录，但无法生成行程？** 检查 Agent 的运行配置中模型名称、API 地址、Key 是否匹配，以及高德 MCP 是否可访问。`AGENT_UNAVAILABLE` 表示 Agent 不可用；登录和历史查看仍可使用。
 - **地图不显示或景点没图片？** 核对前端 JS API Key 的类型与高德控制台的安全配置、域名限制，修改 Key 后重新构建前端。某些景点没有可信图片时会显示占位提示。
 - **为什么有资料缺口或降级结果？** 可能是路线、餐饮、天气或知识资料不足；未启用 RAG 时也可能缺少攻略上下文。请查看具体提示，调整或补充核验，不要把草稿当作完整方案。
 - **中断后恢复是否重新扣费？** 兼容且未过期的阶段可以复用；已发送但尚未持久化响应的调用按不确定处理。新调用仍先预留预算，失败不退计数，不承诺费用 Exactly Once。重复点击恢复使用同一幂等键不会创建多份执行。
 - **30 天是否都能算出最优结果？** 输入仍支持 1–30 日，但求解器有候选、路线查询及总时间上限。达到上限会保留有效阶段并说明原因；不承诺全局最优，也没有用短行程测试证明全部长度的性能。
-- **需要资料审核管理员？** 先注册账号，再在 `deploy/runtime/business.env` 添加 `BOOTSTRAP_ADMIN_USERNAME=已注册的用户名`，执行 `docker compose up -d --force-recreate backend`。
+- **需要资料审核管理员？** 先注册账号，再在所选部署的 `business.env` 添加 `BOOTSTRAP_ADMIN_USERNAME=已注册的用户名`，使用同一 Compose 文件重建 `backend`。根目录四服务环境使用 `deploy/runtime/business.env`；本机七服务路径与命令见[运行手册](docs/operations/java-migration.md#现有七服务部署操作)。
 - **可以直接部署到公网吗？** 本指南面向本机单实例使用；公网部署还需配置 HTTPS、访问入口和备份策略。当前不提供多实例高可用部署。
 
 ## 技术栈与进一步阅读
 
-前端使用 Vue 3、TypeScript 与高德 JS API；Java / Spring Boot 负责用户、行程、任务与审核，Python / LangGraph 负责候选生成、高德 MCP 和检索，OR-Tools 负责有界时间窗口求解；PostgreSQL 保存业务数据，Chroma 保存向量索引。Docker Compose 默认启动四个服务，仅前端发布本机端口。
+前端使用 Vue 3、TypeScript 与高德 JS API；Java / Spring Boot 负责用户、行程、任务与审核，Python / LangGraph 负责候选生成、高德 MCP 和检索，OR-Tools 负责有界时间窗口求解；PostgreSQL 保存业务数据，Chroma 保存向量索引。根目录四服务模板仅前端发布本机端口；本机日常七服务另含 Prometheus、Alertmanager 和本地告警收件箱，Prometheus 也仅绑定本机端口。
 
 - [运行、升级与备份恢复](docs/operations/java-migration.md)
 - [时间规划、受限改排与恢复运维](docs/operations/final-planning.md)
@@ -173,7 +175,7 @@ docker compose up -d --wait
 
 ### 升级与全新部署
 
-默认 `docker-compose.yml` 是既有单机环境的升级入口，必须保留原挂载。`docker-compose.production.yml` 现在是独立的新环境，默认项目名为 `trip-production`，读取 `deploy/runtime-production/*.env`，不能通过换 Compose 文件来迁移已有资料。新环境先执行：
+仓库默认 `docker-compose.yml` 提供四核心服务模板；既有部署升级必须继续使用原 Compose 文件、项目名、私有配置与挂载。本机七服务使用 `.codex-optimization/daily-window/daily-release.compose.json`，不切换到根目录模板。`docker-compose.production.yml` 是独立的新环境，默认项目名为 `trip-production`，读取 `deploy/runtime-production/*.env`，不能通过换 Compose 文件来迁移已有资料。新环境先执行：
 
 ```powershell
 python backend/scripts/prepare_java_deployment.py --output deploy/runtime-production
@@ -182,7 +184,7 @@ docker compose -f docker-compose.production.yml --profile monitoring up -d --bui
 
 新配置会分配 `DATASET_ID`。业务数据库、上传与 Agent 持久目录的标记不匹配会拒绝启动。该标记证明环境身份，不能单独证明恢复时点一致；恢复和升级仍须核对成套备份的内容。
 
-既有数据首次启用登记时，应在维护窗口停止写入，保留 PostgreSQL 可读，先成套备份，再执行检查。以下示例路径必须替换为本次实际备份：
+既有数据首次启用登记时，应在维护窗口停止写入，保留 PostgreSQL 可读，先成套备份，再执行检查。以下仅适用于尚未登记的数据集，示例路径必须替换为实际备份；本机七服务已完成登记且备份停用，不执行这组初始化或备份命令：
 
 ```powershell
 python backend/scripts/backup_java_deployment.py --output backups/pre-optimization-YYYYMMDD-HHMM --archive-images
@@ -197,7 +199,7 @@ python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYM
 
 容器已配置 CPU、内存、PID 与日志轮转；这些是资源预算，不是峰值容量证明。终态任务正文默认保留 90 天，过期快照延迟 24 小时分批清理；保留任务身份、恢复关联、预算账本、未完成作业与必要删除证据。超过保留期的任务需从当前行程发起新执行。
 
-生产 monitoring 配置连接 Prometheus、Alertmanager 和有界本地持久收件箱，提供分组、去重、恢复通知与重复间隔。外部人工作用通知渠道需另行配置，不能把本地收件箱称为已送达真实值班人员。
+本机日常七服务及独立生产环境的 monitoring 配置均连接 Prometheus、Alertmanager 和有界本地持久收件箱，提供分组、去重、恢复通知与重复间隔。外部人工作用通知渠道需另行配置，不能把本地收件箱称为已送达真实值班人员。
 
 本机 `TripPlanner-AutomatedBackup` 已停用，离线镜像与备份已退役，没有可用恢复集。以下命令仅检查维护配置；需要备份时，应先另行确认重新启用与恢复验收，再安装计划任务或执行备份：
 

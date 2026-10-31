@@ -1,25 +1,58 @@
 # Java + Python Agent 单机运行手册
 
-当前日常部署只保留 Compose 项目 `langchain-trip-planner` 的四个服务：`frontend`、`backend`（Java）、`agent`、`postgres`。Python 业务后端已经退出工作树，不能再使用旧入口、Alembic 或旧 SQLAlchemy 操作脚本。
+当前本机日常部署使用 Compose 项目 `langchain-trip-planner`，包含七个服务：
+
+| 服务 | 用途 |
+|---|---|
+| `frontend` | Nginx 与 Vue 页面，本机入口 `127.0.0.1:8380` |
+| `backend` | Java 业务服务、任务调度与业务数据库访问 |
+| `agent` | Python / LangGraph 规划、检索与解析 |
+| `postgres` | PostgreSQL 业务数据库 |
+| `prometheus` | 指标与告警规则，本机入口 `127.0.0.1:19090` |
+| `alertmanager` | 告警分组、去重与恢复通知 |
+| `alert-receiver` | 本地持久告警收件箱 |
+
+七服务配置位于 `.codex-optimization/daily-window/daily-release.compose.json`，私有环境文件位于同目录的 `runtime/`。这些本机文件不进入 Git。仓库根目录 `docker-compose.yml` 仍提供四个核心服务的首次部署模板；已有七服务环境继续使用原 Compose 文件，不能用首次部署命令替换它。
+
+截至 2026-10-31，本机七个日常容器均已停止；业务数据和私有配置保留。自动备份与恢复入口继续停用，当前没有有效恢复集。Python 业务后端已经退出工作树，不能再使用旧入口、Alembic 或旧 SQLAlchemy 操作脚本。
 
 ## 配置与数据
 
-- Java 配置：`deploy/runtime/business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
-- Java 地图配置：`deploy/runtime/business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；仅公开 POI／天气／路线、用户主动复核和图片走此通道，Agent 生成不再由 Java 二次核验或改排。
-- Agent 配置：`deploy/runtime/agent.env`；模型、`AMAP_MCP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。
+下列环境文件均相对于 `.codex-optimization/daily-window/runtime/`；根目录四服务模板首次生成的对应文件位于 `deploy/runtime/`，两套路径不能混用。
+
+- Java 配置：`business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
+- Java 地图配置：`business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；仅公开 POI／天气／路线、用户主动复核和图片走此通道，Agent 生成不再由 Java 二次核验或改排。
+- Agent 配置：`agent.env`；模型、`AMAP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。首次配置脚本将源文件中的 `AMAP_MCP_API_KEY` 转入运行配置的 `AMAP_API_KEY`。
+- PostgreSQL 配置：`postgres.env`；继续使用原数据库凭据。
 - PostgreSQL：`langchain-trip-planner_java_business_data` 数据卷。
 - 原文件：`backend/data/knowledge_uploads`，Java 管理。
 - 向量：`backend/data/chroma`；模型／维度变更须受控重建。
 - 操作账本：`backend/data/agent-runtime`；不是业务事实源，不能通过删除它重置调用预算或重放旧执行。
+- 监控配置：`deploy/prometheus.yml`、`deploy/alerts.yml`、`deploy/alertmanager.yml`；沿用既有只读挂载。
+- 监控数据卷：`langchain-trip-planner_daily_prometheus`、`langchain-trip-planner_daily_alerts`、`langchain-trip-planner_daily_alert_inbox`；指标、告警状态与收件箱独立持久化。
 
 已有私有配置不重新生成。`prepare_java_deployment.py` 只创建新目录，新部署默认开启 workers、关闭验收预算模式；已有账号环境的 JWT Key 不可随意更换。
 
-## 健康与故障检查
+## 现有七服务部署操作
+
+以下命令在项目根目录执行，显式选择现有七服务配置。查看状态和日志不会启动容器：
 
 ```powershell
-docker compose ps
-docker compose logs --tail 100 backend agent
+$dailyCompose = '.codex-optimization/daily-window/daily-release.compose.json'
+docker compose -p langchain-trip-planner -f $dailyCompose ps -a
+docker compose -p langchain-trip-planner -f $dailyCompose logs --tail 100 backend agent frontend prometheus alertmanager alert-receiver
 ```
+
+需要日常使用时，以下命令启动已有七个容器；暂停时停止全部七服务，保留配置、镜像、数据卷与绑定目录。当前维护状态为停止，仅在需要运行服务时执行 `start`：
+
+```powershell
+docker compose -p langchain-trip-planner -f $dailyCompose start
+docker compose -p langchain-trip-planner -f $dailyCompose stop
+```
+
+修改运行环境文件后，`start` / `restart` 不会重新载入新配置；确认需要更新时，在同一项目和 Compose 文件下仅重建受影响服务，例如 `docker compose -p langchain-trip-planner -f $dailyCompose up -d --no-build --force-recreate agent`。应用升级须先准备并验证新镜像，再更新原配置中的相应镜像引用；保留现有环境文件、挂载、端口与运行限制。不要运行首次配置生成脚本、改用根目录 Compose，或使用 `down -v` 排查问题。
+
+## 健康与故障检查
 
 Java 存活检查不调用模型，就绪检查只验证数据库、迁移和本地必要配置；前端只依赖 Java 健康。Agent 就绪检查验证 AI 服务本身。停止 Agent 后必须复测登录、POI 搜索、收藏、手工行程、路线、历史、分享和导出；智能规划应返回 `AGENT_UNAVAILABLE`，而不是拖垮传统业务。容器“已启动”不是服务“已就绪”。
 
@@ -45,22 +78,23 @@ SELECT d.id,d.submitted_by,d.reviewed_by FROM knowledge_documents d
 
 2026-09-17 的正式 V3→V4 升级保留了 18 条历史行程和相关 RAG 作业：为原用户 ID 1、2 建立不可登录的归档主体；4 条终态任务和 2 个会话按新外键的 `ON DELETE SET NULL` 语义解除已删除行程引用；清除 1 条源资料早已不存在的已完成摄取作业；修正 4 条旧时区写入造成的终态任务期限顺序。升级前、修复后迁移前及升级后的完整备份分别位于 `E:\project\trip-planner-backups\pre-v4-20260917-233408`、`repaired-pre-v4-20260917-233810` 和 `post-v4-20260917-234046`。Flyway 最终处于 V4，38 条既有行程均建立基线版本；这些一次性维护动作不可复制到其他数据库，其他环境必须重新检查实际数据并由数据所有者确认处理方式。
 
-## 当前架构备份和恢复
+## 备份和恢复（当前停用）
+
+`backups/BACKUP_DISABLED.json` 标记备份停用，Windows 任务 `TripPlanner-AutomatedBackup` 保持 Disabled；历史备份与离线恢复材料已退役，没有有效恢复集。当前日常维护不执行备份、恢复、计划任务安装或重新启用操作。
+
+以下命令仅核查任务状态，不启动备份或业务容器：
 
 ```powershell
-docker compose stop frontend backend agent
-python backend/scripts/backup_java_deployment.py --output E:\backups\trip-java-YYYYMMDD-HHMM --archive-images
-docker compose up -d --wait backend agent frontend
-python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-YYYYMMDD-HHMM --output E:\backups\trip-java-restored-YYYYMMDD-HHMM
+Get-ScheduledTask -TaskName TripPlanner-AutomatedBackup | Select-Object TaskName,State
 ```
 
-备份包含业务库、上传、Chroma、账本、有效私有配置及镜像标识，`--archive-images` 同时归档镜像。Java/Flyway-v2 从实际容器读取持久挂载和 Compose 文件，不按默认卷名猜测；输出限全新仓库外目录或已忽略的 `backups/` 目录。恢复工具校验哈希、拒绝不安全归档成员，在独立网络、数据库和目录启动禁用 workers 的克隆，核对原表内容并保留结果；不会覆盖日常配置或删除现有数据。可用 `--candidate-image` 验证候选迁移后原业务列及历史迁移记录不变，见[详细运维说明](final-planning.md)。私有备份必须限制访问，不提交 GitHub。
+源码仍保留 Java/Flyway-v2 备份恢复工具和历史[详细运维说明](final-planning.md)。工具设计覆盖业务库、上传、Chroma、账本、有效私有配置及镜像标识，从实际容器读取持久挂载和 Compose 文件；恢复时校验哈希并使用独立网络、数据库和目录中的禁用 workers 克隆。这些工具及历史验收记录不代表现在有可用备份。
 
-正式回切必须安排维护窗口，先备份当前数据，再核对数据库、上传、Chroma 和账本的一致性。源数据库凭据改变时，单独调整恢复用配置副本，不改原备份。跨机器恢复需先准备对应镜像和私有网络。
+未来如需恢复备份能力，应另行确认新的备份目标和恢复验收范围，再安排维护窗口；当前继续保留停用状态。私有配置与业务数据不提交 GitHub。
 
 ## 迁移历史与旧版本回滚
 
-下述本机路径是迁移时的原始位置。2026-10-06 已将整个外部备份目录移入项目的 `E:\project\langchain-trip-planner\backups`，迁移后文件哈希一致，外部旧目录已不存在。历史材料已合并到该目录中的 `history-20260910-20260919.zip`；内部重复文件清理待执行。清理后先解压到新的独立目录，再读取对应快照；重复恢复副本按原 tar.gz 重建。详见[备份归档说明](backup-organization.md)。
+下述路径和文件名仅记录迁移历史，不代表当前资产存在或可用。2026-10-06 曾将外部备份目录移入项目的 `E:\project\langchain-trip-planner\backups`，当时核对哈希一致，并将历史材料合并为 `history-20260910-20260919.zip`；原始过程见[历史备份归档说明](backup-organization.md)。这些材料已随 2026-10-29 的备份退役处理，不能按旧路径尝试当前恢复。
 
 原始数据为 9 用户、2 偏好、25 行程、4 任务、21 历史同步作业、2 资料、5 资料作业。18 行程原属已不存在的用户 1，经用户确认原样保留；其余 7 条按原所有者验收。没有重分配孤立记录或补造账号。
 
@@ -75,7 +109,7 @@ python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-YYYY
 
 `docker-compose.validation.yml` / `docker-compose.migration.yml` 仅用于离线夹具验证；`trip-validation` 不作为第二套日常服务常驻。CI 创建后销毁；本地验证后按项目名 `down`，不执行全局 Docker prune。
 
-容器或镜像删除不代表删除数据：本次整理保留所有持久卷、宿主数据目录和备份；旧 Python 回滚镜像已另经用户确认删除。清理恢复克隆时只删除明确核对的克隆容器，不能按宽泛前缀误删日常四服务，更不能操作其他项目。
+清理验证资源时保留现有持久卷、宿主业务数据目录和私有配置；旧 Python 回滚镜像已另经用户确认删除。清理恢复克隆时只删除明确核对的克隆容器，不能按宽泛前缀误删日常七服务，更不能操作其他项目。
 
 ## 能力与测试归属
 
@@ -97,4 +131,4 @@ python backend/scripts/restore_java_backup.py --backup E:\backups\trip-java-YYYY
 
 本轮真实验收已结束，账本保留；整理阶段仅离线测试，不自动追加模型、高德或 embedding 调用。资料解析、索引重建和真实生成可能计费，执行前需另行确认预算。取消、超时或断流不保证已发出请求不计费。
 
-日常四容器不附带额外 Prometheus／Alertmanager 服务，告警配置和本地验收脚本仍保留。公开入口不暴露指标和内部服务；生产通知接收端、备份调度、容量规划及高可用需自行部署，不能把本机验证作为生产 SLA。
+本机日常七服务已包含 Prometheus、Alertmanager 与本地持久收件箱；本地接收不等于告警已送达真实值班人员。公开入口不暴露指标和内部服务。备份继续停用，真实人员通知、长期容量和多机高可用不属于当前验收范围，不能把本机验证作为生产 SLA。
