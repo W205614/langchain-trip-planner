@@ -1,0 +1,11 @@
+{
+  "image_id": "sha256:8c77cadb34c79027c59e4b5faefaed316f74bbca9410acd24eb7a6ecb8698666",
+  "validation_image_provenance": "Local candidate installs only the two clean-rebuilt glibc +trip2 packages into the previously verified unchanged Agent runtime; canonical clean CI rebuild is additionally required. No release commit label claimed for precommit validation.",
+  "native_package_revision": "2.41-12+deb13u4+trip2",
+  "file_sha256": {
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": "a6fd3b6995f22c8c9073e134cb61dc22d14a6b92b9206ef4175810f17f9dee35",
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "174d5f1755c4074d056405eaf32a7b6af680d848a4978f4d79da1b3f00823aab",
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "1314e5718bd62122d6e3558d613f7a31058c2dda5afb040d5029d4eb6e644cef"
+  },
+  "no_business_mounts": true
+}

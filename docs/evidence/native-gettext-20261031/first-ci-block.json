@@ -1,0 +1,20 @@
+{
+  "revision": "670f4cbd1e2a5440c099c03471b08f74445f46f8",
+  "workflow_run": 41181536672,
+  "workflow_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/41181536672",
+  "job_id": 124479772134,
+  "artifact_id": 13035338099,
+  "artifact_sha256": "fcabd4ab61fa5bb9c3257e1cc705872337d60867f3b032029be28bbf77f64b0a",
+  "status": "blocked_findings",
+  "raw_high_critical_findings": 61,
+  "blocking_findings": 2,
+  "advisory": "CVE-2026-84243",
+  "packages": {
+    "libc6": "2.41-12+deb13u4+trip1",
+    "libc-bin": "2.41-12+deb13u4+trip1"
+  },
+  "normal_ci_run": 41181536572,
+  "normal_ci_conclusion": "success",
+  "normal_ci_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/41181536572",
+  "action": "Retain the failure; implement source remediation and exact package/ELF review. No rescan-only retry or unfixed-risk acceptance."
+}

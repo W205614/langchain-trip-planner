@@ -1,0 +1,10 @@
+{
+  "libc-bin_2.41-12+deb13u4+trip2_amd64.deb": {
+    "sha256": "1dee8966a61f0ecada95a9c2e0a637b0b73def0e0833943078158181a37285a3",
+    "bytes": 639492
+  },
+  "libc6_2.41-12+deb13u4+trip2_amd64.deb": {
+    "sha256": "9b97734db4b9c80d1d4fb7db4da679960dcde7159efac42c9cb2353faa3a10c0",
+    "bytes": 2842896
+  }
+}

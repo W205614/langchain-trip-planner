@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "reviewed_on": "2026-10-30",
+  "reviewed_on": "2026-10-31",
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
@@ -9,11 +9,11 @@
     "backend/runtime-security-packages.json": "62cd4a01df64c6c063fe9a815246c16463a0d7c3762e8c1ceb9954f7d3f244dd",
     "backend/scripts/install_runtime_security_patches.py": "af72bab09bf9ff1c1a9d08cd031d823ce9db4a78902a088a367ea52fca19e10f",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
-    "backend/security/native-backports/build-glibc.sh": "f56877860e8230970e02242c106f01a0e7ca68a203c1509e393fbd9f29d5f40f",
+    "backend/security/native-backports/build-glibc.sh": "326779f227eaab5af78002a1fe75a6c987b555111e402b535d9d76dcde3fa7e5",
     "backend/security/native-backports/build-inputs.sh": "0aa6f7186c4dc6d0232d84b8361adacc64fd1bfd86b3f3cdaaaec4f4321f8c09",
     "backend/security/native-backports/build-libstdcxx.sh": "96379cb2482524ddab945c54170f17a88b9461f50738f96c567cf23a6b5cbb63",
     "backend/security/native-backports/build-util-linux.sh": "6528c788bb1c57e73379978ed1b00b1c7a28f02eeea98e28090737ff0490c833",
-    "backend/security/native-backports/patches.sha256": "a0cf24be03d58097aea806cd80541f3e5c039ed2c0a950fda758d1ce7a576dcd",
+    "backend/security/native-backports/patches.sha256": "6e631009c1b2d0fe5c9e80113f10b9d63cf37fc2066f6f7193b6b02a92c44c99",
     "backend/security/native-backports/sources.sha256": "e4819d443564d0fa97ec64dcb9536e325ff450e676a9560164b4edaca9def822",
     "backend/security/native-backports/util-linux-patches.txt": "8b1e61233ecf36d12ce1f318136a1e6e5d73eb13e7b2c8c0fcc64f4001ddb4e0",
     "backend/security/native-backports/patches/gcc-102010.patch": "6bd11207cafce8e595a83726936f5ecc29906fa2e8426076b91a46813997327c",
@@ -30,7 +30,8 @@
     "backend/security/native-backports/patches/util-9fcb98bf08d9119d07ba3a3c709b1a85e4a1bbcb.patch": "86dc6819c9465d829849734605cfe586404607fd7612f3f05ad5c829a33d0bb6",
     "backend/security/native-backports/patches/util-a15c00a9e545aa8b9cf6ec0f888ff6c7b3eaeedc.patch": "874e91ef452c086c94192eec0bf94b324a4e6c4b8f23bcc2e26fafe828edad91",
     "backend/security/native-backports/patches/util-ba905a1874959c70fd706aa7d49df61076864e0a.patch": "6203e5d3dc92f6113e8e37bb7f60b6f6c8ed47cb2e79d1a3b5134df964464497",
-    "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7"
+    "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
+    "backend/security/native-backports/patches/glibc-84243-trixie.patch": "576dcf2575af0fc12e9b10bb86f9962f4b8817480423e7f9e42effd94dd0c6be"
   },
   "assessments": [
     {
@@ -230,28 +231,32 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-19499",
         "https://security-tracker.debian.org/tracker/CVE-2026-5435",
         "https://sourceware.org/git/?p=glibc.git;a=commit;h=b090cf226ff65b913e41536f1f573f500855615c",
-        "https://sourceware.org/git/?p=glibc.git;a=commit;h=ca44a6609c29a683b03575fa035c6d17aa591e72"
+        "https://sourceware.org/git/?p=glibc.git;a=commit;h=ca44a6609c29a683b03575fa035c6d17aa591e72",
+        "https://security-tracker.debian.org/tracker/CVE-2026-84243",
+        "https://sourceware.org/cgit/glibc/plain/advisories/GLIBC-SA-2026-0025",
+        "https://inbox.sourceware.org/libc-alpha/20261012112453.47383-1-avinal.xlvii@gmail.com/"
       ],
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip1",
-        "libc-bin": "2.41-12+deb13u4+trip1",
-        "glibc": "2.41-12+deb13u4+trip1"
+        "libc6": "2.41-12+deb13u4+trip2",
+        "libc-bin": "2.41-12+deb13u4+trip2",
+        "glibc": "2.41-12+deb13u4+trip2"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip1",
-        "libc-bin": "2.41-12+deb13u4+trip1"
+        "libc6": "2.41-12+deb13u4+trip2",
+        "libc-bin": "2.41-12+deb13u4+trip2"
       },
       "ids": [
         "CVE-2026-19499",
-        "CVE-2026-5435"
+        "CVE-2026-5435",
+        "CVE-2026-84243"
       ],
       "classification": "fixed_by_pinned_security_upgrade",
-      "vendor_status": "fixed_by_upstream_security_backport",
-      "reason": "Stable glibc 2.41 rebuilt with the exact official strfmon and deprecated resolver printer fixes, preserving Debian patches and ABI; exact runtime ELF bytes required.",
+      "vendor_status": "fixed_by_reviewed_source_backports",
+      "reason": "Stable glibc 2.41 +trip2 retains the exact strfmon and deprecated resolver fixes and backports the reviewed upstream v7 LANGUAGE traversal guard and regression. Only stable Makefile context is rebased and newer-version NEWS omitted. The original library fails four traversal comparisons; the clean rebuilt library passes the identical upstream regression, ordinary translation and valid fallback, public-symbol comparison and actual consumers. Debian still lists its original distribution packages unfixed; no official Debian release or unfixed-risk acceptance is claimed. Exact installed +trip2 versions, source bindings and actual ELF bytes are mandatory.",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "a5d41413f5944111b5bf3bba29dbd370c6318a20be41c9f0bd2b7219f70fa8c3",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "a6fd3b6995f22c8c9073e134cb61dc22d14a6b92b9206ef4175810f17f9dee35",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "174d5f1755c4074d056405eaf32a7b6af680d848a4978f4d79da1b3f00823aab",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "dd6259be7ba6cd1864c5d061c878f5c3d69c126fc978a55358825b0f39e76d4a"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "1314e5718bd62122d6e3558d613f7a31058c2dda5afb040d5029d4eb6e644cef"
       }
     },
     {

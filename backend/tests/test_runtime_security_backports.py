@@ -21,8 +21,8 @@ def test_runtime_uses_stable_backports_and_fixed_python():
         ['dpkg-query', '-W', '-f=${Package}\t${Version}\n',
          'libc6', 'libc-bin', 'libstdc++6', 'libmount1', 'util-linux'], text=True)
     assert dict(line.split('\t') for line in revisions.splitlines()) == {
-        'libc6': '2.41-12+deb13u4+trip1',
-        'libc-bin': '2.41-12+deb13u4+trip1',
+        'libc6': '2.41-12+deb13u4+trip2',
+        'libc-bin': '2.41-12+deb13u4+trip2',
         'libstdc++6': '14.2.0-19+trip1',
         'libmount1': '2.41.5-0+deb13u1+trip1',
         'util-linux': '2.41.5-0+deb13u1+trip1',

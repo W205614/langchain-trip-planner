@@ -1,0 +1,24 @@
+{
+  "advisory": "CVE-2026-84243",
+  "source_url": "https://inbox.sourceware.org/libc-alpha/20261012112453.47383-1-avinal.xlvii@gmail.com/raw",
+  "source_mail_sha256": "adb7583a05bfd658cbaabe6a97a30c1cfca9409fa521fee599b7b7d3a8893ed9",
+  "rebased_patch_sha256": "576dcf2575af0fc12e9b10bb86f9962f4b8817480423e7f9e42effd94dd0c6be",
+  "upstream_test_bytes_preserved": true,
+  "upstream_guard_bytes_preserved": true,
+  "only_context_rebased_and_newer_NEWS_omitted": true,
+  "reviewed_on": "2026-10-31",
+  "reviewer": "Codex primary-source and byte comparison; no independent human review claimed",
+  "advisory_url": "https://sourceware.org/cgit/glibc/plain/advisories/GLIBC-SA-2026-0025",
+  "advisory_sha256": "908d95791439aec64c4a5b64f3f791548874b7498b4afa71c03b3dd2371c84f0",
+  "stable_source_files_sha256": {
+    "Makefile": "31df6f7ad0b6217aa9bafff60704e43de1f9d5d6572881b8471488fe8f474166",
+    "dcigettext.c": "059431d99c6a657dac28ff15f4a2cbe31eec7a10dd7690b3630fbbc42ad2a304"
+  },
+  "stable_builder_sources_equal_debian_sources": true,
+  "baseline_regression": {
+    "upstream_test": "intl/tst-gettext-path-traversal",
+    "comparison_failures": 4,
+    "ordinary_translation_and_valid_fallback_not_failed": true
+  },
+  "vendor_release_status": "Debian tracker marks original distribution source unfixed; local reviewed v7 submission backport, not an official released Debian fix"
+}

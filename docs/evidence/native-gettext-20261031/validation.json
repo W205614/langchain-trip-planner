@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "scope": "Local native-source and actual candidate-runtime validation; final exact-commit GitHub workflows are independently required.",
+  "upstream_regression_before": {
+    "traversal_comparison_failures": 4,
+    "old_package_revision": "+trip1"
+  },
+  "upstream_regression_after": "PASS: intl/tst-gettext-path-traversal",
+  "upstream_normal_translation_and_valid_fallback_pass": true,
+  "runtime_abi_tests_passed": 8,
+  "public_exports_removed": 0,
+  "public_export_libraries_checked": [
+    "libc.so.6",
+    "libresolv.so.2",
+    "ld-linux-x86-64.so.2"
+  ],
+  "policy_positive_exact_package_and_elf": "pass",
+  "policy_rejects": [
+    "old_trip1_version",
+    "changed_ELF",
+    "unrelated_CVE",
+    "missing_ELF_inventory"
+  ],
+  "gate_threshold_and_scanner_implementation_changed": false,
+  "unfixed_risk_acceptance_added": false,
+  "daily_containers_started": false,
+  "backup_reenabled": false
+}

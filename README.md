@@ -249,6 +249,8 @@ python tools/single_host_inspection.py --path E:/project/langchain-trip-planner 
 
 本轮新扫描发现并修复了前端依赖告警：`follow-redirects` 1.16.2、Vite 6.4.5，以及从依赖图移除受影响 minimatch 的 vue-tsc 3.3.14；[原始失败与修复结果](docs/evidence/single-host-20261031/dependency-remediation.json)单独保留，官方 npm registry 的完整审计为0项。版本来自上游修复，不增加安全例外。
 
+glibc 的 `CVE-2026-84243` LANGUAGE 路径穿越由新构建中的 `+trip2` 源码回补处理，保留原有两项 glibc 修复。补丁来自经过审查的上游 v7 提案，当前不声称 Debian 已发布官方修复版；构建必须通过同一上游回归、ABI 检查及实际镜像扫描，包版本和 ELF 指纹精确绑定，原始告警继续保留。[修复与反例证据](docs/evidence/native-gettext-20261031/README.md)单独记录。该源码更新不自动切换本机日常镜像，现有七服务继续保持停止，配置、数据及备份停用状态沿用原值。
+
 源码变化后须使用新SARIF重新复核精确查询、位置、源码和数据流；旧绿灯不沿用到新源码树。最终提交的CI与安全检查仍须全部实际成功。
 
 安全门禁允许有证据的适用性评估，不能读作“零风险”。Chroma 的四项上游问题仅在本项目显式嵌入式客户端、入口和源码指纹均匹配时适用[当前评估](.github/security-vex-remediated.json)。原 8 项原生 CVE 中，6 项采用上游安全代码回补；PBDS 头文件问题仅对实际匹配的 Debian 运行时包作组件不包含判定，2.42 才引入的 util-linux 子目录路径不适用于当前 2.41 分支。预编译 Python wheel 没有在此流程中全部重编，不能把共享库更新说成修复了所有已内联模板。
