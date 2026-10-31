@@ -1,0 +1,44 @@
+{
+  "classification": "official-upstream-dependency-remediation",
+  "versions": {
+    "follow-redirects": {
+      "node_modules/follow-redirects": "1.16.2"
+    },
+    "vite": {
+      "node_modules/vite": "6.4.5"
+    },
+    "vue-tsc": {
+      "node_modules/vue-tsc": "3.3.14"
+    },
+    "minimatch": {}
+  },
+  "audit_registry": "https://registry.npmjs.org",
+  "npm_audit_vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "build_passed": true,
+  "changes": "Official Vite patch release, Vue type-checker upgrade that removes vulnerable minimatch from the dependency graph, and compatible follow-redirects patch. No override or vulnerability exemption.",
+  "references": [
+    "https://github.com/follow-redirects/follow-redirects/releases/tag/v1.16.2",
+    "https://github.com/vitejs/vite/releases/tag/v6.4.5",
+    "https://github.com/isaacs/minimatch/releases/tag/v11.0.1"
+  ],
+  "browser_recheck": {
+    "passed": 16,
+    "failed": 0,
+    "scope": "All proposal confirmation/conflict tests, PNG/PDF/offline HTML export, and new fact/proposal contract cases after dependency update"
+  },
+  "minimatch_removed_from_graph": true,
+  "upstream_security_reproductions": {
+    "passed": 2,
+    "scope": "Actual follow-redirects cross-realm sensitive-header removal and Vite blocked-file query variants, loopback only; Vite file watching disabled because no watch lifecycle is needed.",
+    "windows_runtime_note": "Local Node 24.19.0 assertions passed but the Vite test worker emitted a native Windows libuv shutdown assertion; not treated as a clean target-runtime run. Linux/Node 22 confirmation is pending.",
+    "target_runtime_status": "pending",
+    "linux_probe_installation": "Optional local Linux dependency installation failed with ECONNRESET before tests; not counted as a test pass. Target-runtime verification remains required in CI."
+  }
+}

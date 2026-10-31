@@ -1,0 +1,39 @@
+{
+  "source_revision": "d99e6d07a35fbe31a3621d886c4759ea1f4b62dd",
+  "workflow_run": 41174066102,
+  "dependency_job": 124458018887,
+  "status": "blocked_findings_not_accepted",
+  "scanner": "npm audit against official registry",
+  "original_totals": {
+    "info": 0,
+    "low": 0,
+    "moderate": 4,
+    "high": 1,
+    "critical": 0,
+    "total": 5
+  },
+  "advisories": [
+    {
+      "name": "follow-redirects",
+      "title": "follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects",
+      "url": "https://github.com/advisories/GHSA-mrwp-f3q8-3g9p",
+      "severity": "high",
+      "range": ">=1.16.0 <=1.16.1"
+    },
+    {
+      "name": "minimatch",
+      "title": "minimatch has potential denial of service via globparts amplification",
+      "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+      "severity": "moderate",
+      "range": "<11.0.1"
+    },
+    {
+      "name": "vite",
+      "title": "Vite: `server.fs.deny` bypassed with queries",
+      "url": "https://github.com/advisories/GHSA-8g5g-mxqh-grgj",
+      "severity": "moderate",
+      "range": "=6.4.4"
+    }
+  ],
+  "boundary": "Package-level advisories, not proof that this browser application leaked credentials. No suppression added."
+}
