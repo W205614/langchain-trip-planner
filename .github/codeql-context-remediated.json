@@ -1,17 +1,17 @@
 {
   "schema_version": 2,
   "classification": "not_affected_context",
-  "scope": "Only 22 exact source/trace-reviewed results from source 6c920d0 and workflow 41052400989. Change-triggered review; original severities and SARIF retained, new findings blocked.",
-  "reviewed_business_revision": "6c920d051d225831af7cae4b52678dc502db716c",
-  "original_sarif_revision": "6c920d051d225831af7cae4b52678dc502db716c",
-  "original_workflow_run": 41052400989,
+  "scope": "Only the 22 exact source/trace-reviewed results from source 2368aaf and workflow 41174837938. No new blanket suppression; raw severities retained and unknown findings blocked.",
+  "reviewed_business_revision": "2368aaf59af16ea954b686931248933ba7b168e5",
+  "original_sarif_revision": "2368aaf59af16ea954b686931248933ba7b168e5",
+  "original_workflow_run": 41174837938,
   "flow_hash_algorithm": "sarif-semantic-flow-v1",
-  "review_record": "docs/evidence/source-bound-review-20261030/codeql-source-review.json",
-  "review_record_sha256": "b6afabd4efd6d2a71dbb75ba6d9482765d76e1eeba19b553ae896e9c57ad7e73",
+  "review_record": "docs/evidence/single-host-20261031/codeql-source-review.json",
+  "review_record_sha256": "fd71fb1902626b00d4f336a49de30c002d0aa73bb52371c24794af58fa151dae",
   "business_tree_bindings": {
-    "backend": "671466566369ea174045409aa5ced9b8a4d19ae5",
+    "backend": "7ff7e7e87844c4cd641c4afc9007b744b28db401",
     "business-backend": "e4127e1d6369f252bd95fb69f37b753fac1e7c39",
-    "frontend": "b8e7c44d7de7280038882769e7e96a052c238b89",
+    "frontend": "8a7ee3bcbb5b467b829664f3a66033305c1fca3d",
     "deploy": "878fda6f02eed79f24102e66b0ccbf703d143c0d",
     "contracts": "4552962a8b760dc5d1fb3d10483a18daad81f57f"
   },
@@ -44,7 +44,7 @@
     "frontend/e2e/operations.spec.ts": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
     "frontend/vite.config.ts": "1e5c0a108092df0955d2ca813f2cadbbf29e8765457a9bb1d7d94b2c5c2f63b2",
     "frontend/playwright.config.ts": "43b8d4f2601b86523807ddc881b839ce4b99f0da02441224959eba77acf77b7d",
-    "frontend/package.json": "8d4b920a7b5279a0fda6c41adc26d2f7dd99b18c182289778f3533ab70140d32"
+    "frontend/package.json": "cb5e7b33dc3866a9df70efaf8b6362a44a7cfe0f10eb764f03872c4cc3858098"
   },
   "entries": [
     {

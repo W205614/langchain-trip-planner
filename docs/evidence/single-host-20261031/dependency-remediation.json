@@ -40,5 +40,7 @@
     "windows_runtime_note": "Local Node 24.19.0 assertions passed but the Vite test worker emitted a native Windows libuv shutdown assertion; not treated as a clean target-runtime run. Linux/Node 22 confirmation is pending.",
     "target_runtime_status": "pending",
     "linux_probe_installation": "Optional local Linux dependency installation failed with ECONNRESET before tests; not counted as a test pass. Target-runtime verification remains required in CI."
-  }
+  },
+  "captured_at_utc": "2026-10-31T06:07:49.262620+00:00",
+  "status_scope": "Evidence assembled before final policy commit; target-runtime CI results are separate and must actually complete."
 }
