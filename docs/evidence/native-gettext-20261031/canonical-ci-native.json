@@ -1,0 +1,57 @@
+{
+  "revision": "ac5dd98a0ff495b31dea31505311423b46c5b682",
+  "workflow_run": 41185317418,
+  "workflow_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/41185317418",
+  "job_id": 124490948001,
+  "job_conclusion": "success",
+  "artifact_id": 13036158406,
+  "artifact_sha256": "5aadbb931470f3bc7260086b3c160848ae61dd5bcd18631b714af3bbd38803e5",
+  "canonical_clean_build_elfs_equal_local_verified_candidate": true,
+  "exact_elf_sha256": {
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": "a6fd3b6995f22c8c9073e134cb61dc22d14a6b92b9206ef4175810f17f9dee35",
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "174d5f1755c4074d056405eaf32a7b6af680d848a4978f4d79da1b3f00823aab",
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "1314e5718bd62122d6e3558d613f7a31058c2dda5afb040d5029d4eb6e644cef"
+  },
+  "new_CVE_assessments": [
+    {
+      "package": "libc-bin",
+      "version": "2.41-12+deb13u4+trip2",
+      "id": "CVE-2026-84243",
+      "raw_severity": "High",
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "package": "libc6",
+      "version": "2.41-12+deb13u4+trip2",
+      "id": "CVE-2026-84243",
+      "raw_severity": "High",
+      "classification": "fixed_by_pinned_security_upgrade"
+    }
+  ],
+  "scan_summary": {
+    "scanner": "grype-image",
+    "target": "trip-security-agent:ac5dd98a0ff495b31dea31505311423b46c5b682",
+    "image_id": "sha256:96860c0512a238d5fda6d57e19a802e6760354880f569d6a57f830b1952a1a6e",
+    "status": "pass_vendor_policy",
+    "blocking_findings": 0,
+    "raw_high_critical_findings": 61,
+    "contextual_not_affected": 4,
+    "all_findings": 175,
+    "exit_code": 2,
+    "vex_expires_on": null,
+    "vex_review_policy": "source_and_execution_path_bound",
+    "distribution_assessments": {
+      "fixed_by_distribution_backport": 0,
+      "fixed_by_pinned_security_upgrade": 39,
+      "still_vulnerable_vendor_minor": 0,
+      "not_affected_component_absent": 18
+    },
+    "still_vulnerable_vendor_minor_ids": [],
+    "vendor_policy_expires_on": null,
+    "vendor_policy_review_policy": "source_and_artifact_bound",
+    "unfixed_risk_accepted_findings": 0,
+    "risk_acceptance": null,
+    "image_revision_context_verified": true
+  },
+  "workflow_boundary": "This source-collection workflow still rejects old CodeQL/business-tree bindings; native image job success is not a claim that the whole workflow passed."
+}

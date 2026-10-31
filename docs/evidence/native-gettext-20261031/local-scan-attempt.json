@@ -1,0 +1,9 @@
+{
+  "scanner": "grype",
+  "operation": "db update",
+  "status": "unavailable_database_download_eof",
+  "fresh_local_image_scan_run": false,
+  "fresh_local_image_scan_pass_claimed": false,
+  "error": "unable to download db: unexpected EOF",
+  "boundary": "Local native regression, actual-runtime ABI and policy rejection checks are recorded separately. A canonical exact-commit Linux CI rebuild and actual-image scan remain required; this database download failure is not zero findings or a pass."
+}
