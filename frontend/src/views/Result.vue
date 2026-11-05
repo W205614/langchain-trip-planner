@@ -439,6 +439,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useAssistantProposal } from '@/composables/useAssistantProposal'
+import { useAttractionPhotos } from '@/composables/useAttractionPhotos'
 import { useTripMap } from '@/composables/useTripMap'
 import { isAuthenticated } from '@/services/auth'
 import AttractionPicker from '@/components/trip/AttractionPicker.vue'
@@ -610,7 +611,7 @@ const { exportBusy, exportAsHTML, exportAsImage, exportAsPDF } = useTripExport(t
   if (tripPlan.value) refreshScheduleValidity(tripPlan.value)
 })
 const originalPlan = ref<TripPlan | null>(null)
-const attractionPhotos = ref<Record<string, string>>({})
+const { loadAttractionPhotos, getAttractionImage, handleImageError } = useAttractionPhotos(tripPlan)
 const activeSection = ref('overview')
 const activeDays = ref<number[]>([0]) // 默认展开第一天
 const historyRecordId = ref<number>(0) // 从历史打开时的记录 id (0=新规划)
@@ -695,7 +696,7 @@ onMounted(async () => {
       recordVersion.value = workspace.version
       historyRecordId.value = id
       planLoading.value = false
-      await loadAttractionPhotos()
+      loadAttractionPhotos()
       await nextTick()
       initMap()
     } catch (e: any) {
@@ -728,7 +729,7 @@ onMounted(async () => {
     refreshScheduleValidity(tripPlan.value!)
     planLoading.value = false
     // 加载景点图片
-    await loadAttractionPhotos()
+    loadAttractionPhotos()
     // 等待DOM渲染完成后初始化地图
     await nextTick()
     initMap()
@@ -844,7 +845,7 @@ const submitRevision = async () => {
     revisionOpen.value = false
     message.success(response.message || '改排提案已生成，请预览并确认')
     await nextTick()
-    await loadAttractionPhotos()
+    loadAttractionPhotos()
     initMap()
   } catch (error: any) {
     message.error(error.response?.data?.detail || error.message || '改排失败')
@@ -891,63 +892,6 @@ const getMealLabel = (type: string): string => {
     snack: '小吃'
   }
   return labels[type] || type
-}
-
-const svgToDataUrl = (svg: string): string =>
-  `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`
-
-// 页面和导出都直接使用同源受控代理，避免先解析一次、渲染时再解析一次。
-// 代理会在无图或上游失败时返回 SVG 占位图，因此无需额外的预检请求。
-const loadAttractionPhotos = async () => {
-  if (!tripPlan.value) return
-
-  tripPlan.value.days.forEach(day => {
-    day.attractions.forEach(attraction => {
-      // Invalidate placeholders cached by the first Java proxy; real photos still keep their normal TTL.
-      attractionPhotos.value[photoKey(attraction, day.city || tripPlan.value!.city)] = `/api/poi/photo/image?name=${encodeURIComponent(attraction.name)}&poi_id=${encodeURIComponent(attraction.poi_id || "")}&city=${encodeURIComponent(day.city || tripPlan.value!.city)}&v=java-photo-v3`
-    })
-  })
-}
-
-// 获取景点图片
-const photoKey = (attraction: Attraction, city: string) => `${city}:${attraction.poi_id || attraction.name}`
-const getAttractionImage = (attraction: Attraction, index: number, city: string): string => {
-  // 如果已加载真实图片,返回真实图片
-  if (attractionPhotos.value[photoKey(attraction, city)]) {
-    return attractionPhotos.value[photoKey(attraction, city)]
-  }
-
-  // 返回一个纯色占位图(避免跨域问题)
-  const colors = [
-    { start: '#667eea', end: '#764ba2' },
-    { start: '#f093fb', end: '#f5576c' },
-    { start: '#4facfe', end: '#00f2fe' },
-    { start: '#43e97b', end: '#38f9d7' },
-    { start: '#fa709a', end: '#fee140' }
-  ]
-  const colorIndex = index % colors.length
-  const { start, end } = colors[colorIndex]
-
-  // 使用base64编码避免中文问题
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
-    <defs>
-      <linearGradient id="grad${index}" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:${start};stop-opacity:1" />
-        <stop offset="100%" style="stop-color:${end};stop-opacity:1" />
-      </linearGradient>
-    </defs>
-    <rect width="400" height="300" fill="url(#grad${index})"/>
-    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="bold" fill="white">${name}</text>
-  </svg>`
-
-  return svgToDataUrl(svg)
-}
-
-// 图片加载失败时的处理
-const handleImageError = (event: Event) => {
-  const img = event.target as HTMLImageElement
-  // 使用灰色占位图
-  img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%23999"%3E图片加载失败%3C/text%3E%3C/svg%3E'
 }
 
 </script>

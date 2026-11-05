@@ -37,6 +37,37 @@ test('result retains required-name mapping, cost assumptions and precise photo i
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
+test('missing and failed attraction photos render their respective placeholders', async ({ page }) => {
+  const names = ['缺图景点', '加载失败景点']
+  const plan = {
+    city: '北京', start_date: '2026-10-01', end_date: '2026-10-01',
+    days: [{
+      day_index: 0, date: '2026-10-01', meals: [],
+      attractions: names.map(name => ({
+        name, address: '北京', location: { longitude: 116.4, latitude: 39.9 }, visit_duration: 60
+      }))
+    }]
+  }
+  await page.addInitScript(plan => sessionStorage.setItem('tripPlan', JSON.stringify(plan)), plan)
+  await page.route('**/api/poi/photo/image*', route => {
+    if (new URL(route.request().url()).searchParams.get('name') === names[0]) {
+      return route.fulfill({
+        contentType: 'image/svg+xml',
+        body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><text y="30">暂无图片</text></svg>'
+      })
+    }
+    return route.fulfill({ status: 404 })
+  })
+  await page.goto('/result')
+  const missing = page.getByAltText(names[0], { exact: true })
+  const failed = page.getByAltText(names[1], { exact: true })
+  await expect(missing).toHaveAttribute('src', /api\/poi\/photo\/image/)
+  await expect(failed).toHaveAttribute('src', /^data:image\/svg\+xml,.*图片加载失败/)
+  for (const photo of [missing, failed]) {
+    await expect.poll(() => photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth === 400)).toBe(true)
+  }
+})
+
 test('a one-attraction day is not displayed as zero walking distance', async ({ page }) => {
   const plan = { city: '北京', start_date: '2026-10-01', end_date: '2026-10-01', overall_suggestions: '测试',
     days: [{ date: '2026-10-01', day_index: 0, description: '单景点行程', transportation: '步行', accommodation: '无需住宿',
