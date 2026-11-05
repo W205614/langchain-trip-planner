@@ -26,3 +26,4 @@
 - [source-bound-review-20261030](source-bound-review-20261030/)
 - [single-host-20261031](single-host-20261031/README.md)
 - [native-gettext-20261031](native-gettext-20261031/README.md)
+- [SQLite 安全升级与结果页照片改动的 CodeQL 复核](sqlite-photos-20261105/codeql-source-review.json)
