@@ -1,0 +1,27 @@
+root = true
+
+# Scope rules to handwritten sources. Archived evidence and generated files
+# outside these paths retain their original byte representation.
+[{backend/app,backend/scripts,backend/tests,tools}/**.py]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[{frontend/src,frontend/e2e}/**.{vue,ts}]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+
+[business-backend/src/**.java]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+
+[backend/scripts/improvement_benchmark.py]
+charset = unset
+indent_style = unset
+indent_size = unset
+insert_final_newline = unset

@@ -1,64 +1,16 @@
-# Java + Python Agent 单机运行手册
-
-当前本机日常部署使用 Compose 项目 `langchain-trip-planner`，包含七个服务：
-
-| 服务 | 用途 |
-|---|---|
-| `frontend` | Nginx 与 Vue 页面，本机入口 `127.0.0.1:8380` |
-| `backend` | Java 业务服务、任务调度与业务数据库访问 |
-| `agent` | Python / LangGraph 规划、检索与解析 |
-| `postgres` | PostgreSQL 业务数据库 |
-| `prometheus` | 指标与告警规则，本机入口 `127.0.0.1:19090` |
-| `alertmanager` | 告警分组、去重与恢复通知 |
-| `alert-receiver` | 本地持久告警收件箱 |
-
-七服务配置位于 `.codex-optimization/daily-window/daily-release.compose.json`，私有环境文件位于同目录的 `runtime/`。这些本机文件不进入 Git。仓库根目录 `docker-compose.yml` 仍提供四个核心服务的首次部署模板；已有七服务环境继续使用原 Compose 文件，不能用首次部署命令替换它。
-
-截至 2026-10-31，本机七个日常容器均已停止；业务数据和私有配置保留。自动备份与恢复入口继续停用，当前没有有效恢复集。Python 业务后端已经退出工作树，不能再使用旧入口、Alembic 或旧 SQLAlchemy 操作脚本。
+# Java 业务服务迁移与升级
 
 ## 配置与数据
 
-下列环境文件均相对于 `.codex-optimization/daily-window/runtime/`；根目录四服务模板首次生成的对应文件位于 `deploy/runtime/`，两套路径不能混用。
-
-- Java 配置：`business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
-- Java 地图配置：`business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；仅公开 POI／天气／路线、用户主动复核和图片走此通道，Agent 生成不再由 Java 二次核验或改排。
-- Agent 配置：`agent.env`；模型、`AMAP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。首次配置脚本将源文件中的 `AMAP_MCP_API_KEY` 转入运行配置的 `AMAP_API_KEY`。
-- PostgreSQL 配置：`postgres.env`；继续使用原数据库凭据。
-- PostgreSQL：`langchain-trip-planner_java_business_data` 数据卷。
-- 原文件：`backend/data/knowledge_uploads`，Java 管理。
-- 向量：`backend/data/chroma`；模型／维度变更须受控重建。
-- 操作账本：`backend/data/agent-runtime`；不是业务事实源，不能通过删除它重置调用预算或重放旧执行。
-- 监控配置：`deploy/prometheus.yml`、`deploy/alerts.yml`、`deploy/alertmanager.yml`；沿用既有只读挂载。
-- 监控数据卷：`langchain-trip-planner_daily_prometheus`、`langchain-trip-planner_daily_alerts`、`langchain-trip-planner_daily_alert_inbox`；指标、告警状态与收件箱独立持久化。
-
-已有私有配置不重新生成。`prepare_java_deployment.py` 只创建新目录，新部署默认开启 workers、关闭验收预算模式；已有账号环境的 JWT Key 不可随意更换。
+见[单机运行手册 · 配置与数据](single-host.md#配置与数据)。
 
 ## 现有七服务部署操作
 
-以下命令在项目根目录执行，显式选择现有七服务配置。查看状态和日志不会启动容器：
-
-```powershell
-$dailyCompose = '.codex-optimization/daily-window/daily-release.compose.json'
-docker compose -p langchain-trip-planner -f $dailyCompose ps -a
-docker compose -p langchain-trip-planner -f $dailyCompose logs --tail 100 backend agent frontend prometheus alertmanager alert-receiver
-```
-
-需要日常使用时，以下命令启动已有七个容器；暂停时停止全部七服务，保留配置、镜像、数据卷与绑定目录。当前维护状态为停止，仅在需要运行服务时执行 `start`：
-
-```powershell
-docker compose -p langchain-trip-planner -f $dailyCompose start
-docker compose -p langchain-trip-planner -f $dailyCompose stop
-```
-
-修改运行环境文件后，`start` / `restart` 不会重新载入新配置；确认需要更新时，在同一项目和 Compose 文件下仅重建受影响服务，例如 `docker compose -p langchain-trip-planner -f $dailyCompose up -d --no-build --force-recreate agent`。应用升级须先准备并验证新镜像，再更新原配置中的相应镜像引用；保留现有环境文件、挂载、端口与运行限制。不要运行首次配置生成脚本、改用根目录 Compose，或使用 `down -v` 排查问题。
+见[单机运行手册 · 现有七服务部署操作](single-host.md#现有七服务部署操作)。
 
 ## 健康与故障检查
 
-Java 存活检查不调用模型，就绪检查只验证数据库、迁移和本地必要配置；前端只依赖 Java 健康。Agent 就绪检查验证 AI 服务本身。停止 Agent 后必须复测登录、POI 搜索、收藏、手工行程、路线、历史、分享和导出；智能规划应返回 `AGENT_UNAVAILABLE`，而不是拖垮传统业务。容器“已启动”不是服务“已就绪”。
-
-Java 重启中的运行任务标为 `PROCESS_INTERRUPTED`，用户显式重试，不自动重新计费生成。单实例 PostgreSQL advisory lock 不等于跨主机故障接管；数据库异常后应检查并重启唯一 Java 实例，不另起第二套 workers。
-
-内部 Prometheus 从 Java 的 `/actuator/prometheus` 抓取 Actuator/Micrometer 指标；Nginx 对公网入口显式拒绝 `/actuator/*`、`/metrics` 和 `/internal/*`。`X-Request-ID` 会进入 Java MDC、任务记录、审计事件和 Java→Agent 请求头，排障时应以该字段关联日志，不把用户 ID、任务 ID或提示词作为指标标签。
+见[单机运行手册 · 健康与故障检查](single-host.md#健康与故障检查)。
 
 ## V4 数据完整性升级
 
@@ -132,3 +84,25 @@ Get-ScheduledTask -TaskName TripPlanner-AutomatedBackup | Select-Object TaskName
 本轮真实验收已结束，账本保留；整理阶段仅离线测试，不自动追加模型、高德或 embedding 调用。资料解析、索引重建和真实生成可能计费，执行前需另行确认预算。取消、超时或断流不保证已发出请求不计费。
 
 本机日常七服务已包含 Prometheus、Alertmanager 与本地持久收件箱；本地接收不等于告警已送达真实值班人员。公开入口不暴露指标和内部服务。备份继续停用，真实人员通知、长期容量和多机高可用不属于当前验收范围，不能把本机验证作为生产 SLA。
+
+## 升级与全新部署
+
+仓库默认 `docker-compose.yml` 提供四核心服务模板；既有部署升级必须继续使用原 Compose 文件、项目名、私有配置与挂载。本机七服务使用 `.codex-optimization/daily-window/daily-release.compose.json`，不切换到根目录模板。`docker-compose.production.yml` 是独立的新环境，默认项目名为 `trip-production`，读取 `deploy/runtime-production/*.env`，不能通过换 Compose 文件来迁移已有资料。新环境先执行：
+
+```powershell
+python backend/scripts/prepare_java_deployment.py --output deploy/runtime-production
+docker compose -f docker-compose.production.yml --profile monitoring up -d --build --wait
+```
+
+新配置会分配 `DATASET_ID`。业务数据库、上传与 Agent 持久目录的标记不匹配会拒绝启动。该标记证明环境身份，不能单独证明恢复时点一致；恢复和升级仍须核对成套备份的内容。
+
+既有数据首次启用登记时，应在维护窗口停止写入，保留 PostgreSQL 可读，先成套备份，再执行检查。以下仅适用于尚未登记的数据集，示例路径必须替换为实际备份；本机七服务已完成登记且备份停用，不执行这组初始化或备份命令：
+
+```powershell
+python backend/scripts/backup_java_deployment.py --output backups/pre-optimization-YYYYMMDD-HHMM --archive-images
+python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime
+# 上一步校验原表原列与三套持久文件后，显式登记同一数据集：
+python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime --execute
+```
+
+登记后还须准备本次私有运行配置和镜像，再使用明确的 Compose 文件启动。现有 `prepare_java_deployment.py --upgrade-existing` 会优先读取 `backend/.env` 的地图配置并选择 MCP 传输，使用前必须核对这是否符合原环境；本轮日常升级从原容器的有效配置准备新的私有文件，保留原供应商、凭据、传输和预算，没有直接运行该命令。实际镜像与挂载见[脱敏部署记录](../evidence/optimization-20261026/daily-effective-deployment-public.json)。不要为修复登记失败切换空卷、清库或删除原目录。旧镜像连接已迁移数据库不等于完成数据回退；应从已验证备份恢复到新的隔离数据库和文件目录。恢复工具保留旧、新克隆并报告精确资源，不自动清理。
