@@ -1,17 +1,17 @@
 {
   "schema_version": 2,
   "classification": "not_affected_context",
-  "scope": "Only the 22 individually reviewed source/trace contexts from 1a24b3339c5976c47d399c234e2fdc114222f296 and workflow 42035833070; raw severities and unknown finding failures remain.",
-  "reviewed_business_revision": "1a24b3339c5976c47d399c234e2fdc114222f296",
-  "original_sarif_revision": "1a24b3339c5976c47d399c234e2fdc114222f296",
-  "original_workflow_run": 42035833070,
+  "scope": "Only the 22 individually reviewed source/trace contexts from de6c10a05b39f692ec853d8e42dddd243eb0c76e and workflow 42041814608; raw severities and unknown finding failures remain.",
+  "reviewed_business_revision": "de6c10a05b39f692ec853d8e42dddd243eb0c76e",
+  "original_sarif_revision": "de6c10a05b39f692ec853d8e42dddd243eb0c76e",
+  "original_workflow_run": 42041814608,
   "flow_hash_algorithm": "sarif-semantic-flow-v1",
-  "review_record": "docs/evidence/sqlite-photos-20261105/codeql-source-review.json",
-  "review_record_sha256": "7e9fb3ca83aa10c88541b9caa3a1ab3ad47a4d416807f2cf8c0bd809eecdcd06",
+  "review_record": "docs/evidence/format-review-20261105/codeql-source-review.json",
+  "review_record_sha256": "fee4872bcc4bbdbd1a83eb12b3b6fc588d12f2e22a072b87e43bff7b8ec16f50",
   "business_tree_bindings": {
-    "backend": "dcb7aefb57026c6bc86af52f96eb634c2d42c87d",
+    "backend": "a2641fc94cf94d8f97415b7281985005cc9fa40e",
     "business-backend": "e4127e1d6369f252bd95fb69f37b753fac1e7c39",
-    "frontend": "ab4e39db6827c78a090a44337d3b636478d40013",
+    "frontend": "01c0f867aa1b0d8b3a0a8d0efda3bf06cc87e7cd",
     "deploy": "878fda6f02eed79f24102e66b0ccbf703d143c0d",
     "contracts": "4552962a8b760dc5d1fb3d10483a18daad81f57f"
   },
@@ -59,7 +59,7 @@
       "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
       "classification": "not_affected_context",
       "source_sha256": "3e5b56fbc691e17f8e112554e87ffad29682dc447b68c0dc45c9fc8d00f10095",
-      "reviewed_raw_trace_sha256": "6b25e85f679b5895b7f495cbb3798c4a6d6704ffc168be0746d0cd6c00d9f3cd",
+      "reviewed_raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
       "reason": "contextual_false_positive_custom_csrf_guard",
       "review_context": "java/spring-disabled-csrf-protection",
       "evidence": [
@@ -83,7 +83,7 @@
       "semantic_flow_sha256": "4727bd5042ced4316485c83ce516b3d9651cb1ef120d43c4a29695dffe7f0c6c",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "cea5829f48cfc85aefa2194555f504d3e97c6742656acf22c0f2fd0cb51dcfc8",
+      "reviewed_raw_trace_sha256": "1085f5127de3e5cc815be13c7418eccffef9d1e796ed2a268e6bc986b3d530bc",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -112,7 +112,7 @@
       "semantic_flow_sha256": "99372bda750105f744e7a579ba456c138c2926df0e8e66a118d7872ba16aa1fa",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "a22fba0f1d40ee1fb2944e7f2b9a9b1d1fda6cd7b5c91b04ed7d863974f91730",
+      "reviewed_raw_trace_sha256": "ce14b4ec56a28529d091fb2f982971fc0614160910a30c8a244d8d95b07fc1f8",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -141,7 +141,7 @@
       "semantic_flow_sha256": "379cfbc765a1ad4a308cde306d07286450e2e26f6ea5b86e28233af77c4fcb22",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "1b3f5dc22e18b12c570ecb46e1497c7a6b55052319b6f8978436ea2545b28cfd",
+      "reviewed_raw_trace_sha256": "36aba27cff7f1993cdd911f030934f7fb338198a0e1541255b3b78c8619ab812",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -170,7 +170,7 @@
       "semantic_flow_sha256": "84ede0ca2ae303440473c3d67033185bb3596e6767ce7168ae8790387023e493",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "ab5a358115961b092aa54e5558cd7fc41a0f2a315185db4a488d7ba6f1bae573",
+      "reviewed_raw_trace_sha256": "c0a77dcbee1d9c529fd425fe8a4ea65892334a4fcc697bd8aa1a3ca52de06ac1",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -199,7 +199,7 @@
       "semantic_flow_sha256": "70d72ce40a0464ef3dd203275c30695abd42fedc6549158e9710deca8d505c7e",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "8d32f5de9c738e911b3cc266672cf926b2672f02dcae8048b7f1be84f04e866d",
+      "reviewed_raw_trace_sha256": "95d36d3366c3061ea6cdc0cef64e418265819abd2fdb159662695d7764d7c56f",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -228,7 +228,7 @@
       "semantic_flow_sha256": "6f82819376dc5fd34d07f1c3032b7963511f128a694af0495de9c4e140ed0ce4",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "b5a393218b41b5373f4dd675df545b1a447d3abef1766b62776326f71b2a36c2",
+      "reviewed_raw_trace_sha256": "10b5d753d5f3971ad758d64347e0086ab05b79d2ef316e9bf92c05d33a05082f",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -257,7 +257,7 @@
       "semantic_flow_sha256": "3e788b91337c921e04797f9d6af87a83ac93bfa686bb9d65e724d8aa11705074",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "508e3a8f95109404ee7fa0c150fd8354e33a0f44ce6ff6f103530e053a274954",
+      "reviewed_raw_trace_sha256": "f396b0e7ab849dce857cebbfb974c3b5add8e1681816bff2dceb66ef170c0146",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -286,7 +286,7 @@
       "semantic_flow_sha256": "1eb6f60bb69d7f33fe2268e7e07ebafb1509dedca3e32e9ff9393a378773cbed",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "dcc71e2fb0aad31d1bc87e61f8a5bb536dbf6b155f0ff6f5b5433f652adac131",
+      "reviewed_raw_trace_sha256": "ec0310251e15a7339c44de935be886b5136461e9d6a03c0942d6cff1265dfdc0",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -315,7 +315,7 @@
       "semantic_flow_sha256": "9cd7abc984d20aaeb16524550193838fc3780baa1f782394ad8ef9e652210187",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "b74914927e3003b2941e26642c0dddfa25ed7cc1c862a3314d46261a7446e3ff",
+      "reviewed_raw_trace_sha256": "611d3f839aa420bd67858335fe288a839f9af23b7f98cbb48014fcd4fe1b74ff",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -344,7 +344,7 @@
       "semantic_flow_sha256": "c27a26afcf09d2b2a5ba9bf6987c476c644f1b193fe2b23a851f1c692f30d180",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "f9e6e26d1c3d2e55aeef65a141de2691f29c05e77f5a1c67e272c1bc680847ce",
+      "reviewed_raw_trace_sha256": "e4dbd0037e40f98d8acf5779c01c1bf54477ea4ae3bf09610d7a6f2fcf44bf26",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -373,7 +373,7 @@
       "semantic_flow_sha256": "535f98dc6db437d98d9102251111073b1563cc878266423520e2fbe367b407d0",
       "classification": "not_affected_context",
       "source_sha256": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
-      "reviewed_raw_trace_sha256": "57c433645dbea805a756b41b4532cd9ed379730ec5edbb8f0c6d4f4d3d213e31",
+      "reviewed_raw_trace_sha256": "6722c7802750c177350ac0122b8deb875fdc7b7292ce2f208d88d04bf5ec15ee",
       "reason": "contextual_false_positive_callback_receiver_overapproximation",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -402,7 +402,7 @@
       "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
       "classification": "not_affected_context",
       "source_sha256": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
-      "reviewed_raw_trace_sha256": "73ed299fffb2156c4339dbd435d90f5ebd6fc347c444db3f738fb8796a072e3e",
+      "reviewed_raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
       "reason": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -430,7 +430,7 @@
       "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
       "classification": "not_affected_context",
       "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
-      "reviewed_raw_trace_sha256": "eaebb1ac0ab28449dc45760fc18734289de14639477bc34e8fd3d0077b277a0d",
+      "reviewed_raw_trace_sha256": "c63ec626b2729ef2a9b0d324022573815aa44cf8f86f73df6edf6b3ef71665a4",
       "reason": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -458,7 +458,7 @@
       "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
       "classification": "not_affected_context",
       "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
-      "reviewed_raw_trace_sha256": "3312fad2543858f802b414494adabe5a7acae28879488d17098ac1fc50ddb3be",
+      "reviewed_raw_trace_sha256": "cb6f4b1dbbddfdc09b980ea8f90868a824b914d706c4cbd383bad73acd100b21",
       "reason": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -486,7 +486,7 @@
       "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
       "classification": "not_affected_context",
       "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
-      "reviewed_raw_trace_sha256": "890e72da23606655e3aff38a54cc37be4b68a5b27b78b861fa7c6a2c1a93ce98",
+      "reviewed_raw_trace_sha256": "71692627ed12785f2222be43674ab994ea7386b80cae0a0fc40d2ed0785e0358",
       "reason": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -514,7 +514,7 @@
       "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
       "classification": "not_affected_context",
       "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
-      "reviewed_raw_trace_sha256": "b2b8f66b064eefde204354c44e8767e6166dee1a4aa147dc0a5c4e48c82eaee7",
+      "reviewed_raw_trace_sha256": "df95d559c3efc1dcbc6f81a93363969dffc89eba9a803689d28451a23640ce92",
       "reason": "contextual_false_positive_db_int_update_dominates_response_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -542,7 +542,7 @@
       "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
       "classification": "not_affected_context",
       "source_sha256": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
-      "reviewed_raw_trace_sha256": "2cba0238ed42155f0b25f97a3aa350136fe334a37e1b260d7dcf233d5e10cbdf",
+      "reviewed_raw_trace_sha256": "dc797ed221f71a6cc1e32df1e913525e9d77846b5d6469d4910c3cc5737e62df",
       "reason": "contextual_false_positive_fixed_server_generated_totp_plaintext",
       "review_context": "java/uncontrolled-arithmetic",
       "evidence": [
@@ -565,7 +565,7 @@
       "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
       "classification": "not_affected_context",
       "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
-      "reviewed_raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
+      "reviewed_raw_trace_sha256": "fb60b135e89424eac7d17ebdbd1eae0f5fd9a78ecaf67b47ba3af1592bf611d0",
       "reason": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
       "review_context": "js/insecure-randomness",
       "evidence": [
@@ -591,7 +591,7 @@
       "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
       "classification": "not_affected_context",
       "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
-      "reviewed_raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
+      "reviewed_raw_trace_sha256": "02dc48c140e1ff2185255f9ed2371fcc74289352189f93421dd0072e35fb91b0",
       "reason": "contextual_false_positive_e2e_username_uniqueness_not_security_entropy",
       "review_context": "js/insecure-randomness",
       "evidence": [
