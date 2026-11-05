@@ -727,7 +727,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         graph.add_node("search_restaurants", self._search_restaurants)
         graph.add_node("build_rag_context", self._build_rag_context)
         graph.add_node("generate_trip_plan", self._generate_trip_plan)
-        
+
         # 3. 数据节点彼此无依赖，扇出并行后在生成节点汇合；降低高德 I/O 等待时间。
         graph.add_edge(START, "search_attractions")
         graph.add_edge(START, "get_weather")

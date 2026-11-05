@@ -1479,4 +1479,3 @@ const getMealLabel = (type: string): string => {
   }
 }
 </style>
-

@@ -116,7 +116,7 @@ class Settings(BaseSettings):
     # 日志配置
     log_level: str = "INFO"
 
-    
+
     # @field_validator：Pydantic 字段校验钩子
     # 在环境变量赋值给类字段之前 / 之后，拦截值，自定义处理逻辑。
     @field_validator("llm_model", "llm_temperature", "llm_timeout", "llm_day_timeout", "llm_research_timeout", "vision_model", mode="before")

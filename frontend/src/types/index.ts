@@ -258,4 +258,3 @@ export interface AssistantDecision {
 export interface AssistantConfirmation extends AssistantDecision {
   data: TripPlan
 }
-
