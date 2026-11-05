@@ -1,13 +1,14 @@
 {
   "schema_version": 2,
   "review_policy": "base_and_package_bound",
-  "reviewed_on": "2026-10-26",
+  "reviewed_on": "2026-11-05",
   "distribution": "Debian 13 amd64",
-  "scope": "Only two ABI-compatible official Debian library security updates; reviewed signed-index hashes, no new or removed packages, no libc/toolchain migration, no persistent sid source. Re-evaluate when stable backports become available.",
+  "scope": "Only three ABI-compatible official Debian library security updates; reviewed signed-index hashes, no new or removed packages, no libc/toolchain migration, no persistent sid source. Re-evaluate when stable backports become available.",
   "requires_base_versions": {
     "libc6": "2.41-12+deb13u4",
     "libacl1": "2.3.2-2+b1",
-    "zlib1g": "1:1.3.dfsg+really1.3.1-1+b1"
+    "zlib1g": "1:1.3.dfsg+really1.3.1-1+b1",
+    "libsqlite3-0": "3.46.1-7+deb13u2"
   },
   "packages": {
     "libacl1": {
@@ -16,7 +17,10 @@
       "soname": "libacl.so.1",
       "depends": "libc6 (>= 2.38)",
       "source": "https://deb.debian.org/debian/pool/main/a/acl/libacl1_2.4.0-1_amd64.deb",
-      "advisories": ["CVE-2026-54369", "CVE-2026-54370"]
+      "advisories": [
+        "CVE-2026-54369",
+        "CVE-2026-54370"
+      ]
     },
     "zlib1g": {
       "version": "1:1.3.dfsg+really1.3.2-4",
@@ -24,12 +28,29 @@
       "soname": "libz.so.1",
       "depends": "libc6 (>= 2.14)",
       "source": "https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-4_amd64.deb",
-      "advisories": ["CVE-2026-85091"]
+      "advisories": [
+        "CVE-2026-85091"
+      ]
+    },
+    "libsqlite3-0": {
+      "version": "3.54.1-2",
+      "sha256": "7789bf0b2338b781de388d83d7c473f9386c9ef638af110b5c1b3d1debb36f00",
+      "soname": "libsqlite3.so.0",
+      "depends": "libc6 (>= 2.38)",
+      "source": "https://deb.debian.org/debian/pool/main/s/sqlite3/libsqlite3-0_3.54.1-2_amd64.deb",
+      "advisories": [
+        "CVE-2026-119373",
+        "CVE-2026-119374",
+        "CVE-2026-119379"
+      ]
     }
   },
   "references": [
     "https://security-tracker.debian.org/tracker/CVE-2026-54369",
     "https://security-tracker.debian.org/tracker/CVE-2026-54370",
-    "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+    "https://security-tracker.debian.org/tracker/CVE-2026-85091",
+    "https://security-tracker.debian.org/tracker/CVE-2026-119373",
+    "https://security-tracker.debian.org/tracker/CVE-2026-119374",
+    "https://security-tracker.debian.org/tracker/CVE-2026-119379"
   ]
 }

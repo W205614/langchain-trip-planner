@@ -1,13 +1,13 @@
 {
   "schema_version": 2,
-  "reviewed_on": "2026-10-31",
+  "reviewed_on": "2026-11-05",
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
     "docker-compose.production.yml": "c0b640e932673ba7a7ae9097bca264f874ac75842da8b4297165548b33a337e6",
-    "backend/runtime-security-packages.json": "62cd4a01df64c6c063fe9a815246c16463a0d7c3762e8c1ceb9954f7d3f244dd",
-    "backend/scripts/install_runtime_security_patches.py": "af72bab09bf9ff1c1a9d08cd031d823ce9db4a78902a088a367ea52fca19e10f",
+    "backend/runtime-security-packages.json": "02a7b03f1950d99134ac9d2749802859b0c75c7e907faf1cc22928bfa18f316b",
+    "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
     "backend/security/native-backports/build-glibc.sh": "326779f227eaab5af78002a1fe75a6c987b555111e402b535d9d76dcde3fa7e5",
     "backend/security/native-backports/build-inputs.sh": "0aa6f7186c4dc6d0232d84b8361adacc64fd1bfd86b3f3cdaaaec4f4321f8c09",
@@ -194,7 +194,7 @@
       ],
       "classification": "fixed_by_pinned_security_upgrade",
       "vendor_status": "fixed_in_exact_installed_official_package",
-      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, two-package-only APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
+      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, exact-package APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-54369",
         "https://security-tracker.debian.org/tracker/CVE-2026-54370"
@@ -218,7 +218,7 @@
       ],
       "classification": "fixed_by_pinned_security_upgrade",
       "vendor_status": "fixed_in_exact_installed_official_package",
-      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, two-package-only APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
+      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, exact-package APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-85091"
       ]
@@ -417,6 +417,33 @@
         "/usr/bin/umount",
         "/usr/bin/nsenter",
         "/usr/bin/unshare"
+      ]
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libsqlite3-0": "3.54.1-2"
+      },
+      "requires_dpkg": {
+        "libsqlite3-0": "3.54.1-2"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "225ceb839db2c1dd484cfcaa5ef9fbdd429eb1d5f1e0c39fbd50150bca5fc7bc"
+      },
+      "ids": [
+        "CVE-2026-119373",
+        "CVE-2026-119374",
+        "CVE-2026-119379"
+      ],
+      "classification": "fixed_by_pinned_security_upgrade",
+      "vendor_status": "fixed_in_exact_installed_official_package",
+      "reason": "Debian records these FTS5 and session memory-safety fixes in sid from 3.54.1-1. Require the reviewed official 3.54.1-2 binary package and exact ELF bytes in this image.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-119373",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119374",
+        "https://security-tracker.debian.org/tracker/CVE-2026-119379"
       ]
     }
   ],

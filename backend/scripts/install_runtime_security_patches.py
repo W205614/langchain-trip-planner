@@ -1,6 +1,6 @@
 """Build-only, tightly pinned Debian ABI-compatible library security updates.
 
-This is not a rolling unstable upgrade. Only two authenticated, hash-pinned .deb
+This is not a rolling unstable upgrade. Only the authenticated, hash-pinned .deb
 files may change; the simulated and actual complete package delta must match.
 The temporary signed repository and negative-priority pin are removed in-image.
 """
@@ -34,10 +34,10 @@ def installed():
 def validate_simulation(text, expected):
     changed = {line.split()[1].split(':')[0] for line in text.splitlines() if line.startswith('Inst ')}
     if changed != expected or any(line.startswith('Remv ') for line in text.splitlines()):
-        raise RuntimeError('APT simulation proposed changes outside the exact two reviewed libraries')
+        raise RuntimeError('APT simulation proposed changes outside the reviewed library set')
     count = re.search(r'(\d+) upgraded, (\d+) newly installed, (\d+) to remove', text)
-    if not count or tuple(map(int, count.groups())) != (2, 0, 0):
-        raise RuntimeError('APT simulation was not exactly two upgrades with no new or removed packages')
+    if not count or tuple(map(int, count.groups())) != (len(expected), 0, 0):
+        raise RuntimeError('APT simulation did not match the locked upgrade count with no new or removed packages')
 
 
 def apply(lock_path):

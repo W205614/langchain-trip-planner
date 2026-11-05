@@ -1,8 +1,9 @@
-"""Targeted Linux candidate checks for the two reviewed native library updates."""
+"""Targeted Linux candidate checks for the reviewed native library updates."""
 import ctypes
 from io import BytesIO
 import os
 import platform
+import sqlite3
 import subprocess
 import zlib
 
@@ -15,9 +16,9 @@ pytestmark = pytest.mark.skipif(platform.system() != 'Linux' or os.environ.get('
 
 def test_exact_native_library_revisions_keep_zlib_and_acl_abi_compatible():
     revisions = subprocess.check_output(
-        ['dpkg-query', '-W', '-f=${Package}\t${Version}\n', 'libacl1', 'zlib1g'], text=True)
+        ['dpkg-query', '-W', '-f=${Package}\t${Version}\n', 'libacl1', 'zlib1g', 'libsqlite3-0'], text=True)
     assert dict(line.split('\t') for line in revisions.splitlines()) == {
-        'libacl1': '2.4.0-1', 'zlib1g': '1:1.3.dfsg+really1.3.2-4'}
+        'libsqlite3-0': '3.54.1-2', 'libacl1': '2.4.0-1', 'zlib1g': '1:1.3.dfsg+really1.3.2-4'}
     library = ctypes.CDLL('libz.so.1')
     library.zlibVersion.restype = ctypes.c_char_p
     assert library.zlibVersion().decode() == zlib.ZLIB_RUNTIME_VERSION == '1.3.2'
@@ -42,6 +43,17 @@ def test_exact_native_library_revisions_keep_zlib_and_acl_abi_compatible():
         if text:
             acl.acl_free(text)
         acl.acl_free(value)
+
+
+def test_python_sqlite_loads_fixed_library_and_queries_fts5_prefix():
+    assert sqlite3.sqlite_version == '3.54.1'
+    db = sqlite3.connect(':memory:')
+    try:
+        db.execute("CREATE VIRTUAL TABLE places USING fts5(name, detail=none)")
+        db.executemany("INSERT INTO places(rowid, name) VALUES (?, ?)", [(-1, 'museum'), (1, 'music')])
+        assert db.execute("SELECT rowid FROM places WHERE places MATCH 'mus*' ORDER BY rowid").fetchall() == [(-1,), (1,)]
+    finally:
+        db.close()
 
 
 def test_native_image_and_planning_consumers_still_load_without_provider_calls():
