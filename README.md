@@ -119,7 +119,7 @@ docker compose ps
 
 项目按单机部署，支持离线集成验证和真实模型抽样。SMTP、S3、云数据库及公网入口还需在选定平台完成联调；多实例高可用和真实预订支付未纳入实现。
 
-本机三应用及数据库、监控镜像已按 `f74d7fa` 收尾验收更新，保留原挂载；七服务已完成健康和 HTTP 检查，现按维护要求停止。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），覆盖46条可索引行程、125块。移动端与公开运营补验见[浏览器验收](docs/evidence/personal-closure-20261107/browser-navigation.md)，运行镜像与安全修复见[最终运行验收](docs/evidence/personal-closure-20261107/runtime-security.md)，部署与恢复结果见[个人项目收尾记录](docs/evidence/personal-closure-20261107/report.md)，真实模型抽样见[原公开运营验收](docs/evidence/public-operations-20261107/report.md)。真实行程仍存在事实缺口，云平台与正式公网入口按手册联调。
+本机单机部署保留原挂载，日常七服务按维护要求停止。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），覆盖46条可索引行程、125块。改排数量、路线证据与事实说明的修复及最新真实模型抽样见[行程事实核验报告](docs/evidence/itinerary-facts-20261107/report.md)。移动端与公开运营补验见[浏览器验收](docs/evidence/personal-closure-20261107/browser-navigation.md)，运行镜像与安全修复见[运行验收](docs/evidence/personal-closure-20261107/runtime-security.md)，部署与恢复结果见[个人项目收尾记录](docs/evidence/personal-closure-20261107/report.md)。营业、预约、住宿等实际旅行资料通过工作台补充来源后重新核验，云平台与正式公网入口按手册联调。
 
 - [四服务日常操作与常见问题](docs/operations/single-host.md#首次安装后的四服务维护) · [迁移和升级](docs/operations/java-migration.md)
 - [时间规划与任务恢复](docs/operations/final-planning.md) · [协作与费用](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)

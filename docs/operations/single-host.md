@@ -14,7 +14,7 @@
 
 七服务配置位于 `.codex-optimization/daily-window/daily-release.compose.json`，私有环境文件位于同目录的 `runtime/`。这些本机文件不进入 Git。仓库根目录 `docker-compose.yml` 仍提供四个核心服务的首次部署模板；已有七服务环境继续使用原 Compose 文件，不能用首次部署命令替换它。
 
-2026-11-07，本机 `backend`、`agent`、`frontend` 已更新到源码检查点 `f74d7fa`，保留原挂载。七服务健康检查及 HTTP 检查通过，验收后均已停止。升级前和当前两个手工恢复点均已验证，定时备份任务保持 Disabled，详见[备份与恢复](java-migration.md#备份和恢复)。当前使用 Java 业务后端和 Python Agent。
+2026-11-07，本机部署保留原挂载，使用 Java 业务后端和 Python Agent。Agent 与前端的行程事实修复源码检查点为 `909fbc4`，见[本轮验收](../evidence/itinerary-facts-20261107/report.md)；Java、数据库及监控沿用已验收的生产代码。日常七服务验收后均停止。保留两套已验证的手工恢复点（升级前及 `f74d7fa` 数据与镜像快照）；定时备份任务保持 Disabled，详见[备份与恢复](java-migration.md#备份和恢复)。
 
 本机维护管理员已完成正常注册、Bootstrap、MFA 确认及密码＋TOTP 重新登录。私有凭据保存在 `.codex-optimization/daily-window/runtime/maintenance-admin.private.json`，仅在本机读取。服务启动后通过正常登录进入 `/admin/operations`、`/knowledge/admin` 等管理页面；管理员权限继续受 MFA、账号状态和审计约束。
 

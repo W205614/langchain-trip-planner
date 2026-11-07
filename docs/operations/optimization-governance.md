@@ -147,7 +147,7 @@ python backend/scripts/automated_maintenance.py backup
 
 新增真实验收使用固定服务端批次和持久样本登记：模型最多 12 次、Embedding 40 次、高德 REST 120 次、Token 预留 800000，完整流程最多 4 条且开发/留出各 2 条；旧有更严格额度优先。失败和不确定发送不退额度，不能换编号、换库或清账本获得额度。该批次禁止 MCP，避免把一次工具调用当成一次 REST；浏览器地图 SDK 单列。预留用于额度控制，实际费用以供应商账单为准。
 
-CodeQL、依赖、密钥与镜像检查按精确提交运行，保留原始告警、扫描失败信息及适用性分析。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](../evidence/optimization-20261026/blind-review/review.html)尚无真人评分；真实行程仍有事实缺口，人工质量评审待完成。
+CodeQL、依赖、密钥与镜像检查按精确提交运行，保留原始告警、扫描失败信息及适用性分析。合成反例、离线 HTTP、真实浏览器、真实供应商和人工评审分开记证。[独立人工评审表](../evidence/optimization-20261026/blind-review/review.html)尚无真人评分；最新改排与路线证据修复见[事实核验报告](../evidence/itinerary-facts-20261107/report.md)，实际营业、预约等动态资料按行程补充，人工质量评审待完成。
 
 首次完整 CI 的[失败结果](../evidence/optimization-20261026/first-ci-d323a44-results.json)保留：SARIF 解析器补齐官方扩展规则引用后，实际报告的 24 项高危告警经[独立源码与数据流复核](../evidence/optimization-20261026/codeql-independent-source-review-24.md)。其中 22 项只对精确查询、位置、源码、数据流和到期时间作上下文分类，保留原始等级和数量；它们与当时 8 项未修复 CVE 的临时风险接受相互独立。新路径、新数据流、源码变化、未知或过期审查继续阻断，两项扫描函数命名误报仅作内部改名，不加例外。[第二轮 CI](../evidence/optimization-20261026/second-ci-5485f8a-results.json)实际验证四种语言门禁通过，原始高危 22 项、已审上下文 22 项、阻断 0 项；替换提交仍须重新验证。原始告警在 GitHub 保留，分级结果见对应工作流的门禁报告。
 

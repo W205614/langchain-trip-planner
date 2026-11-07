@@ -35,3 +35,7 @@ docs/evidence/personal-closure-20261107/** -text whitespace=trailing-space,space
 docs/evidence/personal-closure-20261107/**/*.sarif -text -whitespace
 docs/evidence/personal-closure-20261107/**/*.log -text -whitespace
 docs/evidence/personal-closure-20261107/**/*.patch -text -whitespace
+
+docs/evidence/itinerary-facts-20261107/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/itinerary-facts-20261107/**/*.sarif -text -whitespace
+docs/evidence/itinerary-facts-20261107/**/*.diff -text -whitespace

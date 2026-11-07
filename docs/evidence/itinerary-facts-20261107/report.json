@@ -1,0 +1,181 @@
+{
+  "mode": "live_cli_model_and_amap_no_java_writes",
+  "started_at_utc": "2026-11-07T11:20:15.472853+00:00",
+  "completed_at_utc": "2026-11-07T11:21:00.456241+00:00",
+  "passed": true,
+  "before": {
+    "text": 5,
+    "embedding": 23,
+    "vision": 1,
+    "amap": 62
+  },
+  "after": {
+    "text": 7,
+    "embedding": 23,
+    "vision": 1,
+    "amap": 116
+  },
+  "limits": {
+    "text": 12,
+    "vision": 1,
+    "embedding": 40,
+    "amap": 120
+  },
+  "original_budget_not_reset": true,
+  "route_lookup_limit_per_stage": 12,
+  "models": {
+    "text": "gpt-6.1-sol",
+    "endpoint": "https://api.openai.com/v1",
+    "amap": "mcp"
+  },
+  "attractions_before": [
+    {
+      "name": "小白菜文化园",
+      "poi_id": "B023B0A6VB"
+    },
+    {
+      "name": "六和塔文化公园",
+      "poi_id": "B023B08SQK"
+    }
+  ],
+  "attractions_after": [
+    {
+      "name": "杭州西湖风景名胜区-岳飞墓",
+      "poi_id": "B023B17X51"
+    }
+  ],
+  "usage": {
+    "calls": 2,
+    "input_tokens": 3511,
+    "output_tokens": 632
+  },
+  "source_revision": "909fbc455e3dc79e859bdc637e8750702514e820",
+  "raw_live_sha256": "02ee16b7e5187f97e25582b217b364bf420b16028a10e7f52631e4fd279262d7",
+  "tests": {
+    "before_fix_regressions": {
+      "failed": 3
+    },
+    "untouched_expiry_before_fix": {
+      "failed": 1,
+      "passed": 15
+    },
+    "related_python": {
+      "passed": 140,
+      "failed": 0,
+      "provider_calls": 0
+    },
+    "browser": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "frontend_build": {
+      "passed": true
+    },
+    "security_tool_policy": {
+      "passed": 76,
+      "failed": 0
+    }
+  },
+  "checks": {
+    "requested_reduction_two_to_one": true,
+    "original_budget_within_limits": true,
+    "paid_sample_uses_existing_keys": true,
+    "daily_containers_started": false,
+    "java_writes_in_paid_cli_sample": false
+  },
+  "remaining_dynamic_inputs": [
+    "dated venue and restaurant opening/last admission facts",
+    "reservation requirements/availability",
+    "actual departure/hotel endpoints",
+    "breakfast or self-arranged meal confirmation",
+    "map routes not returned in bounded sample",
+    "in-attraction walking distances"
+  ],
+  "quality_before": {
+    "outcome": "degraded",
+    "facts_complete": false,
+    "feasibility_status": "unverified",
+    "day_checks": [
+      {
+        "day_index": 0,
+        "visit_minutes": 210,
+        "meal_allowance_minutes": 90,
+        "buffer_minutes": 30,
+        "route_minutes": 112.0,
+        "planned_minutes": 442.0,
+        "inter_stop_walking_km": 0.713,
+        "route_distance_km": 32.62,
+        "routes": [
+          {
+            "from": "小白菜文化园",
+            "to": "六和塔文化公园",
+            "route_type": "transit",
+            "minutes": 112,
+            "distance_km": 32.62,
+            "walking_km": 0.71
+          }
+        ],
+        "walking_status": "available"
+      }
+    ],
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "hotel_endpoint_unknown",
+      "in_attraction_walking_unknown",
+      "meal_opening_unverified:meal:0:dinner:B023B15C1W",
+      "meal_opening_unverified:meal:0:lunch:B023B0BCMW",
+      "meal_pois_unavailable",
+      "opening_hours_travel_date_unverified",
+      "opening_unknown_or_stale:poi:0:B023B08SQK",
+      "opening_unknown_or_stale:poi:0:B023B0A6VB",
+      "reservation_unverified",
+      "reservation_unverified:poi:0:B023B08SQK",
+      "reservation_unverified:poi:0:B023B0A6VB",
+      "route_endpoint_unknown"
+    ]
+  },
+  "quality_after": {
+    "outcome": "degraded",
+    "facts_complete": false,
+    "feasibility_status": "unverified",
+    "day_checks": [
+      {
+        "day_index": 0,
+        "visit_minutes": 60,
+        "meal_allowance_minutes": 90,
+        "buffer_minutes": 30,
+        "route_minutes": 0.0,
+        "planned_minutes": 180.0,
+        "inter_stop_walking_km": 0.0,
+        "route_distance_km": 0.0,
+        "routes": [],
+        "walking_status": "available"
+      }
+    ],
+    "data_gaps": [
+      "hotel_and_meal_routes_unverified",
+      "hotel_endpoint_unknown",
+      "in_attraction_walking_unknown",
+      "meal_opening_unverified:meal:0:dinner:B023B0BCMW",
+      "meal_opening_unverified:meal:0:lunch:B0JBCCFEXB",
+      "meal_pois_unavailable",
+      "opening_hours_travel_date_unverified",
+      "opening_unknown_or_stale:poi:0:B023B17X51",
+      "reservation_unverified",
+      "reservation_unverified:poi:0:B023B17X51",
+      "route_duration_estimated_30_minutes",
+      "route_endpoint_unknown",
+      "route_fact_expired_or_unobserved"
+    ]
+  },
+  "security": {
+    "codeql_source_revision": "909fbc455e3dc79e859bdc637e8750702514e820",
+    "fresh_analysis_workflow": 42367525744,
+    "raw_high_critical": 26,
+    "unassessed_blocking_after_exact_review": 0,
+    "primary_sources_unchanged": true,
+    "reviewed_support_source_changes": 1
+  }
+}

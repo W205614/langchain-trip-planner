@@ -1,0 +1,470 @@
+diff --git a/backend/app/agent_api/main.py b/backend/app/agent_api/main.py
+index aade98f..6b279b7 100644
+--- a/backend/app/agent_api/main.py
++++ b/backend/app/agent_api/main.py
+@@ -334,11 +334,15 @@ def _execute(body: Execution | ExecutionV2, request: Request):
+                 emit("progress", {"stage":"agent_precheck", "percent":90,
+                     "message":"Agent 草稿已生成，正在核验路线与行程约束"})
+                 allowed_days = None
++                revision_repairs = []
+                 if body.original_plan is not None:
+                     from ..services.time_planner import protect_revision
++                    from ..services.planning_constraints import enforce_revision_reduction
+                     allowed_days = protect_revision(plan, body.original_plan, body.request, body.day_index)
++                    revision_repairs = enforce_revision_reduction(plan, body.original_plan, body.request, body.instruction, allowed_days)
+                 quality = finalize_plan(plan, body.request, planner.amap_service, repair=True,
+                     allowed_days=allowed_days, enhanced=body.protocol_version == 2)
++                quality["repairs"] = revision_repairs + quality["repairs"]
+                 if body.protocol_version == 2:
+                     save_checkpoint("schedule", digest, {"plan":plan.model_dump(mode="json"), "quality":quality, "trusted_candidates":evidence})
+                 quality.setdefault("timings", {})["agent_route_and_constraints_ms"] = round(
+diff --git a/backend/app/agents/trip_planner_agent.py b/backend/app/agents/trip_planner_agent.py
+index 0ee7d30..e3f6864 100644
+--- a/backend/app/agents/trip_planner_agent.py
++++ b/backend/app/agents/trip_planner_agent.py
+@@ -955,6 +955,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
+         )
+         restaurant_text = self._pois_to_text(restaurant_pois[:8])
+         current_text = "、".join(item.name for item in day.attractions) or "无"
++        from ..services.assistant_intent import attraction_reduction
++        reduction = attraction_reduction(instruction)
++        count_instruction = (f"本天最多安排{max(0, len(day.attractions) - reduction)}个景点。" if reduction is not None
++            else "通常安排2-3个景点。")
+         day_query = (
+             f"城市: {day_request.city}\n交通方式: {request.transportation}\n"
+             f"住宿偏好: {request.accommodation}\n旅行偏好: {','.join(request.preferences) or '无'}\n"
+@@ -966,7 +970,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
+             f"{candidate_text}\n"
+             "本天可选餐厅（每餐只能返回其中的 poi_id）：\n"
+             f"{restaurant_text or '无'}\n"
+-            "请输出该天的一个 JSON 对象，通常安排2-3个景点与breakfast/lunch/dinner；必去和受保护安排不得因数量省略，时间冲突须留给后续求解明确报告。"
++            f"请输出该天的一个 JSON 对象，{count_instruction}安排breakfast/lunch/dinner；必去和受保护安排不得因数量省略，时间冲突须留给后续求解明确报告。"
+         )
+         revised_day = self._generate_one_day(
+             day_query,
+diff --git a/backend/app/services/assistant_intent.py b/backend/app/services/assistant_intent.py
+index 8847270..85ec388 100644
+--- a/backend/app/services/assistant_intent.py
++++ b/backend/app/services/assistant_intent.py
+@@ -10,6 +10,19 @@ import re
+ _CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
+ 
+ 
++def attraction_reduction(content: str) -> int | None:
++    """Recognize an explicit count; vague pacing requests stay with the planner."""
++    text = re.sub(r"\s+", "", content)
++    matches = list(re.finditer(r"(?<![至最不])(?:减少|少安排|少去|去掉|删掉|删除|少)([1-9][0-9]?|[一二两三四五六七八九十])(?:个|处)?景点", text))
++    if len(matches) != 1:
++        return None
++    match = matches[0]
++    if re.search(r"(?:不要|不用|不必|不能|不可|别)(?:再)?$", text[:match.start()]):
++        return None
++    raw = match.group(1)
++    return int(raw) if raw.isdigit() else 2 if raw == "两" else _CN[raw]
++
++
+ def _day_index(text: str) -> int | None:
+     match = re.search(r"第\s*([0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*天", text)
+     if not match:
+@@ -33,7 +46,7 @@ def classify_assistant_intent(content: str, travel_days: int) -> dict:
+         or ("住宿" in text and any(word in text for word in ("更换", "换", "替换", "改")))
+     )
+     hotel_read = "酒店" in text and any(word in text for word in ("推荐", "附近", "哪家", "怎么样")) and not hotel_change
+-    revision = hotel_change or any(word in text for word in (
++    revision = hotel_change or attraction_reduction(text) is not None or any(word in text for word in (
+         "轻松", "少走", "增加", "加入", "删除", "去掉", "替换", "改排", "调整", "换成", "不要去",
+     ))
+ 
+diff --git a/backend/app/services/durable_execution.py b/backend/app/services/durable_execution.py
+index b597411..8b7c780 100644
+--- a/backend/app/services/durable_execution.py
++++ b/backend/app/services/durable_execution.py
+@@ -150,6 +150,10 @@ def checkpoint_compatible(stage, saved, current):
+         "time-windows-v3-hotel-nights","time-windows-v4-meal-candidates","time-windows-v5-hotel-departure",
+         "time-windows-v6-conflict-classification","time-windows-v7-whole-day-budget"}:
+         allowed_upgrade=True
++    if current.get("rules") == "time-windows-v9-route-evidence" and saved.get("rules") in {
++        "time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure",
++        "time-windows-v6-conflict-classification", "time-windows-v7-whole-day-budget", "time-windows-v8-fact-completion"}:
++        allowed_upgrade = True
+     return bool(unaffected and isinstance(saved,dict) and allowed_upgrade
+         and {key:value for key,value in saved.items() if key!="rules"}=={key:value for key,value in current.items() if key!="rules"})
+ 
+diff --git a/backend/app/services/planning_constraints.py b/backend/app/services/planning_constraints.py
+index e7d0020..b764678 100644
+--- a/backend/app/services/planning_constraints.py
++++ b/backend/app/services/planning_constraints.py
+@@ -21,6 +21,41 @@ def name_key(value):
+     return value.strip().casefold()
+ 
+ 
++def enforce_revision_reduction(plan, original, request, instruction, allowed_days):
++    """Apply explicit quantity changes after restoring all protected activities."""
++    from .assistant_intent import attraction_reduction
++    from .attraction_names import resolve_name
++    from .time_planner import effective_locks, confirmed
++    from ..core.exceptions import BizException
++
++    reduction = attraction_reduction(instruction)
++    if reduction is None:
++        return []
++    inputs = request.planning_input
++    protected = set(inputs.completed_activity_ids) | {lock.get("activity_id") for lock in effective_locks(inputs)}
++    commitments = [c for c in inputs.commitments if confirmed(c)]
++    protected |= {c.get("activity_id") for c in commitments}
++    reserved_pois = {c.get("poi_id") for c in commitments if c.get("poi_id")}
++    repairs = []
++    for index in sorted(allowed_days):
++        day = plan.days[index]
++        limit = len(original.days[index].attractions) - reduction
++        required = {a.poi_id for name in request.constraints.must_visit
++                    if (a := resolve_name(name, day.attractions, day.city or plan.city)) is not None}
++        removable = sorted((a for a in reversed(day.attractions)
++            if a.optional and a.activity_id not in protected and a.poi_id not in required | reserved_pois),
++            key=lambda a: a.priority)
++        count = max(0, len(day.attractions) - limit)
++        if limit < 1 or count > len(removable):
++            raise BizException("无法按要求减少景点：需保留至少一个景点，以及必去、预约、锁定和范围外的活动",
++                status_code=409, code="REVISION_CONSTRAINT_CONFLICT")
++        for attraction in removable[:count]:
++            day.attractions.remove(attraction)
++            repairs.append({"day_index": index, "removed_poi_id": attraction.poi_id,
++                "reason": "user_requested_attraction_reduction"})
++    return repairs
++
++
+ def refresh_saved_quality(plan, request, previous):
+     """Upgrade name/display checks using saved route evidence; never rewrite a user's trip."""
+     route_evidence = {}
+@@ -97,12 +132,15 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
+                right.location.longitude, right.location.latitude, mode, city)
+         if key not in cache:
+             if enhanced:
+-                evidence=schedule_routes.get((left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,mode))
+-                # The solver has already obtained this directed route. Its
+-                # persisted snapshot carries duration, not distance: do not send
+-                # another paid lookup merely for the legacy quality summary.
+-                cache[key]=(evidence[0],None,None,mode) if evidence and evidence[1] else None
+-                if cache[key] is not None:
++                from .route_facts import current
++                route_key = (left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,mode)
++                evidence = schedule_routes.get(route_key)
++                fact = schedule_routes.get("_route_facts", {}).get(route_key, {})
++                if left.location == right.location:
++                    cache[key] = (0, 0, 0, mode)
++                else:
++                    cache[key] = (evidence[0], fact.get("distance"), fact.get("walking_distance"), fact.get("route_type", mode)) if evidence and evidence[1] and current(fact) else None
++                if cache[key] is not None and (cache[key][1] is None or (mode != "driving" and cache[key][2] is None)):
+                     gaps.add("route_distance_and_walking_unverified")
+                 return cache[key]
+             remaining()
+@@ -249,6 +287,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
+     recalculate_budget(plan, estimate_missing=True, budget_limit=request.budget_total)
+     if enhanced:
+         from .time_planner import RULE_VERSION, confirmed
++        from .route_facts import instant
++        from datetime import datetime, timezone
+         # The solver deliberately touches only allowed_days. Whole-trip quality
+         # must also retain the evidence of every untouched day without rewriting
+         # its persisted JSON. Legacy/stale schedules cannot imply feasibility.
+@@ -258,6 +298,15 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
+             if saved.get("status") not in {"feasible", "unverified", "not_found", "infeasible"} or getattr(day, "schedule_stale", False):
+                 saved["status"] = "unverified"
+                 saved["unknown"] = sorted(set(saved.get("unknown", [])) | {"schedule_unknown_or_stale"})
++            if any(row.get("kind") == "travel" and row.get("source") == "map" for row in day.timeline):
++                try:
++                    route_fresh = instant(getattr(day, "route_fact_expires_at", None)) > datetime.now(timezone.utc)
++                except (ValueError, TypeError):
++                    route_fresh = False
++                if not route_fresh:
++                    if saved.get("status") == "feasible":
++                        saved["status"] = "unverified"
++                    saved["unknown"] = sorted(set(saved.get("unknown", [])) | {"route_fact_expired_or_unobserved"})
+             for field in ("unknown", "conflicts", "omitted_activity_ids"):
+                 saved.setdefault(field, [])
+             schedules.append({**saved, "day_index": day.day_index})
+@@ -266,6 +315,14 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
+         report["data_gaps"]=sorted(set(report["data_gaps"])|{f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"]})
+         report["time_policy_version"] = RULE_VERSION
+         from .time_planner import fact_current
++        if all(len([f for f in request.planning_input.opening_windows
++                    if f.get("poi_id") == a.poi_id and f.get("date") == day.date and fact_current(f)]) == 1
++               for day in plan.days for a in day.attractions):
++            report["data_gaps"] = [gap for gap in report["data_gaps"]
++                if gap not in {"opening_hours_unavailable", "opening_hours_travel_date_unverified"}]
++        if all(day.timeline and not any(gap.startswith(("route_", "hotel_endpoint_unknown", "meal_location_unknown", "schedule_unknown_or_stale"))
++                for gap in schedule["unknown"]) for day, schedule in zip(plan.days, schedules)):
++            report["data_gaps"] = [gap for gap in report["data_gaps"] if gap != "hotel_and_meal_routes_unverified"]
+         if all(any(f.get("poi_id")==a.poi_id and f.get("date")==day.date and f.get("status") in {"confirmed","not_required"} and fact_current(f,"verification") for f in request.planning_input.reservation_facts) for day in plan.days for a in day.attractions):
+             report["data_gaps"]=[gap for gap in report["data_gaps"] if gap!="reservation_unverified"]
+         if all(REQUIRED_MEALS <= ({meal.type for meal in day.meals}|{f["type"] for f in request.planning_input.meal_resolutions if f.get("day_index")==day.day_index and fact_current(f,"verification")}) for day in plan.days):
+diff --git a/backend/app/services/result_policy.py b/backend/app/services/result_policy.py
+index 1cc5339..5427c75 100644
+--- a/backend/app/services/result_policy.py
++++ b/backend/app/services/result_policy.py
+@@ -67,6 +67,7 @@ def error_info(code):
+         "TASK_TIMEOUT": ("规划超过时间预算，请稍后重试或缩短行程", True),
+         "PROCESS_INTERRUPTED": ("服务重启中断了规划，可重新提交", True),
+         "VERSION_CONFLICT": ("原行程已被修改，请重新打开后发起改排", False),
++        "REVISION_CONSTRAINT_CONFLICT": ("景点数量要求与必去、预约、锁定或改排范围冲突，请调整要求", False),
+         "RESULT_DELETED": ("原行程已删除，请重新规划", False),
+         "UPSTREAM_CONFIG_ERROR": ("服务配置异常，请联系管理员；重复提交暂时无法恢复", False),
+         "GENERATION_FAILED": ("规划未完成，请稍后重试；若持续失败，请联系管理员", True),
+diff --git a/backend/app/services/route_facts.py b/backend/app/services/route_facts.py
+index 71fc3fe..c1298a0 100644
+--- a/backend/app/services/route_facts.py
++++ b/backend/app/services/route_facts.py
+@@ -1,5 +1,6 @@
+ """Route observation time survives memory caches and durable checkpoint reuse."""
+ from datetime import datetime, timezone, timedelta
++from math import isfinite
+ from .planning_semantics import FACT_TTLS
+ 
+ EPOCH = "1970-01-01T00:00:00+00:00"
+@@ -22,7 +23,19 @@ def observation(value, *, fresh=False, now=None):
+         expires=observed+timedelta(seconds=FACT_TTLS["route"])
+         if value.get("expires_at"):
+             expires=min(expires,instant(value["expires_at"]))
+-        return {"observed_at":observed.isoformat(),"expires_at":expires.isoformat()}
++        fact = {"observed_at":observed.isoformat(),"expires_at":expires.isoformat()}
++        for field in ("distance", "walking_distance"):
++            try:
++                quantity = float(value[field])
++                if type(value[field]) is not bool and isfinite(quantity) and quantity >= 0:
++                    fact[field] = quantity
++            except (KeyError, TypeError, ValueError):
++                pass
++        if value.get("route_type") in {"walking", "driving", "transit"}:
++            fact["route_type"] = value["route_type"]
++        if fact.get("route_type") == "walking" and "distance" in fact:
++            fact["walking_distance"] = fact["distance"]
++        return fact
+     except (ValueError,TypeError,KeyError):
+         return {"observed_at":value.get("observed_at"),"expires_at":EPOCH}
+ 
+diff --git a/backend/app/services/time_planner.py b/backend/app/services/time_planner.py
+index d768166..885b4d7 100644
+--- a/backend/app/services/time_planner.py
++++ b/backend/app/services/time_planner.py
+@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
+ from ..models.schemas import TripPlan, TripRequest
+ from ..core.exceptions import BizException
+ 
+-RULE_VERSION = "time-windows-v8-fact-completion"
++RULE_VERSION = "time-windows-v9-route-evidence"
+ from .planning_semantics import CONTRACT, FACT_TTLS
+ from .travel_facts import boarding_minutes, relation_pairs
+ from .route_facts import observation as route_observation, current as route_current, instant as route_instant, cache_expiry as route_cache_expiry, bind_day as bind_route_day, EPOCH as ROUTE_EPOCH
+@@ -872,4 +872,5 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None,
+     plan.planning_input = request.planning_input.model_copy(deep=True)
+     if route_evidence is not None:
+         route_evidence.update({key:value for key,value in cache.items() if isinstance(key,tuple)})
++        route_evidence["_route_facts"] = cache.get("_route_facts", {})
+     return reports
+diff --git a/backend/tests/test_itinerary_fact_quality.py b/backend/tests/test_itinerary_fact_quality.py
+new file mode 100644
+index 0000000..d0b901a
+--- /dev/null
++++ b/backend/tests/test_itinerary_fact_quality.py
+@@ -0,0 +1,151 @@
++"""Historical sample regressions across revision execution and fact reporting."""
++from copy import deepcopy
++from datetime import datetime, timedelta, timezone
++import json
++from types import SimpleNamespace
++from uuid import uuid4
++
++from fastapi.testclient import TestClient
++import pytest
++
++from app.services.planning_constraints import finalize_plan
++from test_time_planner import Routes, scenario
++
++
++def test_explicit_reduction_is_enforced_after_revision_protection(monkeypatch, tmp_path):
++    from app.agent_api import main
++    from app.agents import trip_planner_agent
++    from app.services import durable_execution as durable
++
++    request, original = scenario()
++    request.constraints.must_visit = ["A"]
++    original.days[0].attractions[1].optional = True
++    untouched = original.model_dump(mode="json")
++    planner = SimpleNamespace(
++        revise_trip_day=lambda _request, plan, *_args, **_kwargs: plan,
++        amap_service=Routes(),
++    )
++    monkeypatch.setattr(trip_planner_agent, "get_trip_planner_agent", lambda: planner)
++    monkeypatch.setattr(durable, "_call", lambda method, path, payload=None: {"checkpoints": []})
++    monkeypatch.setattr(main, "DATA_DIR", tmp_path)
++    monkeypatch.setenv("INTERNAL_SERVICE_KEY", "0123456789abcdefghijklmnopqrstuv")
++    body = {
++        "protocol_version": 2, "task_id": str(uuid4()), "execution_id": str(uuid4()),
++        "request_id": "remove-one-attraction-regression", "user_id": 1,
++        "deadline_at": (datetime.now(timezone.utc) + timedelta(seconds=60)).isoformat(),
++        "request": request.model_dump(mode="json"), "original_plan": untouched,
++        "original_version": 1, "day_index": 0, "instruction": "当天轻松一些，减少一个景点",
++    }
++    with TestClient(main.app) as client:
++        response = client.post("/internal/v2/executions", json=body,
++            headers={"X-Service-Key": "0123456789abcdefghijklmnopqrstuv"})
++    assert response.status_code == 200 and "event: result" in response.text
++    result = next(json.loads(event.split("data: ", 1)[1])
++        for event in response.text.split("\n\n") if event.startswith("event: result"))
++    assert [a["poi_id"] for a in result["plan"]["days"][0]["attractions"]] == ["A"]
++    assert any(r["reason"] == "user_requested_attraction_reduction" for r in result["quality"]["repairs"])
++    assert original.model_dump(mode="json") == untouched
++
++
++def test_solver_route_distances_and_current_openings_reach_quality_without_new_lookups():
++    request, plan = scenario()
++    routes = Routes()
++    quality = finalize_plan(plan, request, routes, enhanced=True)
++    check = quality["day_checks"][0]
++    assert check["route_distance_km"] == 1
++    assert check["inter_stop_walking_km"] == 1
++    assert "route_distance_and_walking_unverified" not in quality["data_gaps"]
++    assert "opening_hours_travel_date_unverified" not in quality["data_gaps"]
++    assert "opening_hours_unavailable" not in quality["data_gaps"]
++    assert "hotel_and_meal_routes_unverified" not in quality["data_gaps"]
++    assert "in_attraction_walking_unknown" in quality["data_gaps"]
++    assert routes.calls == 6  # Directed hotel/A/B matrix; quality sends nothing extra.
++
++
++def test_route_metrics_survive_checkpoint_resume_without_renewing_observation(monkeypatch):
++    from app.services import durable_execution as durable
++
++    request, plan = scenario()
++    original = deepcopy(plan)
++    saved = {}
++    monkeypatch.setattr(durable, "read_checkpoint", lambda stage, digest: saved.get((stage, digest)))
++    monkeypatch.setattr(durable, "save_checkpoint", lambda stage, digest, payload, **_: saved.__setitem__((stage, digest), deepcopy(payload)))
++    routes = Routes()
++    first = finalize_plan(plan, request, routes, enhanced=True)
++    sends = routes.calls
++    second = finalize_plan(original, request, routes, enhanced=True)
++    assert routes.calls == sends
++    assert first["day_checks"][0]["route_distance_km"] == second["day_checks"][0]["route_distance_km"] == 1
++    assert plan.days[0].route_fact_expires_at == original.days[0].route_fact_expires_at
++
++
++@pytest.mark.parametrize("instruction,expected", [
++    ("减少一个景点", 1), ("第2天少安排2个景点", 2), ("去掉两处景点", 2),
++    ("减少步行", None), ("不要减少一个景点", None), ("不用再去掉1个景点", None),
++    ("至少一个景点", None), ("最少安排两个景点", None), ("不能减少1个景点", None),
++])
++def test_only_explicit_affirmative_attraction_counts_are_constraints(instruction, expected):
++    from app.services.assistant_intent import attraction_reduction, classify_assistant_intent
++    assert attraction_reduction(instruction) == expected
++    if expected is not None:
++        assert classify_assistant_intent(instruction, 2)["intent"] == "revise_day"
++
++
++@pytest.mark.parametrize("protection", ["must_visit", "lock", "reservation", "mandatory"])
++def test_quantity_request_cannot_delete_protected_activities(protection):
++    from app.core.exceptions import BizException
++    from app.services.planning_constraints import enforce_revision_reduction
++    from app.services.time_planner import protect_revision
++    request, original = scenario()
++    for attraction in original.days[0].attractions:
++        attraction.optional = protection != "mandatory"
++    if protection == "must_visit":
++        request.constraints.must_visit = ["A", "B"]
++    elif protection == "lock":
++        request.planning_input.locks = [{"activity_id": a.activity_id, "mode": "content"} for a in original.days[0].attractions]
++    elif protection == "reservation":
++        request.planning_input.commitments = [{"id": a.poi_id, "day_index": 0, "poi_id": a.poi_id,
++            "status": "confirmed"} for a in original.days[0].attractions]
++    changed = deepcopy(original)
++    allowed = protect_revision(changed, original, request, 0)
++    with pytest.raises(BizException) as error:
++        enforce_revision_reduction(changed, original, request, "减少一个景点", allowed)
++    assert error.value.code == "REVISION_CONSTRAINT_CONFLICT"
++    assert len(changed.days[0].attractions) == 2
++
++
++def test_reduction_changes_only_mutable_activities_in_selected_day():
++    from app.models.planning import RevisionScope
++    from app.services.planning_constraints import enforce_revision_reduction
++    from app.services.time_planner import protect_revision
++    request, original = scenario([["A", "B"], ["C"]])
++    for attraction in original.days[0].attractions:
++        attraction.optional = True
++    request.planning_input.revision_scope = RevisionScope(day_indices=[0],
++        activity_ids=[original.days[0].attractions[0].activity_id])
++    changed = deepcopy(original)
++    allowed = protect_revision(changed, original, request, 0)
++    enforce_revision_reduction(changed, original, request, "减少一个景点", allowed)
++    assert [a.poi_id for a in changed.days[0].attractions] == ["B"]
++    assert changed.days[1].model_dump(mode="json") == original.days[1].model_dump(mode="json")
++
++
++def test_expired_route_evidence_on_untouched_day_remains_unverified():
++    request, plan = scenario([["A", "B"], ["C"]])
++    finalize_plan(plan, request, Routes(), enhanced=True)
++    plan.days[0].__pydantic_extra__["route_fact_expires_at"] = (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat()
++    untouched = plan.days[0].model_dump(mode="json")
++    quality = finalize_plan(plan, request, Routes(), allowed_days={1}, enhanced=True)
++    assert plan.days[0].model_dump(mode="json") == untouched
++    assert quality["feasibility_status"] == "unverified"
++    assert "route_fact_expired_or_unobserved" in quality["schedule_checks"][0]["unknown"]
++    assert "hotel_and_meal_routes_unverified" in quality["data_gaps"]
++
++
++def test_stale_opening_declarations_are_not_cleared_as_verified():
++    request, plan = scenario()
++    request.planning_input.opening_windows[0]["observed_at"] = (datetime.now(timezone.utc) - timedelta(days=2)).isoformat()
++    quality = finalize_plan(plan, request, Routes(), enhanced=True)
++    assert "opening_hours_unavailable" in quality["data_gaps"]
++    assert any(gap.startswith("opening_unknown_or_stale:") for gap in quality["data_gaps"])
++    assert quality["facts_complete"] is False
+diff --git a/frontend/e2e/final-planning.spec.ts b/frontend/e2e/final-planning.spec.ts
+index c4d451d..b276737 100644
+--- a/frontend/e2e/final-planning.spec.ts
++++ b/frontend/e2e/final-planning.spec.ts
+@@ -3,6 +3,20 @@ import { expect, test } from '@playwright/test'
+ const planning = { timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate' }
+ const plan = { city: '北京', start_date: '2026-11-01', end_date: '2026-11-01', weather_info: [], overall_suggestions: '核对预约', days: [{ day_index: 0, date: '2026-11-01', attractions: [{ activity_id: 'activity-1', poi_id: 'P1', name: '故宫', address: '北京', description: '游览', visit_duration: 120, location: { longitude: 116.4, latitude: 39.9 } }], meals: [], transportation: '公共交通', accommodation: '酒店', description: '按预约游览', timeline: [{ activity_id: 'activity-1', title: '故宫', kind: 'attraction', status: 'estimated', start_at: '2026-11-01T09:00:00+08:00', end_at: '2026-11-01T11:00:00+08:00', notes: ['营业信息待核实'] }], feasibility: { status: 'unverified', unknown: ['opening_unknown_or_stale:activity-1'] } }] }
+ 
++test('fact warning lists only the unresolved evidence instead of fixed missing-fact claims', async ({ page }) => {
++  await page.addInitScript(({ plan }) => {
++    sessionStorage.setItem('tripPlan', JSON.stringify(plan))
++    sessionStorage.setItem('tripQuality', JSON.stringify({ data_gaps: ['in_attraction_walking_unknown'] }))
++  }, { plan })
++  await page.route('https://*.amap.com/**', route => route.abort())
++  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
++  await page.goto('/result')
++  await expect(page.getByText('景区内部步行距离尚无可靠数据。', { exact: true })).toBeVisible()
++  await expect(page.getByText(/酒店或餐厅接驳路线仍待核实/)).toHaveCount(0)
++  await expect(page.getByText(/预约要求及余票请通过景区官方渠道确认/)).toHaveCount(0)
++  await expect(page.getByText(/部分景点或餐厅的出行日开放时间待核实/)).toHaveCount(0)
++})
++
+ test('legacy missing or stale schedule explains why the unchanged day still needs verification', async ({ page }) => {
+   const code = 'schedule_unknown_or_stale'
+   const sample = { ...plan, days: [{ ...plan.days[0], timeline: [], feasibility: { status: 'unverified', unknown: [code] } }] }
+diff --git a/frontend/src/views/Result.vue b/frontend/src/views/Result.vue
+index de3b9f4..3f6c275 100644
+--- a/frontend/src/views/Result.vue
++++ b/frontend/src/views/Result.vue
+@@ -505,12 +505,17 @@ const proposalQualityMessage = computed(() => ({
+ }[quality.value.validated_outcome as 'complete' | 'degraded' | 'draft'] || '请检查方案及质量说明。'))
+ const factGapMessage = computed(() => {
+   const gaps: string[] = quality.value.data_gaps || []
+-  const notes = ['预约要求及余票请通过景区官方渠道确认']
++  const notes: string[] = []
++  if (gaps.some(gap => gap.startsWith('reservation_unverified'))) notes.push('预约要求及余票请通过景区官方渠道确认')
+   if (gaps.some(gap => gap.split(':')[0] === 'schedule_unknown_or_stale')) notes.push('部分日期的旧时间轴缺失或已过期，请重新核验或改排')
+-  notes.push(gaps.includes('opening_hours_unavailable') ? '部分景点暂无开放时间数据' : '开放时间为查询参考，出行日请再次确认')
++  if (gaps.some(gap => gap.startsWith('opening_') || gap.startsWith('meal_opening_'))) notes.push('部分景点或餐厅的出行日开放时间待核实，请在工作台补充来源及有效期')
+   if (gaps.includes('route_duration_unavailable_fallback_to_straight_line')) notes.push('部分景点间路线查询失败，详见每日交通')
+   if (gaps.some(gap => gap.startsWith('meal_candidate_unassigned:'))) notes.push('部分餐饮候选未能安排，用餐仍有缺口，请就近用餐并重新核验')
+-  notes.push('酒店、餐厅接驳及景区内部步行未计入路线核实')
++  if (gaps.some(gap => gap.startsWith('route_fact_expired_or_unobserved'))) notes.push('部分路线证据已过期或缺少观测时间，请重新核验')
++  if (gaps.includes('hotel_and_meal_routes_unverified')) notes.push('酒店或餐厅接驳路线仍待核实，请补充准确地点并重新核验')
++  if (gaps.includes('in_attraction_walking_unknown')) notes.push('景区内部步行距离尚无可靠数据')
++  if (gaps.includes('meal_pois_unavailable')) notes.push('部分用餐尚无可信餐厅，可补充餐厅或在工作台确认自理用餐')
++  if (!notes.length) notes.push('部分行程事实仍待核实，请在工作台查看对应活动和来源')
+   return notes.join('；') + '。'
+ })
+ const needsTransportArrivalBuffer = computed(() => {
