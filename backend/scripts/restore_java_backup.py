@@ -20,12 +20,42 @@ from enroll_dataset import tar_inventory
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
+V16_WATERMARK_MIGRATION={"version":"16","type":"SQL","script":"V16__object_storage.sql",
+                         "checksum":-2146005944,"success":True}
 
 
 class RestoreVerificationFailure(RuntimeError):
     def __init__(self, report):
         super().__init__("Restore verification failed at " + report["stage"] + "; exact isolated resources retained in restore-report.json")
         self.report = report
+
+
+def verify_candidate_original_rows(expected, actual, columns, before_history, after_history,
+                                   before_revision, after_revision):
+    """V16's fixed storage-key backfill fires the existing statement watermark once."""
+    highest=max(row["installed_rank"] for row in before_history)
+    new_v16=[row for row in after_history if row.get("version")=="16" and row["installed_rank"]>highest]
+    known_v16=(not any(row.get("version")=="16" for row in before_history)
+               and len(new_v16)==1
+               and all(new_v16[0].get(key)==value for key,value in V16_WATERMARK_MIGRATION.items()))
+    if not known_v16:
+        if actual!=expected:raise RuntimeError("Candidate upgrade changed existing business rows; clones retained")
+        return {}
+    if columns.get("evidence_revision")!=["id","revision"]:
+        raise RuntimeError("Known V16 watermark verification requires the original evidence revision columns")
+    if (not isinstance(before_revision,list) or len(before_revision)!=1
+            or before_revision[0].get("id")!=1 or type(before_revision[0].get("revision")) is not int):
+        raise RuntimeError("Known V16 watermark verification requires the original single id=1 row")
+    before=before_revision[0]
+    if after_revision!=[{"id":before["id"],"revision":before["revision"]+1}]:
+        raise RuntimeError("Known V16 evidence revision must advance by exactly one")
+    # The exemption covers only this fixed metadata effect, never other rows or fields.
+    if (set(actual)!=set(expected)
+            or any(actual[name]!=value for name,value in expected.items() if name!="evidence_revision")):
+        raise RuntimeError("Candidate upgrade changed existing business rows outside the fixed V16 watermark")
+    return {"evidence_revision":{"before":before,"after":after_revision[0],"revision_delta":1,
+            "migration":{**V16_WATERMARK_MIGRATION,"installed_rank":new_v16[0]["installed_rank"]},
+            "reason":"V16 storage_key UPDATE fires the existing knowledge_documents statement trigger once"}}
 
 
 def restored_inventory(folder, identity):
@@ -256,6 +286,10 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None,object_con
         actual=database_summary(postgres,"trip_restore")
         if expected!=actual:raise RuntimeError("Restored table contents differ; artifacts retained")
         report.update(tables_verified=len(expected),rows_verified=sum(int(v.split(':')[0]) for v in expected.values()))
+        # Capture from the verified original snapshot before either backend or guard runs.
+        baseline_revision=(json.loads(sql(postgres,"trip_restore",
+            "SELECT json_agg(s ORDER BY id) FROM (SELECT id,revision FROM evidence_revision) s"))
+            if candidate_image and "evidence_revision" in expected else None)
         previous_history=sql(postgres,"trip_restore","SELECT json_agg(s ORDER BY installed_rank) FROM flyway_schema_history s")
         environment=dict(os.environ)
         values=dict(value.split("=",1) for value in json.loads((backup/"runtime/backend.json").read_text()) if "=" in value)
@@ -343,15 +377,21 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None,object_con
             else:raise RuntimeError("Candidate migration/readiness failed; isolated clones retained")
             report["active_backend_ready"]=True
             stage("verify_candidate_original_data_and_migrations")
-            upgraded=database_summary(postgres,"trip_restore",columns=columns)
-            old_tables={k:v for k,v in expected.items() if k!="flyway_schema_history"}
-            if upgraded!=old_tables:raise RuntimeError("Candidate upgrade changed existing business rows; clones retained")
             history=json.loads(previous_history)
             highest=max(row["installed_rank"] for row in history)
             after_history=sql(postgres,"trip_restore",f"SELECT json_agg(s ORDER BY installed_rank) FROM flyway_schema_history s WHERE installed_rank<={highest}")
             if json.loads(after_history)!=history:raise RuntimeError("Published migration history changed")
+            full_history=json.loads(sql(postgres,"trip_restore","SELECT json_agg(s ORDER BY installed_rank) FROM flyway_schema_history s"))
+            upgraded=database_summary(postgres,"trip_restore",columns=columns)
+            old_tables={k:v for k,v in expected.items() if k!="flyway_schema_history"}
+            current_revision=(json.loads(sql(postgres,"trip_restore",
+                "SELECT json_agg(s ORDER BY id) FROM (SELECT id,revision FROM evidence_revision) s"))
+                if baseline_revision is not None else None)
+            metadata_changes=verify_candidate_original_rows(old_tables,upgraded,columns,history,full_history,
+                                                             baseline_revision,current_revision)
             report["upgrade"]={"candidate_image_id":json.loads(docker("image","inspect",candidate_image))[0]["Id"],
-                               "candidate_ready":True,"original_business_tables_unchanged":len(columns),
+                               "candidate_ready":True,"original_business_tables_unchanged":len(columns)-len(metadata_changes),
+                               "original_tables_checked":len(columns),"verified_migration_metadata_changes":metadata_changes,
                                "original_migrations_unchanged":len(history),
                                "schema_version":sql(postgres,"trip_restore","SELECT version FROM flyway_schema_history WHERE success ORDER BY installed_rank DESC LIMIT 1")}
         report["passed"]=True;stage("complete")

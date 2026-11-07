@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import zlib
 
 import pytest
 
@@ -170,3 +171,77 @@ def test_overlapping_subnet_is_reported_before_creating_docker_resources(tmp_pat
     assert report["containers"] == [] and report["network_created"] is False
     assert not any(command[:2] == ("network", "create") for command in calls)
     assert_no_cleanup(calls)
+
+
+@pytest.fixture
+def v16_watermark():
+    history=[{"installed_rank":14,"version":"14","success":True}]
+    return {"expected":{"users":"44:original-users","evidence_revision":"1:original-watermark"},
+            "actual":{"users":"44:original-users","evidence_revision":"1:migrated-watermark"},
+            "columns":{"users":["id","username"],"evidence_revision":["id","revision"]},
+            "before_history":history,
+            "after_history":[*history,{"version":"16","type":"SQL","script":"V16__object_storage.sql",
+                                      "checksum":-2146005944,"success":True,"installed_rank":16}],
+            "before_revision":[{"id":1,"revision":161}],"after_revision":[{"id":1,"revision":162}]}
+
+
+def test_fixed_v16_accepts_exact_single_statement_watermark_effect(v16_watermark):
+    changes=restore.verify_candidate_original_rows(**v16_watermark)
+    assert changes["evidence_revision"]["before"]=={"id":1,"revision":161}
+    assert changes["evidence_revision"]["after"]=={"id":1,"revision":162}
+    assert changes["evidence_revision"]["revision_delta"]==1
+    assert changes["evidence_revision"]["migration"]["checksum"]==-2146005944
+    assert set(changes)=={"evidence_revision"}
+
+
+@pytest.mark.parametrize("delta",[-1,0,2])
+def test_fixed_v16_rejects_any_other_watermark_delta(v16_watermark,delta):
+    v16_watermark["after_revision"][0]["revision"]=161+delta
+    with pytest.raises(RuntimeError,match="exactly one"):
+        restore.verify_candidate_original_rows(**v16_watermark)
+
+
+def test_fixed_v16_does_not_hide_other_original_row_changes(v16_watermark):
+    v16_watermark["actual"]["users"]="44:changed-users"
+    with pytest.raises(RuntimeError,match="outside the fixed V16"):
+        restore.verify_candidate_original_rows(**v16_watermark)
+
+
+@pytest.mark.parametrize("rows",[[],[{"id":2,"revision":162}],
+                                  [{"id":1,"revision":162},{"id":2,"revision":162}]])
+def test_fixed_v16_keeps_watermark_row_identity_and_count(v16_watermark,rows):
+    v16_watermark["after_revision"]=rows
+    with pytest.raises(RuntimeError,match="exactly one"):
+        restore.verify_candidate_original_rows(**v16_watermark)
+
+
+@pytest.mark.parametrize("field,value",[("version","17"),("type","JDBC"),
+    ("script","V16__different.sql"),("checksum",-2146005943),("success",False),("installed_rank",14)])
+def test_watermark_effect_requires_the_exact_newly_applied_v16(v16_watermark,field,value):
+    v16_watermark["after_history"][-1][field]=value
+    with pytest.raises(RuntimeError,match="changed existing business rows"):
+        restore.verify_candidate_original_rows(**v16_watermark)
+
+
+def test_baseline_v16_cannot_receive_another_watermark_exemption(v16_watermark):
+    v16_watermark["before_history"]=v16_watermark["after_history"][:]
+    with pytest.raises(RuntimeError,match="changed existing business rows"):
+        restore.verify_candidate_original_rows(**v16_watermark)
+    v16_watermark["actual"]=v16_watermark["expected"].copy()
+    v16_watermark["after_revision"]=v16_watermark["before_revision"][:]
+    assert restore.verify_candidate_original_rows(**v16_watermark)=={}
+
+
+def test_known_v16_cannot_hide_other_original_watermark_columns(v16_watermark):
+    v16_watermark["columns"]["evidence_revision"].append("other_state")
+    with pytest.raises(RuntimeError,match="original evidence revision columns"):
+        restore.verify_candidate_original_rows(**v16_watermark)
+
+
+def test_known_v16_checksum_matches_the_published_sql():
+    migration=Path(__file__).resolve().parents[2]/"business-backend/src/main/resources/db/migration/V16__object_storage.sql"
+    checksum=0
+    for line in migration.read_text(encoding="utf-8-sig").splitlines():
+        checksum=zlib.crc32(line.encode("utf-8"),checksum)
+    if checksum>=2**31:checksum-=2**32
+    assert checksum==restore.V16_WATERMARK_MIGRATION["checksum"]==-2146005944
