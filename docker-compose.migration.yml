@@ -1,7 +1,12 @@
 # Isolated offline migration verification; never loads daily credentials or data.
 services:
   postgres:
-    image: postgres:17.11-alpine
+    image: trip-planner-postgres:17.11-security1
+    build:
+      context: ./deploy/images
+      dockerfile: postgres.Dockerfile
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     environment:
       POSTGRES_USER: trip
       POSTGRES_PASSWORD: migration-fixture-only

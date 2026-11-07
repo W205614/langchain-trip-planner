@@ -10,9 +10,15 @@ python -m pip install python-dotenv==1.2.3 cryptography==50.0.1
 
 实际数据库配置写入所选运行目录的 `business.env`；CA挂载目录变量写入 Compose读取的 `public.env`。完整 cloud-db overlay 命令见 [公开部署](public-deployment.md#s3-与云-postgresql)，仅把云地址写进源 `backend/.env` 不会改变已创建容器。
 
+备份客户端镜像与应用部署共用 `deploy/images/postgres.Dockerfile`。独立连接云数据库前，在仓库根目录构建一次：
+
+```powershell
+docker build -f deploy/images/postgres.Dockerfile -t trip-planner-postgres:17.11-security1 deploy/images
+```
+
 ## 支持范围
 
-- PostgreSQL **17.x**；客户端固定官方 `postgres:17.11-alpine`，实际镜像 ID 写入清单，恢复也使用这份 PostgreSQL17 镜像。
+- PostgreSQL **17.x**；客户端使用 `trip-planner-postgres:17.11-security1`（官方 PostgreSQL17.11，刷新 Alpine 签名安全包），实际镜像 ID 写入清单，恢复也使用这份 PostgreSQL17 镜像。
 - 显式单主机 URL：`jdbc:postgresql://host[:port]/database`。IPv4、普通 DNS 名、无 scope 的 IPv6 地址；数据库与用户为不超过63个字符的简单 ASCII 名称。
 - 凭据仅使用独立 `POSTGRES_USER`／`POSTGRES_PASSWORD`，不接受 URL 中的用户名、密码、userinfo 或重复参数。
 - URL 参数仅支持 `sslmode`、`sslrootcert`、`sslcert`、`sslkey`、`connectTimeout`（1–300秒）和 `ApplicationName`。未知参数明确失败，不做静默忽略或连接降级。

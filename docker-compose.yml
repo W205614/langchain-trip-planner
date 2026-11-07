@@ -1,7 +1,12 @@
 name: langchain-trip-planner
 services:
   postgres:
-    image: postgres:17.11-alpine
+    image: trip-planner-postgres:17.11-security1
+    build:
+      context: ./deploy/images
+      dockerfile: postgres.Dockerfile
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
     env_file: ./deploy/runtime/postgres.env
     volumes: ["java_business_data:/var/lib/postgresql/data"]
     healthcheck:

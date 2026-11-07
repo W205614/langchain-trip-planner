@@ -69,10 +69,10 @@ _GAODE_CITY_MAX_CHUNKS = 12
 
 
 class _OpenAICompatEmbeddings(LangChainEmbeddings):
-    """嵌入模型 (OpenAI 兼容接口)
+    """OpenAI 官方 Embedding 适配器。
 
-    通过中转/兼容端点 (如 SiliconFlow 等, 复用 LLM 的 base_url + api_key)
-    调用 text-embedding 模型, 使用带总超时的 HTTP 适配器;
+    使用独立的官方 Embedding 端点与模型，可复用后端项目密钥；
+    请求通过带总超时的 HTTP 适配器发送。
     实现 LangChain Embeddings 接口 (embed_documents/embed_query), 供 ChromaDB 使用。
     """
 

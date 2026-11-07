@@ -7,7 +7,8 @@
   "go_toolchain": "1.27.3",
   "dependency_patches": {
     "golang.org/x/net": "v0.60.0",
-    "google.golang.org/grpc": "v1.83.2"
+    "google.golang.org/grpc": "v1.83.2",
+    "github.com/klauspost/compress": "v1.20.3"
   },
   "additional_minimum_version_selection": {
     "golang.org/x/crypto": "v0.57.0",
@@ -18,14 +19,25 @@
     "go_directive": "1.26.0"
   },
   "lock_sha256": {
-    "alertmanager.go.mod": "b1ecabe5126d1ae65ba6640bfdf880a044a1e030f88c35cb7f318173ccba0132",
-    "alertmanager.go.sum": "9ee7df7a8bff95266e74408df2e80d032dffd8894f235a10d49d34abd9453029"
+    "alertmanager.go.mod": "d5bd317913734f2dca7411cce7bf66db10157dc2fabe054a2cceb4b33714ec1b",
+    "alertmanager.go.sum": "82bc73c1783fb20254370add212a40a9d057061729604b31805dbdffc4540401"
   },
   "prometheus": {
-    "version": "3.15.1",
-    "official_image": "prom/prometheus:v3.15.1",
-    "official_repo_digest": "sha256:d445d1806b38f85b5c394a1b87f94113fde0473b45245922c2e8b1bd41fa68ae",
-    "binary_policy": "copy unmodified official static binaries; replace only vulnerable BusyBox rootfs with signed-updated Alpine 3.24"
+    "version": "3.16.0",
+    "official_image": "prom/prometheus:v3.16.0",
+    "official_repo_digest": "sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06",
+    "source_commit": "e2e28adeee2c5883d000fc82aca6008cfbf7e96d",
+    "source_archive_sha256": "5691de55569c79ac40b5ddef0336cfd13f8b50ae85e541f401af16be45b9a270",
+    "official_web_ui_sha256": "000a45231f6dd22a5703218aad3ee11da125c8a44d1824a27670416c07531001",
+    "dependency_patches": {
+      "golang.org/x/net": "v0.62.0"
+    },
+    "official_compress_version": "v1.20.3",
+    "binary_policy": "Official source and builtinassets UI; only x/net is raised for GO-2026-6860; build-info checks both security dependency versions.",
+    "lock_sha256": {
+      "prometheus.go.mod": "f7e438f3e92cbd4f9644a71c08e18dadcecb1bbfe85b1da5badcabdc56c0aa95",
+      "prometheus.go.sum": "154eefa834955d0b817ba16011c74ef7acb29181c8a06b36b8e0a6b62ed218fa"
+    }
   },
   "official_web_ui": {
     "url": "https://github.com/prometheus/alertmanager/releases/download/v0.34.1/alertmanager-web-ui-0.34.1.tar.gz",

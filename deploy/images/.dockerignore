@@ -2,6 +2,9 @@
 # artifacts or configuration are excluded unless explicitly required here.
 *
 !prometheus.Dockerfile
+!prometheus.go.mod
+!prometheus.go.sum
+!postgres.Dockerfile
 !alertmanager.Dockerfile
 !alertmanager.go.mod
 !alertmanager.go.sum
