@@ -4,8 +4,8 @@
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
-    "docker-compose.yml": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
-    "docker-compose.production.yml": "81e917866e3e021f1e46b6de77c2749741d1dd4354990442b0489c035f800905",
+    "docker-compose.yml": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
+    "docker-compose.production.yml": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
     "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
     "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
@@ -451,5 +451,11 @@
     }
   ],
   "review_policy": "source_and_artifact_bound",
-  "review_note": "2026-11-07: Reassessed the sole production Compose change: the Alertmanager read-only config source is now selectable. Agent command, privileges, persistent mounts, native source/patches and locked package installation remain identical. All nine native ABI/backport image regressions passed against the rebuilt artifact. No new advisory or version is suppressed by this metadata update."
+  "review_note": "2026-11-07: Reassessed the sole production Compose change: the Alertmanager read-only config source is now selectable. Agent command, privileges, persistent mounts, native source/patches and locked package installation remain identical. All nine native ABI/backport image regressions passed against the rebuilt artifact. No new advisory or version is suppressed by this metadata update.",
+  "source_binding_review": {
+    "path": "docs/evidence/release-20261107/startup-dependency-review.json",
+    "sha256": "13c0f7af5715b0321af84c69de5b4853aa776f5d73082fef283ad17851add167",
+    "base_revision": "33a6d5dfa47ac027955eaac0ae667e9ce31e7ff1",
+    "scope": "Dependency-only Compose startup ordering; assessments and scanner policy unchanged."
+  }
 }

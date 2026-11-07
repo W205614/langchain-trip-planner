@@ -24,6 +24,7 @@ contracts/openapi-3.1.LICENSE -text
 
 # Preserve upstream legal text, including intentional terminal blank lines.
 docs/licenses/*.txt -text -whitespace
+docs/evidence/release-20261107/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/public-operations-20261107/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/public-operations-20261107/codeql/**/*.sarif -text -whitespace
 docs/evidence/public-operations-20261107/codeql/**/*.log -text -whitespace

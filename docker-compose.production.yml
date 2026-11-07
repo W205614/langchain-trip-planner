@@ -63,6 +63,9 @@ services:
       VALIDATION_ALLOW_FIXTURES: 'no'
       ADMIN_MFA_REQUIRED: 'true'
   agent:
+    depends_on:
+      backend:
+        condition: service_healthy
     build:
       context: ./backend
       args:

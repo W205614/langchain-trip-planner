@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-11-07T13:04:40.926565+00:00",
+  "reviewer": "Codex license_audit sub-agent; independent source/Compose semantic review; no human approval or production deployment claimed",
+  "base_revision": "33a6d5dfa47ac027955eaac0ae667e9ce31e7ff1",
+  "scope": "Only the two new Agent-to-Java healthy startup dependencies and the directly affected VEX/vendor Compose source bindings. Root CodeQL policy is not changed by this review.",
+  "failure_evidence_boundary": "Release coordinator observed daily Agent exit3 with verify_dataset -> Java connection refusal. This reviewer independently verified the startup dependency in owning source; it did not collect the initial container log.",
+  "root_cause_proof": [
+    "prepare_java_deployment.py emits the same newly generated DATASET_ID for business and Agent runtime files.",
+    "Agent lifespan calls verify_dataset before yielding startup; verify_dataset performs an authenticated GET to fixed BUSINESS_URL/internal/v2/dataset and fails on a connection error or dataset mismatch. There is no bounded-retry fallback in this path.",
+    "Before this change neither application Compose file declared the Agent startup dependency on Java readiness. Starting all stopped services together can reach the dataset check before Java is listening."
+  ],
+  "acyclic_proof": [
+    "Both Compose files declare backend -> postgres(service_healthy); neither backend depends_on includes Agent.",
+    "Java HealthController.ready checks SingleInstance.owned when workers are enabled and queries evidence_revision in PostgreSQL; it never calls Agent readiness or capabilities.",
+    "SingleInstance acquires/verifies its PostgreSQL advisory-lock connection. DeploymentIdentity initialization validates PostgreSQL and upload/storage dataset ownership, with local or configured object storage; it does not wait on Agent.",
+    "The added dependency is agent -> backend(service_healthy), so the core order is postgres -> backend -> agent, with frontend separately depending on backend.",
+    "The cloud-database overlay resets only backend -> local postgres. It retains agent -> backend and therefore introduces no reverse dependency or cycle."
+  ],
+  "changes": [
+    {
+      "path": "docker-compose.yml",
+      "base_sha256_lf": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
+      "current_sha256_lf": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
+      "exact_git_diff": "diff --git a/docker-compose.yml b/docker-compose.yml\nindex 7a49114..0dd1cf2 100644\n--- a/docker-compose.yml\n+++ b/docker-compose.yml\n@@ -43,6 +43,9 @@ services:\n     logging: {driver: json-file, options: {max-size: \"10m\", max-file: \"3\"}}\n \n   agent:\n+    depends_on:\n+      backend:\n+        condition: service_healthy\n     build:\n       context: ./backend\n       args:\n",
+      "only_semantic_change": "services.agent.depends_on.backend.condition = service_healthy",
+      "all_other_compose_fields_exactly_equal": true,
+      "dependency_graph": {
+        "postgres": [],
+        "backend": [
+          "postgres"
+        ],
+        "agent": [
+          "backend"
+        ],
+        "frontend": [
+          "backend"
+        ]
+      },
+      "has_no_dependency_cycle": true,
+      "valid_dependency_first_order": [
+        "postgres",
+        "backend",
+        "agent",
+        "frontend"
+      ]
+    },
+    {
+      "path": "docker-compose.production.yml",
+      "base_sha256_lf": "81e917866e3e021f1e46b6de77c2749741d1dd4354990442b0489c035f800905",
+      "current_sha256_lf": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
+      "exact_git_diff": "diff --git a/docker-compose.production.yml b/docker-compose.production.yml\nindex f80125f..c7d5352 100644\n--- a/docker-compose.production.yml\n+++ b/docker-compose.production.yml\n@@ -63,6 +63,9 @@ services:\n       VALIDATION_ALLOW_FIXTURES: 'no'\n       ADMIN_MFA_REQUIRED: 'true'\n   agent:\n+    depends_on:\n+      backend:\n+        condition: service_healthy\n     build:\n       context: ./backend\n       args:\n",
+      "only_semantic_change": "services.agent.depends_on.backend.condition = service_healthy",
+      "all_other_compose_fields_exactly_equal": true,
+      "dependency_graph": {
+        "postgres": [],
+        "backend": [
+          "postgres"
+        ],
+        "agent": [
+          "backend"
+        ],
+        "frontend": [
+          "backend"
+        ],
+        "prometheus": [],
+        "alertmanager": [],
+        "alert-receiver": []
+      },
+      "has_no_dependency_cycle": true,
+      "valid_dependency_first_order": [
+        "postgres",
+        "backend",
+        "agent",
+        "frontend",
+        "prometheus",
+        "alertmanager",
+        "alert-receiver"
+      ]
+    }
+  ],
+  "supporting_source_sha256_lf": {
+    "business-backend/src/main/java/com/tripplanner/api/HealthController.java": "18deecb9b3ea7bdaa3cd78ea899ff459fc662d9228911e198552260e32797e2f",
+    "business-backend/src/main/java/com/tripplanner/domain/SingleInstance.java": "2f465c20b1d8a95ee35411aef34df1c70c85dfb73f55db8db89f7efb14658fac",
+    "business-backend/src/main/java/com/tripplanner/domain/DeploymentIdentity.java": "38924e3b37254c593fcf6a620f86230970e55bcb5fcf9efa6a7a932f22f64d57",
+    "backend/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
+    "backend/app/agent_api/main.py": "1162a712d8c24ca25c77b87d740576ebeb23bddb02b2c004745bde42ab18001f",
+    "backend/scripts/prepare_java_deployment.py": "2ad163bc9474b90d6c05b155a9bde985d720221cc65357c64ff7676ad88763dd",
+    "docker-compose.cloud-db.yml": "32e9096796a03d2ed6bb20a233d917095dd1d72e498825ccc828fd8d04d60584"
+  },
+  "security_preconditions_independently_checked": {
+    "comparison_method": "Parse both complete Compose documents, construct the exact expected dependency-only change, require object equality, then remove the new dependency and require exact semantic equality with the candidate baseline. Separately compare every bound policy source hash.",
+    "unchanged_agent_conditions": [
+      "image/build context and revision argument",
+      "uvicorn command, module, worker count and default image user",
+      "cap_drop ALL and no-new-privileges",
+      "read-only root filesystem and bounded tmpfs options",
+      "runtime/Chroma persistent mounts and permissions",
+      "exposed ports, host bind addresses and network declarations",
+      "environment and referenced private env_file paths",
+      "CPU/memory/PID/logging limits and healthcheck definitions"
+    ],
+    "unchanged_chroma_context": "No Chroma version, embedded_settings constructor, collection/tenant/embedding HTTP exposure, credential path, authorization or RAG/index/rebuild source changed. The four exact advisory assessments retain their existing scope and limitations.",
+    "unchanged_native_context": "No base image, installed package lock, native source/patch, ABI, ELF fingerprint, absent-path requirement or reviewed native advisory changes. All twelve vendor assessment payloads remain byte-for-byte equal as canonical JSON.",
+    "no_secret_material_read_or_published": "Only tracked source/Compose/policy files were read; referenced private environment file bodies were not included.",
+    "scan_boundary": "This source/config review does not replace a current dependency/image scan, prove native parser safety, or report a new startup result. The release coordinator is responsible for the isolated four-service startup and final actual-image/CI checks."
+  },
+  "policy_binding_reviews": [
+    {
+      "path": ".github/security-vex-remediated.json",
+      "base_policy_sha256": "377d9cdf3e2dd8f2f9c73927620ade46c7764b5a44be1314b6593f43e95cf640",
+      "unchanged_assessments_sha256_canonical_json": "4345bc0607afb32e2cffcb21bc3a639564428e0ec8c39cf4a9cc33fe25346e45",
+      "assessment_count": 4,
+      "reviewed_binding_changes": [
+        {
+          "path": "docker-compose.yml",
+          "before_sha256_lf": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
+          "after_sha256_lf": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb"
+        }
+      ],
+      "all_other_source_bindings_unchanged": true,
+      "schema_and_review_policy_unchanged": true,
+      "assessment_payloads_thresholds_scanners_and_advisory_ids_unchanged": true
+    },
+    {
+      "path": ".github/security-vendor-remediated.json",
+      "base_policy_sha256": "cfe993584bd2e2b0e00b3bc22f012b203df778ceef368e9db01ad100daad6817",
+      "unchanged_assessments_sha256_canonical_json": "d93f6a51c6b75647f7f42af97b2cbf5487eb9c1c0be0847246bb1cc7a4e88dfd",
+      "assessment_count": 12,
+      "reviewed_binding_changes": [
+        {
+          "path": "docker-compose.yml",
+          "before_sha256_lf": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
+          "after_sha256_lf": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb"
+        },
+        {
+          "path": "docker-compose.production.yml",
+          "before_sha256_lf": "81e917866e3e021f1e46b6de77c2749741d1dd4354990442b0489c035f800905",
+          "after_sha256_lf": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c"
+        }
+      ],
+      "all_other_source_bindings_unchanged": true,
+      "schema_and_review_policy_unchanged": true,
+      "assessment_payloads_thresholds_scanners_and_advisory_ids_unchanged": true
+    }
+  ],
+  "validation_status": {
+    "compose_semantic_delta_exact": true,
+    "both_dependency_graphs_acyclic": true,
+    "all_non_compose_source_bindings_unchanged": true,
+    "four_service_runtime_validation": "pending release coordinator",
+    "final_ci": "pending final commit"
+  },
+  "preserved_historical_evidence": "docs/evidence/itinerary-facts-20261107/codeql/33a6d5d/ remains unchanged; final CodeQL rescans must be verified against the final commit."
+}

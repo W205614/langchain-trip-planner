@@ -1,0 +1,214 @@
+diff --git a/backend/.dockerignore b/backend/.dockerignore
+index f559f52..fe182c7 100644
+--- a/backend/.dockerignore
++++ b/backend/.dockerignore
+@@ -1,5 +1,6 @@
+-.env
+-.env.docker
++.env*
++!.env.example
++runtime/
+ __pycache__/
+ *.py[cod]
+ .pytest_cache/
+@@ -13,4 +14,5 @@ data/knowledge_uploads/
+ data/agent-runtime/
+ data/backups/
+ data/*.sqlite3*
++data/*.lock
+ scripts/rag_current_validation.py
+diff --git a/backend/app/agent_api/extraction.py b/backend/app/agent_api/extraction.py
+index 394fba1..e5ab5f5 100644
+--- a/backend/app/agent_api/extraction.py
++++ b/backend/app/agent_api/extraction.py
+@@ -1,8 +1,12 @@
+ """File bytes and visible facts only; no business ORM or publication authority."""
+ import base64
++import io
+ import json
++import math
+ import os
+ import re
++import threading
++from contextlib import closing
+ import httpx
+ from langchain_core.messages import HumanMessage, SystemMessage
+ from ..services.llm_service import build_chat_model
+@@ -11,6 +15,10 @@ from ..config import get_settings
+ from ..services.call_budget import hooks, async_hooks
+ 
+ 
++# PDFium forbids simultaneous calls even for separate documents.
++_PDF_LOCK = threading.Lock()
++
++
+ class ExtractedFacts(BaseModel):
+     summary: str = Field(default="", max_length=600)
+     facts: list[str] = Field(default_factory=list, max_length=20)
+@@ -30,17 +38,22 @@ def extract(body):
+             media=response.headers.get("content-type", "").split(";")[0]
+     pages=[]
+     if media=="application/pdf":
+-        import pymupdf
+-        with pymupdf.open(stream=bytes(content), filetype="pdf") as document:
++        import pypdfium2 as pdfium
++        with _PDF_LOCK, pdfium.PdfDocument(bytes(content)) as document:
+             if not 1<=len(document)<=10:
+                 raise ValueError("PDF must contain 1-10 pages")
+-            for page in document:
+-                if page.rect.width*page.rect.height*2.25>24_000_000:
+-                    raise ValueError("PDF rendering pixel budget exceeded")
+-                pages.append((page.get_pixmap(matrix=pymupdf.Matrix(1.5,1.5),alpha=False).tobytes("png"),"image/png"))
++            for number in range(len(document)):
++                with closing(document[number]) as page:
++                    width, height = page.get_size()
++                    if math.ceil(width*1.5)*math.ceil(height*1.5)>24_000_000:
++                        raise ValueError("PDF rendering pixel budget exceeded")
++                    with closing(page.render(scale=1.5)) as bitmap:
++                        with bitmap.to_pil() as image:
++                            output = io.BytesIO()
++                            image.save(output, format="PNG")
++                    pages.append((output.getvalue(),"image/png"))
+     else:
+         from PIL import Image
+-        import io
+         with Image.open(io.BytesIO(content)) as image:
+             decoded = {"JPEG":"image/jpeg","PNG":"image/png","GIF":"image/gif","WEBP":"image/webp"}.get(image.format)
+             if decoded != media:
+diff --git a/backend/requirements.in b/backend/requirements.in
+index 6b30d61..86d6d3d 100644
+--- a/backend/requirements.in
++++ b/backend/requirements.in
+@@ -24,7 +24,7 @@ PyJWT==2.15.1
+ 
+ # CORS支持
+ python-multipart>=0.0.9
+-pymupdf>=1.24.0
++pypdfium2==5.15.0
+ # Pillow does not backport current image-decoder security fixes to 12.x.
+ Pillow==13.0.0
+ 
+diff --git a/backend/requirements.lock b/backend/requirements.lock
+index 552bf16..73af120 100644
+--- a/backend/requirements.lock
++++ b/backend/requirements.lock
+@@ -90,7 +90,7 @@ pydantic-core==2.46.5
+ pydantic-settings==2.15.0
+ pygments==2.21.0
+ pyjwt==2.15.1
+-pymupdf==1.28.2
++pypdfium2==5.15.0
+ pypika==0.51.1
+ pyproject-hooks==1.2.0
+ pytest==9.1.1
+diff --git a/backend/tests/test_agent_extraction.py b/backend/tests/test_agent_extraction.py
+index e8d34d2..c93c395 100644
+--- a/backend/tests/test_agent_extraction.py
++++ b/backend/tests/test_agent_extraction.py
+@@ -1,5 +1,7 @@
+ import io
++import base64
+ from contextlib import contextmanager
++from concurrent.futures import ThreadPoolExecutor
+ from types import SimpleNamespace
+ import pytest
+ from PIL import Image
+@@ -53,3 +55,64 @@ def test_corrupt_image_never_reaches_model(monkeypatch):
+     monkeypatch.setattr(extraction,"build_chat_model",lambda **kwargs:pytest.fail("No model call on invalid input"))
+     with pytest.raises(Exception):
+         extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"test"})
++
++
++def pdf(page_count=1, size=(32, 24)):
++    import pypdfium2 as pdfium
++    output = io.BytesIO()
++    with pdfium.PdfDocument.new() as document:
++        for _ in range(page_count):
++            document.new_page(*size).close()
++        document.save(output)
++    return output.getvalue()
++
++
++def test_real_pdf_pages_render_before_vision_calls(monkeypatch):
++    wire(monkeypatch, pdf(2), "application/pdf")
++    calls = []
++    def invoke(messages):
++        encoded = messages[1].content[1]["image_url"]["url"].split(",", 1)[1]
++        with Image.open(io.BytesIO(base64.b64decode(encoded))) as image:
++            assert image.format == "PNG"
++            assert image.size == (48, 36)
++        calls.append(messages)
++        return SimpleNamespace(content='{"summary":"PDF page","facts":["Visible fact"]}')
++    monkeypatch.setattr(extraction, "build_chat_model", lambda **kwargs: SimpleNamespace(invoke=invoke))
++    result = extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"PDF"})
++    assert len(calls) == 2
++    assert len(result["pages"]) == 2
++    assert "来源页: 2" in result["pages"][1]
++
++
++@pytest.mark.parametrize("content, message", [
++    (lambda: pdf(11), "1-10 pages"),
++    (lambda: pdf(size=(4000, 4000)), "pixel budget"),
++])
++def test_pdf_limits_reject_before_model_call(monkeypatch, content, message):
++    wire(monkeypatch, content(), "application/pdf")
++    monkeypatch.setattr(extraction, "build_chat_model", lambda **kwargs: pytest.fail("No model call on invalid PDF"))
++    with pytest.raises(ValueError, match=message):
++        extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"PDF"})
++
++
++def test_corrupt_pdf_never_reaches_model(monkeypatch):
++    import pypdfium2 as pdfium
++    wire(monkeypatch, b"%PDF-1.7\ninvalid", "application/pdf")
++    monkeypatch.setattr(extraction, "build_chat_model", lambda **kwargs: pytest.fail("No model call on corrupt PDF"))
++    with pytest.raises(pdfium.PdfiumError):
++        extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"PDF"})
++
++
++def test_concurrent_pdf_extractions_render_complete_pages(monkeypatch):
++    wire(monkeypatch, pdf(2), "application/pdf")
++    def invoke(messages):
++        encoded = messages[1].content[1]["image_url"]["url"].split(",", 1)[1]
++        with Image.open(io.BytesIO(base64.b64decode(encoded))) as image:
++            image.load()
++            assert image.size == (48, 36)
++        return SimpleNamespace(content='{"summary":"PDF page","facts":[]}')
++    monkeypatch.setattr(extraction, "build_chat_model", lambda **kwargs: SimpleNamespace(invoke=invoke))
++    body = {"document_id":1,"document_version":2,"city":"北京","title":"PDF"}
++    with ThreadPoolExecutor(max_workers=4) as executor:
++        results = list(executor.map(extraction.extract, [body] * 8))
++    assert all(len(result["pages"]) == 2 for result in results)
+diff --git a/backend/tests/test_itinerary_fact_quality.py b/backend/tests/test_itinerary_fact_quality.py
+index d0b901a..9390cc4 100644
+--- a/backend/tests/test_itinerary_fact_quality.py
++++ b/backend/tests/test_itinerary_fact_quality.py
+@@ -13,6 +13,7 @@ from test_time_planner import Routes, scenario
+ 
+ 
+ def test_explicit_reduction_is_enforced_after_revision_protection(monkeypatch, tmp_path):
++    monkeypatch.delenv("DATABASE_URL", raising=False)
+     from app.agent_api import main
+     from app.agents import trip_planner_agent
+     from app.services import durable_execution as durable
+diff --git a/business-backend/.dockerignore b/business-backend/.dockerignore
+new file mode 100644
+index 0000000..f1302a3
+--- /dev/null
++++ b/business-backend/.dockerignore
+@@ -0,0 +1,6 @@
++target/
++.env
++.env.*
++*.log
++.idea/
++.vscode/
+diff --git a/frontend/.dockerignore b/frontend/.dockerignore
+index f13548d..c10055b 100644
+--- a/frontend/.dockerignore
++++ b/frontend/.dockerignore
+@@ -3,3 +3,5 @@ dist/
+ .vite/
+ test-results/
+ playwright-report/
++.env.local
++.env.*.local

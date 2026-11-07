@@ -49,11 +49,14 @@ docker compose -p langchain-trip-planner -f $dailyCompose logs --tail 100 backen
 需要日常使用时，以下命令启动已有七个容器；暂停时停止全部七服务，保留配置、镜像、数据卷与绑定目录。仅在需要运行服务时执行 `start`：
 
 ```powershell
-docker compose -p langchain-trip-planner -f $dailyCompose start
+docker compose -p langchain-trip-planner -f $dailyCompose start --wait postgres backend
+docker compose -p langchain-trip-planner -f $dailyCompose start --wait agent frontend prometheus alertmanager alert-receiver
 docker compose -p langchain-trip-planner -f $dailyCompose stop
 ```
 
 修改运行环境文件后，`start` / `restart` 不会重新载入新配置；确认需要更新时，在同一项目和 Compose 文件下仅重建受影响服务，例如 `docker compose -p langchain-trip-planner -f $dailyCompose up -d --no-build --force-recreate agent`。应用升级须先准备并验证新镜像，再更新原配置中的相应镜像引用；保留现有环境文件、挂载、端口与运行限制。不要运行首次配置生成脚本、改用根目录 Compose，或使用 `down -v` 排查问题。
+
+Agent 启动时向 Java 核对 `DATASET_ID`，因此先等待数据库和 Java 就绪，再启动其余服务。首次安装与公开部署的 Compose 已声明 `agent → backend(service_healthy)`；维护既有停止的容器时仍按上面的两阶段命令启动，避免在 Java 尚未就绪时触发 Agent 的连接失败退出。
 
 ## 健康与故障检查
 

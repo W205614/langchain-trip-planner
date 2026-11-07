@@ -43,6 +43,9 @@ services:
     logging: {driver: json-file, options: {max-size: "10m", max-file: "3"}}
 
   agent:
+    depends_on:
+      backend:
+        condition: service_healthy
     build:
       context: ./backend
       args:
