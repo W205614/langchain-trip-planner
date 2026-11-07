@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+from uuid import uuid4
 
 from deployment_assets import docker, inspect, services, sql
 from dotenv import dotenv_values
@@ -44,13 +45,18 @@ SELECT COALESCE(json_agg(grouped ORDER BY storage_bucket,storage_key),'[]'::json
     return json.loads(sql(postgres, database, query, user))
 
 
-def export_snapshot(deployed: dict, output: Path) -> dict | None:
+def export_snapshot(deployed: dict, output: Path, database_client=None) -> dict | None:
     """Export every referenced S3 upload using the selected backend's exact image/env."""
     if any(deployed[name]["State"]["Running"] for name in ("backend", "agent")):
         raise RuntimeError("Stop all writers before exporting object references")
-    postgres, backend = deployed["postgres"], deployed["backend"]
-    pg = dict(item.split("=", 1) for item in postgres["Config"]["Env"] if "=" in item)
-    refs = object_references(postgres["Id"], pg.get("POSTGRES_DB", "trip"), pg.get("POSTGRES_USER", "trip"))
+    if database_client is None:
+        from backup_database import DatabaseClient, private_directory
+        output = output.resolve()
+        private_directory(output, exist_ok=True)
+        with DatabaseClient(deployed, output / ("database-client-" + uuid4().hex[:12])) as client:
+            return export_snapshot(deployed, output, client)
+    backend = deployed["backend"]
+    refs = object_references(database_client.container, database_client.target["database"], database_client.target["user"])
     if not refs:
         return None
     output = output.resolve()
@@ -65,6 +71,9 @@ def export_snapshot(deployed: dict, output: Path) -> dict | None:
         raise ValueError("Unsupported multiline runtime configuration")
     private.write_text("".join(f"{key}={value}\n" for key, value in environment.items()), encoding="utf-8")
     private.chmod(0o600)
+    # Host-created staging retains the selected private parent ACL on Windows;
+    # Linux uses the operator UID below rather than the image's service UID.
+    (output / "data").mkdir(exist_ok=True)
     networks = backend["NetworkSettings"]["Networks"]
     if not networks:
         raise RuntimeError("Backend has no object-service network")
@@ -161,7 +170,7 @@ def main() -> None:
     remap.add_argument("--mapping", required=True, type=Path)
     args = parser.parse_args()
     if args.operation == "export":
-        print(json.dumps(export_snapshot(services(args.project), args.output)))
+        print(json.dumps(export_snapshot(services(args.project, require_postgres=False), args.output)))
     else:
         print(json.dumps({"updated_locations": apply_location_map(args.postgres_container, args.database, args.mapping, args.user)}))
 

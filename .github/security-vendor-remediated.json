@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "reviewed_on": "2026-11-05",
+  "reviewed_on": "2026-11-07",
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
-    "docker-compose.production.yml": "c0b640e932673ba7a7ae9097bca264f874ac75842da8b4297165548b33a337e6",
+    "docker-compose.production.yml": "7815d1439bbdd5269186abbe3e5d03c38e0dbf046c1293c23e7e9f502657787f",
     "backend/runtime-security-packages.json": "02a7b03f1950d99134ac9d2749802859b0c75c7e907faf1cc22928bfa18f316b",
     "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
@@ -447,5 +447,6 @@
       ]
     }
   ],
-  "review_policy": "source_and_artifact_bound"
+  "review_policy": "source_and_artifact_bound",
+  "review_note": "2026-11-07: Reassessed the sole production Compose change: the Alertmanager read-only config source is now selectable. Agent command, privileges, persistent mounts, native source/patches and locked package installation remain identical. All nine native ABI/backport image regressions passed against the rebuilt artifact. No new advisory or version is suppressed by this metadata update."
 }

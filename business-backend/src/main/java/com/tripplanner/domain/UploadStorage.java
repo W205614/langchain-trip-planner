@@ -104,7 +104,11 @@ public class UploadStorage {
     var reservations=db.queryForList("SELECT * FROM upload_reservations WHERE user_id=?",uid);
     if(reservations.stream().anyMatch(row->active.contains((UUID)row.get("id"))))throw new ApiException(409,"资料仍在上传，清理稍后继续","UPLOAD_IN_PROGRESS");
     for(var row:reservations){
-      objects.delete(ObjectStorageService.location(row));
+      var location=ObjectStorageService.location(row);
+      // A missing object does not prove a timed-out, already-started PUT is finished.
+      if(row.get("write_started_at")!=null&&Set.of("reserved","uncertain").contains(row.get("status"))&&objects.stat(location)==null)
+        throw new ApiException(409,"资料保存结果仍待核对，清理稍后继续","UPLOAD_IN_PROGRESS");
+      objects.delete(location);
       db.update("DELETE FROM upload_reservations WHERE id=? AND user_id=?",row.get("id"),uid);
     }
   }

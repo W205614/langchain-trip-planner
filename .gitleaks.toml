@@ -56,3 +56,11 @@ targetRules = ["generic-api-key"]
 paths = ['''(^|/)docs/evidence/optimization-20261026/ci-browser-contract-review\.json$''']
 regexTarget = "secret"
 regexes = ['''^(c70142c2f343f0215a3d4a6f54d1f7744c488594c8f30dccb0f4352ec932068c|3e8b5d56f4cec301d6047e72c1605be570be5971ac53b8b527238a5fba804c51)$''']
+
+[[allowlists]]
+description = "Three exact public Go module h1 checksums in the frozen Caddy build receipt"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/evidence/caddy-security-20261107/build-info\.txt$''']
+regexTarget = "secret"
+regexes = ['''^(FY8oSZpCYoUNv6QxVODuMjQz4IlSOVeiQtZ08vLPz88=|JUlcxA8oAtauLfiH8FX2/FkAWHAdi0QtGCGc\+hofE98=|537ccDDmbwuwX1iof3Vtdz9vow6uJCgrSZJWedAWM0I=)$''']

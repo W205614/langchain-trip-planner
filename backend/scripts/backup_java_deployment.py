@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import tarfile
 from deployment_assets import services, docker, digest, database_summary, database_columns
+from backup_database import DatabaseClient, private_directory
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
@@ -13,7 +14,7 @@ COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
 
 def backup(output, project="langchain-trip-planner", archive_images=False, private_config_dir=None):
     """Version two uses container-side archives for bind mounts AND named volumes."""
-    deployed = services(project)
+    deployed = services(project, require_postgres=False)
     for service in ("backend", "agent"):
         if deployed[service]["State"]["Running"]:
             raise RuntimeError("Stop backend and agent before a consistent backup")
@@ -28,20 +29,26 @@ def backup(output, project="langchain-trip-planner", archive_images=False, priva
             raise ValueError("Private configuration must be a separate directory")
         if any(path.is_symlink() for path in private_config_dir.rglob("*")):
             raise ValueError("Private configuration snapshot does not follow symbolic links")
-    output.mkdir(parents=True)
-    postgres = deployed["postgres"]
-    pg_mount = next((mount for mount in postgres["Mounts"] if mount["Destination"] == "/var/lib/postgresql/data"), None)
-    if pg_mount is None:
-        raise RuntimeError("Missing PostgreSQL persistent data mount")
-    pg_env = dict(value.split("=", 1) for value in postgres["Config"]["Env"] if "=" in value)
-    user = pg_env.get("POSTGRES_USER", "trip")
-    database = pg_env.get("POSTGRES_DB", user)
+    # Validate the effective JDBC source before creating a partial backup directory.
+    client = DatabaseClient(deployed, output / "database-client")
+    private_directory(output)
+    with client:
+        return _backup_connected(output, project, archive_images, private_config_dir, deployed, client)
+
+
+def _backup_connected(output, project, archive_images, private_config_dir, deployed, client):
+    database, user = client.target["database"], client.target["user"]
+    pg_mount = None
+    if client.target["local"]:
+        pg_mount = next((m for m in deployed["postgres"]["Mounts"] if m["Destination"] == "/var/lib/postgresql/data"), None)
+        if pg_mount is None:
+            raise RuntimeError("Missing PostgreSQL persistent data mount")
     with (output / "database.dump").open("wb") as stream:
-        subprocess.run(["docker", "exec", postgres["Id"], "pg_dump", "-U", user, "-d", database,
+        subprocess.run(["docker", "exec", client.container, "pg_dump", "-U", user, "-d", database,
                         "-Fc", "--no-owner"], stdout=stream, stderr=subprocess.PIPE, check=True)
-    summary = database_summary(postgres["Id"], database, user)
+    summary = database_summary(client.container, database, user)
     (output / "database-summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    (output / "database-columns.json").write_text(json.dumps(database_columns(postgres["Id"],database,user),indent=2),encoding="utf-8")
+    (output / "database-columns.json").write_text(json.dumps(database_columns(client.container,database,user),indent=2),encoding="utf-8")
     mounts = {}
     for name, service, destination in (("knowledge_uploads", "backend", "/data/uploads"),
                                       ("chroma", "agent", "/app/data/chroma"),
@@ -56,7 +63,7 @@ def backup(output, project="langchain-trip-planner", archive_images=False, priva
         mounts[name] = {"service": service, "destination": destination, "type": mount["Type"],
                         "source": mount.get("Name") or mount["Source"], "archive": f"{name}.tar"}
     runtime = output / "runtime"
-    runtime.mkdir()
+    private_directory(runtime)
     for name, container in deployed.items():
         # Private backup only. Preserve effective environment without printing credentials.
         (runtime / f"{name}.json").write_text(json.dumps(container["Config"]["Env"]), encoding="utf-8")
@@ -67,14 +74,17 @@ def backup(output, project="langchain-trip-planner", archive_images=False, priva
         private_configuration={"archive":"private-configuration.tar",
             "files":sum(path.is_file() for path in private_config_dir.rglob("*"))}
     from storage_objects import export_snapshot
-    object_snapshot=export_snapshot(deployed,output/"objects")
+    object_snapshot=export_snapshot(deployed,output/"objects",client)
     images = {name: item["Image"] for name, item in deployed.items()}
+    # A logical external dump restores into this known PostgreSQL17 server image,
+    # never into an unrelated local decoy container or the source cloud service.
+    images["postgres"] = client.image
     if archive_images:
         docker("image", "save", "-o", output / "images.tar", *sorted(set(images.values())))
     manifest = {"schema": "Java/Flyway-v2", "created_at": datetime.now(timezone.utc).isoformat(),
-                "project": project, "database": database, "database_user": user, "images": images,
+                "project": project, "database": database, "database_user": user, "database_provenance":client.provenance, "images": images,
                 "mounts": mounts, "object_snapshot":object_snapshot,"private_configuration":private_configuration, "compose_files": deployed["backend"]["Config"]["Labels"].get("com.docker.compose.project.config_files", ""),
-                "postgres_mount": {"type": pg_mount["Type"], "source": pg_mount.get("Name") or pg_mount["Source"], "destination": pg_mount["Destination"]},
+                "postgres_mount": {"type": pg_mount["Type"], "source": pg_mount.get("Name") or pg_mount["Source"], "destination": pg_mount["Destination"]} if pg_mount else None,
                 "sha256": {f.relative_to(output).as_posix(): digest(f) for f in output.rglob("*") if f.is_file()}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps({"backup": str(output), "files": len(manifest["sha256"]), "tables": len(summary),

@@ -5,6 +5,7 @@ Creates a new normal-mode deployment; existing private files are never overwritt
 """
 import argparse
 import json
+import os
 from pathlib import Path
 import secrets
 import base64
@@ -39,7 +40,10 @@ def _validate(values):
 def _write(path, values):
     _validate(values)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text("".join(f"{key}='{value}'\n" for key,value in values.items()), encoding="utf-8")
+    with temporary.open("w", encoding="utf-8") as stream:
+        if os.name != "nt":
+            os.fchmod(stream.fileno(), 0o600)
+        stream.write("".join(f"{key}='{value}'\n" for key,value in values.items()))
     temporary.replace(path)
 
 
@@ -68,7 +72,7 @@ def prepare(output, public=False):
     agent = model_settings(source)
     agent.update(AMAP_API_KEY=source.get("AMAP_MCP_API_KEY") or source.get("AMAP_API_KEY", ""),
         AMAP_TRANSPORT="mcp", AMAP_MCP_URL=source.get("AMAP_MCP_URL", "https://mcp.amap.com/mcp"))
-    agent.update(INTERNAL_SERVICE_KEY=internal, BUSINESS_URL="http://backend:9000", DATA_DIR="/app/data",
+    agent.update(INTERNAL_SERVICE_KEY=internal, BUSINESS_URL="http://backend:9000", DATA_DIR="/app/runtime",
         CHROMA_DIR="/app/data/chroma", APP_ENV="development", ACCEPTANCE_BUDGET_FILE="")
     agent.update(DATASET_ID=dataset, DATASET_ENROLL_NEW="true")
     public_values = None
@@ -92,7 +96,10 @@ def prepare(output, public=False):
         _validate(values)
     if public_values is not None: _validate(public_values)
     output = output.resolve()
-    output.mkdir(parents=True, exist_ok=False)
+    if os.name == "nt":
+        output.mkdir(parents=True, exist_ok=False)
+    else:
+        output.mkdir(parents=True, mode=0o700, exist_ok=False)
     for name, values in configs:
         _write(output / f"{name}.env", values)
     if public_values is not None:
@@ -131,6 +138,10 @@ def upgrade(output):
     forbidden = {"JWT_SECRET_KEY", "POSTGRES_PASSWORD", "DATABASE_URL", "JDBC_DATABASE_URL"}
     if forbidden.intersection(agent):
         raise RuntimeError("Agent runtime config contains business database credentials")
+    if os.name != "nt":
+        output.chmod(0o700)
+        for path in required:
+            path.chmod(0o600)
     _write(output / "business.env", business)
     _write(output / "agent.env", agent)
     print(json.dumps({"private_config": str(output), "upgraded": True,

@@ -1,5 +1,6 @@
 """New deployments must not inherit old Docker credentials or acceptance mode."""
 import importlib.util
+import os
 from pathlib import Path
 
 import pytest
@@ -27,6 +28,11 @@ def test_new_config_is_normal_mode_and_private(tmp_path, monkeypatch):
     assert agent["ACCEPTANCE_BUDGET_FILE"] == ""
     assert agent["INTERNAL_SERVICE_KEY"] == business["INTERNAL_SERVICE_KEY"]
     assert agent["DATASET_ID"] == business["DATASET_ID"]
+    assert agent["DATA_DIR"] == "/app/runtime"
+    assert agent["CHROMA_DIR"] == "/app/data/chroma"
+    if os.name != "nt":
+        assert output.stat().st_mode & 0o777 == 0o700
+        assert all(path.stat().st_mode & 0o777 == 0o600 for path in output.glob("*.env"))
     assert business["DATASET_ENROLL_NEW"] == "true"
     assert business["ACCESS_TOKEN_EXPIRE_MINUTES"] == "120"
     assert not any(key in agent for key in ("JWT_SECRET_KEY", "POSTGRES_PASSWORD", "DATABASE_URL", "JDBC_DATABASE_URL"))
@@ -70,4 +76,7 @@ def test_upgrade_preserves_credentials_and_adds_split_amap_keys(tmp_path, monkey
     assert business["ACCESS_TOKEN_EXPIRE_MINUTES"] == "120"
     import base64
     assert len(base64.b64decode(business["ACCOUNT_SECURITY_ENCRYPTION_KEY"])) == 32
+    if os.name != "nt":
+        assert output.stat().st_mode & 0o777 == 0o700
+        assert all((output/name).stat().st_mode & 0o777 == 0o600 for name in ("postgres.env","business.env","agent.env"))
     assert not any(key in agent for key in ("JWT_SECRET_KEY", "POSTGRES_PASSWORD", "DATABASE_URL", "JDBC_DATABASE_URL"))

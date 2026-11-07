@@ -18,7 +18,7 @@ def inspect(identity):
     return json.loads(docker("inspect", identity))[0]
 
 
-def services(project):
+def services(project, require_postgres=True):
     ids = docker("ps", "-aq", "--filter", f"label=com.docker.compose.project={project}").decode().split()
     found = {}
     for identity in ids:
@@ -33,8 +33,9 @@ def services(project):
             if name in found:
                 raise RuntimeError(f"Multiple {name} containers; select an unambiguous project")
             found[name] = item
-    if set(found) != {"backend", "agent", "postgres", "frontend"}:
-        raise RuntimeError("Expected exactly the four application services")
+    required = {"backend", "agent", "frontend"} | ({"postgres"} if require_postgres else set())
+    if not required <= set(found):
+        raise RuntimeError("Expected exactly the four application services" if require_postgres else "Expected backend, agent and frontend services")
     return found
 
 
