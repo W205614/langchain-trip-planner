@@ -198,7 +198,15 @@
     "unassessed_blocking_after_exact_review": 0,
     "primary_sources_unchanged": true,
     "reviewed_support_source_changes": 0,
-    "supporting_sources_unchanged": 47
+    "supporting_sources_unchanged": 47,
+    "gitleaks_review": {
+      "history_findings": 0,
+      "tracked_findings": 0,
+      "original_false_positive_matches": 2,
+      "classification": "same existing public isolated-service test literal in the frozen source diff",
+      "allowlist_scope": "generic-api-key AND one exact evidence path AND one exact public fixture value",
+      "negative_cases_changed_value_and_other_path_blocked": true
+    }
   },
   "acceptance_source_revision": "dc1e46180a2d903aff3349338ab9c9e115334b9c"
 }

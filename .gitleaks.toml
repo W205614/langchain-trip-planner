@@ -72,3 +72,11 @@ targetRules = ["generic-api-key"]
 paths = ['''(^|/)docs/evidence/personal-closure-20261107/codeql/f74d7fa/reviewed-business-diff\.patch$''']
 regexTarget = "secret"
 regexes = ['''^(2\+f87RXv3l6Rom0t2GN0zOr2dV\+LqOKnxSFVOUEurnc=|FY8oSZpCYoUNv6QxVODuMjQz4IlSOVeiQtZ08vLPz88=|JUlcxA8oAtauLfiH8FX2/FkAWHAdi0QtGCGc\+hofE98=|PpWkvVPB7Fr/No8w\+TfyJ/I6rWZ2YPZhT3JorIg\+06c=|QpMhHZyfYsOsIu5n5QA7TQTLabM4OQJEbKi3pXXnw7U=|SNO55PnWhaDafsOcv16lCA0kdoFMl/YlegWoVsU02s0=|W1X/5rOaAk3/Mjwrt\+DHaiJO6buhruKWrbQ\+pumONkA=|hGCYyvKHCwtwMitj2vU4vYx0Z16N9GyZk9BBnz0wDAE=|l6N77U7tjwB5L056bgrBTJIEdevac/naBZ3iSvDNfpM=|way\+bWYa6lDppZoZcgMbYsvC7GxljxrskdNInRtuthU=)$''']
+
+[[allowlists]]
+description = "Existing public service-auth fixture copied into the exact frozen itinerary source diff"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/evidence/itinerary-facts-20261107/codeql/909fbc4/business-source\.diff$''']
+regexTarget = "secret"
+regexes = ['''^0123456789abcdefghijklmnopqrstuv$''']
