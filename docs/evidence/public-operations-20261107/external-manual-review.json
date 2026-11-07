@@ -1,0 +1,108 @@
+{
+  "reviewed_at_utc": "2026-11-07T06:31:38.385795+00:00",
+  "business_checkpoint": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "scope": "README and current external integration manuals vs owning implementation; documentation-only changes by this reviewer",
+  "documents_lf_sha256": {
+    "docs/operations/public-deployment.md": "f220f828f5dc04f37736ae37477503a493f0b65ecaeea92e0d2fe1d9dabbc289",
+    "docs/operations/object-storage.md": "654b42dee00cf6868cd4ac094289ad0774c5c8829be156007bd082a0c17ff414",
+    "docs/operations/email-accounts.md": "ffabcaa741727e7336ff2301c86a9251bb8ea02b84724b87c94069f01f698bd7",
+    "docs/operations/cloud-postgresql-backup.md": "892f142cdbeb715d1b8318853ae0aae10d8365b81767b7f82e935e29c1722a8a",
+    "docs/operations/openai-migration.md": "ec9b388d268e2d3022cf4d85bf506a65d3bb41a4885f73334101c018b8cc7f12",
+    "docs/amap-mcp.md": "f440797abc477e07e645de85a7e315baa9c877550b27c7ffd35a8653e0296ef8"
+  },
+  "configuration_routing": {
+    "backend/.env": "Preparation/checker input only; not auto-loaded by existing containers",
+    "public.env": "Compose interpolation: domain, runtime directory, CA source directory, Alertmanager config path",
+    "business.env": "Actual backend SMTP/S3/JDBC settings",
+    "agent.env": "Actual OpenAI/AMap settings"
+  },
+  "capabilities": [
+    {
+      "name": "OpenAI and RAG",
+      "manual": "docs/operations/openai-migration.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "checker exit0+passed flag and per-role evidence; rebuild success/preview/generation plus permission-aware retrieval check",
+      "limits": "Access vs live distinct; persistent finite budget; full daily migration not claimed"
+    },
+    {
+      "name": "SMTP accounts and notification",
+      "manual": "docs/operations/email-accounts.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Options only config; real registration/verification/reset receipt and session revocation check; accepted separate from inbox receipt",
+      "limits": "Business STARTTLS/TLS; no SMTP exactly-once or inbox guarantee; disable pauses claiming, erasure cancels"
+    },
+    {
+      "name": "S3 and file migration",
+      "manual": "docs/operations/object-storage.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Real upload/read SHA256, switched/already_current, delete job succeeded/current object absent, new-target restore",
+      "limits": "Status connectivity_checked false; same dataset/source identity; no automatic AWS profile/WebIdentity file-mount propagation to CLI"
+    },
+    {
+      "name": "Cloud PostgreSQL backup and restore",
+      "manual": "docs/operations/cloud-postgresql-backup.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Intended database write/read; TLS negative tests; same-JDBC dump+summary+S3refs; isolated restore/readback",
+      "limits": "PostgreSQL17 singlehost standard project env; no arbitrary Spring overrides; manual maintenance only; private staging Linux/NTFS semantics distinct"
+    },
+    {
+      "name": "HTTPS and proxy",
+      "manual": "docs/operations/public-deployment.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Actual HTTPS/cookie/CSRF/proxy spoof isolation; final Caddy runtime/scan evidence separately linked",
+      "limits": "80/443 template, no custom origin port; actual public DNS/ACME not yet verified"
+    },
+    {
+      "name": "External alerts",
+      "manual": "docs/operations/public-deployment.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Native amtool validity, firing/resolved accepted at actual receiver, native failures observable",
+      "limits": "Alert SMTP STARTTLS only; explicit TRIP_ALERTMANAGER_CONFIG in public.env required; local inbox not external acceptance"
+    },
+    {
+      "name": "Encrypted archive and recovery",
+      "manual": "docs/operations/public-deployment.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Coherent manifest then restic snapshot/check/restore followed by application restore",
+      "limits": "Metadata check not all-byte read or off-host proof; backup scheduler remains disabled"
+    },
+    {
+      "name": "Amap MCP, REST and browser map",
+      "manual": "docs/amap-mcp.md",
+      "config": true,
+      "commands": true,
+      "success_criteria": "Live probe exit0 and passed=true with POI identity, weather, geocode and three route results; not executed in this review",
+      "limits": "Java REST and Python MCP distinct; persistent shared120-tool acceptance budget; MCP tool count does not prove upstream REST count; no bypass of central ledger or fixed REST-only campaign"
+    }
+  ],
+  "fixed_document_gaps": [
+    "Explicit Compose vs service env routing and full public/cloud/monitoring arguments",
+    "Pinned host maintenance dependencies; full model-checker requirements and standalone RAG httpx pin",
+    "S3 full sample, migration API commands and precise status/cleanup criteria",
+    "SMTP disable/erase semantics corrected against implementation",
+    "Final Caddy security/runtime evidence distinguished from historical2.11.7 test",
+    "Amap Java REST/Python MCP ownership and opt-in live command with required --output and persistent budget"
+  ],
+  "core_issue_reported_to_root": {
+    "issue": "Linux runtime config generator could create0755 directories/0644 secret env under umask022",
+    "resolution_owner": "root",
+    "resolution": "Source checkpoint includes0700 directories and0600 secret writes/upgrade; root reported10 native Linux permission cases pass; Windows inherits selected private parent ACL",
+    "this_reviewer_changed_business_source": false
+  },
+  "verification": {
+    "local_links_and_CLI_references": "passed for6 manuals",
+    "powershell_code_blocks": "19 parsed, not executed",
+    "compose_config_with_only_fixture_env": "passed: SMTP/JDBC env, cloud CA readonly mount, selected external alert file mount, local PG absent, frontend not published",
+    "containers_started": false,
+    "external_provider_calls_made": false,
+    "business_directories_clean": true
+  },
+  "scope_limits": "Documentation execution paths and explicit limits checked. Does not mark real cloud providers or public ACME as integrated."
+}

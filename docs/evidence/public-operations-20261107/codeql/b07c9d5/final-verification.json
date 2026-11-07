@@ -1,0 +1,23 @@
+{
+  "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "raw_sarif_directory": "docs/evidence/public-operations-20261107/codeql/b07c9d5",
+  "raw_source_revisions": {
+    "java": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+    "python": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+    "javascript": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+    "actions": "b07c9d5d1636c58875746458f2abc0131f2d9975"
+  },
+  "raw_blocking_findings": 26,
+  "individual_context_reviews": 26,
+  "unknown_identity_or_primary_source_changes": 0,
+  "all_five_business_tree_oids_bound": true,
+  "source_bindings": 47,
+  "review_record": "docs/evidence/public-operations-20261107/codeql/b07c9d5/source-review.json",
+  "review_record_sha256": "311a1a72c1fb415972911d7651e276cde333a802ef760a9a9e6bde0da6f9f5a6",
+  "policy_draft": "docs/evidence/public-operations-20261107/codeql/b07c9d5/policy-draft.json",
+  "public_snapshot_path_hash_array": true,
+  "ignored_raw_snapshot_retained": true,
+  "active_policy_modified_by_collector": false,
+  "activation_status": "Awaiting root independent load/assess against all four current SARIF, then explicit root activation",
+  "complete_repository_identical_after_postscan_changes_claimed": false
+}

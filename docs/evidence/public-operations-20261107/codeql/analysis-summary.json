@@ -1,0 +1,114 @@
+{
+  "source_checkpoint": "93af3415cb7b6842402fadd878a8598294ee997b",
+  "source_snapshot_sha256": "b705e0986f5f620ad2cde98bf0241be191c7581f8851d1c39336a5f80bdf0781",
+  "analysis_origin": "local official CodeQL2.27.4; no GitHub workflow or CI success claimed",
+  "tool": {
+    "version": "2.27.4",
+    "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.4/codeql-bundle-win64.tar.gz",
+    "archive": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64.tar.gz",
+    "directory": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64",
+    "sha256": "d67fead75936c55a241d26c25342747b07f94664b104f719dfe291b665508c4d",
+    "bytes": 700532554,
+    "configuration_verified": true
+  },
+  "python_interpreter_configuration": {
+    "version": "Python 3.11.9",
+    "path_prefix": "C:\\Users\\25452\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0",
+    "official_extractor_option": "python_executable_name=python",
+    "scope": "this collector subprocess only",
+    "initial_failure_retained": "create-python.log"
+  },
+  "query_suite": "security-extended for each of java/python/javascript/actions",
+  "stages": [
+    {
+      "name": "create-java",
+      "exit_code": 0,
+      "elapsed_seconds": 378.0
+    },
+    {
+      "name": "analyze-java",
+      "exit_code": 0,
+      "elapsed_seconds": 139.3
+    },
+    {
+      "name": "create-python",
+      "exit_code": 2,
+      "elapsed_seconds": 27.0
+    },
+    {
+      "name": "create-python-interpreter311",
+      "exit_code": 0,
+      "elapsed_seconds": 217.1
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 221.0
+    },
+    {
+      "name": "create-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 47.3
+    },
+    {
+      "name": "analyze-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 91.0
+    },
+    {
+      "name": "create-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 32.6
+    },
+    {
+      "name": "analyze-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 38.5
+    }
+  ],
+  "valid_successful_stages": 8,
+  "initial_failed_python_attempt_retained": true,
+  "coverage": {
+    "java": "96 compiled main sources out of146 Java files;50 test sources are not part of Maven compile, matching the existing workflow",
+    "python": "235/235 source files",
+    "javascript": "75/75 source files",
+    "actions": "2/2 workflow files"
+  },
+  "sarif": [
+    {
+      "language": "java",
+      "path": "docs/evidence/public-operations-20261107/codeql/java.sarif",
+      "sha256": "09eaf592f96afca010168c3457a164717ed5103584a6aacca01566f02e1c769b",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 21
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/public-operations-20261107/codeql/python.sarif",
+      "sha256": "beb77787cdfe8931b8250db94d3e1fb4795c2ded47d514c620bea95d44477a49",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 2
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/public-operations-20261107/codeql/javascript.sarif",
+      "sha256": "0c70a433baabdc28ac2b1480abdab99d417ec8cf2a7f7b43b2ad156c8e6e0962",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 3
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/public-operations-20261107/codeql/actions.sarif",
+      "sha256": "446ab2837c9ffe724c61d927ef614cbc353394e854ea433cd1506142327dd8b5",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 0
+    }
+  ],
+  "raw_blocking_findings": 26,
+  "new_findings": 4,
+  "changed_existing_csrf_contexts": 11,
+  "unchanged_existing_exact_identities": 11,
+  "source_review_complete": true,
+  "active_policy_changed": false,
+  "schema3_draft_only": true
+}

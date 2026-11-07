@@ -21,5 +21,12 @@ docs/evidence/sqlite-photos-20261105/** -text
 docs/evidence/format-review-20261105/** -text
 contracts/openapi-3.1.schema.json -text
 contracts/openapi-3.1.LICENSE -text
-docs/evidence/public-operations-20261107/codeql/** -text
-docs/evidence/public-operations-20261107/*.json -text
+docs/evidence/public-operations-20261107/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/public-operations-20261107/codeql/**/*.sarif -text -whitespace
+docs/evidence/public-operations-20261107/codeql/**/*.log -text -whitespace
+docs/evidence/public-operations-20261107/codeql/**/*.patch -text -whitespace
+docs/evidence/public-operations-20261107/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/caddy-security-20261107/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/caddy-security-20261107/build-info.txt -text -whitespace
+docs/evidence/caddy-security-20261107/standard-modules.txt -text -whitespace
+docs/evidence/cloud-postgresql-backup-20261107/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol

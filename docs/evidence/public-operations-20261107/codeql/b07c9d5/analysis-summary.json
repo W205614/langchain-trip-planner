@@ -1,0 +1,128 @@
+{
+  "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "analysis_origin": "Local official CodeQL2.27.4 CLI; no GitHub/remote-CI success claimed",
+  "query_suite": "security-extended",
+  "source_snapshot_public": "docs/evidence/public-operations-20261107/codeql/b07c9d5/source-snapshot.json",
+  "source_snapshot_public_sha256": "866e72521aa2544f5102c7ebcdb325c5f6b9533c5bafe876981fbba9daf2cca7",
+  "source_snapshot_original_ignored_sha256": "a6d33c04a57a9f529c6324556eaf0cf221a39314b66c7e4f180d1d78cff490eb",
+  "tool": {
+    "version": "2.27.4",
+    "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.4/codeql-bundle-win64.tar.gz",
+    "archive": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64.tar.gz",
+    "directory": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64",
+    "sha256": "d67fead75936c55a241d26c25342747b07f94664b104f719dfe291b665508c4d",
+    "bytes": 700532554,
+    "configuration_verified": true
+  },
+  "stages": [
+    {
+      "name": "create-java",
+      "exit_code": 0,
+      "elapsed_seconds": 239.6
+    },
+    {
+      "name": "analyze-java",
+      "exit_code": 0,
+      "elapsed_seconds": 71.4
+    },
+    {
+      "name": "create-python",
+      "exit_code": 0,
+      "elapsed_seconds": 128.1
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 113.3
+    },
+    {
+      "name": "create-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 24.5
+    },
+    {
+      "name": "analyze-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 44.8
+    },
+    {
+      "name": "create-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 19.7
+    },
+    {
+      "name": "analyze-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 20.6
+    }
+  ],
+  "all_eight_stages_exit_zero": true,
+  "snapshot_sources_unchanged": true,
+  "business_tree_bindings": {
+    "backend": "ccfccba810bcdd5bf31d8f05dc9570deca6e06ca",
+    "business-backend": "bc18595c8465ccc0f9e0605a58b625c939d377e6",
+    "frontend": "dc8535ec029cbd67a560ed080353078688636e9a",
+    "deploy": "608821351d0067ca1756a10d0dfd3426637a3d73",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "jobs": [
+    {
+      "language": "java",
+      "path": "docs/evidence/public-operations-20261107/codeql/b07c9d5/java.sarif",
+      "sha256": "f36ea902ddbed247c7af94e2df1561bd89a2ff43e34a0749012cd26fbae5f2d9",
+      "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+      "blocking_findings": 21
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/public-operations-20261107/codeql/b07c9d5/python.sarif",
+      "sha256": "a24c6f99ffa4d79f2eb81864196d52f48212e92a4adcd9f4bc46c76887cf5917",
+      "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+      "blocking_findings": 2
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/public-operations-20261107/codeql/b07c9d5/javascript.sarif",
+      "sha256": "15fffa71d5f5556635a062cc75ad787813ebe4ba0b02929ff2d2bba0061a3553",
+      "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+      "blocking_findings": 3
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/public-operations-20261107/codeql/b07c9d5/actions.sarif",
+      "sha256": "ea5f0e49d53c5c4ffa6a59b8778a93e0e586ab6a03567a8ef527458e735cc04f",
+      "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+      "blocking_findings": 0
+    }
+  ],
+  "coverage": {
+    "java": "96/147 Java/Kotlin files:96 main sources compiled,51 test sources outside Maven compile, matching the existing workflow",
+    "python": "237/237 Python files",
+    "javascript": "75/75 JavaScript/TypeScript files",
+    "actions": "2/2 workflow files"
+  },
+  "raw_blocking_findings": 26,
+  "individual_context_reviews": 26,
+  "unknown_new_identities": 0,
+  "active_policy_modified_by_collector": false,
+  "scanned_gate_tool_sources": [
+    {
+      "path": "tools/codeql_context.py",
+      "sha256_lf": "434d2671f27d61e3025a789ea335960fe78c1f9ffdb8b0a132a8cd0204fc9366",
+      "scanned_source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975"
+    },
+    {
+      "path": "tools/tests/test_codeql_context.py",
+      "sha256_lf": "8d80d28ff935fcbb987014736ed792c5d7712aeddacc26e2c5131cae1d72d706",
+      "scanned_source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975"
+    }
+  ],
+  "postscan_nonbusiness_test_contract_change": {
+    "path": "tools/tests/test_active_security_reviews.py",
+    "scan_snapshot_lf_sha256": "dd943926ccc3fe9499fa610a6e8fe6fc16516072170ffa2d266dd1b939cbc247",
+    "current_lf_sha256": "24e554ae2d14f272d9330f4bbea117c9bb06d1a729d6b200d6e9b080dbd8028e",
+    "patch": "docs/evidence/public-operations-20261107/codeql/b07c9d5/postscan-test-contract.patch",
+    "description": "Parent adapts only this test expectation to schema3 for CodeQL context, keeping other review schemas2. This postscan test-contract change is explicitly outside the five production business trees; no claim all later repository bytes equalb07c9d5. The gate implementation and its main contract tests above were actually analyzed inb07."
+  },
+  "scope": "All four raw SARIF files in this batch came fromb07. Later documentation/vendor metadata/test-expectation edits are not represented as the same complete repository tree."
+}

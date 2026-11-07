@@ -1,0 +1,57 @@
+{
+  "purpose": "Release regression after final storage guard and cloud/runtime configuration fixes",
+  "source_checkpoint": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "project": "trip-public-e2e",
+  "base_url": "http://127.0.0.1:18881",
+  "mailpit_url": "http://127.0.0.1:18026",
+  "start_utc": "2026-11-07T06:26:59.724Z",
+  "duration_ms": 26394.655,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "retries": 0,
+  "tests": [
+    {
+      "title": "public registration, verification, notifications, feedback, export and erasure use real services",
+      "status": "passed",
+      "duration_ms": 18457,
+      "retry": 0
+    },
+    {
+      "title": "email password recovery UI consumes a real delivered reset link",
+      "status": "passed",
+      "duration_ms": 5163,
+      "retry": 0
+    }
+  ],
+  "exit_code": 0,
+  "images": {
+    "agent": {
+      "reference": "trip-planner-agent:public-final",
+      "container_image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e"
+    },
+    "amap-fixture": {
+      "reference": "trip-planner-agent:public-final",
+      "container_image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e"
+    },
+    "backend": {
+      "reference": "trip-planner-backend:public-final",
+      "container_image_id": "sha256:cc88e12d04412e604bc750105cabf32066bb077b57f1199136f9933bc005aa8a"
+    },
+    "frontend": {
+      "reference": "trip-public-validation-frontend:20261107",
+      "container_image_id": "sha256:b90a82118e5ca00c6fb5721340d90b38c548eddcf1605a0f3b6e0ae2593f906d"
+    },
+    "mailpit": {
+      "reference": "axllent/mailpit:v1.30.7",
+      "container_image_id": "sha256:d5ecbb067db3705fa953d79e1b7f81ef84038df67aba6c52825d8c02a1ea748a"
+    },
+    "postgres": {
+      "reference": "postgres:17.11-alpine",
+      "container_image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+    }
+  },
+  "passed_all": true,
+  "all_owned_containers_stopped": true
+}

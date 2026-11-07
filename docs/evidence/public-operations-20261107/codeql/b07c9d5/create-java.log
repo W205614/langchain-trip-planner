@@ -1,0 +1,55 @@
+Initializing database at E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/tools/codeql.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Running build command: [cmd.exe, /d, /c, business-backend\mvnw.cmd, -B, -ntp, -f, business-backend/pom.xml, -DskipTests, compile]
+Running command in E:\trip-public-codeql-cloud-final-1e567280: [cmd.exe, /d, /c, business-backend\mvnw.cmd, -B, -ntp, -f, business-backend/pom.xml, -DskipTests, compile]
+[2026-11-07 14:24:16] [build-stdout] [INFO] Scanning for projects...
+[2026-11-07 14:24:16] [build-stdout] [INFO] 
+[2026-11-07 14:24:16] [build-stdout] [INFO] ------------------< com.tripplanner:business-backend >------------------
+[2026-11-07 14:24:16] [build-stdout] [INFO] Building business-backend 1.0.0-SNAPSHOT
+[2026-11-07 14:24:16] [build-stdout] [INFO]   from pom.xml
+[2026-11-07 14:24:16] [build-stdout] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-11-07 14:24:19] [build-stdout] [INFO] 
+[2026-11-07 14:24:19] [build-stdout] [INFO] --- resources:3.3.1:resources (default-resources) @ business-backend ---
+[2026-11-07 14:24:19] [build-stdout] [INFO] Copying 1 resource from src\main\resources to target\classes
+[2026-11-07 14:24:19] [build-stdout] [INFO] Copying 21 resources from src\main\resources to target\classes
+[2026-11-07 14:24:19] [build-stdout] [INFO] 
+[2026-11-07 14:24:19] [build-stdout] [INFO] --- compiler:3.14.1:compile (default-compile) @ business-backend ---
+[2026-11-07 14:24:20] [build-stdout] [INFO] Recompiling the module because of changed source code.
+[2026-11-07 14:24:20] [build-stdout] [INFO] Compiling 96 source files with javac [debug parameters release 21] to target\classes
+[2026-11-07 14:27:29] [build-stdout] [INFO] /E:/trip-public-codeql-cloud-final-1e567280/business-backend/src/main/java/com/tripplanner/agent/AgentClient.java: ĳЩ�����ļ�ʹ�û򸲸����ѹ�ʱ�� API��
+[2026-11-07 14:27:29] [build-stdout] [INFO] /E:/trip-public-codeql-cloud-final-1e567280/business-backend/src/main/java/com/tripplanner/agent/AgentClient.java: �й���ϸ��Ϣ, ��ʹ�� -Xlint:deprecation ���±��롣
+[2026-11-07 14:27:29] [build-stdout] [INFO] ------------------------------------------------------------------------
+[2026-11-07 14:27:29] [build-stdout] [INFO] BUILD SUCCESS
+[2026-11-07 14:27:29] [build-stdout] [INFO] ------------------------------------------------------------------------
+[2026-11-07 14:27:29] [build-stdout] [INFO] Total time:  03:13 min
+[2026-11-07 14:27:29] [build-stdout] [INFO] Finished at: 2026-11-07T14:27:29+08:00
+[2026-11-07 14:27:29] [build-stdout] [INFO] ------------------------------------------------------------------------
+Finalizing database at E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java.
+Running pre-finalize script E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\java\tools\pre-finalize.cmd in E:\trip-public-codeql-cloud-final-1e567280.
+Running command in E:\trip-public-codeql-cloud-final-1e567280: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\java\tools\pre-finalize.cmd]
+[2026-11-07 14:27:32] [build-stderr] Scanning for files in E:\trip-public-codeql-cloud-final-1e567280...
+[2026-11-07 14:27:33] [build-stderr] E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java: Indexing files in in E:\trip-public-codeql-cloud-final-1e567280...
+[2026-11-07 14:27:33] [build-stderr] Running command in E:\trip-public-codeql-cloud-final-1e567280: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\xml\tools\index-files.cmd, E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java\working\files-to-index16160560832666061224.list]
+[2026-11-07 14:27:34] [build-stdout] [2026-11-07 14:27:34] [build-stderr] WARNING: A restricted method in java.lang.System has been called
+[2026-11-07 14:27:34] [build-stdout] [2026-11-07 14:27:34] [build-stderr] WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/xml/tools/xml-extractor.jar)
+[2026-11-07 14:27:34] [build-stdout] [2026-11-07 14:27:34] [build-stderr] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[2026-11-07 14:27:34] [build-stdout] [2026-11-07 14:27:34] [build-stderr] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[2026-11-07 14:27:35] [build-stderr] Scanning for files in E:\trip-public-codeql-cloud-final-1e567280...
+[2026-11-07 14:27:36] [build-stderr] E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java: Indexing files in in E:\trip-public-codeql-cloud-final-1e567280...
+[2026-11-07 14:27:36] [build-stderr] Running command in E:\trip-public-codeql-cloud-final-1e567280: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\properties\tools\index-files.cmd, E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java\working\files-to-index14985526212159181252.list]
+[2026-11-07 14:27:37] [build-stdout] [2026-11-07 14:27:37] [build-stderr] WARNING: A restricted method in java.lang.System has been called
+[2026-11-07 14:27:37] [build-stdout] [2026-11-07 14:27:37] [build-stderr] WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/tools/codeql.jar)
+[2026-11-07 14:27:37] [build-stdout] [2026-11-07 14:27:37] [build-stderr] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[2026-11-07 14:27:37] [build-stdout] [2026-11-07 14:27:37] [build-stderr] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+Pre-finalize script E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\java\tools\pre-finalize.cmd completed in 7987 ms.
+Running TRAP import for CodeQL database at E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java...
+Importing TRAP files
+Merging relations
+Finished writing database (relations: 3.15 MiB; string pool: 5.53 MiB).
+TRAP import complete (12.6s).
+Finished zipping source archive (216.89 KiB).
+Successfully created database at E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-java.

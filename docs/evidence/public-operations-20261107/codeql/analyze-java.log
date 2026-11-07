@@ -1,0 +1,509 @@
+Running queries.
+Resolving data extensions.
+Finished resolving data extensions.
+Merging data extensions.
+Finished merging data extensions.
+WARNING: Not caching stages during query-loading, since max heap size is only 1800 MB.
+[1/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Likely Bugs\Arithmetic\InformationLoss.qlx.
+[2/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-020\OverlyLargeRange.qlx.
+[3/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-022\ZipSlip.qlx.
+[4/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-023\PartialPathTraversalFromRemote.qlx.
+[5/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-022\TaintedPath.qlx.
+[6/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-074\JndiInjection.qlx.
+[7/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-074\XsltInjection.qlx.
+[8/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecTainted.qlx.
+[9/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-079\XSS.qlx.
+[10/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-089\SqlTainted.qlx.
+[11/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\GroovyInjection.qlx.
+[12/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-090\LdapInjection.qlx.
+[13/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\InsecureBeanValidation.qlx.
+[14/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\JexlInjection.qlx.
+[15/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\MvelInjection.qlx.
+[16/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\SpelInjection.qlx.
+[17/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\TemplateInjection.qlx.
+[18/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-1104\MavenPomDependsOnBintray.qlx.
+[19/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-113\NettyResponseSplitting.qlx.
+[20/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-1004\SensitiveCookieNotHttpOnly.qlx.
+[21/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-113\ResponseSplitting.qlx.
+[22/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-134\ExternallyControlledFormatString.qlx.
+[23/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\SpringBootActuators.qlx.
+[24/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\SpringBootActuatorsConfig\SpringBootActuatorsConfig.qlx.
+[25/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-1204\StaticInitializationVector.qlx.
+[26/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-209\SensitiveDataExposureThroughErrorMessage.qlx.
+[27/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-209\StackTraceExposure.qlx.
+[28/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-287\AndroidInsecureLocalAuthentication.qlx.
+[29/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-295\ImproperWebViewCertificateValidation.qlx.
+[30/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-266\IntentUriPermissionManipulation.qlx.
+[31/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-295\InsecureTrustManager.qlx.
+[32/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-297\UnsafeHostnameVerification.qlx.
+[33/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\AllowBackupAttributeEnabled.qlx.
+[34/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageCookie.qlx.
+[35/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-327\BrokenCryptoAlgorithm.qlx.
+[36/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-326\InsufficientKeySize.qlx.
+[37/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-330\InsecureRandomness.qlx.
+[38/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-338\JHipsterGeneratedPRNG.qlx.
+[39/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-347\MissingJWTSignatureCheck.qlx.
+[40/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-352\SpringCSRFProtection.qlx.
+[41/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-335\PredictableSeed.qlx.
+[42/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-441\UnsafeContentUriResolution.qlx.
+[43/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-470\FragmentInjectionInPreferenceActivity.qlx.
+[44/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-489\DebuggableAttributeEnabled.qlx.
+[45/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-470\FragmentInjection.qlx.
+[46/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-489\WebviewDebuggingEnabled.qlx.
+[47/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-522\InsecureLdapAuth.qlx.
+[48/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-502\UnsafeDeserialization.qlx.
+[49/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-552\UrlForward.qlx.
+[50/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-601\UrlRedirect.qlx.
+[51/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-611\XXE.qlx.
+[52/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-614\InsecureCookie.qlx.
+[53/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-643\XPathInjection.qlx.
+[54/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-681\NumericCastTainted.qlx.
+[55/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-730\PolynomialReDoS.qlx.
+[56/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-730\ReDoS.qlx.
+[57/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-732\ReadingFromWorldWritableFile.qlx.
+[58/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-730\RegexInjection.qlx.
+[59/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-780\RsaWithoutOaep.qlx.
+[60/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-829\InsecureDependencyResolution.qlx.
+[61/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-807\TaintedPermissionsCheck.qlx.
+[62/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-917\OgnlInjection.qlx.
+[63/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-918\RequestForgery.qlx.
+[64/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-926\ImplicitlyExportedAndroidComponent.qlx.
+[65/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-925\ImproperIntentVerification.qlx.
+[66/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-927\ImplicitPendingIntents.qlx.
+[67/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Likely Bugs\Concurrency\UnreleasedLock.qlx.
+[68/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-940\AndroidIntentRedirection.qlx.
+[69/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-023\PartialPathTraversal.qlx.
+[70/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecRelative.qlx.
+[71/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecTaintedEnvironment.qlx.
+[72/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-079\AndroidWebViewAddJavascriptInterface.qlx.
+[73/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-079\AndroidWebViewSettingsEnabledJavaScript.qlx.
+[74/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecUnescaped.qlx.
+[75/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-089\SqlConcatenated.qlx.
+[76/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\ArbitraryApkInstallation.qlx.
+[77/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-117\LogInjection.qlx.
+[78/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-129\ImproperValidationOfArrayConstruction.qlx.
+[79/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-129\ImproperValidationOfArrayIndex.qlx.
+[80/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-190\ArithmeticUncontrolled.qlx.
+[81/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-190\ComparisonWithWiderType.qlx.
+[82/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-190\ArithmeticTainted.qlx.
+[83/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidSensitiveNotifications.qlx.
+[84/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidSensitiveTextField.qlx.
+[85/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidWebViewSettingsFileAccess.qlx.
+[86/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidWebViewSettingsAllowsContentAccess.qlx.
+[87/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\TempDirLocalInformationDisclosure.qlx.
+[88/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-273\UnsafeCertTrust.qlx.
+[89/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-287\AndroidInsecureKeys.qlx.
+[90/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-297\InsecureJavaMail.qlx.
+[91/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-295\AndroidMissingCertificatePinning.qlx.
+[92/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageAndroidFilesystem.qlx.
+[93/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageAndroidDatabase.qlx.
+[94/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageProperties.qlx.
+[95/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-327\MaybeBrokenCryptoAlgorithm.qlx.
+[96/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageSharedPrefs.qlx.
+[97/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-367\TOCTOURace.qlx.
+[98/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-421\SocketAuthRace.qlx.
+[99/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-352\CsrfUnprotectedRequestType.qlx.
+[100/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-522\InsecureBasicAuth.qlx.
+[101/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-501\TrustBoundaryViolation.qlx.
+[102/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-524\SensitiveKeyboardCache.qlx.
+[103/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-676\PotentiallyDangerousFunction.qlx.
+[104/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-532\SensitiveInfoLog.qlx.
+[105/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-749\UnsafeAndroidAccess.qlx.
+[106/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-835\InfiniteLoop.qlx.
+[107/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-926\ContentProviderIncompletePermissions.qlx.
+[108/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-807\ConditionalBypass.qlx.
+[109/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-927\SensitiveCommunication.qlx.
+[110/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Diagnostics\ExtractionErrors.qlx.
+[111/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Diagnostics\ExtractionWarnings.qlx.
+[112/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Diagnostics\SuccessfullyExtractedFiles.qlx.
+[113/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\DatabaseQualityDiagnostics.qlx.
+[114/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Metrics\Summaries\LinesOfCode.qlx.
+[115/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Metrics\Summaries\LinesOfCodeJava.qlx.
+[116/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Metrics\Summaries\LinesOfCodeKotlin.qlx.
+[117/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\ExternalLibraryUsage.qlx.
+[118/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\ExtractorInformation.qlx.
+[119/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-927\SensitiveResultReceiver.qlx.
+[120/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalApis.qlx.
+[121/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalSources.qlx.
+[122/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalSinks.qlx.
+[123/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalTaint.qlx.
+[124/124] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\UnsupportedExternalAPIs.qlx.
+Starting evaluation of codeql\java-queries\Diagnostics\ExtractionErrors.ql.
+Starting evaluation of codeql\java-queries\Diagnostics\ExtractionWarnings.ql.
+Starting evaluation of codeql\java-queries\Diagnostics\SuccessfullyExtractedFiles.ql.
+[1/124 eval 513ms] Evaluation done; writing results to codeql\java-queries\Diagnostics\ExtractionWarnings.bqrs.
+[2/124 eval 678ms] Evaluation done; writing results to codeql\java-queries\Diagnostics\ExtractionErrors.bqrs.
+Starting evaluation of codeql\java-queries\Likely Bugs\Arithmetic\InformationLoss.ql.
+Starting evaluation of codeql\java-queries\Likely Bugs\Concurrency\UnreleasedLock.ql.
+[3/124 eval 327ms] Evaluation done; writing results to codeql\java-queries\Likely Bugs\Arithmetic\InformationLoss.bqrs.
+[4/124 eval 3.7s] Evaluation done; writing results to codeql\java-queries\Diagnostics\SuccessfullyExtractedFiles.bqrs.
+Starting evaluation of codeql\java-queries\Metrics\Summaries\LinesOfCode.ql.
+[5/124 eval 79ms] Evaluation done; writing results to codeql\java-queries\Metrics\Summaries\LinesOfCode.bqrs.
+Starting evaluation of codeql\java-queries\Metrics\Summaries\LinesOfCodeJava.ql.
+Starting evaluation of codeql\java-queries\Metrics\Summaries\LinesOfCodeKotlin.ql.
+[6/124 eval 11ms] Evaluation done; writing results to codeql\java-queries\Metrics\Summaries\LinesOfCodeJava.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-020\OverlyLargeRange.ql.
+[7/124 eval 21ms] Evaluation done; writing results to codeql\java-queries\Metrics\Summaries\LinesOfCodeKotlin.bqrs.
+[8/124 eval 18.4s] Evaluation done; writing results to codeql\java-queries\Likely Bugs\Concurrency\UnreleasedLock.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-022\TaintedPath.ql.
+[9/124 eval 19.3s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-020\OverlyLargeRange.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-022\ZipSlip.ql.
+[10/124 eval 2.8s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-022\TaintedPath.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-023\PartialPathTraversal.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-023\PartialPathTraversalFromRemote.ql.
+[11/124 eval 69ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-023\PartialPathTraversal.bqrs.
+[12/124 eval 2.1s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-022\ZipSlip.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-074\JndiInjection.ql.
+[13/124 eval 760ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-023\PartialPathTraversalFromRemote.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-074\XsltInjection.ql.
+[14/124 eval 1.2s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-074\JndiInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-078\ExecRelative.ql.
+[15/124 eval 314ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-078\ExecRelative.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-078\ExecTainted.ql.
+[16/124 eval 1.9s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-074\XsltInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-078\ExecTaintedEnvironment.ql.
+[17/124 eval 1.2s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-078\ExecTainted.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-078\ExecUnescaped.ql.
+[18/124 eval 10ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-078\ExecUnescaped.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-079\AndroidWebViewAddJavascriptInterface.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-079\AndroidWebViewSettingsEnabledJavaScript.ql.
+[19/124 eval 30ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-079\AndroidWebViewAddJavascriptInterface.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-079\XSS.ql.
+[20/124 eval 19ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-079\AndroidWebViewSettingsEnabledJavaScript.bqrs.
+[21/124 eval 976ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-078\ExecTaintedEnvironment.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-089\SqlConcatenated.ql.
+[22/124 eval 1.6s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-079\XSS.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-089\SqlTainted.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-090\LdapInjection.ql.
+[23/124 eval 1.7s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-089\SqlConcatenated.bqrs.
+[24/124 eval 657ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-089\SqlTainted.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\ArbitraryApkInstallation.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\GroovyInjection.ql.
+[25/124 eval 272ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\ArbitraryApkInstallation.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\InsecureBeanValidation.ql.
+[26/124 eval 187ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\GroovyInjection.bqrs.
+[27/124 eval 1.4s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-090\LdapInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\JexlInjection.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\MvelInjection.ql.
+[28/124 eval 202ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\JexlInjection.bqrs.
+[29/124 eval 1.2s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\InsecureBeanValidation.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\SpelInjection.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-094\TemplateInjection.ql.
+[30/124 eval 309ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\SpelInjection.bqrs.
+[31/124 eval 858ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\MvelInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-1004\SensitiveCookieNotHttpOnly.ql.
+[32/124 eval 662ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-094\TemplateInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-1104\MavenPomDependsOnBintray.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-113\NettyResponseSplitting.ql.
+[33/124 eval 44ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-1104\MavenPomDependsOnBintray.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-113\ResponseSplitting.ql.
+[34/124 eval 60ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-113\NettyResponseSplitting.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-117\LogInjection.ql.
+[35/124 eval 807ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-113\ResponseSplitting.bqrs.
+[36/124 eval 1.6s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-1004\SensitiveCookieNotHttpOnly.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-1204\StaticInitializationVector.ql.
+[37/124 eval 1.2s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-117\LogInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-129\ImproperValidationOfArrayConstruction.ql.
+[38/124 eval 596ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-129\ImproperValidationOfArrayConstruction.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-129\ImproperValidationOfArrayIndex.ql.
+[39/124 eval 1.9s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-1204\StaticInitializationVector.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-134\ExternallyControlledFormatString.ql.
+[40/124 eval 565ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-129\ImproperValidationOfArrayIndex.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-190\ArithmeticTainted.ql.
+[41/124 eval 488ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-134\ExternallyControlledFormatString.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-190\ArithmeticUncontrolled.ql.
+[42/124 eval 3.4s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-190\ArithmeticTainted.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-190\ComparisonWithWiderType.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\AndroidSensitiveNotifications.ql.
+[43/124 eval 70ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-190\ComparisonWithWiderType.bqrs.
+[44/124 eval 843ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\AndroidSensitiveNotifications.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\AndroidSensitiveTextField.ql.
+[45/124 eval 4.6s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-190\ArithmeticUncontrolled.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\AndroidWebViewSettingsAllowsContentAccess.ql.
+[46/124 eval 148ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\AndroidSensitiveTextField.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\AndroidWebViewSettingsFileAccess.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\SpringBootActuators.ql.
+[47/124 eval 43ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\AndroidWebViewSettingsFileAccess.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\SpringBootActuatorsConfig\SpringBootActuatorsConfig.ql.
+[48/124 eval 58ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\AndroidWebViewSettingsAllowsContentAccess.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-200\TempDirLocalInformationDisclosure.ql.
+[49/124 eval 71ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\SpringBootActuators.bqrs.
+[50/124 eval 247ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\SpringBootActuatorsConfig\SpringBootActuatorsConfig.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-209\SensitiveDataExposureThroughErrorMessage.ql.
+[51/124 eval 578ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-200\TempDirLocalInformationDisclosure.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-209\StackTraceExposure.ql.
+[52/124 eval 31ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-209\StackTraceExposure.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-266\IntentUriPermissionManipulation.ql.
+[53/124 eval 136ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-266\IntentUriPermissionManipulation.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-273\UnsafeCertTrust.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-287\AndroidInsecureKeys.ql.
+[54/124 eval 150ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-273\UnsafeCertTrust.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-287\AndroidInsecureLocalAuthentication.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-295\AndroidMissingCertificatePinning.ql.
+[55/124 eval 684ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-209\SensitiveDataExposureThroughErrorMessage.bqrs.
+[56/124 eval 66ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-287\AndroidInsecureKeys.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-295\ImproperWebViewCertificateValidation.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-295\InsecureTrustManager.ql.
+[57/124 eval 47ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-287\AndroidInsecureLocalAuthentication.bqrs.
+[58/124 eval 49ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-295\AndroidMissingCertificatePinning.bqrs.
+[59/124 eval 205ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-295\ImproperWebViewCertificateValidation.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-297\InsecureJavaMail.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-297\UnsafeHostnameVerification.ql.
+[60/124 eval 57ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-297\InsecureJavaMail.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-312\AllowBackupAttributeEnabled.ql.
+[61/124 eval 569ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-297\UnsafeHostnameVerification.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-312\CleartextStorageAndroidDatabase.ql.
+[62/124 eval 874ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-295\InsecureTrustManager.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-312\CleartextStorageAndroidFilesystem.ql.
+[63/124 eval 37ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-312\AllowBackupAttributeEnabled.bqrs.
+[64/124 eval 162ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-312\CleartextStorageAndroidDatabase.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-312\CleartextStorageCookie.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-312\CleartextStorageProperties.ql.
+[65/124 eval 30ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-312\CleartextStorageCookie.bqrs.
+[66/124 eval 78ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-312\CleartextStorageProperties.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-312\CleartextStorageSharedPrefs.ql.
+[67/124 eval 65ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-312\CleartextStorageSharedPrefs.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-326\InsufficientKeySize.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-327\BrokenCryptoAlgorithm.ql.
+[68/124 eval 636ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-326\InsufficientKeySize.bqrs.
+[69/124 eval 884ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-327\BrokenCryptoAlgorithm.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-327\MaybeBrokenCryptoAlgorithm.ql.
+[70/124 eval 893ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-327\MaybeBrokenCryptoAlgorithm.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-330\InsecureRandomness.ql.
+[71/124 eval 3.5s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-312\CleartextStorageAndroidFilesystem.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-335\PredictableSeed.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-338\JHipsterGeneratedPRNG.ql.
+[72/124 eval 743ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-330\InsecureRandomness.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-347\MissingJWTSignatureCheck.ql.
+[73/124 eval 284ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-338\JHipsterGeneratedPRNG.bqrs.
+[74/124 eval 397ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-347\MissingJWTSignatureCheck.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-352\CsrfUnprotectedRequestType.ql.
+[75/124 eval 794ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-335\PredictableSeed.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-352\SpringCSRFProtection.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-367\TOCTOURace.ql.
+[76/124 eval 150ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-352\SpringCSRFProtection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-421\SocketAuthRace.ql.
+[77/124 eval 158ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-367\TOCTOURace.bqrs.
+[78/124 eval 904ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-352\CsrfUnprotectedRequestType.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-441\UnsafeContentUriResolution.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-470\FragmentInjection.ql.
+[79/124 eval 33ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-441\UnsafeContentUriResolution.bqrs.
+[80/124 eval 716ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-421\SocketAuthRace.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-470\FragmentInjectionInPreferenceActivity.ql.
+[81/124 eval 492ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-470\FragmentInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-489\DebuggableAttributeEnabled.ql.
+[82/124 eval 70ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-470\FragmentInjectionInPreferenceActivity.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-489\WebviewDebuggingEnabled.ql.
+[83/124 eval 30ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-489\DebuggableAttributeEnabled.bqrs.
+[84/124 eval 338ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-489\WebviewDebuggingEnabled.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-501\TrustBoundaryViolation.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-502\UnsafeDeserialization.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-522\InsecureBasicAuth.ql.
+[85/124 eval 798ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-502\UnsafeDeserialization.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-522\InsecureLdapAuth.ql.
+[86/124 eval 159ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-522\InsecureBasicAuth.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-524\SensitiveKeyboardCache.ql.
+[87/124 eval 222ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-522\InsecureLdapAuth.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-532\SensitiveInfoLog.ql.
+[88/124 eval 1.6s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-501\TrustBoundaryViolation.bqrs.
+[89/124 eval 130ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-524\SensitiveKeyboardCache.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-552\UrlForward.ql.
+[90/124 eval 711ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-532\SensitiveInfoLog.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-601\UrlRedirect.ql.
+[91/124 eval 881ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-552\UrlForward.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-611\XXE.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-614\InsecureCookie.ql.
+[92/124 eval 190ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-611\XXE.bqrs.
+[93/124 eval 62ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-614\InsecureCookie.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-643\XPathInjection.ql.
+[94/124 eval 613ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-601\UrlRedirect.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-676\PotentiallyDangerousFunction.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-681\NumericCastTainted.ql.
+[95/124 eval 56ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-676\PotentiallyDangerousFunction.bqrs.
+[96/124 eval 354ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-643\XPathInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-730\PolynomialReDoS.ql.
+[97/124 eval 610ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-681\NumericCastTainted.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-730\ReDoS.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-730\RegexInjection.ql.
+[98/124 eval 330ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-730\ReDoS.bqrs.
+[99/124 eval 1.4s] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-730\PolynomialReDoS.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-732\ReadingFromWorldWritableFile.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-749\UnsafeAndroidAccess.ql.
+[100/124 eval 365ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-730\RegexInjection.bqrs.
+[101/124 eval 97ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-749\UnsafeAndroidAccess.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-780\RsaWithoutOaep.ql.
+[102/124 eval 321ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-732\ReadingFromWorldWritableFile.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-807\ConditionalBypass.ql.
+[103/124 eval 194ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-780\RsaWithoutOaep.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-807\TaintedPermissionsCheck.ql.
+[104/124 eval 167ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-807\ConditionalBypass.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-829\InsecureDependencyResolution.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-835\InfiniteLoop.ql.
+[105/124 eval 12ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-829\InsecureDependencyResolution.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-917\OgnlInjection.ql.
+[106/124 eval 49ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-835\InfiniteLoop.bqrs.
+[107/124 eval 306ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-807\TaintedPermissionsCheck.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-918\RequestForgery.ql.
+[108/124 eval 312ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-917\OgnlInjection.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-925\ImproperIntentVerification.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-926\ContentProviderIncompletePermissions.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-926\ImplicitlyExportedAndroidComponent.ql.
+[109/124 eval 8ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-925\ImproperIntentVerification.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-927\ImplicitPendingIntents.ql.
+[110/124 eval 8ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-926\ContentProviderIncompletePermissions.bqrs.
+[111/124 eval 14ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-926\ImplicitlyExportedAndroidComponent.bqrs.
+[112/124 eval 558ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-918\RequestForgery.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-927\SensitiveCommunication.ql.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-927\SensitiveResultReceiver.ql.
+[113/124 eval 427ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-927\ImplicitPendingIntents.bqrs.
+[114/124 eval 18ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-927\SensitiveCommunication.bqrs.
+Starting evaluation of codeql\java-queries\Security\CWE\CWE-940\AndroidIntentRedirection.ql.
+[115/124 eval 320ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-927\SensitiveResultReceiver.bqrs.
+Starting evaluation of codeql\java-queries\Telemetry\DatabaseQualityDiagnostics.ql.
+[116/124 eval 272ms] Evaluation done; writing results to codeql\java-queries\Security\CWE\CWE-940\AndroidIntentRedirection.bqrs.
+Starting evaluation of codeql\java-queries\Telemetry\ExternalLibraryUsage.ql.
+Starting evaluation of codeql\java-queries\Telemetry\ExtractorInformation.ql.
+[117/124 eval 60ms] Evaluation done; writing results to codeql\java-queries\Telemetry\DatabaseQualityDiagnostics.bqrs.
+Starting evaluation of codeql\java-queries\Telemetry\SupportedExternalApis.ql.
+[118/124 eval 125ms] Evaluation done; writing results to codeql\java-queries\Telemetry\ExtractorInformation.bqrs.
+Starting evaluation of codeql\java-queries\Telemetry\SupportedExternalSinks.ql.
+[119/124 eval 259ms] Evaluation done; writing results to codeql\java-queries\Telemetry\ExternalLibraryUsage.bqrs.
+Starting evaluation of codeql\java-queries\Telemetry\SupportedExternalSources.ql.
+Starting evaluation of codeql\java-queries\Telemetry\SupportedExternalTaint.ql.
+Starting evaluation of codeql\java-queries\Telemetry\UnsupportedExternalAPIs.ql.
+[120/124 eval 693ms] Evaluation done; writing results to codeql\java-queries\Telemetry\SupportedExternalSinks.bqrs.
+[121/124 eval 640ms] Evaluation done; writing results to codeql\java-queries\Telemetry\SupportedExternalSources.bqrs.
+[122/124 eval 790ms] Evaluation done; writing results to codeql\java-queries\Telemetry\SupportedExternalApis.bqrs.
+[123/124 eval 24ms] Evaluation done; writing results to codeql\java-queries\Telemetry\UnsupportedExternalAPIs.bqrs.
+[124/124 eval 17.9s] Evaluation done; writing results to codeql\java-queries\Telemetry\SupportedExternalTaint.bqrs.
+Shutting down query evaluator.
+Interpreting results.
+Resolving extensions
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Likely Bugs\Arithmetic\InformationLoss.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-020\OverlyLargeRange.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-022\TaintedPath.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-022\ZipSlip.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-023\PartialPathTraversalFromRemote.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-074\JndiInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-074\XsltInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecTainted.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-079\XSS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-089\SqlTainted.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-090\LdapInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\GroovyInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\InsecureBeanValidation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\JexlInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\MvelInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\SpelInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\TemplateInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-1004\SensitiveCookieNotHttpOnly.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-1104\MavenPomDependsOnBintray.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-113\NettyResponseSplitting.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-113\ResponseSplitting.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-1204\StaticInitializationVector.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-134\ExternallyControlledFormatString.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\SpringBootActuators.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\SpringBootActuatorsConfig\SpringBootActuatorsConfig.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-209\SensitiveDataExposureThroughErrorMessage.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-209\StackTraceExposure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-266\IntentUriPermissionManipulation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-287\AndroidInsecureLocalAuthentication.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-295\ImproperWebViewCertificateValidation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-295\InsecureTrustManager.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-297\UnsafeHostnameVerification.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\AllowBackupAttributeEnabled.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-326\InsufficientKeySize.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-327\BrokenCryptoAlgorithm.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-330\InsecureRandomness.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-335\PredictableSeed.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-338\JHipsterGeneratedPRNG.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-347\MissingJWTSignatureCheck.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-352\SpringCSRFProtection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-441\UnsafeContentUriResolution.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-470\FragmentInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-470\FragmentInjectionInPreferenceActivity.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-489\DebuggableAttributeEnabled.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-489\WebviewDebuggingEnabled.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-502\UnsafeDeserialization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-522\InsecureLdapAuth.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-552\UrlForward.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-601\UrlRedirect.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-611\XXE.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-614\InsecureCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-643\XPathInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-681\NumericCastTainted.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-730\PolynomialReDoS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-730\ReDoS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-730\RegexInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-732\ReadingFromWorldWritableFile.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-780\RsaWithoutOaep.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-807\TaintedPermissionsCheck.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-829\InsecureDependencyResolution.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-917\OgnlInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-918\RequestForgery.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-925\ImproperIntentVerification.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-926\ImplicitlyExportedAndroidComponent.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-927\ImplicitPendingIntents.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-940\AndroidIntentRedirection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Likely Bugs\Concurrency\UnreleasedLock.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-023\PartialPathTraversal.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecRelative.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecTaintedEnvironment.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-078\ExecUnescaped.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-079\AndroidWebViewAddJavascriptInterface.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-079\AndroidWebViewSettingsEnabledJavaScript.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-089\SqlConcatenated.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-094\ArbitraryApkInstallation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-117\LogInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-129\ImproperValidationOfArrayConstruction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-129\ImproperValidationOfArrayIndex.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-190\ArithmeticTainted.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-190\ArithmeticUncontrolled.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-190\ComparisonWithWiderType.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidSensitiveNotifications.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidSensitiveTextField.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidWebViewSettingsAllowsContentAccess.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\AndroidWebViewSettingsFileAccess.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-200\TempDirLocalInformationDisclosure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-273\UnsafeCertTrust.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-287\AndroidInsecureKeys.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-295\AndroidMissingCertificatePinning.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-297\InsecureJavaMail.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageAndroidDatabase.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageAndroidFilesystem.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageProperties.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-312\CleartextStorageSharedPrefs.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-327\MaybeBrokenCryptoAlgorithm.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-352\CsrfUnprotectedRequestType.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-367\TOCTOURace.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-421\SocketAuthRace.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-501\TrustBoundaryViolation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-522\InsecureBasicAuth.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-524\SensitiveKeyboardCache.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-532\SensitiveInfoLog.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-676\PotentiallyDangerousFunction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-749\UnsafeAndroidAccess.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-807\ConditionalBypass.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-835\InfiniteLoop.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-926\ContentProviderIncompletePermissions.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-927\SensitiveCommunication.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Security\CWE\CWE-927\SensitiveResultReceiver.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Diagnostics\ExtractionErrors.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Diagnostics\ExtractionWarnings.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Diagnostics\SuccessfullyExtractedFiles.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\DatabaseQualityDiagnostics.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Metrics\Summaries\LinesOfCode.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Metrics\Summaries\LinesOfCodeJava.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Metrics\Summaries\LinesOfCodeKotlin.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\ExternalLibraryUsage.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\ExtractorInformation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalApis.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalSinks.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalSources.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\SupportedExternalTaint.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\Telemetry\UnsupportedExternalAPIs.ql...
+Reading source archive E:\project\langchain-trip-planner\.codex-public\codeql-fresh-20261107-0ad64298\db-java\src.zip
+CodeQL scanned 96 out of 146 Java/Kotlin files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information.
+Exporting results to SARIF v2.1.0...
+Exported results to SARIF v2.1.0 (849ms).

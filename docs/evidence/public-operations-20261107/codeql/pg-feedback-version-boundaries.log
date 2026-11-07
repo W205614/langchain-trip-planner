@@ -1,0 +1,10 @@
+BEGIN
+CREATE TABLE
+INSERT 0 1
+unmatched_max_header_rows=0
+UPDATE 1
+largest_successful_java_operand=2147483646;next_version=2147483647;rows=1
+DO
+stored_version_after_rejected_update=2147483647
+ROLLBACK
+NOTICE:  matching_max_version_SQLSTATE=22003

@@ -1,0 +1,130 @@
+{
+  "verified_at_utc": "2026-11-07T05:17:37.552971+00:00",
+  "source_checkpoint": "93af3415cb7b6842402fadd878a8598294ee997b",
+  "image": {
+    "tag": "trip-planner-caddy:2.11.9-security1",
+    "id": "sha256:e4bd2f7fb9fbaca1c780c81b2646bde1f167abdfa3337e4521770a165ce788d0",
+    "version": "v2.11.9-security1",
+    "running_edge_image_matched_scan": true
+  },
+  "upstream": {
+    "caddy_commit": "0d98caea58f794f88e709b1bef2880996a471bca",
+    "caddy_archive_sha256": "7b8de20699ec38a43c97d70dd5347ed8e19d3db96d0c9d76ded020f018cb6e5e",
+    "certificates_commit": "cddde30af36e238f156bb557bfd1f11a05ffe6f9",
+    "security_fix": "Official upstream dependency migrations. Caddy source and all standard modules remain unchanged; no VEX exclusions or risk acceptance.",
+    "licenses": {
+      "certificates": {
+        "spdx": "Apache-2.0",
+        "source": "https://raw.githubusercontent.com/smallstep/certificates/cddde30af36e238f156bb557bfd1f11a05ffe6f9/LICENSE"
+      },
+      "crypto": {
+        "spdx": "Apache-2.0",
+        "source": "https://raw.githubusercontent.com/smallstep/crypto/v0.92.0/LICENSE"
+      },
+      "android_attestation": {
+        "spdx": "Apache-2.0",
+        "source": "https://raw.githubusercontent.com/smallstep/android-attestation/a51b1564ebda/LICENSE"
+      }
+    }
+  },
+  "linked_security_dependencies": {
+    "github.com/go-jose/go-jose/v4": "v4.1.9",
+    "github.com/smallstep/certificates": "v0.30.3-0.20261105204752-cddde30af36e",
+    "go.step.sm/crypto": "v0.92.0",
+    "golang.org/x/net": "v0.62.0"
+  },
+  "go_jose_v3_absent_from_binary": true,
+  "standard_module_count": 136,
+  "standard_module_names_match_official": true,
+  "upstream_targeted_tests": {
+    "test_case_pass_events": 24,
+    "top_level_test_passes": 7,
+    "packages": [
+      "github.com/caddyserver/caddy/v2/modules/caddytls",
+      "github.com/caddyserver/caddy/v2/modules/caddypki",
+      "github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver"
+    ],
+    "failed_events": 0
+  },
+  "image_scan": {
+    "scanner": "grype-image",
+    "target": "trip-planner-caddy:2.11.9-security1",
+    "image_id": "sha256:e4bd2f7fb9fbaca1c780c81b2646bde1f167abdfa3337e4521770a165ce788d0",
+    "status": "pass",
+    "blocking_findings": 0,
+    "raw_high_critical_findings": 0,
+    "contextual_not_affected": 0,
+    "all_findings": 3,
+    "exit_code": 0,
+    "vex_expires_on": null,
+    "vex_review_policy": null,
+    "distribution_assessments": {
+      "fixed_by_distribution_backport": 0,
+      "fixed_by_pinned_security_upgrade": 0,
+      "still_vulnerable_vendor_minor": 0,
+      "not_affected_component_absent": 0
+    },
+    "still_vulnerable_vendor_minor_ids": [],
+    "vendor_policy_expires_on": null,
+    "vendor_policy_review_policy": null,
+    "unfixed_risk_accepted_findings": 0,
+    "risk_acceptance": null,
+    "image_revision_context_verified": false
+  },
+  "baseline_comparison": {
+    "caddy-image": {
+      "severity_counts": {
+        "Critical": 18,
+        "High": 50,
+        "Medium": 11
+      },
+      "raw_high_critical": 68
+    },
+    "caddy-patched-image": {
+      "severity_counts": {
+        "High": 2,
+        "Medium": 6
+      },
+      "raw_high_critical": 2
+    },
+    "caddy-final-image": {
+      "severity_counts": {
+        "Medium": 3
+      },
+      "raw_high_critical": 0
+    }
+  },
+  "source_inputs_sha256": {
+    "deploy/images/caddy.Dockerfile": "4d3db1fc1d850e0c1b7de30ff11cc46f2ef3bc1e3cbb1423eb39a4ec45d0f24e",
+    "deploy/images/caddy.go.mod": "2e527e67aaabea17626b970999a2c3fa19ed2a739728d50ec40a4460baec43a4",
+    "deploy/images/caddy.go.sum": "1c153bac31badb92d0510c2e99bfabe6fcaf85d01d1da2134894ae3eda461fbb",
+    "deploy/images/.dockerignore": "c1a9c6429a802e98c3d1a00743f14091928247f8430a528a3311538c933c6554",
+    "docker-compose.public.yml": "d8b68dbf31e18c07966a588f1fdcc85d37ada70dfee7bc39bd84508701673a84",
+    "docker-compose.public-edge-validation.yml": "fb1f9ca201574869599514fb5676318a6ec2e71000517291c724990845fbade7",
+    ".github/workflows/ci.yml": "516fcf53acb36f7bf7fc1e5bed0bfd5c11d12de2ebd4b93a5102a956d48e0a9a",
+    ".github/workflows/security.yml": "7824f3da70d5602d8251457987f51e5a7debbac57ba4c9b795fac1a46a424850",
+    "deploy/Caddyfile": "fa519be650f010d4cf2358a60386d853577487861ce24b6a71aad5758c722c17",
+    "deploy/validation/Caddyfile.edge": "5018ec5b13699265ac400634ae2b1afaf3ef92cbfbc2b11b63defb4b102fd432"
+  },
+  "https_acceptance": "https-result.json",
+  "alert_delivery_acceptance": "alerts-result.json",
+  "public_acme_dns_challenge_verified": false,
+  "runtime_boundary": {
+    "project": "trip-public-edge",
+    "all_11_containers_stopped": true,
+    "container_states": {
+      "trip-public-edge-prometheus-1": "exited",
+      "trip-public-edge-alertmanager-1": "exited",
+      "trip-public-edge-alert-receiver-1": "exited",
+      "trip-public-edge-edge-1": "exited",
+      "trip-public-edge-webhook-1": "exited",
+      "trip-public-edge-amap-fixture-1": "exited",
+      "trip-public-edge-backend-1": "exited",
+      "trip-public-edge-agent-1": "exited",
+      "trip-public-edge-frontend-1": "exited",
+      "trip-public-edge-postgres-1": "exited",
+      "trip-public-edge-mailpit-1": "exited"
+    },
+    "other_projects_operated": false
+  }
+}

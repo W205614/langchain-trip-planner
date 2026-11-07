@@ -1,0 +1,109 @@
+Running queries.
+Resolving data extensions.
+Finished resolving data extensions.
+Merging data extensions.
+Finished merging data extensions.
+WARNING: Not caching stages during query-loading, since max heap size is only 1810 MB.
+[1/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvVarInjectionCritical.qlx.
+[2/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvPathInjectionCritical.qlx.
+[3/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-1395\UseOfKnownVulnerableAction.qlx.
+[4/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-275\MissingActionsPermissions.qlx.
+[5/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-094\CodeInjectionCritical.qlx.
+[6/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-312\ExcessiveSecretsExposure.qlx.
+[7/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-312\SecretsInArtifacts.qlx.
+[8/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-285\ImproperAccessControl.qlx.
+[9/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-312\UnmaskedSecretExposure.qlx.
+[10/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-349\CachePoisoningViaCodeInjection.qlx.
+[11/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-349\CachePoisoningViaDirectCache.qlx.
+[12/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-349\CachePoisoningViaPoisonableStep.qlx.
+[13/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-367\UntrustedCheckoutTOCTOUCritical.qlx.
+[14/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-367\UntrustedCheckoutTOCTOUHigh.qlx.
+[15/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\ArtifactPoisoningCritical.qlx.
+[16/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UntrustedCheckoutCritical.qlx.
+[17/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UntrustedCheckoutHigh.qlx.
+[18/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvVarInjectionMedium.qlx.
+[19/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvPathInjectionMedium.qlx.
+[20/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-094\CodeInjectionMedium.qlx.
+[21/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\ArtifactPoisoningMedium.qlx.
+[22/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UnpinnedActionsTag.qlx.
+[23/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Diagnostics\SuccessfullyExtractedFiles.qlx.
+[24/24] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UntrustedCheckoutMedium.qlx.
+Starting evaluation of codeql\actions-queries\Diagnostics\SuccessfullyExtractedFiles.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-077\EnvPathInjectionCritical.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-077\EnvPathInjectionMedium.ql.
+[1/24 eval 545ms] Evaluation done; writing results to codeql\actions-queries\Diagnostics\SuccessfullyExtractedFiles.bqrs.
+[2/24 eval 2.4s] Evaluation done; writing results to codeql\actions-queries\Security\CWE-077\EnvPathInjectionCritical.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-077\EnvVarInjectionCritical.ql.
+[3/24 eval 2.4s] Evaluation done; writing results to codeql\actions-queries\Security\CWE-077\EnvPathInjectionMedium.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-077\EnvVarInjectionMedium.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-094\CodeInjectionCritical.ql.
+[4/24 eval 214ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-077\EnvVarInjectionCritical.bqrs.
+[5/24 eval 163ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-077\EnvVarInjectionMedium.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-094\CodeInjectionMedium.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-1395\UseOfKnownVulnerableAction.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-275\MissingActionsPermissions.ql.
+[6/24 eval 231ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-094\CodeInjectionCritical.bqrs.
+[7/24 eval 74ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-094\CodeInjectionMedium.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-285\ImproperAccessControl.ql.
+[8/24 eval 38ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-275\MissingActionsPermissions.bqrs.
+[9/24 eval 166ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-1395\UseOfKnownVulnerableAction.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-312\ExcessiveSecretsExposure.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-312\SecretsInArtifacts.ql.
+[10/24 eval 79ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-285\ImproperAccessControl.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-312\UnmaskedSecretExposure.ql.
+[11/24 eval 10ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-312\SecretsInArtifacts.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-349\CachePoisoningViaCodeInjection.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-349\CachePoisoningViaDirectCache.ql.
+[12/24 eval 2ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-349\CachePoisoningViaCodeInjection.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-349\CachePoisoningViaPoisonableStep.ql.
+[13/24 eval 28ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-349\CachePoisoningViaDirectCache.bqrs.
+[14/24 eval 128ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-312\ExcessiveSecretsExposure.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-367\UntrustedCheckoutTOCTOUCritical.ql.
+[15/24 eval 105ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-312\UnmaskedSecretExposure.bqrs.
+[16/24 eval 152ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-349\CachePoisoningViaPoisonableStep.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-367\UntrustedCheckoutTOCTOUHigh.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-829\ArtifactPoisoningCritical.ql.
+[17/24 eval 129ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-367\UntrustedCheckoutTOCTOUCritical.bqrs.
+[18/24 eval 52ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-367\UntrustedCheckoutTOCTOUHigh.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-829\ArtifactPoisoningMedium.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-829\UnpinnedActionsTag.ql.
+Starting evaluation of codeql\actions-queries\Security\CWE-829\UntrustedCheckoutCritical.ql.
+[19/24 eval 18ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-829\UnpinnedActionsTag.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-829\UntrustedCheckoutHigh.ql.
+[20/24 eval 8ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-829\UntrustedCheckoutCritical.bqrs.
+Starting evaluation of codeql\actions-queries\Security\CWE-829\UntrustedCheckoutMedium.ql.
+[21/24 eval 10ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-829\UntrustedCheckoutHigh.bqrs.
+[22/24 eval 62ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-829\UntrustedCheckoutMedium.bqrs.
+[23/24 eval 182ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-829\ArtifactPoisoningMedium.bqrs.
+[24/24 eval 574ms] Evaluation done; writing results to codeql\actions-queries\Security\CWE-829\ArtifactPoisoningCritical.bqrs.
+Shutting down query evaluator.
+Interpreting results.
+Resolving extensions
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvPathInjectionCritical.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvVarInjectionCritical.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-094\CodeInjectionCritical.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-1395\UseOfKnownVulnerableAction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-275\MissingActionsPermissions.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-285\ImproperAccessControl.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-312\ExcessiveSecretsExposure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-312\SecretsInArtifacts.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-312\UnmaskedSecretExposure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-349\CachePoisoningViaCodeInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-349\CachePoisoningViaDirectCache.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-349\CachePoisoningViaPoisonableStep.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-367\UntrustedCheckoutTOCTOUCritical.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-367\UntrustedCheckoutTOCTOUHigh.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\ArtifactPoisoningCritical.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UntrustedCheckoutCritical.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UntrustedCheckoutHigh.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvPathInjectionMedium.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-077\EnvVarInjectionMedium.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-094\CodeInjectionMedium.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\ArtifactPoisoningMedium.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UnpinnedActionsTag.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Security\CWE-829\UntrustedCheckoutMedium.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\Diagnostics\SuccessfullyExtractedFiles.ql...
+Reading source archive E:\project\langchain-trip-planner\.codex-public\codeql-cloud-final-1e567280\db-actions\src.zip
+CodeQL scanned 2 out of 2 GitHub Actions files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information.
+Exporting results to SARIF v2.1.0...
+Exported results to SARIF v2.1.0 (181ms).

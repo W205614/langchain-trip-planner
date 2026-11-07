@@ -1,0 +1,1263 @@
+{
+  "reported_at_utc": "2026-11-07T06:44:50.588909+00:00",
+  "source_checkpoint": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "branch": "codex/public-operations-openai",
+  "pushed": false,
+  "publicly_deployed": false,
+  "models": {
+    "text": "gpt-6.1-sol",
+    "vision": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "embedding": "text-embedding-3-large",
+    "dimensions": 3072,
+    "endpoint": "https://api.openai.com/v1",
+    "credentials": "private backend configuration, omitted"
+  },
+  "live_sampling": {
+    "used": {
+      "text": 5,
+      "embedding": 10,
+      "vision": 1,
+      "amap": 62
+    },
+    "limits": {
+      "text": 12,
+      "vision": 1,
+      "embedding": 40,
+      "amap": 120
+    },
+    "counter_reset": false,
+    "counting": "pre-send provider reservations; MCP counts tools rather than hidden downstream requests",
+    "vision": {
+      "pages": 1,
+      "status": "published",
+      "synthetic_source": true,
+      "reviewed_before_publish": true
+    },
+    "plan": {
+      "status": "succeeded",
+      "saved": true,
+      "outcome": "degraded",
+      "facts_complete": false,
+      "data_gaps": [
+        "hotel_and_meal_routes_unverified",
+        "in_attraction_walking_unknown",
+        "meal_pois_unavailable",
+        "opening_hours_travel_date_unverified",
+        "reservation_unverified"
+      ]
+    },
+    "revision": {
+      "status": "succeeded",
+      "saved": true,
+      "outcome": "degraded",
+      "facts_complete": false,
+      "data_gaps": [
+        "hotel_and_meal_routes_unverified",
+        "hotel_endpoint_unknown",
+        "in_attraction_walking_unknown",
+        "meal_opening_unverified:meal:0:dinner:B0JBCCFEXB",
+        "meal_opening_unverified:meal:0:lunch:B023B0BCMW",
+        "meal_pois_unavailable",
+        "opening_hours_travel_date_unverified",
+        "opening_unknown_or_stale:poi:0:B023B0A6I1",
+        "opening_unknown_or_stale:poi:0:B023B0AC72",
+        "reservation_unverified",
+        "reservation_unverified:poi:0:B023B0A6I1",
+        "reservation_unverified:poi:0:B023B0AC72",
+        "route_distance_and_walking_unverified",
+        "route_duration_estimated_30_minutes",
+        "route_endpoint_unknown",
+        "route_fact_expired_or_unobserved",
+        "schedule_unknown_or_stale"
+      ],
+      "attractions_before": [
+        2
+      ],
+      "attractions_after": [
+        2
+      ],
+      "remove_one_attraction_semantic_goal_passed": false
+    },
+    "research": {
+      "http_status": 200,
+      "answer_status": "extractive_fallback",
+      "support_check": {
+        "passed": false,
+        "method": "conservative_exact_excerpt_match",
+        "issues": [
+          "UNSUPPORTED_CLAIM"
+        ],
+        "independent_semantic_evaluation": false,
+        "boundary": "Checks citation range and textual support only; does not prove factual truth, relevance or current validity."
+      },
+      "sources": 5
+    },
+    "official_stream": {
+      "stream_chunks": 5,
+      "nonempty": true,
+      "usage": {
+        "input_tokens": 12,
+        "output_tokens": 4,
+        "total_tokens": 16,
+        "input_token_details": {
+          "audio": 0,
+          "cache_creation": 0,
+          "cache_read": 0
+        },
+        "output_token_details": {
+          "audio": 0,
+          "reasoning": 0
+        }
+      },
+      "finish_reason": "stop"
+    },
+    "sample_rebuild_preview": {
+      "success": true,
+      "preview": true,
+      "chunks": 83,
+      "history_records": 1,
+      "embedding_identity": {
+        "provider": "openai",
+        "endpoint": "https://api.openai.com/v1",
+        "model": "text-embedding-3-large",
+        "dimensions": 3072
+      },
+      "source_fingerprint": "9860f756aacb112c07207e7fc22dc1d770009d88c78f8de0523c90ca0249398c",
+      "estimated_embedding_requests": 9,
+      "input_utf8_bytes": 23355
+    },
+    "daily_full_migration_executed": false
+  },
+  "tests": {
+    "java_full": {
+      "passed": 206,
+      "failed": 0,
+      "skipped": 0,
+      "database": "fresh isolated PostgreSQL17.11",
+      "old_campaign_retained": true
+    },
+    "python_full": {
+      "passed": 488,
+      "skipped": 10,
+      "failed": 0,
+      "scope": "regular Dockerfile build at final business checkpoint with locked dependencies"
+    },
+    "native_abi_backports_separate": {
+      "passed": 9,
+      "failed": 0,
+      "provider_calls": 0
+    },
+    "restic_windows_separate": {
+      "passed": 2,
+      "failed": 0
+    },
+    "restic_linux_separate": {
+      "passed": 2,
+      "failed": 0
+    },
+    "browser": {
+      "purpose": "Release regression after final storage guard and cloud/runtime configuration fixes",
+      "source_checkpoint": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+      "project": "trip-public-e2e",
+      "base_url": "http://127.0.0.1:18881",
+      "mailpit_url": "http://127.0.0.1:18026",
+      "start_utc": "2026-11-07T06:26:59.724Z",
+      "duration_ms": 26394.655,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "tests": [
+        {
+          "title": "public registration, verification, notifications, feedback, export and erasure use real services",
+          "status": "passed",
+          "duration_ms": 18457,
+          "retry": 0
+        },
+        {
+          "title": "email password recovery UI consumes a real delivered reset link",
+          "status": "passed",
+          "duration_ms": 5163,
+          "retry": 0
+        }
+      ],
+      "exit_code": 0,
+      "images": {
+        "agent": {
+          "reference": "trip-planner-agent:public-final",
+          "container_image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e"
+        },
+        "amap-fixture": {
+          "reference": "trip-planner-agent:public-final",
+          "container_image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e"
+        },
+        "backend": {
+          "reference": "trip-planner-backend:public-final",
+          "container_image_id": "sha256:cc88e12d04412e604bc750105cabf32066bb077b57f1199136f9933bc005aa8a"
+        },
+        "frontend": {
+          "reference": "trip-public-validation-frontend:20261107",
+          "container_image_id": "sha256:b90a82118e5ca00c6fb5721340d90b38c548eddcf1605a0f3b6e0ae2593f906d"
+        },
+        "mailpit": {
+          "reference": "axllent/mailpit:v1.30.7",
+          "container_image_id": "sha256:d5ecbb067db3705fa953d79e1b7f81ef84038df67aba6c52825d8c02a1ea748a"
+        },
+        "postgres": {
+          "reference": "postgres:17.11-alpine",
+          "container_image_id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+        }
+      },
+      "passed_all": true,
+      "all_owned_containers_stopped": true
+    },
+    "generated_production_agent_startup": {
+      "name": "trip-generated-agent-9dc6ebd9e4",
+      "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+      "generated_production_config": true,
+      "data_dir": "/app/runtime",
+      "chroma_dir": "/app/data/chroma",
+      "provider_calls": 0,
+      "network": "fresh internal network; no external connectivity",
+      "retained_resources": true,
+      "initial_startup_passed": true,
+      "restart_and_dataset_markers_passed": true,
+      "read_only_root": true,
+      "user": "appuser",
+      "cap_drop": [
+        "ALL"
+      ],
+      "passed": true,
+      "all_owned_containers_stopped": true
+    },
+    "uncertain_upload_erasure": {
+      "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+      "issue": "Started PUT with unknown outcome and currently missing object was previously erased as though no future publication was possible.",
+      "change": "Keep the reservation/quota and existing erasure waiting stage while that unknown write remains absent; once its supplier object is visible, remove it before removing the reservation.",
+      "test_boundary": "Real PostgreSQL17 and real S3Mock5 SDK HEAD/late PUT/DELETE; a controlled IOException is injected only at the initial uncertain client transport boundary. This does not claim a real cloud timeout was induced.",
+      "before_fix": {
+        "tests": 2,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "observed_failure": "Expected ApiException but nothing was thrown when erasing a missing started uncertain write."
+      },
+      "after_fix": {
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "new_tests": 2,
+        "existing_related_tests": 17,
+        "coverage": [
+          "unknown missing reservation retains bytes and prevents erasure completion",
+          "actual late supplier PUT can subsequently be deleted",
+          "committed already-deleted originals do not block erasure",
+          "never-started reservations do not block erasure",
+          "existing storage roundtrip/snapshot/migration and public operations erasure regressions"
+        ]
+      },
+      "source_files": [
+        {
+          "path": "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+          "sha256_lf": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc"
+        },
+        {
+          "path": "business-backend/src/test/java/com/tripplanner/UploadErasureUncertaintyIntegrationTest.java",
+          "sha256_lf": "cb0e840211ce80d9d8191a6629657bb3b9832190c7c187159edde26c73e798b5"
+        }
+      ],
+      "raw_test_logs_ignored": [
+        {
+          "path": ".codex-public\\upload-erasure-before-fix.log",
+          "sha256": "ec8177dc144f422a8fa8a22ee07f4f0f351a83f37e6fece2ef8faecf9ad3cf80"
+        },
+        {
+          "path": ".codex-public\\upload-erasure-after-fix.log",
+          "sha256": "89d0369ff0168dd16ccf66041108e16d0739d61882bcfea3a02103674f890614"
+        }
+      ],
+      "fixture_resources_retained": [
+        {
+          "name": "trip-upload-uncertain-postgres-1",
+          "state": "exited",
+          "exit_code": 0,
+          "named_volumes": [
+            "trip-upload-uncertain_pg_data"
+          ]
+        },
+        {
+          "name": "trip-upload-uncertain-s3mock-1",
+          "state": "exited",
+          "exit_code": 143,
+          "named_volumes": [
+            "trip-upload-uncertain_s3_data"
+          ]
+        }
+      ],
+      "automatic_cleanup": false,
+      "daily_resources_touched": false
+    },
+    "api_contract": {
+      "paths": 31,
+      "operations": 35,
+      "schemas": 52,
+      "java_request_records": 11,
+      "response_allowlists": 6,
+      "official_openapi_meta_schema": true
+    }
+  },
+  "storage": {
+    "sdk_endpoint": "isolated S3Mock5.2.3",
+    "real_http_upload_and_original": true,
+    "source_bytes": 115,
+    "sha256": "98e990de3f3324167fe51111282b71696893faa9b3517c051d906f1a9e74ea12",
+    "coherent_backup": true,
+    "restore_to_new_bucket_prefix_origin_and_database": true,
+    "persistent_stop_restart_readback": true,
+    "source_bytes_unchanged": true,
+    "off_host_verified": false
+  },
+  "restic": {
+    "init": {
+      "initialized": true
+    },
+    "archive": {
+      "archived": true,
+      "snapshot_id": "380504caa5c3ea06193e8deaeeed94ce8c3763a95eef6df7aa3a6d0e60db8c9d",
+      "off_host_verified": false
+    },
+    "check": {
+      "repository_metadata_checked": true,
+      "all_data_read": false,
+      "restore_drill_completed": false
+    },
+    "restore": {
+      "restored": true,
+      "checksums_verified": true,
+      "backup_directory": "E:\\trip-public-restic-fe60a13ba7\\E\\project\\langchain-trip-planner\\backups\\public-storage-e2e-fe60a13ba7",
+      "application_restore_completed": false
+    },
+    "validation": {
+      "actual_coherent_backup": true,
+      "file_hashes_verified": 14,
+      "s3_original_bytes_verified": 115,
+      "s3_sha256": "98e990de3f3324167fe51111282b71696893faa9b3517c051d906f1a9e74ea12",
+      "wrong_password_rejected": true,
+      "off_host_verified": false,
+      "application_restore_completed": false
+    }
+  },
+  "security": {
+    "dependencies": {
+      "tool_pins_verified_date": "2026-10-26",
+      "results": [
+        {
+          "scanner": "pip-audit",
+          "status": "pass_contextual",
+          "raw_findings": 5,
+          "contextual_not_affected": 5,
+          "unresolved_findings": 0,
+          "skipped": 0,
+          "exit_code": 1,
+          "vex_expires_on": null,
+          "vex_review_policy": "source_and_execution_path_bound"
+        },
+        {
+          "scanner": "npm-audit",
+          "status": "pass",
+          "blocking_findings": 0,
+          "all_severities": {
+            "info": 0,
+            "low": 0,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0,
+            "total": 0
+          },
+          "exit_code": 0
+        },
+        {
+          "scanner": "osv-maven",
+          "status": "pass",
+          "findings": 0,
+          "resolved_components": 132,
+          "scanned_packages": 132,
+          "exit_code": 0
+        }
+      ]
+    },
+    "agent_image": {
+      "scanner": "grype-image",
+      "target": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+      "image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+      "status": "pass_vendor_policy",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 85,
+      "contextual_not_affected": 4,
+      "all_findings": 241,
+      "exit_code": 2,
+      "vex_expires_on": null,
+      "vex_review_policy": "source_and_execution_path_bound",
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 14,
+        "fixed_by_pinned_security_upgrade": 47,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 20
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": "source_and_artifact_bound",
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": true
+    },
+    "backend_image": {
+      "scanner": "grype-image",
+      "target": "sha256:cc88e12d04412e604bc750105cabf32066bb077b57f1199136f9933bc005aa8a",
+      "image_id": "sha256:cc88e12d04412e604bc750105cabf32066bb077b57f1199136f9933bc005aa8a",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 238,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "frontend_image": {
+      "scanner": "grype-image",
+      "target": "trip-public-validation-frontend:20261107",
+      "image_id": "sha256:b90a82118e5ca00c6fb5721340d90b38c548eddcf1605a0f3b6e0ae2593f906d",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "caddy_image": {
+      "scanner": "grype-image",
+      "target": "trip-planner-caddy:2.11.9-security1",
+      "image_id": "sha256:e4bd2f7fb9fbaca1c780c81b2646bde1f167abdfa3337e4521770a165ce788d0",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "credentials_absent_from_live_logs_and_frontend_build": {
+      "trip-public-live-agent-1_key_absent": true,
+      "trip-public-live-backend-1_key_absent": true,
+      "frontend_build_key_absent": true
+    },
+    "runtime_constraints": {
+      "passed": true,
+      "image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+      "constraints": {
+        "user": "1000",
+        "cap_eff": "0000000000000000",
+        "cap_bnd": "0000000000000000",
+        "no_new_privileges": true,
+        "readonly_rootfs": true,
+        "privileged": false,
+        "cap_drop_all": true,
+        "restricted_tools_absent": true,
+        "actual_uvicorn": true
+      },
+      "observed_in_isolated_container": true,
+      "container_stopped_after_observation": true
+    },
+    "codeql": {
+      "status": "passed_with_exact_source_and_trace_bound_context_review",
+      "old_source_review_reused": false,
+      "activation": {
+        "activated_at_utc": "2026-11-07T06:44:13.333997+00:00",
+        "reviewed_business_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+        "active_policy": ".github/codeql-context-remediated.json",
+        "active_policy_sha256": "ed2d5e0d840a98a73801f4dc3064bad24304a60a4342cd76bbd3034eafac0394",
+        "review_record": "docs/evidence/public-operations-20261107/codeql/b07c9d5/source-review.json",
+        "review_record_sha256": "311a1a72c1fb415972911d7651e276cde333a802ef760a9a9e6bde0da6f9f5a6",
+        "schema_version": 3,
+        "expected_entry_count": 26,
+        "business_tree_bindings": {
+          "backend": "ccfccba810bcdd5bf31d8f05dc9570deca6e06ca",
+          "business-backend": "bc18595c8465ccc0f9e0605a58b625c939d377e6",
+          "frontend": "dc8535ec029cbd67a560ed080353078688636e9a",
+          "deploy": "608821351d0067ca1756a10d0dfd3426637a3d73",
+          "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+        },
+        "root_independent_draft_load_and_four_raw_sarif_assessment": "passed",
+        "active_policy_four_raw_sarif_gate": "passed",
+        "raw_high_critical_findings": 26,
+        "individually_reviewed_not_affected_context_findings": 26,
+        "unresolved_blocking_findings": 0,
+        "unknown_findings_automatically_accepted": false,
+        "query_or_directory_wide_suppression": false,
+        "raw_findings_and_severity_preserved": true,
+        "gate_tool_tests": {
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "analysis_scope": "All four raw reports from immutable b07c9d5 archive; exact five production business trees remain bound. The disclosed one-line schema expectation test edit and later documentation/policy data are not represented as complete repository byte equality.",
+        "remote_ci_run": false,
+        "results": [
+          {
+            "scanner": "codeql-policy",
+            "file": "actions.sarif",
+            "raw_high_critical_findings": 0,
+            "not_affected_context_findings": 0,
+            "context_assessments": [],
+            "context_expires_at": null,
+            "context_review_policy": "source_and_trace_bound",
+            "blocking_findings": 0,
+            "status": "pass"
+          },
+          {
+            "scanner": "codeql-policy",
+            "file": "java.sarif",
+            "raw_high_critical_findings": 21,
+            "not_affected_context_findings": 21,
+            "context_assessments": [
+              {
+                "query": "java/spring-disabled-csrf-protection",
+                "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+                "region": {
+                  "startLine": 124,
+                  "startColumn": 20,
+                  "endColumn": 31
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+                "source_sha256": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_custom_cookie_csrf_guard",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+                "region": {
+                  "startLine": 184,
+                  "startColumn": 9,
+                  "endColumn": 20
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
+                "source_sha256": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                "region": {
+                  "startLine": 87,
+                  "startColumn": 62,
+                  "endColumn": 71
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
+                "source_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_database_compare_and_increment_guard",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 46,
+                  "endColumn": 55
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
+                "source_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_database_compare_and_increment_guard",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+                "region": {
+                  "startLine": 74,
+                  "startColumn": 81,
+                  "endColumn": 91
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
+                "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 46,
+                  "endColumn": 56
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
+                "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+                "region": {
+                  "startLine": 100,
+                  "startColumn": 60,
+                  "endColumn": 70
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
+                "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/tainted-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+                "region": {
+                  "startLine": 101,
+                  "startColumn": 54,
+                  "endColumn": 64
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
+                "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/uncontrolled-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 69,
+                  "endColumn": 96
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
+                "source_sha256": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_fixed_nonce_and_no_unbounded_remote_payload",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/uncontrolled-arithmetic",
+                "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+                "region": {
+                  "startLine": 51,
+                  "startColumn": 69,
+                  "endColumn": 98
+                },
+                "security_severity": "8.6",
+                "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
+                "source_sha256": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_fixed_generated_totp_encryption_input",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 58,
+                  "endColumn": 68
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 61,
+                  "startColumn": 17,
+                  "endColumn": 27
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 66,
+                  "startColumn": 17,
+                  "endColumn": 20
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 17,
+                  "endColumn": 23
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 81,
+                  "startColumn": 17,
+                  "endColumn": 23
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 86,
+                  "startColumn": 17,
+                  "endColumn": 24
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 110,
+                  "startColumn": 17,
+                  "endColumn": 20
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 115,
+                  "startColumn": 17,
+                  "endColumn": 26
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 123,
+                  "startColumn": 17,
+                  "endColumn": 27
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_readiness_callback_receiver_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+                "region": {
+                  "startLine": 128,
+                  "startColumn": 17,
+                  "endColumn": 29
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+                "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "java/csrf-unprotected-request-type",
+                "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 17,
+                  "endColumn": 23
+                },
+                "security_severity": "8.8",
+                "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
+                "source_sha256": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+                "classification": "not_affected_context",
+                "reason": "contextual_current_read_only_validation_only_and_concrete_callback_review",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              }
+            ],
+            "context_expires_at": null,
+            "context_review_policy": "source_and_trace_bound",
+            "blocking_findings": 0,
+            "status": "pass_codeql_context"
+          },
+          {
+            "scanner": "codeql-policy",
+            "file": "javascript.sarif",
+            "raw_high_critical_findings": 3,
+            "not_affected_context_findings": 3,
+            "context_assessments": [
+              {
+                "query": "js/insecure-randomness",
+                "path": "frontend/e2e/operations.spec.ts",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 23,
+                  "endColumn": 32
+                },
+                "security_severity": "7.8",
+                "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
+                "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_e2e_public_username_uniqueness",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "js/insecure-randomness",
+                "path": "frontend/e2e/operations.spec.ts",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 23,
+                  "endColumn": 33
+                },
+                "security_severity": "7.8",
+                "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
+                "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_e2e_public_username_uniqueness",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "js/insecure-randomness",
+                "path": "frontend/e2e/public-operations.spec.ts",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 20,
+                  "endColumn": 84
+                },
+                "security_severity": "7.8",
+                "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff",
+                "source_sha256": "0e43292bae8df3c9da20ee2e6043a9992663cfa31ba8f5949f3758dee388471d",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_public_e2e_username_and_example_email_uniqueness",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              }
+            ],
+            "context_expires_at": null,
+            "context_review_policy": "source_and_trace_bound",
+            "blocking_findings": 0,
+            "status": "pass_codeql_context"
+          },
+          {
+            "scanner": "codeql-policy",
+            "file": "python.sarif",
+            "raw_high_critical_findings": 2,
+            "not_affected_context_findings": 2,
+            "context_assessments": [
+              {
+                "query": "py/clear-text-logging-sensitive-data",
+                "path": "backend/scripts/optimization_seed_admin.py",
+                "region": {
+                  "startLine": 70,
+                  "startColumn": 31,
+                  "endColumn": 110
+                },
+                "security_severity": "7.5",
+                "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
+                "source_sha256": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+                "classification": "not_affected_context",
+                "reason": "contextual_false_positive_current_fixture_status_only_return_is_logged",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              },
+              {
+                "query": "py/overly-permissive-file",
+                "path": "backend/scripts/install_runtime_security_patches.py",
+                "region": {
+                  "startLine": 69,
+                  "startColumn": 13,
+                  "endColumn": 36
+                },
+                "security_severity": "7.8",
+                "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+                "source_sha256": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
+                "classification": "not_affected_context",
+                "reason": "contextual_not_sensitive_current_public_signed_package_download_directory",
+                "expires_at": null,
+                "review_policy": "source_and_trace_bound",
+                "boundary": "Exact source-reviewed analyzer context; raw severity preserved. Not the eight-CVE temporary risk acceptance."
+              }
+            ],
+            "context_expires_at": null,
+            "context_review_policy": "source_and_trace_bound",
+            "blocking_findings": 0,
+            "status": "pass_codeql_context"
+          }
+        ]
+      }
+    },
+    "gate_tool_tests": {
+      "passed": 76,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "cloud_postgresql_backup": {
+    "verified_at_utc": "2026-11-07T06:14:19.445907+00:00",
+    "scope": "Real PostgreSQL17 TLS+mTLS source, decoy local DB, S3Mock, official pg_dump/psql client and fresh Java/Flyway+S3 restore",
+    "project": "trip-cloud-backup-3170d216",
+    "source": {
+      "source": "backend-effective-jdbc",
+      "mode": "external_postgresql",
+      "host": "cloud-postgres",
+      "port": 5432,
+      "database": "cloud_actual",
+      "user": "cloud_owner",
+      "sslmode": "verify-full",
+      "server_version_num": 170011,
+      "server_ssl": true,
+      "client_container": "trip-backup-pg-client-5496261cc8ee",
+      "client_image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "client_image_reference": "postgres:17.11-alpine",
+      "network": "trip-cloud-backup-3170d216_default",
+      "credential_projection": "PG connection settings only; private env; no JWT/model keys",
+      "tls_backend_paths": {
+        "sslrootcert": "/run/certs/postgres/ca.crt",
+        "sslcert": "/run/certs/postgres/client.crt",
+        "sslkey": "/run/certs/postgres/client.pk8"
+      }
+    },
+    "source_database_marker": "ACTUAL-CLOUD-SENTINEL",
+    "decoy_database_marker": "LOCAL-DECOY-MUST-NOT-BACKUP",
+    "checks": {
+      "wrong-ca": {
+        "rejected": true,
+        "container": "trip-backup-pg-client-682556d3d792",
+        "stopped": true
+      },
+      "wrong-host": {
+        "rejected": true,
+        "container": "trip-backup-pg-client-a0ae615864ca",
+        "stopped": true
+      },
+      "backup_checksums_valid": true,
+      "same_source_s3_refs": true,
+      "linux_staging_mode": "0700 native filesystem",
+      "restored_actual_marker": true,
+      "decoy_unchanged": true,
+      "restore_has_no_external_PGHOST": true,
+      "restored_java_ready": true,
+      "restored_tables": 47,
+      "restored_objects": 1,
+      "local_default_client_compatibility": true,
+      "local_default_client_container": "trip-backup-pg-client-e70a94708776",
+      "restored_java_original_bytes": 68,
+      "restored_java_original_sha256": "46311346233ff614db11a07fe8ddaae697f12f344163e3aa7894c10b6eaa7c6a",
+      "final_source_guards_native_pass": true,
+      "final_source_client": "trip-backup-pg-client-1aed896935b9"
+    },
+    "backup": {
+      "manifest_schema": "Java/Flyway-v2",
+      "checksummed_files": 19,
+      "tables": 47,
+      "database": "cloud_actual",
+      "database_user": "cloud_owner",
+      "postgres_mount": null,
+      "restore_postgres_image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "object_snapshot": {
+        "schema": "trip-object-snapshot/v1",
+        "dataset_id": "cloud-backup-3170d216",
+        "directory": "objects/data",
+        "objects": 1,
+        "missing_optional_references": 0
+      },
+      "private_output_acl": "Windows private parent explicitly grants only operator SID and SYSTEM; generated object manifest inherits those grants; no POSIX-mode claim on NTFS"
+    },
+    "restored": {
+      "tables_verified": 47,
+      "rows_verified": 26,
+      "java_ready": true,
+      "separate_database": "trip_restore",
+      "separate_user": "trip",
+      "external_PGHOST_absent": true,
+      "objects_verified": 1,
+      "original_bytes": 68,
+      "original_sha256": "46311346233ff614db11a07fe8ddaae697f12f344163e3aa7894c10b6eaa7c6a",
+      "source_and_decoy_unchanged": true
+    },
+    "tests": {
+      "passed": 81,
+      "failed": 0,
+      "skipped": 0,
+      "command": "python -m pytest -q backend/tests/test_backup_database.py backend/tests/test_deployment_assets.py backend/tests/test_backup_policy.py backend/tests/test_restore_retained_baseline.py backend/tests/test_restore_dataset_identity.py backend/tests/test_dataset_enrollment.py backend/tests/test_maintenance_failure_recovery.py backend/tests/test_maintenance_image_preflight.py"
+    },
+    "source_lf_sha256": {
+      "backend/scripts/backup_database.py": "4be28e21cbc21d753c3f55362742f188e730fce5d41a82350340b9f3aa264954",
+      "backend/scripts/backup_java_deployment.py": "0faee398ef3168b006e74ce62f045e0c26a4a85ee83bceb78f854e592218b0d4",
+      "backend/scripts/deployment_assets.py": "4697d591618e1e0626b63850ac08d3e7454168c1feef931d28a181a0eb15a5b8",
+      "backend/scripts/storage_objects.py": "c7bd6e7662ad2853b673562d77484f2a2b074cb53afaaad31f5494437504ffb3",
+      "backend/tests/test_backup_database.py": "4ba3067d0400347f5ee2bb332fc75053077cb3b1904e656c28e092c77e4c9cc2"
+    },
+    "resources": [
+      {
+        "name": "trip-backup-pg-client-0763447b5d37",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-backup-pg-client-1aed896935b9",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-backup-pg-client-323fc050f5c9",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-backup-pg-client-5496261cc8ee",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-backup-pg-client-682556d3d792",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-backup-pg-client-a0ae615864ca",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-backup-pg-client-e70a94708776",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-agent-1",
+        "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-amap-fixture-1",
+        "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-backend-1",
+        "image": "sha256:f9aff49c5c4996ad1c1bc8e0870105622fbbe5379ff05b5979f00c8d5b85c9c2",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-cert-init",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-cloud-postgres-1",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-frontend-1",
+        "image": "sha256:b90a82118e5ca00c6fb5721340d90b38c548eddcf1605a0f3b6e0ae2593f906d",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-linux-staging-check",
+        "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-postgres-1",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      },
+      {
+        "name": "trip-cloud-backup-3170d216-s3mock-1",
+        "image": "sha256:ab01a6946750f451ca215a47e91030695b260e4003b8a5a6201d25029b8fca92",
+        "state": "exited"
+      },
+      {
+        "name": "trip-final-restore-backend-1227f61a62a0",
+        "image": "sha256:f9aff49c5c4996ad1c1bc8e0870105622fbbe5379ff05b5979f00c8d5b85c9c2",
+        "state": "exited"
+      },
+      {
+        "name": "trip-final-restore-pg-1227f61a62a0",
+        "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+        "state": "exited"
+      }
+    ],
+    "state": {
+      "all_owned_containers_stopped": true,
+      "retained_containers": 18,
+      "networks_volumes_and_backup_files_retained": true,
+      "daily_unchanged_and_stopped": true,
+      "scheduled_backup": "DISABLED unchanged",
+      "other_test_projects_unchanged": true
+    },
+    "not_verified": [
+      "Actual cloud provider DNS/IAM/CA/client certificate and privileges",
+      "Other Spring datasource/config overrides, multi-host JDBC and PKCS12/private-key password callbacks unsupported"
+    ]
+  },
+  "external_services": {
+    "smtp_and_notifications": "adapter and local verified STARTTLS SMTP delivery/failure recovery; real provider pending",
+    "s3": "adapter and isolated SDK/HTTP/migration/restore verified; real cloud IAM pending",
+    "https": "local CA proxy/session/CSRF/rate-limit verified; public DNS and ACME pending",
+    "cloud_postgresql": "effective JDBC target, TLS/mTLS, wrong CA/hostname rejection, backup and fresh database/S3 restore verified in isolation; selected cloud pending",
+    "alerts": "local native firing/resolved/failure/retry verified; external recipient pending",
+    "off_host_backups": "local encryption/restore verified; off-host failure domain pending"
+  },
+  "runtime_boundary": {
+    "daily_containers_started": false,
+    "daily_database_used_for_samples": false,
+    "scheduled_backup_enabled": false,
+    "daily_existing_index_migrated": false
+  }
+}

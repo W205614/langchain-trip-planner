@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "review_id": "zlib-exact-package-cve-2026-76844",
+  "recorded_at_utc": "2026-11-07T06:33:26.831556+00:00",
+  "verified_on": "2026-11-07",
+  "verdict": "sufficient_evidence_for_existing_exact_assessment",
+  "review_scope": {
+    "additional_id": "CVE-2026-76844",
+    "same_fix_existing_id": "CVE-2026-85091",
+    "component": "zlib1g",
+    "classification": "fixed_by_pinned_security_upgrade"
+  },
+  "method": {
+    "independent_read_only_review": true,
+    "image_commands_executed": false,
+    "image_rebuilt": false,
+    "scanner_rerun_by_reviewer": false,
+    "business_source_modified": false,
+    "source_archives_and_official_deb_inspected_in_memory": true,
+    "actual_image_file_read_via": "docker cp to stdout from the existing never-started inventory container; tar content hashed in memory"
+  },
+  "official_sources": [
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-76844",
+      "verified_statement": "The exact unstable version 1:1.3.dfsg+really1.3.2-4 is fixed; the fixing change is the same as CVE-2026-85091."
+    },
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-85091",
+      "verified_statement": "The same exact version is fixed; upstream fixing commit df84af25dc1942490e1d1c899a07619152a46148 is identified."
+    },
+    {
+      "url": "https://github.com/madler/zlib/commit/df84af25dc1942490e1d1c899a07619152a46148",
+      "verified_statement": "The gz_write error branch resets strm.avail_in and strm.next_in before returning."
+    }
+  ],
+  "debian_source": {
+    "dsc": {
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.3.dfsg+really1.3.2-4.dsc",
+      "sha256": "5735985df9244ebceb03e606342d3d0bf2fd76284f3ccc939a266b43b559a8e1"
+    },
+    "debian_archive": {
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.3.dfsg+really1.3.2-4.debian.tar.xz",
+      "sha256": "ee9db06d87b2d810b9edd8485b8b39433b18eb30d93f9e1d40fe8dbd40eda7a1",
+      "bytes": 18988,
+      "sha256_matched_official_dsc": true
+    },
+    "source_format": "3.0 (quilt)",
+    "series_path": "debian/patches/series",
+    "series": [
+      "minizip-headers.patch",
+      "minizip-ldadd.patch",
+      "Avoid-undefined-behavior-in-gzwrite.c.patch",
+      "Fix-buffer-overflow-bug-in-non-blocking-gzwrite.patch"
+    ],
+    "security_patch_path": "debian/patches/Fix-buffer-overflow-bug-in-non-blocking-gzwrite.patch",
+    "security_patch_enabled_in_series": true,
+    "patch_origin": "https://github.com/madler/zlib/commit/df84af25dc1942490e1d1c899a07619152a46148",
+    "changelog_evidence": "The exact -4 changelog records the upstream gzwrite buffer-overflow fix for CVE-2026-85091 and Debian bug #1146895.",
+    "branch_coverage": {
+      "file": "gzwrite.c",
+      "function": "gz_write",
+      "condition": "ret == -1",
+      "changes": [
+        "state->strm.avail_in = 0;",
+        "state->strm.next_in = state->in;"
+      ],
+      "return_after_reset": "state->again ? put - len : 0",
+      "covers_blocking_write_failure_stale_pointer_case": true,
+      "reason": "Both resets occur in the common error branch before the state->again-dependent return. The resets are not restricted to non-blocking descriptors, so they cover the newly described underlying write failure leaving a stale caller-buffer pointer.",
+      "evidence_kind": "source-level inspection and explicit Debian same-fix attribution; no exploit execution"
+    },
+    "signature_verification_boundary": "This reviewer compared the archive SHA256 with the HTTPS official .dsc and the official .deb SHA256 with the existing signed-index metadata and lock. The reviewer did not independently repeat GPG signature verification."
+  },
+  "exact_official_package": {
+    "package": "zlib1g",
+    "source_package": "zlib",
+    "version": "1:1.3.dfsg+really1.3.2-4",
+    "architecture": "amd64",
+    "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.3.dfsg+really1.3.2-4_amd64.deb",
+    "sha256": "8506ce550a81ac14b047608e0df121037d9cbb10c3cc28446f68cf8c1d9d31ce",
+    "bytes": 92424,
+    "hash_matches_existing_lock_and_signed_index_metadata": true,
+    "installed_dpkg_status": "install ok installed",
+    "installed_dpkg_version_matches": true
+  },
+  "image_binding": {
+    "requested_image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+    "docker_image_inspect_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+    "grype_input": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+    "grype_config_image_id": "sha256:ea713b5b9c79109f8e82a787811167fc29287ac2d24fb6568094e4345640da2c",
+    "manifest_config_digest": "sha256:ea713b5b9c79109f8e82a787811167fc29287ac2d24fb6568094e4345640da2c",
+    "config_digest_matches_report_image_id": true,
+    "repo_digest": "trip-planner-agent@sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+    "inventory_container_name": "trip-security-inventory-a59b48260693",
+    "inventory_container_id": "59bfdc027941ea07990e550018383ee9bd068fa2fe396b211fd61f3b3583f91c",
+    "inventory_container_image_matches": true,
+    "inventory_container_state_at_review": "created"
+  },
+  "actual_elf": {
+    "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3.2",
+    "bytes": 129520,
+    "sha256": "e0d5aa725cb684e7bcc048c1cb1fbb314f7cb7b7203e8d623044bb6a043e1d61",
+    "official_deb_extracted_file_bytes": 129520,
+    "official_deb_extracted_file_sha256": "e0d5aa725cb684e7bcc048c1cb1fbb314f7cb7b7203e8d623044bb6a043e1d61",
+    "actual_image_bytes_equal_official_deb_file": true,
+    "matches_existing_exact_policy_hash": true
+  },
+  "raw_scanner_observation": {
+    "report": ".codex-public/security/agent-frozen-image/image-vulnerabilities.json",
+    "additional_id_match_count": 1,
+    "artifact_type": "deb",
+    "artifact_name": "zlib1g",
+    "artifact_version": "1:1.3.dfsg+really1.3.2-4",
+    "namespace": "debian:distro:debian:13",
+    "severity": "High",
+    "fix_state": "not-fixed",
+    "version_constraint": "none (unknown)",
+    "interpretation": "The Debian 13 distro matcher reports stable-release no-fix metadata with no usable version constraint, while the actual installed package is the exact official fixed unstable package. This conclusion applies only to the verified package and file bytes."
+  },
+  "assessment_boundary": {
+    "policy": ".github/security-vendor-remediated.json",
+    "observed_existing_exact_assessment": {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "zlib1g": "1:1.3.dfsg+really1.3.2-4"
+      },
+      "requires_dpkg": {
+        "zlib1g": "1:1.3.dfsg+really1.3.2-4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libz.so.1.3.2": "e0d5aa725cb684e7bcc048c1cb1fbb314f7cb7b7203e8d623044bb6a043e1d61"
+      },
+      "ids": [
+        "CVE-2026-85091",
+        "CVE-2026-76844"
+      ],
+      "classification": "fixed_by_pinned_security_upgrade",
+      "vendor_status": "fixed_in_exact_installed_official_package",
+      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, exact-package APT simulation/install delta and final file bytes are locked. Debian explicitly identifies 1:1.3.dfsg+really1.3.2-4 as fixed for CVE-2026-76844 and states it uses the same upstream df84af25 fix as CVE-2026-85091. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-85091",
+        "https://security-tracker.debian.org/tracker/CVE-2026-76844",
+        "https://github.com/madler/zlib/commit/df84af25dc1942490e1d1c899a07619152a46148"
+      ]
+    },
+    "requires_exact_artifact_version": true,
+    "requires_exact_installed_dpkg_version": true,
+    "requires_exact_actual_elf_sha256": true,
+    "version_range_or_distro_wide_exception": false,
+    "risk_acceptance": false,
+    "unfixed_risk_accepted": false,
+    "raw_high_finding_retained": true,
+    "raw_report_suppressed_or_rewritten": false,
+    "entire_image_raw_clean_claimed": false,
+    "whole_image_gate_result_recomputed_by_this_review": false,
+    "policy_action": "Associate the additional CVE ID and primary references with the existing exact-package assessment; no business-tree, package-byte or runtime-image change is needed."
+  },
+  "local_evidence_sha256": {
+    ".codex-public/security/agent-frozen-image/image-vulnerabilities.json": "8bd4cfc44ff4f6fd17952377362cd607fdbac3936d0a7a32c465378f99fead44",
+    ".codex-public/security/agent-frozen-image/distribution-inventory.json": "3f9134dc11433860bf93e83c21b1fe49d45fc1896fe8a2efde4a8f84b79086f6",
+    ".codex-public/security/agent-frozen-image/trip-security-inventory-a59b48260693-resource.json": "ab3368d64b5c730cc2901691df26c86e6594d593ccb98ff478400348efda4b74",
+    "backend/runtime-security-packages.json": "02a7b03f1950d99134ac9d2749802859b0c75c7e907faf1cc22928bfa18f316b",
+    ".github/security-vendor-remediated.json": "04717e79902efb4e8146899fa0d10c238431fad970cd2365d2e7dd9ee04354d3",
+    "docs/evidence/optimization-20261026/security-scans/candidate-summary/native-library-signed-index-metadata.json": "d212e2f986e16427de8a5dc104c2c8b5c9bfd29637d05aec8a630547f2894b87"
+  }
+}

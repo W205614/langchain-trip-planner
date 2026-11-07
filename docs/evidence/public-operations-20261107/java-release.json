@@ -1,0 +1,22 @@
+{
+  "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "fresh_database": "trip_public_release_20261107_b1",
+  "initial_fixture_states": {
+    "trip-public-check-postgres": false,
+    "trip-public-check-mailpit": false,
+    "trip-public-check-s3mock": false
+  },
+  "exit_code": 0,
+  "tests": {
+    "tests": 206,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "passed": true,
+  "final_fixture_states": {
+    "trip-public-check-postgres": false,
+    "trip-public-check-mailpit": false,
+    "trip-public-check-s3mock": false
+  }
+}

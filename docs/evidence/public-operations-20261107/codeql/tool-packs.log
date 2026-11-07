@@ -1,0 +1,62 @@
+Searching directories specified by `--additional-packs`. All directories have equal priority.
+  Searching in:
+    No packs were found at this location.
+Searching directories specified by `--search-path`. Directories are searched in order.
+Searching the root of the CodeQL distribution.
+  Searching in:
+      E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql
+    The following packs were found:
+      codeql/actions-all@0.7.1: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-all\0.7.1\qlpack.yml
+      codeql/actions-queries@0.6.39: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\actions-queries\0.6.39\qlpack.yml
+      codeql/concepts@0.0.35: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\concepts\0.0.35\qlpack.yml
+      codeql/controlflow@2.0.45: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\controlflow\2.0.45\qlpack.yml
+      codeql/cpp-all@12.4.0: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\cpp-all\12.4.0\qlpack.yml
+      codeql/cpp-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\cpp-examples\0.0.0\qlpack.yml
+      codeql/cpp-queries@1.10.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\cpp-queries\1.10.0\qlpack.yml
+      codeql/csharp-all@7.4.2: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\csharp-all\7.4.2\qlpack.yml
+      codeql/csharp-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\csharp-examples\0.0.0\qlpack.yml
+      codeql/csharp-queries@1.11.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\csharp-queries\1.11.0\qlpack.yml
+      codeql/dataflow@2.1.17: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\dataflow\2.1.17\qlpack.yml
+      codeql/go-all@8.1.0: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\go-all\8.1.0\qlpack.yml
+      codeql/go-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\go-examples\0.0.0\qlpack.yml
+      codeql/go-queries@1.6.14: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\go-queries\1.6.14\qlpack.yml
+      codeql/java-all@9.3.4: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-all\9.3.4\qlpack.yml
+      codeql/java-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-examples\0.0.0\qlpack.yml
+      codeql/java-queries@1.12.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\java-queries\1.12.0\qlpack.yml
+      codeql/javascript-all@3.0.0: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-all\3.0.0\qlpack.yml
+      codeql/javascript-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-examples\0.0.0\qlpack.yml
+      codeql/javascript-queries@2.5.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\qlpack.yml
+      codeql/mad@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\mad\1.0.61\qlpack.yml
+      codeql/namebinding@0.0.10: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\namebinding\0.0.10\qlpack.yml
+      codeql/python-all@7.2.9: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-all\7.2.9\qlpack.yml
+      codeql/python-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-examples\0.0.0\qlpack.yml
+      codeql/python-queries@1.9.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\qlpack.yml
+      codeql/quantum@0.0.39: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\quantum\0.0.39\qlpack.yml
+      codeql/rangeanalysis@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\rangeanalysis\1.0.61\qlpack.yml
+      codeql/regex@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\regex\1.0.61\qlpack.yml
+      codeql/ruby-all@7.1.1: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\ruby-all\7.1.1\qlpack.yml
+      codeql/ruby-examples@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\ruby-examples\0.0.0\qlpack.yml
+      codeql/ruby-queries@1.7.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\ruby-queries\1.7.0\qlpack.yml
+      codeql/rust-all@0.2.25: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\rust-all\0.2.25\qlpack.yml
+      codeql/rust-queries@0.1.46: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\rust-queries\0.1.46\qlpack.yml
+      codeql/ssa@2.0.37: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\ssa\2.0.37\qlpack.yml
+      codeql/suite-helpers@1.0.61: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\suite-helpers\1.0.61\qlpack.yml
+      codeql/swift-all@6.8.7: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\swift-all\6.8.7\qlpack.yml
+      codeql/swift-queries@1.4.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\swift-queries\1.4.0\qlpack.yml
+      codeql/threat-models@1.1.1: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\threat-models\1.1.1\qlpack.yml
+      codeql/tutorial@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\tutorial\1.0.61\qlpack.yml
+      codeql/typeflow@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\typeflow\1.0.61\qlpack.yml
+      codeql/typeinference@0.0.42: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\typeinference\0.0.42\qlpack.yml
+      codeql/typetracking@2.0.45: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\typetracking\2.0.45\qlpack.yml
+      codeql/typos@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\typos\1.0.61\qlpack.yml
+      codeql/util@2.0.48: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\util\2.0.48\qlpack.yml
+      codeql/xml@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\xml\1.0.61\qlpack.yml
+      codeql/yaml@1.0.61: (library) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\yaml\1.0.61\qlpack.yml
+      legacy-upgrades@0.0.0: (query) E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\legacy-upgrades\qlpack.yml
+Searching the parent directory of the CodeQL distribution.
+  Searching in:
+      E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64
+    Some packs were hidden by previously found packs. Use --show-hidden-packs to see them.
+Searching the local pack cache. This only applies when searching for a particular version of a pack specified in a lock file.
+  Searching in: C:\Users\25452\.codeql\packages
+  No packs were found at this location.

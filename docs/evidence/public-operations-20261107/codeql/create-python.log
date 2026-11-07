@@ -1,0 +1,12 @@
+Initializing database at E:\project\langchain-trip-planner\.codex-public\codeql-fresh-20261107-0ad64298\db-python.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/tools/codeql.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Running build command: []
+Running command in E:\trip-public-codeql-source-0ad64298: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\python\tools\autobuild.cmd]
+[2026-11-07 13:20:54] [build-stderr] Unable to create process using 'E:\download\python.exe --version': ???????????
+[2026-11-07 13:20:54] [build-stderr] The `py` launcher is required for CodeQL to work on Windows.Please include it when installing Python for Windows.see https://docs.python.org/3/using/windows.html#python-launcher-for-windows
+[2026-11-07 13:20:54] [ERROR] Spawned process exited abnormally (code 4; tried to run: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\tools\win64\runner.exe, cmd.exe, /C, type, NUL, &&, E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\python\tools\autobuild.cmd])
+A fatal error occurred: Exit status 4 from command: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\tools\win64\runner.exe, cmd.exe, /C, type, NUL, &&, E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\python\tools\autobuild.cmd]

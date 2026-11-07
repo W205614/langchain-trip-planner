@@ -1,0 +1,68 @@
+{
+  "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "issue": "Started PUT with unknown outcome and currently missing object was previously erased as though no future publication was possible.",
+  "change": "Keep the reservation/quota and existing erasure waiting stage while that unknown write remains absent; once its supplier object is visible, remove it before removing the reservation.",
+  "test_boundary": "Real PostgreSQL17 and real S3Mock5 SDK HEAD/late PUT/DELETE; a controlled IOException is injected only at the initial uncertain client transport boundary. This does not claim a real cloud timeout was induced.",
+  "before_fix": {
+    "tests": 2,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "observed_failure": "Expected ApiException but nothing was thrown when erasing a missing started uncertain write."
+  },
+  "after_fix": {
+    "tests": 19,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "new_tests": 2,
+    "existing_related_tests": 17,
+    "coverage": [
+      "unknown missing reservation retains bytes and prevents erasure completion",
+      "actual late supplier PUT can subsequently be deleted",
+      "committed already-deleted originals do not block erasure",
+      "never-started reservations do not block erasure",
+      "existing storage roundtrip/snapshot/migration and public operations erasure regressions"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java",
+      "sha256_lf": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc"
+    },
+    {
+      "path": "business-backend/src/test/java/com/tripplanner/UploadErasureUncertaintyIntegrationTest.java",
+      "sha256_lf": "cb0e840211ce80d9d8191a6629657bb3b9832190c7c187159edde26c73e798b5"
+    }
+  ],
+  "raw_test_logs_ignored": [
+    {
+      "path": ".codex-public\\upload-erasure-before-fix.log",
+      "sha256": "ec8177dc144f422a8fa8a22ee07f4f0f351a83f37e6fece2ef8faecf9ad3cf80"
+    },
+    {
+      "path": ".codex-public\\upload-erasure-after-fix.log",
+      "sha256": "89d0369ff0168dd16ccf66041108e16d0739d61882bcfea3a02103674f890614"
+    }
+  ],
+  "fixture_resources_retained": [
+    {
+      "name": "trip-upload-uncertain-postgres-1",
+      "state": "exited",
+      "exit_code": 0,
+      "named_volumes": [
+        "trip-upload-uncertain_pg_data"
+      ]
+    },
+    {
+      "name": "trip-upload-uncertain-s3mock-1",
+      "state": "exited",
+      "exit_code": 143,
+      "named_volumes": [
+        "trip-upload-uncertain_s3_data"
+      ]
+    }
+  ],
+  "automatic_cleanup": false,
+  "daily_resources_touched": false
+}

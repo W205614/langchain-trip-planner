@@ -1,0 +1,9 @@
+import json
+cases=[
+('verify','旅行助手：验证邮箱','请打开以下链接验证邮箱，30分钟内有效：\n','/account/email#mode='+'verify'+'&token='+'x'*43+'\n如果不是你发起的请求，请忽略此邮件。'),
+('reset','旅行助手：重设密码','请打开以下链接重设密码，15分钟内有效；已开启二次验证时仍需验证码：\n','/account/email#mode='+'reset'+'&token='+'x'*43+'\n如果不是你发起的请求，请忽略此邮件。'),
+('notification','旅行助手：你有新的站内通知','你有新的旅行通知。请登录查看：','/inbox\n可在账号安全页关闭邮件提醒。')]
+overhead=len(json.dumps({'recipient':'','subject':'','text':''},separators=(',',':')))
+for name,subject,prefix,suffix in cases:
+ fixed=len(subject)+len(prefix)+len(suffix);constant=overhead+254*12+fixed*6+28
+ print(name,{'JSON_syntax_bytes':overhead,'recipient_bound_bytes':254*12,'fixed_utf16_units':fixed,'allocation_upper_bound':f'6*B+{constant}','max_B_for_no_int_overflow':(2147483647-constant)//6})

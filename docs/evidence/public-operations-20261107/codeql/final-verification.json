@@ -1,0 +1,66 @@
+{
+  "analysis_origin": "local official CodeQL CLI; no remote CI claimed",
+  "validation_scope": "HISTORICAL H1/H2 ONLY: cloud-database backup implementation is changing business sources after these scans; no current worktree gate or activation claimed",
+  "historical_selected_sarif_directory": "docs/evidence/public-operations-20261107/codeql/final",
+  "source_revisions": {
+    "java": "93af3415cb7b6842402fadd878a8598294ee997b",
+    "python": "8af56a33859b4075b840c4ee36332f5185c9a945",
+    "javascript": "93af3415cb7b6842402fadd878a8598294ee997b",
+    "actions": "93af3415cb7b6842402fadd878a8598294ee997b"
+  },
+  "business_source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+  "five_business_trees_equal_between_h1_h2": true,
+  "raw_blocking_findings": 26,
+  "unresolved_after_individual_source_trace_review_in_historical_batch": 0,
+  "new_tool_source_python_findings": 0,
+  "first_round_raw_and_review_retained": true,
+  "active_policy_modified_by_collector": false,
+  "current_worktree_gate_not_run_for_historical_draft": true,
+  "draft_review_raw_hash_and_immutable_h1_h2_source_bindings_checked": true,
+  "review_record": "docs/evidence/public-operations-20261107/codeql/source-review-93af341-8af56a3.json",
+  "review_record_sha256": "dd99ba5c12135aca92668176c5d99a4f177102558e40ea31c809b757ee7e0948",
+  "policy_draft": "docs/evidence/public-operations-20261107/codeql/policy-draft.json",
+  "source_bindings": 47,
+  "jobs": [
+    {
+      "language": "java",
+      "path": "docs/evidence/public-operations-20261107/codeql/final/java.sarif",
+      "sha256": "09eaf592f96afca010168c3457a164717ed5103584a6aacca01566f02e1c769b",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 21
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/public-operations-20261107/codeql/final/python.sarif",
+      "sha256": "84a93428b53d1a78482a6de82e2d51c5fc9a73513bf8de5c912ad16391e87909",
+      "source_revision": "8af56a33859b4075b840c4ee36332f5185c9a945",
+      "blocking_findings": 2
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/public-operations-20261107/codeql/final/javascript.sarif",
+      "sha256": "0c70a433baabdc28ac2b1480abdab99d417ec8cf2a7f7b43b2ad156c8e6e0962",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 3
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/public-operations-20261107/codeql/final/actions.sarif",
+      "sha256": "446ab2837c9ffe724c61d927ef614cbc353394e854ea433cd1506142327dd8b5",
+      "source_revision": "93af3415cb7b6842402fadd878a8598294ee997b",
+      "blocking_findings": 0
+    }
+  ],
+  "supplemental_python_stages": [
+    {
+      "name": "create-python",
+      "exit_code": 0,
+      "elapsed_seconds": 189.9
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 177.3
+    }
+  ]
+}

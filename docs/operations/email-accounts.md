@@ -6,6 +6,8 @@
 
 在业务服务的私有运行配置中填写，不能放入前端环境或提交 Git：
 
+默认四服务为 `deploy/runtime/business.env`，公开环境为 `deploy/runtime-production/business.env`。新安装可先写 `backend/.env` 再生成配置；已有容器不会直接读取这份源文件，修改实际运行文件后还需按原 Compose 参数重建 backend。
+
 ```dotenv
 PUBLIC_REGISTRATION_MODE=email_verified
 PUBLIC_BASE_URL=https://travel.example.com
@@ -22,6 +24,16 @@ SMTP_FROM=travel@example.com
 
 `ACCOUNT_SECURITY_ENCRYPTION_KEY` 使用既有的独立 32 字节 Base64 密钥，邮件载荷以不同于 TOTP 的 AAD 加密保存。不要因为开启邮件重新生成该密钥；数据库、私有配置与此密钥应成套保存。公开邮箱注册要求已启用 SMTP，生产 `PUBLIC_BASE_URL` 要求 HTTPS。它是完整来源地址，不能带路径、查询参数或片段。
 
+公开环境重建示例（云库部署继续带相同 cloud-db overlay）：
+
+```powershell
+docker compose --env-file deploy/runtime-production/public.env -f docker-compose.production.yml -f docker-compose.public.yml up -d --no-deps --force-recreate --wait backend
+docker compose --env-file deploy/runtime-production/public.env -f docker-compose.production.yml -f docker-compose.public.yml restart frontend
+Invoke-RestMethod 'https://travel.example.com/api/auth/options'
+```
+
+`registration_mode=email_verified`、`email_available=true` 只证明应用配置已加载，不会测试 SMTP 连接。真实联调应使用测试邮箱完成注册→实际收信→点击确认→重新登录，并完成一次找回密码、验证旧会话失效。后台 `accepted` 与收件箱收到分别检查；认证／投递失败应在脱敏队列状态和错误码中可见。更换后端容器后若前端仍解析旧容器地址，按同一部署参数重新启动 frontend；不能用代理502判断 SMTP 密码错误。
+
 ## 用户流程
 
 - `/account/security` 绑定或更换邮箱，需要当前密码；已开启 TOTP 时还需一次验证码。新地址验证完成前，原邮箱继续有效。
@@ -36,7 +48,7 @@ SMTP_FROM=travel@example.com
 
 投递状态为 `pending`、`sending`、`retry`、`accepted`、`failed` 或 `cancelled`。网络发送在数据库事务外进行；SMTP 451 等临时错误按 30、60、120、240 秒有界等待，累计最多 5 次尝试。认证失败、550 等永久错误立即失败。响应丢失或进程中断可能在租约到期后再次发送，不能承诺恰好一次。
 
-`accepted` 仅表示 SMTP 接受，不表示收件箱收到。被接受或已过期载荷会从队列表清除。禁用或注销账号时取消未发送邮件；已交给 SMTP 的邮件无法撤回。收件箱反垃圾规则、退信及供应商投递能力需真实服务单独验收。
+`accepted` 仅表示 SMTP 接受，不表示收件箱收到。被接受或已过期载荷会从队列表清除。停用账号会阻止继续领取待发项，重新启用后未过期项可能继续投递；注销会取消待发项并清空载荷。已交给 SMTP 的邮件无法撤回。收件箱反垃圾规则、退信及供应商投递能力需真实服务单独验收。
 
 ## 隔离验收
 

@@ -1,0 +1,894 @@
+{
+  "schema_version": 2,
+  "review_policy": "source_and_trace_bound",
+  "checked_at_utc": "2026-11-07T05:30:30.535429+00:00",
+  "reviewer": "Codex operations sub-agent; no independent human approval claimed",
+  "source_checkpoint": "93af3415cb7b6842402fadd878a8598294ee997b",
+  "finding_count": 3,
+  "scope": "Only the3 newly introduced Java arithmetic findings; not a gate activation or a blanket suppression",
+  "raw_trace_hash_algorithm": "SHA256 UTF8 canonical JSON result, sorted keys, compact separators, ensure_ascii=false",
+  "semantic_flow_hash_algorithm": "sarif-semantic-flow-v1",
+  "raw_sarif_sha256": "09eaf592f96afca010168c3457a164717ed5103584a6aacca01566f02e1c769b",
+  "source_snapshot_sha256": "b705e0986f5f620ad2cde98bf0241be191c7581f8851d1c39336a5f80bdf0781",
+  "supporting_source_bindings_lf": {
+    "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+    "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java": "765689a903a4767a54eaf5e6a89f1fbb5d874c5ed4b0c9e9ad1b83ad3b3640a9",
+    "business-backend/src/main/resources/db/migration/V17__public_operations.sql": "2123d9e4fddc1d8cae760e1da6e97248042c06337edca071536249e96bb2ddb8",
+    "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+    "business-backend/src/main/java/com/tripplanner/security/EmailAccountService.java": "176f0b233e2a134c4356f3f0ea27f95a5d411d1fab65b5bd006365637a65f673",
+    "business-backend/src/main/java/com/tripplanner/api/EmailAccountController.java": "6e7f6410a755539a01829c285023b4e5360b980492325bed122534f2139d147f",
+    "business-backend/src/main/java/com/tripplanner/api/UsersController.java": "9dd9a6ffabaf64edb0bcd64954c8761ac30f5d393429f148129e341f1d5ca806",
+    "business-backend/src/main/resources/db/migration/V15__email_and_delivery.sql": "b1a26678a8b5eb6da96a9ea11efc0c4bf29931636bbdaa5bf52353e6d2d5e041",
+    "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+    "backend/scripts/prepare_java_deployment.py": "d38e13f907d9787230da6eaf7361475259f325547f42d3e80e05272c2f55be9e"
+  },
+  "source_snapshot_comparison": {
+    "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java": {
+      "source_sha256_current_worktree_lf": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+      "sarif_snapshot_raw_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java": {
+      "source_sha256_current_worktree_lf": "765689a903a4767a54eaf5e6a89f1fbb5d874c5ed4b0c9e9ad1b83ad3b3640a9",
+      "sarif_snapshot_raw_sha256": "765689a903a4767a54eaf5e6a89f1fbb5d874c5ed4b0c9e9ad1b83ad3b3640a9",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/resources/db/migration/V17__public_operations.sql": {
+      "source_sha256_current_worktree_lf": "2123d9e4fddc1d8cae760e1da6e97248042c06337edca071536249e96bb2ddb8",
+      "sarif_snapshot_raw_sha256": "2123d9e4fddc1d8cae760e1da6e97248042c06337edca071536249e96bb2ddb8",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java": {
+      "source_sha256_current_worktree_lf": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+      "sarif_snapshot_raw_sha256": "cc2219ddf63b38cb950affb0c348b4ca712d6b5399ac8171a74a9386bf9f3388",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/java/com/tripplanner/security/EmailAccountService.java": {
+      "source_sha256_current_worktree_lf": "176f0b233e2a134c4356f3f0ea27f95a5d411d1fab65b5bd006365637a65f673",
+      "sarif_snapshot_raw_sha256": "c2a1a5ce303bdcc43a48fdabac48938f816ac336ebe789c4d346e71c4039601a",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/java/com/tripplanner/api/EmailAccountController.java": {
+      "source_sha256_current_worktree_lf": "6e7f6410a755539a01829c285023b4e5360b980492325bed122534f2139d147f",
+      "sarif_snapshot_raw_sha256": "6e7f6410a755539a01829c285023b4e5360b980492325bed122534f2139d147f",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/java/com/tripplanner/api/UsersController.java": {
+      "source_sha256_current_worktree_lf": "9dd9a6ffabaf64edb0bcd64954c8761ac30f5d393429f148129e341f1d5ca806",
+      "sarif_snapshot_raw_sha256": "364b3c3bc4544cb37678cde6223c5b49c5d52a708a6145b61126e8aea346e5e0",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/resources/db/migration/V15__email_and_delivery.sql": {
+      "source_sha256_current_worktree_lf": "b1a26678a8b5eb6da96a9ea11efc0c4bf29931636bbdaa5bf52353e6d2d5e041",
+      "sarif_snapshot_raw_sha256": "b1a26678a8b5eb6da96a9ea11efc0c4bf29931636bbdaa5bf52353e6d2d5e041",
+      "checkpoint_blob_lf_equal": true
+    },
+    "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java": {
+      "source_sha256_current_worktree_lf": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+      "sarif_snapshot_raw_sha256": "70e7874759a3dc174114ddd4446a86b9fd4142d6ac7eea72b0a667731dd2114f",
+      "checkpoint_blob_lf_equal": true
+    },
+    "backend/scripts/prepare_java_deployment.py": {
+      "source_sha256_current_worktree_lf": "d38e13f907d9787230da6eaf7361475259f325547f42d3e80e05272c2f55be9e",
+      "sarif_snapshot_raw_sha256": "d38e13f907d9787230da6eaf7361475259f325547f42d3e80e05272c2f55be9e",
+      "checkpoint_blob_lf_equal": true
+    }
+  },
+  "source_changed": false,
+  "runtime_check": "Only authorized15439 PostgreSQL started; temporary-table transaction rolled back; PostgreSQL stopped again; no old rows touched",
+  "primary_documentation": [
+    {
+      "url": "https://www.postgresql.org/docs/17/datatype-numeric.html",
+      "supports": "PostgreSQL INTEGER range and out-of-range rejection"
+    },
+    {
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/SecureRandom.html#nextBytes(byte%5B%5D)",
+      "supports": "nextBytes fills the supplied existing array"
+    },
+    {
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/javax/crypto/Cipher.html",
+      "supports": "AEAD tag appended to ciphertext during encryption"
+    }
+  ],
+  "findings": [
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 87,
+        "startColumn": 62,
+        "endColumn": 71
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
+      "source_sha256_current_worktree_lf": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+      "raw_trace_sha256": "a7103152e5709a194b635e2acfbcc819e7988e7f43da75d7f02f91d4f5a2978d",
+      "sarif_result_index": 2,
+      "rule_help_uri": null,
+      "raw_sarif_path": ".codex-public/codeql-fresh-20261107-0ad64298/java.sarif",
+      "raw_result": {
+        "ruleId": "java/tainted-arithmetic",
+        "ruleIndex": 79,
+        "rule": {
+          "id": "java/tainted-arithmetic",
+          "index": 79
+        },
+        "message": {
+          "text": "This arithmetic expression depends on a [user-provided value](1), potentially causing an overflow."
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 2
+              },
+              "region": {
+                "startLine": 87,
+                "startColumn": 62,
+                "endColumn": 71
+              }
+            }
+          }
+        ],
+        "partialFingerprints": {
+          "primaryLocationLineHash": "616e55fec514b5f0:1",
+          "primaryLocationStartColumnFingerprint": "55"
+        },
+        "codeFlows": [
+          {
+            "threadFlows": [
+              {
+                "locations": [
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 3
+                        },
+                        "region": {
+                          "startLine": 28,
+                          "startColumn": 115,
+                          "endColumn": 152
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 3
+                        },
+                        "region": {
+                          "startLine": 28,
+                          "startColumn": 242,
+                          "endColumn": 249
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 82,
+                          "startColumn": 44,
+                          "endColumn": 55
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 84,
+                          "startColumn": 23,
+                          "endLine": 89,
+                          "endColumn": 6
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 84,
+                          "startColumn": 23,
+                          "endLine": 89,
+                          "endColumn": 6
+                        }
+                      },
+                      "message": {
+                        "text": "...->... : new TransactionCallback<Map<String,Object & ...>>(...) { ... } [version] : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 84,
+                          "startColumn": 23,
+                          "endLine": 89,
+                          "endColumn": 6
+                        }
+                      },
+                      "message": {
+                        "text": "parameter this : new TransactionCallback<Map<String,Object & ...>>(...) { ... } [version] : Number"
+                      }
+                    },
+                    "taxa": [
+                      {
+                        "id": "heuristic-callback",
+                        "properties": {
+                          "CodeQL/DataflowRole": "step"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 87,
+                          "startColumn": 62,
+                          "endColumn": 69
+                        }
+                      },
+                      "message": {
+                        "text": "this : new TransactionCallback<Map<String,Object & ...>>(...) { ... } [version] : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 87,
+                          "startColumn": 62,
+                          "endColumn": 69
+                        }
+                      },
+                      "message": {
+                        "text": "version"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "relatedLocations": [
+          {
+            "id": 1,
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 3
+              },
+              "region": {
+                "startLine": 28,
+                "startColumn": 115,
+                "endColumn": 152
+              }
+            },
+            "message": {
+              "text": "user-provided value"
+            }
+          },
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 3
+              },
+              "region": {
+                "startLine": 28,
+                "startColumn": 115,
+                "endColumn": 152
+              }
+            }
+          },
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 2
+              },
+              "region": {
+                "startLine": 87,
+                "startColumn": 62,
+                "endColumn": 69
+              }
+            }
+          }
+        ]
+      },
+      "review_decision": "contextual_false_positive_database_compare_and_increment_guard",
+      "entry_point": "PUT /api/admin/operations/feedback/{id}, If-Match parsed as Java int; controller line28 -> respond(version) line82 -> captured transaction callback -> audit/response version+1",
+      "complete_trace_review": "All 8 ordered thread-flow locations and all related locations read. The tracked value is If-Match version, not page. The page<1/page>100000 checks are unrelated and are not evidence for these findings.",
+      "constraints": [
+        "Only the authenticated ADMIN route reaches this endpoint; public controller role checks are additional context, not the arithmetic proof.",
+        "respond rejects version<1 before the transaction.",
+        "The SQL statement binds the supplied version in WHERE id=? AND version=? and computes SET version=version+1 in PostgreSQL INTEGER (V17).",
+        "Java audit/response expressions execute only after db.update returned exactly1. A mismatch throws409 first; an INTEGER overflow throws before db.update can return1.",
+        "No production statement assigns user_feedback.version from arbitrary request input; creation defaults1 and response updates increment by1."
+      ],
+      "arithmetic": {
+        "input_type": "Java int",
+        "input_min_after_guard": 1,
+        "syntactic_input_max": 2147483647,
+        "largest_reachable_operand_after_successful_sql_update": 2147483646,
+        "largest_java_result": 2147483647,
+        "minimum_java_result": 2,
+        "operation": "version+1"
+      },
+      "native_boundary_evidence": {
+        "script": ".codex-public/codeql-fresh-20261107-0ad64298/pg-feedback-version-boundaries.sql",
+        "log": ".codex-public/codeql-fresh-20261107-0ad64298/pg-feedback-version-boundaries.log",
+        "observed": [
+          "unmatched maximum header gives affected rows0",
+          "2147483646 gives affected rows1 and stored2147483647",
+          "matched2147483647 gives SQLSTATE22003 and leaves stored2147483647"
+        ]
+      },
+      "limits": [
+        "Relies on the current V17 INTEGER type, matching WHERE predicate, affected-row guard and statement-before-Java order. Changing any requires re-review.",
+        "At actual stored INT_MAX the next update is rejected by PostgreSQL; this is finite version exhaustion, not a Java wraparound, and successful indefinite revisions are not claimed."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 88,
+        "startColumn": 46,
+        "endColumn": 55
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
+      "source_sha256_current_worktree_lf": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+      "raw_trace_sha256": "ca80b71b3996020bb419b6db0788d733402b98cb469692410b4b45e04215ef88",
+      "sarif_result_index": 3,
+      "rule_help_uri": null,
+      "raw_sarif_path": ".codex-public/codeql-fresh-20261107-0ad64298/java.sarif",
+      "raw_result": {
+        "ruleId": "java/tainted-arithmetic",
+        "ruleIndex": 79,
+        "rule": {
+          "id": "java/tainted-arithmetic",
+          "index": 79
+        },
+        "message": {
+          "text": "This arithmetic expression depends on a [user-provided value](1), potentially causing an overflow."
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 2
+              },
+              "region": {
+                "startLine": 88,
+                "startColumn": 46,
+                "endColumn": 55
+              }
+            }
+          }
+        ],
+        "partialFingerprints": {
+          "primaryLocationLineHash": "2ce5cbb6876a7bfc:1",
+          "primaryLocationStartColumnFingerprint": "39"
+        },
+        "codeFlows": [
+          {
+            "threadFlows": [
+              {
+                "locations": [
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 3
+                        },
+                        "region": {
+                          "startLine": 28,
+                          "startColumn": 115,
+                          "endColumn": 152
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 3
+                        },
+                        "region": {
+                          "startLine": 28,
+                          "startColumn": 242,
+                          "endColumn": 249
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 82,
+                          "startColumn": 44,
+                          "endColumn": 55
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 84,
+                          "startColumn": 23,
+                          "endLine": 89,
+                          "endColumn": 6
+                        }
+                      },
+                      "message": {
+                        "text": "version : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 84,
+                          "startColumn": 23,
+                          "endLine": 89,
+                          "endColumn": 6
+                        }
+                      },
+                      "message": {
+                        "text": "...->... : new TransactionCallback<Map<String,Object & ...>>(...) { ... } [version] : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 84,
+                          "startColumn": 23,
+                          "endLine": 89,
+                          "endColumn": 6
+                        }
+                      },
+                      "message": {
+                        "text": "parameter this : new TransactionCallback<Map<String,Object & ...>>(...) { ... } [version] : Number"
+                      }
+                    },
+                    "taxa": [
+                      {
+                        "id": "heuristic-callback",
+                        "properties": {
+                          "CodeQL/DataflowRole": "step"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 88,
+                          "startColumn": 46,
+                          "endColumn": 53
+                        }
+                      },
+                      "message": {
+                        "text": "this : new TransactionCallback<Map<String,Object & ...>>(...) { ... } [version] : Number"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 2
+                        },
+                        "region": {
+                          "startLine": 88,
+                          "startColumn": 46,
+                          "endColumn": 53
+                        }
+                      },
+                      "message": {
+                        "text": "version"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "relatedLocations": [
+          {
+            "id": 1,
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 3
+              },
+              "region": {
+                "startLine": 28,
+                "startColumn": 115,
+                "endColumn": 152
+              }
+            },
+            "message": {
+              "text": "user-provided value"
+            }
+          },
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 3
+              },
+              "region": {
+                "startLine": 28,
+                "startColumn": 115,
+                "endColumn": 152
+              }
+            }
+          },
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 2
+              },
+              "region": {
+                "startLine": 88,
+                "startColumn": 46,
+                "endColumn": 53
+              }
+            }
+          }
+        ]
+      },
+      "review_decision": "contextual_false_positive_database_compare_and_increment_guard",
+      "entry_point": "PUT /api/admin/operations/feedback/{id}, If-Match parsed as Java int; controller line28 -> respond(version) line82 -> captured transaction callback -> audit/response version+1",
+      "complete_trace_review": "All 8 ordered thread-flow locations and all related locations read. The tracked value is If-Match version, not page. The page<1/page>100000 checks are unrelated and are not evidence for these findings.",
+      "constraints": [
+        "Only the authenticated ADMIN route reaches this endpoint; public controller role checks are additional context, not the arithmetic proof.",
+        "respond rejects version<1 before the transaction.",
+        "The SQL statement binds the supplied version in WHERE id=? AND version=? and computes SET version=version+1 in PostgreSQL INTEGER (V17).",
+        "Java audit/response expressions execute only after db.update returned exactly1. A mismatch throws409 first; an INTEGER overflow throws before db.update can return1.",
+        "No production statement assigns user_feedback.version from arbitrary request input; creation defaults1 and response updates increment by1."
+      ],
+      "arithmetic": {
+        "input_type": "Java int",
+        "input_min_after_guard": 1,
+        "syntactic_input_max": 2147483647,
+        "largest_reachable_operand_after_successful_sql_update": 2147483646,
+        "largest_java_result": 2147483647,
+        "minimum_java_result": 2,
+        "operation": "version+1"
+      },
+      "native_boundary_evidence": {
+        "script": ".codex-public/codeql-fresh-20261107-0ad64298/pg-feedback-version-boundaries.sql",
+        "log": ".codex-public/codeql-fresh-20261107-0ad64298/pg-feedback-version-boundaries.log",
+        "observed": [
+          "unmatched maximum header gives affected rows0",
+          "2147483646 gives affected rows1 and stored2147483647",
+          "matched2147483647 gives SQLSTATE22003 and leaves stored2147483647"
+        ]
+      },
+      "limits": [
+        "Relies on the current V17 INTEGER type, matching WHERE predicate, affected-row guard and statement-before-Java order. Changing any requires re-review.",
+        "At actual stored INT_MAX the next update is rejected by PostgreSQL; this is finite version exhaustion, not a Java wraparound, and successful indefinite revisions are not claimed."
+      ]
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 69,
+        "endColumn": 96
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
+      "source_sha256_current_worktree_lf": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+      "raw_trace_sha256": "6d32506a89b935d61ef583e7398758874f9292e035d174578ba2833cba963bb4",
+      "sarif_result_index": 8,
+      "rule_help_uri": null,
+      "raw_sarif_path": ".codex-public/codeql-fresh-20261107-0ad64298/java.sarif",
+      "raw_result": {
+        "ruleId": "java/uncontrolled-arithmetic",
+        "ruleIndex": 80,
+        "rule": {
+          "id": "java/uncontrolled-arithmetic",
+          "index": 80
+        },
+        "message": {
+          "text": "This arithmetic expression depends on an [uncontrolled value](1), potentially causing an overflow."
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 8
+              },
+              "region": {
+                "startLine": 75,
+                "startColumn": 69,
+                "endColumn": 96
+              }
+            }
+          }
+        ],
+        "partialFingerprints": {
+          "primaryLocationLineHash": "7fb193dc01709468:1",
+          "primaryLocationStartColumnFingerprint": "62"
+        },
+        "codeFlows": [
+          {
+            "threadFlows": [
+              {
+                "locations": [
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 8
+                        },
+                        "region": {
+                          "startLine": 70,
+                          "startColumn": 65,
+                          "endColumn": 70
+                        }
+                      },
+                      "message": {
+                        "text": "nonce : byte[]"
+                      }
+                    }
+                  },
+                  {
+                    "location": {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                          "uriBaseId": "%SRCROOT%",
+                          "index": 8
+                        },
+                        "region": {
+                          "startLine": 75,
+                          "startColumn": 69,
+                          "endColumn": 81
+                        }
+                      },
+                      "message": {
+                        "text": "nonce.length"
+                      }
+                    },
+                    "taxa": [
+                      {
+                        "id": "entrypointFieldStep",
+                        "properties": {
+                          "CodeQL/DataflowRole": "step"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "relatedLocations": [
+          {
+            "id": 1,
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 8
+              },
+              "region": {
+                "startLine": 70,
+                "startColumn": 65,
+                "endColumn": 70
+              }
+            },
+            "message": {
+              "text": "uncontrolled value"
+            }
+          },
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 8
+              },
+              "region": {
+                "startLine": 70,
+                "startColumn": 65,
+                "endColumn": 70
+              }
+            }
+          },
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                "uri": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+                "uriBaseId": "%SRCROOT%",
+                "index": 8
+              },
+              "region": {
+                "startLine": 75,
+                "startColumn": 69,
+                "endColumn": 81
+              }
+            }
+          }
+        ]
+      },
+      "review_decision": "contextual_false_positive_fixed_nonce_and_no_unbounded_remote_payload",
+      "entry_point": "encrypt is package-private, invoked in production only by enqueue; enqueue invoked by EmailAccountService.issue and MailDeliveryService.bridgeNotifications. No HTTP endpoint exposes arbitrary enqueue subject/text or encrypt input.",
+      "complete_trace_review": "Both ordered flow steps and all related locations read. The reported source is SecureRandom.nextBytes(nonce) at line70, flowing to nonce.length. Local nonce is allocated new byte[12]; nextBytes fills elements and cannot change Java array length. The second operand value.length was independently audited rather than ignored.",
+      "constraints": [
+        "AES/GCM/NoPadding uses GCMParameterSpec(128,nonce), i.e.16 authentication-tag bytes; AAD is fixed and not encrypted. For N UTF-8 plaintext bytes, the buffer size is N+16+12=N+28.",
+        "Verification/reset templates contain only fixed strings, a43-character server-generated URL-safe token, validated recipient and the final configured publicBase string. No password, username, arbitrary feedback or trip text is inserted in the encrypted text.",
+        "Registered/bound email is normalized with input length<=254; enqueue occurs after insertion into account_email_tokens.target_email VARCHAR(254). Reset/resend read the same bounded columns. Notification recipient is users.email VARCHAR(254).",
+        "The notification bridge selects IDs/recipient but deliberately uses a fixed generic notification template; notification content, invitation text and trip titles do not flow into the mail payload.",
+        "A conservative bound permits12 JSON UTF-8 bytes per database Unicode character, covering escaped surrogate pairs: recipient contribution<=3048 bytes. A Java UTF16 unit in fixed/config strings contributes at most6 JSON bytes; compact three-field JSON syntax adds39 bytes.",
+        "PUBLIC_BASE_URL is final constructor-injected deployment configuration, validated as HTTP(S) origin by EmailAccountService; it is not derived from request Host/forwarded headers and remote users cannot set it."
+      ],
+      "arithmetic": {
+        "nonce_length_exact": 12,
+        "gcm_tag_bytes_exact": 16,
+        "json_syntax_bytes": 39,
+        "recipient_database_characters_max": 254,
+        "recipient_json_utf8_bytes_max_conservative": 3048,
+        "B_definition": "UTF16 length of trimmed trusted PUBLIC_BASE_URL",
+        "verification_allocate_upper_bound_bytes": "6*B+3865",
+        "reset_allocate_upper_bound_bytes": "6*B+3943",
+        "notification_allocate_upper_bound_bytes": "6*B+3409",
+        "all_branches_upper_bound_bytes": "6*B+3943",
+        "B_sufficient_max_for_all_bounds_within_java_int": 357913284
+      },
+      "caller_paths": [
+        {
+          "path": "business-backend/src/main/java/com/tripplanner/security/EmailAccountService.java",
+          "calls": "registered -> normalize -> issueVerification -> issue; bind -> normalize -> issueVerification -> issue; resend -> bounded token/email row -> issueVerification -> issue; requestReset -> normalize -> bounded verified email row -> issue",
+          "enqueue_lines": [
+            114,
+            117
+          ]
+        },
+        {
+          "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+          "calls": "scheduled -> bridgeNotifications -> enqueue",
+          "enqueue_lines": [
+            106,
+            107
+          ]
+        }
+      ],
+      "limits": [
+        "There is no application-level numeric maximum for trusted PUBLIC_BASE_URL. Therefore this review does not claim a fixed absolute allocation maximum across all possible operator configurations. The symbolic bound and sufficient threshold are explicit; runtime memory size or low probability is not used as a justification.",
+        "The finding is not exploitable through current remote inputs: the only remote payload component is bounded email; the reported nonce-length input is constant. This decision is scoped to the enumerated current call graph and deployment-config trust boundary, not a general safe-for-arbitrary-text claim about encrypt/enqueue.",
+        "New enqueue callers, user-editable base URLs, changed templates, recipient schema, serializer settings, nonce/GCM settings or origin trust require new source-and-trace review."
+      ],
+      "bound_calculation_script": ".codex-public/codeql-fresh-20261107-0ad64298/mail-size-bound.py"
+    }
+  ]
+}

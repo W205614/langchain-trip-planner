@@ -1,0 +1,74 @@
+{
+  "source": "E:\\trip-public-codeql-source-0ad64298",
+  "evidence": "E:\\project\\langchain-trip-planner\\.codex-public\\codeql-fresh-20261107-0ad64298",
+  "snapshot_files": 1047,
+  "stages": [
+    {
+      "name": "create-java",
+      "exit_code": 0,
+      "elapsed_seconds": 378.0
+    },
+    {
+      "name": "analyze-java",
+      "exit_code": 0,
+      "elapsed_seconds": 139.3
+    },
+    {
+      "name": "create-python",
+      "exit_code": 2,
+      "elapsed_seconds": 27.0
+    },
+    {
+      "name": "create-python-interpreter311",
+      "exit_code": 0,
+      "elapsed_seconds": 217.1
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 221.0
+    },
+    {
+      "name": "create-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 47.3
+    },
+    {
+      "name": "analyze-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 91.0
+    },
+    {
+      "name": "create-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 32.6
+    },
+    {
+      "name": "analyze-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 38.5
+    }
+  ],
+  "complete": true,
+  "old_review_modified": false,
+  "gate_bypassed": false,
+  "tool": {
+    "version": "2.27.4",
+    "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.4/codeql-bundle-win64.tar.gz",
+    "archive": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64.tar.gz",
+    "directory": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64",
+    "sha256": "d67fead75936c55a241d26c25342747b07f94664b104f719dfe291b665508c4d",
+    "bytes": 700532554,
+    "configuration_verified": true
+  },
+  "python_interpreter_configuration": {
+    "version": "Python 3.11.9",
+    "path_prefix": "C:\\Users\\25452\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0",
+    "official_extractor_option": "python_executable_name=python",
+    "scope": "this collector subprocess only",
+    "initial_failure_retained": "create-python.log"
+  },
+  "snapshot_sources_unchanged": true,
+  "application_source_still_matches_snapshot": true,
+  "all_analyzed_source_still_matches_snapshot": false
+}

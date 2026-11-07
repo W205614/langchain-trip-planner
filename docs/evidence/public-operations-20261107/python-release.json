@@ -1,0 +1,10 @@
+{
+  "source_checkpoint": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "image_id": "sha256:788b2ba104272f894c1a9c700474e69ca4053fe79bc1a5ab50032f21daf7bf2e",
+  "passed": 488,
+  "skipped": 10,
+  "failed": 0,
+  "network": "none",
+  "raw_log_sha256": "f0421e581ba5d1a8e43630bc2584c3f52c44109be4fff07d742196f2bfbab882",
+  "skip_boundary": "Nine native ABI/security cases separately passed in the final readonly/cap-drop/no-new-privileges image; the restic binary checks separately passed on pinned Windows and Linux binaries. Skipped is not counted as passed."
+}

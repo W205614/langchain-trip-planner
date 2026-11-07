@@ -1,0 +1,3528 @@
+{
+  "schema": "trip-codeql-csrf-source-review/v1",
+  "source_checkpoint": "93af3415cb7b6842402fadd878a8598294ee997b",
+  "business_tree_bindings": {
+    "backend": "9220c829856ddaa77dad6455dc709d7d6eb5a16c",
+    "business-backend": "a110ec78978683df86e209856dc84c84b2a0da59",
+    "frontend": "dc8535ec029cbd67a560ed080353078688636e9a",
+    "deploy": "608821351d0067ca1756a10d0dfd3426637a3d73",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "source_snapshot": "E:\\project\\langchain-trip-planner\\.codex-public\\codeql-fresh-20261107-0ad64298\\source-snapshot.json",
+  "raw_sarif": "E:\\project\\langchain-trip-planner\\.codex-public\\codeql-fresh-20261107-0ad64298\\java.sarif",
+  "raw_sarif_sha256": "09eaf592f96afca010168c3457a164717ed5103584a6aacca01566f02e1c769b",
+  "reviewer": "Codex storage subagent; individual current-source and all supplied current raw-flow review; no independent human approval claimed",
+  "review_status": "Source/trace assessment complete; parent retains product-contract decision and active-policy ownership",
+  "old_review_modified": false,
+  "active_policy_modified": false,
+  "supporting_source_bindings_lf": {
+    "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+    "business-backend/src/main/java/com/tripplanner/api/ValidationController.java": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+    "business-backend/src/main/java/com/tripplanner/api/AssistantController.java": "978dcfaa2b7acd540b4ccbc53751e6f4fe2f5bd8c26d43cc85d1d6949eab35d4",
+    "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java": "1b9cd9d2e3bfa54f66264856ba589cfd86087b7232e856c0707da642dd9d4ab8",
+    "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java": "0a8e916fcf132ec8ee89455f24804ab7be675fab6bd68c8490923f2bc1e7cbd7",
+    "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java": "c5ded52c0b34df9b9b5c80befb5ff5085862110e80bc044502efdd25c83f210e",
+    "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java": "546519210d6e0c8864c55f1ad0a1cf99706fcd8a329e77b95b0f69db25987d29",
+    "business-backend/src/main/java/com/tripplanner/domain/UserQuotaService.java": "e4bbec53ad314d795755871bb51adcf54d0fc090e16eefc26276a8cff3b8ff6d",
+    "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java": "724031c9e0c24ac97e9e3898e40626f707ce3f68f1c06c30db02685518bee934",
+    "business-backend/src/main/java/com/tripplanner/domain/TaskService.java": "22fdfbce43aebfaac820fa40203d6274bc564778829ad572fb586b92afb6e839",
+    "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+    "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java": "10f8d492cf59da62b4146a0924b76da88e2464152816b56710187d82bde8336d",
+    "backend/app/agent_api/main.py": "216a0d0369876c6397740ebe79b7dbbffae865fa55c83d34a55c0129758be841"
+  },
+  "common_proof": [
+    "UpstreamGuard.execute invokes only its received Operation<T> at line87. AgentClient.post, available, stream and AmapGateway GET/image methods each supply their own concrete lambda. A synchronous GET capability cannot acquire the unrelated streaming lambda and its TaskService progress consumer merely because both implement Operation.run.",
+    "All 44 supplied flows were read individually. Their four sinks per primary are OutboundActorContext.register DELETE/INSERT at lines56/57 and unrelated TaskService progress writes at lines399/403. The former are not all impossible: map reads really register operations and reserve AMAP quota, as explicitly stated per finding.",
+    "Map operations have purpose=map. ExecutionGovernanceService rejects text/embedding kinds for that context; actor ID comes from the authenticated Java request, not POI/body-controlled user_id. UserQuotaService applies active-user shared-lock and per-user limits before a real supplier reservation.",
+    "These GET handlers do not change trips, plans, user permissions, feedback, exports, deletion state or payments. Bounded provider accounting is incidental to resource retrieval, not an additional user-selected business action. RFC9110 section9.2.1 explicitly permits logging/accounting side effects of safe methods.",
+    "Browser sessions are host-only HttpOnly SameSite=Strict, Secure for non-loopback. Ordinary cross-site requests do not send the authenticated cookie. Cookie-authenticated unsafe methods require the custom X-CSRF-Token guard; explicit Bearer headers are not ambient browser credentials."
+  ],
+  "references": [
+    "https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.1"
+  ],
+  "limitations": [
+    "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+    "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+    "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+    "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+  ],
+  "findings": [
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+      "raw_trace_sha256": "a566dbb78de721af94b62c944b9299d0d4c1501eea6f4b4c2ca6ae2531e19566",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "photoImage",
+      "category": "operational_map_accounting",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "Read-only POI photo/detail retrieval. The shown image-download guard to AgentClient.post is a different Operation receiver; the earlier explicit poi-detail call and actual image budget reservation can legitimately create map accounting.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 35,
+            "message": "photoImage"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 49,
+            "message": "imageFromPoi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 357,
+            "message": "imageFromPoi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 366,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 35,
+            "message": "photoImage"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 49,
+            "message": "imageFromPoi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 357,
+            "message": "imageFromPoi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 366,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 35,
+            "message": "photoImage"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 49,
+            "message": "imageFromPoi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 357,
+            "message": "imageFromPoi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 366,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 35,
+            "message": "photoImage"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 49,
+            "message": "imageFromPoi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 357,
+            "message": "imageFromPoi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 366,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+      "raw_trace_sha256": "0d44bfbc091a394828bad7435ef5b885783cad64f008da8fbc1a26ffe16a6e78",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "evalPolicy",
+      "category": "excluded_status_path",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "The only Agent path is /capabilities/eval-policy, which forAgent explicitly excludes before any register call. The supplied synchronous callback cannot invoke streamGuarded or TaskService consumer.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 61,
+            "message": "evalPolicy"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 62,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 61,
+            "message": "evalPolicy"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 62,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 61,
+            "message": "evalPolicy"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 62,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 61,
+            "message": "evalPolicy"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 62,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+      "raw_trace_sha256": "1be9c6c2f9a8590ce32b43999aa17ebe9d507c6578bf9224c3916ca954076b6a",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "poi",
+      "category": "operational_map_accounting",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "The constant Agent path /capabilities/poi-search performs POI retrieval; actual map operation and AMAP quota bookkeeping are acknowledged. No trip/task/profile mutation is requested.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+      "raw_trace_sha256": "51042bec28594f5ad4e2b3cd58e584f097a846beaa8beaf2a3eee495c56f2595",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "search",
+      "category": "operational_map_accounting",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "Delegates directly to poi with validated query/city arguments and therefore has the same read-only POI and actual map-accounting boundary.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 75,
+            "message": "search"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 77,
+            "message": "poi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 75,
+            "message": "search"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 77,
+            "message": "poi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 75,
+            "message": "search"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 77,
+            "message": "poi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 75,
+            "message": "search"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 77,
+            "message": "poi(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 66,
+            "message": "poi"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 70,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+      "raw_trace_sha256": "ed1ee022e7474546280c4c37109ccd845a522ef06135958f582370a402f891a2",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "detail",
+      "category": "operational_map_accounting",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "The constant Agent path /capabilities/poi-detail returns validated public POI fields. Map operation and AMAP quota bookkeeping are real, and cannot authorize text/embedding.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 81,
+            "message": "detail"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 82,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 81,
+            "message": "detail"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 82,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 81,
+            "message": "detail"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 82,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 81,
+            "message": "detail"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 82,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+      "raw_trace_sha256": "fd05be319a8dd95320c00e14ba245ccf7d96f268aa3afe399412db5f16b1e392",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "weather",
+      "category": "operational_map_accounting",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "Weather calls the bounded cached AmapGateway geocode/weather GET path. Its concrete callback performs HTTP GET and reserveAmap; the shown AgentClient.post receiver and stream consumer are different callbacks. Actual map accounting is acknowledged.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 86,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 87,
+            "message": "weather(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 225,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 233,
+            "message": "get(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 111,
+            "message": "get"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 123,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 86,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 87,
+            "message": "weather(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 225,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 233,
+            "message": "get(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 111,
+            "message": "get"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 123,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 86,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 87,
+            "message": "weather(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 225,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 233,
+            "message": "get(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 111,
+            "message": "get"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 123,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 86,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 87,
+            "message": "weather(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 225,
+            "message": "weather"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 233,
+            "message": "get(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 111,
+            "message": "get"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java",
+            "line": 123,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+      "raw_trace_sha256": "c5805e328083f2707b10b01613e74cdc50bbf31b247baebf7f56229c4338fe86",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "rag",
+      "category": "excluded_status_path",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "The constant Agent path /capabilities/rag-status is excluded by forAgent and only reads the enabled flag/model identity in the Python handler. It neither indexes nor embeds.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 110,
+            "message": "rag"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 111,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 110,
+            "message": "rag"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 111,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 110,
+            "message": "rag"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 111,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 110,
+            "message": "rag"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 111,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
+      "raw_trace_sha256": "42d1a996c012bbfeca989db18b723b651d1adac7ce96cb7e7f11a465555e44f2",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "mapHealth",
+      "category": "excluded_status_path",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "available uses a concrete readiness GET callback; its later /capabilities/status path is explicitly excluded from register. No streaming callback is supplied.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 115,
+            "message": "mapHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 116,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 115,
+            "message": "mapHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 116,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 115,
+            "message": "mapHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 116,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 115,
+            "message": "mapHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 116,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
+      "raw_trace_sha256": "613c5e940018f2431dfeb6115ce22fe0d4d7ed0165d67d1ce7337ea63f390d14",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "tripHealth",
+      "category": "readiness_callback_receiver",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "Only available is called. Its exact callback performs a bounded /readyz GET and updates the local availability cache; the post and stream receivers in the raw trace are not this argument.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 123,
+            "message": "tripHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 124,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 123,
+            "message": "tripHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 124,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 123,
+            "message": "tripHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 124,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 123,
+            "message": "tripHealth"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 124,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+      "raw_trace_sha256": "d94abb1b476203c41a4fce83dbc7b02448b8e2893addf9db2e19b3b80fe29792",
+      "source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "method": "capabilities",
+      "category": "excluded_status_path",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "The controller calls available and the constant /capabilities/status route. The former uses only its readiness GET callback; the latter is excluded before register and returns configuration capability flags.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 128,
+            "message": "capabilities"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 129,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 128,
+            "message": "capabilities"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 129,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 128,
+            "message": "capabilities"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 129,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 128,
+            "message": "capabilities"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+            "line": 129,
+            "message": "available(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 124,
+            "message": "available"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 129,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
+      "raw_trace_sha256": "209690f10dd945525de491ee2900b181c82a88140f09f7c4fa6d762c625910af",
+      "source_sha256_lf": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+      "method": "marker",
+      "category": "validation_only",
+      "assessment": "not_affected_context_for_the_exact_bound_read_only_handler",
+      "reason": "Java registers this controller only for APP_ENV=validation. Python additionally requires APP_ENV=validation plus VALIDATION_ALLOW_FIXTURES=yes. The marker does not start planning/indexing; any operation record in that mode is fixture accounting.",
+      "flows_read": [
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 18,
+            "message": "marker"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 19,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 56,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 18,
+            "message": "marker"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 19,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 96,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 98,
+            "message": "request(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 65,
+            "message": "request"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 79,
+            "message": "forAgent(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 19,
+            "message": "forAgent"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 32,
+            "message": "register(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 54,
+            "message": "register"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java",
+            "line": 57,
+            "message": "update(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 18,
+            "message": "marker"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 19,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 399,
+            "message": "progress(...)"
+          }
+        ],
+        [
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 18,
+            "message": "marker"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+            "line": 19,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 85,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 90,
+            "message": "post(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 93,
+            "message": "post"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 95,
+            "message": "execute(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 70,
+            "message": "execute"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java",
+            "line": 87,
+            "message": "run(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 160,
+            "message": "run"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 161,
+            "message": "streamGuarded(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 173,
+            "message": "streamGuarded"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java",
+            "line": 210,
+            "message": "accept(...)"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 390,
+            "message": "accept"
+          },
+          {
+            "path": "business-backend/src/main/java/com/tripplanner/domain/TaskService.java",
+            "line": 403,
+            "message": "progress(...)"
+          }
+        ]
+      ]
+    }
+  ]
+}

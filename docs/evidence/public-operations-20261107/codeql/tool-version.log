@@ -1,0 +1,6 @@
+CodeQL command-line toolchain release 2.27.4.
+Copyright (C) 2019-2026 GitHub, Inc.
+Unpacked in: E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql
+   Analysis results depend critically on separately distributed query and
+   extractor modules. To list modules that are visible to the toolchain,
+   use 'codeql resolve packs' and 'codeql resolve languages'.

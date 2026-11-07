@@ -214,13 +214,16 @@
         "/usr/lib/x86_64-linux-gnu/libz.so.1.3.2": "e0d5aa725cb684e7bcc048c1cb1fbb314f7cb7b7203e8d623044bb6a043e1d61"
       },
       "ids": [
-        "CVE-2026-85091"
+        "CVE-2026-85091",
+        "CVE-2026-76844"
       ],
       "classification": "fixed_by_pinned_security_upgrade",
       "vendor_status": "fixed_in_exact_installed_official_package",
-      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, exact-package APT simulation/install delta and final file bytes are locked. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
+      "reason": "The exact official Debian sid security package replaces the vulnerable library while preserving SONAME and existing libc ABI. Its signed-index SHA256, exact-package APT simulation/install delta and final file bytes are locked. Debian explicitly identifies 1:1.3.dfsg+really1.3.2-4 as fixed for CVE-2026-76844 and states it uses the same upstream df84af25 fix as CVE-2026-85091. The scanner applies Debian 13 stable no-fix metadata even to this explicitly upgraded sid version; exact package version and actual ELF hash are mandatory, never a distro-wide or version-range exception.",
       "references": [
-        "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+        "https://security-tracker.debian.org/tracker/CVE-2026-85091",
+        "https://security-tracker.debian.org/tracker/CVE-2026-76844",
+        "https://github.com/madler/zlib/commit/df84af25dc1942490e1d1c899a07619152a46148"
       ]
     },
     {

@@ -1,0 +1,67 @@
+{
+  "source_revision": "b07c9d5d1636c58875746458f2abc0131f2d9975",
+  "source": "E:\\trip-public-codeql-cloud-final-1e567280",
+  "evidence": "E:\\project\\langchain-trip-planner\\.codex-public\\codeql-cloud-final-1e567280",
+  "tool": {
+    "version": "2.27.4",
+    "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.4/codeql-bundle-win64.tar.gz",
+    "archive": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64.tar.gz",
+    "directory": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64",
+    "sha256": "d67fead75936c55a241d26c25342747b07f94664b104f719dfe291b665508c4d",
+    "bytes": 700532554,
+    "configuration_verified": true
+  },
+  "python": "3.11.9",
+  "threads_argument": 2,
+  "ram_argument_mb": 4096,
+  "query_suite": "security-extended",
+  "stages": [
+    {
+      "name": "create-java",
+      "exit_code": 0,
+      "elapsed_seconds": 239.6
+    },
+    {
+      "name": "analyze-java",
+      "exit_code": 0,
+      "elapsed_seconds": 71.4
+    },
+    {
+      "name": "create-python",
+      "exit_code": 0,
+      "elapsed_seconds": 128.1
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 113.3
+    },
+    {
+      "name": "create-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 24.5
+    },
+    {
+      "name": "analyze-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 44.8
+    },
+    {
+      "name": "create-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 19.7
+    },
+    {
+      "name": "analyze-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 20.6
+    }
+  ],
+  "complete": true,
+  "review_complete": false,
+  "active_policy_modified": false,
+  "snapshot_sources_unchanged": true,
+  "completed_at_utc": "2026-11-07T06:35:08.733662+00:00",
+  "current_business_trees_equal_checkpoint": true,
+  "current_business_worktree_clean": true
+}

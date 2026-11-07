@@ -1,0 +1,201 @@
+{
+  "verified_at_utc": "2026-11-07T06:14:19.445907+00:00",
+  "scope": "Real PostgreSQL17 TLS+mTLS source, decoy local DB, S3Mock, official pg_dump/psql client and fresh Java/Flyway+S3 restore",
+  "project": "trip-cloud-backup-3170d216",
+  "source": {
+    "source": "backend-effective-jdbc",
+    "mode": "external_postgresql",
+    "host": "cloud-postgres",
+    "port": 5432,
+    "database": "cloud_actual",
+    "user": "cloud_owner",
+    "sslmode": "verify-full",
+    "server_version_num": 170011,
+    "server_ssl": true,
+    "client_container": "trip-backup-pg-client-5496261cc8ee",
+    "client_image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+    "client_image_reference": "postgres:17.11-alpine",
+    "network": "trip-cloud-backup-3170d216_default",
+    "credential_projection": "PG connection settings only; private env; no JWT/model keys",
+    "tls_backend_paths": {
+      "sslrootcert": "/run/certs/postgres/ca.crt",
+      "sslcert": "/run/certs/postgres/client.crt",
+      "sslkey": "/run/certs/postgres/client.pk8"
+    }
+  },
+  "source_database_marker": "ACTUAL-CLOUD-SENTINEL",
+  "decoy_database_marker": "LOCAL-DECOY-MUST-NOT-BACKUP",
+  "checks": {
+    "wrong-ca": {
+      "rejected": true,
+      "container": "trip-backup-pg-client-682556d3d792",
+      "stopped": true
+    },
+    "wrong-host": {
+      "rejected": true,
+      "container": "trip-backup-pg-client-a0ae615864ca",
+      "stopped": true
+    },
+    "backup_checksums_valid": true,
+    "same_source_s3_refs": true,
+    "linux_staging_mode": "0700 native filesystem",
+    "restored_actual_marker": true,
+    "decoy_unchanged": true,
+    "restore_has_no_external_PGHOST": true,
+    "restored_java_ready": true,
+    "restored_tables": 47,
+    "restored_objects": 1,
+    "local_default_client_compatibility": true,
+    "local_default_client_container": "trip-backup-pg-client-e70a94708776",
+    "restored_java_original_bytes": 68,
+    "restored_java_original_sha256": "46311346233ff614db11a07fe8ddaae697f12f344163e3aa7894c10b6eaa7c6a",
+    "final_source_guards_native_pass": true,
+    "final_source_client": "trip-backup-pg-client-1aed896935b9"
+  },
+  "backup": {
+    "manifest_schema": "Java/Flyway-v2",
+    "checksummed_files": 19,
+    "tables": 47,
+    "database": "cloud_actual",
+    "database_user": "cloud_owner",
+    "postgres_mount": null,
+    "restore_postgres_image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+    "object_snapshot": {
+      "schema": "trip-object-snapshot/v1",
+      "dataset_id": "cloud-backup-3170d216",
+      "directory": "objects/data",
+      "objects": 1,
+      "missing_optional_references": 0
+    },
+    "private_output_acl": "Windows private parent explicitly grants only operator SID and SYSTEM; generated object manifest inherits those grants; no POSIX-mode claim on NTFS"
+  },
+  "restored": {
+    "tables_verified": 47,
+    "rows_verified": 26,
+    "java_ready": true,
+    "separate_database": "trip_restore",
+    "separate_user": "trip",
+    "external_PGHOST_absent": true,
+    "objects_verified": 1,
+    "original_bytes": 68,
+    "original_sha256": "46311346233ff614db11a07fe8ddaae697f12f344163e3aa7894c10b6eaa7c6a",
+    "source_and_decoy_unchanged": true
+  },
+  "tests": {
+    "passed": 81,
+    "failed": 0,
+    "skipped": 0,
+    "command": "python -m pytest -q backend/tests/test_backup_database.py backend/tests/test_deployment_assets.py backend/tests/test_backup_policy.py backend/tests/test_restore_retained_baseline.py backend/tests/test_restore_dataset_identity.py backend/tests/test_dataset_enrollment.py backend/tests/test_maintenance_failure_recovery.py backend/tests/test_maintenance_image_preflight.py"
+  },
+  "source_lf_sha256": {
+    "backend/scripts/backup_database.py": "4be28e21cbc21d753c3f55362742f188e730fce5d41a82350340b9f3aa264954",
+    "backend/scripts/backup_java_deployment.py": "0faee398ef3168b006e74ce62f045e0c26a4a85ee83bceb78f854e592218b0d4",
+    "backend/scripts/deployment_assets.py": "4697d591618e1e0626b63850ac08d3e7454168c1feef931d28a181a0eb15a5b8",
+    "backend/scripts/storage_objects.py": "c7bd6e7662ad2853b673562d77484f2a2b074cb53afaaad31f5494437504ffb3",
+    "backend/tests/test_backup_database.py": "4ba3067d0400347f5ee2bb332fc75053077cb3b1904e656c28e092c77e4c9cc2"
+  },
+  "resources": [
+    {
+      "name": "trip-backup-pg-client-0763447b5d37",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-backup-pg-client-1aed896935b9",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-backup-pg-client-323fc050f5c9",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-backup-pg-client-5496261cc8ee",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-backup-pg-client-682556d3d792",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-backup-pg-client-a0ae615864ca",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-backup-pg-client-e70a94708776",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-agent-1",
+      "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-amap-fixture-1",
+      "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-backend-1",
+      "image": "sha256:f9aff49c5c4996ad1c1bc8e0870105622fbbe5379ff05b5979f00c8d5b85c9c2",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-cert-init",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-cloud-postgres-1",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-frontend-1",
+      "image": "sha256:b90a82118e5ca00c6fb5721340d90b38c548eddcf1605a0f3b6e0ae2593f906d",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-linux-staging-check",
+      "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-postgres-1",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    },
+    {
+      "name": "trip-cloud-backup-3170d216-s3mock-1",
+      "image": "sha256:ab01a6946750f451ca215a47e91030695b260e4003b8a5a6201d25029b8fca92",
+      "state": "exited"
+    },
+    {
+      "name": "trip-final-restore-backend-1227f61a62a0",
+      "image": "sha256:f9aff49c5c4996ad1c1bc8e0870105622fbbe5379ff05b5979f00c8d5b85c9c2",
+      "state": "exited"
+    },
+    {
+      "name": "trip-final-restore-pg-1227f61a62a0",
+      "image": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "state": "exited"
+    }
+  ],
+  "state": {
+    "all_owned_containers_stopped": true,
+    "retained_containers": 18,
+    "networks_volumes_and_backup_files_retained": true,
+    "daily_unchanged_and_stopped": true,
+    "scheduled_backup": "DISABLED unchanged",
+    "other_test_projects_unchanged": true
+  },
+  "not_verified": [
+    "Actual cloud provider DNS/IAM/CA/client certificate and privileges",
+    "Other Spring datasource/config overrides, multi-host JDBC and PKCS12/private-key password callbacks unsupported"
+  ]
+}

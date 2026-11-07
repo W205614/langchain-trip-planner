@@ -1,0 +1,29 @@
+{
+  "source_revision": "8af56a33859b4075b840c4ee36332f5185c9a945",
+  "source": "E:\\trip-public-codeql-python-h2-739a7415",
+  "evidence": "E:\\project\\langchain-trip-planner\\.codex-public\\codeql-python-h2-739a7415",
+  "tool": {
+    "version": "2.27.4",
+    "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.4/codeql-bundle-win64.tar.gz",
+    "archive": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64.tar.gz",
+    "directory": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64",
+    "sha256": "d67fead75936c55a241d26c25342747b07f94664b104f719dfe291b665508c4d",
+    "bytes": 700532554,
+    "configuration_verified": true
+  },
+  "python": "3.11.9",
+  "stages": [
+    {
+      "name": "create-python",
+      "exit_code": 0,
+      "elapsed_seconds": 189.9
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 177.3
+    }
+  ],
+  "complete": true,
+  "snapshot_unchanged": true
+}

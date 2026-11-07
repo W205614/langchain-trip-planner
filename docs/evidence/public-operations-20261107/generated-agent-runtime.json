@@ -1,0 +1,19 @@
+{
+  "name": "trip-generated-agent-9dc6ebd9e4",
+  "image": "sha256:00388453bd60aefa946acda49c4935c7aa01ac6ba45e1a17eaa3378638fd462e",
+  "generated_production_config": true,
+  "data_dir": "/app/runtime",
+  "chroma_dir": "/app/data/chroma",
+  "provider_calls": 0,
+  "network": "fresh internal network; no external connectivity",
+  "retained_resources": true,
+  "initial_startup_passed": true,
+  "restart_and_dataset_markers_passed": true,
+  "read_only_root": true,
+  "user": "appuser",
+  "cap_drop": [
+    "ALL"
+  ],
+  "passed": true,
+  "all_owned_containers_stopped": true
+}

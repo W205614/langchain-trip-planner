@@ -1,0 +1,30 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "grype-image",
+      "target": "trip-planner-caddy:2.11.9-security1",
+      "image_id": "sha256:e4bd2f7fb9fbaca1c780c81b2646bde1f167abdfa3337e4521770a165ce788d0",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    }
+  ]
+}

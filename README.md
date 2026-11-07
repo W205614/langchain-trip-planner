@@ -57,7 +57,7 @@ git clone https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
-python -m pip install python-dotenv
+python -m pip install python-dotenv==1.2.3
 ```
 
 ### 2. 填写必要配置
@@ -66,16 +66,16 @@ python -m pip install python-dotenv
 
 | 文件 | 配置项 | 填写内容 |
 |---|---|---|
-| `backend/.env` | `LLM_MODEL_ID` | 模型供应商提供的文本模型名称 |
+| `backend/.env` | `LLM_MODEL_ID` | 默认 `gpt-6.1-sol` |
 | `backend/.env` | `LLM_API_KEY` | 对应的模型 API Key |
 | `backend/.env` | `LLM_BASE_URL` | OpenAI 官方 API：`https://api.openai.com/v1` |
 | `backend/.env` | `AMAP_REST_API_KEY` | 高德 Web 服务 Key，供 Java 使用 |
 | `backend/.env` | `AMAP_MCP_API_KEY` | 高德 MCP 使用的 Web 服务 Key；开发时可与上一项相同 |
 | `frontend/.env` | `VITE_AMAP_WEB_JS_KEY` | 高德 Web 端（JS API）Key，用于显示地图 |
 
-`LLM_BASE_URL` 按供应商的接口说明填写，通常包含 `/v1`，不要填成完整的 `/chat/completions` 请求地址。前端地图 Key 与服务端 Web 服务 Key 类型不同，不能混用；模型 Key 只放在后端配置。
+`LLM_BASE_URL` 保持 `https://api.openai.com/v1`，不要填成完整的 `/chat/completions` 请求地址。前端地图 Key 与服务端 Web 服务 Key 类型不同，不能混用；模型 Key 只放在后端配置。
 
-**首次只体验行程规划时，将 `backend/.env` 中的 `RAG_ENABLED` 改为 `false`**，其余未列出的配置可先保留模板值。以后需要知识检索，再配置供应商支持的 `EMBEDDING_MODEL`、`EMBEDDING_BASE_URL`、`EMBEDDING_API_KEY` 并开启 RAG；图文资料解析还需要相应的 `VISION_*` 配置。文本模型服务不一定同时支持嵌入和视觉模型。
+**首次只体验行程规划时，将 `backend/.env` 中的 `RAG_ENABLED` 改为 `false`**，其余未列出的配置可先保留模板值。开启知识检索时使用默认的 `text-embedding-3-large`（3072 维），图文解析使用默认 `gpt-6.1-sol`；两者均连接 OpenAI 官方端点，可复用 `LLM_API_KEY`，对应项目须有模型访问权限。已有向量数据先按[索引迁移手册](docs/operations/openai-migration.md)重建。
 
 ### 3. 生成配置并启动
 

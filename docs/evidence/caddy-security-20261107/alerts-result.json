@@ -1,0 +1,224 @@
+{
+  "native_config_valid": true,
+  "real_prometheus_probe": true,
+  "webhook_events": [
+    {
+      "id": 1,
+      "status": "firing",
+      "accepted": true,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "status": "resolved",
+      "accepted": true,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "resolved"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "status": "firing",
+      "accepted": false,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "status": "firing",
+      "accepted": true,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "firing"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "status": "resolved",
+      "accepted": true,
+      "authorization_matched": true,
+      "alerts": [
+        {
+          "name": "PublicEdgeValidationProbeDown",
+          "status": "resolved"
+        }
+      ]
+    }
+  ],
+  "failed_counter_before": {
+    "email": 0.0,
+    "webhook": 0.0
+  },
+  "failed_counter_after": {
+    "email": 1.0,
+    "webhook": 1.0
+  },
+  "smtp_subjects": [
+    "[RESOLVED] PublicEdgeValidationProbeDown edge-validation-probe (webhook:9088 validation)",
+    "[FIRING:1] PublicEdgeValidationProbeDown edge-validation-probe (webhook:9088 validation)"
+  ],
+  "deduplicated_local_inbox_events": 14,
+  "tls": "SMTP STARTTLS and HTTPS Webhook both verify their explicit local CAs"
+}

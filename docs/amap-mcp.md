@@ -32,7 +32,7 @@ AMAP_MCP_SEARCH_LIMIT=10
 
 Key 单独配置，不需要写进 URL；客户端会在连接时添加。URL 要求 HTTPS，本机协议测试允许 localhost HTTP。不要将带 Key 的连接 URL 写进文档或截图。常规应用日志使用已有脱敏格式器；公共异常不附带上游原始文本。
 
-当前地图能力位于 Python Agent，公开入口由 Java 鉴权。首次部署按根 README 生成私有配置；已有部署修改 `deploy/runtime/agent.env` 的对应设置，再执行 `docker compose up -d --build --wait --wait-timeout 180 agent`。不需要重建业务数据库。
+公开入口由 Java 鉴权：Python Agent 的 MCP 提供工作流地图事实与公开 POI 搜索／详情；Java `AmapGateway` 仍通过高德 REST 提供公开天气／路线、手工行程组装及事实／风险核验。两者都使用高德，并非所有地图请求都经 MCP。生成配置时，`AMAP_MCP_API_KEY` 写入 `agent.env` 的 `AMAP_API_KEY`，`AMAP_REST_API_KEY` 写入 `business.env`；前端底图另用高德 JS Key。首次部署按根 README 生成私有配置；已有部署修改实际运行目录的对应配置，再用原部署的 Compose 参数重建相关服务，公网参数见[部署手册](operations/public-deployment.md)。不需要重建业务数据库。
 
 离线回归从项目根目录运行：
 
@@ -40,7 +40,21 @@ Key 单独配置，不需要写进 URL；客户端会在连接时添加。URL �
 docker compose -p trip-validation -f docker-compose.validation.yml run --rm tests
 ```
 
-`backend/scripts/check_amap_mcp.py` 是另行授权后使用的真实探针，会消耗高德调用；它不属于上述离线回归。依赖以 `backend/requirements.lock` 为准。
+`backend/scripts/check_amap_mcp.py` 是另行授权后使用的真实探针，不属于上述离线回归。先安装完整锁定依赖，在 `backend/.env` 配好 Key，并准备具有私有权限的 `E:\trip-private\acceptance` 目录；从仓库根目录执行：
+
+```powershell
+python -m pip install -r backend/requirements.txt
+Push-Location backend
+try {
+  $env:ACCEPTANCE_BUDGET_FILE = 'E:\trip-private\acceptance\call-budget.sqlite3'
+  python scripts/check_amap_mcp.py --output E:\trip-private\acceptance\amap-mcp.json
+  if ($LASTEXITCODE -ne 0) { throw '高德 MCP 真实探针未通过，请检查私有报告' }
+} finally {
+  Pop-Location
+}
+```
+
+该命令会消耗高德工具调用预算，不调用 LLM；每次发送前预留持久账本中的 `amap` 次数，上限120，失败不退还，重复运行不能更换账本重置额度。运行前核对已授权的剩余额度。工具内部的高德 REST 请求数不等于可观测的 MCP 工具调用数。独立探针没有 Java 任务／operation 上下文，不能直接在要求中央账本的环境运行；固定 `FINAL_*` 验收批次会拒绝 MCP，应使用其 REST 验收流程，不得为运行探针关闭生产账本。成功须退出码0且报告 `passed=true`，并核对 POI 详情 ID、天气、地理编码及三种路线结果；本次文档检查未执行该命令。
 
 显式回退：设置 `AMAP_TRANSPORT=rest` 并重启后端。不会因为 MCP 请求失败自动切回 REST；景点不足、天气不可用等仍走原有工作流降级和质量提示。健康接口返回 `transport` 与 `connectivity_checked=false`，仅表示配置状态，不把它当作 MCP 连通性检测。
 

@@ -1,0 +1,31 @@
+{
+  "http_redirect": 308,
+  "secure_session_and_csrf_cookies": true,
+  "hsts": true,
+  "csrf_missing_invalid_valid": [
+    403,
+    403,
+    202
+  ],
+  "protected_routes": 404,
+  "forged_header_login_statuses": [
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    429,
+    429
+  ],
+  "independent_peer_login_after_first_peer_rate_limited": 401,
+  "untrusted_direct_forwarded_https_ignored": {
+    "status": 200,
+    "secure": false
+  },
+  "forged_remote_absent_from_nginx": true
+}
