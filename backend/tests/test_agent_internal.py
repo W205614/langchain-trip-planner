@@ -145,7 +145,7 @@ def test_duplicate_execution_never_calls_planner_twice(client, monkeypatch):
     )
     def finalize(*args, **kwargs):
         validation_routes.append(args[2])
-        return {"outcome":"complete","issues":[]}
+        return {"outcome":"complete","issues":[],"repairs":[]}
     monkeypatch.setattr(planning_constraints,"finalize_plan",finalize)
     body={"protocol_version":1,"task_id":str(uuid.uuid4()),"execution_id":str(uuid.uuid4()),"request_id":"duplicate",
         "user_id":1,"deadline_at":(datetime.now(timezone.utc)+timedelta(seconds=20)).isoformat(),
