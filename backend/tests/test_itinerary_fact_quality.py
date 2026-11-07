@@ -13,6 +13,7 @@ from test_time_planner import Routes, scenario
 
 
 def test_explicit_reduction_is_enforced_after_revision_protection(monkeypatch, tmp_path):
+    monkeypatch.delenv("DATABASE_URL", raising=False)
     from app.agent_api import main
     from app.agents import trip_planner_agent
     from app.services import durable_execution as durable

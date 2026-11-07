@@ -1,0 +1,501 @@
+Upstream copyright and licensing notices for files represented by the native backport patches.
+The leading comment blocks below are copied verbatim; section titles and Source URLs are added for identification.
+The patch files retain their original bytes, authors and modification notes. New upstream regression tests retain the notices carried in the patches.
+
+GNU C Library: stdlib/Makefile
+Source: https://raw.githubusercontent.com/bminor/glibc/glibc-2.41/stdlib/Makefile
+
+# Copyright (C) 1991-2025 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with the GNU C Library; if not, see
+# <https://www.gnu.org/licenses/>.
+
+#
+#	Makefile for stdlib routines
+#
+
+GNU C Library: stdlib/strfmon_l.c
+Source: https://raw.githubusercontent.com/bminor/glibc/glibc-2.41/stdlib/strfmon_l.c
+
+/* Formatting a monetary value according to the given locale.
+   Copyright (C) 1996-2025 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+GNU C Library: intl/Makefile
+Source: https://raw.githubusercontent.com/bminor/glibc/glibc-2.41/intl/Makefile
+
+# Copyright (C) 1995-2025 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with the GNU C Library; if not, see
+# <https://www.gnu.org/licenses/>.
+
+# Makefile for intl subdirectory: message handling code from GNU gettext.
+
+GNU C Library: intl/dcigettext.c
+Source: https://raw.githubusercontent.com/bminor/glibc/glibc-2.41/intl/dcigettext.c
+
+/* Implementation of the internal dcigettext function.
+   Copyright (C) 1995-2025 Free Software Foundation, Inc.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Lesser General Public License as published by
+   the Free Software Foundation; either version 2.1 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+
+GNU C Library: resolv/ns_print.c
+Source: https://raw.githubusercontent.com/bminor/glibc/glibc-2.41/resolv/ns_print.c
+
+/*
+ * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")
+ * Copyright (c) 1996-1999 by Internet Software Consortium.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS
+ * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE
+ * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
+ */
+
+GCC libstdc++: libstdc++-v3/libsupc++/new_opa.cc
+Source: https://raw.githubusercontent.com/gcc-mirror/gcc/200183d4ab5d57575f3dfebc6af3baf649910b9e/libstdc++-v3/libsupc++/new_opa.cc
+
+// Support routines for the -*- C++ -*- dynamic memory management.
+
+// Copyright (C) 1997-2024 Free Software Foundation, Inc.
+//
+// This file is part of GCC.
+//
+// GCC is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3, or (at your option)
+// any later version.
+//
+// GCC is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+GCC libstdc++: libstdc++-v3/include/ext/pb_ds/detail/binary_heap_/erase_fn_imps.hpp
+Source: https://raw.githubusercontent.com/gcc-mirror/gcc/aaa8351f4d2e636f9680a1f0a8ebc2f0a60611e6/libstdc++-v3/include/ext/pb_ds/detail/binary_heap_/erase_fn_imps.hpp
+
+// -*- C++ -*-
+
+// Copyright (C) 2005-2026 Free Software Foundation, Inc.
+//
+// This file is part of the GNU ISO C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the terms
+// of the GNU General Public License as published by the Free Software
+// Foundation; either version 3, or (at your option) any later
+// version.
+
+// This library is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 2004 Ami Tavory and Vladimir Dreizin, IBM-HRL.
+
+// Permission to use, copy, modify, sell, and distribute this software
+// is hereby granted without fee, provided that the above copyright
+// notice appears in all copies, and that both that copyright notice
+// and this permission notice appear in supporting documentation. None
+// of the above authors, nor IBM Haifa Research Laboratories, make any
+// representation about the suitability of this software for any
+// purpose. It is provided "as is" without express or implied
+// warranty.
+
+util-linux: include/fileutils.h
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/include/fileutils.h
+
+/*
+ * No copyright is claimed.  This code is in the public domain; do with
+ * it what you wish.
+ **/
+
+util-linux: lib/fileutils.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/lib/fileutils.c
+
+/*
+ * This code is in the public domain; do with it what you wish.
+ *
+ * Copyright (C) 2012 Sami Kerola <kerolasa@iki.fi>
+ * Copyright (C) 2012-2024 Karel Zak <kzak@redhat.com>
+ */
+
+util-linux: libmount/src/context.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/context.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2010-2018 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ */
+
+util-linux: libmount/src/context_mount.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/context_mount.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2010-2018 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ */
+
+util-linux: libmount/src/hook_idmap.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/hook_idmap.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2022 Karel Zak <kzak@redhat.com>
+ * Copyright (C) 2022 Christian Brauner (Microsoft) <brauner@kernel.org>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ *
+ * This is X-mount.idmap= implementation.
+ *
+ * Please, see the comment in libmount/src/hooks.c to understand how hooks work.
+ */
+
+util-linux: libmount/src/hook_loopdev.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/hook_loopdev.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2011-2022 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * Please, see the comment in libmount/src/hooks.c to understand how hooks work.
+ */
+
+util-linux: libmount/src/hooks.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/hooks.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2022 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ *
+ * The "hookset" is a set of callbacks (hooks) that implement some functionality.
+ * The library defines stages where hooks are called (e.g. when preparing source, post
+ * mount(2), etc.). An arbitrary hook can, on the fly, define another hook for the
+ * arbitrary stage. The first hook from the hookset which goes to the game is a
+ * "firstcall" (defined in struct libmnt_hookset). This first hook controls
+ * what will happen in the next stages (usually nothing).
+ *
+ * The library supports two kinds of data for hooksets:
+ *
+ * - global data;  accessible for all callbacks. Makes sense for complex
+ *   hooksets with more callbacks in more stages. Usually implemented by
+ *   locally defined 'struct hookset_data' in hook_*.c.
+ *
+ * - per-hook data; accessible for specific callback
+ *   Usually implemented by locally defined 'struct hook_data' in hook_*.c.
+ */
+
+util-linux: libmount/src/mountP.h
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/mountP.h
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * mountP.h - private library header file
+ *
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2008-2018 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ */
+
+util-linux: libmount/src/utils.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/utils.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2008-2018 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ */
+
+util-linux: libmount/src/version.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/libmount/src/version.c
+
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * This file is part of libmount from util-linux project.
+ *
+ * Copyright (C) 2008-2018 Karel Zak <kzak@redhat.com>
+ *
+ * libmount is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ */
+
+util-linux: sys-utils/mount.8.adoc
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/sys-utils/mount.8.adoc
+
+////
+Copyright (c) 1996-2004 Andries Brouwer
+Copyright (C) 2006-2012 Karel Zak <kzak@redhat.com>
+
+This page is somewhat derived from a page that was
+(c) 1980, 1989, 1991 The Regents of the University of California
+and had been heavily modified by Rik Faith and myself.
+(Probably no BSD text remains.)
+Fragments of text were written by Werner Almesberger, Remy Card,
+Stephen Tweedie and Eric Youngdale.
+
+This is free documentation; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of
+the License, or (at your option) any later version.
+
+The GNU General Public License's references to "object code"
+and "executables" are to be interpreted as the output of any
+document formatting or typesetting system, including
+intermediate and printed output.
+
+This manual is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+////
+
+util-linux: sys-utils/nsenter.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/sys-utils/nsenter.c
+
+/*
+ * SPDX-License-Identifier: GPL-2.0-only
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; version 2.
+ *
+ * Copyright (C) 2012-2023 Eric Biederman <ebiederm@xmission.com>
+ *
+ * nsenter(1) - command-line interface for setns(2)
+ */
+
+util-linux: sys-utils/unshare.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/sys-utils/unshare.c
+
+/*
+ * unshare(1) - command-line interface for unshare(2)
+ *
+ * Copyright (C) 2009 Mikhail Gusarov <dottedmag@dottedmag.net>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+util-linux: term-utils/wall.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/term-utils/wall.c
+
+/*
+ * Copyright (c) 1988, 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by the University of
+ *	California, Berkeley and its contributors.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * Modified Sun Mar 12 10:34:34 1995, faith@cs.unc.edu, for Linux
+ */
+
+util-linux: term-utils/write.c
+Source: https://raw.githubusercontent.com/util-linux/util-linux/v2.41.5/term-utils/write.c
+
+/*
+ * Copyright (c) 1989, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Jef Poskanzer and Craig Leres of the Lawrence Berkeley Laboratory.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *	This product includes software developed by the University of
+ *	California, Berkeley and its contributors.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * Modified for Linux, Mon Mar  8 18:16:24 1993, faith@cs.unc.edu
+ * Wed Jun 22 21:41:56 1994, faith@cs.unc.edu:
+ *      Added fix from Mike Grupenhoff (kashmir@umiacs.umd.edu)
+ * Mon Jul  1 17:01:39 MET DST 1996, janl@math.uio.no:
+ *      - Added fix from David.Chapell@mail.trincoll.edu enabling daemons
+ *	  to use write.
+ *      - ANSIed it since I was working on it anyway.
+ * 1999-02-22 Arkadiusz Miśkiewicz <misiek@pld.ORG.PL>
+ * - added Native Language Support
+ *
+ */

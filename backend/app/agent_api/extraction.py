@@ -1,14 +1,22 @@
 """File bytes and visible facts only; no business ORM or publication authority."""
 import base64
+import io
 import json
+import math
 import os
 import re
+import threading
+from contextlib import closing
 import httpx
 from langchain_core.messages import HumanMessage, SystemMessage
 from ..services.llm_service import build_chat_model
 from pydantic import BaseModel, Field
 from ..config import get_settings
 from ..services.call_budget import hooks, async_hooks
+
+
+# PDFium forbids simultaneous calls even for separate documents.
+_PDF_LOCK = threading.Lock()
 
 
 class ExtractedFacts(BaseModel):
@@ -30,17 +38,22 @@ def extract(body):
             media=response.headers.get("content-type", "").split(";")[0]
     pages=[]
     if media=="application/pdf":
-        import pymupdf
-        with pymupdf.open(stream=bytes(content), filetype="pdf") as document:
+        import pypdfium2 as pdfium
+        with _PDF_LOCK, pdfium.PdfDocument(bytes(content)) as document:
             if not 1<=len(document)<=10:
                 raise ValueError("PDF must contain 1-10 pages")
-            for page in document:
-                if page.rect.width*page.rect.height*2.25>24_000_000:
-                    raise ValueError("PDF rendering pixel budget exceeded")
-                pages.append((page.get_pixmap(matrix=pymupdf.Matrix(1.5,1.5),alpha=False).tobytes("png"),"image/png"))
+            for number in range(len(document)):
+                with closing(document[number]) as page:
+                    width, height = page.get_size()
+                    if math.ceil(width*1.5)*math.ceil(height*1.5)>24_000_000:
+                        raise ValueError("PDF rendering pixel budget exceeded")
+                    with closing(page.render(scale=1.5)) as bitmap:
+                        with bitmap.to_pil() as image:
+                            output = io.BytesIO()
+                            image.save(output, format="PNG")
+                    pages.append((output.getvalue(),"image/png"))
     else:
         from PIL import Image
-        import io
         with Image.open(io.BytesIO(content)) as image:
             decoded = {"JPEG":"image/jpeg","PNG":"image/png","GIF":"image/gif","WEBP":"image/webp"}.get(image.format)
             if decoded != media:

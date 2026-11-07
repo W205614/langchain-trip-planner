@@ -126,3 +126,9 @@ docker compose ps
 - [规划、账号与运行治理](docs/operations/optimization-governance.md) · [性能与可靠性](docs/operations/performance-reliability.md) · [原生安全回补](backend/security/native-backports/README.md)
 
 开发环境、按改动选择测试及提交说明见 [贡献指南](CONTRIBUTING.md)；漏洞报告见 [安全政策](SECURITY.md)。[CI 工作流](.github/workflows/ci.yml) 包含 Java/PostgreSQL、Python、前端构建及隔离浏览器流程，默认使用离线供应商和专用数据卷。
+
+## 版本与许可证
+
+版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。首次发布使用 `v0.1.0`，范围为单机部署与试用；验收方式、外部服务限制及升级说明见[发布检查记录](docs/evidence/release-20261107/README.md)。源码发布不包含本机配置、数据库、备份或预构建镜像，使用对应 Tag 中的依赖文件和 Dockerfile 构建。
+
+原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。仓库保存的上游补丁、OpenAPI schema、运行依赖和供应商地图素材遵循各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。PDF 资料渲染使用 PDFium；历史 PyMuPDF 版本的许可义务单独处理。

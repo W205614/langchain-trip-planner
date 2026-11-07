@@ -1,5 +1,6 @@
-.env
-.env.docker
+.env*
+!.env.example
+runtime/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -13,4 +14,5 @@ data/knowledge_uploads/
 data/agent-runtime/
 data/backups/
 data/*.sqlite3*
+data/*.lock
 scripts/rag_current_validation.py

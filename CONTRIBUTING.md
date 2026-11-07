@@ -61,3 +61,5 @@ try { npm run build } finally { Pop-Location }
 - `.env`、运行配置、数据库、用户原件和未脱敏日志留在私有目录。历史验收原件及其哈希绑定保留原始内容，新结果写入新的批次。
 
 提交前运行 `git diff --check` 并核对改动清单。Pull Request 描述中列出本地结果；CI 运行后检查当前提交对应的结果。
+
+原创贡献沿用项目 [MIT License](LICENSE)。引入第三方代码、补丁或素材时注明来源、版本、修改及适用许可，并按需更新 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。依赖锁文件通过解析器生成，保留平台条件并核对差异；PDF 解析改动还应运行 `backend/tests/test_agent_extraction.py`，验证真实 PDF 渲染、输入限制和并发访问。
