@@ -334,11 +334,15 @@ def _execute(body: Execution | ExecutionV2, request: Request):
                 emit("progress", {"stage":"agent_precheck", "percent":90,
                     "message":"Agent 草稿已生成，正在核验路线与行程约束"})
                 allowed_days = None
+                revision_repairs = []
                 if body.original_plan is not None:
                     from ..services.time_planner import protect_revision
+                    from ..services.planning_constraints import enforce_revision_reduction
                     allowed_days = protect_revision(plan, body.original_plan, body.request, body.day_index)
+                    revision_repairs = enforce_revision_reduction(plan, body.original_plan, body.request, body.instruction, allowed_days)
                 quality = finalize_plan(plan, body.request, planner.amap_service, repair=True,
                     allowed_days=allowed_days, enhanced=body.protocol_version == 2)
+                quality["repairs"] = revision_repairs + quality["repairs"]
                 if body.protocol_version == 2:
                     save_checkpoint("schedule", digest, {"plan":plan.model_dump(mode="json"), "quality":quality, "trusted_candidates":evidence})
                 quality.setdefault("timings", {})["agent_route_and_constraints_ms"] = round(

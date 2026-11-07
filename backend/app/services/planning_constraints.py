@@ -21,6 +21,41 @@ def name_key(value):
     return value.strip().casefold()
 
 
+def enforce_revision_reduction(plan, original, request, instruction, allowed_days):
+    """Apply explicit quantity changes after restoring all protected activities."""
+    from .assistant_intent import attraction_reduction
+    from .attraction_names import resolve_name
+    from .time_planner import effective_locks, confirmed
+    from ..core.exceptions import BizException
+
+    reduction = attraction_reduction(instruction)
+    if reduction is None:
+        return []
+    inputs = request.planning_input
+    protected = set(inputs.completed_activity_ids) | {lock.get("activity_id") for lock in effective_locks(inputs)}
+    commitments = [c for c in inputs.commitments if confirmed(c)]
+    protected |= {c.get("activity_id") for c in commitments}
+    reserved_pois = {c.get("poi_id") for c in commitments if c.get("poi_id")}
+    repairs = []
+    for index in sorted(allowed_days):
+        day = plan.days[index]
+        limit = len(original.days[index].attractions) - reduction
+        required = {a.poi_id for name in request.constraints.must_visit
+                    if (a := resolve_name(name, day.attractions, day.city or plan.city)) is not None}
+        removable = sorted((a for a in reversed(day.attractions)
+            if a.optional and a.activity_id not in protected and a.poi_id not in required | reserved_pois),
+            key=lambda a: a.priority)
+        count = max(0, len(day.attractions) - limit)
+        if limit < 1 or count > len(removable):
+            raise BizException("无法按要求减少景点：需保留至少一个景点，以及必去、预约、锁定和范围外的活动",
+                status_code=409, code="REVISION_CONSTRAINT_CONFLICT")
+        for attraction in removable[:count]:
+            day.attractions.remove(attraction)
+            repairs.append({"day_index": index, "removed_poi_id": attraction.poi_id,
+                "reason": "user_requested_attraction_reduction"})
+    return repairs
+
+
 def refresh_saved_quality(plan, request, previous):
     """Upgrade name/display checks using saved route evidence; never rewrite a user's trip."""
     route_evidence = {}
@@ -97,12 +132,15 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                right.location.longitude, right.location.latitude, mode, city)
         if key not in cache:
             if enhanced:
-                evidence=schedule_routes.get((left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,mode))
-                # The solver has already obtained this directed route. Its
-                # persisted snapshot carries duration, not distance: do not send
-                # another paid lookup merely for the legacy quality summary.
-                cache[key]=(evidence[0],None,None,mode) if evidence and evidence[1] else None
-                if cache[key] is not None:
+                from .route_facts import current
+                route_key = (left.location.longitude,left.location.latitude,right.location.longitude,right.location.latitude,city,mode)
+                evidence = schedule_routes.get(route_key)
+                fact = schedule_routes.get("_route_facts", {}).get(route_key, {})
+                if left.location == right.location:
+                    cache[key] = (0, 0, 0, mode)
+                else:
+                    cache[key] = (evidence[0], fact.get("distance"), fact.get("walking_distance"), fact.get("route_type", mode)) if evidence and evidence[1] and current(fact) else None
+                if cache[key] is not None and (cache[key][1] is None or (mode != "driving" and cache[key][2] is None)):
                     gaps.add("route_distance_and_walking_unverified")
                 return cache[key]
             remaining()
@@ -249,6 +287,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     recalculate_budget(plan, estimate_missing=True, budget_limit=request.budget_total)
     if enhanced:
         from .time_planner import RULE_VERSION, confirmed
+        from .route_facts import instant
+        from datetime import datetime, timezone
         # The solver deliberately touches only allowed_days. Whole-trip quality
         # must also retain the evidence of every untouched day without rewriting
         # its persisted JSON. Legacy/stale schedules cannot imply feasibility.
@@ -258,6 +298,15 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             if saved.get("status") not in {"feasible", "unverified", "not_found", "infeasible"} or getattr(day, "schedule_stale", False):
                 saved["status"] = "unverified"
                 saved["unknown"] = sorted(set(saved.get("unknown", [])) | {"schedule_unknown_or_stale"})
+            if any(row.get("kind") == "travel" and row.get("source") == "map" for row in day.timeline):
+                try:
+                    route_fresh = instant(getattr(day, "route_fact_expires_at", None)) > datetime.now(timezone.utc)
+                except (ValueError, TypeError):
+                    route_fresh = False
+                if not route_fresh:
+                    if saved.get("status") == "feasible":
+                        saved["status"] = "unverified"
+                    saved["unknown"] = sorted(set(saved.get("unknown", [])) | {"route_fact_expired_or_unobserved"})
             for field in ("unknown", "conflicts", "omitted_activity_ids"):
                 saved.setdefault(field, [])
             schedules.append({**saved, "day_index": day.day_index})
@@ -266,6 +315,14 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         report["data_gaps"]=sorted(set(report["data_gaps"])|{f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"]})
         report["time_policy_version"] = RULE_VERSION
         from .time_planner import fact_current
+        if all(len([f for f in request.planning_input.opening_windows
+                    if f.get("poi_id") == a.poi_id and f.get("date") == day.date and fact_current(f)]) == 1
+               for day in plan.days for a in day.attractions):
+            report["data_gaps"] = [gap for gap in report["data_gaps"]
+                if gap not in {"opening_hours_unavailable", "opening_hours_travel_date_unverified"}]
+        if all(day.timeline and not any(gap.startswith(("route_", "hotel_endpoint_unknown", "meal_location_unknown", "schedule_unknown_or_stale"))
+                for gap in schedule["unknown"]) for day, schedule in zip(plan.days, schedules)):
+            report["data_gaps"] = [gap for gap in report["data_gaps"] if gap != "hotel_and_meal_routes_unverified"]
         if all(any(f.get("poi_id")==a.poi_id and f.get("date")==day.date and f.get("status") in {"confirmed","not_required"} and fact_current(f,"verification") for f in request.planning_input.reservation_facts) for day in plan.days for a in day.attractions):
             report["data_gaps"]=[gap for gap in report["data_gaps"] if gap!="reservation_unverified"]
         if all(REQUIRED_MEALS <= ({meal.type for meal in day.meals}|{f["type"] for f in request.planning_input.meal_resolutions if f.get("day_index")==day.day_index and fact_current(f,"verification")}) for day in plan.days):

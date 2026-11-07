@@ -1,5 +1,6 @@
 """Route observation time survives memory caches and durable checkpoint reuse."""
 from datetime import datetime, timezone, timedelta
+from math import isfinite
 from .planning_semantics import FACT_TTLS
 
 EPOCH = "1970-01-01T00:00:00+00:00"
@@ -22,7 +23,19 @@ def observation(value, *, fresh=False, now=None):
         expires=observed+timedelta(seconds=FACT_TTLS["route"])
         if value.get("expires_at"):
             expires=min(expires,instant(value["expires_at"]))
-        return {"observed_at":observed.isoformat(),"expires_at":expires.isoformat()}
+        fact = {"observed_at":observed.isoformat(),"expires_at":expires.isoformat()}
+        for field in ("distance", "walking_distance"):
+            try:
+                quantity = float(value[field])
+                if type(value[field]) is not bool and isfinite(quantity) and quantity >= 0:
+                    fact[field] = quantity
+            except (KeyError, TypeError, ValueError):
+                pass
+        if value.get("route_type") in {"walking", "driving", "transit"}:
+            fact["route_type"] = value["route_type"]
+        if fact.get("route_type") == "walking" and "distance" in fact:
+            fact["walking_distance"] = fact["distance"]
+        return fact
     except (ValueError,TypeError,KeyError):
         return {"observed_at":value.get("observed_at"),"expires_at":EPOCH}
 

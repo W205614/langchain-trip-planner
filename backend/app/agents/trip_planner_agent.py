@@ -955,6 +955,10 @@ class MultiAgentTripPlanner(TravelDataNodes):
         )
         restaurant_text = self._pois_to_text(restaurant_pois[:8])
         current_text = "、".join(item.name for item in day.attractions) or "无"
+        from ..services.assistant_intent import attraction_reduction
+        reduction = attraction_reduction(instruction)
+        count_instruction = (f"本天最多安排{max(0, len(day.attractions) - reduction)}个景点。" if reduction is not None
+            else "通常安排2-3个景点。")
         day_query = (
             f"城市: {day_request.city}\n交通方式: {request.transportation}\n"
             f"住宿偏好: {request.accommodation}\n旅行偏好: {','.join(request.preferences) or '无'}\n"
@@ -966,7 +970,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             f"{candidate_text}\n"
             "本天可选餐厅（每餐只能返回其中的 poi_id）：\n"
             f"{restaurant_text or '无'}\n"
-            "请输出该天的一个 JSON 对象，通常安排2-3个景点与breakfast/lunch/dinner；必去和受保护安排不得因数量省略，时间冲突须留给后续求解明确报告。"
+            f"请输出该天的一个 JSON 对象，{count_instruction}安排breakfast/lunch/dinner；必去和受保护安排不得因数量省略，时间冲突须留给后续求解明确报告。"
         )
         revised_day = self._generate_one_day(
             day_query,

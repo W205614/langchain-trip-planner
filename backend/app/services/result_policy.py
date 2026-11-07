@@ -67,6 +67,7 @@ def error_info(code):
         "TASK_TIMEOUT": ("规划超过时间预算，请稍后重试或缩短行程", True),
         "PROCESS_INTERRUPTED": ("服务重启中断了规划，可重新提交", True),
         "VERSION_CONFLICT": ("原行程已被修改，请重新打开后发起改排", False),
+        "REVISION_CONSTRAINT_CONFLICT": ("景点数量要求与必去、预约、锁定或改排范围冲突，请调整要求", False),
         "RESULT_DELETED": ("原行程已删除，请重新规划", False),
         "UPSTREAM_CONFIG_ERROR": ("服务配置异常，请联系管理员；重复提交暂时无法恢复", False),
         "GENERATION_FAILED": ("规划未完成，请稍后重试；若持续失败，请联系管理员", True),

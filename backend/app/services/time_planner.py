@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v8-fact-completion"
+RULE_VERSION = "time-windows-v9-route-evidence"
 from .planning_semantics import CONTRACT, FACT_TTLS
 from .travel_facts import boarding_minutes, relation_pairs
 from .route_facts import observation as route_observation, current as route_current, instant as route_instant, cache_expiry as route_cache_expiry, bind_day as bind_route_day, EPOCH as ROUTE_EPOCH
@@ -872,4 +872,5 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
     plan.planning_input = request.planning_input.model_copy(deep=True)
     if route_evidence is not None:
         route_evidence.update({key:value for key,value in cache.items() if isinstance(key,tuple)})
+        route_evidence["_route_facts"] = cache.get("_route_facts", {})
     return reports

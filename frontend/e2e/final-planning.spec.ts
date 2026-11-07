@@ -3,6 +3,20 @@ import { expect, test } from '@playwright/test'
 const planning = { timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate' }
 const plan = { city: '北京', start_date: '2026-11-01', end_date: '2026-11-01', weather_info: [], overall_suggestions: '核对预约', days: [{ day_index: 0, date: '2026-11-01', attractions: [{ activity_id: 'activity-1', poi_id: 'P1', name: '故宫', address: '北京', description: '游览', visit_duration: 120, location: { longitude: 116.4, latitude: 39.9 } }], meals: [], transportation: '公共交通', accommodation: '酒店', description: '按预约游览', timeline: [{ activity_id: 'activity-1', title: '故宫', kind: 'attraction', status: 'estimated', start_at: '2026-11-01T09:00:00+08:00', end_at: '2026-11-01T11:00:00+08:00', notes: ['营业信息待核实'] }], feasibility: { status: 'unverified', unknown: ['opening_unknown_or_stale:activity-1'] } }] }
 
+test('fact warning lists only the unresolved evidence instead of fixed missing-fact claims', async ({ page }) => {
+  await page.addInitScript(({ plan }) => {
+    sessionStorage.setItem('tripPlan', JSON.stringify(plan))
+    sessionStorage.setItem('tripQuality', JSON.stringify({ data_gaps: ['in_attraction_walking_unknown'] }))
+  }, { plan })
+  await page.route('https://*.amap.com/**', route => route.abort())
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+  await page.goto('/result')
+  await expect(page.getByText('景区内部步行距离尚无可靠数据。', { exact: true })).toBeVisible()
+  await expect(page.getByText(/酒店或餐厅接驳路线仍待核实/)).toHaveCount(0)
+  await expect(page.getByText(/预约要求及余票请通过景区官方渠道确认/)).toHaveCount(0)
+  await expect(page.getByText(/部分景点或餐厅的出行日开放时间待核实/)).toHaveCount(0)
+})
+
 test('legacy missing or stale schedule explains why the unchanged day still needs verification', async ({ page }) => {
   const code = 'schedule_unknown_or_stale'
   const sample = { ...plan, days: [{ ...plan.days[0], timeline: [], feasibility: { status: 'unverified', unknown: [code] } }] }

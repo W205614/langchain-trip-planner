@@ -10,6 +10,19 @@ import re
 _CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
 
 
+def attraction_reduction(content: str) -> int | None:
+    """Recognize an explicit count; vague pacing requests stay with the planner."""
+    text = re.sub(r"\s+", "", content)
+    matches = list(re.finditer(r"(?<![至最不])(?:减少|少安排|少去|去掉|删掉|删除|少)([1-9][0-9]?|[一二两三四五六七八九十])(?:个|处)?景点", text))
+    if len(matches) != 1:
+        return None
+    match = matches[0]
+    if re.search(r"(?:不要|不用|不必|不能|不可|别)(?:再)?$", text[:match.start()]):
+        return None
+    raw = match.group(1)
+    return int(raw) if raw.isdigit() else 2 if raw == "两" else _CN[raw]
+
+
 def _day_index(text: str) -> int | None:
     match = re.search(r"第\s*([0-9]{1,2}|[一二三四五六七八九十]{1,3})\s*天", text)
     if not match:
@@ -33,7 +46,7 @@ def classify_assistant_intent(content: str, travel_days: int) -> dict:
         or ("住宿" in text and any(word in text for word in ("更换", "换", "替换", "改")))
     )
     hotel_read = "酒店" in text and any(word in text for word in ("推荐", "附近", "哪家", "怎么样")) and not hotel_change
-    revision = hotel_change or any(word in text for word in (
+    revision = hotel_change or attraction_reduction(text) is not None or any(word in text for word in (
         "轻松", "少走", "增加", "加入", "删除", "去掉", "替换", "改排", "调整", "换成", "不要去",
     ))
 

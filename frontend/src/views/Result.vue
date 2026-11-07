@@ -505,12 +505,17 @@ const proposalQualityMessage = computed(() => ({
 }[quality.value.validated_outcome as 'complete' | 'degraded' | 'draft'] || '请检查方案及质量说明。'))
 const factGapMessage = computed(() => {
   const gaps: string[] = quality.value.data_gaps || []
-  const notes = ['预约要求及余票请通过景区官方渠道确认']
+  const notes: string[] = []
+  if (gaps.some(gap => gap.startsWith('reservation_unverified'))) notes.push('预约要求及余票请通过景区官方渠道确认')
   if (gaps.some(gap => gap.split(':')[0] === 'schedule_unknown_or_stale')) notes.push('部分日期的旧时间轴缺失或已过期，请重新核验或改排')
-  notes.push(gaps.includes('opening_hours_unavailable') ? '部分景点暂无开放时间数据' : '开放时间为查询参考，出行日请再次确认')
+  if (gaps.some(gap => gap.startsWith('opening_') || gap.startsWith('meal_opening_'))) notes.push('部分景点或餐厅的出行日开放时间待核实，请在工作台补充来源及有效期')
   if (gaps.includes('route_duration_unavailable_fallback_to_straight_line')) notes.push('部分景点间路线查询失败，详见每日交通')
   if (gaps.some(gap => gap.startsWith('meal_candidate_unassigned:'))) notes.push('部分餐饮候选未能安排，用餐仍有缺口，请就近用餐并重新核验')
-  notes.push('酒店、餐厅接驳及景区内部步行未计入路线核实')
+  if (gaps.some(gap => gap.startsWith('route_fact_expired_or_unobserved'))) notes.push('部分路线证据已过期或缺少观测时间，请重新核验')
+  if (gaps.includes('hotel_and_meal_routes_unverified')) notes.push('酒店或餐厅接驳路线仍待核实，请补充准确地点并重新核验')
+  if (gaps.includes('in_attraction_walking_unknown')) notes.push('景区内部步行距离尚无可靠数据')
+  if (gaps.includes('meal_pois_unavailable')) notes.push('部分用餐尚无可信餐厅，可补充餐厅或在工作台确认自理用餐')
+  if (!notes.length) notes.push('部分行程事实仍待核实，请在工作台查看对应活动和来源')
   return notes.join('；') + '。'
 })
 const needsTransportArrivalBuffer = computed(() => {

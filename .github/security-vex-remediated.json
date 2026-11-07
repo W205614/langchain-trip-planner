@@ -9,7 +9,7 @@
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
     "backend/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
     "backend/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
-    "backend/app/agent_api/main.py": "216a0d0369876c6397740ebe79b7dbbffae865fa55c83d34a55c0129758be841",
+    "backend/app/agent_api/main.py": "1162a712d8c24ca25c77b87d740576ebeb23bddb02b2c004745bde42ab18001f",
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
@@ -90,5 +90,5 @@
       ]
     }
   ],
-  "review_note": "2026-11-07: Reassessed OpenAI identity, resumable rebuild and all-generation erasure paths. Every Chroma constructor still uses explicit embedded_settings; Java authenticates internal operations; no Chroma HTTP, tenant or embedding-configuration API was introduced. The three embedded-boundary regression tests passed against current source. This does not assert an upstream fix."
+  "review_note": "2026-11-07: Reassessed OpenAI identity, resumable rebuild and all-generation erasure paths. Every Chroma constructor still uses explicit embedded_settings; Java authenticates internal operations; no Chroma HTTP, tenant or embedding-configuration API was introduced. The three embedded-boundary regression tests passed against current source. This does not assert an upstream fix. 2026-11-07 itinerary revision postprocessing adds only quantity constraints after scope protection; Agent HTTP capabilities, Chroma initialization and embedded-only network isolation are unchanged."
 }
