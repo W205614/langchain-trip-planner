@@ -1,0 +1,29 @@
+Initializing database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-actions.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/tools/codeql.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Running build command: []
+Running command in E:\trip-public-codeql-closure-final-015c2347: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\actions\tools\autobuild.cmd]
+[2026-11-07 15:30:14] [build-stdout] "Running PowerShell script at 'E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\actions\tools\autobuild-impl.ps1'"
+[2026-11-07 15:30:22] [build-stdout] LGTM_INDEX_FILTERS not set. Using the default filters, and passing through to the JavaScript extractor.
+[2026-11-07 15:30:23] [build-stdout] Found JavaScript extractor at 'E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript'.
+[2026-11-07 15:30:23] [build-stdout] Running JavaScript autobuilder at 'E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\autobuild.cmd'.
+[2026-11-07 15:30:24] [build-stdout] Parallel extraction with 2 threads.
+[2026-11-07 15:30:25] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\ci.yml
+[2026-11-07 15:30:25] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\security.yml
+[2026-11-07 15:30:25] [build-stderr] WARNING: A restricted method in java.lang.System has been called
+[2026-11-07 15:30:25] [build-stderr] WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/javascript/tools/extractor-javascript.jar)
+[2026-11-07 15:30:25] [build-stderr] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[2026-11-07 15:30:25] [build-stderr] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[2026-11-07 15:30:25] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\ci.yml (112 ms)
+[2026-11-07 15:30:25] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\security.yml (112 ms)
+Finalizing database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-actions.
+Running TRAP import for CodeQL database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-actions...
+Importing TRAP files
+Merging relations
+Finished writing database (relations: 16.39 KiB; string pool: 2.05 MiB).
+TRAP import complete (2.9s).
+Finished zipping source archive (8.49 KiB).
+Successfully created database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-actions.

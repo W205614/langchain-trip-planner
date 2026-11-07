@@ -25,7 +25,7 @@ GPT-6 请求使用 reasoning 参数，不发送旧温度参数；输出上限仍
 
 ## 接入检查
 
-主机 Python 需先安装完整后端锁定依赖；仅安装部署配置脚本的 python-dotenv 不足以运行真实模型检查。以下命令从仓库根目录执行，默认只查询模型访问权限，不生成内容：
+主机 Python 需先安装完整后端锁定依赖。以下命令从仓库根目录执行，默认只查询模型访问权限，不生成内容：
 
 ```powershell
 python -m pip install -r backend/requirements.txt
@@ -40,13 +40,13 @@ python backend/scripts/openai_check.py --live --roles text,vision,embedding `
   --report E:\trip-private\acceptance\openai-live.json
 ```
 
-上限是文本 12 次、视觉 1 次、Embedding 40 次、高德 MCP 工具调用 120 次。真实项目验收与此检查应共用账本；MCP 内部请求数不等于这里可观测的工具调用数。报告区分 `accessible` 与 `live_checked`，不能把模型列表可读当作生成成功。
+上限是文本 12 次、视觉 1 次、Embedding 40 次、高德 MCP 工具调用 120 次。真实项目验收与此检查共用账本；高德按可观测的 MCP 工具调用计数，工具内部 REST 请求数另计。报告的 `accessible` 记录访问权限，`live_checked` 记录实际生成检查。
 
-成功判据为进程退出码0、报告 `passed=true`；访问检查还需三角色 HTTP200，真实检查需对应角色 `live_checked=true`、文本非空、视觉颜色识别通过和 Embedding 返回3072维。401／403、余额、网络及预算错误均不能记作接入成功。检查脚本读取 `backend/.env`；实际容器还要通过生成／升级运行配置及重建加载新值，不要用主机检查成功替代容器链路验收。
+成功判据为进程退出码0、报告 `passed=true`；访问检查还需三角色 HTTP200，真实检查需对应角色 `live_checked=true`、文本非空、视觉颜色识别通过和 Embedding 返回3072维。401／403、余额、网络及预算错误按报告排查后重试。检查脚本读取 `backend/.env`；部署时还需生成／升级运行配置、重建容器，并检查容器实际调用链路。
 
 ## 已有向量迁移
 
-新索引身份包含供应商、端点、模型和维度。同名模型的第三方向量及缺少身份的旧索引均不能直接视作兼容；系统保留旧数据并提示需要重建。初始化和健康检查不会为了验证维度调用 Embedding。
+新索引身份包含供应商、端点、模型和维度。第三方向量及缺少身份的旧索引需要重建，系统会保留旧数据并提示迁移。初始化和健康检查使用本地身份信息，避免额外 Embedding 调用。
 
 使用已完成 MFA 和邮箱验证（公开模式）的管理员 API Bearer token 设置 `TRIP_ADMIN_TOKEN`。先预览，再执行：
 
@@ -56,16 +56,22 @@ python backend/scripts/rag_migrate.py --base-url http://127.0.0.1:8380
 python backend/scripts/rag_migrate.py --base-url http://127.0.0.1:8380 --execute
 ```
 
-公开部署将 `--base-url` 换成实际 HTTPS 来源；令牌只从 `TRIP_ADMIN_TOKEN` 环境读取。预览必须返回 `success=true, preview=true` 且计数符合预期；执行需 `success=true, preview=false` 并返回新的 `generation`，再以受权查询核对命中及隔离。仅HTTP2xx或脚本打印了JSON不证明索引已切换。
+公开部署将 `--base-url` 换成实际 HTTPS 来源；令牌只从 `TRIP_ADMIN_TOKEN` 环境读取。预览必须返回 `success=true, preview=true` 且计数符合预期；执行需 `success=true, preview=false` 并返回新的 `generation`，再以受权查询核对命中及隔离。
 
 预览读取业务快照，输出文档数量、输入 UTF-8 字节及请求数量估算；字节数不是供应商 Token 或费用。执行每 16 个文档保存一次进度，网络中断后重跑执行命令会续接相同快照。相同批次使用稳定文档 ID，响应丢失时重放不会重复插入。
 
-业务快照、来源内容或索引身份改变时停止续接；重新预览后可用 `--execute --restart` 建立新一代。新集合数量、检索和业务版本均通过后才原子切换，失败保留原集合。完整数据重建需要独立预算，不把小样本通过等同全量迁移。
+业务快照、来源内容或索引身份改变时停止续接；重新预览后可用 `--execute --restart` 建立新一代。新集合数量、检索和业务版本均通过后才原子切换，失败保留原集合。其他部署的全量重建先预估输入和调用次数，再安排预算。
 
 注销／资料删除会清理活动、保留及未完成的索引集合，并写版本墓碑；这个删除路径不依赖模型或 Embedding 可用。
 
+## 本机全量迁移结果（2026-11-07）
+
+本机日常三角色现连接 OpenAI 官方端点：文本／视觉 `gpt-6.1-sol`、Embedding `text-embedding-3-large`（3072维），模型访问检查均为 HTTP200。日常全量索引迁移已成功，覆盖46条可索引行程、125块，使用13次 Embedding，活动 generation 为 `42efb7e7a2b449b5b13f44a065bab01a`，状态为 `enabled`。
+
+该全量迁移单独记录在[个人项目收尾验收](../evidence/personal-closure-20261107/report.md)，原[真实模型小样本](../evidence/public-operations-20261107/report.md)保留原结果。持久验收账本累计为文本5/12、视觉1/1、Embedding23/40、高德62/120，沿用原账本；后续真实调用仍受剩余额度限制。
+
 ## 用量解释
 
-发送前的调用与 Token 预留用于额度控制，失败不代表供应商未计费。非流式文本、视觉和 Embedding 的供应商 usage 单独回报；流式规划保留任务 usage。缺失回报保持未知，不填成零；两个口径不能相加重复估价。单价为零表示未配置估价，真实费用以供应商账单为准。
+发送前的调用与 Token 预留用于额度控制，已发出但失败的请求仍可能计费。非流式文本、视觉和 Embedding 的供应商 usage 单独回报；流式规划保留任务 usage。缺失回报保持未知，重复描述同一次调用的用量只计一次。单价为零表示未配置估价，真实费用以供应商账单为准。
 
 接口和模型依据：[GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol)、[迁移说明](https://developers.openai.com/api/docs/guides/latest-model)、[Embedding](https://developers.openai.com/api/docs/guides/embeddings)。

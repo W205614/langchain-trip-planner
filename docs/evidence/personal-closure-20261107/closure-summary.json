@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-07T08:13:12.522142+00:00",
+  "source_checkpoint": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+  "runtime": {
+    "seven_services_ready": true,
+    "mounts_preserved": true,
+    "workers_paused_for_readback": true,
+    "provider_calls_during_readback": 0,
+    "http": {
+      "/": 200,
+      "/health": 200,
+      "/readyz": 200,
+      "/api/auth/options": 200,
+      "/api/capabilities": 200
+    },
+    "workers_configuration_restored": true,
+    "all_daily_stopped": true,
+    "applications": [
+      {
+        "service": "backend",
+        "image_id": "sha256:5041b33aaa46b208368e36ac0197dbaddd7291df92f6439420bcc2a36e44a6f5",
+        "revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770"
+      },
+      {
+        "service": "agent",
+        "image_id": "sha256:2307a10d8a9ec0273788e69e6dfee7c7c8e2abae998ae29ae954e3592b297000",
+        "revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770"
+      },
+      {
+        "service": "frontend",
+        "image_id": "sha256:5f736b3bd92856dbe6c6eb2176a72441f75bd816ebfaafb57e131b0fbc48e04d",
+        "revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770"
+      }
+    ]
+  },
+  "models": {
+    "configuration": {
+      "LLM_MODEL_ID": "gpt-6.1-sol",
+      "LLM_BASE_URL": "https://api.openai.com/v1",
+      "LLM_REASONING_EFFORT": "low",
+      "VISION_MODEL_ID": "gpt-6.1-sol",
+      "VISION_BASE_URL": "https://api.openai.com/v1",
+      "VISION_REASONING_EFFORT": "low",
+      "EMBEDDING_MODEL": "text-embedding-3-large",
+      "EMBEDDING_BASE_URL": "https://api.openai.com/v1",
+      "EMBEDDING_DIMENSIONS": "3072"
+    },
+    "all_roles_share_private_project_key": true,
+    "access_check": {
+      "mode": "model_access_only",
+      "passed": true,
+      "roles": {
+        "text": {
+          "model": "gpt-6.1-sol",
+          "http_status": 200,
+          "accessible": true,
+          "live_checked": false
+        },
+        "vision": {
+          "model": "gpt-6.1-sol",
+          "http_status": 200,
+          "accessible": true,
+          "live_checked": false
+        },
+        "embedding": {
+          "model": "text-embedding-3-large",
+          "http_status": 200,
+          "accessible": true,
+          "live_checked": false
+        }
+      }
+    },
+    "data_dir_preserved": true,
+    "dataset_id_preserved": true
+  },
+  "maintenance_administrator": {
+    "account_created": true,
+    "normal_mfa_enrollment": true,
+    "normal_password_totp_login": true
+  },
+  "full_index_migration": {
+    "passed": true,
+    "sampling_and_full_migration_separate": true,
+    "preview": {
+      "chunks": 125,
+      "history_records": 46,
+      "embedding_identity": {
+        "provider": "openai",
+        "endpoint": "https://api.openai.com/v1",
+        "model": "text-embedding-3-large",
+        "dimensions": 3072
+      },
+      "estimated_embedding_requests": 13,
+      "input_utf8_bytes": 42039
+    },
+    "result": {
+      "success": true,
+      "chunks": 125,
+      "history_records": 46,
+      "generation": "42efb7e7a2b449b5b13f44a065bab01a"
+    },
+    "embedding_calls": 13,
+    "rag_status_after": {
+      "success": true,
+      "enabled": true,
+      "embedding_model": "text-embedding-3-large"
+    },
+    "retrieval_completed": true,
+    "budget_before": {
+      "text": 5,
+      "embedding": 10,
+      "vision": 1,
+      "amap": 62
+    },
+    "budget_after": {
+      "text": 5,
+      "embedding": 23,
+      "vision": 1,
+      "amap": 62
+    },
+    "budget_limits": {
+      "text": 12,
+      "vision": 1,
+      "embedding": 40,
+      "amap": 120
+    }
+  },
+  "manual_recovery_points": [
+    {
+      "name": "pre-upgrade",
+      "source_schema": "14",
+      "passed": true,
+      "stage": "complete",
+      "checksums_verified": true,
+      "tables_verified": 36,
+      "rows_verified": 1098,
+      "restored_java_ready": true,
+      "baseline_ready_before_upgrade": true,
+      "active_backend_ready": true,
+      "upgrade": {
+        "candidate_ready": true,
+        "original_business_tables_unchanged": 34,
+        "original_tables_checked": 35,
+        "verified_migration_metadata_changes": {
+          "evidence_revision": {
+            "before": {
+              "id": 1,
+              "revision": 161
+            },
+            "after": {
+              "id": 1,
+              "revision": 162
+            },
+            "revision_delta": 1,
+            "migration": {
+              "version": "16",
+              "type": "SQL",
+              "script": "V16__object_storage.sql",
+              "checksum": -2146005944,
+              "success": true,
+              "installed_rank": 16
+            },
+            "reason": "V16 storage_key UPDATE fires the existing knowledge_documents statement trigger once"
+          }
+        },
+        "original_migrations_unchanged": 14,
+        "schema_version": "20"
+      }
+    },
+    {
+      "name": "latest-current",
+      "source_schema": "20",
+      "passed": true,
+      "stage": "complete",
+      "checksums_verified": true,
+      "tables_verified": 46,
+      "rows_verified": 1127,
+      "restored_java_ready": true,
+      "active_backend_ready": true,
+      "state": {
+        "schema": "20",
+        "users": 45,
+        "trips": 61,
+        "documents": 3,
+        "usable_mfa_admins": 1
+      },
+      "manifest_files": 13,
+      "images_archived": true,
+      "image_archive_count": 4
+    }
+  ],
+  "scheduled_backup_task_state": "Disabled",
+  "quality": {
+    "new_quality_evaluation_run": false,
+    "previous_real_sample_outcome": "degraded",
+    "reference": "docs/evidence/public-operations-20261107/report.md"
+  },
+  "targeted_tests": {
+    "restore_regression_passed": 32,
+    "security_tools_passed": 76,
+    "full_suite_reference": "docs/evidence/public-operations-20261107/report.md",
+    "full_suite_rerun_in_this_closure": false
+  },
+  "format_audit": {
+    "handwritten_files_checked": 430,
+    "python_syntax_files": 216,
+    "checks": [
+      "utf8",
+      "BOM",
+      "final newline",
+      "trailing whitespace",
+      "tab indentation",
+      "Python syntax"
+    ],
+    "issues": [],
+    "generated_and_historical_evidence_excluded": true
+  },
+  "security": {
+    "secrets": [
+      {
+        "scanner": "gitleaks-history",
+        "status": "pass",
+        "findings": 0,
+        "exit_code": 0
+      },
+      {
+        "scanner": "gitleaks-tracked",
+        "status": "pass",
+        "findings": 0,
+        "exit_code": 0
+      }
+    ],
+    "codeql": [
+      {
+        "file": "actions.sarif",
+        "raw_high_critical_findings": 0,
+        "not_affected_context_findings": 0,
+        "blocking_findings": 0,
+        "status": "pass"
+      },
+      {
+        "file": "java.sarif",
+        "raw_high_critical_findings": 21,
+        "not_affected_context_findings": 21,
+        "blocking_findings": 0,
+        "status": "pass_codeql_context"
+      },
+      {
+        "file": "javascript.sarif",
+        "raw_high_critical_findings": 3,
+        "not_affected_context_findings": 3,
+        "blocking_findings": 0,
+        "status": "pass_codeql_context"
+      },
+      {
+        "file": "python.sarif",
+        "raw_high_critical_findings": 2,
+        "not_affected_context_findings": 2,
+        "blocking_findings": 0,
+        "status": "pass_codeql_context"
+      }
+    ],
+    "agent_image": {
+      "target": "trip-daily-agent:56fef02",
+      "image_id": "sha256:2307a10d8a9ec0273788e69e6dfee7c7c8e2abae998ae29ae954e3592b297000",
+      "status": "pass_vendor_policy",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 85,
+      "contextual_not_affected": 4,
+      "all_findings": 241,
+      "exit_code": 2,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 14,
+        "fixed_by_pinned_security_upgrade": 47,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 20
+      },
+      "unfixed_risk_accepted_findings": 0
+    }
+  },
+  "completed_old_fixture_cleanup": {
+    "removed": {
+      "containers": 70,
+      "volumes": 41,
+      "networks": 12
+    },
+    "global_prune_used": false,
+    "force_container_removal_used": false,
+    "implicit_volume_removal_used": false,
+    "all_exact_old_ids_absent": true
+  },
+  "completed_closure_fixture_cleanup": {
+    "removed": {
+      "containers": 15,
+      "volumes": 3,
+      "networks": 3
+    },
+    "global_prune_used": false
+  },
+  "completed_cleanup_totals": {
+    "containers": 85,
+    "volumes": 44,
+    "networks": 15
+  },
+  "windows_recycle_completed_paths_in_this_batch": 143,
+  "source_receipts": [
+    {
+      "path": ".codex-closure/daily-index-migration.json",
+      "sha256": "b943615bdbbb72a96a9b68c6bc89e7d50129022625cc4571ed3bafe60c006075"
+    },
+    {
+      "path": ".codex-closure/daily-upgrade-provisional.json",
+      "sha256": "c10875677037e6eb75ee6120cb20761fdc764a02551b816b113e5be5c8e38874"
+    },
+    {
+      "path": ".codex-closure/latest-current-backup.json",
+      "sha256": "0140877d2f2793aac4a73e1159232cc7dd4ed84508d12276ef5984cf35f13667"
+    },
+    {
+      "path": ".codex-closure/daily-model-config.json",
+      "sha256": "1465438b2ef3f1c33f703aa6f498ed75224f47c00d04836946f61e876e69d66f"
+    },
+    {
+      "path": ".codex-closure/model-access-daily.json",
+      "sha256": "46ed7cee406ac8a4c51f5af3a7ceb1610c1b6eaa728849f64caee1590c2c7442"
+    },
+    {
+      "path": ".codex-closure/format-audit.json",
+      "sha256": "db5f1d497331a3b54df424c9bfdf32b14b593c6f67533300675cbc364278a45d"
+    },
+    {
+      "path": ".codex-closure/cleanup-docker-old-result.json",
+      "sha256": "f9cf22df9e86783290326af8ab2689e8a7b427992f58ca530957bc63f95ef5eb"
+    },
+    {
+      "path": ".codex-closure/cleanup-docker-closure-result.json",
+      "sha256": "a9fb8573a62f341ab457588b7082480926102c90fb3c291fd3aab58c828f1216"
+    },
+    {
+      "path": ".codex-closure/security-tool-tests.log",
+      "sha256": "f2fe3734304938384bbc0bec50045f91b85a3a7e43cced19a1a8cf7f2d16c491"
+    },
+    {
+      "path": ".codex-closure/security/agent-source-image/image-summary.json",
+      "sha256": "600b874ff8c2f11427a339e73663c47608024b3977b4dab984d29ef5c4ea3a76"
+    },
+    {
+      "path": ".codex-closure/security/codeql-active/sarif-summary.json",
+      "sha256": "208e2bf43b567d03244a8f2e3e8aaaa28b8e8fc3d0234ee989b0eb216868f04b"
+    },
+    {
+      "path": ".codex-closure/security/secrets/secrets-summary.json",
+      "sha256": "cd5f28ae0b9a8c702587793bc42e28697c01102c535f9232fe451128146d7c04"
+    },
+    {
+      "path": ".codex-closure/retained-restore-reports/restore-v16-watermark-verified.json",
+      "sha256": "ea0b1029522cd80eef8b2c048996a075f68192711ce9617ef993eda84daa5844"
+    },
+    {
+      "path": ".codex-closure/retained-restore-reports/latest-current-verified.json",
+      "sha256": "7950e13468b9daa76488507ae6ee64195458568ccb44c1ed157850793decf925"
+    }
+  ]
+}

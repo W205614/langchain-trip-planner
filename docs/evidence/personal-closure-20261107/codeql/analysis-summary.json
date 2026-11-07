@@ -1,0 +1,169 @@
+{
+  "source_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+  "analysis_origin": "Local official CodeQL2.27.4 security-extended",
+  "query_suite": "security-extended",
+  "source_snapshot_public": "docs/evidence/personal-closure-20261107/codeql/source-snapshot.json",
+  "source_snapshot_public_sha256": "a6ff6a7a99a2bdda9a61d43a92d6a8c56daeba12069cc60a2022b5d8715c0853",
+  "source_snapshot_original_ignored_sha256": "882ffb9944a9806caca16aef4c22fed2ed4d9f31c20e50b6b5633c632ef789ad",
+  "public_snapshot_digest_format": "path-sha256-array/v1",
+  "tool": {
+    "version": "2.27.4",
+    "url": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.4/codeql-bundle-win64.tar.gz",
+    "archive": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64.tar.gz",
+    "directory": "E:\\project\\langchain-trip-planner\\.cache\\public-tools\\codeql-bundle-2.27.4-win64",
+    "sha256": "d67fead75936c55a241d26c25342747b07f94664b104f719dfe291b665508c4d",
+    "bytes": 700532554,
+    "configuration_verified": true
+  },
+  "stages": [
+    {
+      "name": "create-java",
+      "exit_code": 0,
+      "elapsed_seconds": 265.1
+    },
+    {
+      "name": "analyze-java",
+      "exit_code": 0,
+      "elapsed_seconds": 65.3
+    },
+    {
+      "name": "create-python",
+      "exit_code": 0,
+      "elapsed_seconds": 154.8
+    },
+    {
+      "name": "analyze-python",
+      "exit_code": 0,
+      "elapsed_seconds": 147.5
+    },
+    {
+      "name": "create-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 30.3
+    },
+    {
+      "name": "analyze-javascript",
+      "exit_code": 0,
+      "elapsed_seconds": 65.0
+    },
+    {
+      "name": "create-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 20.8
+    },
+    {
+      "name": "analyze-actions",
+      "exit_code": 0,
+      "elapsed_seconds": 22.7
+    }
+  ],
+  "all_eight_stages_exit_zero": true,
+  "snapshot_sources_unchanged": true,
+  "business_tree_bindings": {
+    "backend": "bb3cc2e4cc9a1ce0caee29e94f1c1d27d31f5338",
+    "business-backend": "bc18595c8465ccc0f9e0605a58b625c939d377e6",
+    "frontend": "dc8535ec029cbd67a560ed080353078688636e9a",
+    "deploy": "608821351d0067ca1756a10d0dfd3426637a3d73",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "jobs": [
+    {
+      "language": "java",
+      "path": "docs/evidence/personal-closure-20261107/codeql/java.sarif",
+      "sha256": "09c2b4e5e0af048f1b9025d77cec4f73a85ab94135db23d9661434d671a934d0",
+      "source_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+      "blocking_findings": 21
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/personal-closure-20261107/codeql/python.sarif",
+      "sha256": "b5d6ec1cb11b63b22c660c9029954757fd9060dab23ba420d38cada2ab7b1009",
+      "source_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+      "blocking_findings": 2
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/personal-closure-20261107/codeql/javascript.sarif",
+      "sha256": "c0246f0945b5a094a14bef2bfb3c1fc5a7034fe9d412cff73ed07442a5153043",
+      "source_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+      "blocking_findings": 3
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/personal-closure-20261107/codeql/actions.sarif",
+      "sha256": "232df491e3270f97c9480842b787bd2cc23a3f55287a876eb5147bf4bfd65c7b",
+      "source_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+      "blocking_findings": 0
+    }
+  ],
+  "raw_blocking_findings": 26,
+  "individual_context_reviews": 26,
+  "coverage": {
+    "java": [
+      "CodeQL scanned 96 out of 147 Java/Kotlin files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information."
+    ],
+    "python": [
+      "CodeQL scanned 237 out of 237 Python files and 2 out of 2 GitHub Actions files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information."
+    ],
+    "javascript": [
+      "CodeQL scanned 75 out of 75 JavaScript/TypeScript files and 2 out of 2 GitHub Actions files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information."
+    ],
+    "actions": [
+      "CodeQL scanned 2 out of 2 GitHub Actions files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information."
+    ]
+  },
+  "invocation_diagnostics": [
+    {
+      "language": "java",
+      "execution_successful": true,
+      "tool_execution_notification_levels": {
+        "none": 558,
+        "note": 1
+      }
+    },
+    {
+      "language": "python",
+      "execution_successful": true,
+      "tool_execution_notification_levels": {
+        "none": 722,
+        "note": 13
+      }
+    },
+    {
+      "language": "javascript",
+      "execution_successful": true,
+      "tool_execution_notification_levels": {
+        "none": 567
+      }
+    },
+    {
+      "language": "actions",
+      "execution_successful": true,
+      "tool_execution_notification_levels": {
+        "none": 464
+      }
+    }
+  ],
+  "java_coverage_scope": "96 compiled main sources; test sources are outside Maven compile, matching the existing CI analysis command",
+  "full_raw_results_equal_active_baseline": 26,
+  "unknown_new_identities": 0,
+  "supporting_lf_sources_unchanged": 47,
+  "review_record": "docs/evidence/personal-closure-20261107/codeql/source-review.json",
+  "review_record_sha256": "7e8e3436167fd683fedded7487b6487e124a1ed027053b5db51b17993ad060c9",
+  "policy_draft": "docs/evidence/personal-closure-20261107/codeql/policy-draft.json",
+  "activation_status": "Awaiting root independent load/assess",
+  "active_policy_modified": false,
+  "changed_business_sources_reviewed": [
+    {
+      "path": "backend/scripts/restore_java_backup.py",
+      "sha256_lf": "f395fef14a458c4a241ef531873f4e5669677254b068efd8600af878605d87ad",
+      "related_bound_support_source": false
+    },
+    {
+      "path": "backend/tests/test_restore_retained_baseline.py",
+      "sha256_lf": "fa7475398590d4f79669d22d00a28a5c35527a1d1162b0fba20f9133057fa348",
+      "related_bound_support_source": false
+    }
+  ],
+  "scope": "Fresh local analysis; remote CI results are tracked separately. Documentation stays outside the frozen business source snapshot."
+}

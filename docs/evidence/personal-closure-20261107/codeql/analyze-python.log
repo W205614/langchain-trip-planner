@@ -1,0 +1,221 @@
+Running queries.
+Resolving data extensions.
+Finished resolving data extensions.
+Merging data extensions.
+Finished merging data extensions.
+WARNING: Not caching stages during query-loading, since max heap size is only 1800 MB.
+[1/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Expressions\UseofInput.qlx.
+[2/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CVE-2018-1281\BindToAllInterfaces.qlx.
+[3/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\IncompleteHostnameRegExp.qlx.
+[4/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\IncompleteUrlSubstringSanitization.qlx.
+[5/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\CookieInjection.qlx.
+[6/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\OverlyLargeRange.qlx.
+[7/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-022\PathInjection.qlx.
+[8/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-074\TemplateInjection.qlx.
+[9/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-078\CommandInjection.qlx.
+[10/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-079\ReflectedXss.qlx.
+[11/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-089\SqlInjection.qlx.
+[12/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-090\LdapInjection.qlx.
+[13/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-1004\NonHttpOnlyCookie.qlx.
+[14/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-094\CodeInjection.qlx.
+[15/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-116\BadTagFilter.qlx.
+[16/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-113\HeaderInjection.qlx.
+[17/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-1275\SameSiteNoneCookie.qlx.
+[18/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-215\FlaskDebug.qlx.
+[19/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-209\StackTraceExposure.qlx.
+[20/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-295\MissingHostKeyValidation.qlx.
+[21/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-285\PamAuthorization.qlx.
+[22/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-312\CleartextLogging.qlx.
+[23/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-326\WeakCryptoKey.qlx.
+[24/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-312\CleartextStorage.qlx.
+[25/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\BrokenCryptoAlgorithm.qlx.
+[26/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\InsecureDefaultProtocol.qlx.
+[27/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\InsecureProtocol.qlx.
+[28/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-352\CSRFProtectionDisabled.qlx.
+[29/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\WeakSensitiveDataHashing.qlx.
+[30/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-377\InsecureTemporaryFile.qlx.
+[31/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-502\UnsafeDeserialization.qlx.
+[32/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-601\UrlRedirect.qlx.
+[33/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-614\InsecureCookie.qlx.
+[34/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-611\Xxe.qlx.
+[35/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-643\XpathInjection.qlx.
+[36/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-730\PolynomialReDoS.qlx.
+[37/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-730\ReDoS.qlx.
+[38/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-730\RegexInjection.qlx.
+[39/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-776\XmlBomb.qlx.
+[40/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-918\FullServerSideRequestForgery.qlx.
+[41/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-943\NoSqlInjection.qlx.
+[42/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-022\TarSlip.qlx.
+[43/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-079\Jinja2WithoutEscaping.qlx.
+[44/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-078\UnsafeShellCommandConstruction.qlx.
+[45/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-295\RequestWithoutValidation.qlx.
+[46/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-117\LogInjection.qlx.
+[47/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-732\WeakFilePermissions.qlx.
+[48/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Diagnostics\ExtractedFiles.qlx.
+[49/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Diagnostics\ExtractionWarnings.qlx.
+[50/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Summary\LinesOfCode.qlx.
+[51/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Summary\LinesOfUserCode.qlx.
+[52/52] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-918\PartialServerSideRequestForgery.qlx.
+Starting evaluation of codeql\python-queries\Diagnostics\ExtractionWarnings.ql.
+Starting evaluation of codeql\python-queries\Diagnostics\ExtractedFiles.ql.
+Starting evaluation of codeql\python-queries\Expressions\UseofInput.ql.
+[1/52 eval 6.7s] Evaluation done; writing results to codeql\python-queries\Diagnostics\ExtractedFiles.bqrs.
+[2/52 eval 7.8s] Evaluation done; writing results to codeql\python-queries\Diagnostics\ExtractionWarnings.bqrs.
+Starting evaluation of codeql\python-queries\Security\CVE-2018-1281\BindToAllInterfaces.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\CookieInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\IncompleteHostnameRegExp.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-020\IncompleteUrlSubstringSanitization.ql.
+[3/52 eval 572ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\IncompleteUrlSubstringSanitization.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-020\OverlyLargeRange.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-022\PathInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-022\TarSlip.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-074\TemplateInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-078\CommandInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-078\UnsafeShellCommandConstruction.ql.
+[4/52 eval 1m7s] Evaluation done; writing results to codeql\python-queries\Expressions\UseofInput.bqrs.
+[5/52 eval 12.9s] Evaluation done; writing results to codeql\python-queries\Security\CWE-074\TemplateInjection.bqrs.
+[6/52 eval 20.9s] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\CookieInjection.bqrs.
+[7/52 eval 21.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\IncompleteHostnameRegExp.bqrs.
+[8/52 eval 20.9s] Evaluation done; writing results to codeql\python-queries\Security\CWE-020\OverlyLargeRange.bqrs.
+[9/52 eval 44.6s] Evaluation done; writing results to codeql\python-queries\Security\CVE-2018-1281\BindToAllInterfaces.bqrs.
+[10/52 eval 24.5s] Evaluation done; writing results to codeql\python-queries\Security\CWE-022\TarSlip.bqrs.
+[11/52 eval 26.9s] Evaluation done; writing results to codeql\python-queries\Security\CWE-022\PathInjection.bqrs.
+[12/52 eval 24.9s] Evaluation done; writing results to codeql\python-queries\Security\CWE-078\CommandInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-079\Jinja2WithoutEscaping.ql.
+[13/52 eval 153ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-079\Jinja2WithoutEscaping.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-079\ReflectedXss.ql.
+[14/52 eval 669ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-079\ReflectedXss.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-089\SqlInjection.ql.
+[15/52 eval 27s] Evaluation done; writing results to codeql\python-queries\Security\CWE-078\UnsafeShellCommandConstruction.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-090\LdapInjection.ql.
+[16/52 eval 3.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-089\SqlInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-094\CodeInjection.ql.
+[17/52 eval 3.3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-090\LdapInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-1004\NonHttpOnlyCookie.ql.
+[18/52 eval 839ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-1004\NonHttpOnlyCookie.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-113\HeaderInjection.ql.
+[19/52 eval 1.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-094\CodeInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-116\BadTagFilter.ql.
+[20/52 eval 1.3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-113\HeaderInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-117\LogInjection.ql.
+[21/52 eval 2.4s] Evaluation done; writing results to codeql\python-queries\Security\CWE-116\BadTagFilter.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-1275\SameSiteNoneCookie.ql.
+[22/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-117\LogInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-209\StackTraceExposure.ql.
+[23/52 eval 690ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-1275\SameSiteNoneCookie.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-215\FlaskDebug.ql.
+[24/52 eval 182ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-215\FlaskDebug.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-285\PamAuthorization.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-295\MissingHostKeyValidation.ql.
+[25/52 eval 85ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-285\PamAuthorization.bqrs.
+[26/52 eval 161ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-295\MissingHostKeyValidation.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-295\RequestWithoutValidation.ql.
+[27/52 eval 280ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-295\RequestWithoutValidation.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-312\CleartextLogging.ql.
+[28/52 eval 1.7s] Evaluation done; writing results to codeql\python-queries\Security\CWE-209\StackTraceExposure.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-312\CleartextStorage.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-326\WeakCryptoKey.ql.
+[29/52 eval 3.5s] Evaluation done; writing results to codeql\python-queries\Security\CWE-312\CleartextStorage.bqrs.
+[30/52 eval 5.4s] Evaluation done; writing results to codeql\python-queries\Security\CWE-312\CleartextLogging.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-327\BrokenCryptoAlgorithm.ql.
+[31/52 eval 2.2s] Evaluation done; writing results to codeql\python-queries\Security\CWE-326\WeakCryptoKey.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-327\InsecureDefaultProtocol.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-327\InsecureProtocol.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-327\WeakSensitiveDataHashing.ql.
+[32/52 eval 14ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\InsecureDefaultProtocol.bqrs.
+[33/52 eval 681ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\BrokenCryptoAlgorithm.bqrs.
+[34/52 eval 6.4s] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\InsecureProtocol.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-352\CSRFProtectionDisabled.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-377\InsecureTemporaryFile.ql.
+[35/52 eval 5ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-352\CSRFProtectionDisabled.bqrs.
+[36/52 eval 7.1s] Evaluation done; writing results to codeql\python-queries\Security\CWE-327\WeakSensitiveDataHashing.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-502\UnsafeDeserialization.ql.
+[37/52 eval 599ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-377\InsecureTemporaryFile.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-601\UrlRedirect.ql.
+[38/52 eval 291ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-601\UrlRedirect.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-611\Xxe.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-614\InsecureCookie.ql.
+[39/52 eval 409ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-611\Xxe.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-643\XpathInjection.ql.
+[40/52 eval 4ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-614\InsecureCookie.bqrs.
+[41/52 eval 1.6s] Evaluation done; writing results to codeql\python-queries\Security\CWE-502\UnsafeDeserialization.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-730\PolynomialReDoS.ql.
+[42/52 eval 757ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-643\XpathInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-730\ReDoS.ql.
+[43/52 eval 117ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-730\ReDoS.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-730\RegexInjection.ql.
+Starting evaluation of codeql\python-queries\Security\CWE-732\WeakFilePermissions.ql.
+[44/52 eval 1.8s] Evaluation done; writing results to codeql\python-queries\Security\CWE-730\RegexInjection.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-776\XmlBomb.ql.
+[45/52 eval 68ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-732\WeakFilePermissions.bqrs.
+[46/52 eval 3s] Evaluation done; writing results to codeql\python-queries\Security\CWE-730\PolynomialReDoS.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-918\FullServerSideRequestForgery.ql.
+[47/52 eval 646ms] Evaluation done; writing results to codeql\python-queries\Security\CWE-776\XmlBomb.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-918\PartialServerSideRequestForgery.ql.
+[48/52 eval 1.9s] Evaluation done; writing results to codeql\python-queries\Security\CWE-918\FullServerSideRequestForgery.bqrs.
+Starting evaluation of codeql\python-queries\Security\CWE-943\NoSqlInjection.ql.
+[49/52 eval 1.6s] Evaluation done; writing results to codeql\python-queries\Security\CWE-918\PartialServerSideRequestForgery.bqrs.
+Starting evaluation of codeql\python-queries\Summary\LinesOfCode.ql.
+[50/52 eval 6ms] Evaluation done; writing results to codeql\python-queries\Summary\LinesOfCode.bqrs.
+Starting evaluation of codeql\python-queries\Summary\LinesOfUserCode.ql.
+[51/52 eval 5.4s] Evaluation done; writing results to codeql\python-queries\Security\CWE-943\NoSqlInjection.bqrs.
+[52/52 eval 2.4s] Evaluation done; writing results to codeql\python-queries\Summary\LinesOfUserCode.bqrs.
+Shutting down query evaluator.
+Interpreting results.
+Resolving extensions
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Expressions\UseofInput.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CVE-2018-1281\BindToAllInterfaces.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\CookieInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\IncompleteHostnameRegExp.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\IncompleteUrlSubstringSanitization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-020\OverlyLargeRange.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-022\PathInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-074\TemplateInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-078\CommandInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-079\ReflectedXss.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-089\SqlInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-090\LdapInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-094\CodeInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-1004\NonHttpOnlyCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-113\HeaderInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-116\BadTagFilter.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-1275\SameSiteNoneCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-209\StackTraceExposure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-215\FlaskDebug.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-285\PamAuthorization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-295\MissingHostKeyValidation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-312\CleartextLogging.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-312\CleartextStorage.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-326\WeakCryptoKey.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\BrokenCryptoAlgorithm.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\InsecureDefaultProtocol.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\InsecureProtocol.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-327\WeakSensitiveDataHashing.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-352\CSRFProtectionDisabled.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-377\InsecureTemporaryFile.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-502\UnsafeDeserialization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-601\UrlRedirect.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-611\Xxe.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-614\InsecureCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-643\XpathInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-730\PolynomialReDoS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-730\ReDoS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-730\RegexInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-776\XmlBomb.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-918\FullServerSideRequestForgery.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-943\NoSqlInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-022\TarSlip.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-078\UnsafeShellCommandConstruction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-079\Jinja2WithoutEscaping.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-117\LogInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-295\RequestWithoutValidation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-732\WeakFilePermissions.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Security\CWE-918\PartialServerSideRequestForgery.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Diagnostics\ExtractedFiles.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Diagnostics\ExtractionWarnings.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Summary\LinesOfCode.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\python-queries\1.9.0\Summary\LinesOfUserCode.ql...
+Reading source archive E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-python\src.zip
+CodeQL scanned 237 out of 237 Python files and 2 out of 2 GitHub Actions files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information.
+Exporting results to SARIF v2.1.0...
+Exported results to SARIF v2.1.0 (256ms).

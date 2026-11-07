@@ -1,0 +1,175 @@
+diff --git a/backend/scripts/restore_java_backup.py b/backend/scripts/restore_java_backup.py
+index e193781..4e914e9 100644
+--- a/backend/scripts/restore_java_backup.py
++++ b/backend/scripts/restore_java_backup.py
+@@ -20,6 +20,8 @@ from enroll_dataset import tar_inventory
+ 
+ ROOT=Path(__file__).resolve().parents[2]
+ COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
++V16_WATERMARK_MIGRATION={"version":"16","type":"SQL","script":"V16__object_storage.sql",
++                         "checksum":-2146005944,"success":True}
+ 
+ 
+ class RestoreVerificationFailure(RuntimeError):
+@@ -28,6 +30,34 @@ class RestoreVerificationFailure(RuntimeError):
+         self.report = report
+ 
+ 
++def verify_candidate_original_rows(expected, actual, columns, before_history, after_history,
++                                   before_revision, after_revision):
++    """V16's fixed storage-key backfill fires the existing statement watermark once."""
++    highest=max(row["installed_rank"] for row in before_history)
++    new_v16=[row for row in after_history if row.get("version")=="16" and row["installed_rank"]>highest]
++    known_v16=(not any(row.get("version")=="16" for row in before_history)
++               and len(new_v16)==1
++               and all(new_v16[0].get(key)==value for key,value in V16_WATERMARK_MIGRATION.items()))
++    if not known_v16:
++        if actual!=expected:raise RuntimeError("Candidate upgrade changed existing business rows; clones retained")
++        return {}
++    if columns.get("evidence_revision")!=["id","revision"]:
++        raise RuntimeError("Known V16 watermark verification requires the original evidence revision columns")
++    if (not isinstance(before_revision,list) or len(before_revision)!=1
++            or before_revision[0].get("id")!=1 or type(before_revision[0].get("revision")) is not int):
++        raise RuntimeError("Known V16 watermark verification requires the original single id=1 row")
++    before=before_revision[0]
++    if after_revision!=[{"id":before["id"],"revision":before["revision"]+1}]:
++        raise RuntimeError("Known V16 evidence revision must advance by exactly one")
++    # The exemption covers only this fixed metadata effect, never other rows or fields.
++    if (set(actual)!=set(expected)
++            or any(actual[name]!=value for name,value in expected.items() if name!="evidence_revision")):
++        raise RuntimeError("Candidate upgrade changed existing business rows outside the fixed V16 watermark")
++    return {"evidence_revision":{"before":before,"after":after_revision[0],"revision_delta":1,
++            "migration":{**V16_WATERMARK_MIGRATION,"installed_rank":new_v16[0]["installed_rank"]},
++            "reason":"V16 storage_key UPDATE fires the existing knowledge_documents statement trigger once"}}
++
++
+ def restored_inventory(folder, identity):
+     """Compare extracted clone contents without following links or loading files."""
+     result={}
+@@ -256,6 +286,10 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None,object_con
+         actual=database_summary(postgres,"trip_restore")
+         if expected!=actual:raise RuntimeError("Restored table contents differ; artifacts retained")
+         report.update(tables_verified=len(expected),rows_verified=sum(int(v.split(':')[0]) for v in expected.values()))
++        # Capture from the verified original snapshot before either backend or guard runs.
++        baseline_revision=(json.loads(sql(postgres,"trip_restore",
++            "SELECT json_agg(s ORDER BY id) FROM (SELECT id,revision FROM evidence_revision) s"))
++            if candidate_image and "evidence_revision" in expected else None)
+         previous_history=sql(postgres,"trip_restore","SELECT json_agg(s ORDER BY installed_rank) FROM flyway_schema_history s")
+         environment=dict(os.environ)
+         values=dict(value.split("=",1) for value in json.loads((backup/"runtime/backend.json").read_text()) if "=" in value)
+@@ -343,15 +377,21 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None,object_con
+             else:raise RuntimeError("Candidate migration/readiness failed; isolated clones retained")
+             report["active_backend_ready"]=True
+             stage("verify_candidate_original_data_and_migrations")
+-            upgraded=database_summary(postgres,"trip_restore",columns=columns)
+-            old_tables={k:v for k,v in expected.items() if k!="flyway_schema_history"}
+-            if upgraded!=old_tables:raise RuntimeError("Candidate upgrade changed existing business rows; clones retained")
+             history=json.loads(previous_history)
+             highest=max(row["installed_rank"] for row in history)
+             after_history=sql(postgres,"trip_restore",f"SELECT json_agg(s ORDER BY installed_rank) FROM flyway_schema_history s WHERE installed_rank<={highest}")
+             if json.loads(after_history)!=history:raise RuntimeError("Published migration history changed")
++            full_history=json.loads(sql(postgres,"trip_restore","SELECT json_agg(s ORDER BY installed_rank) FROM flyway_schema_history s"))
++            upgraded=database_summary(postgres,"trip_restore",columns=columns)
++            old_tables={k:v for k,v in expected.items() if k!="flyway_schema_history"}
++            current_revision=(json.loads(sql(postgres,"trip_restore",
++                "SELECT json_agg(s ORDER BY id) FROM (SELECT id,revision FROM evidence_revision) s"))
++                if baseline_revision is not None else None)
++            metadata_changes=verify_candidate_original_rows(old_tables,upgraded,columns,history,full_history,
++                                                             baseline_revision,current_revision)
+             report["upgrade"]={"candidate_image_id":json.loads(docker("image","inspect",candidate_image))[0]["Id"],
+-                               "candidate_ready":True,"original_business_tables_unchanged":len(columns),
++                               "candidate_ready":True,"original_business_tables_unchanged":len(columns)-len(metadata_changes),
++                               "original_tables_checked":len(columns),"verified_migration_metadata_changes":metadata_changes,
+                                "original_migrations_unchanged":len(history),
+                                "schema_version":sql(postgres,"trip_restore","SELECT version FROM flyway_schema_history WHERE success ORDER BY installed_rank DESC LIMIT 1")}
+         report["passed"]=True;stage("complete")
+diff --git a/backend/tests/test_restore_retained_baseline.py b/backend/tests/test_restore_retained_baseline.py
+index 92934e6..292e93b 100644
+--- a/backend/tests/test_restore_retained_baseline.py
++++ b/backend/tests/test_restore_retained_baseline.py
+@@ -3,6 +3,7 @@ import json
+ from pathlib import Path
+ import subprocess
+ import sys
++import zlib
+ 
+ import pytest
+ 
+@@ -170,3 +171,77 @@ def test_overlapping_subnet_is_reported_before_creating_docker_resources(tmp_pat
+     assert report["containers"] == [] and report["network_created"] is False
+     assert not any(command[:2] == ("network", "create") for command in calls)
+     assert_no_cleanup(calls)
++
++
++@pytest.fixture
++def v16_watermark():
++    history=[{"installed_rank":14,"version":"14","success":True}]
++    return {"expected":{"users":"44:original-users","evidence_revision":"1:original-watermark"},
++            "actual":{"users":"44:original-users","evidence_revision":"1:migrated-watermark"},
++            "columns":{"users":["id","username"],"evidence_revision":["id","revision"]},
++            "before_history":history,
++            "after_history":[*history,{"version":"16","type":"SQL","script":"V16__object_storage.sql",
++                                      "checksum":-2146005944,"success":True,"installed_rank":16}],
++            "before_revision":[{"id":1,"revision":161}],"after_revision":[{"id":1,"revision":162}]}
++
++
++def test_fixed_v16_accepts_exact_single_statement_watermark_effect(v16_watermark):
++    changes=restore.verify_candidate_original_rows(**v16_watermark)
++    assert changes["evidence_revision"]["before"]=={"id":1,"revision":161}
++    assert changes["evidence_revision"]["after"]=={"id":1,"revision":162}
++    assert changes["evidence_revision"]["revision_delta"]==1
++    assert changes["evidence_revision"]["migration"]["checksum"]==-2146005944
++    assert set(changes)=={"evidence_revision"}
++
++
++@pytest.mark.parametrize("delta",[-1,0,2])
++def test_fixed_v16_rejects_any_other_watermark_delta(v16_watermark,delta):
++    v16_watermark["after_revision"][0]["revision"]=161+delta
++    with pytest.raises(RuntimeError,match="exactly one"):
++        restore.verify_candidate_original_rows(**v16_watermark)
++
++
++def test_fixed_v16_does_not_hide_other_original_row_changes(v16_watermark):
++    v16_watermark["actual"]["users"]="44:changed-users"
++    with pytest.raises(RuntimeError,match="outside the fixed V16"):
++        restore.verify_candidate_original_rows(**v16_watermark)
++
++
++@pytest.mark.parametrize("rows",[[],[{"id":2,"revision":162}],
++                                  [{"id":1,"revision":162},{"id":2,"revision":162}]])
++def test_fixed_v16_keeps_watermark_row_identity_and_count(v16_watermark,rows):
++    v16_watermark["after_revision"]=rows
++    with pytest.raises(RuntimeError,match="exactly one"):
++        restore.verify_candidate_original_rows(**v16_watermark)
++
++
++@pytest.mark.parametrize("field,value",[("version","17"),("type","JDBC"),
++    ("script","V16__different.sql"),("checksum",-2146005943),("success",False),("installed_rank",14)])
++def test_watermark_effect_requires_the_exact_newly_applied_v16(v16_watermark,field,value):
++    v16_watermark["after_history"][-1][field]=value
++    with pytest.raises(RuntimeError,match="changed existing business rows"):
++        restore.verify_candidate_original_rows(**v16_watermark)
++
++
++def test_baseline_v16_cannot_receive_another_watermark_exemption(v16_watermark):
++    v16_watermark["before_history"]=v16_watermark["after_history"][:]
++    with pytest.raises(RuntimeError,match="changed existing business rows"):
++        restore.verify_candidate_original_rows(**v16_watermark)
++    v16_watermark["actual"]=v16_watermark["expected"].copy()
++    v16_watermark["after_revision"]=v16_watermark["before_revision"][:]
++    assert restore.verify_candidate_original_rows(**v16_watermark)=={}
++
++
++def test_known_v16_cannot_hide_other_original_watermark_columns(v16_watermark):
++    v16_watermark["columns"]["evidence_revision"].append("other_state")
++    with pytest.raises(RuntimeError,match="original evidence revision columns"):
++        restore.verify_candidate_original_rows(**v16_watermark)
++
++
++def test_known_v16_checksum_matches_the_published_sql():
++    migration=Path(__file__).resolve().parents[2]/"business-backend/src/main/resources/db/migration/V16__object_storage.sql"
++    checksum=0
++    for line in migration.read_text(encoding="utf-8-sig").splitlines():
++        checksum=zlib.crc32(line.encode("utf-8"),checksum)
++    if checksum>=2**31:checksum-=2**32
++    assert checksum==restore.V16_WATERMARK_MIGRATION["checksum"]==-2146005944

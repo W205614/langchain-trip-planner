@@ -1,0 +1,393 @@
+{
+  "source_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
+  "files": [
+    {
+      "file": "actions.sarif",
+      "sha256": "232df491e3270f97c9480842b787bd2cc23a3f55287a876eb5147bf4bfd65c7b",
+      "blocking_findings": 0
+    },
+    {
+      "file": "java.sarif",
+      "sha256": "09c2b4e5e0af048f1b9025d77cec4f73a85ab94135db23d9661434d671a934d0",
+      "blocking_findings": 21
+    },
+    {
+      "file": "javascript.sarif",
+      "sha256": "c0246f0945b5a094a14bef2bfb3c1fc5a7034fe9d412cff73ed07442a5153043",
+      "blocking_findings": 3
+    },
+    {
+      "file": "python.sarif",
+      "sha256": "b5d6ec1cb11b63b22c660c9029954757fd9060dab23ba420d38cada2ab7b1009",
+      "blocking_findings": 2
+    }
+  ],
+  "blocking_findings": [
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "89822acdddd96f80321e6d3d2ca00f8009ec18baf5d389f50a018b195483aa53",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/spring-disabled-csrf-protection",
+      "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+      "region": {
+        "startLine": 124,
+        "startColumn": 20,
+        "endColumn": 31
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "d456e1844fc253354c35f3587484417a7031ec8f55b6ab167eb1c196f3806b4a",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+      "region": {
+        "startLine": 184,
+        "startColumn": 9,
+        "endColumn": 20
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "a7103152e5709a194b635e2acfbcc819e7988e7f43da75d7f02f91d4f5a2978d",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 87,
+        "startColumn": 62,
+        "endColumn": 71
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "ca80b71b3996020bb419b6db0788d733402b98cb469692410b4b45e04215ef88",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 88,
+        "startColumn": 46,
+        "endColumn": 55
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "b0dde8626bc173e8f8804d57b8d4a4f2b5248cb8b2d415142a2837c3de73884e",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 74,
+        "startColumn": 81,
+        "endColumn": 91
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "0d5a279008f6082a51f8bcac4708c494a81b14cd9095f8ca40a4e63f9d361f6a",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 46,
+        "endColumn": 56
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "e77617ac63b19c9ffb9efc8a9d57d6668d3a6d1de322918aca3866e7673d2014",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 100,
+        "startColumn": 60,
+        "endColumn": 70
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "7088fd4729cd6ea62ae2cdf52e6cf2dad6985335eab03d914f1996af74897eee",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 101,
+        "startColumn": 54,
+        "endColumn": 64
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "6d32506a89b935d61ef583e7398758874f9292e035d174578ba2833cba963bb4",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 69,
+        "endColumn": 96
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "e0c36cdee870bb2ee6d534a245cf3103a6e656c87703271843828045833718b6",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+      "region": {
+        "startLine": 51,
+        "startColumn": 69,
+        "endColumn": 98
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "a566dbb78de721af94b62c944b9299d0d4c1501eea6f4b4c2ca6ae2531e19566",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "0d44bfbc091a394828bad7435ef5b885783cad64f008da8fbc1a26ffe16a6e78",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "1be9c6c2f9a8590ce32b43999aa17ebe9d507c6578bf9224c3916ca954076b6a",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "51042bec28594f5ad4e2b3cd58e584f097a846beaa8beaf2a3eee495c56f2595",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "ed1ee022e7474546280c4c37109ccd845a522ef06135958f582370a402f891a2",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "fd05be319a8dd95320c00e14ba245ccf7d96f268aa3afe399412db5f16b1e392",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "c5805e328083f2707b10b01613e74cdc50bbf31b247baebf7f56229c4338fe86",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "42d1a996c012bbfeca989db18b723b651d1adac7ce96cb7e7f11a465555e44f2",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "613c5e940018f2431dfeb6115ce22fe0d4d7ed0165d67d1ce7337ea63f390d14",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "d94abb1b476203c41a4fce83dbc7b02448b8e2893addf9db2e19b3b80fe29792",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b"
+    },
+    {
+      "sarif": "java.sarif",
+      "raw_trace_sha256": "209690f10dd945525de491ee2900b181c82a88140f09f7c4fa6d762c625910af",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863"
+    },
+    {
+      "sarif": "javascript.sarif",
+      "raw_trace_sha256": "f8b0d860d8aa236f25c14204a37698a977b7de9cd38dda5fbce3e6d9dd5cf865",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 9,
+        "startColumn": 23,
+        "endColumn": 32
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22"
+    },
+    {
+      "sarif": "javascript.sarif",
+      "raw_trace_sha256": "fce04758f09a59a9f77c4339e5f40f6b5c814daa15fa9997ab645b01ac86db2d",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 23,
+        "endColumn": 33
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9"
+    },
+    {
+      "sarif": "javascript.sarif",
+      "raw_trace_sha256": "ba2c17388590b79ce645e80dc3175e42027a771a69d24d894590d2adce83b7c4",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/public-operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 20,
+        "endColumn": 84
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff"
+    },
+    {
+      "sarif": "python.sarif",
+      "raw_trace_sha256": "76c4a3ee96107e80f03641dcf4ca06bb5bd387d98cc1390d8399ff56d65d35a9",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "backend/scripts/optimization_seed_admin.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 31,
+        "endColumn": 110
+      },
+      "security_severity": "7.5",
+      "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8"
+    },
+    {
+      "sarif": "python.sarif",
+      "raw_trace_sha256": "e72406786c263fc2c3e2da630a207ecf8816297c3c4e516150c4d633eedc13d0",
+      "review_status": "pending_individual_current_source_and_complete_trace_review",
+      "query": "py/overly-permissive-file",
+      "path": "backend/scripts/install_runtime_security_patches.py",
+      "region": {
+        "startLine": 69,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675"
+    }
+  ],
+  "review_complete": false,
+  "active_policy_modified": false
+}

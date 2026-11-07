@@ -87,7 +87,7 @@ docker compose ps
 
 配置脚本会生成私有的 `deploy/runtime/postgres.env`、`business.env` 和 `agent.env`，自动创建数据库密码、JWT 与内部服务密钥。**只在首次部署执行，不要删除已有目录后重新生成，也不要提交这些私有文件。** 数据库表由 Flyway 在启动时自动初始化。
 
-首次构建需下载依赖，耗时取决于网络与机器。`docker compose ps` 中应看到 `frontend`、`backend`、`agent`、`postgres` 四个服务，启动完成后健康状态应为 `healthy`；容器健康不代表外部 API Key 已验证可用。
+首次构建需下载依赖，耗时取决于网络与机器。`docker compose ps` 中应看到 `frontend`、`backend`、`agent`、`postgres` 四个服务，启动完成后健康状态应为 `healthy`。随后按“第一次使用”生成一份短行程，检查模型与高德链路。
 
 打开 **[http://localhost:8380](http://localhost:8380)**，注册自己的账号并登录即可使用，无默认账号密码。默认仅允许本机访问。
 
@@ -113,27 +113,16 @@ docker compose ps
 | 用户停用、配额、反馈、个人数据导出与注销 | 已实现前后端闭环，参见 [运营与数据管理](docs/operations/public-operations.md) |
 | 本地／S3 原文件存储和迁移 | 已实现真实 S3 SDK 适配；Bucket、权限、端点及凭据由部署者提供，参见 [对象存储](docs/operations/object-storage.md) |
 | HTTPS、外部告警、云 PostgreSQL | 提供部署配置与联调步骤；域名、DNS、网络和平台账号仍需实际配置，参见 [公开部署](docs/operations/public-deployment.md) |
-| 成套备份、加密归档和隔离恢复 | 提供工具与恢复流程，参见 [公开部署](docs/operations/public-deployment.md#备份与恢复)；本机原有备份任务仍停用 |
+| 成套备份、加密归档和隔离恢复 | 提供工具与恢复流程，参见 [公开部署](docs/operations/public-deployment.md#备份与恢复)；本机已验证升级前、当前两个手工恢复点，定时任务仍停用 |
 
 新安装的公开环境使用独立配置及 `docker-compose.production.yml`、`docker-compose.public.yml`；已有本机环境沿用原安装路径。公网模板要求邮箱验证和管理员 MFA。账号注销会撤回本人共享行程与投稿，索引和文件清理完成前显示处理中；已下载的导出文件、其他人的独立副本及已有备份按各自保留策略管理。
 
-源码、离线集成测试、真实模型抽样与真实云平台联调分别提供证据。SMTP/S3 测试替身通过不等于任何云厂商均已验证，也不提供多实例高可用或真实预订支付。
+项目按单机部署，支持离线集成验证和真实模型抽样。SMTP、S3、云数据库及公网入口还需在选定平台完成联调；多实例高可用和真实预订支付未纳入实现。
 
-本次实现与验证边界见[公开运营验收记录](docs/evidence/public-operations-20261107/report.md)：真实行程样本仍存在事实缺口，日常全量索引尚未迁移；云端连接及正式发布需按手册验收。
+本机三应用已更新到 `56fef02`，保留原挂载；七服务已完成健康和 HTTP 检查，现按维护要求停止。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），覆盖46条可索引行程、125块。当前部署与恢复结果见[个人项目收尾记录](docs/evidence/personal-closure-20261107/report.md)，真实模型抽样见[原公开运营验收](docs/evidence/public-operations-20261107/report.md)。真实行程仍存在事实缺口，云平台与正式公网入口按手册联调。
 
 - [四服务日常操作与常见问题](docs/operations/single-host.md#首次安装后的四服务维护) · [迁移和升级](docs/operations/java-migration.md)
 - [时间规划与任务恢复](docs/operations/final-planning.md) · [协作与费用](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)
 - [规划、账号与运行治理](docs/operations/optimization-governance.md) · [性能与可靠性](docs/operations/performance-reliability.md) · [原生安全回补](backend/security/native-backports/README.md)
 
-本地检查从仓库根目录执行：
-
-```powershell
-cd backend
-python -m pytest -q
-python scripts/time_window_benchmark.py --output ../.codex-optimization/time-windows.json
-cd ../frontend
-npm run build
-npx playwright test --config playwright.config.ts
-```
-
-Python 需要安装锁定依赖，完整浏览器测试需要隔离验证栈和测试管理员配置。可复用 [CI 工作流](.github/workflows/ci.yml) 中的完整准备与执行顺序；单独通过构建或一条脚本不代表整体验收。隔离环境使用专用项目／数据卷和离线供应商，不读取日常业务挂载。
+开发环境、按改动选择测试及提交说明见 [贡献指南](CONTRIBUTING.md)；漏洞报告见 [安全政策](SECURITY.md)。[CI 工作流](.github/workflows/ci.yml) 包含 Java/PostgreSQL、Python、前端构建及隔离浏览器流程，默认使用离线供应商和专用数据卷。

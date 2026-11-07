@@ -32,7 +32,7 @@ docker compose --env-file deploy/runtime-production/public.env -f docker-compose
 Invoke-RestMethod 'https://travel.example.com/api/auth/options'
 ```
 
-`registration_mode=email_verified`、`email_available=true` 只证明应用配置已加载，不会测试 SMTP 连接。真实联调应使用测试邮箱完成注册→实际收信→点击确认→重新登录，并完成一次找回密码、验证旧会话失效。后台 `accepted` 与收件箱收到分别检查；认证／投递失败应在脱敏队列状态和错误码中可见。更换后端容器后若前端仍解析旧容器地址，按同一部署参数重新启动 frontend；不能用代理502判断 SMTP 密码错误。
+`registration_mode=email_verified`、`email_available=true` 表示应用已加载配置。随后使用测试邮箱完成注册→实际收信→点击确认→重新登录，并完成一次找回密码、验证旧会话失效。后台 `accepted` 与收件箱收到分别检查；认证／投递失败应在脱敏队列状态和错误码中可见。更换后端容器后若前端出现代理502，先按同一部署参数重新启动 frontend，刷新其解析的后端地址。
 
 ## 用户流程
 
@@ -46,9 +46,9 @@ Invoke-RestMethod 'https://travel.example.com/api/auth/options'
 
 管理员在 `GET /api/admin/mail?status=failed` 查看脱敏投递元数据，通过 `POST /api/admin/mail/{id}/replay` 手动重放未过期的失败项。接口不返回收件地址、正文或令牌。管理员权限沿用 MFA 限制。
 
-投递状态为 `pending`、`sending`、`retry`、`accepted`、`failed` 或 `cancelled`。网络发送在数据库事务外进行；SMTP 451 等临时错误按 30、60、120、240 秒有界等待，累计最多 5 次尝试。认证失败、550 等永久错误立即失败。响应丢失或进程中断可能在租约到期后再次发送，不能承诺恰好一次。
+投递状态为 `pending`、`sending`、`retry`、`accepted`、`failed` 或 `cancelled`。网络发送在数据库事务外进行；SMTP 451 等临时错误按 30、60、120、240 秒有界等待，累计最多 5 次尝试。认证失败、550 等永久错误立即失败。响应丢失或进程中断后，租约到期会再次尝试，收件人可能收到重复邮件。
 
-`accepted` 仅表示 SMTP 接受，不表示收件箱收到。被接受或已过期载荷会从队列表清除。停用账号会阻止继续领取待发项，重新启用后未过期项可能继续投递；注销会取消待发项并清空载荷。已交给 SMTP 的邮件无法撤回。收件箱反垃圾规则、退信及供应商投递能力需真实服务单独验收。
+`accepted` 表示 SMTP 已接受邮件，收件箱送达需另行检查。被接受或已过期载荷会从队列表清除。停用账号会阻止继续领取待发项，重新启用后未过期项可能继续投递；注销会取消待发项并清空载荷。已交给 SMTP 的邮件无法撤回。收件箱反垃圾规则、退信及供应商投递能力需真实服务单独验收。
 
 ## 隔离验收
 
@@ -63,4 +63,4 @@ cd business-backend
 ./mvnw.cmd -B -ntp '-Dtest=EmailAccountIntegrationTest,MailDeliveryServiceTest,TokenServiceTest' test
 ```
 
-这些端口是本地隔离示例。实际执行须确认连接的是测试资源。Mailpit 通过不代表真实供应商的发信地址授权、TLS、收件箱送达或域名配置已经验收。
+这些端口是本地隔离示例，执行前确认连接的是测试资源。真实供应商还需完成发信地址授权、TLS、收件箱送达及域名配置联调。

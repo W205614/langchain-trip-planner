@@ -1,0 +1,514 @@
+Initializing database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/tools/codeql.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Running build command: []
+Running command in E:\trip-public-codeql-closure-final-015c2347: [E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\autobuild.cmd]
+[2026-11-07 15:28:39] [build-stdout] Parallel extraction with 2 threads.
+[2026-11-07 15:28:43] [build-stdout] frontend\package.json: Main file not found
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\blind-review\review.html
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\ActivityTimeline.vue
+[2026-11-07 15:28:43] [build-stderr] WARNING: A restricted method in java.lang.System has been called
+[2026-11-07 15:28:43] [build-stderr] WARNING: java.lang.System::load has been called by com.semmle.util.files.SubstResolver in an unnamed module (file:/E:/project/langchain-trip-planner/.cache/public-tools/codeql-bundle-2.27.4-win64/codeql/javascript/tools/extractor-javascript.jar)
+[2026-11-07 15:28:43] [build-stderr] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[2026-11-07 15:28:43] [build-stderr] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\ActivityTimeline.vue (213 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\AttractionPicker.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\blind-review\review.html (225 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\AttractionReplacementReview.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\AttractionPicker.vue (34 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\CommitmentDetailsEditor.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\AttractionReplacementReview.vue (32 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\FactCompletionEditor.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\CommitmentDetailsEditor.vue (29 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\PlanningInputEditor.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\FactCompletionEditor.vue (45 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\ProposalReviewPanel.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\PlanningInputEditor.vue (42 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\RevisionScopeEditor.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\ProposalReviewPanel.vue (34 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\KnowledgeReview.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\trip\RevisionScopeEditor.vue (26 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\UploadQuotaPanel.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\KnowledgeReview.vue (22 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountData.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\components\UploadQuotaPanel.vue (25 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountEmail.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountData.vue (33 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountErasureStatus.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountEmail.vue (25 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountSecurity.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountErasureStatus.vue (21 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Community.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\AccountSecurity.vue (28 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\CommunityAdmin.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Community.vue (23 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Explore.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\CommunityAdmin.vue (24 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Feedback.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Explore.vue (25 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\History.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Feedback.vue (23 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Home.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\History.vue (44 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Knowledge.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Home.vue (35 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\KnowledgeAdmin.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Knowledge.vue (23 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Login.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\KnowledgeAdmin.vue (21 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\OperationsAdmin.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Login.vue (25 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Research.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\OperationsAdmin.vue (28 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Result.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Research.vue (24 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\SharedTrip.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\SharedTrip.vue (23 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\TripInbox.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\Result.vue (58 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\TripWorkspace.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\TripInbox.vue (25 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\App.vue
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\App.vue (16 ms)
+[2026-11-07 15:28:43] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\index.html
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\views\TripWorkspace.vue (36 ms)
+[2026-11-07 15:28:43] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\index.html (16 ms)
+[2026-11-07 15:28:46] [build-stdout] Found Node.js at: node
+[2026-11-07 15:28:46] [build-stdout] Found Node.js version: v24.19.0
+[2026-11-07 15:28:46] [build-stdout] Memory for TypeScript process: 2048 MB, and 400 MB reserve
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useAssistantProposal.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useAssistantProposal.ts (81 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useAttractionPhotos.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useAttractionPhotos.ts (36 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useTripExport.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useTripExport.ts (120 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useTripMap.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\composables\useTripMap.ts (34 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\router\index.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\router\index.ts (34 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\api.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\api.ts (112 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\auth.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\auth.ts (22 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\map.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\map.ts (17 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\publicOperations.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\services\publicOperations.ts (33 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\types\index.ts
+[2026-11-07 15:28:47] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\types\index.ts (36 ms)
+[2026-11-07 15:28:47] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\datetime.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\datetime.ts (16 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\factChecklist.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\factChecklist.ts (29 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\proposalChanges.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\proposalChanges.ts (21 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\proposalConflict.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\proposalConflict.ts (20 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\scheduleValidity.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\utils\scheduleValidity.ts (19 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\assistant-explore.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\assistant-explore.spec.ts (55 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\assistant-proposal.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\assistant-proposal.spec.ts (44 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\collaborator-plan.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\collaborator-plan.spec.ts (37 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\completion.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\completion.spec.ts (39 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\dependency-security.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\dependency-security.spec.ts (27 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\deployment.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\deployment.spec.ts (27 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\display.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\display.spec.ts (53 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\editing.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\editing.spec.ts (42 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\export.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\export.spec.ts (34 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\final-planning.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\final-planning.spec.ts (52 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\final-roles-live.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\final-roles-live.spec.ts (71 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\improvement-http.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\improvement-http.spec.ts (82 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\offline-provider-boundary.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\offline-provider-boundary.ts (18 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\operations.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\operations.spec.ts (33 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\optimization-flows.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\optimization-flows.spec.ts (184 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\public-operations.spec.ts
+[2026-11-07 15:28:48] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\public-operations.spec.ts (66 ms)
+[2026-11-07 15:28:48] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\reliability.spec.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\reliability.spec.ts (40 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\responsive.spec.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\responsive.spec.ts (25 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\security-optimization.spec.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\security-optimization.spec.ts (40 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\single-host-contracts.spec.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\single-host-contracts.spec.ts (30 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\task-recovery.spec.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\e2e\task-recovery.spec.ts (33 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\main.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\main.ts (15 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\vite-env.d.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\src\vite-env.d.ts (16 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\playwright.config.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\playwright.config.ts (17 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\vite.config.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\vite.config.ts (15 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Community.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Community.vue.ts (31 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\CommunityAdmin.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\CommunityAdmin.vue.ts (20 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\TripWorkspace.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\TripWorkspace.vue.ts (77 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Feedback.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Feedback.vue.ts (25 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\KnowledgeAdmin.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\KnowledgeAdmin.vue.ts (22 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\AttractionPicker.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\AttractionPicker.vue.ts (25 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountErasureStatus.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountErasureStatus.vue.ts (21 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\AttractionReplacementReview.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\AttractionReplacementReview.vue.ts (17 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\History.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\History.vue.ts (75 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\FactCompletionEditor.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\FactCompletionEditor.vue.ts (69 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\ActivityTimeline.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\ActivityTimeline.vue.ts (35 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountSecurity.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountSecurity.vue.ts (33 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Knowledge.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Knowledge.vue.ts (26 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Research.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Research.vue.ts (24 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\UploadQuotaPanel.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\UploadQuotaPanel.vue.ts (25 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\RevisionScopeEditor.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\RevisionScopeEditor.vue.ts (30 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\TripInbox.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\TripInbox.vue.ts (24 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\CommitmentDetailsEditor.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\CommitmentDetailsEditor.vue.ts (23 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountData.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountData.vue.ts (28 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Result.vue.ts
+[2026-11-07 15:28:49] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Result.vue.ts (117 ms)
+[2026-11-07 15:28:49] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Home.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Home.vue.ts (42 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Login.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Login.vue.ts (27 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Explore.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\Explore.vue.ts (23 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\KnowledgeReview.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\KnowledgeReview.vue.ts (28 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountEmail.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\AccountEmail.vue.ts (27 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\OperationsAdmin.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\OperationsAdmin.vue.ts (38 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\SharedTrip.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\views\SharedTrip.vue.ts (18 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\PlanningInputEditor.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\PlanningInputEditor.vue.ts (39 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\ProposalReviewPanel.vue.ts
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\working\frontend\src\components\trip\ProposalReviewPanel.vue.ts (18 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\business-backend\src\main\resources\application.yml
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\blind-review\manifest.json
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\blind-review\manifest.json (22 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\historical-build-inputs\manifest.json
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\historical-build-inputs\manifest.json (20 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-source-snapshots\manifest.json
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\business-backend\src\main\resources\application.yml (50 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-source-snapshots\run1-reconstructed-before-relative-locator-fix.cjs
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-source-snapshots\manifest.json (19 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-source-snapshots\run2-before-failure-report-fix.cjs
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-source-snapshots\run1-reconstructed-before-relative-locator-fix.cjs (101 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\business-backend\target\classes\application.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-source-snapshots\run2-before-failure-report-fix.cjs (99 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\daily-readback-acceptance.cjs
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\business-backend\target\classes\application.yml (28 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\fact-ui-acceptance.cjs
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\daily-readback-acceptance.cjs (66 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-acceptance.cjs
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\fact-ui-acceptance.cjs (77 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\ci.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\ci.yml (40 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\security.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docs\evidence\optimization-20261026\poi-ui-acceptance.cjs (88 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\validation\alerts.edge.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\.github\workflows\security.yml (26 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\validation\prometheus.edge.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\validation\alerts.edge.yml (20 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\contracts\public-operations.openapi.yaml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\validation\prometheus.edge.yml (16 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alertmanager.validation.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alertmanager.validation.yml (14 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alertmanager.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alertmanager.yml (14 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alerts.capacity.test.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alerts.capacity.test.yml (21 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alerts.test.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alerts.test.yml (16 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alerts.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\contracts\public-operations.openapi.yaml (81 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\prometheus.validation.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\alerts.yml (17 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\deploy\prometheus.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\prometheus.validation.yml (14 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\package.json
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\deploy\prometheus.yml (15 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\frontend\tsconfig.json
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\package.json (14 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.cloud-db.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\frontend\tsconfig.json (12 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.migration.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.cloud-db.yml (13 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.production.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.migration.yml (16 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public-e2e.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.production.yml (19 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public-edge-validation.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public-e2e.yml (16 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public-validation.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public-edge-validation.yml (19 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public-validation.yml (16 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.validation.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.public.yml (15 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.yml
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.validation.yml (15 ms)
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\trip-public-codeql-closure-final-015c2347\docker-compose.yml (16 ms)
+[2026-11-07 15:28:50] [build-stderr] No externs trap cache found
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es2016.js
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es2017.js
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es2016.js (68 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es3.js
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es2017.js (68 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es5.js
+[2026-11-07 15:28:50] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es5.js (62 ms)
+[2026-11-07 15:28:50] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es6.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es3.js (187 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es6_collections.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es6.js (137 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\intl.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\es6_collections.js (45 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\proxy.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\intl.js (43 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\bdd.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\es\proxy.js (31 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\jquery-3.2.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\bdd.js (38 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\should.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\should.js (40 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\vows.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\vows.js (42 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\assert.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\assert.js (36 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\assert_legacy.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\lib\jquery-3.2.js (150 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\buffer.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\assert_legacy.js (29 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\child_process.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\buffer.js (34 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\cluster.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\child_process.js (67 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\console.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\console.js (30 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\constants.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\cluster.js (84 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\crypto.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\crypto.js (82 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\dgram.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\constants.js (111 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\dns.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\dgram.js (37 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\domain.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\dns.js (40 ms)
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\domain.js (30 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\events.js
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\fs.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\events.js (33 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\globals.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\fs.js (117 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\http.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\globals.js (117 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\https.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\http.js (54 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\module.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\https.js (44 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\net.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\module.js (32 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\os.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\os.js (38 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\path.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\net.js (51 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\process.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\process.js (29 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\punycode.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\path.js (44 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\querystring.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\punycode.js (34 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\readline.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\querystring.js (29 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\repl.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\readline.js (39 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\stream.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\repl.js (33 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\string_decoder.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\string_decoder.js (32 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\sys.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\sys.js (33 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\timers.js
+[2026-11-07 15:28:51] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\stream.js (77 ms)
+[2026-11-07 15:28:51] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\tls.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\timers.js (32 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\tty.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\tls.js (55 ms)
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\tty.js (32 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\url.js
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\util.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\url.js (34 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\v8.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\util.js (36 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\vm.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\v8.js (36 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\zlib.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\vm.js (39 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\jsshell.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\nodejs\zlib.js (55 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\rhino.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\jsshell.js (62 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\spidermonkey.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\rhino.js (32 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\v8.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\spidermonkey.js (29 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\chrome.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\vm\v8.js (28 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\fetchapi.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\chrome.js (52 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\fileapi.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\fetchapi.js (46 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\flash.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\flash.js (34 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_css.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\fileapi.js (62 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_dom.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_css.js (34 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_event.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_event.js (33 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_ext.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_dom.js (58 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_xml.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_ext.js (29 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\html5.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\gecko_xml.js (29 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_css.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_css.js (41 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_dom.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_dom.js (83 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_event.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_event.js (49 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_vml.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\ie_vml.js (36 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\intl.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\html5.js (234 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\iphone.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\intl.js (39 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\mediasource.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\iphone.js (34 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\page_visibility.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\mediasource.js (37 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\streamsapi.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\page_visibility.js (31 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\url.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\url.js (39 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_anim_timing.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\streamsapi.js (51 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_batterystatus.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_anim_timing.js (36 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_css.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_batterystatus.js (31 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_css3d.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_css3d.js (34 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_device_sensor_event.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_device_sensor_event.js (36 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom1.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_css.js (106 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom2.js
+[2026-11-07 15:28:52] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom1.js (65 ms)
+[2026-11-07 15:28:52] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom3.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom3.js (85 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom4.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom4.js (59 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_elementtraversal.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_dom2.js (177 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_encoding.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_elementtraversal.js (42 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_event.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_encoding.js (56 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_event3.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_event3.js (44 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_gamepad.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_event.js (86 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_geolocation.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_gamepad.js (41 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_indexeddb.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_geolocation.js (39 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_midi.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_midi.js (39 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_navigation_timing.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_indexeddb.js (64 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_permissions.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_permissions.js (30 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_pointer_events.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_navigation_timing.js (39 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_range.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_pointer_events.js (34 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_requestidlecallback.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_range.js (40 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_rtc.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_requestidlecallback.js (33 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_screen_orientation.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_screen_orientation.js (34 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_selectors.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_selectors.js (31 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_serviceworker.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_rtc.js (120 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_touch_event.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_serviceworker.js (53 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_webcrypto.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_touch_event.js (37 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_xml.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_webcrypto.js (46 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webgl.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\w3c_xml.js (48 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_css.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_css.js (83 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_dom.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_dom.js (42 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_event.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webgl.js (166 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_notifications.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_event.js (30 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_usercontent.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_usercontent.js (27 ms)
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webkit_notifications.js (35 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\whatwg_encoding.js
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webstorage.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\webstorage.js (31 ms)
+[2026-11-07 15:28:53] [build-stdout] Extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\window.js
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\whatwg_encoding.js (31 ms)
+[2026-11-07 15:28:53] [build-stdout] Done extracting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\javascript\tools\data\externs\web\window.js (29 ms)
+Finalizing database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript.
+Running TRAP import for CodeQL database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript...
+Importing TRAP files
+Merging relations
+Finished writing database (relations: 6.96 MiB; string pool: 5.53 MiB).
+TRAP import complete (6.3s).
+Finished zipping source archive (525.85 KiB).
+Successfully created database at E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript.

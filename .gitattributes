@@ -30,3 +30,8 @@ docs/evidence/caddy-security-20261107/** -text whitespace=trailing-space,space-b
 docs/evidence/caddy-security-20261107/build-info.txt -text -whitespace
 docs/evidence/caddy-security-20261107/standard-modules.txt -text -whitespace
 docs/evidence/cloud-postgresql-backup-20261107/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+
+docs/evidence/personal-closure-20261107/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/personal-closure-20261107/**/*.sarif -text -whitespace
+docs/evidence/personal-closure-20261107/**/*.log -text -whitespace
+docs/evidence/personal-closure-20261107/**/*.patch -text -whitespace

@@ -8,7 +8,7 @@
 python -m pip install python-dotenv==1.2.3 PyYAML==6.0.3
 ```
 
-执行本地 CA／客户端证书维护时另装 `cryptography==50.0.1`；主机模型检查使用模型手册中的完整锁定依赖。Linux 在准备含秘密的源 `.env`、证书和生成配置之前执行 `umask 077`，并使用私有父目录；Windows 使用仅操作者和系统可访问的父目录 NTFS ACL，不能把 POSIX mode 当作 NTFS 保密保证。
+执行本地 CA／客户端证书维护时另装 `cryptography==50.0.1`；主机模型检查使用模型手册中的完整锁定依赖。Linux 在准备含秘密的源 `.env`、证书和生成配置之前执行 `umask 077`，并使用私有父目录；Windows 使用仅操作者和系统可访问的父目录 NTFS ACL，私有文件继承该 ACL。
 
 Compose 的 `--env-file` 供变量插值，服务自己的 `env_file` 才给应用传参：`public.env` 保存入口／挂载配置，`business.env` 保存 SMTP／S3／数据库配置，`agent.env` 保存 OpenAI／高德配置。某项写入 `backend/.env` 后，还需要生成／升级对应运行文件并重建容器，才会成为应用的实际环境。
 
@@ -28,7 +28,7 @@ SMTP_PASSWORD=your-private-password
 SMTP_FROM=no-reply@example.com
 ```
 
-发件域验证、DNS 邮件记录和供应商额度由实际邮件服务配置；本项目不声称已验证任意发件域或邮件必达。
+发件域验证、DNS 邮件记录和供应商额度在实际邮件服务配置，随后用测试收件地址验证投递。
 
 ```powershell
 python backend/scripts/prepare_java_deployment.py --public --output deploy/runtime-production
@@ -42,7 +42,7 @@ docker compose --env-file deploy/runtime-production/public.env -f docker-compose
 
 Caddy 自动申请和续期证书，证书卷需持久化。只有 Caddy 公开入口，前端、业务、数据库和监控端口不对外发布。`PUBLIC_EDGE_CIDR` 默认 `172.30.244.0/28`，部署前确认与主机现有网络不重叠；如改变，前端信任范围与网络同时由该配置生成。前端只信任隔离 edge 网络转发的客户端地址和协议，入口清除内部服务身份头。
 
-当前公网模板固定发布80／443；`PUBLIC_BASE_URL` 应使用与443入口一致的 HTTPS 来源，不带路径或自定义端口。`config --quiet` 只检查合并配置，不能证明 DNS、端口可达、证书已签发或账号可用。
+当前公网模板固定发布80／443；`PUBLIC_BASE_URL` 应使用与443入口一致的 HTTPS 来源，不带路径或自定义端口。`config --quiet` 检查合并配置；启动后还需核对 DNS、端口可达、证书签发及账号流程。
 
 入口使用 `deploy/images/caddy.Dockerfile` 固定官方 Caddy 2.11.9 源码与标准模块，生成 `trip-planner-caddy:2.11.9-security1`。固定的 `caddy.go.mod`／`caddy.go.sum` 将 Smallstep Crypto 升至 0.92.0，配套固定证书库的[官方兼容迁移提交 cddde30af36e](https://github.com/smallstep/certificates/commit/cddde30af36e238f156bb557bfd1f11a05ffe6f9)（使用已修复的 Go JOSE v4，移除链接的 v3），并将 `x/net` 升至 0.62.0 修复 GO-2026-6860；不修改 Caddy 业务源码或关闭 ACME。构建检查最终 Go 模块清单，CI 扫描真实镜像。`PUBLIC_CADDY_IMAGE` 仅用于指定已构建、已扫描的同一派生版本。依据见 [Caddy 2.11.9 发布记录](https://github.com/caddyserver/caddy/releases/tag/v2.11.9)、[Smallstep Crypto 0.92.0](https://github.com/smallstep/crypto/releases/tag/v0.92.0) 与 [Go 官方漏洞记录](https://pkg.go.dev/vuln/GO-2026-6860)。
 
@@ -69,7 +69,7 @@ docker compose --env-file deploy/runtime-production/public.env -f docker-compose
 docker compose --env-file deploy/runtime-production/public.env -f docker-compose.production.yml -f docker-compose.public.yml -f docker-compose.cloud-db.yml up -d --build --wait backend agent frontend edge
 ```
 
-成功判据：backend 就绪、Flyway 在预期真实库完成，实际账号写入／读回成功，且该库会话使用 TLS；在隔离联调目标以错误 CA／主机名负例确认未跳过验证，再执行成套备份与独立恢复。仅容器 healthy 不证明连接的是预期云库，不能用本地库的表或健康状态替代核对。
+成功判据：backend 就绪、Flyway 在预期真实库完成，实际账号写入／读回成功，且该库会话使用 TLS；在隔离联调目标以错误 CA／主机名负例确认未跳过验证，再执行成套备份与独立恢复。
 
 成套备份依据 backend 实际 JDBC 连接选择源库，支持没有内置 PostgreSQL 的项目；参数、TLS／客户端证书、停写窗口和独立恢复边界见 [外部 PostgreSQL 备份](cloud-postgresql-backup.md)。
 
@@ -87,7 +87,7 @@ Linux 主机还需将这个 `0600` 私有文件交给维护版 Alertmanager 的�
 sudo chown 65534:65534 deploy/runtime-production/alertmanager.yml
 ```
 
-将 `TRIP_ALERTMANAGER_CONFIG` 设置为生成文件的绝对路径，然后使用同一公开 Compose 命令加 `--profile monitoring` 启动。实际发送前用 Alertmanager 自带 `amtool check-config /etc/alertmanager/alertmanager.yml` 验证；通过隔离告警或供应商测试收件地址核对 firing、resolved、去重和失败日志。本地收件箱继续保留，不能把本地落盘当作外部送达。
+将 `TRIP_ALERTMANAGER_CONFIG` 设置为生成文件的绝对路径，然后使用同一公开 Compose 命令加 `--profile monitoring` 启动。实际发送前用 Alertmanager 自带 `amtool check-config /etc/alertmanager/alertmanager.yml` 验证；通过隔离告警或供应商测试收件地址核对 firing、resolved、去重和失败日志。本地收件箱继续保留，外部接收状态在指定邮件／Webhook 接收端核对。
 
 必须将该变量写入 **`deploy/runtime-production/public.env`**（Compose 插值源），指向刚生成文件的真实绝对路径；仅写进 `business.env` 或 `backend/.env` 不会改变监控挂载。例如在 Linux 使用 `realpath deploy/runtime-production/alertmanager.yml` 查得路径后加入该文件：
 
@@ -103,11 +103,11 @@ docker compose --env-file deploy/runtime-production/public.env -f docker-compose
 docker compose --env-file deploy/runtime-production/public.env -f docker-compose.production.yml -f docker-compose.public.yml --profile monitoring exec -T alertmanager /bin/amtool check-config /etc/alertmanager/alertmanager.yml
 ```
 
-告警邮件适配器只支持 STARTTLS。业务 SMTP 若使用465端口隐式 TLS，应为告警准备单独的私有 env 并用 `--env-file` 传给生成脚本，或仅配置 HTTPS Webhook；不要把 `SMTP_SECURITY=tls` 当作告警模板已支持。成功判据为原生校验通过、测试 firing／resolved 到达指定接收端、模拟失败可见于 Alertmanager 日志／失败计数；仅生成文件或本地 inbox 落盘不算外部接受。完整隔离验证命令见本文末尾，真实接收端仍需独立联调。
+告警邮件适配器只支持 STARTTLS。业务 SMTP 若使用465端口隐式 TLS，应为告警准备单独的私有 env 并用 `--env-file` 传给生成脚本，或仅配置 HTTPS Webhook；不要把 `SMTP_SECURITY=tls` 当作告警模板已支持。成功判据为原生校验通过、测试 firing／resolved 到达指定接收端、模拟失败可见于 Alertmanager 日志／失败计数。完整隔离验证命令见本文末尾，真实接收端仍需独立联调。
 
 ## 备份与恢复
 
-本机原备份任务仍停用，没有因代码交付自动获得新恢复集。以下能力需在选定新目标、明确维护窗口后启用；不自动安装计划任务或清理历史快照。
+本机定时备份任务仍停用，已有手工恢复点与验证结果见[迁移手册](java-migration.md#备份和恢复)。在新部署选定目标和维护窗口后执行下列流程，定时调度另行配置。
 
 先使用现有成套维护工具在停写窗口生成并验证备份。S3 模式额外导出被数据库引用的原文件、保留迁移副本和未完成预留的状态，写入同一个校验清单。参考 [现有维护流程](optimization-governance.md) 与 [对象存储恢复](object-storage.md)。
 
@@ -133,7 +133,7 @@ python backend/scripts/restic_archive.py check --env-file E:\trip-private\restic
 python backend/scripts/restic_archive.py restore --env-file E:\trip-private\restic.env --target E:\recovery\trip-new-restore --execute
 ```
 
-恢复目标必须全新且在仓库之外。restic 恢复、文件哈希正确和应用恢复演练是三个结论：取回成套目录后仍须运行 `restore_java_backup.py`，S3 还需明确的隔离目标配置。不会覆盖原数据库或原 Bucket。`check` 默认只检查仓库结构，不证明读遍所有数据，也不证明故障域独立。
+恢复目标必须全新且在仓库之外。restic 恢复、文件哈希正确和应用恢复演练是三个结论：取回成套目录后仍须运行 `restore_java_backup.py`，S3 还需明确的隔离目标配置。不会覆盖原数据库或原 Bucket。`check` 默认检查仓库结构；应用读回和异机恢复在独立演练中完成。
 
 保留期限、异机访问策略和定时调度由运营配置；备份不实时反映账号注销。恢复旧备份后须重新应用后续删除状态，避免重新公开已撤回资料。公开运营前应完成一次所选真实目标的备份、隔离还原和业务读回。
 
@@ -162,8 +162,8 @@ docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml 
 
 `https` 创建隔离账号，核验跳转、HSTS、Secure／HttpOnly／SameSite、CSRF、内部路由隔离、可信代理和不同实际客户端的限流。`alerts` 使用真实 Prometheus 探针和原生 Alertmanager，通过 STARTTLS SMTP 及带 Bearer 的 HTTPS Webhook 验证触发、恢复、投递失败计数增加及恢复后的自动重试，同时检查本地收件箱去重；会短暂停止并恢复**本项目** Mailpit。测试配置将分组等待缩短为 1 秒、分组间隔缩短为 2 秒，生产模板仍为 10 秒／2 分钟。
 
-成功判据为两个脚本退出码均为 0，私有 `https-result.json` 与 `alerts-result.json` 均生成；失败时查看本项目 `backend frontend edge alertmanager prometheus mailpit` 日志，并始终执行 `stop`。Mailpit 接受代表测试 SMTP 接受，Webhook 2xx 代表接收端接受；均不证明真实用户收件。2026-11-07 原始隔离验收见 [历史入口记录](../evidence/public-edge-20261107/report.json)，最终 `2.11.9-security1` 镜像复测和扫描见 [Caddy最终证据](../evidence/caddy-security-20261107/report.json)。公网 DNS、ACME 申请／续期、真实邮件供应商及真实 Webhook 的接入仍待所选环境验证。
+成功判据为两个脚本退出码均为 0，私有 `https-result.json` 与 `alerts-result.json` 均生成；失败时查看本项目 `backend frontend edge alertmanager prometheus mailpit` 日志，并始终执行 `stop`。Mailpit 记录测试 SMTP 接受，Webhook 2xx 记录接收端接受；真实收件箱送达在供应商联调中检查。2026-11-07 原始隔离验收见 [历史入口记录](../evidence/public-edge-20261107/report.json)，最终 `2.11.9-security1` 镜像复测和扫描见 [Caddy最终证据](../evidence/caddy-security-20261107/report.json)。公网 DNS、ACME 申请／续期、真实邮件供应商及真实 Webhook 的接入仍待所选环境验证。
 
-CI 的 Docker 验收 job 在公开账号浏览器流程后运行同一隔离验证，先检查子网和宿主端口，再保留结果与容器日志，始终停止该验证项目。当前本地通过不代表尚未推送的 GitHub 工作流已执行。
+CI 的 Docker 验收 job 在公开账号浏览器流程后运行同一隔离验证，先检查子网和宿主端口，再保留结果与容器日志，始终停止该验证项目。运行结果在对应提交的 GitHub Actions 中查看。
 
 代理头处理依据 [Caddy reverse_proxy 官方文档](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)，SMTP／Webhook 配置及投递行为依据 [Alertmanager 官方配置](https://prometheus.io/docs/alerting/latest/configuration/)。

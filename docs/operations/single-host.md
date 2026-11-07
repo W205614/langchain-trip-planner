@@ -14,15 +14,18 @@
 
 七服务配置位于 `.codex-optimization/daily-window/daily-release.compose.json`，私有环境文件位于同目录的 `runtime/`。这些本机文件不进入 Git。仓库根目录 `docker-compose.yml` 仍提供四个核心服务的首次部署模板；已有七服务环境继续使用原 Compose 文件，不能用首次部署命令替换它。
 
-截至 2026-10-31，本机七个日常容器均已停止；业务数据和私有配置保留。自动备份与恢复入口继续停用，当前没有有效恢复集。Python 业务后端已经退出工作树，不能再使用旧入口、Alembic 或旧 SQLAlchemy 操作脚本。
+2026-11-07，本机 `backend`、`agent`、`frontend` 已更新到源码检查点 `56fef02`，保留原挂载。七服务健康检查及 HTTP 检查通过，验收后均已停止。`pre-upgrade` 和 `latest-current` 两个手工恢复点均已验证，定时备份任务保持 Disabled，详见[备份与恢复](java-migration.md#备份和恢复)。当前使用 Java 业务后端和 Python Agent。
+
+本机维护管理员已完成正常注册、Bootstrap、MFA 确认及密码＋TOTP 重新登录。私有凭据保存在 `.codex-optimization/daily-window/runtime/maintenance-admin.private.json`，仅在本机读取。服务启动后通过正常登录进入 `/admin/operations`、`/knowledge/admin` 等管理页面；管理员权限继续受 MFA、账号状态和审计约束。
 
 ## 配置与数据
 
 下列环境文件均相对于 `.codex-optimization/daily-window/runtime/`；根目录四服务模板首次生成的对应文件位于 `deploy/runtime/`，两套路径不能混用。
 
 - Java 配置：`business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
-- Java 地图配置：`business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；仅公开 POI／天气／路线、用户主动复核和图片走此通道，Agent 生成不再由 Java 二次核验或改排。
+- Java 地图配置：`business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；公开天气／路线、手工组装及用户主动复核使用此通道。公开 POI 搜索／详情经 Java 转发到 Agent MCP，图片由 Java 同源代理读取 Agent 返回的可信地址。
 - Agent 配置：`agent.env`；模型、`AMAP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。首次配置脚本将源文件中的 `AMAP_MCP_API_KEY` 转入运行配置的 `AMAP_API_KEY`。
+- 日常模型：文本／视觉为官方 `gpt-6.1-sol`，Embedding 为官方 `text-embedding-3-large`、3072维，三角色模型访问检查均为 HTTP200。全量 RAG 已重建并启用，迁移详情见[模型与索引手册](openai-migration.md#本机全量迁移结果2026-11-07)。
 - PostgreSQL 配置：`postgres.env`；继续使用原数据库凭据。
 - PostgreSQL：`langchain-trip-planner_java_business_data` 数据卷。
 - 原文件：`backend/data/knowledge_uploads`，Java 管理。
@@ -54,9 +57,9 @@ docker compose -p langchain-trip-planner -f $dailyCompose stop
 
 ## 健康与故障检查
 
-Java 存活检查不调用模型，就绪检查只验证数据库、迁移和本地必要配置；前端只依赖 Java 健康。Agent 就绪检查验证 AI 服务本身。停止 Agent 后必须复测登录、POI 搜索、收藏、手工行程、路线、历史、分享和导出；智能规划应返回 `AGENT_UNAVAILABLE`，而不是拖垮传统业务。容器“已启动”不是服务“已就绪”。
+Java 存活检查不调用模型，就绪检查验证数据库、迁移和本地必要配置；前端依赖 Java 健康。Agent 就绪检查验证 AI 服务本身。停止 Agent 的演练中，检查登录、收藏、手工行程、Java 路线、历史、分享和导出继续服务；经 Agent 的 POI 查询与智能规划返回 `AGENT_UNAVAILABLE`。启动后检查 readiness，再执行对应业务流程。
 
-Java 重启中的运行任务标为 `PROCESS_INTERRUPTED`，用户显式重试，不自动重新计费生成。单实例 PostgreSQL advisory lock 不等于跨主机故障接管；数据库异常后应检查并重启唯一 Java 实例，不另起第二套 workers。
+Java 重启中的运行任务标为 `PROCESS_INTERRUPTED`，用户显式重试，不自动重新计费生成。当前采用单实例 PostgreSQL advisory lock；数据库异常后应检查并重启唯一 Java 实例，不另起第二套 workers。
 
 内部 Prometheus 从 Java 的 `/actuator/prometheus` 抓取 Actuator/Micrometer 指标；Nginx 对公网入口显式拒绝 `/actuator/*`、`/metrics` 和 `/internal/*`。`X-Request-ID` 会进入 Java MDC、任务记录、审计事件和 Java→Agent 请求头，排障时应以该字段关联日志，不把用户 ID、任务 ID或提示词作为指标标签。
 
@@ -86,7 +89,7 @@ docker compose up -d --wait
 | Agent 高德 Key | `deploy/runtime/agent.env` 的 `AMAP_API_KEY`（脚本从 `AMAP_MCP_API_KEY` 转入） | `docker compose up -d --force-recreate agent` |
 | 前端地图 Key | `frontend/.env` 的 `VITE_AMAP_WEB_JS_KEY` | `docker compose up -d --build frontend`，完成后刷新浏览器 |
 
-`docker compose restart` 不会重新载入修改后的环境文件，应使用表中的重建容器命令。不要使用 `down -v` 或删除 `backend/data` 来排查问题；数据库卷、上传文件、索引及私有配置需要成套备份，详见[备份与恢复前提](java-migration.md#备份和恢复当前停用)。
+`docker compose restart` 不会重新载入修改后的环境文件，应使用表中的重建容器命令。不要使用 `down -v` 或删除 `backend/data` 来排查问题；数据库卷、上传文件、索引及私有配置需要成套备份，详见[备份与恢复前提](java-migration.md#备份和恢复)。
 
 ### 常见问题
 
@@ -94,8 +97,8 @@ docker compose up -d --wait
 - **能登录，但无法生成行程？** 检查 Agent 的运行配置中模型名称、API 地址、Key 是否匹配，以及高德 MCP 是否可访问。`AGENT_UNAVAILABLE` 表示 Agent 不可用；登录和历史查看仍可使用。
 - **地图不显示或景点没图片？** 核对前端 JS API Key 的类型与高德控制台的安全配置、域名限制，修改 Key 后重新构建前端。某些景点没有可信图片时会显示占位提示。
 - **为什么有资料缺口或降级结果？** 可能是路线、餐饮、天气或知识资料不足；未启用 RAG 时也可能缺少攻略上下文。请查看具体提示，调整或补充核验，不要把草稿当作完整方案。
-- **中断后恢复是否重新扣费？** 兼容且未过期的阶段可以复用；已发送但尚未持久化响应的调用按不确定处理。新调用仍先预留预算，失败不退计数，不承诺费用 Exactly Once。重复点击恢复使用同一幂等键不会创建多份执行。
-- **30 天是否都能算出最优结果？** 输入仍支持 1–30 日，但求解器有候选、路线查询及总时间上限。达到上限会保留有效阶段并说明原因；不承诺全局最优，也没有用短行程测试证明全部长度的性能。
+- **中断后恢复是否重新扣费？** 兼容且未过期的阶段可以复用；已发送但尚未持久化响应的调用按不确定处理。新调用仍先预留预算，失败不退计数，实际费用以供应商账单为准。重复点击恢复使用同一幂等键不会创建多份执行。
+- **30 天是否都能算出最优结果？** 输入仍支持 1–30 日，但求解器有候选、路线查询及总时间上限。达到上限会保留有效阶段并说明原因；返回的是有界搜索结果，长行程性能需按实际输入检查。
 - **需要资料审核管理员？** 先注册账号，再在所选部署的 `business.env` 添加 `BOOTSTRAP_ADMIN_USERNAME=已注册的用户名`，使用同一 Compose 文件重建 `backend`。根目录四服务环境使用 `deploy/runtime/business.env`；本机七服务路径与命令见[运行手册](single-host.md#现有七服务部署操作)。
 - **可以直接部署到公网吗？** 本指南面向本机单实例使用；公网部署还需配置 HTTPS、访问入口和备份策略。当前不提供多实例高可用部署。
 
@@ -109,4 +112,4 @@ docker compose up -d --wait
 python tools/single_host_inspection.py --path E:/project/langchain-trip-planner --path E:/Docker --project langchain-trip-planner --output .codex-optimization/host-inspection.json
 ```
 
-路径须替换为本机实际项目／Docker数据位置；可重复传入 `--path`，也可指定现有VHDX文件以同时记录文件大小。默认剩余空间低于10%返回非零，路径不存在或Docker读取失败也明确失败。该检查观测宿主文件系统，不等同于Linux卷剩余空间、数据库WAL大小、应用健康或外部通知送达，不自动安装任务、启动服务或启用备份。
+路径须替换为本机实际项目／Docker数据位置；可重复传入 `--path`，也可指定现有VHDX文件以同时记录文件大小。默认剩余空间低于10%返回非零，路径不存在或Docker读取失败也明确失败。该检查观测宿主文件系统；Linux卷空间、数据库WAL、应用健康和外部通知分别通过对应监控检查。命令只读，不安装任务、启动服务或启用备份。

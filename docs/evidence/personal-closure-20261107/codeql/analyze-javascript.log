@@ -1,0 +1,433 @@
+Running queries.
+Resolving data extensions.
+Finished resolving data extensions.
+Merging data extensions.
+Finished merging data extensions.
+WARNING: Not caching stages during query-loading, since max heap size is only 1800 MB.
+[1/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\AngularJS\DoubleCompilation.qlx.
+[2/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\AngularJS\DisablingSce.qlx.
+[3/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\AngularJS\InsecureUrlWhitelist.qlx.
+[4/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Electron\AllowRunningInsecureContent.qlx.
+[5/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Electron\DisablingWebSecurity.qlx.
+[6/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Performance\ReDoS.qlx.
+[7/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\RegExp\IdentityReplacement.qlx.
+[8/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncompleteHostnameRegExp.qlx.
+[9/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Performance\PolynomialReDoS.qlx.
+[10/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncompleteUrlSchemeCheck.qlx.
+[11/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncompleteUrlSubstringSanitization.qlx.
+[12/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncorrectSuffixCheck.qlx.
+[13/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\OverlyLargeRange.qlx.
+[14/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\UselessRegExpCharacterEscape.qlx.
+[15/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-022\ZipSlip.qlx.
+[16/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-022\TaintedPath.qlx.
+[17/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-073\TemplateObjectInjection.qlx.
+[18/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\CommandInjection.qlx.
+[19/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\SecondOrderCommandInjection.qlx.
+[20/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\ShellCommandInjectionFromEnvironment.qlx.
+[21/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\UselessUseOfCat.qlx.
+[22/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\UnsafeShellCommandConstruction.qlx.
+[23/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\ExceptionXss.qlx.
+[24/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\ReflectedXss.qlx.
+[25/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\StoredXss.qlx.
+[26/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\UnsafeHtmlConstruction.qlx.
+[27/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\UnsafeJQueryPlugin.qlx.
+[28/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\Xss.qlx.
+[29/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\XssThroughDom.qlx.
+[30/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-089\SqlInjection.qlx.
+[31/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\CodeInjection.qlx.
+[32/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\ImproperCodeSanitization.qlx.
+[33/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\UnsafeDynamicMethodAccess.qlx.
+[34/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-1004\ClientExposedCookie.qlx.
+[35/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\DoubleEscaping.qlx.
+[36/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\BadTagFilter.qlx.
+[37/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\IncompleteMultiCharacterSanitization.qlx.
+[38/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\IncompleteHtmlAttributeSanitization.qlx.
+[39/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\IncompleteSanitization.qlx.
+[40/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\UnsafeHtmlExpansion.qlx.
+[41/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-134\TaintedFormatString.qlx.
+[42/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-1427\SystemPromptInjection.qlx.
+[43/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-200\PrivateFileExposure.qlx.
+[44/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-178\CaseSensitiveMiddlewarePath.qlx.
+[45/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-201\PostMessageStar.qlx.
+[46/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-209\StackTraceExposure.qlx.
+[47/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-300\InsecureDependencyResolution.qlx.
+[48/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-295\DisablingCertificateValidation.qlx.
+[49/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-312\BuildArtifactLeak.qlx.
+[50/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-312\CleartextLogging.qlx.
+[51/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-326\InsufficientKeySize.qlx.
+[52/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-312\CleartextStorage.qlx.
+[53/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-327\BadRandomness.qlx.
+[54/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-327\BrokenCryptoAlgorithm.qlx.
+[55/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-338\InsecureRandomness.qlx.
+[56/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-347\MissingJWTKeyVerification.qlx.
+[57/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-346\CorsMisconfigurationForCredentials.qlx.
+[58/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-352\MissingCsrfMiddleware.qlx.
+[59/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-400\DeepObjectResourceExhaustion.qlx.
+[60/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-502\UnsafeDeserialization.qlx.
+[61/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-598\SensitiveGetQuery.qlx.
+[62/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-601\ClientSideUrlRedirect.qlx.
+[63/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-601\ServerSideUrlRedirect.qlx.
+[64/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-614\ClearTextCookie.qlx.
+[65/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-611\Xxe.qlx.
+[66/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-640\HostHeaderPoisoningInEmailGeneration.qlx.
+[67/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-643\XpathInjection.qlx.
+[68/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-693\InsecureHelmet.qlx.
+[69/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-730\ServerCrash.qlx.
+[70/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-730\RegExpInjection.qlx.
+[71/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-770\MissingRateLimiting.qlx.
+[72/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-754\UnvalidatedDynamicMethodCall.qlx.
+[73/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-770\ResourceExhaustion.qlx.
+[74/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-776\XmlBomb.qlx.
+[75/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-829\InsecureDownload.qlx.
+[76/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-830\FunctionalityFromUntrustedDomain.qlx.
+[77/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-830\FunctionalityFromUntrustedSource.qlx.
+[78/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-834\LoopBoundInjection.qlx.
+[79/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-843\TypeConfusionThroughParameterTampering.qlx.
+[80/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-915\PrototypePollutingFunction.qlx.
+[81/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-915\PrototypePollutingAssignment.qlx.
+[82/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-915\PrototypePollutingMergeCall.qlx.
+[83/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-916\InsufficientPasswordHash.qlx.
+[84/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-918\RequestForgery.qlx.
+[85/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-942\CorsPermissiveConfiguration.qlx.
+[86/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\MissingOriginCheck.qlx.
+[87/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\MissingRegExpAnchor.qlx.
+[88/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\IndirectCommandInjection.qlx.
+[89/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\UnsafeCodeConstruction.qlx.
+[90/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-1275\SameSiteNoneCookie.qlx.
+[91/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-117\LogInjection.qlx.
+[92/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-367\FileSystemRace.qlx.
+[93/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-200\FileAccessToHttp.qlx.
+[94/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-377\InsecureTemporaryFile.qlx.
+[95/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-384\SessionFixation.qlx.
+[96/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-400\RemotePropertyInjection.qlx.
+[97/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-506\HardcodedDataInterpretedAsCode.qlx.
+[98/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-862\EmptyPasswordInConfigurationFile.qlx.
+[99/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-807\ConditionalBypass.qlx.
+[100/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-912\HttpToFileAccess.qlx.
+[101/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Diagnostics\ExtractedFiles.qlx.
+[102/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Diagnostics\ExtractionErrors.qlx.
+[103/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Summary\LinesOfCode.qlx.
+[104/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-918\ClientSideRequestForgery.qlx.
+[105/105] Loaded E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Summary\LinesOfUserCode.qlx.
+Starting evaluation of codeql\javascript-queries\AngularJS\DisablingSce.ql.
+Starting evaluation of codeql\javascript-queries\AngularJS\DoubleCompilation.ql.
+Starting evaluation of codeql\javascript-queries\AngularJS\InsecureUrlWhitelist.ql.
+Starting evaluation of codeql\javascript-queries\Diagnostics\ExtractedFiles.ql.
+Starting evaluation of codeql\javascript-queries\Diagnostics\ExtractionErrors.ql.
+[1/105 eval 13.3s] Evaluation done; writing results to codeql\javascript-queries\AngularJS\DoubleCompilation.bqrs.
+Starting evaluation of codeql\javascript-queries\Electron\AllowRunningInsecureContent.ql.
+Starting evaluation of codeql\javascript-queries\Electron\DisablingWebSecurity.ql.
+Starting evaluation of codeql\javascript-queries\Performance\PolynomialReDoS.ql.
+[2/105 eval 13.3s] Evaluation done; writing results to codeql\javascript-queries\AngularJS\DisablingSce.bqrs.
+[3/105 eval 13.3s] Evaluation done; writing results to codeql\javascript-queries\AngularJS\InsecureUrlWhitelist.bqrs.
+[4/105 eval 28ms] Evaluation done; writing results to codeql\javascript-queries\Diagnostics\ExtractionErrors.bqrs.
+[5/105 eval 36ms] Evaluation done; writing results to codeql\javascript-queries\Diagnostics\ExtractedFiles.bqrs.
+[6/105 eval 1.2s] Evaluation done; writing results to codeql\javascript-queries\Electron\AllowRunningInsecureContent.bqrs.
+[7/105 eval 1.2s] Evaluation done; writing results to codeql\javascript-queries\Electron\DisablingWebSecurity.bqrs.
+Starting evaluation of codeql\javascript-queries\Performance\ReDoS.ql.
+[8/105 eval 2.1s] Evaluation done; writing results to codeql\javascript-queries\Performance\PolynomialReDoS.bqrs.
+Starting evaluation of codeql\javascript-queries\RegExp\IdentityReplacement.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\IncompleteHostnameRegExp.ql.
+[9/105 eval 47ms] Evaluation done; writing results to codeql\javascript-queries\RegExp\IdentityReplacement.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\IncompleteUrlSchemeCheck.ql.
+[10/105 eval 376ms] Evaluation done; writing results to codeql\javascript-queries\Performance\ReDoS.bqrs.
+[11/105 eval 59ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\IncompleteHostnameRegExp.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\IncompleteUrlSubstringSanitization.ql.
+[12/105 eval 174ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\IncompleteUrlSchemeCheck.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\IncorrectSuffixCheck.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\MissingOriginCheck.ql.
+[13/105 eval 89ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\IncompleteUrlSubstringSanitization.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\MissingRegExpAnchor.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\OverlyLargeRange.ql.
+[14/105 eval 55ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\IncorrectSuffixCheck.bqrs.
+[15/105 eval 42ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\MissingOriginCheck.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-020\UselessRegExpCharacterEscape.ql.
+[16/105 eval 102ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\MissingRegExpAnchor.bqrs.
+[17/105 eval 110ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\OverlyLargeRange.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-022\TaintedPath.ql.
+[18/105 eval 235ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-020\UselessRegExpCharacterEscape.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-022\ZipSlip.ql.
+[19/105 eval 1.2s] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-022\TaintedPath.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-073\TemplateObjectInjection.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-078\CommandInjection.ql.
+[20/105 eval 1.1s] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-022\ZipSlip.bqrs.
+[21/105 eval 535ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-073\TemplateObjectInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-078\IndirectCommandInjection.ql.
+[22/105 eval 1s] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-078\CommandInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-078\SecondOrderCommandInjection.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-078\ShellCommandInjectionFromEnvironment.ql.
+[23/105 eval 800ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-078\IndirectCommandInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-078\UnsafeShellCommandConstruction.ql.
+[24/105 eval 462ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-078\ShellCommandInjectionFromEnvironment.bqrs.
+[25/105 eval 8ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-078\UnsafeShellCommandConstruction.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-078\UselessUseOfCat.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\ExceptionXss.ql.
+[26/105 eval 718ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-078\SecondOrderCommandInjection.bqrs.
+[27/105 eval 262ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-078\UselessUseOfCat.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\ReflectedXss.ql.
+[28/105 eval 882ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\ReflectedXss.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\StoredXss.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\UnsafeHtmlConstruction.ql.
+[29/105 eval 528ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\StoredXss.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\UnsafeJQueryPlugin.ql.
+[30/105 eval 1.8s] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\ExceptionXss.bqrs.
+[31/105 eval 429ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\UnsafeHtmlConstruction.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\Xss.ql.
+[32/105 eval 374ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\UnsafeJQueryPlugin.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-079\XssThroughDom.ql.
+[33/105 eval 637ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\Xss.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-089\SqlInjection.ql.
+[34/105 eval 858ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-079\XssThroughDom.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-094\CodeInjection.ql.
+[35/105 eval 876ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-089\SqlInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-094\ImproperCodeSanitization.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-094\UnsafeCodeConstruction.ql.
+[36/105 eval 153ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-094\ImproperCodeSanitization.bqrs.
+[37/105 eval 15ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-094\UnsafeCodeConstruction.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-094\UnsafeDynamicMethodAccess.ql.
+[38/105 eval 924ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-094\CodeInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-1004\ClientExposedCookie.ql.
+[39/105 eval 819ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-094\UnsafeDynamicMethodAccess.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-116\BadTagFilter.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-116\DoubleEscaping.ql.
+[40/105 eval 1.5s] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-1004\ClientExposedCookie.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-116\IncompleteHtmlAttributeSanitization.ql.
+[41/105 eval 589ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-116\BadTagFilter.bqrs.
+[42/105 eval 194ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-116\DoubleEscaping.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-116\IncompleteMultiCharacterSanitization.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-116\IncompleteSanitization.ql.
+[43/105 eval 135ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-116\IncompleteMultiCharacterSanitization.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-116\UnsafeHtmlExpansion.ql.
+[44/105 eval 382ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-116\IncompleteHtmlAttributeSanitization.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-117\LogInjection.ql.
+[45/105 eval 56ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-116\IncompleteSanitization.bqrs.
+[46/105 eval 116ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-116\UnsafeHtmlExpansion.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-1275\SameSiteNoneCookie.ql.
+[47/105 eval 2ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-1275\SameSiteNoneCookie.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-134\TaintedFormatString.ql.
+[48/105 eval 397ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-117\LogInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-1427\SystemPromptInjection.ql.
+[49/105 eval 425ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-134\TaintedFormatString.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-178\CaseSensitiveMiddlewarePath.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-200\FileAccessToHttp.ql.
+[50/105 eval 93ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-178\CaseSensitiveMiddlewarePath.bqrs.
+[51/105 eval 359ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-1427\SystemPromptInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-200\PrivateFileExposure.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-201\PostMessageStar.ql.
+[52/105 eval 265ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-200\PrivateFileExposure.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-209\StackTraceExposure.ql.
+[53/105 eval 85ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-201\PostMessageStar.bqrs.
+[54/105 eval 697ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-200\FileAccessToHttp.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-295\DisablingCertificateValidation.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-300\InsecureDependencyResolution.ql.
+[55/105 eval 45ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-295\DisablingCertificateValidation.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-312\BuildArtifactLeak.ql.
+[56/105 eval 30ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-300\InsecureDependencyResolution.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-312\CleartextLogging.ql.
+[57/105 eval 101ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-312\BuildArtifactLeak.bqrs.
+[58/105 eval 639ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-209\StackTraceExposure.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-312\CleartextStorage.ql.
+[59/105 eval 996ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-312\CleartextLogging.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-326\InsufficientKeySize.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-327\BadRandomness.ql.
+[60/105 eval 159ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-326\InsufficientKeySize.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-327\BrokenCryptoAlgorithm.ql.
+[61/105 eval 656ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-312\CleartextStorage.bqrs.
+[62/105 eval 161ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-327\BadRandomness.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-338\InsecureRandomness.ql.
+[63/105 eval 425ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-327\BrokenCryptoAlgorithm.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-346\CorsMisconfigurationForCredentials.ql.
+[64/105 eval 196ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-346\CorsMisconfigurationForCredentials.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-347\MissingJWTKeyVerification.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-352\MissingCsrfMiddleware.ql.
+[65/105 eval 21ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-347\MissingJWTKeyVerification.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-367\FileSystemRace.ql.
+[66/105 eval 39ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-352\MissingCsrfMiddleware.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-377\InsecureTemporaryFile.ql.
+[67/105 eval 81ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-367\FileSystemRace.bqrs.
+[68/105 eval 139ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-377\InsecureTemporaryFile.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-384\SessionFixation.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-400\DeepObjectResourceExhaustion.ql.
+[69/105 eval 30ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-384\SessionFixation.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-400\RemotePropertyInjection.ql.
+[70/105 eval 378ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-400\DeepObjectResourceExhaustion.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-502\UnsafeDeserialization.ql.
+[71/105 eval 518ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-400\RemotePropertyInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-506\HardcodedDataInterpretedAsCode.ql.
+[72/105 eval 279ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-502\UnsafeDeserialization.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-598\SensitiveGetQuery.ql.
+[73/105 eval 2.2s] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-338\InsecureRandomness.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-601\ClientSideUrlRedirect.ql.
+[74/105 eval 50ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-598\SensitiveGetQuery.bqrs.
+[75/105 eval 526ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-506\HardcodedDataInterpretedAsCode.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-601\ServerSideUrlRedirect.ql.
+[76/105 eval 466ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-601\ServerSideUrlRedirect.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-611\Xxe.ql.
+[77/105 eval 995ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-601\ClientSideUrlRedirect.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-614\ClearTextCookie.ql.
+[78/105 eval 123ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-611\Xxe.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-640\HostHeaderPoisoningInEmailGeneration.ql.
+[79/105 eval 4ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-614\ClearTextCookie.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-643\XpathInjection.ql.
+[80/105 eval 57ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-640\HostHeaderPoisoningInEmailGeneration.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-693\InsecureHelmet.ql.
+[81/105 eval 66ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-643\XpathInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-730\RegExpInjection.ql.
+[82/105 eval 70ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-730\RegExpInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-730\ServerCrash.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-754\UnvalidatedDynamicMethodCall.ql.
+[83/105 eval 12ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-730\ServerCrash.bqrs.
+[84/105 eval 149ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-693\InsecureHelmet.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-770\MissingRateLimiting.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-770\ResourceExhaustion.ql.
+[85/105 eval 9ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-770\MissingRateLimiting.bqrs.
+[86/105 eval 282ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-770\ResourceExhaustion.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-776\XmlBomb.ql.
+[87/105 eval 78ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-776\XmlBomb.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-807\ConditionalBypass.ql.
+[88/105 eval 586ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-754\UnvalidatedDynamicMethodCall.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-829\InsecureDownload.ql.
+[89/105 eval 361ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-807\ConditionalBypass.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-830\FunctionalityFromUntrustedDomain.ql.
+[90/105 eval 28ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-830\FunctionalityFromUntrustedDomain.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-830\FunctionalityFromUntrustedSource.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-834\LoopBoundInjection.ql.
+[91/105 eval 3ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-830\FunctionalityFromUntrustedSource.bqrs.
+[92/105 eval 17ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-834\LoopBoundInjection.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-843\TypeConfusionThroughParameterTampering.ql.
+Starting evaluation of codeql\javascript-queries\Security\CWE-862\EmptyPasswordInConfigurationFile.ql.
+[93/105 eval 5ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-843\TypeConfusionThroughParameterTampering.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-912\HttpToFileAccess.ql.
+[94/105 eval 353ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-829\InsecureDownload.bqrs.
+[95/105 eval 172ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-862\EmptyPasswordInConfigurationFile.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-915\PrototypePollutingAssignment.ql.
+[96/105 eval 256ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-912\HttpToFileAccess.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-915\PrototypePollutingFunction.ql.
+[97/105 eval 328ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-915\PrototypePollutingAssignment.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-915\PrototypePollutingMergeCall.ql.
+[98/105 eval 264ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-915\PrototypePollutingFunction.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-916\InsufficientPasswordHash.ql.
+[99/105 eval 233ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-915\PrototypePollutingMergeCall.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-918\ClientSideRequestForgery.ql.
+[100/105 eval 189ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-916\InsufficientPasswordHash.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-918\RequestForgery.ql.
+[101/105 eval 65ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-918\RequestForgery.bqrs.
+Starting evaluation of codeql\javascript-queries\Security\CWE-942\CorsPermissiveConfiguration.ql.
+Starting evaluation of codeql\javascript-queries\Summary\LinesOfCode.ql.
+[102/105 eval 3ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-942\CorsPermissiveConfiguration.bqrs.
+Starting evaluation of codeql\javascript-queries\Summary\LinesOfUserCode.ql.
+[103/105 eval 4ms] Evaluation done; writing results to codeql\javascript-queries\Summary\LinesOfCode.bqrs.
+[104/105 eval 377ms] Evaluation done; writing results to codeql\javascript-queries\Security\CWE-918\ClientSideRequestForgery.bqrs.
+[105/105 eval 7s] Evaluation done; writing results to codeql\javascript-queries\Summary\LinesOfUserCode.bqrs.
+Shutting down query evaluator.
+Interpreting results.
+Resolving extensions
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\AngularJS\DisablingSce.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\AngularJS\DoubleCompilation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\AngularJS\InsecureUrlWhitelist.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Electron\AllowRunningInsecureContent.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Electron\DisablingWebSecurity.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Performance\PolynomialReDoS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Performance\ReDoS.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\RegExp\IdentityReplacement.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncompleteHostnameRegExp.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncompleteUrlSchemeCheck.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncompleteUrlSubstringSanitization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\IncorrectSuffixCheck.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\OverlyLargeRange.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\UselessRegExpCharacterEscape.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-022\TaintedPath.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-022\ZipSlip.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-073\TemplateObjectInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\CommandInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\SecondOrderCommandInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\ShellCommandInjectionFromEnvironment.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\UnsafeShellCommandConstruction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\UselessUseOfCat.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\ExceptionXss.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\ReflectedXss.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\StoredXss.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\UnsafeHtmlConstruction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\UnsafeJQueryPlugin.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\Xss.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-079\XssThroughDom.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-089\SqlInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\CodeInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\ImproperCodeSanitization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\UnsafeDynamicMethodAccess.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-1004\ClientExposedCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\BadTagFilter.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\DoubleEscaping.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\IncompleteHtmlAttributeSanitization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\IncompleteMultiCharacterSanitization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\IncompleteSanitization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-116\UnsafeHtmlExpansion.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-134\TaintedFormatString.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-1427\SystemPromptInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-178\CaseSensitiveMiddlewarePath.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-200\PrivateFileExposure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-201\PostMessageStar.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-209\StackTraceExposure.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-295\DisablingCertificateValidation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-300\InsecureDependencyResolution.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-312\BuildArtifactLeak.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-312\CleartextLogging.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-312\CleartextStorage.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-326\InsufficientKeySize.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-327\BadRandomness.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-327\BrokenCryptoAlgorithm.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-338\InsecureRandomness.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-346\CorsMisconfigurationForCredentials.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-347\MissingJWTKeyVerification.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-352\MissingCsrfMiddleware.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-400\DeepObjectResourceExhaustion.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-502\UnsafeDeserialization.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-598\SensitiveGetQuery.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-601\ClientSideUrlRedirect.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-601\ServerSideUrlRedirect.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-611\Xxe.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-614\ClearTextCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-640\HostHeaderPoisoningInEmailGeneration.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-643\XpathInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-693\InsecureHelmet.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-730\RegExpInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-730\ServerCrash.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-754\UnvalidatedDynamicMethodCall.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-770\MissingRateLimiting.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-770\ResourceExhaustion.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-776\XmlBomb.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-829\InsecureDownload.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-830\FunctionalityFromUntrustedDomain.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-830\FunctionalityFromUntrustedSource.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-834\LoopBoundInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-843\TypeConfusionThroughParameterTampering.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-915\PrototypePollutingAssignment.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-915\PrototypePollutingFunction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-915\PrototypePollutingMergeCall.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-916\InsufficientPasswordHash.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-918\RequestForgery.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-942\CorsPermissiveConfiguration.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\MissingOriginCheck.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-020\MissingRegExpAnchor.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-078\IndirectCommandInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-094\UnsafeCodeConstruction.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-117\LogInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-1275\SameSiteNoneCookie.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-200\FileAccessToHttp.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-367\FileSystemRace.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-377\InsecureTemporaryFile.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-384\SessionFixation.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-400\RemotePropertyInjection.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-506\HardcodedDataInterpretedAsCode.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-807\ConditionalBypass.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-862\EmptyPasswordInConfigurationFile.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-912\HttpToFileAccess.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Security\CWE-918\ClientSideRequestForgery.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Diagnostics\ExtractedFiles.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Diagnostics\ExtractionErrors.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Summary\LinesOfCode.ql...
+Interpreting E:\project\langchain-trip-planner\.cache\public-tools\codeql-bundle-2.27.4-win64\codeql\qlpacks\codeql\javascript-queries\2.5.0\Summary\LinesOfUserCode.ql...
+Reading source archive E:\project\langchain-trip-planner\.codex-public\codeql-closure-final-015c2347\db-javascript\src.zip
+CodeQL scanned 75 out of 75 JavaScript/TypeScript files and 2 out of 2 GitHub Actions files in this invocation. Typically CodeQL is configured to analyze a single CodeQL language per invocation, so check other invocations to determine overall coverage information.
+Exporting results to SARIF v2.1.0...
+Exported results to SARIF v2.1.0 (314ms).
