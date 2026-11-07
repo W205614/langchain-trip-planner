@@ -1,0 +1,75 @@
+{
+  "source_checkpoint": "9165c2efc832f527ae9bebe03f4384961199f54a",
+  "mobile_navigation_test": {
+    "passed": 1,
+    "expected_navigation_buttons": 9,
+    "viewport_width": 390,
+    "all_visible_and_no_horizontal_overflow": true
+  },
+  "public_browser_stats": {
+    "startTime": "2026-11-07T09:52:49.122Z",
+    "duration": 23321.093999999997,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "https": {
+    "http_redirect": 308,
+    "secure_session_and_csrf_cookies": true,
+    "hsts": true,
+    "csrf_missing_invalid_valid": [
+      403,
+      403,
+      202
+    ],
+    "protected_routes": 404,
+    "forged_header_login_statuses": [
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      429,
+      429
+    ],
+    "independent_peer_login_after_first_peer_rate_limited": 401,
+    "untrusted_direct_forwarded_https_ignored": {
+      "status": 200,
+      "secure": false
+    },
+    "forged_remote_absent_from_nginx": true
+  },
+  "alerts": {
+    "native_config_valid": true,
+    "real_prometheus_probe": true,
+    "failed_counter_before": {
+      "email": 0.0,
+      "webhook": 0.0
+    },
+    "failed_counter_after": {
+      "email": 1.0,
+      "webhook": 1.0
+    },
+    "tls": "SMTP STARTTLS and HTTPS Webhook both verify their explicit local CAs"
+  },
+  "webhook_accepted_states": [
+    "firing",
+    "resolved"
+  ],
+  "isolated_validation_passed": true,
+  "daily_seven_unchanged_and_stopped": true,
+  "source_delta": [
+    "frontend/e2e/responsive.spec.ts:expectedActions"
+  ],
+  "codeql": {
+    "raw_high_critical": 26,
+    "blocking": 0,
+    "unchanged_supporting_source_count": 47
+  }
+}

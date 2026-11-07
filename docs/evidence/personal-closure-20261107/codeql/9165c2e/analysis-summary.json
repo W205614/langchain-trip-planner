@@ -1,0 +1,60 @@
+{
+  "source_revision": "9165c2efc832f527ae9bebe03f4384961199f54a",
+  "workflow_run": 42361154555,
+  "workflow_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42361154555",
+  "analysis_jobs": [
+    {
+      "language": "java",
+      "path": "docs/evidence/personal-closure-20261107/codeql/9165c2e/java.sarif",
+      "sha256": "7a7a648bd0fa3e124b4764bf88dcbbd1cb7d4c552094cfa45c1cb872e6966fb2",
+      "source_revision": "9165c2efc832f527ae9bebe03f4384961199f54a",
+      "blocking_findings": 21,
+      "artifact_id": 13570355114
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/personal-closure-20261107/codeql/9165c2e/python.sarif",
+      "sha256": "d92c7735243d929e2cf32429e162b77dd77c20fecfe0100a10bfb2e5bc215757",
+      "source_revision": "9165c2efc832f527ae9bebe03f4384961199f54a",
+      "blocking_findings": 2,
+      "artifact_id": 13569676346
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/personal-closure-20261107/codeql/9165c2e/javascript.sarif",
+      "sha256": "34a099dae44db43a9d00bd67d6a9361ca92ad05914f8584d96cdb1ae5197f339",
+      "source_revision": "9165c2efc832f527ae9bebe03f4384961199f54a",
+      "blocking_findings": 3,
+      "artifact_id": 13569484018
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/personal-closure-20261107/codeql/9165c2e/actions.sarif",
+      "sha256": "278fb1a1df1681e2c822dff891414cf401b12f2bf3a43ef4913e032e0682d9ba",
+      "source_revision": "9165c2efc832f527ae9bebe03f4384961199f54a",
+      "blocking_findings": 0,
+      "artifact_id": 13569732021
+    }
+  ],
+  "raw_blocking_findings": 26,
+  "individually_reviewed": 26,
+  "new_unknown_identities": 0,
+  "checked_supporting_source_bindings": 47,
+  "unchanged_supporting_sources": 47,
+  "changed_supporting_sources": [],
+  "all_analysis_steps_succeeded": true,
+  "old_context_gate_steps_failed": true,
+  "business_tree_bindings": {
+    "backend": "1429e7e6ad8bae612b6dd33b0e5b4ba47149d0ae",
+    "business-backend": "bc18595c8465ccc0f9e0605a58b625c939d377e6",
+    "frontend": "bcab2589a55815a2121b422f2e12544e93cabcae",
+    "deploy": "b44af8caa7569e0fb017cb44a1d0e86f41b01e59",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "review_sha256": "ae1003957a6369a72710a1cbff830beaf1fde2238722e6166c05f7955a58a78e",
+  "policy_draft": "docs/evidence/personal-closure-20261107/codeql/9165c2e/policy-draft.json",
+  "active_policy_modified": false,
+  "full_raw_representation_differences": "None: all26 complete original result objects,raw trace hashes and complete resolved rule descriptors exactly match the prior fresh f74 remote report. The original SARIF files remain newly downloaded bytes from run42361154555 at9165c2e.",
+  "complete_original_results_identical_to_baseline": 26,
+  "complete_rule_descriptors_identical_to_baseline": true
+}

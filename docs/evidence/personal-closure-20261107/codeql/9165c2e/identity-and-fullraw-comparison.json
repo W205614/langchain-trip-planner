@@ -1,0 +1,409 @@
+{
+  "baseline_review": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/source-review.json",
+  "baseline_review_sha256": "11b22d79c24b49b30c486ad0c92b37d7dc59c53619c20c51070738a5d2356a9c",
+  "fresh_revision": "9165c2efc832f527ae9bebe03f4384961199f54a",
+  "workflow_run": 42361154555,
+  "findings": [
+    {
+      "query": "java/spring-disabled-csrf-protection",
+      "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+      "region": {
+        "startLine": 124,
+        "startColumn": 20,
+        "endColumn": 31
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "new_raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
+      "previous_raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+      "region": {
+        "startLine": 184,
+        "startColumn": 9,
+        "endColumn": 20
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
+      "new_raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
+      "previous_raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 87,
+        "startColumn": 62,
+        "endColumn": 71
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
+      "new_raw_trace_sha256": "7947b61858a8ffc54c0c7532be2cd4c13ca29107669dec7ba9de0130ce906fe6",
+      "previous_raw_trace_sha256": "7947b61858a8ffc54c0c7532be2cd4c13ca29107669dec7ba9de0130ce906fe6",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 88,
+        "startColumn": 46,
+        "endColumn": 55
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
+      "new_raw_trace_sha256": "b1ba89a138af679face310de1b5c4e5bce4341712481f594f466826e33200151",
+      "previous_raw_trace_sha256": "b1ba89a138af679face310de1b5c4e5bce4341712481f594f466826e33200151",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 74,
+        "startColumn": 81,
+        "endColumn": 91
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
+      "new_raw_trace_sha256": "5fa33087cf5a44ec108595c94298c33f0b6c770d0bda4d4c2a24a7c077c4b9ce",
+      "previous_raw_trace_sha256": "5fa33087cf5a44ec108595c94298c33f0b6c770d0bda4d4c2a24a7c077c4b9ce",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 46,
+        "endColumn": 56
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
+      "new_raw_trace_sha256": "eb7b360d4ec95e39fa515acf6fff4312b8455af95600691af14404b25d28525a",
+      "previous_raw_trace_sha256": "eb7b360d4ec95e39fa515acf6fff4312b8455af95600691af14404b25d28525a",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 100,
+        "startColumn": 60,
+        "endColumn": 70
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
+      "new_raw_trace_sha256": "4655dcecbbbfb972fef04cddc3cd85382442ed607b117436ce1517515ab35543",
+      "previous_raw_trace_sha256": "4655dcecbbbfb972fef04cddc3cd85382442ed607b117436ce1517515ab35543",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 101,
+        "startColumn": 54,
+        "endColumn": 64
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
+      "new_raw_trace_sha256": "7ef5bbf021a789a24a32573f1dda99dbe45f5b79b040eca5a6dbd276c28f5526",
+      "previous_raw_trace_sha256": "7ef5bbf021a789a24a32573f1dda99dbe45f5b79b040eca5a6dbd276c28f5526",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 69,
+        "endColumn": 96
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
+      "new_raw_trace_sha256": "9bb6b25c12d49d08f9279310a3be4f149cdc969ed8e8573738e8d867f533f0b1",
+      "previous_raw_trace_sha256": "9bb6b25c12d49d08f9279310a3be4f149cdc969ed8e8573738e8d867f533f0b1",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+      "region": {
+        "startLine": 51,
+        "startColumn": 69,
+        "endColumn": 98
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
+      "new_raw_trace_sha256": "2125442733a3463f4a0b3758315af3ff89f0c7b27581e67dbc53967e0855eea1",
+      "previous_raw_trace_sha256": "2125442733a3463f4a0b3758315af3ff89f0c7b27581e67dbc53967e0855eea1",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+      "new_raw_trace_sha256": "2a144877fa9a290ce268ecee2b65be059472cb239560df3d222d14b84d1cab23",
+      "previous_raw_trace_sha256": "2a144877fa9a290ce268ecee2b65be059472cb239560df3d222d14b84d1cab23",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
+      "new_raw_trace_sha256": "f9da10cf202368e24915d9d1912ed532682b56a13b1d624953b31c0412af5d78",
+      "previous_raw_trace_sha256": "f9da10cf202368e24915d9d1912ed532682b56a13b1d624953b31c0412af5d78",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
+      "new_raw_trace_sha256": "d5eb86c5b7b29864fdd8f043b2e601cd942bbf78b416d2eef6f7a7f140b751f6",
+      "previous_raw_trace_sha256": "d5eb86c5b7b29864fdd8f043b2e601cd942bbf78b416d2eef6f7a7f140b751f6",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+      "new_raw_trace_sha256": "ed3b45ad154431bf92c14dd507916f9636d3f2495f0c238d04a89a3ab8124269",
+      "previous_raw_trace_sha256": "ed3b45ad154431bf92c14dd507916f9636d3f2495f0c238d04a89a3ab8124269",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+      "new_raw_trace_sha256": "ea6e6a2993eb2a8f6b0ec763ab9e8d8be9e67cae1e8b0feba801cc9293c72c0c",
+      "previous_raw_trace_sha256": "ea6e6a2993eb2a8f6b0ec763ab9e8d8be9e67cae1e8b0feba801cc9293c72c0c",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+      "new_raw_trace_sha256": "7a8ad6d7ae67ff7cd9e082b370ff41eb9ea30196a7859076bf9f3f23ae7fea25",
+      "previous_raw_trace_sha256": "7a8ad6d7ae67ff7cd9e082b370ff41eb9ea30196a7859076bf9f3f23ae7fea25",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+      "new_raw_trace_sha256": "ab4650a64581228d41a55f76af4e57809a2be6817831af01c008e95ca1b380ed",
+      "previous_raw_trace_sha256": "ab4650a64581228d41a55f76af4e57809a2be6817831af01c008e95ca1b380ed",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+      "new_raw_trace_sha256": "86d58c3cca32cc59735812f7add9cb7f5eb65fddfafc63b9dbc42ed8490aceb5",
+      "previous_raw_trace_sha256": "86d58c3cca32cc59735812f7add9cb7f5eb65fddfafc63b9dbc42ed8490aceb5",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+      "new_raw_trace_sha256": "1e909f706cf29fd8e12df2e28cea62e016c7c9e1d07e77901df36e7b5ef2d09e",
+      "previous_raw_trace_sha256": "1e909f706cf29fd8e12df2e28cea62e016c7c9e1d07e77901df36e7b5ef2d09e",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+      "new_raw_trace_sha256": "4697bdc946222d370dcb478c8105e4f95810f6295f9d2ad968caab9b1fb2ade5",
+      "previous_raw_trace_sha256": "4697bdc946222d370dcb478c8105e4f95810f6295f9d2ad968caab9b1fb2ade5",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
+      "new_raw_trace_sha256": "69e67eed0b04886aa267d51ff25617a4afc247199d65e9289c6f29d253068d55",
+      "previous_raw_trace_sha256": "69e67eed0b04886aa267d51ff25617a4afc247199d65e9289c6f29d253068d55",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "backend/scripts/optimization_seed_admin.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 31,
+        "endColumn": 110
+      },
+      "security_severity": "7.5",
+      "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
+      "new_raw_trace_sha256": "8af25d92f74b3ee2b89f373baeb8863450b486f95bbc83cd99c0ad6428a8745e",
+      "previous_raw_trace_sha256": "8af25d92f74b3ee2b89f373baeb8863450b486f95bbc83cd99c0ad6428a8745e",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "py/overly-permissive-file",
+      "path": "backend/scripts/install_runtime_security_patches.py",
+      "region": {
+        "startLine": 69,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "new_raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
+      "previous_raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 9,
+        "startColumn": 23,
+        "endColumn": 32
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
+      "new_raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
+      "previous_raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 23,
+        "endColumn": 33
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
+      "new_raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
+      "previous_raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/public-operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 20,
+        "endColumn": 84
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff",
+      "new_raw_trace_sha256": "3ccb5557dc7d6adb66468b3b78ed223d67669e79de56004a737d40ba82da3f5d",
+      "previous_raw_trace_sha256": "3ccb5557dc7d6adb66468b3b78ed223d67669e79de56004a737d40ba82da3f5d",
+      "raw_differences": [],
+      "normalized_full_result_equal": true
+    }
+  ],
+  "rule_descriptor_differences": {
+    "java/spring-disabled-csrf-protection": [],
+    "java/tainted-arithmetic": [],
+    "java/uncontrolled-arithmetic": [],
+    "java/csrf-unprotected-request-type": [],
+    "py/clear-text-logging-sensitive-data": [],
+    "py/overly-permissive-file": [],
+    "js/insecure-randomness": []
+  },
+  "interpretation": "All26 complete original SARIF result objects and all resolved complete rule descriptors are exactly equal to the prior fresh f74 remote analysis. Query,location,severity,full ordered flow,raw trace hash,rule references and artifact indexes are unchanged; no normalization is needed to establish equality. The additional resolved-reference whole-result comparison also passes.",
+  "complete_original_result_and_rule_descriptors_identical": true
+}

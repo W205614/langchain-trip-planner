@@ -1,0 +1,86 @@
+{
+  "run": {
+    "id": 42361154555,
+    "head_sha": "9165c2efc832f527ae9bebe03f4384961199f54a",
+    "run_attempt": 1,
+    "workflow_path": ".github/workflows/security.yml",
+    "html_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42361154555",
+    "status": "in_progress"
+  },
+  "artifacts": [
+    {
+      "id": 13570355114,
+      "name": "security-codeql-java-kotlin",
+      "size_in_bytes": 120594,
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13570355114/zip",
+      "expired": false,
+      "created_at": "2026-11-07T09:48:20Z",
+      "expires_at": "2026-11-21T09:48:20Z",
+      "updated_at": "2026-11-07T09:48:20Z",
+      "digest": "sha256:ab1028e2990fa5b441dff84f17b473936042d24bbda5144718f73c1bd6ff3d2b",
+      "workflow_run": {
+        "id": 42361154555,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "9165c2efc832f527ae9bebe03f4384961199f54a"
+      }
+    },
+    {
+      "id": 13569732021,
+      "name": "security-codeql-actions",
+      "size_in_bytes": 21525,
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13569732021/zip",
+      "expired": false,
+      "created_at": "2026-11-07T09:47:19Z",
+      "expires_at": "2026-11-21T09:47:18Z",
+      "updated_at": "2026-11-07T09:47:19Z",
+      "digest": "sha256:6d052fbc2f9fc7ec6ec03191a5f40125e18f3a9375095fae045959db64557f95",
+      "workflow_run": {
+        "id": 42361154555,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "9165c2efc832f527ae9bebe03f4384961199f54a"
+      }
+    },
+    {
+      "id": 13569676346,
+      "name": "security-codeql-python",
+      "size_in_bytes": 52529,
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13569676346/zip",
+      "expired": false,
+      "created_at": "2026-11-07T09:48:01Z",
+      "expires_at": "2026-11-21T09:48:00Z",
+      "updated_at": "2026-11-07T09:48:01Z",
+      "digest": "sha256:3a343fdb3bb0f7fa0e780964dab47ab99632dab1a7d2df9ae879a38078fb1fb9",
+      "workflow_run": {
+        "id": 42361154555,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "9165c2efc832f527ae9bebe03f4384961199f54a"
+      }
+    },
+    {
+      "id": 13569484018,
+      "name": "security-codeql-javascript-typescript",
+      "size_in_bytes": 86994,
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13569484018/zip",
+      "expired": false,
+      "created_at": "2026-11-07T09:47:41Z",
+      "expires_at": "2026-11-21T09:47:40Z",
+      "updated_at": "2026-11-07T09:47:41Z",
+      "digest": "sha256:2a0a74c4cb846baccf76dab1ec8808338462e69515bc6153b06a72e392ebf866",
+      "workflow_run": {
+        "id": 42361154555,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "9165c2efc832f527ae9bebe03f4384961199f54a"
+      }
+    }
+  ],
+  "archive_sha256_verified": true,
+  "exact_source_run_and_head_verified": true
+}

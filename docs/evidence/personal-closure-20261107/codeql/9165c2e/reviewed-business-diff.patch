@@ -1,0 +1,13 @@
+diff --git a/frontend/e2e/responsive.spec.ts b/frontend/e2e/responsive.spec.ts
+index a7ca8af..713e7af 100644
+--- a/frontend/e2e/responsive.spec.ts
++++ b/frontend/e2e/responsive.spec.ts
+@@ -13,7 +13,7 @@ test('mobile home keeps every signed-in navigation action on screen', async ({ p
+   const actions = page.locator('.top-actions')
+   const buttons = actions.getByRole('button')
+   const expectedActions = [
+-    '账号安全', '🌏 行程广场', '🧭 景点发现', '✨ 我的行程 · 问答与修改',
++    '账号安全', '我的数据', '问题反馈', '🌏 行程广场', '🧭 景点发现', '✨ 我的行程 · 问答与修改',
+     '📚 投稿攻略', '🔎 旅行资料研究', '退 出'
+   ]
+   await expect(buttons).toHaveCount(expectedActions.length)
