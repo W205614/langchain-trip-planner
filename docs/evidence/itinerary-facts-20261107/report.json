@@ -76,6 +76,27 @@
     "security_tool_policy": {
       "passed": 76,
       "failed": 0
+    },
+    "full_python_built_image": {
+      "passed": 524,
+      "skipped": 10,
+      "failed": 0,
+      "skip_reasons": {
+        "native_abi_and_backports": 9,
+        "restic_not_configured": 1
+      }
+    },
+    "native_abi_backports_separate": {
+      "passed": 9,
+      "failed": 0
+    },
+    "browser_built_isolated": {
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "outbound_reservations": 0,
+      "daily_seven_remained_stopped": true
     }
   },
   "checks": {
@@ -171,11 +192,13 @@
     ]
   },
   "security": {
-    "codeql_source_revision": "909fbc455e3dc79e859bdc637e8750702514e820",
-    "fresh_analysis_workflow": 42367525744,
+    "codeql_source_revision": "dc1e46180a2d903aff3349338ab9c9e115334b9c",
+    "fresh_analysis_workflow": 42368970017,
     "raw_high_critical": 26,
     "unassessed_blocking_after_exact_review": 0,
     "primary_sources_unchanged": true,
-    "reviewed_support_source_changes": 1
-  }
+    "reviewed_support_source_changes": 0,
+    "supporting_sources_unchanged": 47
+  },
+  "acceptance_source_revision": "dc1e46180a2d903aff3349338ab9c9e115334b9c"
 }
