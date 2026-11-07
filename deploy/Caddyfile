@@ -1,0 +1,17 @@
+{
+    email {$ACME_EMAIL}
+    admin off
+}
+{$PUBLIC_HOSTNAME} {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        Referrer-Policy same-origin
+    }
+    reverse_proxy frontend:80 {
+        flush_interval -1
+        header_up -X-Outbound-Operation
+        header_up -X-Service-Key
+    }
+}

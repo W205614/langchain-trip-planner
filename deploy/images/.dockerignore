@@ -1,8 +1,11 @@
-# Monitor builds use this directory as their complete context. Future local
+# Runtime builds use this directory as their complete context. Future local
 # artifacts or configuration are excluded unless explicitly required here.
 *
 !prometheus.Dockerfile
 !alertmanager.Dockerfile
 !alertmanager.go.mod
 !alertmanager.go.sum
+!caddy.Dockerfile
+!caddy.go.mod
+!caddy.go.sum
 !monitoring-source.lock.json

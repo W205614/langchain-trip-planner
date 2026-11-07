@@ -6,8 +6,16 @@
       "type": "boolean"
     },
     "message": {
-      "title": "Message",
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Message"
     },
     "chunks": {
       "minimum": 0,
@@ -38,11 +46,66 @@
       ],
       "default": null,
       "title": "Generation"
+    },
+    "preview": {
+      "default": false,
+      "title": "Preview",
+      "type": "boolean"
+    },
+    "embedding_identity": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Embedding Identity"
+    },
+    "source_fingerprint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Fingerprint"
+    },
+    "estimated_embedding_requests": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Embedding Requests"
+    },
+    "input_utf8_bytes": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Input Utf8 Bytes"
     }
   },
   "required": [
     "success",
-    "message",
     "chunks"
   ],
   "title": "IndexRebuildResult",

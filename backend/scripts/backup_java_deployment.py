@@ -4,13 +4,14 @@ from datetime import datetime,timezone
 import json
 from pathlib import Path
 import subprocess
+import tarfile
 from deployment_assets import services, docker, digest, database_summary, database_columns
 
 ROOT=Path(__file__).resolve().parents[2]
 COMPOSE=["docker","compose","-f",str(ROOT/"docker-compose.yml")]
 
 
-def backup(output, project="langchain-trip-planner", archive_images=False):
+def backup(output, project="langchain-trip-planner", archive_images=False, private_config_dir=None):
     """Version two uses container-side archives for bind mounts AND named volumes."""
     deployed = services(project)
     for service in ("backend", "agent"):
@@ -21,6 +22,12 @@ def backup(output, project="langchain-trip-planner", archive_images=False):
         raise ValueError("Use a fresh external directory or the ignored backups directory")
     if output.exists():
         raise ValueError("Backup target must not already exist")
+    if private_config_dir is not None:
+        private_config_dir=private_config_dir.resolve(strict=True)
+        if not private_config_dir.is_dir() or output.is_relative_to(private_config_dir):
+            raise ValueError("Private configuration must be a separate directory")
+        if any(path.is_symlink() for path in private_config_dir.rglob("*")):
+            raise ValueError("Private configuration snapshot does not follow symbolic links")
     output.mkdir(parents=True)
     postgres = deployed["postgres"]
     pg_mount = next((mount for mount in postgres["Mounts"] if mount["Destination"] == "/var/lib/postgresql/data"), None)
@@ -53,12 +60,20 @@ def backup(output, project="langchain-trip-planner", archive_images=False):
     for name, container in deployed.items():
         # Private backup only. Preserve effective environment without printing credentials.
         (runtime / f"{name}.json").write_text(json.dumps(container["Config"]["Env"]), encoding="utf-8")
+    private_configuration=None
+    if private_config_dir is not None:
+        with tarfile.open(output/"private-configuration.tar","w") as archive:
+            archive.add(private_config_dir,arcname="private-configuration")
+        private_configuration={"archive":"private-configuration.tar",
+            "files":sum(path.is_file() for path in private_config_dir.rglob("*"))}
+    from storage_objects import export_snapshot
+    object_snapshot=export_snapshot(deployed,output/"objects")
     images = {name: item["Image"] for name, item in deployed.items()}
     if archive_images:
         docker("image", "save", "-o", output / "images.tar", *sorted(set(images.values())))
     manifest = {"schema": "Java/Flyway-v2", "created_at": datetime.now(timezone.utc).isoformat(),
                 "project": project, "database": database, "database_user": user, "images": images,
-                "mounts": mounts, "compose_files": deployed["backend"]["Config"]["Labels"].get("com.docker.compose.project.config_files", ""),
+                "mounts": mounts, "object_snapshot":object_snapshot,"private_configuration":private_configuration, "compose_files": deployed["backend"]["Config"]["Labels"].get("com.docker.compose.project.config_files", ""),
                 "postgres_mount": {"type": pg_mount["Type"], "source": pg_mount.get("Name") or pg_mount["Source"], "destination": pg_mount["Destination"]},
                 "sha256": {f.relative_to(output).as_posix(): digest(f) for f in output.rglob("*") if f.is_file()}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
@@ -71,4 +86,5 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser();parser.add_argument("--output",required=True,type=Path)
     parser.add_argument("--project",default="langchain-trip-planner")
     parser.add_argument("--archive-images",action="store_true")
-    args=parser.parse_args();backup(args.output,args.project,args.archive_images)
+    parser.add_argument("--private-config-dir",type=Path,help="Also archive the selected private runtime/alert configuration directory")
+    args=parser.parse_args();backup(args.output,args.project,args.archive_images,args.private_config_dir)

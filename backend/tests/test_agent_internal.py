@@ -127,9 +127,14 @@ def test_duplicate_execution_never_calls_planner_twice(client, monkeypatch):
     from types import SimpleNamespace
     from app.agents import trip_planner_agent
     from app.services import planning_constraints
+    from app.services import durable_execution
+    reservations=[]
+    monkeypatch.setenv("OUTBOUND_LEDGER_REQUIRED","true")
+    monkeypatch.setattr(durable_execution,"_call",lambda method,path,payload=None:reservations.append(payload) or {"run_id":""})
     calls=[]
     def plan(*args, **kwargs):
         calls.append(1)
+        durable_execution.reserve_outbound("text",reserved_tokens=100)
         return SimpleNamespace(enrichment_notices=[], model_dump=lambda: {"days": []})
     route_planner = object()
     validation_routes = []
@@ -152,4 +157,5 @@ def test_duplicate_execution_never_calls_planner_twice(client, monkeypatch):
     assert '"agent_route_and_constraints_ms"' in response.text
     assert client.post("/internal/v1/executions",json=body,headers=headers).status_code==409
     assert calls==[1]
+    assert reservations[0]["execution_id"] == body["execution_id"]
     assert validation_routes == [route_planner]

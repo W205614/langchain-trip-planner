@@ -1,0 +1,45 @@
+# NEW public installation overlay; combine with docker-compose.production.yml.
+services:
+  backend:
+    environment:
+      PUBLIC_REGISTRATION_MODE: email_verified
+      OUTBOUND_REQUIRE_ACTOR_CONTEXT: 'true'
+      CORS_ORIGINS: https://${PUBLIC_HOSTNAME:?Set PUBLIC_HOSTNAME}
+  agent:
+    environment:
+      OUTBOUND_LEDGER_REQUIRED: 'true'
+  frontend:
+    ports: !reset []
+    environment:
+      TRUSTED_PROXY_CIDR: ${PUBLIC_EDGE_CIDR:-172.30.244.0/28}
+    networks: [default, edge]
+  edge:
+    image: ${PUBLIC_CADDY_IMAGE:-trip-planner-caddy:2.11.9-security1}
+    build:
+      context: ./deploy/images
+      dockerfile: caddy.Dockerfile
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    environment:
+      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME:?Set PUBLIC_HOSTNAME}
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL}
+    ports: ['80:80', '443:443', '443:443/udp']
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - public_certificates:/data
+      - public_caddy_config:/config
+    networks: [edge]
+    depends_on: [frontend]
+    restart: unless-stopped
+    mem_limit: 128m
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+networks:
+  edge:
+    ipam:
+      config: [{subnet: '${PUBLIC_EDGE_CIDR:-172.30.244.0/28}'}]
+volumes:
+  public_certificates:
+  public_caddy_config:

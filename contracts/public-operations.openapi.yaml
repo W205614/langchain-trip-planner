@@ -1,0 +1,2439 @@
+openapi: 3.1.0
+info:
+  title: Trip Planner Public Operations API
+  version: '2026-11-07'
+  description: 公开运营增量契约，以Java Controller记录和服务返回白名单为准。默认同源。Cookie写请求需X-CSRF-Token；Bearer兼容。管理员操作受ROLE_ADMIN及部署MFA设置约束。时间存储使用UTC；配额按UTC日界。当前文件不替代既有行程规划API与internal-v1/v2契约。
+servers:
+- url: /
+security:
+- sessionCookie: []
+- bearerAuth: []
+tags:
+- name: account
+- name: operations
+- name: admin
+paths:
+  /api/auth/options:
+    get:
+      operationId: authOptions
+      summary: 读取注册及邮件配置状态
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthOptions'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      description: email_available表示SMTP已配置，不是连接探测或收件箱送达证明。
+  /api/auth/register:
+    post:
+      operationId: register
+      summary: 注册并登录
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/AuthMode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+      description: email_verified模式邮箱必填，账号与验证邮件发件箱同事务；失败不保留半成品账号。验证完成前可登录读取资料，付费AI、上传与发布受服务端策略限制。
+  /api/auth/login:
+    post:
+      operationId: login
+      summary: 密码及可选TOTP登录
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/AuthMode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      description: 开启TOTP的账号必须提供未使用的当前验证码。不可用账号拒绝登录。
+  /api/auth/logout:
+    post:
+      operationId: logout
+      summary: 撤销本人所有旧会话
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+  /api/auth/me:
+    get:
+      operationId: currentUser
+      summary: 读取本人公开字段白名单
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+  /api/account/email:
+    get:
+      operationId: emailStatus
+      summary: 读取本人邮箱与待验证地址
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailStatus'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+    post:
+      operationId: bindEmail
+      summary: 验证当前身份后绑定或更换邮箱
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailBinding'
+      description: 已启用TOTP时需当前验证码；新邮箱确认后才替换原邮箱。每分钟最多一次、每小时最多5次验证邮件请求。
+  /api/account/email/resend:
+    post:
+      operationId: resendEmail
+      summary: 重新发送最新验证链接
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      description: 沿用已申请的目标地址，不接受新的邮箱参数；新链接使旧链接失效。
+  /api/auth/email/confirm:
+    post:
+      operationId: confirmEmail
+      summary: 消费一次性邮箱验证令牌
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailToken'
+      description: 链接30分钟有效，重复或过期409；不需要登录Cookie或CSRF。
+  /api/auth/email/request-reset:
+    post:
+      operationId: requestPasswordReset
+      summary: 申请邮件密码重置
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailResetRequest'
+      description: 未知、未验证、不可用账号及账号级请求限流均返回相同成功提示，防止按响应枚举邮箱。邮件未配置返回503。
+  /api/auth/email/reset:
+    post:
+      operationId: resetPassword
+      summary: 使用邮件令牌和所需TOTP重设密码
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reauthenticate'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailReset'
+      description: 令牌15分钟有效，仅一次使用；已开启的MFA保持有效。成功撤销所有旧登录与该账号其他重置令牌。
+  /api/account/notification-preferences:
+    get:
+      operationId: notificationPreferences
+      summary: 读取本人邮件订阅状态
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPreferences'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+    put:
+      operationId: updateNotificationPreferences
+      summary: 修改本人邮件订阅状态
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPreferences'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPreferencesUpdate'
+      description: 开启需要已验证邮箱及配置SMTP。只发送开启后的新通知，关闭时清除未发送的通知邮件载荷；已交给SMTP的邮件不能撤回。
+  /api/feedback:
+    get:
+      operationId: feedbackList
+      summary: 分页读取本人的反馈
+      tags:
+      - operations
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackPage'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+    post:
+      operationId: createFeedback
+      summary: 提交问题反馈
+      tags:
+      - operations
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedId'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackCreate'
+      description: 关联行程和任务必须属于本人。每账号每小时最多10次。
+  /api/usage/limits:
+    get:
+      operationId: usageLimits
+      summary: 读取本人UTC日配额与调用预留
+      tags:
+      - operations
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaSummary'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      description: 视觉调用归入text额度。预留不是实际账单；supplier_usage与usage/summary可能描述同一次调用，不能相加计费。
+  /api/admin/operations/users:
+    get:
+      operationId: adminUsers
+      summary: 分页搜索账号白名单
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersPage'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - name: query
+        in: query
+        schema:
+          type: string
+          maxLength: 64
+          default: ''
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。
+  /api/admin/operations/users/{uid}/state:
+    put:
+      operationId: adminUserState
+      summary: 停用或恢复账号
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStateResult'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStateUpdate'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。禁止恢复deleting/deleted账号，禁止停用最后一个可用管理员。状态变化撤销旧会话，停用停止活动规划任务。
+  /api/admin/operations/users/{uid}/quotas:
+    get:
+      operationId: adminUserQuotas
+      summary: 读取指定用户有效配额与覆盖值
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaSummary'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/UserId'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。
+    put:
+      operationId: adminUpdateQuotas
+      summary: 设置完整的用户配额覆盖
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaSummary'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuotaUpdate'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。
+  /api/admin/operations/feedback:
+    get:
+      operationId: adminFeedback
+      summary: 分页筛选全部反馈
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackPage'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - ''
+          - open
+          - processing
+          - closed
+          default: ''
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。
+  /api/admin/operations/feedback/{id}:
+    put:
+      operationId: adminReplyFeedback
+      summary: 按版本回复或关闭反馈
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionResult'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackReply'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。
+  /api/admin/mail:
+    get:
+      operationId: adminMail
+      summary: 读取脱敏邮件投递元数据
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MailPage'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - ''
+          - pending
+          - sending
+          - retry
+          - accepted
+          - failed
+          - cancelled
+          default: ''
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。响应没有地址、正文、令牌或密文。accepted仅表示SMTP接受，不能证明收件箱送达；响应丢失重试可能重复投递。
+  /api/admin/mail/{id}/replay:
+    post:
+      operationId: adminReplayMail
+      summary: 重放未过期的失败投递
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Id'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。只允许failed且仍有载荷、未过期、所属账号active的投递；重放重置本轮最多5次尝试。
+  /api/account/data-jobs:
+    get:
+      operationId: accountDataJobs
+      summary: 读取本人最近50个导出与注销作业
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataJobs'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+  /api/account/exports:
+    post:
+      operationId: requestAccountExport
+      summary: 申请异步个人数据ZIP导出
+      tags:
+      - account
+      responses:
+        '202':
+          description: 已接受异步作业，尚未证明处理完成
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportAccepted'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '429':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      description: 同用户已有queued/running导出返回相同作业且cached=true；每小时最多3次新建。完成后24小时可下载。
+  /api/account/exports/{id}/download:
+    get:
+      operationId: downloadAccountExport
+      summary: 下载本人已完成的导出ZIP
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+            Content-Disposition:
+              schema:
+                type: string
+              description: attachment; filename=trip-account-{id}.zip
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '410':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/JobId'
+      description: 尚未完成、文件不存在或不属于本人返回404；已过期410。文件和接口均要求账号仍active。
+  /api/account/erasure-preview:
+    get:
+      operationId: erasurePreview
+      summary: 读取本人注销影响范围
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErasurePreview'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+  /api/account/erasure:
+    post:
+      operationId: eraseAccount
+      summary: 验证身份后申请注销并立即撤权
+      tags:
+      - account
+      responses:
+        '202':
+          description: 已接受异步作业，尚未证明处理完成
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErasureAccepted'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErasureRequest'
+      description: 需要当前密码和已开启的TOTP；拒绝注销最后一个可用管理员。立即撤回分享/公开投稿并撤销登录，剩余数据与索引异步清理。receipt仅本次返回。
+  /api/auth/erasure/{id}:
+    get:
+      operationId: erasureStatus
+      summary: 凭下载回执查询注销进度
+      tags:
+      - account
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErasureStatus'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/JobId'
+      - $ref: '#/components/parameters/ErasureReceipt'
+      description: 返回仅含id/status/stage/error_code。succeeded才表示在线数据与索引清理完成，waiting_cleanup表示仍在处理。
+  /api/admin/operations/data-jobs:
+    get:
+      operationId: adminDataJobs
+      summary: 读取最近100个数据作业白名单
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminDataJobs'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。
+  /api/admin/operations/data-jobs/{id}/replay:
+    post:
+      operationId: adminReplayDataJob
+      summary: 重新排队失败的数据作业
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/JobId'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。仅失败作业可重放；已有同类活动作业返回409。恢复到queued或waiting_cleanup，由worker核验实际处理条件。
+  /api/knowledge/admin/storage:
+    get:
+      operationId: storageStatus
+      summary: 读取存储配置状态
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageConfiguration'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。不返回Bucket、对象Key、端点或密钥；connectivity_checked=false，不触发外部连接。
+  /api/knowledge/admin/storage/migration:
+    get:
+      operationId: previewStorageMigration
+      summary: 预览文件迁移候选
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageMigrationPreview'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int64
+          default: 25
+          minimum: 1
+          maximum: 100
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。只读，不复制、不修改业务引用。
+  /api/knowledge/admin/storage/migration/{id}:
+    post:
+      operationId: migrateStoredDocument
+      summary: 复制、校验并切换单份原文件引用
+      tags:
+      - admin
+      responses:
+        '200':
+          description: 成功
+          headers:
+            X-Request-ID:
+              schema:
+                type: string
+              description: 用于关联服务日志的请求编号。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageMigrationResult'
+        '401':
+          $ref: '#/components/responses/ApiError'
+        '403':
+          $ref: '#/components/responses/ApiError'
+        '404':
+          $ref: '#/components/responses/ApiError'
+        '409':
+          $ref: '#/components/responses/ApiError'
+        '422':
+          $ref: '#/components/responses/ApiError'
+        '503':
+          $ref: '#/components/responses/ApiError'
+        default:
+          $ref: '#/components/responses/ApiError'
+      x-required-role: ADMIN
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Id'
+      description: 需要管理员权限；ADMIN_MFA_REQUIRED=true时必须已完成TOTP设置并通过登录验证。公开邮箱验证模式下管理员也必须已验证邮箱。复制与SHA-256校验在事务外，切换时比较原文档版本和位置；冲突409保留源与副本，不覆盖引用。重复迁移已就位文件返回already_current。
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: trip_session
+      description: HttpOnly会话Cookie；写操作必须发送trip_csrf值为X-CSRF-Token。
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Csrf:
+      name: X-CSRF-Token
+      in: header
+      required: false
+      schema:
+        type: string
+      description: 使用trip_session Cookie的写请求必须发送trip_csrf Cookie的值；Bearer请求不要求此头。
+    AuthMode:
+      name: X-Auth-Mode
+      in: header
+      required: false
+      schema:
+        type: string
+        enum:
+        - cookie
+      description: cookie模式返回CookieLogin并设置HttpOnly trip_session与可读取的trip_csrf；省略则返回BearerLogin。
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+        default: 1
+        minimum: 1
+        maximum: 100000
+    UserId:
+      name: uid
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    JobId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        description: 当前反馈version的十进制整数；不是带引号的ETag。成功响应给出新version；冲突409需重新读取反馈。
+    ErasureReceipt:
+      name: X-Erasure-Receipt
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9_-]{43}$
+      description: 下载回执中的receipt。此接口只使用回执，忽略登录凭证；缺失、错误或30天过期均404。
+  responses:
+    ApiError:
+      description: 已处理业务/鉴权错误。401凭证无效；403权限/邮箱未验证；404未找到或回执无效；409状态/版本冲突；410导出过期；422输入无效；429限额；503外部能力不可用。 框架错误在HTML
+        Accept协商下可返回错误页面。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/Error'
+            - $ref: '#/components/schemas/FrameworkError'
+        text/html:
+          schema:
+            type: string
+  schemas:
+    Error:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: false
+        detail:
+          type: string
+        message:
+          type: string
+        error_code:
+          type: string
+        code:
+          type: string
+      required:
+      - detail
+    Success:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+      required:
+      - success
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        message:
+          type: string
+      required:
+      - success
+      - message
+    Reauthenticate:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        reauthenticate:
+          type: boolean
+          const: true
+        message:
+          type: string
+      required:
+      - success
+      - reauthenticate
+      - message
+    Registration:
+      type: object
+      additionalProperties: false
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+        password:
+          type: string
+          minLength: 8
+          maxLength: 64
+          writeOnly: true
+          description: 最多72个UTF-8字节，不能等于用户名或常见弱密码。
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+          description: email_verified模式必填；legacy模式可省略。
+      required:
+      - username
+      - password
+      x-java-record: UsersController.Registration
+    Login:
+      type: object
+      additionalProperties: false
+      properties:
+        username:
+          type: string
+          maxLength: 64
+        password:
+          type: string
+          maxLength: 128
+          writeOnly: true
+        totp_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 6
+          writeOnly: true
+          description: 已开启验证器时必须提供当前未使用的6位数字。
+      required:
+      - username
+      - password
+      x-java-record: UsersController.Login
+    CookieLogin:
+      type: object
+      additionalProperties: false
+      properties:
+        token_type:
+          type: string
+          const: cookie
+        username:
+          type: string
+        is_admin:
+          type: boolean
+        mfa_setup_required:
+          type: boolean
+      required:
+      - token_type
+      - username
+      - is_admin
+      - mfa_setup_required
+    BearerLogin:
+      type: object
+      additionalProperties: false
+      properties:
+        access_token:
+          type: string
+          description: 服务器签发的JWT；私有客户端凭证。
+        token_type:
+          type: string
+          const: bearer
+        username:
+          type: string
+        is_admin:
+          type: boolean
+      required:
+      - access_token
+      - token_type
+      - username
+      - is_admin
+    LoginResult:
+      oneOf:
+      - $ref: '#/components/schemas/CookieLogin'
+      - $ref: '#/components/schemas/BearerLogin'
+    AccountState:
+      type: string
+      enum:
+      - active
+      - disabled
+      - deleting
+      - deleted
+    PublicUser:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        is_admin:
+          type: boolean
+        created_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        email:
+          type:
+          - string
+          - 'null'
+        email_verified_at:
+          type:
+          - string
+          - 'null'
+          description: 服务序列化的UTC时间。
+        account_state:
+          $ref: '#/components/schemas/AccountState'
+        email_verified:
+          type: boolean
+      required:
+      - id
+      - username
+      - is_admin
+      - created_at
+      - email
+      - email_verified_at
+      - account_state
+      - email_verified
+    AdminUser:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+        email_verified_at:
+          type:
+          - string
+          - 'null'
+          description: 服务序列化的UTC时间。
+        account_state:
+          $ref: '#/components/schemas/AccountState'
+        is_admin:
+          type: boolean
+        created_at:
+          type: string
+          description: 服务序列化的UTC时间。
+      required:
+      - id
+      - username
+      - email
+      - email_verified_at
+      - account_state
+      - is_admin
+      - created_at
+    AuthOptions:
+      type: object
+      additionalProperties: false
+      properties:
+        registration_mode:
+          type: string
+          enum:
+          - legacy
+          - email_verified
+        email_available:
+          type: boolean
+      required:
+      - registration_mode
+      - email_available
+    EmailStatus:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+        verified:
+          type: boolean
+        verification_required:
+          type: boolean
+        available:
+          type: boolean
+        pending_email:
+          type:
+          - string
+          - 'null'
+      required:
+      - email
+      - verified
+      - verification_required
+      - available
+      - pending_email
+    EmailBinding:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          maxLength: 128
+          writeOnly: true
+        totp_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 6
+          writeOnly: true
+          description: 已开启验证器时必填；每个验证码只能使用一次。
+      required:
+      - email
+      - password
+      x-java-record: EmailAccountController.Binding
+    EmailToken:
+      type: object
+      additionalProperties: false
+      properties:
+        token:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{43}$
+          maxLength: 128
+          writeOnly: true
+      required:
+      - token
+      x-java-record: EmailAccountController.Token
+    EmailResetRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+      required:
+      - email
+      x-java-record: EmailAccountController.ResetRequest
+    EmailReset:
+      type: object
+      additionalProperties: false
+      properties:
+        token:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{43}$
+          maxLength: 128
+          writeOnly: true
+        new_password:
+          type: string
+          minLength: 8
+          maxLength: 64
+          writeOnly: true
+          description: 最多72个UTF-8字节，禁止常见弱密码和用户名。
+        totp_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 6
+          writeOnly: true
+          description: 验证器已开启时必填；邮件找回不关闭也不绕过MFA。
+      required:
+      - token
+      - new_password
+      x-java-record: EmailAccountController.Reset
+    NotificationPreferencesUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        email_enabled:
+          type: boolean
+      required:
+      - email_enabled
+      x-java-record: EmailAccountController.Preferences
+    NotificationPreferences:
+      type: object
+      additionalProperties: false
+      properties:
+        email_enabled:
+          type: boolean
+        email_available:
+          type: boolean
+      required:
+      - email_enabled
+      - email_available
+    UserStateUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          enum:
+          - active
+          - disabled
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 300
+      required:
+      - state
+      - reason
+      x-java-record: PublicOperationsController.State
+    UserStateResult:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        account_state:
+          type: string
+          enum:
+          - active
+          - disabled
+      required:
+      - success
+      - account_state
+    UsersPage:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminUser'
+        page:
+          type: integer
+          format: int64
+          minimum: 1
+        total:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - data
+      - page
+      - total
+    FeedbackCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        category:
+          type: string
+          enum:
+          - planning
+          - account
+          - knowledge
+          - other
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 160
+        message:
+          type: string
+          minLength: 1
+          maxLength: 3000
+        trip_id:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        task_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 36
+        request_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+      required:
+      - category
+      - subject
+      - message
+      x-java-record: PublicOperationsController.Feedback
+    CreatedId:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        id:
+          type: integer
+          format: int64
+      required:
+      - success
+      - id
+    Feedback:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        category:
+          type: string
+          enum:
+          - planning
+          - account
+          - knowledge
+          - other
+        subject:
+          type: string
+        message:
+          type: string
+        trip_id:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        task_id:
+          type:
+          - string
+          - 'null'
+        request_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - open
+          - processing
+          - closed
+        reply:
+          type: string
+        version:
+          type: integer
+          format: int64
+          minimum: 1
+        created_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        updated_at:
+          type: string
+          description: 服务序列化的UTC时间。
+      required:
+      - id
+      - user_id
+      - category
+      - subject
+      - message
+      - trip_id
+      - task_id
+      - request_id
+      - status
+      - reply
+      - version
+      - created_at
+      - updated_at
+    FeedbackPage:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feedback'
+        page:
+          type: integer
+          format: int64
+          minimum: 1
+      required:
+      - data
+      - page
+    FeedbackReply:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - open
+          - processing
+          - closed
+        reply:
+          type: string
+          maxLength: 3000
+          description: closed状态要求非空回复。
+      required:
+      - status
+      - reply
+      x-java-record: PublicOperationsController.Response
+    VersionResult:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        version:
+          type: integer
+          format: int64
+          minimum: 1
+      required:
+      - success
+      - version
+    ReservedCall:
+      type: object
+      additionalProperties: false
+      properties:
+        kind:
+          type: string
+          enum:
+          - text
+          - embedding
+          - amap
+        reserved_calls:
+          type: integer
+          format: int64
+          minimum: 0
+        reserved_tokens:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - kind
+      - reserved_calls
+      - reserved_tokens
+    SupplierUsage:
+      type: object
+      additionalProperties: false
+      properties:
+        input_tokens:
+          type: integer
+          format: int64
+          minimum: 0
+        output_tokens:
+          type: integer
+          format: int64
+          minimum: 0
+        reported_calls:
+          type: integer
+          format: int64
+          minimum: 0
+        unreported_calls:
+          type: integer
+          format: int64
+          minimum: 0
+        taskless_reported_calls:
+          type: integer
+          format: int64
+          minimum: 0
+        execution_reported_calls:
+          type: integer
+          format: int64
+          minimum: 0
+        note:
+          type: string
+      required:
+      - input_tokens
+      - output_tokens
+      - reported_calls
+      - unreported_calls
+      - taskless_reported_calls
+      - execution_reported_calls
+      - note
+    MailStatus:
+      type: string
+      enum:
+      - pending
+      - sending
+      - retry
+      - accepted
+      - failed
+      - cancelled
+    MailDelivery:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        user_id:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        kind:
+          type: string
+        status:
+          $ref: '#/components/schemas/MailStatus'
+        attempts:
+          type: integer
+          format: int64
+          minimum: 0
+          maximum: 5
+        next_attempt_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        expires_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        last_error:
+          type: string
+        accepted_at:
+          type:
+          - string
+          - 'null'
+          description: 服务序列化的UTC时间。
+        created_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        updated_at:
+          type: string
+          description: 服务序列化的UTC时间。
+      required:
+      - id
+      - user_id
+      - kind
+      - status
+      - attempts
+      - next_attempt_at
+      - expires_at
+      - last_error
+      - accepted_at
+      - created_at
+      - updated_at
+    MailPage:
+      type: object
+      additionalProperties: false
+      properties:
+        available:
+          type: boolean
+        acceptance_note:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MailDelivery'
+      required:
+      - available
+      - acceptance_note
+      - data
+    DataJobState:
+      type: string
+      enum:
+      - queued
+      - running
+      - waiting_cleanup
+      - succeeded
+      - failed
+      - expired
+    DataJob:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+          enum:
+          - export
+          - erasure
+        status:
+          $ref: '#/components/schemas/DataJobState'
+        stage:
+          type: string
+        error_code:
+          type: string
+        created_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        updated_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        expires_at:
+          type:
+          - string
+          - 'null'
+          description: 服务序列化的UTC时间。
+      required:
+      - id
+      - kind
+      - status
+      - stage
+      - error_code
+      - created_at
+      - updated_at
+      - expires_at
+    AdminDataJob:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: integer
+          format: int64
+        kind:
+          type: string
+          enum:
+          - export
+          - erasure
+        status:
+          $ref: '#/components/schemas/DataJobState'
+        stage:
+          type: string
+        error_code:
+          type: string
+        created_at:
+          type: string
+          description: 服务序列化的UTC时间。
+        updated_at:
+          type: string
+          description: 服务序列化的UTC时间。
+      required:
+      - id
+      - user_id
+      - kind
+      - status
+      - stage
+      - error_code
+      - created_at
+      - updated_at
+    DataJobs:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataJob'
+      required:
+      - data
+    AdminDataJobs:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminDataJob'
+      required:
+      - data
+    ExportAccepted:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        id:
+          type: string
+          format: uuid
+        cached:
+          type: boolean
+      required:
+      - success
+      - id
+      - cached
+    ErasurePreview:
+      type: object
+      additionalProperties: false
+      properties:
+        owned_trips:
+          type: integer
+          format: int64
+          minimum: 0
+        submissions:
+          type: integer
+          format: int64
+          minimum: 0
+        public_cards:
+          type: integer
+          format: int64
+          minimum: 0
+        shared_memberships:
+          type: integer
+          format: int64
+          minimum: 0
+        policy:
+          type: string
+      required:
+      - owned_trips
+      - submissions
+      - public_cards
+      - shared_memberships
+      - policy
+    ErasureRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        password:
+          type: string
+          maxLength: 128
+          writeOnly: true
+        totp_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 6
+          writeOnly: true
+          description: 已开启验证器时必填。
+        confirmation:
+          type: string
+          const: DELETE MY ACCOUNT
+      required:
+      - password
+      - confirmation
+      x-java-record: AccountDataController.Erasure
+    ErasureAccepted:
+      type: object
+      additionalProperties: false
+      properties:
+        success:
+          type: boolean
+          const: true
+        id:
+          type: string
+          format: uuid
+        receipt:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{43}$
+          description: 仅本次返回，保存后用于注销后的进度查询。
+        status:
+          type: string
+          const: queued
+        message:
+          type: string
+      required:
+      - success
+      - id
+      - receipt
+      - status
+      - message
+    ErasureStatus:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/DataJobState'
+        stage:
+          type: string
+        error_code:
+          type: string
+      required:
+      - id
+      - status
+      - stage
+      - error_code
+    StorageConfiguration:
+      type: object
+      additionalProperties: false
+      properties:
+        backend:
+          type: string
+          enum:
+          - local
+          - s3
+        s3_configured:
+          type: boolean
+        connectivity_checked:
+          type: boolean
+          const: false
+      required:
+      - backend
+      - s3_configured
+      - connectivity_checked
+    StorageCandidate:
+      type: object
+      additionalProperties: false
+      properties:
+        document_id:
+          type: integer
+          format: int64
+        source_backend:
+          type: string
+          enum:
+          - local
+          - s3
+        target_backend:
+          type: string
+          enum:
+          - local
+          - s3
+        size_bytes:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - document_id
+      - source_backend
+      - target_backend
+      - size_bytes
+    StorageMigrationPreview:
+      type: object
+      additionalProperties: false
+      properties:
+        target:
+          $ref: '#/components/schemas/StorageConfiguration'
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorageCandidate'
+        writes_performed:
+          type: boolean
+          const: false
+      required:
+      - target
+      - candidates
+      - writes_performed
+    StorageMigrationResult:
+      oneOf:
+      - type: object
+        additionalProperties: false
+        properties:
+          success:
+            type: boolean
+            const: true
+          document_id:
+            type: integer
+            format: int64
+          status:
+            type: string
+            const: already_current
+        required:
+        - success
+        - document_id
+        - status
+      - type: object
+        additionalProperties: false
+        properties:
+          success:
+            type: boolean
+            const: true
+          document_id:
+            type: integer
+            format: int64
+          status:
+            type: string
+            const: switched
+          source_retained:
+            type: boolean
+            const: true
+        required:
+        - success
+        - document_id
+        - status
+        - source_retained
+    QuotaUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        daily_tasks:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+          maximum: 100000
+        active_tasks:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+          maximum: 1000
+        daily_text:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+          maximum: 1000000
+        daily_embedding:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+          maximum: 1000000
+        daily_amap:
+          type:
+          - integer
+          - 'null'
+          format: int64
+          minimum: 0
+          maximum: 1000000
+      required:
+      - daily_tasks
+      - active_tasks
+      - daily_text
+      - daily_embedding
+      - daily_amap
+      description: 提交完整五个字段；null继承部署默认值，0禁止该类新操作。
+    QuotaValues:
+      type: object
+      additionalProperties: false
+      properties:
+        daily_tasks:
+          type: integer
+          format: int64
+          minimum: 0
+        active_tasks:
+          type: integer
+          format: int64
+          minimum: 0
+        daily_text:
+          type: integer
+          format: int64
+          minimum: 0
+        daily_embedding:
+          type: integer
+          format: int64
+          minimum: 0
+        daily_amap:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - daily_tasks
+      - active_tasks
+      - daily_text
+      - daily_embedding
+      - daily_amap
+    QuotaSummary:
+      type: object
+      additionalProperties: false
+      properties:
+        limits:
+          $ref: '#/components/schemas/QuotaValues'
+        overrides:
+          $ref: '#/components/schemas/QuotaUpdate'
+        reserved_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReservedCall'
+        tasks_today:
+          type: integer
+          format: int64
+          minimum: 0
+        active_tasks:
+          type: integer
+          format: int64
+          minimum: 0
+        usage_date:
+          type: string
+          format: date
+        supplier_usage:
+          $ref: '#/components/schemas/SupplierUsage'
+        note:
+          type: string
+      required:
+      - limits
+      - overrides
+      - reserved_calls
+      - tasks_today
+      - active_tasks
+      - usage_date
+      - supplier_usage
+      - note
+    FrameworkError:
+      type: object
+      properties:
+        timestamp: {}
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+        requestId:
+          type: string
+      required:
+      - status
+      - error
+      additionalProperties: true
+      description: Spring默认错误分发形状；错误时间与附加字段由框架配置决定，不是业务响应白名单。

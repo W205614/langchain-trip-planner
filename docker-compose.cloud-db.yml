@@ -1,0 +1,11 @@
+# New external-PostgreSQL deployment; configure business.env before selecting this overlay.
+services:
+  postgres:
+    profiles: [local-database]
+  backend:
+    depends_on: !reset {}
+    volumes:
+      - type: bind
+        source: ${TRIP_POSTGRES_CA_DIR:?Set the directory containing the PostgreSQL CA certificate}
+        target: /run/certs/postgres
+        read_only: true

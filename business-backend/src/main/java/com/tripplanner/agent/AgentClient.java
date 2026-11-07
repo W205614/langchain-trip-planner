@@ -20,6 +20,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Component
 public class AgentClient {
+  @Autowired(required=false) private com.tripplanner.domain.OutboundActorContext actors;
   private final String base, key;
   private final JsonMapper json;
   private final UpstreamGuard guard;
@@ -74,6 +75,10 @@ public class AgentClient {
       requestId = java.util.Objects.toString(values.get("request_id"), "");
     if (requestId != null && requestId.matches("[A-Za-z0-9_-]{1,64}"))
       builder.header("X-Request-ID", requestId);
+    if (actors != null) {
+      String operation = actors.forAgent(path, body);
+      if (operation != null) builder.header("X-Outbound-Operation", operation);
+    }
     return builder.build();
   }
 

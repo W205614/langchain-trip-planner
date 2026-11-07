@@ -11,6 +11,11 @@ import { isAuthenticated, setAuth } from '../services/auth'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    { path: '/account/email', component: () => import('../views/AccountEmail.vue') },
+    { path: '/account/erasure-status', component: () => import('../views/AccountErasureStatus.vue') },
+    { path: '/account/data', component: () => import('../views/AccountData.vue'), meta: { requiresAuth: true } },
+    { path: '/feedback', component: () => import('../views/Feedback.vue'), meta: { requiresAuth: true } },
+    { path: '/admin/operations', component: () => import('../views/OperationsAdmin.vue'), meta: { requiresAuth: true } },
     { path: '/account/security', component: () => import('../views/AccountSecurity.vue'), meta: { requiresAuth: true } },
     { path: '/tasks', redirect: { path: '/history', query: { tab: 'tasks' } }, meta: { requiresAuth: true } },
     { path: '/explore', component: () => import('../views/Explore.vue') },

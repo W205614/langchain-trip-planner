@@ -1,18 +1,19 @@
 {
   "schema_version": 2,
   "review_policy": "source_and_execution_path_bound",
-  "assessment_date": "2026-10-30",
+  "assessment_date": "2026-11-07",
   "product": "langchain-trip-planner internal Agent embedded derived index",
   "assessment_kind": "contextual_not_affected_not_upstream_fixed",
   "application": "Explicit --vex opt-in only; raw scanner findings are preserved. New unassessed vulnerabilities, other versions or changed bound source require review and remain blocking. No fixed calendar expiry. Image application additionally requires the embedded Agent CMD and the exact checked-out revision label.",
   "source_bindings": {
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
-    "backend/app/services/rag_service.py": "0e3db20b8e973cd301d49806ac76d847a149472e7dbed316e5f4a1c033c44064",
-    "backend/app/agent_api/rebuild.py": "7b5829d8a880d376eb7dbfb9e9fab8233d31150989b4c80d292d016962bbc8f1",
-    "backend/app/agent_api/main.py": "76e9a4a68f00f9a893e53f0df58509676c2582a60e4912ac4dbe72e049ba396e",
+    "backend/app/services/rag_service.py": "d7a6248744ee5eb0d21658062d4d1bebc128ef1b45eb394f9be37ee98397b4b1",
+    "backend/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
+    "backend/app/agent_api/main.py": "216a0d0369876c6397740ebe79b7dbbffae865fa55c83d34a55c0129758be841",
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
-    "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b"
+    "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
+    "backend/app/agent_api/indexing.py": "3ba50918edf7538f5b4eca3e89b87e5851b89cdd5592632d1de3e41897a6d23e"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
@@ -88,5 +89,6 @@
         "https://github.com/advisories/GHSA-2wm9-hf6c-p5cr"
       ]
     }
-  ]
+  ],
+  "review_note": "2026-11-07: Reassessed OpenAI identity, resumable rebuild and all-generation erasure paths. Every Chroma constructor still uses explicit embedded_settings; Java authenticates internal operations; no Chroma HTTP, tenant or embedding-configuration API was introduced. The three embedded-boundary regression tests passed against current source. This does not assert an upstream fix."
 }

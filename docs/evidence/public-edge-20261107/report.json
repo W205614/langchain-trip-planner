@@ -1,0 +1,96 @@
+{
+  "accepted_at_utc": "2026-11-07T04:35:58.107987+00:00",
+  "scope": "Isolated local CA, real Java/PostgreSQL/Nginx/Caddy, real Prometheus+Alertmanager, local SMTP/Webhook only",
+  "project": "trip-public-edge",
+  "edge_cidr": "10.253.245.0/28",
+  "versions": {
+    "caddy": "2.11.7 official image",
+    "alertmanager": "0.34.1-security1",
+    "prometheus": "3.15.1 unmodified official binaries",
+    "mailpit": "1.30.7"
+  },
+  "https": {
+    "http_redirect": 308,
+    "secure_session_and_csrf_cookies": true,
+    "hsts": true,
+    "csrf_missing_invalid_valid": [
+      403,
+      403,
+      202
+    ],
+    "protected_routes": 404,
+    "forged_header_login_statuses": [
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      401,
+      429,
+      429
+    ],
+    "independent_peer_login_after_first_peer_rate_limited": 401,
+    "untrusted_direct_forwarded_https_ignored": {
+      "status": 200,
+      "secure": false
+    },
+    "forged_remote_absent_from_nginx": true
+  },
+  "alerts": {
+    "native_amtool_config": "PASS",
+    "native_promtool_config_and_rule": "PASS",
+    "real_prometheus_probe": true,
+    "verified_transports": [
+      "SMTP STARTTLS local CA",
+      "HTTPS Webhook Caddy local CA, Bearer matched"
+    ],
+    "accepted_webhook_statuses": [
+      "firing",
+      "resolved",
+      "firing",
+      "resolved"
+    ],
+    "failed_webhook_attempts": 13,
+    "failed_counter_before": {
+      "email": 7.0,
+      "webhook": 19.0
+    },
+    "failed_counter_after": {
+      "email": 8.0,
+      "webhook": 20.0
+    },
+    "smtp_after_failure_subjects": [
+      "[RESOLVED] PublicEdgeValidationProbeDown edge-validation-probe (webhook:9088 validation)",
+      "[FIRING:1] PublicEdgeValidationProbeDown edge-validation-probe (webhook:9088 validation)"
+    ],
+    "deduplicated_local_inbox_events": 10,
+    "production_grouping": "10s wait/2m interval retained; test 1s/2s",
+    "linux_private_configuration": "Real Linux volume: mode0600 owner1001 denied UID65534; chown65534:65534 native amtool PASS; CI and manual instructions apply ownership"
+  },
+  "images": {
+    "edge": "sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5",
+    "backend": "sha256:ab9b06d022741b129b9aa0d1ccb282c2a703efd879a6da419a2895d37e1cfeab",
+    "frontend": "sha256:b90a82118e5ca00c6fb5721340d90b38c548eddcf1605a0f3b6e0ae2593f906d",
+    "agent": "sha256:b770dfd9b6a9c51cae1532e7f58e824210f178c9f18f75dd1597094b2b7c68fc",
+    "alertmanager": "sha256:f55a553c24b4d1e2a1b7751d827875f23ecfb57be61fd56105afdb672104322f",
+    "prometheus": "sha256:d2ed6b6921e407ed18bfd5152b9592a84488538577efa7c5fad4828ec629a873",
+    "mailpit": "sha256:d5ecbb067db3705fa953d79e1b7f81ef84038df67aba6c52825d8c02a1ea748a"
+  },
+  "not_verified": [
+    "Public DNS and public ACME issuance/renewal",
+    "Real SMTP provider/delivery to user mailbox",
+    "Real external Webhook service"
+  ],
+  "state": {
+    "own_project": "11 containers stopped; volumes retained",
+    "daily": "remains stopped",
+    "backups": "remain disabled",
+    "resources_deleted": false,
+    "host_CA_installed": false,
+    "github_pushed": false
+  }
+}

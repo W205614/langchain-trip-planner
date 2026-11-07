@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "preview": {
+      "default": false,
+      "title": "Preview",
+      "type": "boolean"
+    },
+    "restart": {
+      "default": false,
+      "title": "Restart",
+      "type": "boolean"
+    }
+  },
+  "title": "IndexRebuildRequest",
+  "type": "object"
+}

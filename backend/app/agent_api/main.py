@@ -171,6 +171,16 @@ app.add_exception_handler(BizException, biz_exception_handler)
 
 @app.middleware("http")
 async def correlate_request(request: Request, call_next):
+    from ..services.durable_execution import outbound_operation_var
+    operation = request.headers.get("X-Outbound-Operation")
+    if operation:
+        try:
+            operation = str(UUID(operation))
+        except ValueError:
+            from fastapi.responses import JSONResponse
+            return JSONResponse(status_code=422,content={"detail":"Invalid outbound operation"})
+    request.state.outbound_operation = operation
+    operation_token = outbound_operation_var.set(operation)
     incoming = request.headers.get("X-Request-ID", "")
     request_id = incoming if incoming and len(incoming) <= 64 and incoming.replace("-", "").replace("_", "").isalnum() else str(uuid4())
     request.state.request_id = request_id
@@ -200,6 +210,7 @@ async def correlate_request(request: Request, call_next):
                 elapsed * 1000,
             )
         request_id_context.reset(token)
+        outbound_operation_var.reset(operation_token)
 
 
 @app.exception_handler(ValidationError)
@@ -281,7 +292,8 @@ def _execute(body: Execution | ExecutionV2, request: Request):
         work_started = time.perf_counter()
         request_token = request_id_context.set(body.request_id)
         token = cancellation_var.set(cancelled)
-        from ..services.durable_execution import execution_id_var, journal_cache_var, new_journal_cache, read_checkpoint, save_checkpoint, input_hash
+        from ..services.durable_execution import execution_id_var, outbound_execution_var, journal_cache_var, new_journal_cache, read_checkpoint, save_checkpoint, input_hash
+        outbound_token = outbound_execution_var.set(identity)
         durable_token = execution_id_var.set(identity if body.protocol_version == 2 else None)
         journal_token = journal_cache_var.set(new_journal_cache() if body.protocol_version == 2 else None)
         try:
@@ -360,6 +372,7 @@ def _execute(body: Execution | ExecutionV2, request: Request):
                 rag_degradation_var.reset(notices_token)
             cancellation_var.reset(token)
             execution_id_var.reset(durable_token)
+            outbound_execution_var.reset(outbound_token)
             journal_cache_var.reset(journal_token)
             request_id_context.reset(request_token)
             with _lock:
@@ -490,11 +503,14 @@ def research_stream(body: dict, http_request: Request):
         from ..core.trip_metrics import observe_agent_stage
 
         def with_request_context(callback):
+            from ..services.durable_execution import outbound_operation_var
+            operation_token=outbound_operation_var.set(getattr(http_request.state,"outbound_operation",None))
             token = request_id_context.set(request_id)
             try:
                 return callback()
             finally:
                 request_id_context.reset(token)
+                outbound_operation_var.reset(operation_token)
 
         started_at = time.perf_counter()
         try:
@@ -536,7 +552,9 @@ def index(kind: Literal["history", "document", "rebuild"], body: dict):
     with capacity("index", _slow_slots):
         if kind == "rebuild":
             from .rebuild import rebuild
-            return rebuild()
+            from .contracts import IndexRebuildRequest
+            flags=IndexRebuildRequest.model_validate(body)
+            return rebuild(preview=flags.preview,restart=flags.restart)
         from . import indexing
         from .contracts import HistoryIndexRequest, DocumentIndexRequest
         contract = HistoryIndexRequest if kind == "history" else DocumentIndexRequest

@@ -1,0 +1,120 @@
+# Isolated edge/notification acceptance. No daily/public-e2e volumes or credentials.
+include:
+  - path: ./docker-compose.migration.yml
+services:
+  postgres:
+    ports: !reset []
+  backend:
+    image: ${PUBLIC_VALIDATION_BACKEND_IMAGE:-trip-public-validation-backend:20261107}
+    ports: !reset []
+    environment:
+      PUBLIC_REGISTRATION_MODE: email_verified
+      PUBLIC_BASE_URL: https://localhost:18443
+      CORS_ORIGINS: https://localhost:18443
+      SMTP_ENABLED: 'true'
+      SMTP_HOST: mailpit
+      SMTP_PORT: '1025'
+      SMTP_SECURITY: none
+      SMTP_FROM: no-reply@example.test
+      ACCOUNT_SECURITY_ENCRYPTION_KEY: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+      OUTBOUND_REQUIRE_ACTOR_CONTEXT: 'true'
+      VALIDATION_ALLOW_FIXTURES: 'no'
+      # This stack exercises transport/auth only; never sends a real map request.
+      AMAP_REST_BASE_URL: http://127.0.0.1:1
+    depends_on:
+      mailpit: {condition: service_started}
+  agent:
+    image: ${PUBLIC_VALIDATION_AGENT_IMAGE:-trip-public-validation-agent:20261107}
+  amap-fixture:
+    image: ${PUBLIC_VALIDATION_AGENT_IMAGE:-trip-public-validation-agent:20261107}
+  frontend:
+    image: ${PUBLIC_VALIDATION_FRONTEND_IMAGE:-trip-public-validation-frontend:20261107}
+    ports: !reset []
+    environment:
+      TRUSTED_PROXY_CIDR: ${PUBLIC_EDGE_TEST_CIDR:-10.253.245.0/28}
+    networks: [default, edge]
+  edge:
+    image: ${PUBLIC_EDGE_CADDY_IMAGE:-trip-planner-caddy:2.11.9-security1}
+    build:
+      context: ./deploy/images
+      dockerfile: caddy.Dockerfile
+      args:
+        VCS_REF: ${BUILD_REVISION:-unknown}
+    environment:
+      PUBLIC_HOSTNAME: localhost
+      ACME_EMAIL: edge-validation@example.test
+    ports: ['127.0.0.1:18082:80', '127.0.0.1:18443:443']
+    volumes:
+      - ./deploy/Caddyfile:/repo/deploy/Caddyfile:ro
+      - ./deploy/validation/Caddyfile.edge:/etc/caddy/Caddyfile:ro
+      - edge_certificates:/data
+      - edge_caddy_config:/config
+    networks: [edge, notifications]
+    depends_on: [frontend, webhook]
+  mailpit:
+    image: axllent/mailpit:v1.30.7
+    ports: ['127.0.0.1:18028:8025']
+    environment:
+      MP_SMTP_TLS_CERT: /tls/mailpit.crt
+      MP_SMTP_TLS_KEY: /tls/mailpit.key
+    volumes:
+      - ./.cache/public-edge-validation/tls:/tls:ro
+  webhook:
+    image: ${PUBLIC_VALIDATION_AGENT_IMAGE:-trip-public-validation-agent:20261107}
+    entrypoint: [python, /app/scripts/edge_notification_fixture.py]
+    environment: {APP_ENV: validation, VALIDATION_ALLOW_FIXTURES: 'yes'}
+    volumes: [./backend/scripts:/app/scripts:ro]
+    networks: [notifications]
+  alert-receiver:
+    image: ${PUBLIC_VALIDATION_AGENT_IMAGE:-trip-public-validation-agent:20261107}
+    entrypoint: [python, /app/scripts/operational_alert_receiver.py]
+    environment: {ALERT_INBOX: /app/runtime/alerts.jsonl}
+    volumes:
+      - ./backend/scripts:/app/scripts:ro
+      - edge_alert_inbox:/app/runtime
+    networks: [notifications]
+  alertmanager:
+    image: ${PUBLIC_EDGE_ALERTMANAGER_IMAGE:-trip-planner-alertmanager:0.34.1-security1}
+    build:
+      context: ./deploy/images
+      dockerfile: alertmanager.Dockerfile
+    environment: {SSL_CERT_FILE: /tls/combined-ca.pem}
+    volumes:
+      - ./.cache/public-edge-validation/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./.cache/public-edge-validation/tls:/tls:ro
+      - edge_alertmanager:/alertmanager
+    networks: [default, notifications]
+    depends_on: [edge, mailpit, alert-receiver]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:9093/-/ready]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  prometheus:
+    image: ${PUBLIC_EDGE_PROMETHEUS_IMAGE:-trip-planner-prometheus:3.15.1-security1}
+    build:
+      context: ./deploy/images
+      dockerfile: prometheus.Dockerfile
+    command: [--config.file=/etc/prometheus/prometheus.yml, --storage.tsdb.path=/prometheus, --storage.tsdb.retention.time=1d]
+    volumes:
+      - ./deploy/validation/prometheus.edge.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/validation/alerts.edge.yml:/etc/prometheus/edge-alerts.yml:ro
+      - edge_prometheus:/prometheus
+    networks: [default, notifications]
+    depends_on: [alertmanager, webhook]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:9090/-/ready]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  edge_certificates:
+  edge_caddy_config:
+  edge_alert_inbox:
+  edge_alertmanager:
+  edge_prometheus:
+networks:
+  edge:
+    ipam:
+      config: [{subnet: '${PUBLIC_EDGE_TEST_CIDR:-10.253.245.0/28}'}]
+  notifications:

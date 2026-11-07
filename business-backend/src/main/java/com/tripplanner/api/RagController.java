@@ -60,10 +60,16 @@ public class RagController {
   }
 
   @PostMapping("/rebuild")
-  public Object rebuild() {
+  public Object rebuild(@RequestBody(required=false) Map<String,Object> body) {
     if (!rebuild.tryLock()) throw new ApiException(409, "已有重建任务运行中");
     try {
-      return agent.post("/index/rebuild", Map.of());
+      var flags = new java.util.HashMap<String,Object>();
+      for (String name : java.util.List.of("preview","restart")) {
+        Object value=body==null?null:body.get(name);
+        if (value!=null && !(value instanceof Boolean)) throw new ApiException(422,"重建参数须为布尔值");
+        flags.put(name,Boolean.TRUE.equals(value));
+      }
+      return agent.post("/index/rebuild", flags);
     } finally {
       rebuild.unlock();
     }

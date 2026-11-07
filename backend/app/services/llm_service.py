@@ -13,35 +13,41 @@ logger = logging.getLogger(__name__)
 _llm_instance = None
 
 # LLM调用自动重试次数。
-# 设为0: 生成行程本身较慢(实测 deepseek-v4-flash 完整行程 ~27s),
-# 超时后再重试只会翻倍干等 (日志曾出现两次 Retrying 后仍 Request timed out)。
-# 关闭重试后, 单次成功即返回, 失败立即走备用计划, 不无谓等待。
+# Each provider attempt must reserve its own budget; SDK retries are disabled.
 _LLM_MAX_RETRIES = 0
 
 
-def _build_llm(timeout: int) -> ChatOpenAI:
-    """按给定超时创建 LLM；单日硬超时不污染默认单例。"""
-    settings = get_settings()
+def build_chat_model(*, model, api_key, base_url, timeout, max_tokens, kind,
+                     reasoning_effort, temperature=None) -> ChatOpenAI:
+    parameters = {"reasoning_effort": reasoning_effort} if model.startswith("gpt-6") else {"temperature": temperature}
     return ChatOpenAI(
-        model=settings.llm_model,
-        api_key=settings.llm_api_key or None,
-        base_url=settings.llm_base_url or None,
-        temperature=settings.llm_temperature,
+        model=model,
+        api_key=api_key or None,
+        base_url=base_url or "https://api.openai.com/v1",
+        use_responses_api=False,
+        stream_usage=True,
         timeout=timeout,
         max_retries=_LLM_MAX_RETRIES,
-        max_tokens=settings.llm_day_max_tokens,
-        http_client=httpx.Client(event_hooks=hooks("text"), follow_redirects=False),
-        http_async_client=httpx.AsyncClient(event_hooks=async_hooks("text"), follow_redirects=False),
+        max_completion_tokens=max_tokens,
+        http_client=httpx.Client(event_hooks=hooks(kind), follow_redirects=False),
+        http_async_client=httpx.AsyncClient(event_hooks=async_hooks(kind), follow_redirects=False),
+        **parameters,
     )
+
+
+def _build_llm(timeout: int) -> ChatOpenAI:
+    settings = get_settings()
+    return build_chat_model(model=settings.llm_model, api_key=settings.llm_api_key,
+        base_url=settings.llm_base_url, timeout=timeout, max_tokens=settings.llm_day_max_tokens,
+        kind="text", reasoning_effort=settings.llm_reasoning_effort, temperature=settings.llm_temperature)
 
 
 def get_llm(timeout: int | None = None) -> ChatOpenAI:
     """
     获取LLM实例(单例模式)
 
-    使用 langchain-openai 的 ChatOpenAI, 兼容任意 OpenAI 格式的 API 端点
-    (OpenAI / DeepSeek / Moonshot / 通义 / 智谱等)。
-    换模型只需修改 .env 中的 LLM_API_KEY / LLM_BASE_URL / LLM_MODEL_ID。
+    使用 langchain-openai 的 ChatOpenAI 连接 OpenAI 官方 API。
+    配置位于后端私有环境文件的 LLM_* 字段。
 
     Returns:
         ChatOpenAI实例

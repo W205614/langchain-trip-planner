@@ -41,7 +41,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       clearAuth()
       // 跳转到登录页 (仅当前不在登录页时)
-      if (error.config?.url !== '/api/auth/me' && !window.location.pathname.startsWith('/login')) {
+      if (!['/api/auth/me', '/api/auth/email/reset'].includes(error.config?.url || '') && !window.location.pathname.startsWith('/login')) {
         window.location.href = '/login'
       }
     }
@@ -52,8 +52,8 @@ apiClient.interceptors.response.use(
 /**
  * 用户注册 (成功自动登录, 返回 token)
  */
-export async function register(username: string, password: string): Promise<any> {
-  const response = await apiClient.post('/api/auth/register', { username, password }, { headers: { 'X-Auth-Mode': 'cookie' } })
+export async function register(username: string, password: string, email?: string): Promise<any> {
+  const response = await apiClient.post('/api/auth/register', { username, password, email: email || undefined }, { headers: { 'X-Auth-Mode': 'cookie' } })
   return response.data
 }
 
@@ -496,4 +496,16 @@ export function storeTripResult(response: TripPlanResponse): void {
   sessionStorage.setItem('tripPlanId', String(response.id || 0))
   sessionStorage.setItem('tripPlanVersion', String(response.version || 1))
   sessionStorage.setItem('tripQuality', JSON.stringify(response.quality || {}))
+}
+
+export const accountEmail = {
+  options: async () => (await apiClient.get('/api/auth/options')).data,
+  status: async () => (await apiClient.get('/api/account/email')).data,
+  bind: async (payload: { email: string; password: string; totp_code?: string }) => (await apiClient.post('/api/account/email', payload)).data,
+  resend: async () => (await apiClient.post('/api/account/email/resend')).data,
+  confirm: async (token: string) => (await apiClient.post('/api/auth/email/confirm', { token })).data,
+  requestReset: async (email: string) => (await apiClient.post('/api/auth/email/request-reset', { email })).data,
+  reset: async (payload: { token: string; new_password: string; totp_code?: string }) => (await apiClient.post('/api/auth/email/reset', payload)).data,
+  preferences: async () => (await apiClient.get('/api/account/notification-preferences')).data,
+  savePreferences: async (email_enabled: boolean) => (await apiClient.put('/api/account/notification-preferences', { email_enabled })).data,
 }

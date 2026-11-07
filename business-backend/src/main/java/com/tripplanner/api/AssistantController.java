@@ -20,6 +20,9 @@ import tools.jackson.databind.node.ObjectNode;
 public class AssistantController {
   @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
   @org.springframework.beans.factory.annotation.Autowired private AssistantClarificationService clarifications;
+  @org.springframework.beans.factory.annotation.Autowired private OutboundActorContext actors;
+  @org.springframework.beans.factory.annotation.Autowired private com.tripplanner.security.AccountAccess accounts;
+  @org.springframework.beans.factory.annotation.Autowired private org.springframework.jdbc.core.JdbcTemplate database;
   private final AssistantMapper conversations; private final HistoryMapper history;
   private final TaskService tasks; private final AgentClient agent; private final JsonMapper json;
   private final TransactionTemplate tx;
@@ -143,11 +146,13 @@ public class AssistantController {
     Runnable cancel=()->{var running=worker.get();if(running!=null)running.interrupt();};
     emitter.onCompletion(cancel); emitter.onTimeout(cancel); emitter.onError(ignored->cancel.run());
     String requestId=BusinessAuditService.safeRequestId(req.getHeader("X-Request-ID"));
+    String operation=actors.register("user",uid,"model");
     worker.set(Thread.startVirtualThread(()->{
-      try(var ignored=MDC.putCloseable("request_id",requestId)){
+      try(var ignored=MDC.putCloseable("request_id",requestId);var actorScope=MDC.putCloseable("outbound_operation",operation)){
         agent.stream("/capabilities/research/stream",Map.of("city",city,"query",content,"trip_context",context),
             Duration.ofSeconds(25),(event,data)->{
               try{
+                accounts.requireActive(uid);
                 if("result".equals(event)){
                   String answer=data.path("answer").asText("").strip();
                   if(!answer.isBlank())saveResearch(id,uid,answer,data);
@@ -277,10 +282,15 @@ public class AssistantController {
     conversations.message(new HashMap<>(Map.of("conversation_id",id,"user_id",uid,"role",role,"content",content,"action_type",action,"action_ref",ref)));
   }
   private void saveResearch(String id,long uid,String answer,tools.jackson.databind.JsonNode data){
+    tx.executeWithoutResult(status->{
+    database.queryForList("SELECT id FROM users WHERE id=? FOR SHARE",uid);
+    accounts.requireActive(uid);
+    owned(uid,id);
     var row=new HashMap<String,Object>(Map.of("conversation_id",id,"user_id",uid,"role","assistant","content",answer,"action_type","research","action_ref",""));
     var metadata=json.createObjectNode();
     for(String field:List.of("sources","answer_status","support_check","semantic_truth_status","data_classification"))if(data.has(field))metadata.set(field,data.path(field));
     row.put("result_json",json.writeValueAsString(metadata));conversations.message(row);
+    });
   }
   private ObjectNode request(Map<String,Object> row){
     var body=json.createObjectNode(); for(String f:List.of("departure_city","city","start_date","end_date","travel_days","transportation","accommodation","traveler_count","room_count","budget_total","free_text_input"))body.set(f,json.valueToTree(row.get(f)));

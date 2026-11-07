@@ -19,6 +19,11 @@ FROM nginx:1.30.6-alpine
 # Upstream Nginx tags can predate signed Alpine security package updates.
 RUN apk upgrade --no-cache
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/trip-common.conf
+RUN sed -i 's/X-Forwarded-Proto $scheme;/X-Forwarded-Proto $trip_request_scheme;/g' /etc/nginx/trip-common.conf
+COPY nginx-public.conf.template /etc/nginx/templates/default.conf.template
+ENV TRUSTED_PROXY_CIDR=127.0.0.1/32 \
+    NGINX_ENVSUBST_FILTER=TRUSTED_PROXY_CIDR
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80

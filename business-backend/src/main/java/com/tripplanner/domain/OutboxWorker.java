@@ -14,6 +14,7 @@ import tools.jackson.databind.json.JsonMapper;
 @org.springframework.context.annotation.DependsOn("singleInstance")
 public class OutboxWorker {
   @org.springframework.beans.factory.annotation.Autowired private SingleInstance singleInstance;
+  @org.springframework.beans.factory.annotation.Autowired private UserQuotaService userQuotas;
   private static final Logger log = LoggerFactory.getLogger(OutboxWorker.class);
 
   @org.springframework.beans.factory.annotation.Value("${WORKERS_ENABLED:true}")
@@ -175,6 +176,7 @@ public class OutboxWorker {
             if (current == null
                 || ((Number) current.get("version")).intValue() != version
                 || !Set.of("publishing", "failed").contains(current.get("status"))) return;
+            userQuotas.lockActive(((Number)current.get("submitted_by")).longValue());
             current.put("status", "published");
             current.put("next_version", version);
             knowledge.update(current);
@@ -200,6 +202,7 @@ public class OutboxWorker {
                 || ((Number) current.get("version")).intValue() != version
                 || !Set.of("queued", "processing", "failed").contains(current.get("status")))
               return;
+            userQuotas.lockActive(((Number)current.get("submitted_by")).longValue());
             current.put("status", "awaiting_review");
             current.put("page_count", result.path("pages").size());
             current.put("extracted_pages_json", result.path("pages").toString());

@@ -255,7 +255,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         settings = get_settings()
         day_timeout = min(settings.llm_timeout, settings.llm_day_timeout)
         day_chain = prompt_template | get_llm(timeout=day_timeout).bind(
-            max_tokens=settings.llm_day_max_tokens
+            max_completion_tokens=settings.llm_day_max_tokens
         )
 
         day_deadline = time.monotonic() + remaining(day_timeout)

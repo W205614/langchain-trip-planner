@@ -5,6 +5,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @Configuration
 public class Schedulers {
+  @Bean(name = "accountDataScheduler")
+  ThreadPoolTaskScheduler accountDataScheduler() {
+    var scheduler=new ThreadPoolTaskScheduler();scheduler.setPoolSize(1);scheduler.setThreadNamePrefix("account-data-");return scheduler;
+  }
   @Bean(name = "taskScheduler")
   ThreadPoolTaskScheduler taskScheduler() {
     var s = new ThreadPoolTaskScheduler();

@@ -56,6 +56,7 @@ public class TokenService {
       var user = users.byId(Long.parseLong(claims.getSubject()));
       Number ver = (Number) claims.getClaim("ver");
       if (user == null
+          || !"active".equals(user.get("account_state"))
           || ((Number) user.get("token_version")).intValue() != (ver == null ? 0 : ver.intValue()))
         throw new IllegalArgumentException();
       return user;

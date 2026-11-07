@@ -18,7 +18,8 @@ def wire(monkeypatch, content, media):
     monkeypatch.setenv("BUSINESS_URL","http://java.test")
     monkeypatch.setenv("INTERNAL_SERVICE_KEY","test-only-012345678901234567890123")
     monkeypatch.setattr(extraction,"get_settings",lambda:SimpleNamespace(vision_model="fixture-vision",vision_api_key="test",
-        llm_api_key="test",vision_base_url="http://fixture.test",llm_base_url="http://fixture.test",vision_timeout=10))
+        llm_api_key="test",vision_base_url="http://fixture.test",llm_base_url="http://fixture.test",vision_timeout=10,
+        llm_day_max_tokens=1800,vision_reasoning_effort="low"))
 
 
 def png():
@@ -29,12 +30,12 @@ def test_real_image_decoder_then_one_vision_call(monkeypatch):
     wire(monkeypatch,png(),"image/png")
     calls=[]
     def model(**kwargs):
-        assert kwargs["max_retries"]==0
+        assert kwargs["kind"]=="vision"
         def invoke(messages):
             calls.append(messages)
             return SimpleNamespace(content='{"summary":"test document","facts":["Check official opening times"]}')
         return SimpleNamespace(invoke=invoke)
-    monkeypatch.setattr(extraction,"ChatOpenAI",model)
+    monkeypatch.setattr(extraction,"build_chat_model",model)
     result=extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"test"})
     assert len(calls)==1 and len(result["pages"])==1
     assert "Check official opening times" in result["pages"][0]
@@ -42,13 +43,13 @@ def test_real_image_decoder_then_one_vision_call(monkeypatch):
 
 def test_declared_image_type_must_match_decoded_format(monkeypatch):
     wire(monkeypatch,png(),"image/jpeg")
-    monkeypatch.setattr(extraction,"ChatOpenAI",lambda **kwargs:pytest.fail("No model call on invalid input"))
+    monkeypatch.setattr(extraction,"build_chat_model",lambda **kwargs:pytest.fail("No model call on invalid input"))
     with pytest.raises(ValueError,match="format"):
         extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"test"})
 
 
 def test_corrupt_image_never_reaches_model(monkeypatch):
     wire(monkeypatch,b"\x89PNG\r\n\x1a\ninvalid", "image/png")
-    monkeypatch.setattr(extraction,"ChatOpenAI",lambda **kwargs:pytest.fail("No model call on invalid input"))
+    monkeypatch.setattr(extraction,"build_chat_model",lambda **kwargs:pytest.fail("No model call on invalid input"))
     with pytest.raises(Exception):
         extraction.extract({"document_id":1,"document_version":2,"city":"北京","title":"test"})

@@ -1,6 +1,6 @@
 """Version-one non-streaming wire requests; shared with Java as JSON Schema."""
 from typing import Literal, Any
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, StrictBool, model_validator
 
 
 class DocumentExtractRequest(BaseModel):
@@ -56,13 +56,23 @@ class EvidenceSnapshot(BaseModel):
     records: list[dict[str,Any]]
 
 
+class IndexRebuildRequest(BaseModel):
+    preview: StrictBool = False
+    restart: StrictBool = False
+
+
 class IndexRebuildResult(BaseModel):
     success: bool
-    message: str
+    message: str | None = None
     chunks: int = Field(ge=0)
     history_records: int | None = Field(default=None,ge=0)
     generation: str | None = None
+    preview: bool = False
+    embedding_identity: dict[str, Any] | None = None
+    source_fingerprint: str | None = None
+    estimated_embedding_requests: int | None = Field(default=None,ge=0)
+    input_utf8_bytes: int | None = Field(default=None,ge=0)
 
 
 WIRE_MODELS=(DocumentExtractRequest,DocumentExtractResult,DocumentIndexRequest,HistoryIndexRequest,
-    EvidenceVisibilityRequest,EvidenceVisibilityResult,EvidenceSnapshot,IndexRebuildResult)
+    EvidenceVisibilityRequest,EvidenceVisibilityResult,EvidenceSnapshot,IndexRebuildRequest,IndexRebuildResult)

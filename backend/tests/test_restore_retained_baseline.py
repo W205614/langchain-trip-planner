@@ -92,6 +92,12 @@ def test_candidate_upgrade_stops_renames_and_retains_baseline_without_removal(tm
     assert report["containers"] == [report["resources"][0]["name"], baseline["name"], candidate["name"]]
     assert report["passed"] is True and report["automatic_cleanup"] is False
     assert report["network_created"] is True
+    volume = next(resource for resource in report["resources"] if resource["role"] == "isolated_postgres_data")
+    assert volume["created"] is True and volume["retained_on_stop"] is True
+    assert report["resources"][0]["data_volume"] == volume["name"]
+    assert ("volume", "create", "--label", "codex.task=trip-planner-final", volume["name"]) in calls
+    assert any(f"type=volume,source={volume['name']},target=/var/lib/postgresql/data" in command for command in calls)
+    assert not any("--tmpfs" in command for command in calls)
     assert report["rollback"]["old_image_on_upgraded_schema"] == "not_tested"
     assert report["rollback"]["data_rollback_verified"] is False
     assert report["dataset_identity_guards"]["flyway_history_unchanged"] is True

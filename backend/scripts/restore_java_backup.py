@@ -137,13 +137,13 @@ def run_clone_identity_guards(output, suffix, image, values, environment, backen
     return result
 
 
-def restore(backup,output,candidate_image=None,network_subnet=None):
+def restore(backup,output,candidate_image=None,network_subnet=None,object_config=None):
     backup=backup.resolve();output=output.resolve()
     if output==ROOT or ROOT in output.parents or output==backup or backup in output.parents:
         raise ValueError("Restore files into a fresh directory outside repository and backup")
     manifest=json.loads((backup/"manifest.json").read_text(encoding="utf-8"))
     if manifest.get("schema")=="Java/Flyway-v2":
-        return restore_v2(backup,output,candidate_image,network_subnet)
+        return restore_v2(backup,output,candidate_image,network_subnet,object_config)
     if candidate_image:
         raise ValueError("Candidate upgrade verification requires a v2 backup")
     if manifest.get("schema")!="Java/Flyway":raise ValueError("Not a Java backup")
@@ -182,22 +182,28 @@ def restore(backup,output,candidate_image=None,network_subnet=None):
     print(json.dumps(report))
 
 
-def restore_v2(backup,output,candidate_image=None,network_subnet=None):
+def restore_v2(backup,output,candidate_image=None,network_subnet=None,object_config=None):
     manifest=validate_manifest(backup)
+    if manifest.get("object_snapshot") and object_config is None:
+        raise ValueError("S3 restore requires --object-config for an explicit isolated target")
+    if object_config is not None and not manifest.get("object_snapshot"):
+        raise ValueError("This backup has no S3 snapshot")
     output.mkdir(parents=True,exist_ok=False)
     suffix=uuid4().hex[:12]
     postgres="trip-final-restore-pg-"+suffix
+    postgres_volume="trip-final-restore-data-"+suffix
     backend="trip-final-restore-backend-"+suffix
     preserved="trip-final-restore-baseline-"+suffix
     network="trip-final-restore-"+suffix
     label="codex.task=trip-planner-final"
     baseline={"role":"baseline_backend","name":backend,"original_name":backend,
               "preserved_name":preserved,"image":manifest["images"]["backend"],"created":False}
-    database_resource={"role":"isolated_postgres","name":postgres,"image":manifest["images"]["postgres"],"created":False}
+    database_resource={"role":"isolated_postgres","name":postgres,"image":manifest["images"]["postgres"],"created":False,"data_volume":postgres_volume}
+    volume_resource={"role":"isolated_postgres_data","name":postgres_volume,"created":False,"retained_on_stop":True}
     report={"checksums_verified":True,"passed":False,"stage":"extract_files","production_configuration_changed":False,
             "containers":[],"network":network,"network_created":False,"files":str(output),
-            "resources":[database_resource,baseline],"mount_archives":list(manifest["mounts"]),
-            "automatic_cleanup":False,"resource_retention":"All created clone containers and the isolated network are retained until separately authorized cleanup."}
+            "resources":[database_resource,baseline,volume_resource],"mount_archives":list(manifest["mounts"]),
+            "automatic_cleanup":False,"resource_retention":"All created clone containers, PostgreSQL data volume and the isolated network are retained until separately authorized cleanup."}
 
     def save():
         (output/"restore-report.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
@@ -221,12 +227,17 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None):
                         raise ValueError("Restore subnet overlaps an existing Docker network")
             network_args=["--subnet",str(requested)]
         stage("create_isolated_network")
-        docker("network","create","--internal","--label",label,*network_args,network)
+        isolation=[] if object_config is not None else ["--internal"]
+        docker("network","create",*isolation,"--label",label,*network_args,network)
         report["network_created"]=True
+        report["object_restore_network_egress"]=object_config is not None
+        stage("create_isolated_postgres_volume")
+        docker("volume","create","--label",label,postgres_volume)
+        volume_resource["created"]=True;save()
         stage("start_isolated_postgres")
         database_resource["creation_attempted"]=True;save()
         docker("run","-d","--name",postgres,"--label",label,"--label","com.docker.compose.project=trip-final-restore",
-               "--label","com.docker.compose.service=restore-postgres","--network",network,"--tmpfs","/var/lib/postgresql/data:rw,size=512m",
+               "--label","com.docker.compose.service=restore-postgres","--network",network,"--mount",f"type=volume,source={postgres_volume},target=/var/lib/postgresql/data",
                "--memory","768m","--cpus","1","--pids-limit","128",
                "-e","POSTGRES_USER=trip","-e","POSTGRES_PASSWORD=restore-isolated-only",
                "-e","POSTGRES_DB=trip_restore",manifest["images"]["postgres"])
@@ -250,6 +261,17 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None):
         values=dict(value.split("=",1) for value in json.loads((backup/"runtime/backend.json").read_text()) if "=" in value)
         values.update(JDBC_DATABASE_URL=f"jdbc:postgresql://{postgres}:5432/trip_restore",POSTGRES_USER="trip",
                       POSTGRES_PASSWORD="restore-isolated-only",WORKERS_ENABLED="false",UPLOAD_DIR="/data/uploads")
+        if object_config is not None:
+            from storage_objects import restore_snapshot, apply_location_map
+            stage("verify_original_clone_before_object_remap")
+            report["dataset_identity"]=enroll_clone_dataset(backup,output,manifest,postgres,values)
+            values["DATASET_ID"]=report["dataset_identity"]["dataset_id"]
+            stage("restore_objects_to_explicit_target")
+            values,report["object_restore"]=restore_snapshot(backup,output,manifest["images"]["backend"],network,values,object_config)
+            report["object_restore"]["database_locations_remapped"]=apply_location_map(postgres,"trip_restore",output/"object-location-map.json")
+            # Original rows were verified above. Only the explicit location updates are
+            # now the baseline for a subsequent candidate/schema compatibility check.
+            expected=database_summary(postgres,"trip_restore")
         environment.update(values)
         def backend_args(name,uploads,settings):
             args=["docker","run","-d","--name",name,"--label",label,"--label","com.docker.compose.project=trip-final-restore",
@@ -257,6 +279,7 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None):
                   "--memory","1g","--cpus","2","--pids-limit","256",
                   "--log-driver","json-file","--log-opt","max-size=10m","--log-opt","max-file=3",
                   "-v",str(uploads)+":/data/uploads:ro"]
+            if object_config is not None:args.extend(["--add-host","host.docker.internal:host-gateway"])
             args.extend(value for key in settings for value in ("-e",key))
             return args
         args=backend_args(backend,output/"knowledge_uploads",values)
@@ -294,7 +317,7 @@ def restore_v2(backup,output,candidate_image=None,network_subnet=None):
                 "boundary":"Starting the retained old image uses the candidate-upgraded database; this is not a data rollback and compatibility is not guaranteed. Restore the verified backup into a separate fresh clone to verify an actual database rollback.",
                 "inspection_restart_command":["docker","start",preserved]}
             stage("enroll_verified_clone_dataset")
-            report["dataset_identity"]=enroll_clone_dataset(backup,output,manifest,postgres,values)
+            if object_config is None:report["dataset_identity"]=enroll_clone_dataset(backup,output,manifest,postgres,values)
             values.update(DATASET_ID=report["dataset_identity"]["dataset_id"],DATASET_ENROLL_NEW="false",
                           APP_ENV="production",VALIDATION_ALLOW_FIXTURES="no")
             environment.update(values)
@@ -343,4 +366,5 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser();parser.add_argument("--backup",required=True,type=Path);parser.add_argument("--output",required=True,type=Path)
     parser.add_argument("--candidate-image",help="Verify a candidate migration only in the restored clone")
     parser.add_argument("--network-subnet",help="Optional unused CIDR when Docker's automatic address pools are exhausted")
-    args=parser.parse_args();restore(args.backup,args.output,args.candidate_image,args.network_subnet)
+    parser.add_argument("--object-config",type=Path,help="Private destination-only S3 env file; required for backups containing objects")
+    args=parser.parse_args();restore(args.backup,args.output,args.candidate_image,args.network_subnet,args.object_config)

@@ -49,7 +49,24 @@ class DeploymentMigrationGuardTest {
     var source=fresh();
     var flyway=Flyway.configure().dataSource(source).locations("classpath:db/migration").load();
     new DeploymentMigrationGuard().verifiedDatasetMigration(id,"production",true,uploads.toString()).migrate(flyway);
-    assertEquals("14",new JdbcTemplate(source).queryForObject("SELECT version FROM flyway_schema_history ORDER BY installed_rank DESC LIMIT 1",String.class));
+    assertEquals(0,flyway.info().pending().length);
+    assertTrue(new JdbcTemplate(source).queryForObject("SELECT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_name='knowledge_documents' AND column_name='storage_backend')",Boolean.class));
     assertEquals(id,Files.readString(uploads.resolve(".dataset-id")).strip());
+  }
+  @Test void changedS3OriginRejectsBeforeFlywayAndBeforeAnyRemoteProbe()throws Exception {
+    var source=fresh();var db=new JdbcTemplate(source);
+    var baseline=Flyway.configure().dataSource(source).locations("classpath:db/migration").load();baseline.migrate();
+    db.update("INSERT INTO deployment_identity(id,dataset_id) VALUES(1,?)",id);
+    long uid=db.queryForObject("INSERT INTO users(username,hashed_password) VALUES(?,'fixture') RETURNING id",Long.class,"origin_"+UUID.randomUUID());
+    db.update("INSERT INTO knowledge_documents(submitted_by,city,title,original_filename,stored_path,sha256,media_type,storage_backend,storage_bucket,storage_key,storage_origin) VALUES(?,'北京','来源','fixture.pdf','fixture.pdf',?,'application/pdf','s3','original-bucket','uploads/fixture.pdf',?)",uid,"0".repeat(64),"a".repeat(64));
+    DeploymentIdentity.verifyMarker(uploads,id,true);
+    var env=new org.springframework.mock.env.MockEnvironment().withProperty("UPLOAD_STORAGE_BACKEND","s3").withProperty("S3_BUCKET","other-bucket").withProperty("S3_ENDPOINT","https://never-contact.example.invalid");
+    try(var objects=new ObjectStorageService(env)){
+      var flyway=spy(baseline);String before=db.queryForObject("SELECT max(installed_rank)::text FROM flyway_schema_history",String.class);
+      var strategy=new DeploymentMigrationGuard().verifiedObjectStorageMigration(id,"production",false,uploads.toString(),objects);
+      var failure=assertThrows(IllegalStateException.class,()->strategy.migrate(flyway));
+      assertTrue(failure.getMessage().contains("S3 storage origin"));verify(flyway,never()).migrate();
+      assertEquals(before,db.queryForObject("SELECT max(installed_rank)::text FROM flyway_schema_history",String.class));
+    }
   }
 }

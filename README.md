@@ -68,7 +68,7 @@ python -m pip install python-dotenv
 |---|---|---|
 | `backend/.env` | `LLM_MODEL_ID` | 模型供应商提供的文本模型名称 |
 | `backend/.env` | `LLM_API_KEY` | 对应的模型 API Key |
-| `backend/.env` | `LLM_BASE_URL` | 供应商提供的 OpenAI 兼容 API 基础地址 |
+| `backend/.env` | `LLM_BASE_URL` | OpenAI 官方 API：`https://api.openai.com/v1` |
 | `backend/.env` | `AMAP_REST_API_KEY` | 高德 Web 服务 Key，供 Java 使用 |
 | `backend/.env` | `AMAP_MCP_API_KEY` | 高德 MCP 使用的 Web 服务 Key；开发时可与上一项相同 |
 | `frontend/.env` | `VITE_AMAP_WEB_JS_KEY` | 高德 Web 端（JS API）Key，用于显示地图 |
@@ -100,6 +100,26 @@ docker compose ps
 3. 需要调整时，选择活动或日期，预览变化并确认。满意后可导出 PNG、PDF 或离线 HTML。
 
 ## 开发与运维
+
+### OpenAI 模型与公开运营
+
+文本规划、改排和问答默认使用 `gpt-6.1-sol`，图文事实提取也使用该模型；RAG 文档和查询向量使用 OpenAI 官方 `text-embedding-3-large`（3072 维）。三类请求均默认连接 `https://api.openai.com/v1`，视觉和 Embedding 密钥留空时复用后端 `LLM_API_KEY`。高德继续提供地图、POI、天气及路线，Chroma、关键词召回和时间求解在本地运行。
+
+配置切换、真实请求检查和旧索引迁移见 [OpenAI 接入与索引迁移](docs/operations/openai-migration.md)。现有第三方端点生成的向量必须通过新一代索引重建迁移；即使模型名相同，也不能直接混用。历史验收材料保留原供应商名称。
+
+| 能力 | 交付方式与外部条件 |
+|---|---|
+| 邮箱注册、验证、密码找回、通知订阅 | 已实现；公开模式需配置可用的 TLS SMTP、发件域和 HTTPS 站点地址，参见 [账号与邮件](docs/operations/email-accounts.md) |
+| 用户停用、配额、反馈、个人数据导出与注销 | 已实现前后端闭环，参见 [运营与数据管理](docs/operations/public-operations.md) |
+| 本地／S3 原文件存储和迁移 | 已实现真实 S3 SDK 适配；Bucket、权限、端点及凭据由部署者提供，参见 [对象存储](docs/operations/object-storage.md) |
+| HTTPS、外部告警、云 PostgreSQL | 提供部署配置与联调步骤；域名、DNS、网络和平台账号仍需实际配置，参见 [公开部署](docs/operations/public-deployment.md) |
+| 成套备份、加密归档和隔离恢复 | 提供工具与恢复流程，参见 [公开部署](docs/operations/public-deployment.md#备份与恢复)；本机原有备份任务仍停用 |
+
+新安装的公开环境使用独立配置及 `docker-compose.production.yml`、`docker-compose.public.yml`；已有本机环境沿用原安装路径。公网模板要求邮箱验证和管理员 MFA。账号注销会撤回本人共享行程与投稿，索引和文件清理完成前显示处理中；已下载的导出文件、其他人的独立副本及已有备份按各自保留策略管理。
+
+源码、离线集成测试、真实模型抽样与真实云平台联调分别提供证据。SMTP/S3 测试替身通过不等于任何云厂商均已验证，也不提供多实例高可用或真实预订支付。
+
+本次实现与验证边界见[公开运营验收记录](docs/evidence/public-operations-20261107/report.md)：真实行程样本仍存在事实缺口，日常全量索引尚未迁移；云端连接及正式发布需按手册验收。
 
 - [四服务日常操作与常见问题](docs/operations/single-host.md#首次安装后的四服务维护) · [迁移和升级](docs/operations/java-migration.md)
 - [时间规划与任务恢复](docs/operations/final-planning.md) · [协作与费用](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)

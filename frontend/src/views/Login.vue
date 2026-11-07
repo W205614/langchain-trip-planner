@@ -52,6 +52,10 @@
           <a-input v-model:value="form.totp_code" placeholder="验证器中的6位数字" :maxlength="6" inputmode="numeric" autocomplete="one-time-code" />
         </a-form-item>
 
+        <a-form-item v-if="isRegister && options.email_available" label="邮箱" name="email" :rules="[{ required: options.registration_mode === 'email_verified', type: 'email', message: '请填写有效邮箱' }]">
+          <a-input v-model:value="form.email" type="email" autocomplete="email" placeholder="用于验证与密码找回" />
+        </a-form-item>
+        <a-alert v-if="isRegister && options.registration_mode === 'email_verified'" type="info" message="注册后请验证邮箱，验证前可登录并查看已有资料。" show-icon style="margin-bottom:16px" />
         <a-form-item v-if="isRegister" name="confirmPassword">
           <a-input-password
             v-model:value="form.confirmPassword"
@@ -82,6 +86,7 @@
         </a-button>
       </div>
 
+      <a-button v-if="!isRegister && options.email_available" type="link" @click="router.push('/account/email')">通过已验证邮箱找回密码</a-button>
       <a-button v-if="!isRegister" type="link" @click="recovering = !recovering">使用离线恢复码重设密码</a-button>
       <a-form v-if="recovering" :model="{ username: form.username, recoveryCode, newPassword }" layout="vertical" @finish="recoverAccount">
         <p>使用你预先保存的一次性恢复码。恢复后旧登录、恢复码及二次验证都会失效。</p>
@@ -99,10 +104,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { login, register, accountSecurity } from '@/services/api'
+import { login, register, accountSecurity, accountEmail } from '@/services/api'
 import { setAuth } from '@/services/auth'
 
 const router = useRouter()
@@ -112,12 +117,15 @@ const loading = ref(false)
 const recovering = ref(false)
 const recoveryCode = ref('')
 const newPassword = ref('')
+const options = ref({ registration_mode: 'legacy', email_available: false })
+onMounted(async () => { try { options.value = await accountEmail.options() } catch { /* Existing login stays usable while capability lookup is unavailable. */ } })
 
 const form = reactive({
   username: '',
   password: '',
   confirmPassword: '',
-  totp_code: ''
+  totp_code: '',
+  email: ''
 })
 
 const toggleMode = () => {
@@ -140,13 +148,13 @@ const handleSubmit = async () => {
   loading.value = true
   try {
     const resp = isRegister.value
-      ? await register(form.username, form.password)
+      ? await register(form.username, form.password, form.email)
       : await login(form.username, form.password, form.totp_code)
     setAuth(resp.access_token, resp.username, resp.is_admin)
     message.success(isRegister.value ? '注册成功!' : '登录成功!')
     // 登录后跳回来源页；直接登录或注册默认进入旅行规划首页。
     const requested = (route.query.redirect as string) || '/'
-    const redirect = resp.mfa_setup_required ? '/account/security' : requested.startsWith('/') && !requested.startsWith('//') ? requested : '/'
+    const redirect = resp.mfa_setup_required || isRegister.value && options.value.registration_mode === 'email_verified' ? '/account/security' : requested.startsWith('/') && !requested.startsWith('//') ? requested : '/'
     router.push(redirect)
   } catch (error: any) {
     message.error(error.response?.data?.detail || error.message || '操作失败')

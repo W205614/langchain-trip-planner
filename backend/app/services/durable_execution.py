@@ -10,6 +10,8 @@ from functools import wraps
 from threading import RLock
 
 execution_id_var = ContextVar("durable_execution_id", default=None)
+outbound_execution_var = ContextVar("outbound_execution_id", default=None)
+outbound_operation_var = ContextVar("outbound_operation", default=None)
 journal_cache_var = ContextVar("durable_journal_cache", default=None)
 
 
@@ -28,7 +30,7 @@ def durable_execution(identity):
         journal_cache_var.reset(cache_token)
 
 
-def _call(method, path, payload=None):
+def _call(method, path, payload=None, *, accounting=False):
     import httpx
     from .execution import remaining
     base = os.environ.get("BUSINESS_URL", "").rstrip("/")
@@ -37,25 +39,43 @@ def _call(method, path, payload=None):
         raise RuntimeError("Durable execution requires Java journal and service authentication")
     # Neither SDK retry nor a redirect can send a paid call without another
     # reservation; this internal request is deliberately not hooked as outbound.
-    with httpx.Client(timeout=min(10, remaining()), follow_redirects=False) as client:
+    with httpx.Client(timeout=5 if accounting else min(10, remaining()), follow_redirects=False) as client:
         response = client.request(method, base+path, headers={"X-Service-Key":key}, json=payload)
         response.raise_for_status()
         return response.json() if response.content else {}
 
 
 def reserve_outbound(kind, *, reserved_tokens=None,map_protocol="rest"):
-    identity = execution_id_var.get()
+    identity = execution_id_var.get() or outbound_execution_var.get()
+    operation = outbound_operation_var.get()
     # Capabilities and indexing also require the central acceptance ledger when a
     # run is pinned. Outside controlled runs, old v1 deployments remain compatible.
     required = os.getenv("OUTBOUND_LEDGER_REQUIRED", "false").lower() in {"1","true","yes"}
-    if identity is None and not os.getenv("FINAL_RUN_ID") and not os.getenv("FINAL_ACCEPTANCE_RUN_ID") and not required:
+    if identity is None and operation is None and not os.getenv("FINAL_RUN_ID") and not os.getenv("FINAL_ACCEPTANCE_RUN_ID") and not required:
         return
     payload={"execution_id":identity,"kind":"text" if kind=="vision" else kind,"request_key":str(uuid4())}
+    if operation:
+        payload["operation_id"] = operation
     if reserved_tokens is not None:
         payload["reserved_tokens"]=reserved_tokens
     if kind=="amap":payload["map_protocol"]=map_protocol
     # The business service pins the campaign. Caller-provided run IDs never select a budget.
-    _call("POST", "/internal/v2/outbound/reserve",payload)
+    receipt=_call("POST", "/internal/v2/outbound/reserve",payload)
+    return {"request_key":payload["request_key"],"run_id":receipt.get("run_id","")}
+
+
+def report_outbound_usage(receipt, usage):
+    if not receipt or not isinstance(usage,dict):return
+    inputs=usage.get("prompt_tokens",usage.get("input_tokens"))
+    outputs=usage.get("completion_tokens",usage.get("output_tokens",0))
+    if type(inputs) is not int or type(outputs) is not int or min(inputs,outputs)<0:return
+    import httpx
+    try:
+        _call("POST","/internal/v2/outbound/report",{**receipt,"input_tokens":inputs,"output_tokens":outputs},accounting=True)
+    except (httpx.HTTPError,TimeoutError) as error:
+        # The provider already answered. A reporting outage must not initiate another paid call.
+        import logging
+        logging.getLogger(__name__).warning("supplier_usage_report_failed error_type=%s; reservation remains unreported",type(error).__name__)
 
 
 def input_hash(request, original=None, instruction="", day_index=None):
@@ -77,7 +97,8 @@ def compatibility():
     from .time_planner import RULE_VERSION
     cfg=get_settings()
     prompt_hash=hashlib.sha256((Path(__file__).parents[1]/"agents"/"prompts.py").read_bytes()).hexdigest()
-    return {"protocol":2, "rules":RULE_VERSION, "model":cfg.llm_model,"temperature":cfg.llm_temperature,
+    return {"protocol":2, "rules":RULE_VERSION, "model":cfg.llm_model,"temperature":None if cfg.llm_model.startswith("gpt-6") else cfg.llm_temperature,
+        "reasoning_effort":cfg.llm_reasoning_effort,"api":"chat_completions",
         "max_tokens":cfg.llm_day_max_tokens,"embedding_model":cfg.embedding_model,"prompt":prompt_hash,"schema":"planning-v1"}
 
 

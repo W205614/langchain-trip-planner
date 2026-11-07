@@ -19,3 +19,6 @@ docs/evidence/single-host-20261031/** -text whitespace=trailing-space,space-befo
 docs/evidence/native-gettext-20261031/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/sqlite-photos-20261105/** -text
 docs/evidence/format-review-20261105/** -text
+contracts/openapi-3.1.schema.json -text
+contracts/openapi-3.1.LICENSE -text
+docs/evidence/public-operations-20261107/codeql/** -text

@@ -12,7 +12,7 @@ class TokenServiceTest {
   final String secret="isolated-token-unit-key-01234567890123456789";
   @Test void revocationStoreFailureIs503WhileBadSignaturesAndExpiredTokensRemain401(){
     var users=mock(UserMapper.class);var tokens=new TokenService(secret,120,users);
-    var user=Map.<String,Object>of("id",1L,"token_version",0);String signed=tokens.issue(user);
+    var user=Map.<String,Object>of("id",1L,"token_version",0,"account_state","active");String signed=tokens.issue(user);
     when(users.byId(1L)).thenThrow(new DataAccessResourceFailureException("isolated database outage"));
     var outage=assertThrows(ApiException.class,()->tokens.verify(signed));assertEquals(503,outage.status);assertEquals("AUTH_STORE_UNAVAILABLE",outage.code);
     var forged=new TokenService("different-isolated-secret-01234567890123456789",120,users).issue(user);

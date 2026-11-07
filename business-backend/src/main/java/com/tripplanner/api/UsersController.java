@@ -21,19 +21,20 @@ public class UsersController {
   private final BusinessAuditService audit;
   private final AccountSecurityService security;
   private final BrowserSession browser;
+  private final EmailAccountService emails;
 
   public UsersController(UserMapper users, TokenService tokens, JsonMapper json, BusinessAuditService audit,
-      AccountSecurityService security,BrowserSession browser) {
+      AccountSecurityService security,BrowserSession browser, EmailAccountService emails) {
     this.users = users;
     this.tokens = tokens;
     this.json = json;
     this.audit = audit;
-    this.security=security;this.browser=browser;
+    this.security=security;this.browser=browser;this.emails=emails;
   }
 
   public record Registration(
       @NotNull @Size(min = 3, max = 32) String username,
-      @NotNull @Size(min = 6, max = 64) String password) {}
+      @NotNull @Size(min = 6, max = 64) String password, @Email @Size(max=254) String email) {}
 
   public record Login(@NotNull @Size(max=64) String username, @NotNull @Size(max=128) String password,@Size(max=6) String totp_code) {}
 
@@ -73,6 +74,7 @@ public class UsersController {
   }
 
   @PostMapping("/auth/register")
+  @org.springframework.transaction.annotation.Transactional
   public Object register(@Valid @RequestBody Registration input,HttpServletRequest req,HttpServletResponse res) {
     AccountSecurityService.validatePassword(input.password(),input.username());
     var row = new HashMap<String, Object>();
@@ -83,6 +85,7 @@ public class UsersController {
     } catch (DuplicateKeyException ex) {
       throw new ApiException(409, "用户名已存在");
     }
+    emails.registered(((Number)row.get("id")).longValue(),input.email());
     return token(users.byId(((Number) row.get("id")).longValue()),req,res);
   }
 
@@ -103,10 +106,7 @@ public class UsersController {
 
   @GetMapping("/auth/me")
   public Object me(HttpServletRequest req) {
-    var row = new LinkedHashMap<>(user(req));
-    row.remove("hashed_password");
-    row.remove("token_version");
-    return row;
+    return AccountAccess.publicUser(user(req));
   }
 
   @GetMapping("/preferences/me")

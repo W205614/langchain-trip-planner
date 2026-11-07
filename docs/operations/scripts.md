@@ -15,6 +15,12 @@
 | [enroll_dataset.py](../../backend/scripts/enroll_dataset.py) | 既有数据首次登记，核对停止写入的挂载与备份 |
 | [existing_data_rehearsal.py](../../backend/scripts/existing_data_rehearsal.py) | 有私有备份时准备升级与回滚克隆演练 |
 | [automated_maintenance.py](../../backend/scripts/automated_maintenance.py) | 检查指定项目的维护配置；执行备份或恢复调度需维护窗口 |
+| [openai_check.py](../../backend/scripts/openai_check.py) | 检查官方模型访问；显式 `--live` 时用持久预算验证文本、视觉和 Embedding |
+| [rag_migrate.py](../../backend/scripts/rag_migrate.py) | 管理员预览／续跑分代重建，旧索引保留 |
+| [storage_objects.py](../../backend/scripts/storage_objects.py) | 成套快照导出 S3 文件及恢复后克隆库位置映射 |
+| [restic_archive.py](../../backend/scripts/restic_archive.py) | 使用 restic 0.19.1 加密归档已校验备份，恢复到新目录 |
+| [prepare_external_alerts.py](../../backend/scripts/prepare_external_alerts.py) | 生成私有 Alertmanager 邮件／Webhook 配置，不实际发送 |
+| [public_edge_acceptance.py](../../backend/scripts/public_edge_acceptance.py) | 专用隔离栈验证 HTTPS、可信代理、CSRF、限流和告警投递故障恢复 |
 
 ## 构建与契约（按 Dockerfile 或契约更新流程调用）
 

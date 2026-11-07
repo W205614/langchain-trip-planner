@@ -24,6 +24,22 @@ paths = ['''(^|/)business-backend/src/test/java/com/tripplanner/SecurityOptimiza
 regexTarget = "secret"
 regexes = ['''^AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=$''']
 
+[[allowlists]]
+description = "Exact public account test keys; both test path and literal value must match"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)business-backend/src/test/java/com/tripplanner/(EmailAccountIntegrationTest|PublicActorIntegrationTest)\.java$''']
+regexTarget = "secret"
+regexes = ['''^(AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=|actor-test-jwt-012345678901234567890123456789|actor-test-internal-012345678901234567890123456789)$''']
+
+[[allowlists]]
+description = "Public dummy AES key in isolated browser stacks only"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docker-compose\.public-(e2e|edge-validation)\.yml$''']
+regexTarget = "secret"
+regexes = ['''^(MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=?|0123456789abcdef0123456789abcdef)$''']
+
 
 [[allowlists]]
 description = "Exact frozen approved image fingerprints; path AND literal public SHA256, not arbitrary hashes or file exclusion"

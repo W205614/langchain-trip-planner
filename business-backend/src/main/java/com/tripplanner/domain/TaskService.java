@@ -41,6 +41,8 @@ public class TaskService {
   @org.springframework.beans.factory.annotation.Autowired private PlanningInputService planning;
   @org.springframework.beans.factory.annotation.Autowired private ExecutionGovernanceService governance;
   @org.springframework.beans.factory.annotation.Autowired private SingleInstance singleInstance;
+  @org.springframework.beans.factory.annotation.Autowired private com.tripplanner.security.AccountAccess accountAccess;
+  @org.springframework.beans.factory.annotation.Autowired private UserQuotaService userQuotas;
 
   @Value("${WORKERS_ENABLED:true}")
   private boolean workersEnabled;
@@ -101,6 +103,7 @@ public class TaskService {
   private ObjectNode submit(
       long uid, ObjectNode input, String key, String requestId, ObjectNode revision,String resumeParent) {
     if (closing) throw new ApiException(503, "服务正在停止，请稍后重试", "PROCESS_INTERRUPTED");
+    accountAccess.requireVerified(uid);
     if(workersEnabled&&!singleInstance.owned())throw new ApiException(503,"调度器正在恢复，请稍后重试","SCHEDULER_OWNERSHIP_LOST");
     ObjectNode body = TripRequests.normalize(input);
     if (revision != null) {
@@ -144,9 +147,9 @@ public class TaskService {
     }
     if (!agent.available())
       throw new ApiException(503, "智能规划暂不可用，传统行程功能仍可使用", "AGENT_UNAVAILABLE");
-    if (tasks.activeUser(uid) >= userLimit)
+    if (tasks.activeUser(uid) >= userQuotas.limit(uid,"active_tasks"))
       throw new ApiException(429, "您的待处理任务过多", "USER_QUEUE_FULL");
-    if (tasks.daily() >= globalDaily || tasks.dailyUser(uid) >= userDaily)
+    if (tasks.daily() >= globalDaily || tasks.dailyUser(uid) >= userQuotas.limit(uid,"daily_tasks"))
       throw new ApiException(429, "今日规划任务额度已用完（UTC日界）", "DAILY_TASK_LIMIT");
     if (tasks.active() >= queueLimit) throw new ApiException(429, "规划队列已满", "TASK_QUEUE_FULL");
     String id = UUID.randomUUID().toString();
@@ -165,10 +168,10 @@ public class TaskService {
             requestId == null ? "" : requestId.substring(0, Math.min(64, requestId.length())),
             "deadline_at",
             Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).plusSeconds(timeout)));
-    if(resumeParent==null) tasks.insert(taskData);
-    else tx.executeWithoutResult(s->{
+    tx.executeWithoutResult(s->{
+      userQuotas.lockActive(uid);
       tasks.insert(taskData);
-      governance.linkResume(id,resumeParent);
+      if(resumeParent!=null)governance.linkResume(id,resumeParent);
     });
     return response(uid, id, false);
   }
@@ -520,6 +523,7 @@ public class TaskService {
     tx.executeWithoutResult(
         status -> {
           if(workersEnabled&&!singleInstance.owned())throw new ApiException(503,"调度器所有权丢失，旧执行已拒绝写回","SCHEDULER_OWNERSHIP_LOST");
+          userQuotas.lockActive(((Number)task.get("user_id")).longValue());
           if (tasks.finish(task) != 1) {
             status.setRollbackOnly();
             return;

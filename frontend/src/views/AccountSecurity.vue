@@ -13,6 +13,21 @@
       </a-form>
     </section>
     <section>
+      <h2>邮箱与邮件提醒</h2>
+      <a-alert v-if="emailState.verification_required && !emailState.verified" type="warning" message="请先验证邮箱，验证后可使用AI、上传和发布功能。" show-icon />
+      <p>当前邮箱：{{ emailState.email || '尚未绑定' }}；{{ emailState.verified ? '已验证' : '未验证' }}。</p>
+      <p v-if="emailState.pending_email">待验证邮箱：{{ emailState.pending_email }}。请使用最新邮件中的链接。</p>
+      <template v-if="emailState.available">
+        <a-form :model="{ nextEmail }" layout="vertical" @finish="bindEmail">
+          <a-form-item label="绑定或更换邮箱" name="nextEmail" :rules="[{ required: true, type: 'email', message: '请填写有效邮箱' }]"><a-input v-model:value="nextEmail" aria-label="绑定或更换邮箱" type="email" autocomplete="email" /></a-form-item>
+          <p>绑定或更换需要上方的当前密码及二次验证码；新邮箱验证后才会替换原邮箱。</p>
+          <a-space><a-button html-type="submit" :loading="busy">发送验证邮件</a-button><a-button :loading="busy" :disabled="!emailState.pending_email && (!emailState.email || emailState.verified)" @click="resendEmail">重新发送</a-button></a-space>
+        </a-form>
+        <p><a-checkbox :checked="notification.email_enabled" :disabled="!emailState.verified || busy" @change="saveNotification($event.target.checked)">将新的行程站内通知同时通过邮件提醒</a-checkbox></p>
+      </template>
+      <p v-else>此部署尚未配置邮件服务；可以继续使用离线恢复码与验证器。</p>
+    </section>
+    <section>
       <h2>修改密码</h2>
       <p>新密码8至64字符，最多72个UTF-8字节，不能使用用户名或常见弱密码。修改成功后所有旧登录立即失效。</p>
       <a-form layout="vertical" :model="{ nextPassword, confirmation }" @finish="changePassword">
@@ -31,7 +46,7 @@
         <a-button @click="saveRecovery">下载恢复码</a-button>
         <a-button @click="recovery = ''">我已保存，隐藏</a-button>
       </div>
-      <p>当前未接入邮件或短信恢复；未预留恢复码且已丢失密码时，需要联系部署管理员核验身份。</p>
+      <p>已绑定并验证邮箱时，也可在登录页申请邮件找回。邮件找回保留已开启的验证器；离线恢复码应私下保存。</p>
     </section>
     <section>
       <h2>验证器二次验证</h2>
@@ -61,7 +76,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { accountSecurity } from '@/services/api'
+import { accountSecurity, accountEmail } from '@/services/api'
 import { clearAuth, getUsername, isAdmin } from '@/services/auth'
 const router = useRouter()
 const username = getUsername() || ''
@@ -70,8 +85,9 @@ const state = ref<any>({})
 const password = ref(''), code = ref(''), nextPassword = ref(''), confirmation = ref('')
 const recovery = ref(''), confirmationCode = ref(''), error = ref(''), busy = ref(false)
 const enrollment = ref<any>(null)
+const emailState = ref<any>({}), notification = ref<any>({ email_enabled: false }), nextEmail = ref('')
 const credentials = () => ({ password: password.value, totp_code: code.value })
-const load = async () => { state.value = await accountSecurity.status() }
+const load = async () => { const values = await Promise.all([accountSecurity.status(), accountEmail.status(), accountEmail.preferences()]); state.value = values[0]; emailState.value = values[1]; notification.value = values[2] }
 const action = async (operation: () => Promise<void>) => {
   if (busy.value) return
   busy.value = true; error.value = ''
@@ -80,6 +96,9 @@ const action = async (operation: () => Promise<void>) => {
   finally { busy.value = false; code.value = '' }
 }
 const reauthenticate = async (text: string) => { password.value = ''; nextPassword.value = ''; confirmation.value = ''; recovery.value = ''; enrollment.value = null; clearAuth(); message.success(text); await router.push('/login') }
+const bindEmail = () => action(async () => { const result = await accountEmail.bind({ email: nextEmail.value, ...credentials() }); message.success(result.message); nextEmail.value = ''; await load() })
+const resendEmail = () => action(async () => { const result = await accountEmail.resend(); message.success(result.message); await load() })
+const saveNotification = (enabled: boolean) => action(async () => { notification.value = await accountEmail.savePreferences(enabled); message.success('邮件提醒设置已保存') })
 const changePassword = () => action(async () => {
   if (nextPassword.value !== confirmation.value) throw new Error('两次新密码不一致')
   await accountSecurity.changePassword({ current_password: password.value, new_password: nextPassword.value, totp_code: code.value })

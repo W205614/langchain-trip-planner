@@ -49,6 +49,9 @@ jobs:
         include:
           - service: postgres
             image: postgres:17.11-alpine
+          - service: caddy
+            image: trip-security-caddy:${{ github.sha }}
+            dockerfile: caddy.Dockerfile
           - service: prometheus
             image: trip-security-prometheus:${{ github.sha }}
             dockerfile: prometheus.Dockerfile
@@ -67,12 +70,21 @@ jobs:
         env:
           RUNTIME_IMAGE: ${{ matrix.image }}
         run: docker pull "$RUNTIME_IMAGE"
-      - name: Build reviewed monitor security derivative from pinned upstream artifacts
+      - name: Build reviewed runtime security derivative from pinned upstream artifacts
         if: matrix.service != 'postgres'
         env:
           RUNTIME_IMAGE: ${{ matrix.image }}
           MONITOR_DOCKERFILE: ${{ matrix.dockerfile }}
         run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --file "deploy/images/$MONITOR_DOCKERFILE" --tag "$RUNTIME_IMAGE" deploy/images
+      - name: Verify Caddy standard ACME and reverse proxy modules
+        if: matrix.service == 'caddy'
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+        run: |
+          docker run --rm --network none --read-only --entrypoint caddy "$RUNTIME_IMAGE" list-modules > caddy-modules.txt
+          grep -Fx 'tls.issuance.acme' caddy-modules.txt
+          grep -Fx 'http.handlers.reverse_proxy' caddy-modules.txt
+          docker run --rm --network none --read-only --entrypoint caddy -e PUBLIC_HOSTNAME=trip.example.invalid -e ACME_EMAIL=admin@example.invalid -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro" "$RUNTIME_IMAGE" adapt --config /etc/caddy/Caddyfile --adapter caddyfile > caddy-adapted.json
       - name: Verify Prometheus rules with the rebuilt official binaries
         if: matrix.service == 'prometheus'
         env:

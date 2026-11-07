@@ -3,6 +3,7 @@ package com.tripplanner.domain;
 import com.tripplanner.api.ApiException;
 import com.tripplanner.persistence.KnowledgeMapper;
 import java.nio.file.*;
+import java.io.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,22 @@ public class KnowledgeService {
   private final Path uploads;
   private final BusinessAuditService audit;
   private final UploadStorage storage;
+  private final ObjectStorageService objects;
+  @org.springframework.beans.factory.annotation.Autowired private StorageMigrationService migrations;
+  @org.springframework.beans.factory.annotation.Autowired private UserQuotaService userQuotas;
 
   public KnowledgeService(
       KnowledgeMapper documents,
       TransactionTemplate tx,
       BusinessAuditService audit,
       UploadStorage storage,
+      ObjectStorageService objects,
       @Value("${UPLOAD_DIR:../backend/data/knowledge_uploads}") String uploads) {
     this.documents = documents;
     this.tx = tx;
     this.audit = audit;
     this.storage=storage;
+    this.objects=objects;
     this.uploads = Path.of(uploads).toAbsolutePath().normalize();
   }
 
@@ -59,6 +65,7 @@ public class KnowledgeService {
   }
 
   public Path file(Map<String, Object> document) {
+    if(!ObjectStorageService.location(document).backend().equals("local"))throw new ApiException(409,"该资料保存在对象存储，请使用原文件读取接口");
     String stored = document.get("stored_path").toString().replace('\\', '/');
     String name = stored.substring(stored.lastIndexOf('/') + 1);
     Path path = uploads.resolve(name).normalize();
@@ -69,11 +76,22 @@ public class KnowledgeService {
     return path;
   }
 
+  public org.springframework.core.io.Resource originalResource(Map<String,Object> document) {
+    try{return objects.resource(ObjectStorageService.location(document),Boolean.TRUE.equals(document.get("storage_verified"))?((Number)document.get("size_bytes")).longValue():-1);}
+    catch(NoSuchFileException ex){throw new ApiException(404,"原文件不存在");}
+    catch(Exception ex){throw new ApiException(503,"原文件存储暂不可用","UPLOAD_STORAGE_UNAVAILABLE");}
+  }
+
+  public InputStream openOriginal(Map<String,Object> document)throws IOException {
+    return objects.open(ObjectStorageService.location(document));
+  }
+
   public void removeDeletedOriginal(Map<String, Object> document) throws java.io.IOException {
     if (!"deleted".equals(document.get("status")))
       throw new IllegalArgumentException("Only deleted documents can be unlinked");
     try {
-      Files.deleteIfExists(file(document));
+      objects.delete(ObjectStorageService.location(document));
+      migrations.removeRetainedCopies(((Number)document.get("id")).longValue());
     } catch (ApiException ex) {
       if (ex.status != 404) throw ex;
     }
@@ -119,6 +137,11 @@ public class KnowledgeService {
     return tx.execute(
         s -> {
           var row = get(id);
+          if(!action.equals("delete")) {
+            long submitter=((Number)row.get("submitted_by")).longValue();
+            userQuotas.lockActive(submitter);
+            if(uid!=submitter)userQuotas.lockActive(uid);
+          }
           int version = ((Number) row.get("version")).intValue();
           String status = row.get("status").toString();
           int next = version + 1;

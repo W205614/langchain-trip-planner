@@ -8,9 +8,27 @@ import json
 from pathlib import Path
 import secrets
 import base64
+from urllib.parse import urlsplit
 from dotenv import dotenv_values
 
 ROOT = Path(__file__).resolve().parents[2]
+BUSINESS_SETTINGS = ("PUBLIC_BASE_URL", "PUBLIC_REGISTRATION_MODE", "ADMIN_MFA_REQUIRED",
+    "DB_POOL_MAX_SIZE", "DB_POOL_MIN_IDLE",
+    "CORS_ORIGINS", "UPLOAD_STORAGE_BACKEND", "UPLOAD_DIR", "S3_ENDPOINT", "S3_REGION", "S3_BUCKET", "S3_PREFIX",
+    "S3_PATH_STYLE", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY", "S3_SESSION_TOKEN", "S3_ALLOW_HTTP",
+    "SMTP_ENABLED", "SMTP_HOST", "SMTP_PORT", "SMTP_USERNAME", "SMTP_PASSWORD", "SMTP_FROM",
+    "SMTP_SECURITY", "OUTBOUND_REQUIRE_ACTOR_CONTEXT",
+    "OUTBOUND_USER_DAILY_TEXT_LIMIT", "OUTBOUND_USER_DAILY_EMBEDDING_LIMIT", "OUTBOUND_USER_DAILY_AMAP_LIMIT",
+    "TRIP_INPUT_PRICE_PER_MILLION_USD", "TRIP_OUTPUT_PRICE_PER_MILLION_USD")
+
+
+def model_settings(source):
+    values = {k:v for k,v in source.items() if k.startswith(("LLM_", "OPENAI_", "EMBEDDING_", "VISION_", "RAG_"))}
+    for key,value in {"LLM_MODEL_ID":"gpt-6.1-sol", "LLM_BASE_URL":"https://api.openai.com/v1",
+        "LLM_REASONING_EFFORT":"low", "VISION_MODEL_ID":"gpt-6.1-sol", "VISION_REASONING_EFFORT":"low",
+        "EMBEDDING_MODEL":"text-embedding-3-large", "EMBEDDING_DIMENSIONS":"3072"}.items():
+        if not values.get(key): values[key]=value
+    return values
 
 
 def _validate(values):
@@ -25,7 +43,7 @@ def _write(path, values):
     temporary.replace(path)
 
 
-def prepare(output):
+def prepare(output, public=False):
     source = dotenv_values(ROOT / "backend/.env")
     source = {key: value for key, value in source.items() if value is not None}
     secret = source.get("JWT_SECRET_KEY") or secrets.token_urlsafe(48)
@@ -46,20 +64,39 @@ def prepare(output):
         "AMAP_DETAIL_CACHE_TTL_SECONDS", "AMAP_CACHE_MAXIMUM_SIZE"):
         if source.get(key):
             business[key] = source[key]
-    agent = {k:v for k,v in source.items() if k.startswith(("LLM_", "OPENAI_", "EMBEDDING_", "VISION_", "RAG_"))}
+    business.update({key:source[key] for key in BUSINESS_SETTINGS if key in source})
+    agent = model_settings(source)
     agent.update(AMAP_API_KEY=source.get("AMAP_MCP_API_KEY") or source.get("AMAP_API_KEY", ""),
         AMAP_TRANSPORT="mcp", AMAP_MCP_URL=source.get("AMAP_MCP_URL", "https://mcp.amap.com/mcp"))
     agent.update(INTERNAL_SERVICE_KEY=internal, BUSINESS_URL="http://backend:9000", DATA_DIR="/app/data",
         CHROMA_DIR="/app/data/chroma", APP_ENV="development", ACCEPTANCE_BUDGET_FILE="")
     agent.update(DATASET_ID=dataset, DATASET_ENROLL_NEW="true")
+    public_values = None
+    if public:
+        origin=urlsplit(source.get("PUBLIC_BASE_URL", ""))
+        if origin.scheme!="https" or not origin.hostname or origin.path not in ("", "/") or origin.query or origin.fragment or origin.username is not None or origin.password is not None:
+            raise ValueError("Public deployment requires PUBLIC_BASE_URL=https://your-domain")
+        if source.get("SMTP_ENABLED", "").lower()!="true" or not source.get("SMTP_HOST") or not source.get("SMTP_FROM") or source.get("SMTP_SECURITY","starttls")=="none":
+            raise ValueError("Public deployment requires a configured TLS SMTP service")
+        if not source.get("ACME_EMAIL"):
+            raise ValueError("Public deployment requires ACME_EMAIL for certificate issuance")
+        business.update(APP_ENV="production",PUBLIC_REGISTRATION_MODE="email_verified",ADMIN_MFA_REQUIRED="true",OUTBOUND_REQUIRE_ACTOR_CONTEXT="true")
+        agent.update(APP_ENV="production",OUTBOUND_LEDGER_REQUIRED="true")
+        public_values={"PUBLIC_HOSTNAME":origin.hostname,"ACME_EMAIL":source["ACME_EMAIL"],
+            "TRIP_PRODUCTION_RUNTIME":str(output.resolve()),"PUBLIC_EDGE_CIDR":source.get("PUBLIC_EDGE_CIDR","172.30.244.0/28")}
+        if source.get("TRIP_POSTGRES_CA_DIR"):
+            public_values["TRIP_POSTGRES_CA_DIR"]=source["TRIP_POSTGRES_CA_DIR"]
     configs = (("postgres", postgres), ("business", business), ("agent", agent))
     for _, values in configs:
         # Compose env_file supports single quoted values, without dollar expansion.
         _validate(values)
+    if public_values is not None: _validate(public_values)
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     for name, values in configs:
         _write(output / f"{name}.env", values)
+    if public_values is not None:
+        _write(output / "public.env",public_values)
     print(json.dumps({"private_config": str(output), "workers_enabled": True, "agent_has_business_credentials": False}))
 
 
@@ -82,6 +119,9 @@ def upgrade(output):
     business["AMAP_REST_API_KEY"] = rest_key
     business.setdefault("ACCOUNT_SECURITY_ENCRYPTION_KEY",base64.b64encode(secrets.token_bytes(32)).decode("ascii"))
     business["ACCESS_TOKEN_EXPIRE_MINUTES"]=str(max(5,min(int(business.get("ACCESS_TOKEN_EXPIRE_MINUTES") or "120"),120)))
+    business.update({key:source[key] for key in BUSINESS_SETTINGS if key in source})
+    # Only explicitly supplied model settings replace existing private values.
+    agent.update({k:v for k,v in source.items() if k.startswith(("LLM_", "OPENAI_", "EMBEDDING_", "VISION_", "RAG_"))})
     for key in ("AMAP_REST_BASE_URL", "AMAP_POI_CACHE_TTL_SECONDS", "AMAP_WEATHER_CACHE_TTL_SECONDS",
                 "AMAP_DETAIL_CACHE_TTL_SECONDS", "AMAP_CACHE_MAXIMUM_SIZE"):
         if source.get(key):
@@ -101,5 +141,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=ROOT / "deploy/runtime")
     parser.add_argument("--upgrade-existing", action="store_true")
+    parser.add_argument("--public", action="store_true", help="Prepare a new public deployment with verified email and TLS")
     args = parser.parse_args()
-    (upgrade if args.upgrade_existing else prepare)(args.output)
+    if args.upgrade_existing and args.public:
+        parser.error("--public creates a new installation; use the documented existing-data migration")
+    if args.upgrade_existing: upgrade(args.output)
+    else: prepare(args.output,public=args.public)

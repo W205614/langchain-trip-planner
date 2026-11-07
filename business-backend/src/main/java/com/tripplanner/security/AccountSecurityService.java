@@ -18,6 +18,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class AccountSecurityService {
   private final JdbcTemplate db; private final TransactionTemplate tx; private final UserMapper users;
   private final BusinessAuditService audit; private final String encryptionKey; private final boolean required;
+  @org.springframework.beans.factory.annotation.Autowired private MailDeliveryService mail;
   private final String dummy=Passwords.hash("timing-only-"+UUID.randomUUID());
   public AccountSecurityService(JdbcTemplate db,TransactionTemplate tx,UserMapper users,BusinessAuditService audit,
       @Value("${ACCOUNT_SECURITY_ENCRYPTION_KEY:}") String encryptionKey,
@@ -63,7 +64,7 @@ public class AccountSecurityService {
     var user=tx.execute(s->{
       attempt(key);var found=users.byName(username);
       boolean passwordOk=Passwords.verify(password,found==null?dummy:found.get("hashed_password").toString());
-      if(found==null || !passwordOk){failed(key);return null;}
+      if(found==null || !passwordOk || !"active".equals(found.get("account_state"))){failed(key);return null;}
       long uid=((Number)found.get("id")).longValue();var security=locked(uid);
       if(Boolean.TRUE.equals(security.get("totp_enabled")) && !consumeTotp(uid,security,code)){failed(key);return null;}
       db.update("DELETE FROM account_login_attempts WHERE identity_hash=?",key);return found;
@@ -88,12 +89,33 @@ public class AccountSecurityService {
     var result=new LinkedHashMap<String,Object>();result.put("mfa_enabled",!rows.isEmpty()&&Boolean.TRUE.equals(rows.getFirst().get("totp_enabled")));
     result.put("recovery_configured",!rows.isEmpty()&&rows.getFirst().get("recovery_created_at")!=null);
     result.put("mfa_available",configured);result.put("admin_mfa_required",required);
-    result.put("external_recovery_status","blocked_external");return result;
+    result.put("external_recovery_status",mail!=null&&mail.available()?"available":"not_configured");return result;
+  }
+  public void verifyIdentity(long uid,String password,String code) {
+    tx.executeWithoutResult(s -> {
+      var user=users.byId(uid);
+      if(user==null||!"active".equals(user.get("account_state")))throw new ApiException(403,"账号当前不可用","ACCOUNT_INACTIVE");
+      verifyCurrent(uid,locked(uid),password,code);
+    });
+  }
+  public void resetWithEmail(long uid,String next,String code,String requestId) {
+    tx.executeWithoutResult(s -> {
+      var user=users.byId(uid);
+      if(user==null||!"active".equals(user.get("account_state")))throw new ApiException(403,"账号当前不可用","ACCOUNT_INACTIVE");
+      validatePassword(next,user.get("username").toString());
+      var security=locked(uid);
+      if(Boolean.TRUE.equals(security.get("totp_enabled"))&&!consumeTotp(uid,security,code))
+        throw new ApiException(401,"二次验证码错误","INVALID_TOTP");
+      db.update("UPDATE users SET hashed_password=?,token_version=token_version+1 WHERE id=?",Passwords.hash(next),uid);
+      db.update("UPDATE account_email_tokens SET consumed_at=timezone('UTC',now()) WHERE user_id=? AND purpose='reset' AND consumed_at IS NULL",uid);
+      audit.success(uid,"account.password_reset_email","user",uid,null,requestId);
+    });
   }
   public Object changePassword(long uid,String current,String next,String code,String requestId) {
     validatePassword(next,users.byId(uid).get("username").toString());
     return tx.execute(s->{var security=locked(uid);verifyCurrent(uid,security,current,code);
       db.update("UPDATE users SET hashed_password=?,token_version=token_version+1 WHERE id=?",Passwords.hash(next),uid);
+      db.update("UPDATE account_email_tokens SET consumed_at=timezone('UTC',now()) WHERE user_id=? AND purpose='reset' AND consumed_at IS NULL",uid);
       audit.success(uid,"account.password_changed","user",uid,null,requestId);
       return Map.of("success",true,"reauthenticate",true);});
   }
@@ -107,9 +129,10 @@ public class AccountSecurityService {
   public Object recover(String username,String recovery,String next,String requestId) {
     validatePassword(next,username);String key=identity(username);
     Boolean ok=tx.execute(s->{attempt(key);var user=users.byName(username);
-      if(user==null){failed(key);return false;}long uid=((Number)user.get("id")).longValue();var security=locked(uid);
+      if(user==null||!"active".equals(user.get("account_state"))){failed(key);return false;}long uid=((Number)user.get("id")).longValue();var security=locked(uid);
       if(recovery==null || recovery.length()>128 || security.get("recovery_hash")==null || !MessageDigest.isEqual(hash(recovery).getBytes(StandardCharsets.US_ASCII),security.get("recovery_hash").toString().getBytes(StandardCharsets.US_ASCII))){failed(key);return false;}
       db.update("UPDATE users SET hashed_password=?,token_version=token_version+1 WHERE id=?",Passwords.hash(next),uid);
+      db.update("UPDATE account_email_tokens SET consumed_at=timezone('UTC',now()) WHERE user_id=? AND purpose='reset' AND consumed_at IS NULL",uid);
       db.update("UPDATE account_security SET recovery_hash=NULL,recovery_created_at=NULL,totp_secret=NULL,pending_totp_secret=NULL,totp_enabled=false,last_totp_step=-1,updated_at=timezone('UTC',now()) WHERE user_id=?",uid);
       db.update("DELETE FROM account_login_attempts WHERE identity_hash=?",key);
       audit.success(uid,"account.recovered","user",uid,null,requestId);return true;});

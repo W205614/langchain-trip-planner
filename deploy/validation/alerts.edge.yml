@@ -1,0 +1,10 @@
+groups:
+  - name: public-edge-validation
+    rules:
+      - alert: PublicEdgeValidationProbeDown
+        expr: up{job="edge-validation-probe"} == 0
+        for: 1s
+        labels:
+          severity: validation
+        annotations:
+          summary: Isolated public edge delivery test

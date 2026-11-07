@@ -37,6 +37,7 @@ class FakeEmbedding:
     def __init__(self, dim=3072):
         self.dim = dim
         self.model = "text-embedding-3-large"
+        self.identity = {"provider":"fixture","endpoint":"http://fixture","model":self.model,"dimensions":dim}
 
     def embed_query(self, text):
         return [0.1] * self.dim

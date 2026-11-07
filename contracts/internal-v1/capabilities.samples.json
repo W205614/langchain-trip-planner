@@ -54,5 +54,9 @@
     "chunks": 0,
     "history_records": 0,
     "generation": "sample-generation"
+  },
+  "IndexRebuildRequest": {
+    "preview": true,
+    "restart": false
   }
 }

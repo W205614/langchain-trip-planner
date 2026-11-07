@@ -4,6 +4,7 @@ import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.domain.BusinessTypes;
 import com.tripplanner.domain.TripLedgerService;
 import com.tripplanner.domain.ScheduleDependencies;
+import com.tripplanner.domain.UserQuotaService;
 import com.tripplanner.persistence.CommunityMapper;
 import com.tripplanner.persistence.HistoryMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @RestController
 public class CommunityController {
+  @org.springframework.beans.factory.annotation.Autowired private UserQuotaService userQuotas;
   private final CommunityMapper community;
   private final HistoryMapper history;
   private final JsonMapper json;
@@ -70,6 +72,7 @@ public class CommunityController {
     row.put("snapshot_json", json.writeValueAsString(snapshot));
     try {
       tx.executeWithoutResult(status -> {
+        userQuotas.lockActive(uid);
         community.insert(row);
         audit.success(uid, "community.submit", "community_trip_card", row.get("id"),
             ((Number) record.get("version")).intValue(), req.getHeader("X-Request-ID"),
@@ -121,6 +124,7 @@ public class CommunityController {
     record.put("quality_json", json.writeValueAsString(quality));
     record.put("last_verified_at", null);
     tx.executeWithoutResult(status -> {
+      userQuotas.lockActive(uid);
       history.insert(record);
       long copiedId = ((Number) record.get("id")).longValue();
       history.outbox(copiedId, uid, "delete");

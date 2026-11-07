@@ -28,6 +28,15 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U trip -d trip"
           --health-interval 5s --health-timeout 5s --health-retries 20
+      mailpit:
+        image: axllent/mailpit:v1.30.7
+        ports: ["11025:1025", "18025:8025"]
+        options: >-
+          --health-cmd "/mailpit readyz"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+      s3mock:
+        image: adobe/s3mock:5.2.3
+        ports: ["19190:9090"]
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # verified v6, Node 24
         with:
@@ -41,6 +50,9 @@ jobs:
         working-directory: business-backend
         env:
           TEST_DATABASE_URL: jdbc:postgresql://localhost:5432/trip
+          TEST_MAILPIT_URL: http://localhost:18025
+          TEST_SMTP_PORT: '11025'
+          TEST_S3_ENDPOINT: http://localhost:19190
         run: sh mvnw -B -ntp test
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
@@ -78,11 +90,23 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
+      - name: Install checksum-pinned restic for isolated archive tests
+        run: |
+          mkdir -p ../.cache/public-tools
+          curl --fail --location --retry 3 --connect-timeout 15 --max-time 180 https://github.com/restic/restic/releases/download/v0.19.1/restic_0.19.1_linux_amd64.bz2 --output ../.cache/public-tools/restic.bz2
+          echo 'f415415624dcc452f2a02b8c33641791a8c6d6d3b65bbb3543fcf9a25151585c  ../.cache/public-tools/restic.bz2' | sha256sum --check --strict
+          bzip2 --decompress --stdout ../.cache/public-tools/restic.bz2 > ../.cache/public-tools/restic
+          chmod 700 ../.cache/public-tools/restic
+          echo "TEST_RESTIC_BINARY=$GITHUB_WORKSPACE/.cache/public-tools/restic" >> "$GITHUB_ENV"
+
       - name: Run backend tests
         run: |
           pytest -v --tb=short
           python -m app.evals.constraint_benchmark --output ../evidence/constraints.json
           python scripts/time_window_benchmark.py --output ../evidence/time-windows.json
+
+      - name: Check public API contract against Java controllers
+        run: python scripts/check_public_contract.py
 
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
@@ -201,6 +225,54 @@ jobs:
           subprocess.run(['npx','playwright','test','--config','playwright.config.ts'],env=environment,check=True)
           PY
 
+      - name: Public account, mail, feedback and export browser flow
+        env:
+          PUBLIC_VALIDATION_BACKEND_IMAGE: trip-validation-backend:latest
+          PUBLIC_VALIDATION_AGENT_IMAGE: trip-validation-agent:latest
+          PUBLIC_VALIDATION_FRONTEND_IMAGE: trip-validation-frontend:latest
+          PUBLIC_E2E_BASE_URL: http://127.0.0.1:18881
+          TEST_MAILPIT_URL: http://127.0.0.1:18026
+        run: |
+          docker compose -p trip-public-ci -f docker-compose.public-e2e.yml up -d --no-build --wait --wait-timeout 120
+          cd frontend
+          npx playwright test --config playwright.config.ts public-operations.spec.ts
+
+      - name: Isolated HTTPS proxy and external alert delivery
+        id: public_edge
+        timeout-minutes: 20
+        env:
+          PUBLIC_VALIDATION_BACKEND_IMAGE: trip-validation-backend:latest
+          PUBLIC_VALIDATION_AGENT_IMAGE: trip-validation-agent:latest
+          PUBLIC_VALIDATION_FRONTEND_IMAGE: trip-validation-frontend:latest
+        run: |
+          python -m pip install -c backend/requirements.lock cryptography PyYAML python-dotenv
+          python - <<'PY'
+          import ipaddress,json,os,socket,subprocess
+          candidate=ipaddress.ip_network(os.getenv('PUBLIC_EDGE_TEST_CIDR','10.253.245.0/28'))
+          ids=subprocess.check_output(['docker','network','ls','-q'],text=True).split()
+          networks=json.loads(subprocess.check_output(['docker','network','inspect',*ids],text=True)) if ids else []
+          for network in networks:
+              for config in network.get('IPAM',{}).get('Config',[]):
+                  if config.get('Subnet'):
+                      existing=ipaddress.ip_network(config['Subnet'])
+                      if existing.version==candidate.version and existing.overlaps(candidate):
+                          raise SystemExit(f'Edge subnet overlaps {network["Name"]}: {existing}')
+          for port in (18443,18082,18028):
+              with socket.socket() as probe:
+                  probe.bind(('127.0.0.1',port))
+          PY
+          python backend/scripts/public_edge_acceptance.py prepare
+          # Bind-mounted 0600 credentials must be owned by the image's runtime UID.
+          sudo chown 65534:65534 .cache/public-edge-validation/alertmanager.yml
+          docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml config --quiet
+            docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml build edge
+          docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml up -d --no-build --wait --wait-timeout 150 postgres backend agent amap-fixture frontend webhook edge mailpit
+          python backend/scripts/public_edge_acceptance.py trust
+          docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml up -d --build --wait --wait-timeout 120 alertmanager prometheus
+          docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml exec -T prometheus /bin/promtool check config /etc/prometheus/prometheus.yml
+          python backend/scripts/public_edge_acceptance.py https
+          python backend/scripts/public_edge_acceptance.py alerts
+
       - name: Isolated recovery drill
         if: ${{ !cancelled() && steps.validation_start.outcome == 'success' }}
         run: python backend/scripts/java_recovery_drill.py --output evidence/recovery.json
@@ -240,6 +312,19 @@ jobs:
           docker compose -p trip-validation -f docker-compose.validation.yml ps -a
           docker compose -p trip-validation -f docker-compose.validation.yml logs --no-color --tail 200 > evidence/validation-containers.log
 
+      - name: Preserve public edge diagnostics and stop its resources
+        if: always()
+        run: |
+          trap 'docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml stop' EXIT
+          mkdir -p evidence
+          docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml ps -a > evidence/public-edge-containers.txt
+          docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml logs --no-color --tail 120 > evidence/public-edge-containers.log
+          for kind in https alerts; do
+            if [ -f ".cache/public-edge-validation/$kind-result.json" ]; then
+              cp ".cache/public-edge-validation/$kind-result.json" "evidence/public-edge-$kind.json"
+            fi
+          done
+
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
         if: always()
         with:
@@ -250,4 +335,6 @@ jobs:
 
       - name: Remove validation resources
         if: always()
-        run: docker compose -p trip-validation -f docker-compose.validation.yml down --remove-orphans
+        run: |
+          docker compose -p trip-public-ci -f docker-compose.public-e2e.yml down --remove-orphans
+          docker compose -p trip-validation -f docker-compose.validation.yml down --remove-orphans

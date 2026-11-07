@@ -173,7 +173,7 @@ services:
       args:
         VCS_REF: ${BUILD_REVISION:-unknown}
     volumes:
-    - ./deploy/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    - ${TRIP_ALERTMANAGER_CONFIG:-./deploy/alertmanager.yml}:/etc/alertmanager/alertmanager.yml:ro
     - production_alerts:/alertmanager
     restart: unless-stopped
     mem_limit: 128m

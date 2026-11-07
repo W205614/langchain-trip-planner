@@ -10,12 +10,12 @@ load_dotenv()
 
 # LLM配置字段在环境变量留空时回退的默认值
 _LLM_FIELD_DEFAULTS = {
-    "llm_model": "gpt-4o",
+    "llm_model": "gpt-6.1-sol",
     "llm_temperature": 0.7,
     "llm_timeout": 60,
     "llm_day_timeout": 45,
     "llm_research_timeout": 15,
-    "vision_model": "deepseek-v4-flash-vision-exp",
+    "vision_model": "gpt-6.1-sol",
 }
 
 
@@ -66,16 +66,17 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("LLM_API_KEY", "OPENAI_API_KEY"),  # 多别名备选，按顺序寻找环境变量，优先去找环境变量 LLM_API_KEY如果找不到 LLM_API_KEY，自动退而求其次读取 OPENAI_API_KEY
     )
     llm_base_url: str = Field(
-        default="",
+        default="https://api.openai.com/v1",
         validation_alias=AliasChoices("LLM_BASE_URL", "OPENAI_BASE_URL"),
     )
     llm_model: str = Field(
-        default="gpt-4o",
+        default="gpt-6.1-sol",
         validation_alias=AliasChoices(
             "LLM_MODEL_ID", "LLM_MODEL", "OPENAI_MODEL", "OPENAI_MODEL_NAME"
         ),
     )
     llm_temperature: float = 0.7
+    llm_reasoning_effort: Literal["low", "medium", "high", "xhigh", "max"] = "low"
     llm_timeout: int = 60
     # 单日草稿的硬上限。取值会与全局 LLM_TIMEOUT 取较小者，超时立即返回真实 POI 兜底。
     llm_day_timeout: int = Field(default=45, ge=5, le=120)
@@ -84,29 +85,30 @@ class Settings(BaseSettings):
     # 逐日生成时的并发数。本机演示默认同时生成最多四天；可按模型供应商限流下调。
     llm_concurrency: int = Field(default=4)
     # 单日 JSON 只包含 2-3 个景点和三餐；限制输出避免模型生成冗长文本拖慢响应。
-    # 当前供应商对 1000-token 上限的执行不稳定，因此保留经验证的 1800 默认值。
+    # reasoning 和用户可见输出共用有界的 completion 预算。
     llm_day_max_tokens: int = Field(default=1800, ge=800, le=4096)
     # 成本不写死在代码中：模型供应商、套餐和汇率会变化，部署时按实际账单填入。
     # 保持 0 表示只记录供应商返回 token，不输出未经校准的金额。
     llm_input_price_per_million_usd: float = Field(default=0.0, ge=0)
     llm_output_price_per_million_usd: float = Field(default=0.0, ge=0)
 
-    # RAG 嵌入模型配置 (OpenAI 兼容接口 / 中转, 与 LLM 同一中转服务)
+    # OpenAI embedding configuration; an empty key inherits the text model account.
     # 复用 LLM_BASE_URL/LLM_API_KEY, 也可单独用 EMBEDDING_BASE_URL/EMBEDDING_API_KEY 覆盖;
     # 未配置时 RAG 功能自动降级禁用, 不影响旅行规划主流程
-    embedding_model: str = Field(default="text-embedding-v4")
+    embedding_model: str = Field(default="text-embedding-3-large")
+    embedding_dimensions: int = Field(default=3072, ge=1, le=3072)
     embedding_base_url: str = Field(default="")
     embedding_api_key: str = Field(default="")
 
-    # 多模态知识解析默认使用 DeepSeek Vision；缺省复用 LLM 的 key/base_url，
-    # 不影响行程生成模型。需要切换视觉模型时再用 VISION_MODEL_ID 覆盖。
+    # Text, vision and embeddings share the official account unless explicitly configured.
     vision_model: str = Field(
-        default="deepseek-v4-flash-vision-exp",
+        default="gpt-6.1-sol",
         validation_alias=AliasChoices("VISION_MODEL_ID", "VISION_MODEL"),
     )
     vision_base_url: str = Field(default="")
     vision_api_key: str = Field(default="")
     vision_timeout: int = Field(default=60, ge=10, le=180)
+    vision_reasoning_effort: Literal["low", "medium", "high", "xhigh", "max"] = "low"
     vision_input_price_per_million_usd: float = Field(default=0.0, ge=0)
     vision_output_price_per_million_usd: float = Field(default=0.0, ge=0)
     # Internal service authentication; Java owns user JWT.
@@ -197,7 +199,7 @@ def print_config():
     print(f"攻略问答 LLM Timeout: {settings.llm_research_timeout}s")
     embedding_api_key = settings.embedding_api_key or settings.llm_api_key
     embedding_base_url = settings.embedding_base_url or settings.llm_base_url or "https://api.openai.com/v1"
-    print(f"RAG 嵌入模型: {settings.embedding_model} @ {embedding_base_url} ({'已配置(走中转)' if embedding_api_key else '未配置(自动禁用)'})")
+    print(f"RAG 嵌入模型: {settings.embedding_model} @ {embedding_base_url} ({'已配置' if embedding_api_key else '未配置'})")
     print(f"视觉解析模型: {settings.vision_model or '未配置'}")
     print(f"日志级别: {settings.log_level}")
 

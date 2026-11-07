@@ -4,6 +4,7 @@
 
 ## 业务功能与交付
 
+- [公开运营与 OpenAI 接入（2026-11-07）](public-operations-20261107/report.md)
 - [java-migration](java-migration/README.md)
 - [assistant-proposal-20260928](assistant-proposal-20260928/report.md)
 - [functional-20260929](functional-20260929/report.md)

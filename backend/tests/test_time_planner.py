@@ -301,7 +301,7 @@ def test_resume_validates_hash_expiry_and_rule_compatibility(monkeypatch):
 def test_budget_fails_closed_and_new_send_has_new_reservation(monkeypatch):
     from app.services import durable_execution as durable
     calls=[]
-    monkeypatch.setattr(durable,"_call",lambda method,path,payload:calls.append(payload))
+    monkeypatch.setattr(durable,"_call",lambda method,path,payload:calls.append(payload) or {"run_id":""})
     with durable.durable_execution("test"):
         durable.reserve_outbound("text")
         durable.reserve_outbound("text")
@@ -316,7 +316,7 @@ def test_required_ledger_reserves_capability_calls_without_execution(monkeypatch
     calls=[]
     monkeypatch.setenv("OUTBOUND_LEDGER_REQUIRED","true")
     monkeypatch.delenv("FINAL_ACCEPTANCE_RUN_ID",raising=False)
-    monkeypatch.setattr(durable,"_call",lambda *args:calls.append(args))
+    monkeypatch.setattr(durable,"_call",lambda *args:calls.append(args) or {"run_id":""})
     durable.reserve_outbound("embedding")
     assert len(calls)==1 and calls[0][2]["execution_id"] is None
 

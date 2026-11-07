@@ -70,7 +70,7 @@ def test_failed_central_reservation_never_sends_and_async_hook_has_the_same_boun
 def test_each_retry_needs_a_new_irrevocable_reservation_key(monkeypatch):
     monkeypatch.setenv("OUTBOUND_LEDGER_REQUIRED","true")
     calls=[]
-    monkeypatch.setattr(durable_execution,"_call",lambda method,path,payload=None:calls.append(payload))
+    monkeypatch.setattr(durable_execution,"_call",lambda method,path,payload=None:calls.append(payload) or {"run_id":""})
     durable_execution.reserve_outbound("embedding",reserved_tokens=5000)
     durable_execution.reserve_outbound("embedding",reserved_tokens=5000)
     assert len(calls)==2 and calls[0]["request_key"]!=calls[1]["request_key"]

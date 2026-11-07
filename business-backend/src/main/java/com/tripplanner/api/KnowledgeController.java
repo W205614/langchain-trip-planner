@@ -5,7 +5,6 @@ import com.tripplanner.domain.UploadStorage;
 import com.tripplanner.persistence.KnowledgeMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,7 +97,7 @@ public class KnowledgeController {
         .contentType(MediaType.parseMediaType(d.get("media_type").toString()))
         .header("Cache-Control", "no-store")
         .header("X-Content-Type-Options", "nosniff")
-        .body(new FileSystemResource(service.file(d)));
+        .body(service.originalResource(d));
   }
 
   @PostMapping("/api/knowledge/admin/submissions/{id}/{action}")

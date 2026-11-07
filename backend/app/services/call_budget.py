@@ -21,10 +21,10 @@ def reserve(kind: str, *, reserved_tokens: int | None = None, map_protocol: str 
     if kind=="amap" and map_protocol!="rest" and (os.getenv("FINAL_RUN_ID") or os.getenv("FINAL_ACCEPTANCE_RUN_ID")):
         raise CallBudgetExceeded("Fixed campaign requires AMAP_TRANSPORT=rest; MCP tool fan-out cannot be bounded as REST requests")
     from .durable_execution import reserve_outbound
-    reserve_outbound(kind, reserved_tokens=reserved_tokens,map_protocol=map_protocol)
+    receipt=reserve_outbound(kind, reserved_tokens=reserved_tokens,map_protocol=map_protocol)
     filename = os.environ.get("ACCEPTANCE_BUDGET_FILE")
     if not filename:
-        return
+        return receipt
     path = Path(filename)
     if not path.is_absolute():
         raise RuntimeError("Budget ledger must use an absolute persistent path")
@@ -37,6 +37,7 @@ def reserve(kind: str, *, reserved_tokens: int | None = None, map_protocol: str 
         if counts.get(kind, 0) >= LIMITS[kind]:
             raise CallBudgetExceeded(f"Acceptance {kind} budget exhausted; this category is stopped")
         db.execute("INSERT INTO calls VALUES (?,1) ON CONFLICT(kind) DO UPDATE SET used=used+1", (kind,))
+    return receipt
 
 
 def text_token_reservation(texts) -> int:
@@ -65,7 +66,15 @@ def request_token_reservation(request, kind: str) -> int:
 
 
 def hooks(kind: str):
-    return {"request": [lambda request: _reserve_request(request,kind)]}
+    return {"request": [lambda request: _reserve_request(request,kind)],"response":[_report_response]}
+
+
+def _report_response(response):
+    receipt=response.request.extensions.get("trip.reservation")
+    if receipt and response.is_success and "application/json" in response.headers.get("content-type",""):
+        from .durable_execution import report_outbound_usage
+        response.read()
+        report_outbound_usage(receipt,response.json().get("usage"))
 
 
 def _reserve_request(request,kind):
@@ -77,11 +86,17 @@ def _reserve_request(request,kind):
         # Preserve ordinary compatibility. A campaign known only to Java still
         # rejects this missing bound before any provider send.
         tokens=None
-    reserve(kind,reserved_tokens=tokens)
+    request.extensions["trip.reservation"]=reserve(kind,reserved_tokens=tokens)
 
 
 def async_hooks(kind: str):
     async def before_send(request):
         await request.aread()
         _reserve_request(request,kind)
-    return {"request": [before_send]}
+    async def after_response(response):
+        receipt=response.request.extensions.get("trip.reservation")
+        if receipt and response.is_success and "application/json" in response.headers.get("content-type",""):
+            from .durable_execution import report_outbound_usage
+            await response.aread()
+            report_outbound_usage(receipt,response.json().get("usage"))
+    return {"request": [before_send],"response":[after_response]}

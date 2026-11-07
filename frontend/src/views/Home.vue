@@ -12,6 +12,9 @@
       <template v-if="isLoggedIn">
         <span class="user-badge">👤 {{ username }}</span>
         <a-button class="history-entry" @click="router.push('/account/security')">账号安全</a-button>
+        <a-button class="history-entry" @click="router.push('/account/data')">我的数据</a-button>
+        <a-button class="history-entry" @click="router.push('/feedback')">问题反馈</a-button>
+        <a-button v-if="admin" class="history-entry" @click="router.push('/admin/operations')">运营管理</a-button>
         <a-button class="history-entry" @click="router.push('/community')">🌏 行程广场</a-button>
         <a-button class="history-entry" @click="router.push('/explore')">🧭 景点发现</a-button>
         <a-button class="history-entry" @click="goHistory">

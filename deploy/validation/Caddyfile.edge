@@ -1,0 +1,7 @@
+# Import the exact production edge. localhost automatically uses Caddy's internal CA.
+import /repo/deploy/Caddyfile
+
+https://edge {
+    tls internal
+    reverse_proxy webhook:9088
+}

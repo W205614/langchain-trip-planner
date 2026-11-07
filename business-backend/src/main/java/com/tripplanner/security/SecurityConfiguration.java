@@ -48,7 +48,7 @@ public class SecurityConfiguration {
             "If-Match",
             "Idempotency-Key",
             "X-Request-ID",
-            "Last-Event-ID"));
+            "Last-Event-ID", "X-Erasure-Receipt"));
     config.setExposedHeaders(List.of("X-Request-ID"));
     config.setAllowCredentials(true);
     var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
@@ -82,7 +82,7 @@ public class SecurityConfiguration {
                             "agent", null, List.of(new SimpleGrantedAuthority("ROLE_SERVICE"))));
               } else {
                 String bearer = req.getHeader("Authorization");
-                boolean credentialEndpoint=List.of("/api/auth/login","/api/auth/register","/api/auth/recover").contains(req.getRequestURI());
+                boolean credentialEndpoint=List.of("/api/auth/login","/api/auth/register","/api/auth/recover","/api/auth/email/confirm","/api/auth/email/request-reset","/api/auth/email/reset","/api/auth/options").contains(req.getRequestURI()) || req.getRequestURI().startsWith("/api/auth/erasure/");
                 String credential = bearer != null && bearer.startsWith("Bearer ") ? bearer.substring(7) : null;
                 if (credential == null && !credentialEndpoint) {
                   credential = BrowserSession.cookie(req,BrowserSession.COOKIE);
@@ -138,9 +138,14 @@ public class SecurityConfiguration {
                         "/api/auth/login",
                         "/api/auth/register",
                         "/api/auth/recover",
+                        "/api/auth/options",
+                        "/api/auth/email/confirm",
+                        "/api/auth/email/request-reset",
+                        "/api/auth/email/reset",
                         "/api/capabilities",
                         "/api/validation/fixture")
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/auth/erasure/*").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/shared-trips/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/community/cards", "/api/community/cards/*")
@@ -151,7 +156,7 @@ public class SecurityConfiguration {
                     .requestMatchers("/internal/**")
                     .hasRole("SERVICE")
                     .requestMatchers(
-                        "/api/knowledge/admin/**", "/api/community/admin/**", "/api/rag/**", "/api/trip/eval-policy")
+                        "/api/admin/**", "/api/knowledge/admin/**", "/api/community/admin/**", "/api/rag/**", "/api/trip/eval-policy")
                     .hasRole("ADMIN")
                     .anyRequest()
                     .authenticated())

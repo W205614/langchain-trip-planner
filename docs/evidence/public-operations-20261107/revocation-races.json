@@ -1,0 +1,58 @@
+{
+  "verified_date": "2026-11-07",
+  "database": "Real PostgreSQL17.11 isolated test database on localhost15439",
+  "before_fix": {
+    "first_run": {
+      "tests": 7,
+      "failed_expected_regressions": 5,
+      "existing_upload_protections_passed": 2
+    },
+    "target_version_run": {
+      "tests": 1,
+      "failed_expected_regressions": 1,
+      "observed_target_version": 2,
+      "observed_deleted_document_version": 3
+    }
+  },
+  "after_fix": [
+    {
+      "name": "com.tripplanner.AccountRevocationRaceIntegrationTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.tripplanner.PublicOperationsIntegrationTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.tripplanner.domain.OutboxWorkerTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "verified_interleavings": [
+    "Model publication response returns after submitter disabled; published result rejected",
+    "Extraction response returns after submitter disabled; extracted private content not written",
+    "Export reads original while revocation holds user lock; final ZIP publication rejected",
+    "Community submission reaches commit while revocation transaction holds user lock; insertion rejected",
+    "Community copy reaches commit while revocation transaction holds user lock; personal trip insertion rejected",
+    "Reserved upload finishes object I/O after disabling; new document rejected",
+    "Erasure waits active upload then removes its reservation and original without missing a document",
+    "Admin extraction edit races between erasure target capture and canonical deletion; edit rejected, target version stays aligned, cleanup completes"
+  ],
+  "production_files": [
+    "AccountDataService.java",
+    "KnowledgeService.java",
+    "OutboxWorker.java",
+    "CommunityController.java"
+  ],
+  "new_test": "AccountRevocationRaceIntegrationTest.java",
+  "runtime": "Only the authorized isolated PostgreSQL was started; stopped again after tests; daily stack unchanged"
+}

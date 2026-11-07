@@ -76,10 +76,15 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
     实现 LangChain Embeddings 接口 (embed_documents/embed_query), 供 ChromaDB 使用。
     """
 
-    def __init__(self, api_key: str, base_url: str, model: str = "text-embedding-3-large"):
+    def __init__(self, api_key: str, base_url: str, model: str = "text-embedding-3-large", dimensions: int = 3072):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.model = model
+        self.dimensions = dimensions
+        from .embedding_identity import embedding_identity
+        from types import SimpleNamespace
+        self.identity = embedding_identity(SimpleNamespace(embedding_base_url=base_url, llm_base_url="",
+            embedding_model=model, embedding_dimensions=dimensions))
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         # 部分中转接口单次限制 10 条, 超出分批 (OpenAI 官方单次上限 2048 条)
@@ -109,15 +114,20 @@ class _OpenAICompatEmbeddings(LangChainEmbeddings):
         async def request():
             async with asyncio.timeout(seconds), httpx.AsyncClient(timeout=seconds, follow_redirects=False) as client:
                 from .call_budget import reserve, text_token_reservation
-                reserve("embedding",reserved_tokens=text_token_reservation(texts))
+                receipt=reserve("embedding",reserved_tokens=text_token_reservation(texts))
                 response = await client.post(self.base_url + "/embeddings",
                     headers={"Authorization": "Bearer " + self.api_key},
-                    json={"model": self.model, "input": texts, "encoding_format": "float"})
+                    json={"model": self.model, "input": texts, "encoding_format": "float", "dimensions": self.dimensions})
                 response.raise_for_status()
+                from .durable_execution import report_outbound_usage
+                report_outbound_usage(receipt,response.json().get("usage"))
                 data = sorted(response.json()["data"], key=lambda row: row["index"])
                 if [row["index"] for row in data] != list(range(len(texts))):
                     raise ValueError("Embedding response does not match inputs")
-                return [row["embedding"] for row in data]
+                vectors = [row["embedding"] for row in data]
+                if any(len(vector) != self.dimensions for vector in vectors):
+                    raise ValueError("Embedding response dimension disagrees with configured index space")
+                return vectors
         try:
             with start_blocking_portal() as portal:
                 return portal.call(request)
@@ -173,9 +183,10 @@ class RagService:
         manifest = CHROMA_DIR / "active-index.json"
         if manifest.exists():
             self._collection_names = json.loads(manifest.read_text(encoding="utf-8"))
-            self._degraded = self._collection_names.get("embedding_model") != self.settings.embedding_model
+            from .embedding_identity import embedding_identity
+            self._degraded = self._collection_names.get("embedding_identity") != embedding_identity(self.settings)
         api_key = self.settings.embedding_api_key or self.settings.llm_api_key
-        base_url = self.settings.embedding_base_url or self.settings.llm_base_url
+        base_url = self.settings.embedding_base_url or self.settings.llm_base_url or "https://api.openai.com/v1"
         if not api_key or not base_url:
             logger.warning(
                 "⚠️  RAG 嵌入未配置 (缺少 EMBEDDING_API_KEY/LLM_API_KEY 或 EMBEDDING_BASE_URL/LLM_BASE_URL), "
@@ -190,8 +201,10 @@ class RagService:
                 api_key=api_key,
                 base_url=base_url,
                 model=self.settings.embedding_model,
+                dimensions=self.settings.embedding_dimensions,
             )
-            self._ensure_collections_consistent()
+            if not self._degraded:
+                self._ensure_collections_consistent(allow_probe=False, verified_identity=manifest.exists())
             self._knowledge_store = Chroma(
                 collection_name=self._collection_names.get(_KNOWLEDGE_COLLECTION, _KNOWLEDGE_COLLECTION),
                 embedding_function=self._embedding,
@@ -204,6 +217,13 @@ class RagService:
                 persist_directory=str(CHROMA_DIR),
                 client_settings=embedded_settings(CHROMA_DIR),
             )
+            if not manifest.exists() and not self._degraded:
+                self._collection_names = {_KNOWLEDGE_COLLECTION:_KNOWLEDGE_COLLECTION,
+                    _HISTORY_COLLECTION:_HISTORY_COLLECTION,"embedding_model":self._embedding.model,
+                    "embedding_identity":self._embedding.identity}
+                temporary=manifest.with_suffix(".tmp")
+                temporary.write_text(json.dumps(self._collection_names),encoding="utf-8")
+                os.replace(temporary,manifest)
             logger.info(
                 f"✅ RAG 知识库初始化成功 (嵌入: {self.settings.embedding_model} @ {base_url} | "
                 f"向量库: ChromaDB@{CHROMA_DIR})"
@@ -214,7 +234,7 @@ class RagService:
             self._knowledge_store = None
             self._history_store = None
 
-    def _ensure_collections_consistent(self) -> None:
+    def _ensure_collections_consistent(self, *, allow_probe=True, verified_identity=False) -> None:
         """校验并修复持久化集合的向量维度与当前嵌入模型一致。
 
         切换嵌入模型(如 bge-m3 1024 维 → text-embedding-3-large 3072 维)后,
@@ -238,6 +258,12 @@ class RagService:
                     count = col.count()
                     if count == 0:
                         # 空集合没有向量, 无需维度校验, 首次写入时会按当前嵌入自动建表
+                        continue
+                    if not allow_probe:
+                        stored_dim = len(col.peek(limit=1)["embeddings"][0])
+                        if not verified_identity or stored_dim != self.settings.embedding_dimensions:
+                            self._degraded = True
+                            logger.warning("Existing vectors have no matching provider identity; rebuild required")
                         continue
                     probe = col.peek(limit=1)
                     stored_dim = len(probe["embeddings"][0])

@@ -1,0 +1,31 @@
+# Full isolated browser stack with real PostgreSQL and SMTP, offline model/map fixtures.
+include:
+  - path: ./docker-compose.migration.yml
+services:
+  postgres:
+    ports: !override ['127.0.0.1:15441:5432']
+  backend:
+    image: ${PUBLIC_VALIDATION_BACKEND_IMAGE:-trip-public-validation-backend:20261107}
+    ports: !override ['127.0.0.1:19001:9000']
+    environment:
+      PUBLIC_REGISTRATION_MODE: email_verified
+      PUBLIC_BASE_URL: http://127.0.0.1:18881
+      SMTP_ENABLED: 'true'
+      SMTP_HOST: mailpit
+      SMTP_PORT: '1025'
+      SMTP_SECURITY: none
+      SMTP_FROM: no-reply@example.test
+      ACCOUNT_SECURITY_ENCRYPTION_KEY: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+      OUTBOUND_REQUIRE_ACTOR_CONTEXT: 'true'
+    depends_on:
+      mailpit: {condition: service_started}
+  agent:
+    image: ${PUBLIC_VALIDATION_AGENT_IMAGE:-trip-public-validation-agent:20261107}
+  amap-fixture:
+    image: ${PUBLIC_VALIDATION_AGENT_IMAGE:-trip-public-validation-agent:20261107}
+  frontend:
+    image: ${PUBLIC_VALIDATION_FRONTEND_IMAGE:-trip-public-validation-frontend:20261107}
+    ports: !override ['127.0.0.1:18881:80']
+  mailpit:
+    image: axllent/mailpit:v1.30.7
+    ports: ['127.0.0.1:18026:8025']
