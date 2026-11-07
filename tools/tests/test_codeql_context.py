@@ -71,6 +71,46 @@ class CodeqlContextTests(unittest.TestCase):
                 (directory / 'test.sarif').write_text(json.dumps({'runs': [variant]}))
                 self.assertEqual('blocked_findings', gate.sarif(directory, policy)[0]['status'])
 
+    def test_schema_three_requires_explicit_count_and_exact_independent_identities(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); path, policy, _, _, _ = self.fixture(root)
+            policy.update(schema_version=3, review_policy='source_and_trace_bound', expected_entry_count=1)
+            del policy['expires_at']
+            record = root/'review.json'
+            review = json.loads(record.read_text())
+            review['findings'][0]['classification'] = 'not_affected_context'
+            record.write_text(json.dumps(review))
+            policy['review_record_sha256'] = context.digest(record.read_bytes())
+            path.write_text(json.dumps(policy))
+            with patch.object(context, 'git', side_effect=self.fake_git):
+                self.assertEqual(1, len(context.load(path, root)['entries']))
+                for count in (None, True, 0, -1, 2):
+                    changed = copy.deepcopy(policy); changed['expected_entry_count'] = count
+                    path.write_text(json.dumps(changed))
+                    with self.assertRaises(RuntimeError): context.load(path, root)
+                for key in ('semantic_flow_sha256', 'security_severity', 'classification'):
+                    changed = copy.deepcopy(policy)
+                    changed['entries'][0][key] = 'unreviewed'
+                    path.write_text(json.dumps(changed))
+                    with self.assertRaises(RuntimeError): context.load(path, root)
+                policy['schema_version'] = 2
+                path.write_text(json.dumps(policy))
+                with self.assertRaises(RuntimeError): context.load(path, root)
+
+    def test_schema_three_rejects_an_unaccounted_review_finding(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); path, policy, _, _, _ = self.fixture(root)
+            policy.update(schema_version=3, review_policy='source_and_trace_bound', expected_entry_count=1)
+            record = root/'review.json'; review = json.loads(record.read_text())
+            review['findings'][0]['classification'] = 'not_affected_context'
+            review['findings'].append({**review['findings'][0], 'query': 'java/unaccounted'})
+            record.write_text(json.dumps(review))
+            policy['review_record_sha256'] = context.digest(record.read_bytes())
+            path.write_text(json.dumps(policy))
+            with patch.object(context, 'git', side_effect=self.fake_git):
+                with self.assertRaisesRegex(RuntimeError, 'finding count'):
+                    context.load(path, root)
+
     def test_source_tree_review_expiry_and_missing_proof_fail_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); path, policy, _, source, _ = self.fixture(root)

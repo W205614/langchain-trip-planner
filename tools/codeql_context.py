@@ -136,10 +136,11 @@ def finding_identity(rule, result, run):
 def load(path, root, now=None, source_mode=None):
     now = now or datetime.now(timezone.utc)
     policy = json.loads(Path(path).read_text(encoding='utf-8'))
-    if policy.get('schema_version') == 2:
+    schema = policy.get('schema_version')
+    if schema in (2, 3):
         if policy.get('review_policy') != 'source_and_trace_bound':
             raise RuntimeError('CodeQL review requires exact source and trace bindings')
-    elif policy.get('schema_version') == 1:
+    elif schema == 1:
         try:
             expiry = datetime.fromisoformat(policy['expires_at'])
             if expiry.tzinfo is None or now > expiry or expiry > LEGACY_MAX_EXPIRY:
@@ -148,9 +149,11 @@ def load(path, root, now=None, source_mode=None):
             raise RuntimeError('CodeQL contextual review expired or invalid') from error
     else:
         raise RuntimeError('Unsupported CodeQL contextual review schema')
-    if (policy.get('flow_hash_algorithm') != FLOW_ALGORITHM
+    expected_count = policy.get('expected_entry_count') if schema == 3 else EXPECTED_ENTRY_COUNT
+    if (type(expected_count) is not int or expected_count < 1
+            or policy.get('flow_hash_algorithm') != FLOW_ALGORITHM
             or policy.get('classification') != 'not_affected_context'
-            or not isinstance(policy.get('entries'), list) or len(policy['entries']) != EXPECTED_ENTRY_COUNT
+            or not isinstance(policy.get('entries'), list) or len(policy['entries']) != expected_count
             or set(policy.get('business_tree_bindings', {})) != set(BUSINESS_DIRECTORIES)
             or not policy.get('source_bindings')):
         raise RuntimeError('CodeQL contextual assessment incomplete; exact source/trace proof required')
@@ -158,6 +161,8 @@ def load(path, root, now=None, source_mode=None):
     if digest(review_path.read_bytes()) != policy.get('review_record_sha256'):
         raise RuntimeError('Independent CodeQL review evidence changed')
     review = json.loads(review_path.read_text(encoding='utf-8'))
+    if schema == 3 and len(review.get('findings', [])) != expected_count:
+        raise RuntimeError('CodeQL reviewed finding count differs from the explicit scope')
     head = git(root, 'rev-parse', 'HEAD')
     revision = policy['reviewed_business_revision']
     source_identity = None
@@ -192,6 +197,9 @@ def load(path, root, now=None, source_mode=None):
                 or len(reviewed) != 1 or reviewed[0]['raw_trace_sha256'] != entry.get('reviewed_raw_trace_sha256')
                 or reviewed[0]['source_sha256_current_worktree_lf'] != entry.get('source_sha256')):
             raise RuntimeError('CodeQL entry lacks exact independent source/trace review')
+        if schema == 3 and any(reviewed[0].get(key) != entry.get(key) for key in
+                               ('semantic_flow_sha256', 'security_severity', 'classification')):
+            raise RuntimeError('CodeQL entry differs from the independently reviewed identity')
         seen.add(key)
     return {**policy, 'source_equivalence_identity': source_identity} if source_identity is not None else policy
 
