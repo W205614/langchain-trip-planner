@@ -91,7 +91,7 @@ services:
       timeout: 3s
       retries: 20
   prometheus:
-    image: ${PUBLIC_EDGE_PROMETHEUS_IMAGE:-trip-planner-prometheus:3.15.1-security1}
+    image: ${PUBLIC_EDGE_PROMETHEUS_IMAGE:-trip-planner-prometheus:3.16.0-security1}
     build:
       context: ./deploy/images
       dockerfile: prometheus.Dockerfile

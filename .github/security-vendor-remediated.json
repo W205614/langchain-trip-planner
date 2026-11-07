@@ -5,7 +5,7 @@
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
-    "docker-compose.production.yml": "c5462fa519513df51f5f2fe6b137f1e79c331cdedaad1689eec9d73f27f576ed",
+    "docker-compose.production.yml": "81e917866e3e021f1e46b6de77c2749741d1dd4354990442b0489c035f800905",
     "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
     "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
