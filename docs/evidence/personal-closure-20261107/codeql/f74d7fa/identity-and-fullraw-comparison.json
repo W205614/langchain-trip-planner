@@ -1,0 +1,2979 @@
+{
+  "baseline_review": "docs/evidence/personal-closure-20261107/codeql/source-review.json",
+  "baseline_review_sha256": "7e8e3436167fd683fedded7487b6487e124a1ed027053b5db51b17993ad060c9",
+  "fresh_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+  "workflow_run": 42356710883,
+  "findings": [
+    {
+      "query": "java/spring-disabled-csrf-protection",
+      "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+      "region": {
+        "startLine": 124,
+        "startColumn": 20,
+        "endColumn": 31
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "new_raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
+      "previous_raw_trace_sha256": "89822acdddd96f80321e6d3d2ca00f8009ec18baf5d389f50a018b195483aa53",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 40,
+          "after": 54
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 40,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+      "region": {
+        "startLine": 184,
+        "startColumn": 9,
+        "endColumn": 20
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
+      "new_raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
+      "previous_raw_trace_sha256": "d456e1844fc253354c35f3587484417a7031ec8f55b6ab167eb1c196f3806b4a",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 87,
+        "startColumn": 62,
+        "endColumn": 71
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
+      "new_raw_trace_sha256": "7947b61858a8ffc54c0c7532be2cd4c13ca29107669dec7ba9de0130ce906fe6",
+      "previous_raw_trace_sha256": "a7103152e5709a194b635e2acfbcc819e7988e7f43da75d7f02f91d4f5a2978d",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 88,
+        "startColumn": 46,
+        "endColumn": 55
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
+      "new_raw_trace_sha256": "b1ba89a138af679face310de1b5c4e5bce4341712481f594f466826e33200151",
+      "previous_raw_trace_sha256": "ca80b71b3996020bb419b6db0788d733402b98cb469692410b4b45e04215ef88",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 74,
+        "startColumn": 81,
+        "endColumn": 91
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
+      "new_raw_trace_sha256": "5fa33087cf5a44ec108595c94298c33f0b6c770d0bda4d4c2a24a7c077c4b9ce",
+      "previous_raw_trace_sha256": "b0dde8626bc173e8f8804d57b8d4a4f2b5248cb8b2d415142a2837c3de73884e",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 46,
+        "endColumn": 56
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
+      "new_raw_trace_sha256": "eb7b360d4ec95e39fa515acf6fff4312b8455af95600691af14404b25d28525a",
+      "previous_raw_trace_sha256": "0d5a279008f6082a51f8bcac4708c494a81b14cd9095f8ca40a4e63f9d361f6a",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 100,
+        "startColumn": 60,
+        "endColumn": 70
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
+      "new_raw_trace_sha256": "4655dcecbbbfb972fef04cddc3cd85382442ed607b117436ce1517515ab35543",
+      "previous_raw_trace_sha256": "e77617ac63b19c9ffb9efc8a9d57d6668d3a6d1de322918aca3866e7673d2014",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 101,
+        "startColumn": 54,
+        "endColumn": 64
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
+      "new_raw_trace_sha256": "7ef5bbf021a789a24a32573f1dda99dbe45f5b79b040eca5a6dbd276c28f5526",
+      "previous_raw_trace_sha256": "7088fd4729cd6ea62ae2cdf52e6cf2dad6985335eab03d914f1996af74897eee",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 79,
+          "after": 91
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 79,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 69,
+        "endColumn": 96
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
+      "new_raw_trace_sha256": "9bb6b25c12d49d08f9279310a3be4f149cdc969ed8e8573738e8d867f533f0b1",
+      "previous_raw_trace_sha256": "6d32506a89b935d61ef583e7398758874f9292e035d174578ba2833cba963bb4",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 80,
+          "after": 92
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 80,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+      "region": {
+        "startLine": 51,
+        "startColumn": 69,
+        "endColumn": 98
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
+      "new_raw_trace_sha256": "2125442733a3463f4a0b3758315af3ff89f0c7b27581e67dbc53967e0855eea1",
+      "previous_raw_trace_sha256": "e0c36cdee870bb2ee6d534a245cf3103a6e656c87703271843828045833718b6",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 80,
+          "after": 92
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 80,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+      "new_raw_trace_sha256": "2a144877fa9a290ce268ecee2b65be059472cb239560df3d222d14b84d1cab23",
+      "previous_raw_trace_sha256": "d94abb1b476203c41a4fce83dbc7b02448b8e2893addf9db2e19b3b80fe29792",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
+      "new_raw_trace_sha256": "f9da10cf202368e24915d9d1912ed532682b56a13b1d624953b31c0412af5d78",
+      "previous_raw_trace_sha256": "613c5e940018f2431dfeb6115ce22fe0d4d7ed0165d67d1ce7337ea63f390d14",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
+      "new_raw_trace_sha256": "d5eb86c5b7b29864fdd8f043b2e601cd942bbf78b416d2eef6f7a7f140b751f6",
+      "previous_raw_trace_sha256": "42d1a996c012bbfeca989db18b723b651d1adac7ce96cb7e7f11a465555e44f2",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+      "new_raw_trace_sha256": "ed3b45ad154431bf92c14dd507916f9636d3f2495f0c238d04a89a3ab8124269",
+      "previous_raw_trace_sha256": "c5805e328083f2707b10b01613e74cdc50bbf31b247baebf7f56229c4338fe86",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+      "new_raw_trace_sha256": "ea6e6a2993eb2a8f6b0ec763ab9e8d8be9e67cae1e8b0feba801cc9293c72c0c",
+      "previous_raw_trace_sha256": "fd05be319a8dd95320c00e14ba245ccf7d96f268aa3afe399412db5f16b1e392",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+      "new_raw_trace_sha256": "7a8ad6d7ae67ff7cd9e082b370ff41eb9ea30196a7859076bf9f3f23ae7fea25",
+      "previous_raw_trace_sha256": "ed1ee022e7474546280c4c37109ccd845a522ef06135958f582370a402f891a2",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+      "new_raw_trace_sha256": "ab4650a64581228d41a55f76af4e57809a2be6817831af01c008e95ca1b380ed",
+      "previous_raw_trace_sha256": "51042bec28594f5ad4e2b3cd58e584f097a846beaa8beaf2a3eee495c56f2595",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/14/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/15/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/14/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/15/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+      "new_raw_trace_sha256": "86d58c3cca32cc59735812f7add9cb7f5eb65fddfafc63b9dbc42ed8490aceb5",
+      "previous_raw_trace_sha256": "1be9c6c2f9a8590ce32b43999aa17ebe9d507c6578bf9224c3916ca954076b6a",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+      "new_raw_trace_sha256": "1e909f706cf29fd8e12df2e28cea62e016c7c9e1d07e77901df36e7b5ef2d09e",
+      "previous_raw_trace_sha256": "0d44bfbc091a394828bad7435ef5b885783cad64f008da8fbc1a26ffe16a6e78",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+      "new_raw_trace_sha256": "4697bdc946222d370dcb478c8105e4f95810f6295f9d2ad968caab9b1fb2ade5",
+      "previous_raw_trace_sha256": "a566dbb78de721af94b62c944b9299d0d4c1501eea6f4b4c2ca6ae2531e19566",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 12,
+          "after": 15
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/6/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/7/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
+      "new_raw_trace_sha256": "69e67eed0b04886aa267d51ff25617a4afc247199d65e9289c6f29d253068d55",
+      "previous_raw_trace_sha256": "209690f10dd945525de491ee2900b181c82a88140f09f7c4fa6d762c625910af",
+      "raw_differences": [
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/0/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/1/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/2/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/2/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/3/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/4/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/5/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/8/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/9/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/10/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/11/location/physicalLocation/artifactLocation/index",
+          "before": 14,
+          "after": 12
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/12/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/codeFlows/3/threadFlows/0/locations/13/location/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/2/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/3/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/6/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/relatedLocations/7/physicalLocation/artifactLocation/index",
+          "before": 15,
+          "after": 14
+        },
+        {
+          "path": "/rule/index",
+          "before": 96,
+          "after": 102
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 96,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "backend/scripts/optimization_seed_admin.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 31,
+        "endColumn": 110
+      },
+      "security_severity": "7.5",
+      "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
+      "new_raw_trace_sha256": "8af25d92f74b3ee2b89f373baeb8863450b486f95bbc83cd99c0ad6428a8745e",
+      "previous_raw_trace_sha256": "76c4a3ee96107e80f03641dcf4ca06bb5bd387d98cc1390d8399ff56d65d35a9",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 21,
+          "after": 10
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 21,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "py/overly-permissive-file",
+      "path": "backend/scripts/install_runtime_security_patches.py",
+      "region": {
+        "startLine": 69,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "new_raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
+      "previous_raw_trace_sha256": "e72406786c263fc2c3e2da630a207ecf8816297c3c4e516150c4d633eedc13d0",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 46,
+          "after": 41
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 46,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 9,
+        "startColumn": 23,
+        "endColumn": 32
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
+      "new_raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
+      "previous_raw_trace_sha256": "f8b0d860d8aa236f25c14204a37698a977b7de9cd38dda5fbce3e6d9dd5cf865",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 54,
+          "after": 70
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 54,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 23,
+        "endColumn": 33
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
+      "new_raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
+      "previous_raw_trace_sha256": "fce04758f09a59a9f77c4339e5f40f6b5c814daa15fa9997ab645b01ac86db2d",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 54,
+          "after": 70
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 54,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/public-operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 20,
+        "endColumn": 84
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff",
+      "new_raw_trace_sha256": "3ccb5557dc7d6adb66468b3b78ed223d67669e79de56004a737d40ba82da3f5d",
+      "previous_raw_trace_sha256": "ba2c17388590b79ce645e80dc3175e42027a771a69d24d894590d2adce83b7c4",
+      "raw_differences": [
+        {
+          "path": "/rule/index",
+          "before": 54,
+          "after": 70
+        },
+        {
+          "path": "/rule/toolComponent",
+          "before": null,
+          "after": {
+            "index": 0
+          }
+        },
+        {
+          "path": "/ruleIndex",
+          "before": 54,
+          "after": null
+        }
+      ],
+      "normalized_full_result_equal": true
+    }
+  ],
+  "rule_descriptor_differences": {
+    "java/spring-disabled-csrf-protection": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# Disabled Spring CSRF protection\nCross-site request forgery (CSRF) is a type of vulnerability in which an attacker is able to force a user to carry out an action that the user did not intend.\n\nThe attacker tricks an authenticated user into submitting a request to the web application. Typically, this request will result in a state change on the server, such as changing the user's password. The request can be initiated when the user visits a site controlled by the attacker. If the web application relies only on cookies for authentication, or on other credentials that are automatically included in the request, then this request will appear as legitimate to the server.\n\n\n## Recommendation\nWhen you use Spring, Cross-Site Request Forgery (CSRF) protection is enabled by default. Spring's recommendation is to use CSRF protection for any request that could be processed by a browser client by normal users.\n\n\n## Example\nThe following example shows the Spring Java configuration with CSRF protection disabled. This type of configuration should only be used if you are creating a service that is used only by non-browser clients.\n\n\n```java\nimport org.springframework.context.annotation.Configuration;\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\nimport org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\nimport org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;\n\n@EnableWebSecurity\n@Configuration\npublic class WebSecurityConfig extends WebSecurityConfigurerAdapter {\n  @Override\n  protected void configure(HttpSecurity http) throws Exception {\n    http\n      .csrf(csrf ->\n        // BAD - CSRF protection shouldn't be disabled\n        csrf.disable() \n      );\n  }\n}\n\n```\n\n## References\n* OWASP: [Cross Site Request Forgery (CSRF)](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)).\n* Spring Security Reference: [ Cross Site Request Forgery (CSRF) ](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html).\n* Common Weakness Enumeration: [CWE-352](https://cwe.mitre.org/data/definitions/352.html).\n",
+          "markdown": "# Disabled Spring CSRF protection\nCross-site request forgery (CSRF) is a type of vulnerability in which an attacker is able to force a user to carry out an action that the user did not intend.\n\nThe attacker tricks an authenticated user into submitting a request to the web application. Typically, this request will result in a state change on the server, such as changing the user's password. The request can be initiated when the user visits a site controlled by the attacker. If the web application relies only on cookies for authentication, or on other credentials that are automatically included in the request, then this request will appear as legitimate to the server.\n\n\n## Recommendation\nWhen you use Spring, Cross-Site Request Forgery (CSRF) protection is enabled by default. Spring's recommendation is to use CSRF protection for any request that could be processed by a browser client by normal users.\n\n\n## Example\nThe following example shows the Spring Java configuration with CSRF protection disabled. This type of configuration should only be used if you are creating a service that is used only by non-browser clients.\n\n\n```java\nimport org.springframework.context.annotation.Configuration;\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\nimport org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;\nimport org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;\n\n@EnableWebSecurity\n@Configuration\npublic class WebSecurityConfig extends WebSecurityConfigurerAdapter {\n  @Override\n  protected void configure(HttpSecurity http) throws Exception {\n    http\n      .csrf(csrf ->\n        // BAD - CSRF protection shouldn't be disabled\n        csrf.disable() \n      );\n  }\n}\n\n```\n\n## References\n* OWASP: [Cross Site Request Forgery (CSRF)](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)).\n* Spring Security Reference: [ Cross Site Request Forgery (CSRF) ](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html).\n* Common Weakness Enumeration: [CWE-352](https://cwe.mitre.org/data/definitions/352.html).\n"
+        }
+      }
+    ],
+    "java/tainted-arithmetic": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# User-controlled data in arithmetic expression\nPerforming calculations on user-controlled data can result in integer overflows unless the input is validated.\n\nIf the user is free to enter very large numbers, even arithmetic operations that would usually result in a small change in magnitude may result in overflows.\n\n\n## Recommendation\nAlways guard against overflow in arithmetic operations on user-controlled data by doing one of the following:\n\n* Validate the user input.\n* Define a guard on the arithmetic expression, so that the operation is performed only if the result can be known to be less than, or equal to, the maximum value for the type, for example `MAX_VALUE`.\n* Use a wider type, so that larger input values do not cause overflow.\n\n## Example\nIn this example, a value is read from standard input into an `int`. Because the value is a user-controlled value, it could be extremely large. Performing arithmetic operations on this value could therefore cause an overflow. To avoid this happening, the example shows how to perform a check before performing a multiplication.\n\n\n```java\nclass Test {\n\tpublic static void main(String[] args) {\n\t\t{\n\t\t\tint data;\n\n\t\t\tBufferedReader readerBuffered = new BufferedReader(\n\t\t\t\t\tnew InputStreamReader(System.in, \"UTF-8\"));\n\t\t\tString stringNumber = readerBuffered.readLine();\n\t\t\tif (stringNumber != null) {\n\t\t\t\tdata = Integer.parseInt(stringNumber.trim());\n\t\t\t} else {\n\t\t\t\tdata = 0;\n\t\t\t}\n\n\t\t\t// BAD: may overflow if input data is very large, for example\n\t\t\t// 'Integer.MAX_VALUE'\n\t\t\tint scaled = data * 10;\n\n\t\t\t//...\n\t\t\t\n\t\t\t// GOOD: use a guard to ensure no overflows occur\n\t\t\tint scaled2;\n\t\t\tif (data < Integer.MAX_VALUE / 10)\n\t\t\t\tscaled2 = data * 10;\n\t\t\telse\n\t\t\t\tscaled2 = Integer.MAX_VALUE;\n\t\t}\n\t}\n}\n```\n\n## References\n* SEI CERT Oracle Coding Standard for Java: [NUM00-J. Detect or prevent integer overflow](https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow).\n* Common Weakness Enumeration: [CWE-190](https://cwe.mitre.org/data/definitions/190.html).\n* Common Weakness Enumeration: [CWE-191](https://cwe.mitre.org/data/definitions/191.html).\n",
+          "markdown": "# User-controlled data in arithmetic expression\nPerforming calculations on user-controlled data can result in integer overflows unless the input is validated.\n\nIf the user is free to enter very large numbers, even arithmetic operations that would usually result in a small change in magnitude may result in overflows.\n\n\n## Recommendation\nAlways guard against overflow in arithmetic operations on user-controlled data by doing one of the following:\n\n* Validate the user input.\n* Define a guard on the arithmetic expression, so that the operation is performed only if the result can be known to be less than, or equal to, the maximum value for the type, for example `MAX_VALUE`.\n* Use a wider type, so that larger input values do not cause overflow.\n\n## Example\nIn this example, a value is read from standard input into an `int`. Because the value is a user-controlled value, it could be extremely large. Performing arithmetic operations on this value could therefore cause an overflow. To avoid this happening, the example shows how to perform a check before performing a multiplication.\n\n\n```java\nclass Test {\n\tpublic static void main(String[] args) {\n\t\t{\n\t\t\tint data;\n\n\t\t\tBufferedReader readerBuffered = new BufferedReader(\n\t\t\t\t\tnew InputStreamReader(System.in, \"UTF-8\"));\n\t\t\tString stringNumber = readerBuffered.readLine();\n\t\t\tif (stringNumber != null) {\n\t\t\t\tdata = Integer.parseInt(stringNumber.trim());\n\t\t\t} else {\n\t\t\t\tdata = 0;\n\t\t\t}\n\n\t\t\t// BAD: may overflow if input data is very large, for example\n\t\t\t// 'Integer.MAX_VALUE'\n\t\t\tint scaled = data * 10;\n\n\t\t\t//...\n\t\t\t\n\t\t\t// GOOD: use a guard to ensure no overflows occur\n\t\t\tint scaled2;\n\t\t\tif (data < Integer.MAX_VALUE / 10)\n\t\t\t\tscaled2 = data * 10;\n\t\t\telse\n\t\t\t\tscaled2 = Integer.MAX_VALUE;\n\t\t}\n\t}\n}\n```\n\n## References\n* SEI CERT Oracle Coding Standard for Java: [NUM00-J. Detect or prevent integer overflow](https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow).\n* Common Weakness Enumeration: [CWE-190](https://cwe.mitre.org/data/definitions/190.html).\n* Common Weakness Enumeration: [CWE-191](https://cwe.mitre.org/data/definitions/191.html).\n"
+        }
+      }
+    ],
+    "java/uncontrolled-arithmetic": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# Uncontrolled data in arithmetic expression\nPerforming calculations on uncontrolled data can result in integer overflows unless the input is validated.\n\nIf the data is not under your control, and can take extremely large values, even arithmetic operations that would usually result in a small change in magnitude may result in overflows.\n\n\n## Recommendation\nAlways guard against overflow in arithmetic operations on uncontrolled data by doing one of the following:\n\n* Validate the data.\n* Define a guard on the arithmetic expression, so that the operation is performed only if the result can be known to be less than, or equal to, the maximum value for the type, for example `MAX_VALUE`.\n* Use a wider type, so that larger input values do not cause overflow.\n\n## Example\nIn this example, a random integer is generated. Because the value is not controlled by the programmer, it could be extremely large. Performing arithmetic operations on this value could therefore cause an overflow. To avoid this happening, the example shows how to perform a check before performing a multiplication.\n\n\n```java\nclass Test {\n\tpublic static void main(String[] args) {\n\t\t{\n\t\t\tint data = (new java.security.SecureRandom()).nextInt();\n\n\t\t\t// BAD: may overflow if data is large\n\t\t\tint scaled = data * 10;\n\n\t\t\t// ...\n\n\t\t\t// GOOD: use a guard to ensure no overflows occur\n\t\t\tint scaled2;\n\t\t\tif (data < Integer.MAX_VALUE/10)\n\t\t\t\tscaled2 = data * 10;\n\t\t\telse \n\t\t\t\tscaled2 = Integer.MAX_VALUE;\n\t\t}\n\t}\n}\n```\n\n## References\n* SEI CERT Oracle Coding Standard for Java: [NUM00-J. Detect or prevent integer overflow](https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow).\n* Common Weakness Enumeration: [CWE-190](https://cwe.mitre.org/data/definitions/190.html).\n* Common Weakness Enumeration: [CWE-191](https://cwe.mitre.org/data/definitions/191.html).\n",
+          "markdown": "# Uncontrolled data in arithmetic expression\nPerforming calculations on uncontrolled data can result in integer overflows unless the input is validated.\n\nIf the data is not under your control, and can take extremely large values, even arithmetic operations that would usually result in a small change in magnitude may result in overflows.\n\n\n## Recommendation\nAlways guard against overflow in arithmetic operations on uncontrolled data by doing one of the following:\n\n* Validate the data.\n* Define a guard on the arithmetic expression, so that the operation is performed only if the result can be known to be less than, or equal to, the maximum value for the type, for example `MAX_VALUE`.\n* Use a wider type, so that larger input values do not cause overflow.\n\n## Example\nIn this example, a random integer is generated. Because the value is not controlled by the programmer, it could be extremely large. Performing arithmetic operations on this value could therefore cause an overflow. To avoid this happening, the example shows how to perform a check before performing a multiplication.\n\n\n```java\nclass Test {\n\tpublic static void main(String[] args) {\n\t\t{\n\t\t\tint data = (new java.security.SecureRandom()).nextInt();\n\n\t\t\t// BAD: may overflow if data is large\n\t\t\tint scaled = data * 10;\n\n\t\t\t// ...\n\n\t\t\t// GOOD: use a guard to ensure no overflows occur\n\t\t\tint scaled2;\n\t\t\tif (data < Integer.MAX_VALUE/10)\n\t\t\t\tscaled2 = data * 10;\n\t\t\telse \n\t\t\t\tscaled2 = Integer.MAX_VALUE;\n\t\t}\n\t}\n}\n```\n\n## References\n* SEI CERT Oracle Coding Standard for Java: [NUM00-J. Detect or prevent integer overflow](https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow).\n* Common Weakness Enumeration: [CWE-190](https://cwe.mitre.org/data/definitions/190.html).\n* Common Weakness Enumeration: [CWE-191](https://cwe.mitre.org/data/definitions/191.html).\n"
+        }
+      }
+    ],
+    "java/csrf-unprotected-request-type": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# HTTP request type unprotected from CSRF\nCross-site request forgery (CSRF) is a type of vulnerability in which an attacker is able to force a user to carry out an action that the user did not intend.\n\nThe attacker tricks an authenticated user into submitting a request to the web application. Typically, this request will result in a state change on the server, such as changing the user's password. The request can be initiated when the user visits a site controlled by the attacker. If the web application relies only on cookies for authentication, or on other credentials that are automatically included in the request, then this request will appear as legitimate to the server.\n\n\n## Recommendation\nMake sure any requests that change application state are protected from CSRF. Some application frameworks provide default CSRF protection for unsafe HTTP request methods (such as `POST`) which may change the state of the application. Safe HTTP request methods (such as `GET`) should only perform read-only operations and should not be used for actions that change application state.\n\nThis query currently supports the Spring and Stapler web frameworks. Spring provides default CSRF protection for all unsafe HTTP methods whereas Stapler provides default CSRF protection for the `POST` method.\n\n\n## Example\nThe following examples show Spring request handlers allowing safe HTTP request methods for state-changing actions. Since safe HTTP request methods do not have default CSRF protection in Spring, they should not be used when modifying application state. Instead, use one of the unsafe HTTP methods which Spring default-protects from CSRF.\n\n\n```java\nimport org.springframework.web.bind.annotation.RequestMapping;\nimport org.springframework.web.bind.annotation.RequestMethod;\n\n// BAD - a safe HTTP request like GET should not be used for a state-changing action\n@RequestMapping(value=\"/transfer\", method=RequestMethod.GET)\npublic boolean doTransfer(HttpServletRequest request, HttpServletResponse response){\n  return transfer(request, response);\n}\n\n// BAD - no HTTP request type is specified, so safe HTTP requests are allowed\n@RequestMapping(value=\"/delete\")\npublic boolean doDelete(HttpServletRequest request, HttpServletResponse response){\n  return delete(request, response);\n}\n\n```\n\n```java\nimport org.springframework.web.bind.annotation.RequestMapping;\nimport org.springframework.web.bind.annotation.RequestMethod;\nimport org.springframework.web.bind.annotation.DeleteMapping;\n\n// GOOD - use an unsafe HTTP request like POST\n@RequestMapping(value=\"/transfer\", method=RequestMethod.POST)\npublic boolean doTransfer(HttpServletRequest request, HttpServletResponse response){\n  return transfer(request, response);\n}\n\n// GOOD - use an unsafe HTTP request like DELETE\n@DeleteMapping(value=\"/delete\")\npublic boolean doDelete(HttpServletRequest request, HttpServletResponse response){\n  return delete(request, response);\n}\n\n```\nThe following examples show Stapler web methods allowing safe HTTP request methods for state-changing actions. Since safe HTTP request methods do not have default CSRF protection in Stapler, they should not be used when modifying application state. Instead, use the `POST` method which Stapler default-protects from CSRF.\n\n\n```java\nimport org.kohsuke.stapler.verb.GET;\n\n// BAD - a safe HTTP request like GET should not be used for a state-changing action\n@GET\npublic HttpRedirect doTransfer() {\n  return transfer();\n}\n\n// BAD - no HTTP request type is specified, so safe HTTP requests are allowed\npublic HttpRedirect doPost() {\n  return post();\n}\n\n```\n\n```java\nimport org.kohsuke.stapler.verb.POST;\n\n// GOOD - use POST\n@POST\npublic HttpRedirect doTransfer() {\n  return transfer();\n}\n\n// GOOD - use POST\n@POST\npublic HttpRedirect doPost() {\n  return post();\n}\n\n```\n\n## References\n* OWASP: [Cross Site Request Forgery (CSRF)](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)).\n* Spring Security Reference: [ Cross Site Request Forgery (CSRF)](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html).\n* Jenkins Developer Documentation: [ Protecting from CSRF](https://www.jenkins.io/doc/developer/security/form-validation/#protecting-from-csrf).\n* MDN web docs: [ HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).\n* Common Weakness Enumeration: [CWE-352](https://cwe.mitre.org/data/definitions/352.html).\n",
+          "markdown": "# HTTP request type unprotected from CSRF\nCross-site request forgery (CSRF) is a type of vulnerability in which an attacker is able to force a user to carry out an action that the user did not intend.\n\nThe attacker tricks an authenticated user into submitting a request to the web application. Typically, this request will result in a state change on the server, such as changing the user's password. The request can be initiated when the user visits a site controlled by the attacker. If the web application relies only on cookies for authentication, or on other credentials that are automatically included in the request, then this request will appear as legitimate to the server.\n\n\n## Recommendation\nMake sure any requests that change application state are protected from CSRF. Some application frameworks provide default CSRF protection for unsafe HTTP request methods (such as `POST`) which may change the state of the application. Safe HTTP request methods (such as `GET`) should only perform read-only operations and should not be used for actions that change application state.\n\nThis query currently supports the Spring and Stapler web frameworks. Spring provides default CSRF protection for all unsafe HTTP methods whereas Stapler provides default CSRF protection for the `POST` method.\n\n\n## Example\nThe following examples show Spring request handlers allowing safe HTTP request methods for state-changing actions. Since safe HTTP request methods do not have default CSRF protection in Spring, they should not be used when modifying application state. Instead, use one of the unsafe HTTP methods which Spring default-protects from CSRF.\n\n\n```java\nimport org.springframework.web.bind.annotation.RequestMapping;\nimport org.springframework.web.bind.annotation.RequestMethod;\n\n// BAD - a safe HTTP request like GET should not be used for a state-changing action\n@RequestMapping(value=\"/transfer\", method=RequestMethod.GET)\npublic boolean doTransfer(HttpServletRequest request, HttpServletResponse response){\n  return transfer(request, response);\n}\n\n// BAD - no HTTP request type is specified, so safe HTTP requests are allowed\n@RequestMapping(value=\"/delete\")\npublic boolean doDelete(HttpServletRequest request, HttpServletResponse response){\n  return delete(request, response);\n}\n\n```\n\n```java\nimport org.springframework.web.bind.annotation.RequestMapping;\nimport org.springframework.web.bind.annotation.RequestMethod;\nimport org.springframework.web.bind.annotation.DeleteMapping;\n\n// GOOD - use an unsafe HTTP request like POST\n@RequestMapping(value=\"/transfer\", method=RequestMethod.POST)\npublic boolean doTransfer(HttpServletRequest request, HttpServletResponse response){\n  return transfer(request, response);\n}\n\n// GOOD - use an unsafe HTTP request like DELETE\n@DeleteMapping(value=\"/delete\")\npublic boolean doDelete(HttpServletRequest request, HttpServletResponse response){\n  return delete(request, response);\n}\n\n```\nThe following examples show Stapler web methods allowing safe HTTP request methods for state-changing actions. Since safe HTTP request methods do not have default CSRF protection in Stapler, they should not be used when modifying application state. Instead, use the `POST` method which Stapler default-protects from CSRF.\n\n\n```java\nimport org.kohsuke.stapler.verb.GET;\n\n// BAD - a safe HTTP request like GET should not be used for a state-changing action\n@GET\npublic HttpRedirect doTransfer() {\n  return transfer();\n}\n\n// BAD - no HTTP request type is specified, so safe HTTP requests are allowed\npublic HttpRedirect doPost() {\n  return post();\n}\n\n```\n\n```java\nimport org.kohsuke.stapler.verb.POST;\n\n// GOOD - use POST\n@POST\npublic HttpRedirect doTransfer() {\n  return transfer();\n}\n\n// GOOD - use POST\n@POST\npublic HttpRedirect doPost() {\n  return post();\n}\n\n```\n\n## References\n* OWASP: [Cross Site Request Forgery (CSRF)](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)).\n* Spring Security Reference: [ Cross Site Request Forgery (CSRF)](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html).\n* Jenkins Developer Documentation: [ Protecting from CSRF](https://www.jenkins.io/doc/developer/security/form-validation/#protecting-from-csrf).\n* MDN web docs: [ HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).\n* Common Weakness Enumeration: [CWE-352](https://cwe.mitre.org/data/definitions/352.html).\n"
+        }
+      }
+    ],
+    "py/clear-text-logging-sensitive-data": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# Clear-text logging of sensitive information\nIf sensitive data is written to a log entry it could be exposed to an attacker who gains access to the logs.\n\nPotential attackers can obtain sensitive user data when the log output is displayed. Additionally that data may expose system information such as full path names, system information, and sometimes usernames and passwords.\n\n\n## Recommendation\nSensitive data should not be logged.\n\n\n## Example\nIn the example the entire process environment is logged using \\`print\\`. Regular users of the production deployed application should not have access to this much information about the environment configuration.\n\n\n```python\n# BAD: Logging cleartext sensitive data\nimport os\nprint(f\"[INFO] Environment: {os.environ}\")\n```\nIn the second example the data that is logged is not sensitive.\n\n\n```python\nnot_sensitive_data = {'a': 1, 'b': 2}\n# GOOD: it is fine to log data that is not sensitive\nprint(f\"[INFO] Some object contains: {not_sensitive_data}\")\n```\n\n## References\n* OWASP: [Insertion of Sensitive Information into Log File](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/).\n* Common Weakness Enumeration: [CWE-312](https://cwe.mitre.org/data/definitions/312.html).\n* Common Weakness Enumeration: [CWE-359](https://cwe.mitre.org/data/definitions/359.html).\n* Common Weakness Enumeration: [CWE-532](https://cwe.mitre.org/data/definitions/532.html).\n",
+          "markdown": "# Clear-text logging of sensitive information\nIf sensitive data is written to a log entry it could be exposed to an attacker who gains access to the logs.\n\nPotential attackers can obtain sensitive user data when the log output is displayed. Additionally that data may expose system information such as full path names, system information, and sometimes usernames and passwords.\n\n\n## Recommendation\nSensitive data should not be logged.\n\n\n## Example\nIn the example the entire process environment is logged using \\`print\\`. Regular users of the production deployed application should not have access to this much information about the environment configuration.\n\n\n```python\n# BAD: Logging cleartext sensitive data\nimport os\nprint(f\"[INFO] Environment: {os.environ}\")\n```\nIn the second example the data that is logged is not sensitive.\n\n\n```python\nnot_sensitive_data = {'a': 1, 'b': 2}\n# GOOD: it is fine to log data that is not sensitive\nprint(f\"[INFO] Some object contains: {not_sensitive_data}\")\n```\n\n## References\n* OWASP: [Insertion of Sensitive Information into Log File](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/).\n* Common Weakness Enumeration: [CWE-312](https://cwe.mitre.org/data/definitions/312.html).\n* Common Weakness Enumeration: [CWE-359](https://cwe.mitre.org/data/definitions/359.html).\n* Common Weakness Enumeration: [CWE-532](https://cwe.mitre.org/data/definitions/532.html).\n"
+        }
+      }
+    ],
+    "py/overly-permissive-file": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# Overly permissive file permissions\nWhen creating a file, POSIX systems allow permissions to be specified for owner, group and others separately. Permissions should be kept as strict as possible, preventing access to the files contents by other users.\n\n\n## Recommendation\nRestrict the file permissions of files to prevent any but the owner being able to read or write to that file\n\n\n## References\n* Wikipedia: [File system permissions](https://en.wikipedia.org/wiki/File_system_permissions).\n* Common Weakness Enumeration: [CWE-732](https://cwe.mitre.org/data/definitions/732.html).\n",
+          "markdown": "# Overly permissive file permissions\nWhen creating a file, POSIX systems allow permissions to be specified for owner, group and others separately. Permissions should be kept as strict as possible, preventing access to the files contents by other users.\n\n\n## Recommendation\nRestrict the file permissions of files to prevent any but the owner being able to read or write to that file\n\n\n## References\n* Wikipedia: [File system permissions](https://en.wikipedia.org/wiki/File_system_permissions).\n* Common Weakness Enumeration: [CWE-732](https://cwe.mitre.org/data/definitions/732.html).\n"
+        }
+      }
+    ],
+    "js/insecure-randomness": [
+      {
+        "path": "/help",
+        "before": null,
+        "after": {
+          "text": "# Insecure randomness\nUsing a cryptographically weak pseudo-random number generator to generate a security-sensitive value, such as a password, makes it easier for an attacker to predict the value.\n\nPseudo-random number generators generate a sequence of numbers that only approximates the properties of random numbers. The sequence is not truly random because it is completely determined by a relatively small set of initial values, the seed. If the random number generator is cryptographically weak, then this sequence may be easily predictable through outside observations.\n\n\n## Recommendation\nUse a cryptographically secure pseudo-random number generator if the output is to be used in a security-sensitive context. As a rule of thumb, a value should be considered \"security-sensitive\" if predicting it would allow the attacker to perform an action that they would otherwise be unable to perform. For example, if an attacker could predict the random password generated for a new user, they would be able to log in as that new user.\n\nFor JavaScript on the NodeJS platform, `crypto.getRandomBytes` provides a cryptographically secure pseudo-random byte generator. Note that the conversion from bytes to numbers can introduce bias that breaks the security.\n\nFor JavaScript in the browser, `crypto.getRandomValues` provides a cryptographically secure pseudo-random number generator.\n\n\n## Example\nThe following examples show different ways of generating a password.\n\nIn the first case, we generate a fresh password by appending a random integer to the end of a static string. The random number generator used (`Math.random`) is not cryptographically secure, so it may be possible for an attacker to predict the generated password.\n\n\n```javascript\nfunction insecurePassword() {\n    // BAD: the random suffix is not cryptographically secure\n    var suffix = Math.random();\n    var password = \"myPassword\" + suffix;\n    return password;\n}\n\n```\nIn the second example, a cryptographically secure random number generator is used for the same purpose. In this case, it is much harder to predict the generated integers.\n\n\n```javascript\nfunction securePassword() {\n    // GOOD: the random suffix is cryptographically secure\n    var suffix = window.crypto.getRandomValues(new Uint32Array(1))[0];\n    var password = \"myPassword\" + suffix;\n    \n    // GOOD: if a random value between 0 and 1 is desired\n    var secret = window.crypto.getRandomValues(new Uint32Array(1))[0] * Math.pow(2,-32);\n}\n\n```\n\n## References\n* Wikipedia: [Pseudo-random number generator](https://en.wikipedia.org/wiki/Pseudorandom_number_generator).\n* Mozilla Developer Network: [Crypto: getRandomValues()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues).\n* NodeJS: [crypto.randomBytes](https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback)\n* Common Weakness Enumeration: [CWE-338](https://cwe.mitre.org/data/definitions/338.html).\n",
+          "markdown": "# Insecure randomness\nUsing a cryptographically weak pseudo-random number generator to generate a security-sensitive value, such as a password, makes it easier for an attacker to predict the value.\n\nPseudo-random number generators generate a sequence of numbers that only approximates the properties of random numbers. The sequence is not truly random because it is completely determined by a relatively small set of initial values, the seed. If the random number generator is cryptographically weak, then this sequence may be easily predictable through outside observations.\n\n\n## Recommendation\nUse a cryptographically secure pseudo-random number generator if the output is to be used in a security-sensitive context. As a rule of thumb, a value should be considered \"security-sensitive\" if predicting it would allow the attacker to perform an action that they would otherwise be unable to perform. For example, if an attacker could predict the random password generated for a new user, they would be able to log in as that new user.\n\nFor JavaScript on the NodeJS platform, `crypto.getRandomBytes` provides a cryptographically secure pseudo-random byte generator. Note that the conversion from bytes to numbers can introduce bias that breaks the security.\n\nFor JavaScript in the browser, `crypto.getRandomValues` provides a cryptographically secure pseudo-random number generator.\n\n\n## Example\nThe following examples show different ways of generating a password.\n\nIn the first case, we generate a fresh password by appending a random integer to the end of a static string. The random number generator used (`Math.random`) is not cryptographically secure, so it may be possible for an attacker to predict the generated password.\n\n\n```javascript\nfunction insecurePassword() {\n    // BAD: the random suffix is not cryptographically secure\n    var suffix = Math.random();\n    var password = \"myPassword\" + suffix;\n    return password;\n}\n\n```\nIn the second example, a cryptographically secure random number generator is used for the same purpose. In this case, it is much harder to predict the generated integers.\n\n\n```javascript\nfunction securePassword() {\n    // GOOD: the random suffix is cryptographically secure\n    var suffix = window.crypto.getRandomValues(new Uint32Array(1))[0];\n    var password = \"myPassword\" + suffix;\n    \n    // GOOD: if a random value between 0 and 1 is desired\n    var secret = window.crypto.getRandomValues(new Uint32Array(1))[0] * Math.pow(2,-32);\n}\n\n```\n\n## References\n* Wikipedia: [Pseudo-random number generator](https://en.wikipedia.org/wiki/Pseudorandom_number_generator).\n* Mozilla Developer Network: [Crypto: getRandomValues()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues).\n* NodeJS: [crypto.randomBytes](https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback)\n* Common Weakness Enumeration: [CWE-338](https://cwe.mitre.org/data/definitions/338.html).\n"
+        }
+      }
+    ]
+  },
+  "interpretation": "Raw results differ only in checked query descriptor references and file artifact indexes; the full normalized result,ordered point,region,message and severity match. Resolved descriptor metadata is unchanged except newly embedded matching text/markdown help documentation, retained in full. New original raw hashes retained."
+}

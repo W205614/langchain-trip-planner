@@ -1,0 +1,213 @@
+{
+  "run_id": 42356710883,
+  "head_sha": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+  "workflow_path": ".github/workflows/security.yml",
+  "run_attempt": 1,
+  "html_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42356710883",
+  "jobs": [
+    {
+      "id": 128356270928,
+      "name": "CodeQL / actions",
+      "run_id": 42356710883,
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 128356270973,
+      "name": "CodeQL / java-kotlin",
+      "run_id": 42356710883,
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        }
+      ]
+    },
+    {
+      "id": 128356270990,
+      "name": "CodeQL / javascript-typescript",
+      "run_id": 42356710883,
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 128356270999,
+      "name": "CodeQL / python",
+      "run_id": 42356710883,
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    }
+  ]
+}

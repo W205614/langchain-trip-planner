@@ -1,0 +1,62 @@
+{
+  "run": {
+    "id": 42356710883,
+    "head_sha": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+    "run_attempt": 1,
+    "workflow_path": ".github/workflows/security.yml",
+    "html_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42356710883",
+    "status": "in_progress"
+  },
+  "artifacts": [
+    {
+      "id": 13567578624,
+      "name": "security-codeql-java-kotlin",
+      "digest": "sha256:f80f684ac67b49a326dc747ffd3a13f26346328ba175f54fd47af979a9d9a4bd",
+      "workflow_run": {
+        "id": 42356710883,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653"
+      }
+    },
+    {
+      "id": 13568330572,
+      "name": "security-codeql-python",
+      "digest": "sha256:f9dc620fde7053528ff01e21a61f61cc39d910d259be8503695d0e2062112120",
+      "workflow_run": {
+        "id": 42356710883,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653"
+      }
+    },
+    {
+      "id": 13568251210,
+      "name": "security-codeql-javascript-typescript",
+      "digest": "sha256:45ccc5f98891ed0e75d7367c0f9895d93dd67cd239dc4ee66152cfa3de4b51de",
+      "workflow_run": {
+        "id": 42356710883,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653"
+      }
+    },
+    {
+      "id": 13568261147,
+      "name": "security-codeql-actions",
+      "digest": "sha256:f4d7100f366330272d18c53fa2066f3e654aa71c78025affcbc08294ef643a58",
+      "workflow_run": {
+        "id": 42356710883,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653"
+      }
+    }
+  ],
+  "archive_sha256_verified": true,
+  "exact_source_run_and_head_verified": true
+}

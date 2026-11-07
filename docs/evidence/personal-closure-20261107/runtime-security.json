@@ -1,0 +1,238 @@
+{
+  "source_checkpoint": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+  "runtime": {
+    "source_checkpoint": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+    "passed": true,
+    "budget_before": {
+      "text": 5,
+      "embedding": 23,
+      "vision": 1,
+      "amap": 62
+    },
+    "paused_workers": true,
+    "seven_ready": true,
+    "mounts_preserved": true,
+    "http": {
+      "/": 200,
+      "/health": 200,
+      "/readyz": 200,
+      "/api/auth/options": 200,
+      "/api/capabilities": 200
+    },
+    "state": {
+      "schema": "20",
+      "users": 45,
+      "trips": 61,
+      "documents": 3,
+      "usable_mfa_admins": 1
+    },
+    "images": {
+      "postgres": "sha256:af1f7624617252bf8acd20d76e6b78193852c85eb9fae81087da6a46eb7592ce",
+      "backend": "sha256:e952031f676c1fea3217cb9c2a8c9267d98f2699f577105d293f9ec41425987d",
+      "agent": "sha256:e568b7864f2dd28b0a63473989ab14233b5c659f5489534c5b872614edeb2013",
+      "frontend": "sha256:9852e23afab48b1d742c23e99905fc22d53f3b14ced69df79a9abd7597eff2c6",
+      "prometheus": "sha256:0320335d44721acc78f57e639a600a166ec0bdcf38712504845deeb26a7075be",
+      "alertmanager": "sha256:dc5e826809bf0a70ee41463ed3fc52a221861993e4412304a66ce4524fb2e265",
+      "alert-receiver": "sha256:397944d2c0a9333a1ce1fc3d42345bd796e971ebd1780e42917b30f5cc0e8517"
+    },
+    "all_seven_stopped": true,
+    "workers_config_restored_byte_for_byte": true,
+    "budget_after": {
+      "text": 5,
+      "embedding": 23,
+      "vision": 1,
+      "amap": 62
+    },
+    "budget_unchanged": true
+  },
+  "actual_image_scans": {
+    "agent": {
+      "scanner": "grype-image",
+      "target": "sha256:e568b7864f2dd28b0a63473989ab14233b5c659f5489534c5b872614edeb2013",
+      "image_id": "sha256:e568b7864f2dd28b0a63473989ab14233b5c659f5489534c5b872614edeb2013",
+      "status": "pass_vendor_policy",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 85,
+      "contextual_not_affected": 4,
+      "all_findings": 241,
+      "exit_code": 2,
+      "vex_expires_on": null,
+      "vex_review_policy": "source_and_execution_path_bound",
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 14,
+        "fixed_by_pinned_security_upgrade": 47,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 20
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": "source_and_artifact_bound",
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": true
+    },
+    "backend": {
+      "scanner": "grype-image",
+      "target": "trip-daily-backend:f74d7fa",
+      "image_id": "sha256:e952031f676c1fea3217cb9c2a8c9267d98f2699f577105d293f9ec41425987d",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 232,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "frontend": {
+      "scanner": "grype-image",
+      "target": "trip-daily-frontend:f74d7fa",
+      "image_id": "sha256:9852e23afab48b1d742c23e99905fc22d53f3b14ced69df79a9abd7597eff2c6",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "postgres": {
+      "scanner": "grype-image",
+      "target": "trip-planner-postgres:17.11-security1",
+      "image_id": "sha256:af1f7624617252bf8acd20d76e6b78193852c85eb9fae81087da6a46eb7592ce",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 4,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "caddy": {
+      "scanner": "grype-image",
+      "target": "trip-closure-caddy:compress-fixed",
+      "image_id": "sha256:6a147147579f79d61e4dfbaf7fa17ed468e582b734a2e365d97ab5f11f2c3b09",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "alertmanager": {
+      "scanner": "grype-image",
+      "target": "trip-closure-alertmanager:compress-fixed",
+      "image_id": "sha256:dc5e826809bf0a70ee41463ed3fc52a221861993e4412304a66ce4524fb2e265",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 11,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    },
+    "prometheus": {
+      "scanner": "grype-image",
+      "target": "trip-closure-prometheus:f74d7fa",
+      "image_id": "sha256:0320335d44721acc78f57e639a600a166ec0bdcf38712504845deeb26a7075be",
+      "status": "pass",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 0,
+      "contextual_not_affected": 0,
+      "all_findings": 3,
+      "exit_code": 0,
+      "vex_expires_on": null,
+      "vex_review_policy": null,
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 0,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 0
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": null,
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": false
+    }
+  },
+  "grype_database": {
+    "official_source_url": "https://grype.anchore.io/databases/v6/vulnerability-db_v6.1.10_2026-11-07T00:20:09Z_1794032328.tar.zst?checksum=sha256%3Af90467f0e784f8f6dd04b9a53588851e4b6fb874a4171d9edc95e91502feda5a",
+    "archive_sha256": "f90467f0e784f8f6dd04b9a53588851e4b6fb874a4171d9edc95e91502feda5a",
+    "archive_bytes": 198964673,
+    "archive_matches_expected_official_query_checksum": true,
+    "import_exit_code": 0
+  },
+  "checks": {
+    "backup_restore_policy_tests_passed": 53,
+    "security_tool_tests_passed": 76,
+    "native_runtime_tests_passed": 9,
+    "default_uvicorn_runtime_constraints_passed": true
+  }
+}

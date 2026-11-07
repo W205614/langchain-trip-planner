@@ -61,3 +61,5 @@ README 和维护手册已更新到当前部署、MFA管理员、全量索引和�
 Windows 本批次已将143条明确路径移入回收站。大型 `.codex-public` 缓存已回收，原调用预算SQLite继续保留；4份小源码快照及恢复报告保留在本机私有审计目录。
 
 真实云厂商的 SMTP／S3、正式域名 DNS／ACME、外部告警接收端及异机备份仍需在选定平台联调，步骤见[公开部署手册](../../operations/public-deployment.md)。
+
+后续冷构建与运行依赖修复采用源码 `f74d7fa`，已重新完成镜像扫描、逐项CodeQL复核及日常七服务验收，详见[最终运行验收](runtime-security.md)。

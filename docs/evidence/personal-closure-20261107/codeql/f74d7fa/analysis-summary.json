@@ -1,0 +1,71 @@
+{
+  "source_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+  "workflow_run": 42356710883,
+  "workflow_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42356710883",
+  "analysis_jobs": [
+    {
+      "language": "java",
+      "path": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/java.sarif",
+      "sha256": "f8a1101c878ed6517c7b31928ae7c47db785b8d194fb1457a25c4e8d7f9b4c3c",
+      "source_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+      "blocking_findings": 21,
+      "artifact_id": 13567578624
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/python.sarif",
+      "sha256": "f4ec1eb8a3408db89288b5e2912191b80e0710e098307f0d458ceedebce65d22",
+      "source_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+      "blocking_findings": 2,
+      "artifact_id": 13568330572
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/javascript.sarif",
+      "sha256": "3d62d573912490ef30ea15c070660ae22d2b8035d3c644b6a19933b4683dd5d6",
+      "source_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+      "blocking_findings": 3,
+      "artifact_id": 13568251210
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/actions.sarif",
+      "sha256": "1f06e972aaaefdec428042c79c0e8149c406cce0c0408f44d350725f9e60adba",
+      "source_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+      "blocking_findings": 0,
+      "artifact_id": 13568261147
+    }
+  ],
+  "raw_blocking_findings": 26,
+  "individually_reviewed": 26,
+  "new_unknown_identities": 0,
+  "checked_supporting_source_bindings": 47,
+  "unchanged_supporting_sources": 45,
+  "changed_supporting_sources": [
+    {
+      "path": "backend/app/services/rag_service.py",
+      "previous_lf_sha256": "d7a6248744ee5eb0d21658062d4d1bebc128ef1b45eb394f9be37ee98397b4b1",
+      "current_lf_sha256": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
+      "source_review": "Complete diff read: only three docstring lines replaced the obsolete compatible/intermediary embedding wording with the existing official OpenAI configuration. No executable branch, parameter, signature, line count or embedding caller changed."
+    },
+    {
+      "path": "backend/runtime-security-packages.json",
+      "previous_lf_sha256": "02a7b03f1950d99134ac9d2749802859b0c75c7e907faf1cc22928bfa18f316b",
+      "current_lf_sha256": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
+      "source_review": "Complete diff read: only requires_base_versions.zlib1g changes from1:1.3.dfsg+really1.3.1-1+b1 to1:1.3.dfsg+really1.3.1-1+deb13u1. Independently authenticated current trixie-security InRelease and Packages hash identify this exact stable baseline. All target packages/hashes/SONAMEs and the installer remain unchanged. Fresh real install upgraded the same exact3 packages,0 new/removed,libc unchanged; old baseline is rejected. This public build-artifact lock does not introduce runtime secret data or new chmod target."
+    }
+  ],
+  "all_analysis_steps_succeeded": true,
+  "old_context_gate_steps_failed": true,
+  "business_tree_bindings": {
+    "backend": "1429e7e6ad8bae612b6dd33b0e5b4ba47149d0ae",
+    "business-backend": "bc18595c8465ccc0f9e0605a58b625c939d377e6",
+    "frontend": "dc8535ec029cbd67a560ed080353078688636e9a",
+    "deploy": "b44af8caa7569e0fb017cb44a1d0e86f41b01e59",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "review_sha256": "11b22d79c24b49b30c486ad0c92b37d7dc59c53619c20c51070738a5d2356a9c",
+  "policy_draft": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/policy-draft.json",
+  "active_policy_modified": false,
+  "full_raw_representation_differences": "Rule descriptor references move into extension component0 and artifact indexes are renumbered; resolved rule execution/classification metadata and each URI match, with new embedded help documentation explicitly retained. Normalized whole result is equal."
+}

@@ -4,8 +4,8 @@
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
-    "docker-compose.yml": "6b2bba1491a1bd262f61b08561fb6848c949cb5ffaa9f0faf3db9ba943eb33e3",
-    "docker-compose.production.yml": "7815d1439bbdd5269186abbe3e5d03c38e0dbf046c1293c23e7e9f502657787f",
+    "docker-compose.yml": "f2a1040426f9da2ad189d0e5186c577575f6183f3cbeae0c6ad3dab5a7472a3f",
+    "docker-compose.production.yml": "c5462fa519513df51f5f2fe6b137f1e79c331cdedaad1689eec9d73f27f576ed",
     "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
     "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",

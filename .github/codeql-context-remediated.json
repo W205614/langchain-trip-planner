@@ -3,19 +3,19 @@
   "review_policy": "source_and_trace_bound",
   "expected_entry_count": 26,
   "classification": "not_affected_context",
-  "scope": "26 individually reviewed exact source, location, severity and semantic-flow contexts at 56fef02. Root independently loaded and assessed the four fresh security-extended SARIF; raw severities remain and changed or unknown evidence blocks the gate.",
-  "reviewed_business_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
-  "original_sarif_revision": "56fef02ce1942fa22a439dfa7d40a2457cc45770",
-  "original_workflow_run": null,
-  "analysis_origin": "Local official CodeQL2.27.4 security-extended",
+  "scope": "26 exact source, location, severity and ordered semantic-flow contexts from fresh official CodeQL analysis of f74d7fa. Root independently assessed all four original SARIF before activation; raw severities remain and changed or unknown source or trace blocks the gate.",
+  "reviewed_business_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+  "original_sarif_revision": "f74d7fa8e38e7a998a5f2cdb9d17dea1f429b653",
+  "original_workflow_run": 42356710883,
+  "analysis_origin": "Fresh GitHub Actions official CodeQL2.27.4 security-extended",
   "flow_hash_algorithm": "sarif-semantic-flow-v1",
-  "review_record": "docs/evidence/personal-closure-20261107/codeql/source-review.json",
-  "review_record_sha256": "7e8e3436167fd683fedded7487b6487e124a1ed027053b5db51b17993ad060c9",
+  "review_record": "docs/evidence/personal-closure-20261107/codeql/f74d7fa/source-review.json",
+  "review_record_sha256": "11b22d79c24b49b30c486ad0c92b37d7dc59c53619c20c51070738a5d2356a9c",
   "business_tree_bindings": {
-    "backend": "bb3cc2e4cc9a1ce0caee29e94f1c1d27d31f5338",
+    "backend": "1429e7e6ad8bae612b6dd33b0e5b4ba47149d0ae",
     "business-backend": "bc18595c8465ccc0f9e0605a58b625c939d377e6",
     "frontend": "dc8535ec029cbd67a560ed080353078688636e9a",
-    "deploy": "608821351d0067ca1756a10d0dfd3426637a3d73",
+    "deploy": "b44af8caa7569e0fb017cb44a1d0e86f41b01e59",
     "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
   },
   "source_bindings": {
@@ -24,8 +24,8 @@
     "backend/app/services/amap_mcp_service.py": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
     "backend/app/services/call_budget.py": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
     "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
-    "backend/app/services/rag_service.py": "d7a6248744ee5eb0d21658062d4d1bebc128ef1b45eb394f9be37ee98397b4b1",
-    "backend/runtime-security-packages.json": "02a7b03f1950d99134ac9d2749802859b0c75c7e907faf1cc22928bfa18f316b",
+    "backend/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
+    "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
     "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
     "backend/scripts/optimization_seed_admin.py": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
     "backend/scripts/prepare_java_deployment.py": "2ad163bc9474b90d6c05b155a9bde985d720221cc65357c64ff7676ad88763dd",
@@ -80,7 +80,7 @@
       "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
       "classification": "not_affected_context",
       "source_sha256": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
-      "reviewed_raw_trace_sha256": "89822acdddd96f80321e6d3d2ca00f8009ec18baf5d389f50a018b195483aa53",
+      "reviewed_raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
       "reason": "contextual_false_positive_current_custom_cookie_csrf_guard",
       "review_context": "java/spring-disabled-csrf-protection",
       "evidence": [
@@ -106,7 +106,7 @@
       "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
       "classification": "not_affected_context",
       "source_sha256": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
-      "reviewed_raw_trace_sha256": "d456e1844fc253354c35f3587484417a7031ec8f55b6ab167eb1c196f3806b4a",
+      "reviewed_raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
       "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -131,7 +131,7 @@
       "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
       "classification": "not_affected_context",
       "source_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
-      "reviewed_raw_trace_sha256": "a7103152e5709a194b635e2acfbcc819e7988e7f43da75d7f02f91d4f5a2978d",
+      "reviewed_raw_trace_sha256": "7947b61858a8ffc54c0c7532be2cd4c13ca29107669dec7ba9de0130ce906fe6",
       "reason": "contextual_false_positive_database_compare_and_increment_guard",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -154,7 +154,7 @@
       "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
       "classification": "not_affected_context",
       "source_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
-      "reviewed_raw_trace_sha256": "ca80b71b3996020bb419b6db0788d733402b98cb469692410b4b45e04215ef88",
+      "reviewed_raw_trace_sha256": "b1ba89a138af679face310de1b5c4e5bce4341712481f594f466826e33200151",
       "reason": "contextual_false_positive_database_compare_and_increment_guard",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -177,7 +177,7 @@
       "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
       "classification": "not_affected_context",
       "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
-      "reviewed_raw_trace_sha256": "b0dde8626bc173e8f8804d57b8d4a4f2b5248cb8b2d415142a2837c3de73884e",
+      "reviewed_raw_trace_sha256": "5fa33087cf5a44ec108595c94298c33f0b6c770d0bda4d4c2a24a7c077c4b9ce",
       "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -201,7 +201,7 @@
       "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
       "classification": "not_affected_context",
       "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
-      "reviewed_raw_trace_sha256": "0d5a279008f6082a51f8bcac4708c494a81b14cd9095f8ca40a4e63f9d361f6a",
+      "reviewed_raw_trace_sha256": "eb7b360d4ec95e39fa515acf6fff4312b8455af95600691af14404b25d28525a",
       "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -225,7 +225,7 @@
       "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
       "classification": "not_affected_context",
       "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
-      "reviewed_raw_trace_sha256": "e77617ac63b19c9ffb9efc8a9d57d6668d3a6d1de322918aca3866e7673d2014",
+      "reviewed_raw_trace_sha256": "4655dcecbbbfb972fef04cddc3cd85382442ed607b117436ce1517515ab35543",
       "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -250,7 +250,7 @@
       "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
       "classification": "not_affected_context",
       "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
-      "reviewed_raw_trace_sha256": "7088fd4729cd6ea62ae2cdf52e6cf2dad6985335eab03d914f1996af74897eee",
+      "reviewed_raw_trace_sha256": "7ef5bbf021a789a24a32573f1dda99dbe45f5b79b040eca5a6dbd276c28f5526",
       "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
       "review_context": "java/tainted-arithmetic",
       "evidence": [
@@ -275,7 +275,7 @@
       "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
       "classification": "not_affected_context",
       "source_sha256": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
-      "reviewed_raw_trace_sha256": "6d32506a89b935d61ef583e7398758874f9292e035d174578ba2833cba963bb4",
+      "reviewed_raw_trace_sha256": "9bb6b25c12d49d08f9279310a3be4f149cdc969ed8e8573738e8d867f533f0b1",
       "reason": "contextual_false_positive_fixed_nonce_and_no_unbounded_remote_payload",
       "review_context": "java/uncontrolled-arithmetic",
       "evidence": [
@@ -299,7 +299,7 @@
       "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
       "classification": "not_affected_context",
       "source_sha256": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
-      "reviewed_raw_trace_sha256": "e0c36cdee870bb2ee6d534a245cf3103a6e656c87703271843828045833718b6",
+      "reviewed_raw_trace_sha256": "2125442733a3463f4a0b3758315af3ff89f0c7b27581e67dbc53967e0855eea1",
       "reason": "contextual_false_positive_current_fixed_generated_totp_encryption_input",
       "review_context": "java/uncontrolled-arithmetic",
       "evidence": [
@@ -314,211 +314,15 @@
       "query": "java/csrf-unprotected-request-type",
       "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
       "region": {
-        "startLine": 35,
-        "startColumn": 58,
-        "endColumn": 68
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "a566dbb78de721af94b62c944b9299d0d4c1501eea6f4b4c2ca6ae2531e19566",
-      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 61,
+        "startLine": 128,
         "startColumn": 17,
-        "endColumn": 27
+        "endColumn": 29
       },
       "security_severity": "8.8",
-      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "0d44bfbc091a394828bad7435ef5b885783cad64f008da8fbc1a26ffe16a6e78",
-      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 66,
-        "startColumn": 17,
-        "endColumn": 20
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "1be9c6c2f9a8590ce32b43999aa17ebe9d507c6578bf9224c3916ca954076b6a",
-      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 75,
-        "startColumn": 17,
-        "endColumn": 23
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "51042bec28594f5ad4e2b3cd58e584f097a846beaa8beaf2a3eee495c56f2595",
-      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 81,
-        "startColumn": 17,
-        "endColumn": 23
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "ed1ee022e7474546280c4c37109ccd845a522ef06135958f582370a402f891a2",
-      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 86,
-        "startColumn": 17,
-        "endColumn": 24
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "fd05be319a8dd95320c00e14ba245ccf7d96f268aa3afe399412db5f16b1e392",
-      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 110,
-        "startColumn": 17,
-        "endColumn": 20
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "c5805e328083f2707b10b01613e74cdc50bbf31b247baebf7f56229c4338fe86",
-      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
-      "review_context": "java/csrf-unprotected-request-type",
-      "evidence": [
-        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
-        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
-        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
-        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
-      ],
-      "limitations": [
-        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
-        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
-        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
-        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
-      ]
-    },
-    {
-      "query": "java/csrf-unprotected-request-type",
-      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
-      "region": {
-        "startLine": 115,
-        "startColumn": 17,
-        "endColumn": 26
-      },
-      "security_severity": "8.8",
-      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
-      "classification": "not_affected_context",
-      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "42d1a996c012bbfeca989db18b723b651d1adac7ce96cb7e7f11a465555e44f2",
+      "reviewed_raw_trace_sha256": "2a144877fa9a290ce268ecee2b65be059472cb239560df3d222d14b84d1cab23",
       "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -546,7 +350,7 @@
       "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "613c5e940018f2431dfeb6115ce22fe0d4d7ed0165d67d1ce7337ea63f390d14",
+      "reviewed_raw_trace_sha256": "f9da10cf202368e24915d9d1912ed532682b56a13b1d624953b31c0412af5d78",
       "reason": "contextual_current_read_only_readiness_callback_receiver_and_concrete_callback_review",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -566,16 +370,212 @@
       "query": "java/csrf-unprotected-request-type",
       "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
       "region": {
-        "startLine": 128,
+        "startLine": 115,
         "startColumn": 17,
-        "endColumn": 29
+        "endColumn": 26
       },
       "security_severity": "8.8",
-      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
       "classification": "not_affected_context",
       "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
-      "reviewed_raw_trace_sha256": "d94abb1b476203c41a4fce83dbc7b02448b8e2893addf9db2e19b3b80fe29792",
+      "reviewed_raw_trace_sha256": "d5eb86c5b7b29864fdd8f043b2e601cd942bbf78b416d2eef6f7a7f140b751f6",
       "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "ed3b45ad154431bf92c14dd507916f9636d3f2495f0c238d04a89a3ab8124269",
+      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "ea6e6a2993eb2a8f6b0ec763ab9e8d8be9e67cae1e8b0feba801cc9293c72c0c",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "7a8ad6d7ae67ff7cd9e082b370ff41eb9ea30196a7859076bf9f3f23ae7fea25",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "ab4650a64581228d41a55f76af4e57809a2be6817831af01c008e95ca1b380ed",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "86d58c3cca32cc59735812f7add9cb7f5eb65fddfafc63b9dbc42ed8490aceb5",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "1e909f706cf29fd8e12df2e28cea62e016c7c9e1d07e77901df36e7b5ef2d09e",
+      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "4697bdc946222d370dcb478c8105e4f95810f6295f9d2ad968caab9b1fb2ade5",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
         "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
@@ -602,7 +602,7 @@
       "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
       "classification": "not_affected_context",
       "source_sha256": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
-      "reviewed_raw_trace_sha256": "209690f10dd945525de491ee2900b181c82a88140f09f7c4fa6d762c625910af",
+      "reviewed_raw_trace_sha256": "69e67eed0b04886aa267d51ff25617a4afc247199d65e9289c6f29d253068d55",
       "reason": "contextual_current_read_only_validation_only_and_concrete_callback_review",
       "review_context": "java/csrf-unprotected-request-type",
       "evidence": [
@@ -630,7 +630,7 @@
       "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
       "classification": "not_affected_context",
       "source_sha256": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
-      "reviewed_raw_trace_sha256": "76c4a3ee96107e80f03641dcf4ca06bb5bd387d98cc1390d8399ff56d65d35a9",
+      "reviewed_raw_trace_sha256": "8af25d92f74b3ee2b89f373baeb8863450b486f95bbc83cd99c0ad6428a8745e",
       "reason": "contextual_false_positive_current_fixture_status_only_return_is_logged",
       "review_context": "py/clear-text-logging-sensitive-data",
       "evidence": [
@@ -654,7 +654,7 @@
       "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
       "classification": "not_affected_context",
       "source_sha256": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
-      "reviewed_raw_trace_sha256": "e72406786c263fc2c3e2da630a207ecf8816297c3c4e516150c4d633eedc13d0",
+      "reviewed_raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
       "reason": "contextual_not_sensitive_current_public_signed_package_download_directory",
       "review_context": "py/overly-permissive-file",
       "evidence": [
@@ -678,7 +678,7 @@
       "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
       "classification": "not_affected_context",
       "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
-      "reviewed_raw_trace_sha256": "f8b0d860d8aa236f25c14204a37698a977b7de9cd38dda5fbce3e6d9dd5cf865",
+      "reviewed_raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
       "reason": "contextual_false_positive_current_e2e_public_username_uniqueness",
       "review_context": "js/insecure-randomness",
       "evidence": [
@@ -705,7 +705,7 @@
       "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
       "classification": "not_affected_context",
       "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
-      "reviewed_raw_trace_sha256": "fce04758f09a59a9f77c4339e5f40f6b5c814daa15fa9997ab645b01ac86db2d",
+      "reviewed_raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
       "reason": "contextual_false_positive_current_e2e_public_username_uniqueness",
       "review_context": "js/insecure-randomness",
       "evidence": [
@@ -732,7 +732,7 @@
       "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff",
       "classification": "not_affected_context",
       "source_sha256": "0e43292bae8df3c9da20ee2e6043a9992663cfa31ba8f5949f3758dee388471d",
-      "reviewed_raw_trace_sha256": "ba2c17388590b79ce645e80dc3175e42027a771a69d24d894590d2adce83b7c4",
+      "reviewed_raw_trace_sha256": "3ccb5557dc7d6adb66468b3b78ed223d67669e79de56004a737d40ba82da3f5d",
       "reason": "contextual_false_positive_current_public_e2e_username_and_example_email_uniqueness",
       "review_context": "js/insecure-randomness",
       "evidence": [
