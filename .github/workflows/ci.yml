@@ -252,7 +252,7 @@ jobs:
           ids=subprocess.check_output(['docker','network','ls','-q'],text=True).split()
           networks=json.loads(subprocess.check_output(['docker','network','inspect',*ids],text=True)) if ids else []
           for network in networks:
-              for config in network.get('IPAM',{}).get('Config',[]):
+              for config in network.get('IPAM',{}).get('Config') or []:
                   if config.get('Subnet'):
                       existing=ipaddress.ip_network(config['Subnet'])
                       if existing.version==candidate.version and existing.overlaps(candidate):
