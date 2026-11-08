@@ -113,13 +113,15 @@ docker compose ps
 | 用户停用、配额、反馈、个人数据导出与注销 | 已实现前后端闭环，参见 [运营与数据管理](docs/operations/public-operations.md) |
 | 本地／S3 原文件存储和迁移 | 已实现真实 S3 SDK 适配；Bucket、权限、端点及凭据由部署者提供，参见 [对象存储](docs/operations/object-storage.md) |
 | HTTPS、外部告警、云 PostgreSQL | 提供部署配置与联调步骤；域名、DNS、网络和平台账号仍需实际配置，参见 [公开部署](docs/operations/public-deployment.md) |
-| 成套备份、加密归档和隔离恢复 | 提供工具与恢复流程，参见 [公开部署](docs/operations/public-deployment.md#备份与恢复)；本机已验证升级前、当前两个手工恢复点，定时任务仍停用 |
+| 备份、加密归档和隔离恢复 | 提供工具与恢复流程，参见 [公开部署](docs/operations/public-deployment.md#备份与恢复)；本机保留两套数据和配置快照，已核对数据库恢复，无离线镜像归档，完整服务克隆恢复本轮未验证，定时任务仍停用 |
 
 新安装的公开环境使用独立配置及 `docker-compose.production.yml`、`docker-compose.public.yml`；已有本机环境沿用原安装路径。公网模板要求邮箱验证和管理员 MFA。账号注销会撤回本人共享行程与投稿，索引和文件清理完成前显示处理中；已下载的导出文件、其他人的独立副本及已有备份按各自保留策略管理。
 
 项目按单机部署，支持离线集成验证和真实模型抽样。SMTP、S3、云数据库及公网入口还需在选定平台完成联调；多实例高可用和真实预订支付未纳入实现。
 
-本机单机部署保留原挂载，日常七服务按维护要求停止。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），覆盖46条可索引行程、125块。改排数量、路线证据与事实说明的修复及最新真实模型抽样见[行程事实核验报告](docs/evidence/itinerary-facts-20261107/report.md)。移动端与公开运营补验见[浏览器验收](docs/evidence/personal-closure-20261107/browser-navigation.md)，运行镜像与安全修复见[运行验收](docs/evidence/personal-closure-20261107/runtime-security.md)，部署与恢复结果见[个人项目收尾记录](docs/evidence/personal-closure-20261107/report.md)。营业、预约、住宿等实际旅行资料通过工作台补充来源后重新核验，云平台与正式公网入口按手册联调。
+`v0.1.1` 修复了景点减少未明确说明、最终景点与主题描述不一致，以及默认预算耗尽后未发送路线无法继续查询的问题。数量减少会提示调整前后数量，恢复任务复用仍有效的草稿和已查路线；这不保证每天排满指定数量。用法与边界见[时间规划与任务恢复](docs/operations/final-planning.md)，真实 API 抽样与验证范围见[补丁验收记录](docs/evidence/release-v0.1.1-20261108/README.md)。
+
+本机单机部署保留原挂载，验收后暂停七服务，日常使用时按[运行手册](docs/operations/single-host.md#现有七服务部署操作)启动。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），迁移时覆盖46条可索引行程、125块。此前的[事实核验](docs/evidence/itinerary-facts-20261107/report.md)、[浏览器验收](docs/evidence/personal-closure-20261107/browser-navigation.md)、[运行安全](docs/evidence/personal-closure-20261107/runtime-security.md)和[收尾记录](docs/evidence/personal-closure-20261107/report.md)保留各自时点的结果。营业、预约、住宿等实际旅行资料通过工作台补充来源后重新核验，云平台与正式公网入口按手册联调。
 
 - [四服务日常操作与常见问题](docs/operations/single-host.md#首次安装后的四服务维护) · [迁移和升级](docs/operations/java-migration.md)
 - [时间规划与任务恢复](docs/operations/final-planning.md) · [协作与费用](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)
@@ -129,6 +131,6 @@ docker compose ps
 
 ## 版本与许可证
 
-版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。首次发布使用 `v0.1.0`，范围为单机部署与试用；验收方式、外部服务限制及升级说明见[发布检查记录](docs/evidence/release-20261107/README.md)。源码发布不包含本机配置、数据库、备份或预构建镜像，使用对应 Tag 中的依赖文件和 Dockerfile 构建。
+版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。`v0.1.1` 是 `v0.1.0` 之后的兼容修复，无新增数据库迁移或依赖变更，范围仍为单机部署与试用；见[补丁验收与升级说明](docs/evidence/release-v0.1.1-20261108/README.md)。首次发布的[检查记录](docs/evidence/release-20261107/README.md)继续保留。源码发布不包含本机配置、数据库、备份或预构建镜像，使用对应 Tag 中的依赖文件和 Dockerfile 构建；内部组件的私有包版本不作为整仓发布版本。
 
 原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。仓库保存的上游补丁、OpenAPI schema、运行依赖和供应商地图素材遵循各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。PDF 资料渲染使用 PDFium；历史 PyMuPDF 版本的许可义务单独处理。

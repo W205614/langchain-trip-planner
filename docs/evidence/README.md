@@ -4,6 +4,8 @@
 
 ## 业务功能与交付
 
+- [v0.1.1 补丁发布与真实 API 复测（2026-11-08）](release-v0.1.1-20261108/README.md)
+- [排程说明与默认恢复续排修复（2026-11-08）](schedule-fix-20261108/README.md)
 - [公开运营与 OpenAI 接入（2026-11-07）](public-operations-20261107/report.md)
 - [java-migration](java-migration/README.md)
 - [assistant-proposal-20260928](assistant-proposal-20260928/report.md)
@@ -14,7 +16,6 @@
 ## 评测与真实供应商采样
 
 - [acceptance-20260923](acceptance-20260923/report.md)
-- [resume-validation-20260911](resume-validation-20260911/resume.md)
 - [live-project-20260929](live-project-20260929/report.md)
 - [real-model-20260929](real-model-20260929/report.md)
 - [performance-current](performance-current/report.md)

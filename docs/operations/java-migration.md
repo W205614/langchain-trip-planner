@@ -34,14 +34,16 @@ SELECT d.id,d.submitted_by,d.reviewed_by FROM knowledge_documents d
 
 ## 备份和恢复
 
-Windows 任务 `TripPlanner-AutomatedBackup` 及自动维护入口保持停用，手工备份和隔离恢复按维护窗口执行。2026-11-07 已验证两个手工恢复点，均位于被 Git 忽略的 `backups/maintenance-close-20261107/`：
+Windows 任务 `TripPlanner-AutomatedBackup` 及自动维护入口保持停用，手工备份和隔离恢复按维护窗口执行。2026-11-08 当前保留两套被 Git 忽略的数据和配置快照：
 
 | 恢复点 | 已验证结果 |
 |---|---|
-| `pre-upgrade` | V14源库36表、1098行；独立恢复及V20候选升级通过，34张旧业务表完全一致、V16固定派生水位精确增加1、原14条Flyway历史不变 |
-| `latest-current` | V20当前快照，包含新增维护管理员；13个备份文件含4份镜像归档，独立恢复46表、1127行，Java就绪及恢复文件哈希核对通过 |
+| `backups/maintenance-fix-20261108/pre-upgrade/` | 本次补丁升级前快照；12 个文件哈希核对通过，隔离 PostgreSQL 17 恢复全部 46 张表，行内容摘要一致 |
+| `backups/daily-v0.1.0-upgrade-20261107/pre-upgrade/` | 上次升级前数据和配置快照；文件哈希核对通过，保留原数据库恢复验收记录 |
 
-最新恢复点包含45个用户、61条行程、3份资料，具有1名可用MFA管理员。恢复报告位于本机 `E:/trip-maintenance-close-20261107/latest-current-verified/restore-report.json`，结果为 `passed=true, stage=complete`；脱敏汇总见[收尾记录](../evidence/personal-closure-20261107/report.md)。
+两套快照均不含离线 `images.tar`。最新快照为 V20，包含45个账号、61条行程、3份资料。本轮验证范围是数据库恢复，不代表完整服务克隆恢复；恢复还需要 manifest 记录的镜像及配置，原镜像继续保留。快照中的私有 Compose 是当时的配置，不应直接覆盖现有部署。当前清单及哈希见本机 `backups/BACKUP_DISABLED.json`、各目录的 `manifest.json` 和 `backups/README.md`，不得提交这些私有内容。
+
+历史[收尾记录](../evidence/personal-closure-20261107/report.md)记录当时的恢复和归档结果，其中已清理的恢复点及镜像归档不能作为当前可用资源。后续升级前重新检查备份、镜像存在性与所需恢复范围。
 
 以下命令仅核查任务状态，不启动备份或业务容器：
 

@@ -1,0 +1,143 @@
+{
+  "source": "b96fadcf548539b00ff7d969db9c5ee82a8674fd",
+  "mode": "real_official_model_and_amap_mcp",
+  "before": {
+    "text": 43,
+    "embedding": 23,
+    "vision": 1,
+    "amap": 847
+  },
+  "after": {
+    "text": 50,
+    "embedding": 23,
+    "vision": 1,
+    "amap": 1087
+  },
+  "provider_delta": {
+    "text": 7,
+    "embedding": 0,
+    "vision": 0,
+    "amap": 240
+  },
+  "boundary": "CLI runs the daily Agent image; no Java writes, RAG or vision. Default 30-second/120-lookup scheduler; cumulative paid ledger retained.",
+  "passed": true,
+  "image_id": "sha256:e46891521f178e684c101e8d256aa3b9247734da3c2a222d589d78af5f61fca8",
+  "samples": [
+    {
+      "case": "hangzhou-relaxed",
+      "kind": "generation",
+      "passed": true,
+      "checks": {
+        "correct_dates_and_day_count": true,
+        "ordered_day_indices": true,
+        "nonempty_days": true,
+        "no_model_fallback": true,
+        "unique_pois": true,
+        "vendor_poi_names_and_coordinates": true,
+        "must_visit_present": true,
+        "avoided_absent": true,
+        "unknown_facts_not_certified": true,
+        "unknown_schedule_not_certified": true,
+        "no_blocking_issues": true,
+        "day_0_final_summary": true
+      },
+      "counts_before": [
+        2
+      ],
+      "counts_after": [
+        2
+      ],
+      "natural_requested_count_met": true,
+      "quality_outcome": "degraded",
+      "facts_complete": false,
+      "blocking_issue_codes": []
+    },
+    {
+      "case": "beijing-required-avoid",
+      "kind": "generation",
+      "passed": true,
+      "checks": {
+        "correct_dates_and_day_count": true,
+        "ordered_day_indices": true,
+        "nonempty_days": true,
+        "no_model_fallback": true,
+        "unique_pois": true,
+        "vendor_poi_names_and_coordinates": true,
+        "must_visit_present": true,
+        "avoided_absent": true,
+        "unknown_facts_not_certified": true,
+        "unknown_schedule_not_certified": true,
+        "no_blocking_issues": true,
+        "day_0_final_summary": true,
+        "day_1_final_summary": true
+      },
+      "counts_before": [
+        2,
+        2
+      ],
+      "counts_after": [
+        2,
+        2
+      ],
+      "natural_requested_count_met": null,
+      "quality_outcome": "degraded",
+      "facts_complete": false,
+      "blocking_issue_codes": []
+    },
+    {
+      "case": "xian-arrival-departure",
+      "kind": "generation",
+      "passed": true,
+      "checks": {
+        "correct_dates_and_day_count": true,
+        "ordered_day_indices": true,
+        "nonempty_days": true,
+        "no_model_fallback": true,
+        "unique_pois": true,
+        "vendor_poi_names_and_coordinates": true,
+        "must_visit_present": true,
+        "avoided_absent": true,
+        "unknown_facts_not_certified": true,
+        "unknown_schedule_not_certified": true,
+        "no_blocking_issues": true,
+        "day_0_final_summary": true,
+        "day_0_reduction_disclosed": true,
+        "day_1_final_summary": true
+      },
+      "counts_before": [
+        2,
+        2
+      ],
+      "counts_after": [
+        1,
+        2
+      ],
+      "natural_requested_count_met": false,
+      "quality_outcome": "degraded",
+      "facts_complete": false,
+      "blocking_issue_codes": []
+    }
+  ],
+  "revision": {
+    "case": "xian-arrival-departure",
+    "kind": "revision",
+    "target_day": 1,
+    "status": "completed",
+    "passed": true,
+    "checks": {
+      "correct_dates_and_day_count": true,
+      "ordered_day_indices": true,
+      "nonempty_days": true,
+      "no_model_fallback": true,
+      "unique_pois": true,
+      "vendor_poi_names_and_coordinates": true,
+      "must_visit_present": true,
+      "avoided_absent": true,
+      "unknown_facts_not_certified": true,
+      "unknown_schedule_not_certified": true,
+      "no_blocking_issues": true,
+      "one_fewer_attraction": true,
+      "other_days_unchanged": true
+    }
+  }
+}
