@@ -1,0 +1,249 @@
+{
+  "baseline_revision": "2f0a40c779305c359596ef0768509d5d19b41a03",
+  "current_revision": "d519493e5848dafec119ccab19bbf69ffbdca6d1",
+  "languages": [
+    {
+      "language": "java",
+      "raw_findings": 21,
+      "complete_results_identical": true,
+      "analyzer_version_and_full_rule_catalog_identical": true,
+      "all_resolved_rules_identical": true,
+      "reviewed_runner_temporary_location_changes": [
+        {
+          "path": "tool/extensions/0/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/997beed5-2008-40da-92c7-6335073c8b86/codeql/qlpacks/codeql/java-queries/1.12.0/",
+          "new": "file:///home/runner/work/_temp/51d3c822-1e98-4cb7-a158-74da27615023/codeql/qlpacks/codeql/java-queries/1.12.0/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/0/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/997beed5-2008-40da-92c7-6335073c8b86/codeql/qlpacks/codeql/java-queries/1.12.0/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/51d3c822-1e98-4cb7-a158-74da27615023/codeql/qlpacks/codeql/java-queries/1.12.0/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/997beed5-2008-40da-92c7-6335073c8b86/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/",
+          "new": "file:///home/runner/work/_temp/51d3c822-1e98-4cb7-a158-74da27615023/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/997beed5-2008-40da-92c7-6335073c8b86/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/51d3c822-1e98-4cb7-a158-74da27615023/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/997beed5-2008-40da-92c7-6335073c8b86/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "new": "file:///home/runner/work/_temp/51d3c822-1e98-4cb7-a158-74da27615023/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/997beed5-2008-40da-92c7-6335073c8b86/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/51d3c822-1e98-4cb7-a158-74da27615023/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        }
+      ],
+      "new_or_changed_findings": 0,
+      "artifact_id": 13608261763,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "49ce0ff8acfa7d7745afdbbc16077ef70fdbf011fabc24edf44b20d081864ead"
+    },
+    {
+      "language": "python",
+      "raw_findings": 2,
+      "complete_results_identical": true,
+      "analyzer_version_and_full_rule_catalog_identical": true,
+      "all_resolved_rules_identical": true,
+      "reviewed_runner_temporary_location_changes": [
+        {
+          "path": "tool/extensions/0/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/c72d58e8-921a-4767-90dd-a4ad9b090b7f/codeql/qlpacks/codeql/python-queries/1.9.0/",
+          "new": "file:///home/runner/work/_temp/1b49426a-bd78-4711-9803-1f93b07ea29b/codeql/qlpacks/codeql/python-queries/1.9.0/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/0/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/c72d58e8-921a-4767-90dd-a4ad9b090b7f/codeql/qlpacks/codeql/python-queries/1.9.0/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/1b49426a-bd78-4711-9803-1f93b07ea29b/codeql/qlpacks/codeql/python-queries/1.9.0/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/c72d58e8-921a-4767-90dd-a4ad9b090b7f/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/",
+          "new": "file:///home/runner/work/_temp/1b49426a-bd78-4711-9803-1f93b07ea29b/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/c72d58e8-921a-4767-90dd-a4ad9b090b7f/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/1b49426a-bd78-4711-9803-1f93b07ea29b/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/c72d58e8-921a-4767-90dd-a4ad9b090b7f/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "new": "file:///home/runner/work/_temp/1b49426a-bd78-4711-9803-1f93b07ea29b/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/c72d58e8-921a-4767-90dd-a4ad9b090b7f/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/1b49426a-bd78-4711-9803-1f93b07ea29b/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        }
+      ],
+      "new_or_changed_findings": 0,
+      "artifact_id": 13608405807,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "15621c654956bae25cc0e658ec113609b74b364307ba6f50bcd51896b2aa7edf"
+    },
+    {
+      "language": "javascript",
+      "raw_findings": 3,
+      "complete_results_identical": true,
+      "analyzer_version_and_full_rule_catalog_identical": true,
+      "all_resolved_rules_identical": true,
+      "reviewed_runner_temporary_location_changes": [
+        {
+          "path": "tool/extensions/0/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/97bc927d-b941-4b59-aa51-7a042809c369/codeql/qlpacks/codeql/javascript-queries/2.5.0/",
+          "new": "file:///home/runner/work/_temp/d2e84f8b-29a6-44cb-bdc2-b67558b2a0d6/codeql/qlpacks/codeql/javascript-queries/2.5.0/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/0/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/97bc927d-b941-4b59-aa51-7a042809c369/codeql/qlpacks/codeql/javascript-queries/2.5.0/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/d2e84f8b-29a6-44cb-bdc2-b67558b2a0d6/codeql/qlpacks/codeql/javascript-queries/2.5.0/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/97bc927d-b941-4b59-aa51-7a042809c369/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/",
+          "new": "file:///home/runner/work/_temp/d2e84f8b-29a6-44cb-bdc2-b67558b2a0d6/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/97bc927d-b941-4b59-aa51-7a042809c369/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/d2e84f8b-29a6-44cb-bdc2-b67558b2a0d6/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/97bc927d-b941-4b59-aa51-7a042809c369/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "new": "file:///home/runner/work/_temp/d2e84f8b-29a6-44cb-bdc2-b67558b2a0d6/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/97bc927d-b941-4b59-aa51-7a042809c369/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/d2e84f8b-29a6-44cb-bdc2-b67558b2a0d6/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        }
+      ],
+      "new_or_changed_findings": 0,
+      "artifact_id": 13607313845,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "7121759815886758d2c6335bd3df265e52f0d72471e01f93f3311a2a1a308eee"
+    },
+    {
+      "language": "actions",
+      "raw_findings": 0,
+      "complete_results_identical": true,
+      "analyzer_version_and_full_rule_catalog_identical": true,
+      "all_resolved_rules_identical": true,
+      "reviewed_runner_temporary_location_changes": [
+        {
+          "path": "tool/extensions/0/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/0/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/1/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/2/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/3/locations/0/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        },
+        {
+          "path": "tool/extensions/3/locations/1/uri",
+          "old": "file:///home/runner/work/_temp/20c6ed8f-728d-4def-aeeb-d1cf740b60d1/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "new": "file:///home/runner/work/_temp/ee9dbc80-6ede-4b06-ad22-31862c72ff7e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+          "review": "Only the random official runner temporary directory differs; pack path/version and other location fields are identical."
+        }
+      ],
+      "new_or_changed_findings": 0,
+      "artifact_id": 13607917609,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "40a9e36c3c8c06f63575ff9c14831fb39db8c694f4562a977641b915f5450ff0"
+    }
+  ],
+  "changed_business_files": [
+    "frontend/e2e/improvement-http.spec.ts"
+  ],
+  "business_diff_sha256": "b8531e53a5dbb3ff3e0e0a180dfd263dd7d7958c13d181091dd1612a368c6e4c",
+  "supporting_sources_unchanged": 57,
+  "primary_source_files_unchanged": 13,
+  "new_findings": 0,
+  "changed_findings": 0,
+  "original_ci_gate_status": "failed: CodeQL business source tree changed: frontend; no claim that the first workflow passed"
+}

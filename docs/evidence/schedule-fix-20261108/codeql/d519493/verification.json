@@ -1,0 +1,71 @@
+{
+  "schema": "fresh-codeql-draft-verification-v1",
+  "checked_at_utc": "2026-11-08T07:07:51.690648+00:00",
+  "source_revision": "d519493e5848dafec119ccab19bbf69ffbdca6d1",
+  "official_analysis_run": 42456858599,
+  "draft_gate": {
+    "command": "python tools/security_gate.py sarif --directory docs/evidence/schedule-fix-20261108/codeql/d519493 --codeql-context docs/evidence/schedule-fix-20261108/codeql/d519493/policy-draft.json --reports .codex-final-release-20261108/security-review/draft-gate",
+    "observed_exit_code": 0,
+    "raw_high_critical": 26,
+    "exact_context_assessed": 26,
+    "blocking_findings": 0,
+    "summary_sha256": "b2696505fcf5f3416d8052fec7982c8f8340f547b53d64091f4bcec52772e0b6",
+    "languages": [
+      {
+        "file": "actions.sarif",
+        "raw_high_critical_findings": 0,
+        "not_affected_context_findings": 0,
+        "blocking_findings": 0,
+        "status": "pass"
+      },
+      {
+        "file": "java.sarif",
+        "raw_high_critical_findings": 21,
+        "not_affected_context_findings": 21,
+        "blocking_findings": 0,
+        "status": "pass_codeql_context"
+      },
+      {
+        "file": "javascript.sarif",
+        "raw_high_critical_findings": 3,
+        "not_affected_context_findings": 3,
+        "blocking_findings": 0,
+        "status": "pass_codeql_context"
+      },
+      {
+        "file": "python.sarif",
+        "raw_high_critical_findings": 2,
+        "not_affected_context_findings": 2,
+        "blocking_findings": 0,
+        "status": "pass_codeql_context"
+      }
+    ]
+  },
+  "policy_draft_sha256": "b544e8179a73b033a495d6d041957ede0d8317480bc2a6c7c49d00233c14fb22",
+  "review_record_sha256": "c613156f34d88a303e7748e2b62af175aaf27bff5e15355e2fd2259b27122b85",
+  "active_policy_sha256_before_and_after": "d73a46a893ef35bac88101881ef1b1de26c647035e9d44fc4440484d98283b45",
+  "active_policy_unchanged": true,
+  "entries_and_supporting_source_bindings_unchanged": true,
+  "raw_reports_and_referenced_evidence": {
+    "actions.sarif": "40a9e36c3c8c06f63575ff9c14831fb39db8c694f4562a977641b915f5450ff0",
+    "business-source.diff": "b8531e53a5dbb3ff3e0e0a180dfd263dd7d7958c13d181091dd1612a368c6e4c",
+    "comparison.json": "c5eeef29e0f72f611ac300286fb3a3fd8f7a3e5e093131edb65e9c5abfe85d11",
+    "java.sarif": "49ce0ff8acfa7d7745afdbbc16077ef70fdbf011fabc24edf44b20d081864ead",
+    "javascript.sarif": "7121759815886758d2c6335bd3df265e52f0d72471e01f93f3311a2a1a308eee",
+    "policy-draft.json": "b544e8179a73b033a495d6d041957ede0d8317480bc2a6c7c49d00233c14fb22",
+    "python.sarif": "15621c654956bae25cc0e658ec113609b74b364307ba6f50bcd51896b2aa7edf",
+    "README.md": "80b2aba76b96b69ed6a0d4c03ec40b56f54d539706a7ff821988edb2f5ff9fbd",
+    "remote-provenance.json": "3d46c490568ebf9a01b46c400a6b7d45a98db329f8821f3cf078a83160658f23",
+    "source-review.json": "c613156f34d88a303e7748e2b62af175aaf27bff5e15355e2fd2259b27122b85",
+    "source-snapshot.json": "8ad3ab88614a0ee37fb647762762f4e3c3ae4eadc703fa9c123824c7228d8881"
+  },
+  "all_evidence_text_attribute_unset": true,
+  "new_evidence_bytes": "UTF-8/LF; raw SARIF exact downloaded bytes",
+  "privacy_check": {
+    "existing_public_files_checked": 11,
+    "known_private_values_checked_without_printing": 7,
+    "private_value_hits": 0,
+    "signed_download_url_hits": 0
+  },
+  "activation": "Draft only. No active-policy replacement, Git commit/push, workflow rerun/cancel or deployment performed by this reviewer. Root independent review and final commit CI are still required."
+}

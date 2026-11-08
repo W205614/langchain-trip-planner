@@ -1,0 +1,43 @@
+{
+  "source": "d519493e5848dafec119ccab19bbf69ffbdca6d1",
+  "reviewer": "root assistant, independent of evidence-generating subagent",
+  "reviewed_at_utc": "2026-11-08T07:10:15.851936+00:00",
+  "languages": [
+    {
+      "language": "actions",
+      "all_raw_results": 0,
+      "complete_results_identical": true,
+      "entire_tool_identical_except_runner_uuid": true,
+      "new_sarif_sha256": "40a9e36c3c8c06f63575ff9c14831fb39db8c694f4562a977641b915f5450ff0"
+    },
+    {
+      "language": "java",
+      "all_raw_results": 21,
+      "complete_results_identical": true,
+      "entire_tool_identical_except_runner_uuid": true,
+      "new_sarif_sha256": "49ce0ff8acfa7d7745afdbbc16077ef70fdbf011fabc24edf44b20d081864ead"
+    },
+    {
+      "language": "javascript",
+      "all_raw_results": 3,
+      "complete_results_identical": true,
+      "entire_tool_identical_except_runner_uuid": true,
+      "new_sarif_sha256": "7121759815886758d2c6335bd3df265e52f0d72471e01f93f3311a2a1a308eee"
+    },
+    {
+      "language": "python",
+      "all_raw_results": 2,
+      "complete_results_identical": true,
+      "entire_tool_identical_except_runner_uuid": true,
+      "new_sarif_sha256": "15621c654956bae25cc0e658ec113609b74b364307ba6f50bcd51896b2aa7edf"
+    }
+  ],
+  "strict_gate_exit": 0,
+  "raw_high_critical_findings": 26,
+  "blocking_findings": 0,
+  "primary_sources_verified_by_strict_gate": 13,
+  "supporting_sources_verified_by_strict_gate": 57,
+  "policy_sha256": "b544e8179a73b033a495d6d041957ede0d8317480bc2a6c7c49d00233c14fb22",
+  "original_binding_failure_preserved": true,
+  "changed_source_review": "Only existing E2E date selection waits changed. No product, auth, database, dependency, or API implementation changed. Waits remove the stale closing-popup target demonstrated by the original CI trace. No retries, fixed sleeps, timeout extension, force-click, or suppressed assertions. Three full real HTTP local repetitions passed."
+}
