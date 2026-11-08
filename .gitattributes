@@ -12,7 +12,7 @@ backend/security/native-backports/*.sh text eol=lf
 backend/security/native-backports/*.sha256 text eol=lf
 backend/security/native-backports/*.txt text eol=lf
 backend/security/native-backports/patches/*.patch -text -whitespace
-.github/codeql-context-remediated.json -text
+.github/codeql-context-remediated.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/security-remediation-20261030/** -text
 docs/evidence/source-bound-review-20261030/** -text
 docs/evidence/single-host-20261031/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
@@ -43,3 +43,8 @@ docs/evidence/personal-closure-20261107/**/*.patch -text -whitespace
 docs/evidence/itinerary-facts-20261107/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/itinerary-facts-20261107/**/*.sarif -text -whitespace
 docs/evidence/itinerary-facts-20261107/**/*.diff -text -whitespace
+
+# Keep fresh scanner reports and their byte-bound review records unchanged.
+docs/evidence/schedule-fix-20261108/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/schedule-fix-20261108/codeql/**/*.sarif -text -whitespace
+docs/evidence/schedule-fix-20261108/codeql/**/*.diff -text -whitespace

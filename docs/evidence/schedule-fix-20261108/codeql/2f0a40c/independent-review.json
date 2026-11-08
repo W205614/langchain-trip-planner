@@ -1,0 +1,15 @@
+{
+  "reviewed_at_utc": "2026-11-08T05:26:44.750199+00:00",
+  "reviewer_role": "Root execution agent; independently inspected the complete code diff and reran the SARIF gate",
+  "source_revision": "2f0a40c779305c359596ef0768509d5d19b41a03",
+  "raw_high_critical": 26,
+  "blocking": 0,
+  "independent_gate_exit_code": 0,
+  "policy_sha256": "d73a46a893ef35bac88101881ef1b1de26c647035e9d44fc4440484d98283b45",
+  "review_notes": [
+    "No authentication, authorization, dependency, file-access, network target or SQL changes.",
+    "New summary text derives from typed final POI names; existing Vue text interpolation renders it without raw HTML.",
+    "Deferred routes remain unverified and do not enter provider-failure checkpoints; new sends still reserve against the original execution lineage.",
+    "The changed version reuses compatible drafts/provider facts only; schedule checkpoints revalidate and legacy unknown facts are not retried or renewed."
+  ]
+}

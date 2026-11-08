@@ -1,0 +1,47 @@
+{
+  "checked_source_revision": "2f0a40c779305c359596ef0768509d5d19b41a03",
+  "workflow_run": 42449984032,
+  "raw_high_critical": 26,
+  "context_assessed": 26,
+  "blocking": 0,
+  "local_draft_gate_exit_code": 0,
+  "language_results": [
+    {
+      "file": "actions.sarif",
+      "raw_high_critical_findings": 0,
+      "not_affected_context_findings": 0,
+      "blocking_findings": 0,
+      "status": "pass"
+    },
+    {
+      "file": "java.sarif",
+      "raw_high_critical_findings": 21,
+      "not_affected_context_findings": 21,
+      "blocking_findings": 0,
+      "status": "pass_codeql_context"
+    },
+    {
+      "file": "javascript.sarif",
+      "raw_high_critical_findings": 3,
+      "not_affected_context_findings": 3,
+      "blocking_findings": 0,
+      "status": "pass_codeql_context"
+    },
+    {
+      "file": "python.sarif",
+      "raw_high_critical_findings": 2,
+      "not_affected_context_findings": 2,
+      "blocking_findings": 0,
+      "status": "pass_codeql_context"
+    }
+  ],
+  "privacy_check": {
+    "files_checked": 22,
+    "private_runtime_credentials_found": 0,
+    "signed_download_urls_saved": false
+  },
+  "active_policy_modified": false,
+  "original_workflow_gates": "failed on prior business source tree binding; all four official analyses and uploads succeeded",
+  "policy_sha256": "d73a46a893ef35bac88101881ef1b1de26c647035e9d44fc4440484d98283b45",
+  "review_sha256": "8f8753d67ca872322d3c2040f160da715cb302010866541b8aa6125f9f015955"
+}

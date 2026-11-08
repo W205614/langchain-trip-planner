@@ -1,0 +1,62 @@
+{
+  "baseline_revision": "33a6d5dfa47ac027955eaac0ae667e9ce31e7ff1",
+  "current_revision": "2f0a40c779305c359596ef0768509d5d19b41a03",
+  "languages": [
+    {
+      "language": "java",
+      "raw_findings": 21,
+      "complete_results_identical": true,
+      "all_resolved_rules_identical": true,
+      "new_or_changed_findings": 0,
+      "artifact_id": 13605690219,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "0efcccd3c8aa756cba212a52c56fc56a6c39fdfbf82572643ce857a23b805f5b"
+    },
+    {
+      "language": "python",
+      "raw_findings": 2,
+      "complete_results_identical": true,
+      "all_resolved_rules_identical": true,
+      "new_or_changed_findings": 0,
+      "artifact_id": 13604964094,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "2eb7f2073304eb2b01f312f3f866c23639c81d4f0b42b0e7a746447d590829a4"
+    },
+    {
+      "language": "javascript",
+      "raw_findings": 3,
+      "complete_results_identical": true,
+      "all_resolved_rules_identical": true,
+      "new_or_changed_findings": 0,
+      "artifact_id": 13605301274,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "16adf0012b33bf1e741b027c4477dbf08c4ece17c62648c7aff9bea7dc94d3a4"
+    },
+    {
+      "language": "actions",
+      "raw_findings": 0,
+      "complete_results_identical": true,
+      "all_resolved_rules_identical": true,
+      "new_or_changed_findings": 0,
+      "artifact_id": 13604254400,
+      "artifact_zip_digest_verified": true,
+      "sarif_sha256": "088bdf80e4e750643f8dd1049003ff63df85e2dd78fe27e7a42628a00c300e0d"
+    }
+  ],
+  "changed_business_files": [
+    "backend/app/services/durable_execution.py",
+    "backend/app/services/planning_constraints.py",
+    "backend/app/services/result_policy.py",
+    "backend/app/services/time_planner.py",
+    "backend/tests/test_default_schedule_resume.py",
+    "backend/tests/test_final_schedule_explanation.py",
+    "frontend/e2e/final-planning.spec.ts",
+    "frontend/src/views/Result.vue"
+  ],
+  "business_diff_sha256": "b6fc3e638711f5747444a2ed9d5d42fc7b40e9f9dd3c2ace8502c9ea896df93b",
+  "supporting_sources_unchanged": 57,
+  "primary_source_files_unchanged": 13,
+  "new_findings": 0,
+  "changed_findings": 0,
+  "original_ci_gate_status": "failure; prior business source trees differ"
+}
