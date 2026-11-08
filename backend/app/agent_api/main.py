@@ -323,9 +323,9 @@ def _execute(body: Execution | ExecutionV2, request: Request):
                         scoped_request = body.request.model_copy(update={"city":city_for_day(body.request, day_index)})
                         plan = planner.revise_trip_day(scoped_request, plan, day_index,
                             body.instruction, user_id=body.user_id)
+                plan.enrichment_notices = list(dict.fromkeys([*plan.enrichment_notices, *notices]))
                 if body.protocol_version == 2 and not cached:
                     save_checkpoint("draft", digest, {"plan":plan.model_dump(mode="json"),"trusted_candidates":evidence})
-                plan.enrichment_notices = list(dict.fromkeys([*plan.enrichment_notices, *notices]))
                 # The Agent owns travel generation end to end: trusted POI selection,
                 # route lookup, bounded repair and quality classification. Java validates
                 # the returned protocol and owns task lifecycle and persistence only.

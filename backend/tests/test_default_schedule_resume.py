@@ -1,5 +1,7 @@
 from copy import deepcopy
+from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
+from uuid import uuid4
 import pytest
 
 from app.services import durable_execution, time_planner
@@ -24,6 +26,46 @@ def journal(monkeypatch):
     monkeypatch.setattr(durable_execution,"read_checkpoint",lambda stage,digest:saved.get((stage,digest)))
     monkeypatch.setattr(durable_execution,"save_checkpoint",lambda stage,digest,payload,**kwargs:saved.__setitem__((stage,digest),deepcopy(payload)))
     return saved
+
+
+def test_v2_resume_preserves_enrichment_notices_and_paid_route_checkpoint_hash(monkeypatch,tmp_path):
+    from fastapi.testclient import TestClient
+    from app.agent_api import main
+    from app.agents import trip_planner_agent
+    from app.services.execution import rag_degradation_var
+    from test_time_planner import Routes
+    request,plan=scenario()
+    plan.enrichment_notices=['existing enrichment notice']
+    rows={};generations=[]
+    def journal_call(method,path,payload=None):
+        if method=='GET':return {'checkpoints':list(rows.values())}
+        rows[payload['stage']]=deepcopy(payload)
+        return {'success':True}
+    def generate(*args,**kwargs):
+        generations.append(True)
+        rag_degradation_var.get().append('retrieval unavailable notice')
+        return plan.model_copy(deep=True)
+    provider=Routes()
+    monkeypatch.setattr(durable_execution,'_call',journal_call)
+    monkeypatch.setattr(trip_planner_agent,'get_trip_planner_agent',lambda:SimpleNamespace(plan_trip=generate,amap_service=provider))
+    monkeypatch.setattr(main,'DATA_DIR',tmp_path)
+    monkeypatch.delenv('DATABASE_URL',raising=False)
+    monkeypatch.setenv('INTERNAL_SERVICE_KEY','0123456789abcdefghijklmnopqrstuv')
+    monkeypatch.setenv('BUSINESS_URL','http://journal.test')
+    body={'protocol_version':2,'task_id':str(uuid4()),'execution_id':str(uuid4()),'request_id':'notice-resume-test','user_id':1,
+        'deadline_at':(datetime.now(timezone.utc)+timedelta(seconds=60)).isoformat(),'request':request.model_dump(mode='json')}
+    with TestClient(main.app) as client:
+        first=client.post('/internal/v2/executions',json=body,headers={'X-Service-Key':'0123456789abcdefghijklmnopqrstuv'})
+        assert first.status_code==200 and 'event: result' in first.text
+        paid_calls=provider.calls
+        first_routes=deepcopy(rows['routes'])
+        assert rows['draft']['payload']['plan']['enrichment_notices']==['existing enrichment notice','retrieval unavailable notice']
+        body.update(task_id=str(uuid4()),execution_id=str(uuid4()))
+        resumed=client.post('/internal/v2/executions',json=body,headers={'X-Service-Key':'0123456789abcdefghijklmnopqrstuv'})
+    assert resumed.status_code==200 and 'resume_draft' in resumed.text and 'event: result' in resumed.text
+    assert generations==[True] and provider.calls==paid_calls
+    assert rows['routes']['input_hash']==first_routes['input_hash']
+    assert rows['routes']['payload']==first_routes['payload']
 
 
 def test_default_lookup_limit_defers_an_unsent_route(monkeypatch):
