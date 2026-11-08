@@ -816,6 +816,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     observed = min((fact["observed_at"] for fact in selected_facts), key=route_instant) if selected_facts and all(fact.get("observed_at") for fact in selected_facts) else None
     report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes,
                   finish_at=instant(cursor+travel), route_fact_expires_at=expiry, route_fact_observed_at=observed)
+    if "route_lookup_deferred" in unknown:
+        report.update(status="not_found", conflicts=["Resume to continue scheduling deferred routes"])
     return timeline, report, order
 
 

@@ -123,3 +123,13 @@ def test_origin_connection_expiring_during_later_queries_is_downgraded_without_r
     assert datetime.fromisoformat(connection['end_at']) - datetime.fromisoformat(connection['start_at']) == timedelta(minutes=10)
     assert report['route_fact_expires_at'] == expiry
     assert calls.count(calls[0]) == 1
+
+
+def test_a_selected_unsent_route_requires_resume_instead_of_a_completed_unverified_task(monkeypatch):
+    monkeypatch.setenv('PLANNER_ROUTE_LOOKUPS', '1')
+    request, plan = scenario()
+    timeline, report, _ = time_planner.solve_day(plan.days[0], request, Routes())
+    assert timeline
+    assert 'route_lookup_deferred' in report['unknown']
+    assert report['status'] == 'not_found'
+    assert report['conflicts'] == ['Resume to continue scheduling deferred routes']
