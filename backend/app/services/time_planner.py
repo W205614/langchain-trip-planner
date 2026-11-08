@@ -525,7 +525,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     prior_anchor,prior_city = _hotel_anchor(inputs,request,day.day_index-1,previous_day) if day.day_index else (night_anchor,night_city)
     bridges, connections, connection_conflicts, inbound_anchor, outbound_anchor = [], [], [], None, None
     inbound_required, outbound_required = False, False
-    connection_route_keys, connection_missing_endpoint = set(), False
+    connection_route_keys = set()
     connection_route_rows = []
     proven_connection_conflicts=set()
     connection_minutes = 0
@@ -563,8 +563,6 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                     connection_key = _route_key(prior_anchor, origin, commitment["origin_city"], route_type)
                     if connection_key:
                         connection_route_keys.add(connection_key)
-                    elif not known:
-                        connection_missing_endpoint = True
                     midnight = datetime.fromisoformat(day.date).replace(tzinfo=zone)
                     access_start = midnight+timedelta(minutes=departure-buffer-access)
                     if departure-buffer-access < hard_start or departure > hard_end:
@@ -765,8 +763,6 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         if key and not route_current(cache["_route_facts"][key]):
             unknown.add("route_fact_expired_or_unobserved")
             row.update(status="estimated", notes=_route_notes(minutes, False, {"route_fact_expired_or_unobserved"}))
-    if connection_missing_endpoint:
-        selected_facts.append({"observed_at": None, "expires_at": ROUTE_EPOCH})
     for edge in selected_edges:
         key = edge_keys[edge]
         if key:
@@ -775,8 +771,6 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             if not route_current(fact):
                 edge_unknown[edge].add("route_fact_expired_or_unobserved")
                 travels[edge] = (travels[edge][0], False)
-        elif not travels[edge][1]:
-            selected_facts.append({"observed_at": None, "expires_at": ROUTE_EPOCH})
         unknown.update(edge_unknown[edge])
     report["omitted_activity_ids"] = omitted
     from .plan_quality import expected_meal_types

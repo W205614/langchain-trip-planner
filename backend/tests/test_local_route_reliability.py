@@ -133,3 +133,31 @@ def test_a_selected_unsent_route_requires_resume_instead_of_a_completed_unverifi
     assert 'route_lookup_deferred' in report['unknown']
     assert report['status'] == 'not_found'
     assert report['conflicts'] == ['Resume to continue scheduling deferred routes']
+
+
+def test_unknown_endpoint_does_not_expire_the_actual_selected_provider_facts():
+    request, plan = scenario()
+    request.planning_input.hotel_stays=[]
+    plan.days[0].hotel=None
+    _, report, _ = time_planner.solve_day(plan.days[0], request, Routes())
+    assert report['status']=='unverified' and 'route_endpoint_unknown' in report['unknown']
+    assert datetime.fromisoformat(report['route_fact_expires_at'])>datetime.now(timezone.utc)
+    assert report['route_fact_observed_at'] is not None
+
+
+def test_unknown_endpoint_without_any_provider_fact_has_no_invented_expiry():
+    request, plan = scenario([['A']])
+    request.planning_input.hotel_stays=[]
+    plan.days[0].hotel=None
+    _, report, _ = time_planner.solve_day(plan.days[0], request, Routes())
+    assert report['status']=='unverified' and 'route_endpoint_unknown' in report['unknown']
+    assert report['route_fact_expires_at'] is None
+    assert report['route_fact_observed_at'] is None
+
+
+def test_selected_failed_provider_fact_still_has_no_valid_lifetime():
+    request, plan = scenario()
+    _, report, _ = time_planner.solve_day(plan.days[0], request, Routes(missing=True))
+    assert report['status']=='unverified'
+    assert report['route_fact_expires_at']==time_planner.ROUTE_EPOCH
+    assert report['route_fact_observed_at'] is None
