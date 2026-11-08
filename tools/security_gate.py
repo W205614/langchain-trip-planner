@@ -23,6 +23,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+from urllib.error import URLError
 from urllib.request import Request, urlopen
 import zipfile
 try:
@@ -53,13 +54,24 @@ def tool(name: str) -> str:
     folder = ROOT / '.cache/security-tools' / name / PINS[name]['version']
     folder.mkdir(parents=True, exist_ok=True)
     archive = folder / config['url'].rsplit('/', 1)[-1]
-    if not archive.exists():
+    cached = archive.exists()
+    if not cached:
         request = Request(config['url'], headers={'User-Agent': 'tripplanner-security-gate'})
-        with urlopen(request, timeout=120) as source, archive.open('wb') as target:
-            shutil.copyfileobj(source, target, length=64 * 1024)
-    raw = archive.read_bytes()
+        for attempt in range(3):
+            try:
+                with urlopen(request, timeout=120) as source:
+                    raw = source.read()
+                break
+            except (TimeoutError, URLError) as error:
+                if (isinstance(error, URLError) and not isinstance(error.reason, TimeoutError)) or attempt == 2:
+                    raise
+                print(f'{name}: pinned download timed out; retry {attempt + 2}/3', file=sys.stderr)
+    else:
+        raw = archive.read_bytes()
     if hashlib.sha256(raw).hexdigest() != config['sha256']:
         raise RuntimeError(f'{name}: downloaded/cached asset failed pinned SHA256 verification')
+    if not cached:
+        archive.write_bytes(raw)
     if config.get('member'):
         member = config['member']
         if archive.suffix == '.zip':

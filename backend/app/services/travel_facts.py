@@ -1,6 +1,7 @@
 """Explicit user declarations, never inferred official reservations or venue hierarchy."""
 from datetime import datetime, timezone, timedelta
 from math import isfinite
+import re
 
 
 def validate_fact_inputs(inputs):
@@ -54,8 +55,13 @@ def boarding_minutes(inputs, commitment, current):
 def suspected_same_visit(left, right):
     """A nearby containing name is a planning heuristic, not a venue fact."""
     from .plan_quality import haversine_km
-    names = [item.name.strip().replace(" ", "") for item in (left, right)]
-    return min(map(len, names)) >= 2 and (names[0] in names[1] or names[1] in names[0]) and haversine_km(left, right) < 1
+    shorter, longer = sorted((item.name.strip().replace(" ", "") for item in (left, right)), key=len)
+    if len(shorter) < 2:
+        return False
+    # Venue 1 and Venue 10 are separate numbered names, not parent/child POIs.
+    pattern = ((r"(?<!\d)" if shorter[0].isdecimal() else "") + re.escape(shorter)
+               + (r"(?!\d)" if shorter[-1].isdecimal() else ""))
+    return re.search(pattern, longer) is not None and haversine_km(left, right) < 1
 
 
 def relation_pairs(attractions, inputs, current):
