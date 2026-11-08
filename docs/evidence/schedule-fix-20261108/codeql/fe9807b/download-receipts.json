@@ -1,0 +1,46 @@
+[
+  {
+    "artifact_id": 13615791889,
+    "name": "security-codeql-java-kotlin",
+    "archive_digest": "sha256:19020eed787266024326dbeb51e07da0b98bfee7960499c1a00fa583c471e61c",
+    "bytes": 120572,
+    "members": [
+      "java.sarif",
+      "sarif-summary.json"
+    ],
+    "download": "GitHub connector download_workflow_artifact; archive bytes downloaded using curl; no temporary URL retained"
+  },
+  {
+    "artifact_id": 13614729830,
+    "name": "security-codeql-python",
+    "archive_digest": "sha256:78d8c741079369e610653d4c5a794943a71994183916b10f4f7744187ebad090",
+    "bytes": 52945,
+    "members": [
+      "python.sarif",
+      "sarif-summary.json"
+    ],
+    "download": "GitHub connector download_workflow_artifact; archive bytes downloaded using curl; no temporary URL retained"
+  },
+  {
+    "artifact_id": 13616045021,
+    "name": "security-codeql-javascript-typescript",
+    "archive_digest": "sha256:35fb23f381a589092cac2ae6eb8d5a921cdf70ef7b85f2e15b8ea00867391ea5",
+    "bytes": 86998,
+    "members": [
+      "javascript.sarif",
+      "sarif-summary.json"
+    ],
+    "download": "GitHub connector download_workflow_artifact; archive bytes downloaded using curl; no temporary URL retained"
+  },
+  {
+    "artifact_id": 13615472759,
+    "name": "security-codeql-actions",
+    "archive_digest": "sha256:ec3d61e7beb80a9024d6f659d080e672927b4b3f6429d8d61c6fc7c6190c2ecd",
+    "bytes": 21527,
+    "members": [
+      "actions.sarif",
+      "sarif-summary.json"
+    ],
+    "download": "GitHub connector download_workflow_artifact; archive bytes downloaded using curl; no temporary URL retained"
+  }
+]

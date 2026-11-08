@@ -119,7 +119,7 @@ docker compose ps
 
 项目按单机部署，支持离线集成验证和真实模型抽样。SMTP、S3、云数据库及公网入口还需在选定平台完成联调；多实例高可用和真实预订支付未纳入实现。
 
-`v0.1.1` 修复了景点减少未明确说明、最终景点与主题描述不一致，以及默认预算耗尽后未发送路线无法继续查询的问题。数量减少会提示调整前后数量，恢复任务复用仍有效的草稿和已查路线；这不保证每天排满指定数量。用法与边界见[时间规划与任务恢复](docs/operations/final-planning.md)，真实 API 抽样与验证范围见[补丁验收记录](docs/evidence/release-v0.1.1-20261108/README.md)。
+`v0.1.2` 按独立景点数量准备候选，将到达、离开和每日时间窗口传给规划模型，并优先给短日安排紧凑候选。餐次按当天可用时段核对，路线状态只依据最终使用的接驳；明确数量未满足时会单独提示。景点数量仍受候选与真实时间约束，不保证强行排满。用法与恢复兼容边界见[时间规划与任务恢复](docs/operations/final-planning.md)，验证范围见[本轮验收记录](docs/evidence/release-v0.1.2-20261108/README.md)。
 
 本机单机部署保留原挂载，验收后暂停七服务，日常使用时按[运行手册](docs/operations/single-host.md#现有七服务部署操作)启动。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），迁移时覆盖46条可索引行程、125块。此前的[事实核验](docs/evidence/itinerary-facts-20261107/report.md)、[浏览器验收](docs/evidence/personal-closure-20261107/browser-navigation.md)、[运行安全](docs/evidence/personal-closure-20261107/runtime-security.md)和[收尾记录](docs/evidence/personal-closure-20261107/report.md)保留各自时点的结果。营业、预约、住宿等实际旅行资料通过工作台补充来源后重新核验，云平台与正式公网入口按手册联调。
 
@@ -131,6 +131,6 @@ docker compose ps
 
 ## 版本与许可证
 
-版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。`v0.1.1` 是 `v0.1.0` 之后的兼容修复，无新增数据库迁移或依赖变更，范围仍为单机部署与试用；见[补丁验收与升级说明](docs/evidence/release-v0.1.1-20261108/README.md)。首次发布的[检查记录](docs/evidence/release-20261107/README.md)继续保留。源码发布不包含本机配置、数据库、备份或预构建镜像，使用对应 Tag 中的依赖文件和 Dockerfile 构建；内部组件的私有包版本不作为整仓发布版本。
+版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。`v0.1.2` 继续采用兼容修复版本，无新增数据库迁移或依赖变更，范围仍为单机部署与试用；见[验收与升级说明](docs/evidence/release-v0.1.2-20261108/README.md)。[v0.1.1](docs/evidence/release-v0.1.1-20261108/README.md)及[首次发布检查记录](docs/evidence/release-20261107/README.md)保留各自结果。源码发布不包含本机配置、数据库、备份或预构建镜像，使用对应 Tag 中的依赖文件和 Dockerfile 构建；内部组件的私有包版本不作为整仓发布版本。
 
 原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。仓库保存的上游补丁、OpenAPI schema、运行依赖和供应商地图素材遵循各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。PDF 资料渲染使用 PDFium；历史 PyMuPDF 版本的许可义务单独处理。

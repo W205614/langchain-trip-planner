@@ -1,0 +1,668 @@
+{
+  "repository": "W205614/langchain-trip-planner",
+  "run_id": 42476327745,
+  "source_sha": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "jobs": [
+    {
+      "id": 128718486471,
+      "name": "CodeQL / java-kotlin",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42476327745,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    },
+    {
+      "id": 128718486498,
+      "name": "CodeQL / python",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42476327745,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    },
+    {
+      "id": 128718486594,
+      "name": "CodeQL / javascript-typescript",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42476327745,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    },
+    {
+      "id": 128718486610,
+      "name": "CodeQL / actions",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42476327745,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 13616045021,
+      "name": "security-codeql-javascript-typescript",
+      "size_in_bytes": 86998,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13616045021",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13616045021/zip",
+      "expired": false,
+      "created_at": "2026-11-08T11:35:29Z",
+      "expires_at": "2026-11-22T11:35:28Z",
+      "updated_at": "2026-11-08T11:35:29Z",
+      "digest": "sha256:35fb23f381a589092cac2ae6eb8d5a921cdf70ef7b85f2e15b8ea00867391ea5",
+      "workflow_run": {
+        "id": 42476327745,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "fe9807b38695d2a102dbc4437ca6888866cf5fc7"
+      }
+    },
+    {
+      "id": 13615791889,
+      "name": "security-codeql-java-kotlin",
+      "size_in_bytes": 120572,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13615791889",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13615791889/zip",
+      "expired": false,
+      "created_at": "2026-11-08T11:36:04Z",
+      "expires_at": "2026-11-22T11:36:03Z",
+      "updated_at": "2026-11-08T11:36:04Z",
+      "digest": "sha256:19020eed787266024326dbeb51e07da0b98bfee7960499c1a00fa583c471e61c",
+      "workflow_run": {
+        "id": 42476327745,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "fe9807b38695d2a102dbc4437ca6888866cf5fc7"
+      }
+    },
+    {
+      "id": 13615472759,
+      "name": "security-codeql-actions",
+      "size_in_bytes": 21527,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13615472759",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13615472759/zip",
+      "expired": false,
+      "created_at": "2026-11-08T11:35:15Z",
+      "expires_at": "2026-11-22T11:35:14Z",
+      "updated_at": "2026-11-08T11:35:15Z",
+      "digest": "sha256:ec3d61e7beb80a9024d6f659d080e672927b4b3f6429d8d61c6fc7c6190c2ecd",
+      "workflow_run": {
+        "id": 42476327745,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "fe9807b38695d2a102dbc4437ca6888866cf5fc7"
+      }
+    },
+    {
+      "id": 13614729830,
+      "name": "security-codeql-python",
+      "size_in_bytes": 52945,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13614729830",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13614729830/zip",
+      "expired": false,
+      "created_at": "2026-11-08T11:35:47Z",
+      "expires_at": "2026-11-22T11:35:47Z",
+      "updated_at": "2026-11-08T11:35:47Z",
+      "digest": "sha256:78d8c741079369e610653d4c5a794943a71994183916b10f4f7744187ebad090",
+      "workflow_run": {
+        "id": 42476327745,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "fe9807b38695d2a102dbc4437ca6888866cf5fc7"
+      }
+    }
+  ],
+  "connector_metadata": true,
+  "run": {
+    "id": 42476327745,
+    "name": "Security gates",
+    "node_id": "WFR_kwLOUEia9s8AAAAJ48lTQQ",
+    "head_branch": "main",
+    "head_sha": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+    "path": ".github/workflows/security.yml",
+    "display_title": "Persist enrichment notices before checkpointing resumable drafts",
+    "run_number": 50,
+    "event": "push",
+    "status": "in_progress",
+    "conclusion": null,
+    "workflow_id": 397718153,
+    "check_suite_id": 115063682855,
+    "check_suite_node_id": "CS_kwDOUEia9s8AAAAaylR3Jw",
+    "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/runs/42476327745",
+    "html_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42476327745",
+    "pull_requests": [],
+    "created_at": "2026-11-08T11:34:11Z",
+    "updated_at": "2026-11-08T11:34:46Z",
+    "actor": {
+      "login": "W205614",
+      "id": 166300169,
+      "node_id": "U_kgDOCemKCQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/166300169?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/W205614",
+      "html_url": "https://github.com/W205614",
+      "followers_url": "https://api.github.com/users/W205614/followers",
+      "following_url": "https://api.github.com/users/W205614/following{/other_user}",
+      "gists_url": "https://api.github.com/users/W205614/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/W205614/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/W205614/subscriptions",
+      "organizations_url": "https://api.github.com/users/W205614/orgs",
+      "repos_url": "https://api.github.com/users/W205614/repos",
+      "events_url": "https://api.github.com/users/W205614/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/W205614/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-08T11:34:11Z",
+    "triggering_actor": {
+      "login": "W205614",
+      "id": 166300169,
+      "node_id": "U_kgDOCemKCQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/166300169?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/W205614",
+      "html_url": "https://github.com/W205614",
+      "followers_url": "https://api.github.com/users/W205614/followers",
+      "following_url": "https://api.github.com/users/W205614/following{/other_user}",
+      "gists_url": "https://api.github.com/users/W205614/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/W205614/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/W205614/subscriptions",
+      "organizations_url": "https://api.github.com/users/W205614/orgs",
+      "repos_url": "https://api.github.com/users/W205614/repos",
+      "events_url": "https://api.github.com/users/W205614/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/W205614/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/runs/42476327745/jobs",
+    "logs_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/runs/42476327745/logs",
+    "check_suite_url": "https://api.github.com/repos/W205614/langchain-trip-planner/check-suites/115063682855",
+    "artifacts_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/runs/42476327745/artifacts",
+    "cancel_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/runs/42476327745/cancel",
+    "rerun_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/runs/42476327745/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/workflows/397718153",
+    "head_commit": {
+      "id": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+      "tree_id": "86c8eb97d2f5439952f95bfbcf6cb101fd078caa",
+      "message": "Persist enrichment notices before checkpointing resumable drafts",
+      "timestamp": "2026-11-08T11:34:08Z",
+      "author": {
+        "name": "wjy",
+        "email": "2545284366@qq.com"
+      },
+      "committer": {
+        "name": "wjy",
+        "email": "2545284366@qq.com"
+      }
+    },
+    "repository": {
+      "id": 1346935542,
+      "node_id": "R_kgDOUEia9g",
+      "name": "langchain-trip-planner",
+      "full_name": "W205614/langchain-trip-planner",
+      "private": false,
+      "owner": {
+        "login": "W205614",
+        "id": 166300169,
+        "node_id": "U_kgDOCemKCQ",
+        "avatar_url": "https://avatars.githubusercontent.com/u/166300169?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/W205614",
+        "html_url": "https://github.com/W205614",
+        "followers_url": "https://api.github.com/users/W205614/followers",
+        "following_url": "https://api.github.com/users/W205614/following{/other_user}",
+        "gists_url": "https://api.github.com/users/W205614/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/W205614/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/W205614/subscriptions",
+        "organizations_url": "https://api.github.com/users/W205614/orgs",
+        "repos_url": "https://api.github.com/users/W205614/repos",
+        "events_url": "https://api.github.com/users/W205614/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/W205614/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/W205614/langchain-trip-planner",
+      "description": "基于 Vue 3、Spring Boot 和 LangGraph 的国内旅行规划应用。填写出发地、目的地、日期、人数、预算与偏好，生成可以查看、编辑和导出的逐日行程。  它把景点查询、路线安排、预算整理和出行记录集中到一个应用中，帮助你从“到处查攻略”走到“有一份可以继续调整的旅行计划”。",
+      "fork": false,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner",
+      "forks_url": "https://api.github.com/repos/W205614/langchain-trip-planner/forks",
+      "keys_url": "https://api.github.com/repos/W205614/langchain-trip-planner/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/W205614/langchain-trip-planner/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/W205614/langchain-trip-planner/teams",
+      "hooks_url": "https://api.github.com/repos/W205614/langchain-trip-planner/hooks",
+      "issue_events_url": "https://api.github.com/repos/W205614/langchain-trip-planner/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/W205614/langchain-trip-planner/events",
+      "assignees_url": "https://api.github.com/repos/W205614/langchain-trip-planner/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/W205614/langchain-trip-planner/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/W205614/langchain-trip-planner/tags",
+      "blobs_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/W205614/langchain-trip-planner/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/W205614/langchain-trip-planner/languages",
+      "stargazers_url": "https://api.github.com/repos/W205614/langchain-trip-planner/stargazers",
+      "contributors_url": "https://api.github.com/repos/W205614/langchain-trip-planner/contributors",
+      "subscribers_url": "https://api.github.com/repos/W205614/langchain-trip-planner/subscribers",
+      "subscription_url": "https://api.github.com/repos/W205614/langchain-trip-planner/subscription",
+      "commits_url": "https://api.github.com/repos/W205614/langchain-trip-planner/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/W205614/langchain-trip-planner/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/W205614/langchain-trip-planner/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/W205614/langchain-trip-planner/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/W205614/langchain-trip-planner/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/W205614/langchain-trip-planner/merges",
+      "archive_url": "https://api.github.com/repos/W205614/langchain-trip-planner/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/W205614/langchain-trip-planner/downloads",
+      "issues_url": "https://api.github.com/repos/W205614/langchain-trip-planner/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/W205614/langchain-trip-planner/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/W205614/langchain-trip-planner/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/W205614/langchain-trip-planner/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/W205614/langchain-trip-planner/labels{/name}",
+      "releases_url": "https://api.github.com/repos/W205614/langchain-trip-planner/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/W205614/langchain-trip-planner/deployments"
+    },
+    "head_repository": {
+      "id": 1346935542,
+      "node_id": "R_kgDOUEia9g",
+      "name": "langchain-trip-planner",
+      "full_name": "W205614/langchain-trip-planner",
+      "private": false,
+      "owner": {
+        "login": "W205614",
+        "id": 166300169,
+        "node_id": "U_kgDOCemKCQ",
+        "avatar_url": "https://avatars.githubusercontent.com/u/166300169?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/W205614",
+        "html_url": "https://github.com/W205614",
+        "followers_url": "https://api.github.com/users/W205614/followers",
+        "following_url": "https://api.github.com/users/W205614/following{/other_user}",
+        "gists_url": "https://api.github.com/users/W205614/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/W205614/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/W205614/subscriptions",
+        "organizations_url": "https://api.github.com/users/W205614/orgs",
+        "repos_url": "https://api.github.com/users/W205614/repos",
+        "events_url": "https://api.github.com/users/W205614/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/W205614/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/W205614/langchain-trip-planner",
+      "description": "基于 Vue 3、Spring Boot 和 LangGraph 的国内旅行规划应用。填写出发地、目的地、日期、人数、预算与偏好，生成可以查看、编辑和导出的逐日行程。  它把景点查询、路线安排、预算整理和出行记录集中到一个应用中，帮助你从“到处查攻略”走到“有一份可以继续调整的旅行计划”。",
+      "fork": false,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner",
+      "forks_url": "https://api.github.com/repos/W205614/langchain-trip-planner/forks",
+      "keys_url": "https://api.github.com/repos/W205614/langchain-trip-planner/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/W205614/langchain-trip-planner/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/W205614/langchain-trip-planner/teams",
+      "hooks_url": "https://api.github.com/repos/W205614/langchain-trip-planner/hooks",
+      "issue_events_url": "https://api.github.com/repos/W205614/langchain-trip-planner/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/W205614/langchain-trip-planner/events",
+      "assignees_url": "https://api.github.com/repos/W205614/langchain-trip-planner/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/W205614/langchain-trip-planner/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/W205614/langchain-trip-planner/tags",
+      "blobs_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/W205614/langchain-trip-planner/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/W205614/langchain-trip-planner/languages",
+      "stargazers_url": "https://api.github.com/repos/W205614/langchain-trip-planner/stargazers",
+      "contributors_url": "https://api.github.com/repos/W205614/langchain-trip-planner/contributors",
+      "subscribers_url": "https://api.github.com/repos/W205614/langchain-trip-planner/subscribers",
+      "subscription_url": "https://api.github.com/repos/W205614/langchain-trip-planner/subscription",
+      "commits_url": "https://api.github.com/repos/W205614/langchain-trip-planner/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/W205614/langchain-trip-planner/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/W205614/langchain-trip-planner/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/W205614/langchain-trip-planner/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/W205614/langchain-trip-planner/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/W205614/langchain-trip-planner/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/W205614/langchain-trip-planner/merges",
+      "archive_url": "https://api.github.com/repos/W205614/langchain-trip-planner/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/W205614/langchain-trip-planner/downloads",
+      "issues_url": "https://api.github.com/repos/W205614/langchain-trip-planner/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/W205614/langchain-trip-planner/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/W205614/langchain-trip-planner/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/W205614/langchain-trip-planner/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/W205614/langchain-trip-planner/labels{/name}",
+      "releases_url": "https://api.github.com/repos/W205614/langchain-trip-planner/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/W205614/langchain-trip-planner/deployments"
+    }
+  }
+}

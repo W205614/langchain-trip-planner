@@ -1,0 +1,33 @@
+{
+  "revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "workflow_run": 42476327745,
+  "files_sha256": {
+    "actions.sarif": "02d76a031604bd4fd20c113f721118854023e551822e36fcd4812a4151cadfbf",
+    "business-source.diff": "5c50c33db30dfab79b77842b941c1b19c22e67bdd48ab3f72a85f0dec62e09ab",
+    "comparison.json": "32e3e12d98eefcaeb270f31fb8b901b19b58527d1a2d64640068577bd5a3855d",
+    "download-receipts.json": "00068436d4ff4e875c22c3bb8f47ac66d0c1c1edf3f63ddf17780098a3bf135d",
+    "draft-sarif-summary.json": "b2696505fcf5f3416d8052fec7982c8f8340f547b53d64091f4bcec52772e0b6",
+    "java.sarif": "28d5ffe1ab20c8f7d26494e4992a12989e2d62ecaf2b2f929af0c1888eba9b59",
+    "javascript.sarif": "d2cc4dc07da08cad9da9663c17cdc0a95296c7aef58222c12764e7c33222dccc",
+    "policy-draft.json": "65dfa739d81943a61e5fe479f8327e7f28fb28c6248e9dcf8afc95544927dbec",
+    "python.sarif": "ebedb00d2d2842026b80ea2a0f00fc9c1bb22e57e217d3a3bdb7fd6bbb6bcb0a",
+    "README.md": "9ceb7b30e4d384041f6363bf5986cafc7597a556473d39f1f0a7656d9e5fe38a",
+    "remote-provenance.json": "ec046e3c68d168e68d04a185c0eef64a8466199b3826faf89baa72ee88e57779",
+    "source-review.json": "c4a1d5c6ee476bf22a288626fd553cab3d67098556eda4275f66109c8725b68e",
+    "source-snapshot.json": "975cb855a36b87167b2a560b2ef791c336bfcdb7db1e812d1e5547f69fdb8525",
+    "validation.json": "8152cfc6231e7f2cc653433636a0c39c372f2f88c4391ef1556232a8d333f578",
+    "independent-review.json": "3254317a2af08cde274ba21697643eaf93c924ac7d385e3baaa66c41fff47a2d"
+  },
+  "business_tree_bindings": {
+    "backend": "364fd60d48a3b0e6fcce1fe3d0dd3efc895400ee",
+    "business-backend": "95f83be3d25ab116829cc1e70829dcc35948317a",
+    "frontend": "499857962d454e59359aabae1bc0e280a4e246c8",
+    "deploy": "b44af8caa7569e0fb017cb44a1d0e86f41b01e59",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "unchanged_active_policy_sha256": "b544e8179a73b033a495d6d041957ede0d8317480bc2a6c7c49d00233c14fb22",
+  "activation": {
+    "reviewer": "root assistant",
+    "policy_sha256": "65dfa739d81943a61e5fe479f8327e7f28fb28c6248e9dcf8afc95544927dbec"
+  }
+}

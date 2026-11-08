@@ -1,0 +1,134 @@
+{
+  "business_source": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "normal_api": {
+    "passed_for_applicable_contracts": true,
+    "raw_report_overwritten": false,
+    "raw_harness_assertion_failure_retained": "real-http-check.json",
+    "source": "44925ff1750e61f9f201b63ac8e2314e809f44ab",
+    "provider_delta": {
+      "text": 3,
+      "embedding": 0,
+      "vision": 0,
+      "amap": 141
+    },
+    "before": {
+      "text": 54,
+      "embedding": 23,
+      "vision": 1,
+      "amap": 1271
+    },
+    "after": {
+      "text": 57,
+      "embedding": 23,
+      "vision": 1,
+      "amap": 1412
+    },
+    "xian_v2": {
+      "passed": true,
+      "counts": [
+        2,
+        2
+      ],
+      "checks": {
+        "daily_count": true,
+        "no_fallback": true,
+        "all_days_scheduled": true,
+        "unique_pois": true,
+        "independent_names": true,
+        "unknown_not_certified": true,
+        "within_arrival_departure": true,
+        "no_blocking_issues": true
+      },
+      "outcome": "degraded"
+    },
+    "hangzhou_v1": {
+      "generation_passed": true,
+      "counts": [
+        2
+      ],
+      "checks": {
+        "daily_count": true,
+        "no_fallback": true,
+        "unique_pois": true,
+        "independent_names": true,
+        "unknown_not_certified": true,
+        "within_arrival_departure": true,
+        "no_blocking_issues": true
+      },
+      "deterministic_time_solver": "not_applicable_to_legacy_v1",
+      "why": "Frozen request has no planning_input. TaskService selects protocol1; Agent main enables enhanced scheduling only for protocol2. Initial harness incorrectly required a v2 timeline for this v1 request. No product behavior or assertion about actual scheduling was relaxed.",
+      "source_contracts": [
+        "business-backend/src/main/java/com/tripplanner/domain/TaskService.java:368",
+        "backend/app/agent_api/main.py:344"
+      ]
+    }
+  },
+  "default_real_api_resume": {
+    "passed": true,
+    "checks": {
+      "first_task_incomplete": true,
+      "resume_succeeded": true,
+      "actual_31_second_test_delay": true,
+      "model_calls_unchanged_on_resume": true,
+      "route_checkpoint_digest_unchanged": true,
+      "paid_route_observations_and_expiry_unchanged": true,
+      "deferred_routes_now_queried": true,
+      "two_independent_visits_retained": true,
+      "final_timeline_present": true,
+      "no_unfinished_route": true,
+      "no_blocking_issue": true,
+      "unknown_not_certified": true
+    },
+    "source": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+    "provider_delta": {
+      "text": 1,
+      "embedding": 0,
+      "vision": 0,
+      "amap": 50
+    },
+    "injected_delay_seconds": 31.00015866099966,
+    "outcome": "degraded",
+    "counts": [
+      2
+    ]
+  },
+  "campaign": {
+    "generation_tasks": 6,
+    "xian_generations": 4,
+    "hangzhou_generations": 2,
+    "revision_calls": 0,
+    "before": {
+      "text": 50,
+      "amap": 1087,
+      "embedding": 23,
+      "vision": 1
+    },
+    "after": {
+      "text": 60,
+      "embedding": 23,
+      "vision": 1,
+      "amap": 1572
+    },
+    "delta": {
+      "text": 10,
+      "amap": 485,
+      "embedding": 0,
+      "vision": 0
+    },
+    "ledger_reset": false
+  },
+  "automation": {
+    "python_passed": 680,
+    "python_skipped": 10,
+    "native_checks_passed_separately": 9,
+    "frontend_build": "passed",
+    "result_browser_passed": 13
+  },
+  "limitations": [
+    "Real external weather/opening/reservation/hotel details remain unverified",
+    "RAG and vision not retested here",
+    "Artificial31-second latency is test injection, not real supplier fault",
+    "Legacy v1 generation has no deterministic timeline",
+    "Intermediate failed and harness diagnostics retained privately"
+  ]
+}

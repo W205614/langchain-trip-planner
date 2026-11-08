@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "review_policy": "source_and_execution_path_bound",
-  "assessment_date": "2026-11-07",
+  "assessment_date": "2026-11-08",
   "product": "langchain-trip-planner internal Agent embedded derived index",
   "assessment_kind": "contextual_not_affected_not_upstream_fixed",
   "application": "Explicit --vex opt-in only; raw scanner findings are preserved. New unassessed vulnerabilities, other versions or changed bound source require review and remain blocking. No fixed calendar expiry. Image application additionally requires the embedded Agent CMD and the exact checked-out revision label.",
@@ -9,7 +9,7 @@
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
     "backend/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
     "backend/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
-    "backend/app/agent_api/main.py": "1162a712d8c24ca25c77b87d740576ebeb23bddb02b2c004745bde42ab18001f",
+    "backend/app/agent_api/main.py": "2236e85335a676c712bbee9d9ec65971a127161a6aa0a94dba0e175ca3fed528",
     "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
     "docker-compose.yml": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
@@ -90,11 +90,12 @@
       ]
     }
   ],
-  "review_note": "2026-11-07: Reassessed OpenAI identity, resumable rebuild and all-generation erasure paths. Every Chroma constructor still uses explicit embedded_settings; Java authenticates internal operations; no Chroma HTTP, tenant or embedding-configuration API was introduced. The three embedded-boundary regression tests passed against current source. This does not assert an upstream fix. 2026-11-07 itinerary revision postprocessing adds only quantity constraints after scope protection; Agent HTTP capabilities, Chroma initialization and embedded-only network isolation are unchanged.",
+  "review_note": "2026-11-07: Reassessed OpenAI identity, resumable rebuild and all-generation erasure paths. Every Chroma constructor still uses explicit embedded_settings; Java authenticates internal operations; no Chroma HTTP, tenant or embedding-configuration API was introduced. The three embedded-boundary regression tests passed against current source. This does not assert an upstream fix. 2026-11-07 itinerary revision postprocessing adds only quantity constraints after scope protection; Agent HTTP capabilities, Chroma initialization and embedded-only network isolation are unchanged. 2026-11-08: Re-read the notices-before-draft move and the full internal API/embedded-index boundary; the three no-network embedded Chroma tests pass. Four existing CVE assessments and package versions are unchanged; raw findings are not suppressed or described as upstream-fixed.",
   "source_binding_review": {
-    "path": "docs/evidence/release-20261107/startup-dependency-review.json",
-    "sha256": "13c0f7af5715b0321af84c69de5b4853aa776f5d73082fef283ad17851add167",
-    "base_revision": "33a6d5dfa47ac027955eaac0ae667e9ce31e7ff1",
-    "scope": "Dependency-only Compose startup ordering; assessments and scanner policy unchanged."
+    "path": "docs/evidence/release-v0.1.2-20261108/embedded-chroma-review.json",
+    "sha256": "b1e93c379ff7d810edb09f5d011d889fbb948c69ef53db04beed453d89e87180",
+    "base_revision": "225908f9410a14ceb8460b13c638f79d0a8c144f",
+    "reviewed_source_revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+    "scope": "Notices are included before draft persistence; embedded Chroma entrypoint, authorization and assessments unchanged."
   }
 }

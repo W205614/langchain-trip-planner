@@ -80,3 +80,11 @@ targetRules = ["generic-api-key"]
 paths = ['''(^|/)docs/evidence/itinerary-facts-20261107/codeql/909fbc4/business-source\.diff$''']
 regexTarget = "secret"
 regexes = ['''^0123456789abcdefghijklmnopqrstuv$''']
+
+[[allowlists]]
+description = "Exact public service-auth fixture repeated in the reviewed v0.1.2 source diff"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/evidence/schedule-fix-20261108/codeql/fe9807b/business-source\.diff$''']
+regexTarget = "secret"
+regexes = ['''^0123456789abcdefghijklmnopqrstuv$''']

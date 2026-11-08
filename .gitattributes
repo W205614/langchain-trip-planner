@@ -48,3 +48,5 @@ docs/evidence/itinerary-facts-20261107/**/*.diff -text -whitespace
 docs/evidence/schedule-fix-20261108/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/schedule-fix-20261108/codeql/**/*.sarif -text -whitespace
 docs/evidence/schedule-fix-20261108/codeql/**/*.diff -text -whitespace
+
+docs/evidence/release-v0.1.2-20261108/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol

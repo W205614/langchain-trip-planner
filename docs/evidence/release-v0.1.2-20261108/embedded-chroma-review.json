@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-11-08T11:46:36.422177+00:00",
+  "reviewer": "Root assistant source-bound reassessment; no human approval, upstream fix or production-security claim",
+  "business_source": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "previous_vex_sha256": "8f90d5b95d73916d3ab55358f31e332127a48b9d13e35a7ee0a3e174773abfb5",
+  "previous_binding_review": {
+    "path": "docs/evidence/release-20261107/startup-dependency-review.json",
+    "sha256": "13c0f7af5715b0321af84c69de5b4853aa776f5d73082fef283ad17851add167",
+    "base_revision": "33a6d5dfa47ac027955eaac0ae667e9ce31e7ff1",
+    "scope": "Dependency-only Compose startup ordering; assessments and scanner policy unchanged."
+  },
+  "scope": "Only main.py notices merged before draft persistence; exact same embedded Chroma paths, versions, four CVE assessments and fixture opt-in remain.",
+  "changed_binding": {
+    "path": "backend/app/agent_api/main.py",
+    "old_sha256_lf": "1162a712d8c24ca25c77b87d740576ebeb23bddb02b2c004745bde42ab18001f",
+    "new_sha256_lf": "2236e85335a676c712bbee9d9ec65971a127161a6aa0a94dba0e175ca3fed528"
+  },
+  "proof": [
+    "Exact diff moves only the existing enrichment_notices merge above save_checkpoint; no Chroma constructor or external route is introduced.",
+    "Read main lifespan, authorize dependency, execution capacity/deadline/cancellation, capability dispatch and validation APP_ENV+VALIDATION_ALLOW_FIXTURES gate; authorization behavior is unchanged.",
+    "All Chroma construction remains explicit embedded RustBindingsAPI with server and authorization environment overrides disabled. Index operations retain Java-scoped internal authorization; clients do not expose arbitrary collection/tenant or embedding-loader configuration.",
+    "Remaining seven bound source files, all dependency versions, assessment IDs, assumptions and scanner implementation are unchanged."
+  ],
+  "validation": {
+    "embedded_chroma_boundary_passed": 3,
+    "skipped": 0,
+    "network": "none",
+    "existing_full_python_passed": 680,
+    "upstream_library_fixed": false,
+    "raw_chromadb_findings_preserved": true
+  },
+  "assessments_sha256": "4345bc0607afb32e2cffcb21bc3a639564428e0ec8c39cf4a9cc33fe25346e45"
+}

@@ -1,0 +1,792 @@
+{
+  "schema_version": 3,
+  "review_policy": "source_and_trace_bound",
+  "expected_entry_count": 26,
+  "classification": "not_affected_context",
+  "scope": "26 exact source/location/severity/ordered-flow contexts from fresh official CodeQL analysis of fe9807b. Complete original results, resolved rules, 13 primary files and 56 of the historical 57 supporting sources match d519493; the changed main.py support is individually reviewed and rebound. Full tool catalogs differ only in 26 checked runner temporary UUID URIs. The 26-file production/test/UI batch and five boundary files are individually reviewed and bound: 87 supporting files. No classification or threshold is widened; changed or unknown evidence continues to block.",
+  "reviewed_business_revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "original_sarif_revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "original_workflow_run": 42476327745,
+  "analysis_origin": "Fresh GitHub Actions official CodeQL 2.27.4 security-extended",
+  "flow_hash_algorithm": "sarif-semantic-flow-v1",
+  "review_record": "docs/evidence/schedule-fix-20261108/codeql/fe9807b/source-review.json",
+  "review_record_sha256": "c4a1d5c6ee476bf22a288626fd553cab3d67098556eda4275f66109c8725b68e",
+  "business_tree_bindings": {
+    "backend": "364fd60d48a3b0e6fcce1fe3d0dd3efc895400ee",
+    "business-backend": "95f83be3d25ab116829cc1e70829dcc35948317a",
+    "frontend": "499857962d454e59359aabae1bc0e280a4e246c8",
+    "deploy": "b44af8caa7569e0fb017cb44a1d0e86f41b01e59",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "source_bindings": {
+    "backend/.dockerignore": "a61a1e2cb56d16622390344dad7f3633396d8ea7ce74cae51aa9d0ce09342251",
+    "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
+    "backend/app/agent_api/extraction.py": "f62ff5d35ffa546b5a0ad4eac120756041c75274521d1dffe11b69414480c61d",
+    "backend/app/agent_api/main.py": "2236e85335a676c712bbee9d9ec65971a127161a6aa0a94dba0e175ca3fed528",
+    "backend/app/services/amap_mcp_service.py": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+    "backend/app/services/call_budget.py": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+    "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+    "backend/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
+    "backend/requirements.in": "2b9b90950f68ac9abfde7317bb74731a9f40c534caedbd14f209915f41560bee",
+    "backend/requirements.lock": "e1eca729fe661c72c5d9703272eb820d5f8170164b75a78ab457577c13a40c10",
+    "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
+    "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
+    "backend/scripts/optimization_seed_admin.py": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+    "backend/scripts/prepare_java_deployment.py": "2ad163bc9474b90d6c05b155a9bde985d720221cc65357c64ff7676ad88763dd",
+    "backend/tests/test_agent_extraction.py": "0cbcba20e0d4688cc76c263119c4c296376f7fe8c504be813c1578046238afa9",
+    "backend/tests/test_itinerary_fact_quality.py": "bebc52cdd8f629e3219f55add36c7786b0bc8c1c851a1cd9adc64a659d573e57",
+    "business-backend/.dockerignore": "bdfe8973b8d4b8f31dab61d6313fab3f266b63acf1f45e67f08344895297bd00",
+    "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java": "1b9cd9d2e3bfa54f66264856ba589cfd86087b7232e856c0707da642dd9d4ab8",
+    "business-backend/src/main/java/com/tripplanner/api/AssistantController.java": "978dcfaa2b7acd540b4ccbc53751e6f4fe2f5bd8c26d43cc85d1d6949eab35d4",
+    "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+    "business-backend/src/main/java/com/tripplanner/api/EmailAccountController.java": "6e7f6410a755539a01829c285023b4e5360b980492325bed122534f2139d147f",
+    "business-backend/src/main/java/com/tripplanner/api/HistoryController.java": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+    "business-backend/src/main/java/com/tripplanner/api/PublicOperationsController.java": "765689a903a4767a54eaf5e6a89f1fbb5d874c5ed4b0c9e9ad1b83ad3b3640a9",
+    "business-backend/src/main/java/com/tripplanner/api/TripOperationsController.java": "1a4678f8502ed49a57d7ca2db541e3f125b7200ae2747c63ccf0ae1d27101d68",
+    "business-backend/src/main/java/com/tripplanner/api/UsersController.java": "9dd9a6ffabaf64edb0bcd64954c8761ac30f5d393429f148129e341f1d5ca806",
+    "business-backend/src/main/java/com/tripplanner/api/ValidationController.java": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+    "business-backend/src/main/java/com/tripplanner/domain/AmapGateway.java": "724031c9e0c24ac97e9e3898e40626f707ce3f68f1c06c30db02685518bee934",
+    "business-backend/src/main/java/com/tripplanner/domain/ExecutionGovernanceService.java": "546519210d6e0c8864c55f1ad0a1cf99706fcd8a329e77b95b0f69db25987d29",
+    "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java": "c5ded52c0b34df9b9b5c80befb5ff5085862110e80bc044502efdd25c83f210e",
+    "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+    "business-backend/src/main/java/com/tripplanner/domain/TaskService.java": "22fdfbce43aebfaac820fa40203d6274bc564778829ad572fb586b92afb6e839",
+    "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+    "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+    "business-backend/src/main/java/com/tripplanner/domain/TripOperationsService.java": "f2d5e5799b6a61cdbe2acbde395c6b0a349252a5612d760f65bcb6a13397d9ae",
+    "business-backend/src/main/java/com/tripplanner/domain/UserQuotaService.java": "e4bbec53ad314d795755871bb51adcf54d0fc090e16eefc26276a8cff3b8ff6d",
+    "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java": "c64be9522964eb7e59173ca47fbe541bd0f6de85ecbd1b7c388a013b580dcbae",
+    "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java": "0a8e916fcf132ec8ee89455f24804ab7be675fab6bd68c8490923f2bc1e7cbd7",
+    "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java": "7e75729131c55fb8782c174a72a179e479711c7bc763ae344113e260e2b67556",
+    "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java": "10f8d492cf59da62b4146a0924b76da88e2464152816b56710187d82bde8336d",
+    "business-backend/src/main/java/com/tripplanner/security/EmailAccountService.java": "176f0b233e2a134c4356f3f0ea27f95a5d411d1fab65b5bd006365637a65f673",
+    "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+    "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+    "business-backend/src/main/java/com/tripplanner/security/Totp.java": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+    "business-backend/src/main/resources/db/migration/V15__email_and_delivery.sql": "b1a26678a8b5eb6da96a9ea11efc0c4bf29931636bbdaa5bf52353e6d2d5e041",
+    "business-backend/src/main/resources/db/migration/V17__public_operations.sql": "2123d9e4fddc1d8cae760e1da6e97248042c06337edca071536249e96bb2ddb8",
+    "business-backend/src/main/resources/db/migration/V1__business_schema.sql": "fc7971e035f633b8bc46e8ae2cc3c5e2953b7ee4042ae51633bc57448e1ff66f",
+    "business-backend/src/main/resources/db/migration/V6__trip_operations.sql": "07648808addbec6627ac6534e105b930d15b38a9d7774a2dc4a0f0265c98e73c",
+    "frontend/.dockerignore": "4997a954b3e22bea38a927114bfe2c9df6cb246ee541955fde8ec020649eb034",
+    "frontend/Dockerfile": "aaa567e0a866667156a6444942b2d5718a058e7e99fbf168a1fdb9bde54a83e3",
+    "frontend/e2e/offline-provider-boundary.ts": "47970c484a76d89febab81a461619c90f3b10af82cbbe32c845cc095ae3b8966",
+    "frontend/e2e/operations.spec.ts": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+    "frontend/e2e/public-operations.spec.ts": "0e43292bae8df3c9da20ee2e6043a9992663cfa31ba8f5949f3758dee388471d",
+    "frontend/index.html": "8b195bb90beda52f236daeb836f291963ab61754b76a9e58f41320c6b68dfbbc",
+    "frontend/package.json": "cb5e7b33dc3866a9df70efaf8b6362a44a7cfe0f10eb764f03872c4cc3858098",
+    "frontend/playwright.config.ts": "43b8d4f2601b86523807ddc881b839ce4b99f0da02441224959eba77acf77b7d",
+    "frontend/tsconfig.json": "68aee628afefdef4a4fb9f41e7d7f4821be864ddb6797131fda8ccdab0fbb980",
+    "frontend/vite.config.ts": "1e5c0a108092df0955d2ca813f2cadbbf29e8765457a9bb1d7d94b2c5c2f63b2",
+    "backend/app/agents/candidates.py": "781ad9948ee57ee648b834a66a97bdbe3db83424259af5a3b5e33b19f3fe3cde",
+    "backend/app/agents/data_nodes.py": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+    "backend/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
+    "backend/app/agents/trip_planner_agent.py": "190eb469e6c0d3bc36d6d4a55fe54dd6b5415355529bc1a014ae6d2db5d19b3d",
+    "backend/app/services/assistant_intent.py": "43d2bc7fd56a43b827f91e3dce741383ccfbc9ee4e00c31799c1e9f910b94552",
+    "backend/app/services/durable_execution.py": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+    "backend/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+    "backend/app/services/planning_constraints.py": "8941fd58c405ce12370ff078eebb6bf5838fa04b0cacdb397228d5a99bf158c8",
+    "backend/app/services/result_policy.py": "87b082919e8fc4ccfa480bed8c141dc455419ff5ae9e1972c51572b282c65127",
+    "backend/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
+    "backend/app/services/time_planner.py": "d92f0e37543157a1794641e031864471796e7f0e8f8f2da5662b314158c92b36",
+    "backend/app/services/travel_facts.py": "7a1860c9ff65a882c931f9ba6c22dfbf29ee4d53b149ea094b73b8823801df4e",
+    "backend/scripts/operational_alert_receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
+    "backend/tests/test_candidate_policy_resume.py": "ed37160df91a21df8765e0ce1cf5acd76df77fe8f36add016cca66778f180618",
+    "backend/tests/test_default_schedule_resume.py": "2845c2966fa2cccb113323ce2acbd43364ce0a2abf85e35041bde0a7b5a47fca",
+    "backend/tests/test_hotel_departure_recovery.py": "27ed679c04c844492cfb9a68056d0369ef34f58c14cec752e82c2f331d491094",
+    "backend/tests/test_improvement_planning.py": "622092435facfd5e03ccfa78fd8ca7ba4522be978589aa982d62ac27fedd09c9",
+    "backend/tests/test_local_route_reliability.py": "c18f21d4a4c431dea3e8267eb54963c73f0741f516f748ed9e835577db9e791b",
+    "backend/tests/test_meal_candidate_recovery.py": "7a0e75df8299b8f43f5d39d45f325a2bf372009cd58970adfce66824eaf7a283",
+    "backend/tests/test_operational_alert_receiver.py": "3a5d58472c5fc77da31fb12fd79e29fb346ac52aaa149a205274de30fb0e9ddf",
+    "backend/tests/test_quality_meal_windows_and_targets.py": "79938818b677d92c36f2253778156a855b13165a7defc17765daea64075f2a10",
+    "backend/tests/test_time_planner.py": "f825a5b4a65204a39556fbaab1a8745971fb572a42eda4f1edbade06aaf4f45c",
+    "backend/tests/test_window_candidates.py": "716319280cd1c0e52fb63a0af57a6924f77bc4ef7414a1988d5700165c1e91b3",
+    "frontend/e2e/final-planning.spec.ts": "30a50b5bdc3da3356eb544a7ed4cb4555762777104112df48543da0e712537e3",
+    "frontend/src/views/Result.vue": "000bca05ea88624328c26847fc48dac5f6c3b22e022c095c7f3864457049a170",
+    "backend/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+    "backend/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
+    "backend/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
+    "backend/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
+    "backend/app/contracts/planning-semantics.json": "0d7e33b3195bac83241632e12cfaf0e26f6b63cc43b408328c0bdf39bd52309d"
+  },
+  "entries": [
+    {
+      "query": "java/spring-disabled-csrf-protection",
+      "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+      "region": {
+        "startLine": 124,
+        "startColumn": 20,
+        "endColumn": 31
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "classification": "not_affected_context",
+      "source_sha256": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+      "reviewed_raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
+      "reason": "contextual_false_positive_current_custom_cookie_csrf_guard",
+      "review_context": "java/spring-disabled-csrf-protection",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java:82-124",
+        "business-backend/src/main/java/com/tripplanner/security/BrowserSession.java:17-48",
+        "business-backend/src/main/java/com/tripplanner/security/EmailAccountService.java:118-165",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:102-116"
+      ],
+      "limitations": [
+        "Scope is the current filter ordering, exact credential endpoints, cookie configuration and actual handlers. Changing any requires reassessment.",
+        "Safe-read map request accounting is separately assessed in codeql-csrf-review.json; this is not a claim that every GET has no database side effect."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+      "region": {
+        "startLine": 184,
+        "startColumn": 9,
+        "endColumn": 20
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
+      "classification": "not_affected_context",
+      "source_sha256": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+      "reviewed_raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
+      "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/api/HistoryController.java:174-220",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17"
+      ],
+      "limitations": [
+        "Finite PostgreSQL INTEGER version exhaustion can reject the next update; successful infinite version growth or absence of a500 at that boundary is not claimed.",
+        "Changing version type, assignment sources, SQL predicate, rowcount guard or moving arithmetic before the update requires reassessment."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 87,
+        "startColumn": 62,
+        "endColumn": 71
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
+      "classification": "not_affected_context",
+      "source_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+      "reviewed_raw_trace_sha256": "7947b61858a8ffc54c0c7532be2cd4c13ca29107669dec7ba9de0130ce906fe6",
+      "reason": "contextual_false_positive_database_compare_and_increment_guard",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql/java-new-arithmetic-review.json"
+      ],
+      "limitations": [
+        "Relies on the current V17 INTEGER type, matching WHERE predicate, affected-row guard and statement-before-Java order. Changing any requires re-review.",
+        "At actual stored INT_MAX the next update is rejected by PostgreSQL; this is finite version exhaustion, not a Java wraparound, and successful indefinite revisions are not claimed."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+      "region": {
+        "startLine": 88,
+        "startColumn": 46,
+        "endColumn": 55
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
+      "classification": "not_affected_context",
+      "source_sha256": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+      "reviewed_raw_trace_sha256": "b1ba89a138af679face310de1b5c4e5bce4341712481f594f466826e33200151",
+      "reason": "contextual_false_positive_database_compare_and_increment_guard",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql/java-new-arithmetic-review.json"
+      ],
+      "limitations": [
+        "Relies on the current V17 INTEGER type, matching WHERE predicate, affected-row guard and statement-before-Java order. Changing any requires re-review.",
+        "At actual stored INT_MAX the next update is rejected by PostgreSQL; this is finite version exhaustion, not a Java wraparound, and successful indefinite revisions are not claimed."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 74,
+        "startColumn": 81,
+        "endColumn": 91
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
+      "classification": "not_affected_context",
+      "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "reviewed_raw_trace_sha256": "5fa33087cf5a44ec108595c94298c33f0b6c770d0bda4d4c2a24a7c077c4b9ce",
+      "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:62-76",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Finite PostgreSQL INTEGER version exhaustion can reject the next update; successful infinite version growth or absence of a500 at that boundary is not claimed.",
+        "Changing version type, assignment sources, SQL predicate, rowcount guard or moving arithmetic before the update requires reassessment."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 46,
+        "endColumn": 56
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
+      "classification": "not_affected_context",
+      "source_sha256": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+      "reviewed_raw_trace_sha256": "eb7b360d4ec95e39fa515acf6fff4312b8455af95600691af14404b25d28525a",
+      "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java:62-76",
+        "business-backend/src/main/resources/db/migration/V6__trip_operations.sql:37"
+      ],
+      "limitations": [
+        "Finite PostgreSQL INTEGER version exhaustion can reject the next update; successful infinite version growth or absence of a500 at that boundary is not claimed.",
+        "Changing version type, assignment sources, SQL predicate, rowcount guard or moving arithmetic before the update requires reassessment."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 100,
+        "startColumn": 60,
+        "endColumn": 70
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
+      "classification": "not_affected_context",
+      "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "reviewed_raw_trace_sha256": "4655dcecbbbfb972fef04cddc3cd85382442ed607b117436ce1517515ab35543",
+      "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-102",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17"
+      ],
+      "limitations": [
+        "Finite PostgreSQL INTEGER version exhaustion can reject the next update; successful infinite version growth or absence of a500 at that boundary is not claimed.",
+        "Changing version type, assignment sources, SQL predicate, rowcount guard or moving arithmetic before the update requires reassessment."
+      ]
+    },
+    {
+      "query": "java/tainted-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+      "region": {
+        "startLine": 101,
+        "startColumn": 54,
+        "endColumn": 64
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
+      "classification": "not_affected_context",
+      "source_sha256": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+      "reviewed_raw_trace_sha256": "7ef5bbf021a789a24a32573f1dda99dbe45f5b79b040eca5a6dbd276c28f5526",
+      "reason": "contextual_false_positive_current_database_integer_cas_dominates_java_arithmetic",
+      "review_context": "java/tainted-arithmetic",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java:92-102",
+        "business-backend/src/main/java/com/tripplanner/persistence/HistoryMapper.java:21-26",
+        "business-backend/src/main/resources/db/migration/V1__business_schema.sql:17"
+      ],
+      "limitations": [
+        "Finite PostgreSQL INTEGER version exhaustion can reject the next update; successful infinite version growth or absence of a500 at that boundary is not claimed.",
+        "Changing version type, assignment sources, SQL predicate, rowcount guard or moving arithmetic before the update requires reassessment."
+      ]
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 69,
+        "endColumn": 96
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
+      "classification": "not_affected_context",
+      "source_sha256": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+      "reviewed_raw_trace_sha256": "9bb6b25c12d49d08f9279310a3be4f149cdc969ed8e8573738e8d867f533f0b1",
+      "reason": "contextual_false_positive_fixed_nonce_and_no_unbounded_remote_payload",
+      "review_context": "java/uncontrolled-arithmetic",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql/java-new-arithmetic-review.json"
+      ],
+      "limitations": [
+        "There is no application-level numeric maximum for trusted PUBLIC_BASE_URL. Therefore this review does not claim a fixed absolute allocation maximum across all possible operator configurations. The symbolic bound and sufficient threshold are explicit; runtime memory size or low probability is not used as a justification.",
+        "The finding is not exploitable through current remote inputs: the only remote payload component is bounded email; the reported nonce-length input is constant. This decision is scoped to the enumerated current call graph and deployment-config trust boundary, not a general safe-for-arbitrary-text claim about encrypt/enqueue.",
+        "New enqueue callers, user-editable base URLs, changed templates, recipient schema, serializer settings, nonce/GCM settings or origin trust require new source-and-trace review."
+      ]
+    },
+    {
+      "query": "java/uncontrolled-arithmetic",
+      "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+      "region": {
+        "startLine": 51,
+        "startColumn": 69,
+        "endColumn": 98
+      },
+      "security_severity": "8.6",
+      "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
+      "classification": "not_affected_context",
+      "source_sha256": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+      "reviewed_raw_trace_sha256": "2125442733a3463f4a0b3758315af3ff89f0c7b27581e67dbc53967e0855eea1",
+      "reason": "contextual_false_positive_current_fixed_generated_totp_encryption_input",
+      "review_context": "java/uncontrolled-arithmetic",
+      "evidence": [
+        "business-backend/src/main/java/com/tripplanner/security/Totp.java:14-16,46-51",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:140-155"
+      ],
+      "limitations": [
+        "The public Totp helper could be called with arbitrary strings by future Java code. This review binds the current complete call graph, not a general arbitrary-input guarantee."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "2a144877fa9a290ce268ecee2b65be059472cb239560df3d222d14b84d1cab23",
+      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "f9da10cf202368e24915d9d1912ed532682b56a13b1d624953b31c0412af5d78",
+      "reason": "contextual_current_read_only_readiness_callback_receiver_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "d5eb86c5b7b29864fdd8f043b2e601cd942bbf78b416d2eef6f7a7f140b751f6",
+      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "ed3b45ad154431bf92c14dd507916f9636d3f2495f0c238d04a89a3ab8124269",
+      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "ea6e6a2993eb2a8f6b0ec763ab9e8d8be9e67cae1e8b0feba801cc9293c72c0c",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "7a8ad6d7ae67ff7cd9e082b370ff41eb9ea30196a7859076bf9f3f23ae7fea25",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "ab4650a64581228d41a55f76af4e57809a2be6817831af01c008e95ca1b380ed",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "86d58c3cca32cc59735812f7add9cb7f5eb65fddfafc63b9dbc42ed8490aceb5",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "1e909f706cf29fd8e12df2e28cea62e016c7c9e1d07e77901df36e7b5ef2d09e",
+      "reason": "contextual_current_read_only_excluded_status_path_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+      "classification": "not_affected_context",
+      "source_sha256": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+      "reviewed_raw_trace_sha256": "4697bdc946222d370dcb478c8105e4f95810f6295f9d2ad968caab9b1fb2ade5",
+      "reason": "contextual_current_read_only_operational_map_accounting_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "java/csrf-unprotected-request-type",
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "security_severity": "8.8",
+      "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
+      "classification": "not_affected_context",
+      "source_sha256": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+      "reviewed_raw_trace_sha256": "69e67eed0b04886aa267d51ff25617a4afc247199d65e9289c6f29d253068d55",
+      "reason": "contextual_current_read_only_validation_only_and_concrete_callback_review",
+      "review_context": "java/csrf-unprotected-request-type",
+      "evidence": [
+        "docs/evidence/public-operations-20261107/codeql-csrf-review.json",
+        "business-backend/src/main/java/com/tripplanner/resilience/UpstreamGuard.java:70-87",
+        "business-backend/src/main/java/com/tripplanner/agent/AgentClient.java:65-145,155-210",
+        "business-backend/src/main/java/com/tripplanner/domain/OutboundActorContext.java:19-58"
+      ],
+      "limitations": [
+        "Do not describe GET as having no database writes: outbound operation/audit records and AMAP quota reservations are real and may consume the documented allowance.",
+        "SameSite separates sites, not arbitrary sibling origins. This review does not authorize hostile sibling-origin hosting, permissive credentialed CORS or changing cookie domain/transport settings.",
+        "This is not a blanket CSRF suppression. Adding GET actions that change user business state, allowing model calls from map context, changing concrete callback dispatch, or changing the bound sources/flows requires new review.",
+        "Public read endpoints still need the existing anonymous/provider limits. The assessment is not proof against all service-cost or resource-exhaustion abuse."
+      ]
+    },
+    {
+      "query": "py/clear-text-logging-sensitive-data",
+      "path": "backend/scripts/optimization_seed_admin.py",
+      "region": {
+        "startLine": 70,
+        "startColumn": 31,
+        "endColumn": 110
+      },
+      "security_severity": "7.5",
+      "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
+      "classification": "not_affected_context",
+      "source_sha256": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+      "reviewed_raw_trace_sha256": "8af25d92f74b3ee2b89f373baeb8863450b486f95bbc83cd99c0ad6428a8745e",
+      "reason": "contextual_false_positive_current_fixture_status_only_return_is_logged",
+      "review_context": "py/clear-text-logging-sensitive-data",
+      "evidence": [
+        "backend/scripts/optimization_seed_admin.py:25-70",
+        "business-backend/src/main/java/com/tripplanner/security/AccountSecurityService.java:84-99"
+      ],
+      "limitations": [
+        "The ignored credential file remains sensitive; this is not permission to publish it or log arbitrary future prepare response fields.",
+        "Caller/return-shape, fixture guards and the credential-file location are part of the exact bound context."
+      ]
+    },
+    {
+      "query": "py/overly-permissive-file",
+      "path": "backend/scripts/install_runtime_security_patches.py",
+      "region": {
+        "startLine": 69,
+        "startColumn": 13,
+        "endColumn": 36
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+      "classification": "not_affected_context",
+      "source_sha256": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
+      "reviewed_raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
+      "reason": "contextual_not_sensitive_current_public_signed_package_download_directory",
+      "review_context": "py/overly-permissive-file",
+      "evidence": [
+        "backend/scripts/install_runtime_security_patches.py:43-100",
+        "backend/runtime-security-packages.json",
+        "backend/Dockerfile"
+      ],
+      "limitations": [
+        "0755 is not approved for secret files/directories or other chmod sites. Directory contents, build guard and package-verification flow are bound."
+      ]
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 9,
+        "startColumn": 23,
+        "endColumn": 32
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
+      "classification": "not_affected_context",
+      "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "reviewed_raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
+      "reason": "contextual_false_positive_current_e2e_public_username_uniqueness",
+      "review_context": "js/insecure-randomness",
+      "evidence": [
+        "frontend/e2e/operations.spec.ts:3-20",
+        "frontend/playwright.config.ts:1-8",
+        "frontend/tsconfig.json",
+        "frontend/index.html:11",
+        "frontend/Dockerfile"
+      ],
+      "limitations": [
+        "The old operations test allows E2E_BASE_URL override and has no positive fixture marker check. Use the authorized isolated validation target; this finding review is not approval to run fixture accounts/passwords on arbitrary production targets.",
+        "Do not reuse Math.random for production credentials, session tokens, recovery capabilities or security entropy."
+      ]
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 23,
+        "endColumn": 33
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
+      "classification": "not_affected_context",
+      "source_sha256": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+      "reviewed_raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
+      "reason": "contextual_false_positive_current_e2e_public_username_uniqueness",
+      "review_context": "js/insecure-randomness",
+      "evidence": [
+        "frontend/e2e/operations.spec.ts:3-20",
+        "frontend/playwright.config.ts:1-8",
+        "frontend/tsconfig.json",
+        "frontend/index.html:11",
+        "frontend/Dockerfile"
+      ],
+      "limitations": [
+        "The old operations test allows E2E_BASE_URL override and has no positive fixture marker check. Use the authorized isolated validation target; this finding review is not approval to run fixture accounts/passwords on arbitrary production targets.",
+        "Do not reuse Math.random for production credentials, session tokens, recovery capabilities or security entropy."
+      ]
+    },
+    {
+      "query": "js/insecure-randomness",
+      "path": "frontend/e2e/public-operations.spec.ts",
+      "region": {
+        "startLine": 12,
+        "startColumn": 20,
+        "endColumn": 84
+      },
+      "security_severity": "7.8",
+      "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff",
+      "classification": "not_affected_context",
+      "source_sha256": "0e43292bae8df3c9da20ee2e6043a9992663cfa31ba8f5949f3758dee388471d",
+      "reviewed_raw_trace_sha256": "3ccb5557dc7d6adb66468b3b78ed223d67669e79de56004a737d40ba82da3f5d",
+      "reason": "contextual_false_positive_current_public_e2e_username_and_example_email_uniqueness",
+      "review_context": "js/insecure-randomness",
+      "evidence": [
+        "frontend/e2e/public-operations.spec.ts:1-15,33-60",
+        "frontend/e2e/offline-provider-boundary.ts:12-20",
+        "frontend/playwright.config.ts:1-8",
+        "frontend/tsconfig.json",
+        "frontend/index.html:11",
+        "frontend/Dockerfile"
+      ],
+      "limitations": [
+        "The offline browser boundary only restricts browser subresources to the selected origin; it does not authenticate that operator-selected PUBLIC_E2E_BASE_URL or TEST_MAILPIT_URL is a fixture. CI/dedicated validation configuration supplies those isolated services.",
+        "The fixed password is a test fixture and not a product credential. No claim permits this pattern for production secrets."
+      ]
+    }
+  ]
+}
