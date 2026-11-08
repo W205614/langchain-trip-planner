@@ -95,7 +95,11 @@
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
             :message="dayCheckMessage(check)" />
           <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处候选安排；请检查省略的活动、餐饮缺口及必去要求是否满足。`" />
-          <a-alert v-for="change in quality.attraction_adjustments || []" :key="`attraction-count-${change.day_index}`"
+          <a-alert v-for="target in unmetAttractionTargets" :key="`attraction-target-${target.day_index}`"
+            data-testid="attraction-target-unmet" type="warning" show-icon
+            :message="`第${target.day_index + 1}天要求${target.target_count}个景点，实际安排${target.actual_count}个，数量目标尚未满足`"
+            description="请补充可用景点或调整每日时间后重新规划；当前行程仍可查看和编辑。" />
+          <a-alert v-for="change in visibleAttractionAdjustments" :key="`attraction-count-${change.day_index}`"
             data-testid="attraction-count-adjustment" type="warning" show-icon
             :message="`第${change.day_index + 1}天的景点由${change.before_count}个减少为${change.after_count}个，原数量未保留`"
             description="如需保留原数量，请调整每日时间或景点选择后重新核验。" />
@@ -502,6 +506,9 @@ async function applyRevisionDraft() {
   } catch (e: any) { message.error(e.response?.data?.message || e.response?.data?.detail || '应用失败，请重新打开原行程确认版本') }
 }
 const quality = ref(JSON.parse(sessionStorage.getItem('tripQuality') || '{}'))
+const unmetAttractionTargets = computed(() => (quality.value.attraction_targets || []).filter((target: any) => target.met === false))
+const visibleAttractionAdjustments = computed(() => (quality.value.attraction_adjustments || []).filter((change: any) =>
+  !unmetAttractionTargets.value.some((target: any) => target.day_index === change.day_index)))
 const proposalQualityMessage = computed(() => ({
   complete: '已通过现有质量检查；开放与预约信息仍需出行前核实。',
   degraded: '规划使用了降级结果，请先检查页面上的原因与缺口。',
@@ -519,6 +526,9 @@ const factGapMessage = computed(() => {
   if (gaps.includes('hotel_and_meal_routes_unverified')) notes.push('酒店或餐厅接驳路线仍待核实，请补充准确地点并重新核验')
   if (gaps.includes('in_attraction_walking_unknown')) notes.push('景区内部步行距离尚无可靠数据')
   if (gaps.includes('meal_pois_unavailable')) notes.push('部分用餐尚无可信餐厅，可补充餐厅或在工作台确认自理用餐')
+  if (gaps.some(gap => gap.split(':')[0] === 'arrival_endpoint_unknown')) notes.push('抵达地点尚未确认，请补充实际到达车站、机场或其他地点后重新核验首段接驳')
+  if (gaps.some(gap => gap.split(':')[0] === 'departure_endpoint_unknown')) notes.push('离开地点尚未确认，请补充实际离开车站、机场或其他地点后重新核验末段接驳')
+  if (gaps.some(gap => gap.split(':')[0] === 'start_endpoint_unknown')) notes.push('当天出发地点尚未确认，请补充酒店或其他实际出发地点后重新核验首段接驳')
   if (!notes.length) notes.push('部分行程事实仍待核实，请在工作台查看对应活动和来源')
   return notes.join('；') + '。'
 })

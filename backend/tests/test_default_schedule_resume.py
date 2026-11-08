@@ -13,7 +13,7 @@ from test_time_planner import scenario
 ])
 def test_v10_reuses_provider_evidence_but_recomputes_old_schedules(stage, expected):
     saved = {"rules": "time-windows-v9-route-evidence", "model": "fixture", "prompt": "same"}
-    current = {**saved, "rules": time_planner.RULE_VERSION}
+    current = {**saved, "rules": "time-windows-v10-adjustment-resume"}
     assert durable_execution.checkpoint_compatible(stage, saved, current) is expected
     assert not durable_execution.checkpoint_compatible(stage, saved, {**current, "model": "changed"})
     assert not durable_execution.checkpoint_compatible(stage, saved, {**current, "prompt": "changed"})
@@ -107,4 +107,5 @@ def test_an_attempted_failed_route_remains_failed_without_an_implicit_retry(monk
     time_planner.plan_time_windows(original,request,provider)
 
     assert provider.calls.count(failed)==1
-    assert any("route_failure_not_retried_on_resume" in day.feasibility.get("unknown",[]) for day in original.days)
+    restored_rows=next(value["routes"] for (stage,_),value in saved.items() if stage=="routes")
+    assert next(row for row in restored_rows if tuple(row["key"])==failed)==next(row for row in rows if tuple(row["key"])==failed)

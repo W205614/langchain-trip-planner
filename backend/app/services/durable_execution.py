@@ -94,10 +94,11 @@ def input_hash(request, original=None, instruction="", day_index=None):
 def compatibility():
     from pathlib import Path
     from ..config import get_settings
+    from ..agents.candidates import GENERATION_POLICY_VERSION
     from .time_planner import RULE_VERSION
     cfg=get_settings()
     prompt_hash=hashlib.sha256((Path(__file__).parents[1]/"agents"/"prompts.py").read_bytes()).hexdigest()
-    return {"protocol":2, "rules":RULE_VERSION, "model":cfg.llm_model,"temperature":None if cfg.llm_model.startswith("gpt-6") else cfg.llm_temperature,
+    return {"protocol":2, "rules":RULE_VERSION, "generation":GENERATION_POLICY_VERSION, "model":cfg.llm_model,"temperature":None if cfg.llm_model.startswith("gpt-6") else cfg.llm_temperature,
         "reasoning_effort":cfg.llm_reasoning_effort,"api":"chat_completions",
         "max_tokens":cfg.llm_day_max_tokens,"embedding_model":cfg.embedding_model,"prompt":prompt_hash,"schema":"planning-v1"}
 
@@ -130,6 +131,15 @@ def checkpoint_compatible(stage, saved, current):
         return True
     if not isinstance(saved,dict) or not isinstance(current,dict):
         return False
+    if current.get("rules") == "time-windows-v11-independent-visits" and current.get("generation") == "day-candidates-v2-independent-window" and saved.get("rules") in {
+        "time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure",
+        "time-windows-v6-conflict-classification", "time-windows-v7-whole-day-budget", "time-windows-v8-fact-completion",
+        "time-windows-v9-route-evidence", "time-windows-v10-adjustment-resume"} and "generation" not in saved:
+        # v11 changes POI grouping and the generation prompt. Rebuild choices
+        # and schedules; unchanged raw provider facts keep their original TTLs.
+        raw_facts = stage == "routes" or stage.startswith(("hotels:", "restaurants:", "weather:"))
+        changed = {"rules", "generation", "prompt"}
+        return raw_facts and {key:value for key,value in saved.items() if key not in changed} == {key:value for key,value in current.items() if key not in changed}
     # v4-v7 change only deterministic scheduling and classification.
     # Provider facts and drafts retain the same models, prompts, schema and input
     # hashes; reusing them must not trigger another paid generation. A solved

@@ -123,12 +123,11 @@ def test_actual_v2_crosscity_resume_reuses_original_generation_and_hotel_stage_h
     from fastapi.testclient import TestClient
     from app.agent_api import main
     from app.agents import trip_planner_agent
-    from app.services.time_planner import RULE_VERSION
     saved=json.loads((Path(__file__).parent/'fixtures/crosscity_hotel_regression.json').read_text(encoding='utf-8'))
     synthetic_fresh_observations(saved)
     request=TripRequest.model_validate(saved['request'])
     assert durable.input_hash(request)==saved['draft_input_hash']
-    monkeypatch.setattr(durable,'compatibility',lambda:{**saved['compatibility'],'rules':RULE_VERSION})
+    monkeypatch.setattr(durable,'compatibility',lambda:{**saved['compatibility'],'rules':'time-windows-v10-adjustment-resume'})
     expiry=(datetime.now(timezone.utc)+timedelta(minutes=5)).isoformat()
     rows=[{'stage':stage,'input_hash':saved[stage+'_input_hash'],'compatibility':saved['compatibility'],
         'expires_at':expiry,'payload':payload} for stage,payload in (

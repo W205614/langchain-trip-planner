@@ -51,9 +51,15 @@ def boarding_minutes(inputs, commitment, current):
     return matches[0]["minutes"] if len(matches) == 1 else None
 
 
+def suspected_same_visit(left, right):
+    """A nearby containing name is a planning heuristic, not a venue fact."""
+    from .plan_quality import haversine_km
+    names = [item.name.strip().replace(" ", "") for item in (left, right)]
+    return min(map(len, names)) >= 2 and (names[0] in names[1] or names[1] in names[0]) and haversine_km(left, right) < 1
+
+
 def relation_pairs(attractions, inputs, current):
     """Known included visits share one occupancy; plausible nesting remains an explicit unknown."""
-    from .plan_quality import haversine_km
     pairs, unknown = [], set()
     for i, left in enumerate(attractions):
         for right in attractions[i+1:]:
@@ -64,8 +70,7 @@ def relation_pairs(attractions, inputs, current):
                 if facts[0]["relation"] == "included":
                     pairs.append((left.activity_id, right.activity_id))
                 continue
-            names = [a.name.strip().replace(" ", "") for a in (left, right)]
-            if declared or left.poi_id == right.poi_id or (min(map(len, names)) >= 2 and (names[0] in names[1] or names[1] in names[0]) and haversine_km(left, right) < 1):
+            if declared or left.poi_id == right.poi_id or suspected_same_visit(left, right):
                 pairs.append((left.activity_id, right.activity_id))
                 unknown.add(f"poi_relationship_unverified:{left.poi_id}:{right.poi_id}")
     return pairs, unknown

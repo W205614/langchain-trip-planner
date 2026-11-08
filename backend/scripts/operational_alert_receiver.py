@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+import signal
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -41,4 +42,20 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200); self.end_headers(); self.wfile.write(json.dumps({"accepted": count}).encode())
     def log_message(self, *args): pass
 
-if __name__ == "__main__": HTTPServer(("0.0.0.0", 9088), Handler).serve_forever()
+def main():
+    stopping = False
+
+    def stop(_signum, _frame):
+        nonlocal stopping
+        stopping = True
+
+    signal.signal(signal.SIGTERM, stop)
+    with HTTPServer(("0.0.0.0", 9088), Handler) as server:
+        # Finish the active inbox update before closing; idle waits stay bounded.
+        server.timeout = 0.5
+        while not stopping:
+            server.handle_request()
+
+
+if __name__ == "__main__":
+    main()

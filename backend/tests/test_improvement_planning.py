@@ -66,9 +66,8 @@ def test_untouched_legacy_day_without_schedule_cannot_be_reported_feasible():
 @pytest.mark.parametrize("old_rule", ["time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure", "time-windows-v6-conflict-classification"])
 def test_classification_upgrade_reuses_provider_evidence_but_not_old_schedules(old_rule):
     from app.services.durable_execution import checkpoint_compatible
-    from app.services.time_planner import RULE_VERSION
     saved = {"rules": old_rule, "model": "frozen-model", "prompt": "frozen-prompt"}
-    current = {**saved, "rules": RULE_VERSION}
+    current = {**saved, "rules": "time-windows-v7-whole-day-budget"}
     for stage in ("draft", "routes", "day_draft:0", "attractions:北京", "hotels:北京", "restaurants:北京", "weather:北京"):
         assert checkpoint_compatible(stage, saved, current)
     for stage in ("schedule", "schedule_day:0:hash"):

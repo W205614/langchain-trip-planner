@@ -10,6 +10,42 @@ import re
 _CN = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
 
 
+def _number(raw: str) -> int | None:
+    if raw.isdigit():
+        return int(raw)
+    if raw == "两":
+        return 2
+    if "十" in raw:
+        tens, _, units = raw.partition("十")
+        return _CN.get(tens, 1) * 10 + _CN.get(units, 0)
+    return _CN.get(raw)
+
+
+def daily_attraction_target(content: str | None) -> int | None:
+    """Extract only an explicit exact daily count within the 20-activity bound."""
+    text = re.sub(r"\s+", "", content or "")
+    if re.search(r"第[0-9一二两三四五六七八九十]+天[^，,。；;！？!?]*[0-9一二两三四五六七八九十]+(?:个|处)(?:独立)?景点", text):
+        return None
+    clauses = re.split(r"[，,。；;！？!?]", text)
+    values = []
+    number = r"(?:[0-9]{1,2}|[一二三四五六七八九]?十[一二三四五六七八九]?|[一二两三四五六七八九])"
+    for clause in clauses:
+        if not re.search(r"每天|每日|当天|当日", clause) or "景点" not in clause:
+            continue
+        if re.search(r"不要|不必|不用|不能|不想|不需要|不要求|不一定|无需|无须|别|最多|至少|不超过|不少于|以上|以下|以内|左右|大约|约|[到至~～-]", clause):
+            return None
+        if len(re.findall(number + r"(?:个|处)(?:独立)?景点", clause)) != 1:
+            return None
+        matches = list(re.finditer(r"(?:每天|每日|当天|当日)(?:恰好|正好|安排|游览|参观|去|只|各|要|有)*?(" + number + r")(?:个|处)(?:独立)?景点", clause))
+        if len(matches) != 1:
+            return None
+        value = _number(matches[0].group(1))
+        if value is None or not 1 <= value <= 20:
+            return None
+        values.append(value)
+    return values[0] if values and len(set(values)) == 1 else None
+
+
 def attraction_reduction(content: str) -> int | None:
     """Recognize an explicit count; vague pacing requests stay with the planner."""
     text = re.sub(r"\s+", "", content)
@@ -20,7 +56,7 @@ def attraction_reduction(content: str) -> int | None:
     if re.search(r"(?:不要|不用|不必|不能|不可|别)(?:再)?$", text[:match.start()]):
         return None
     raw = match.group(1)
-    return int(raw) if raw.isdigit() else 2 if raw == "两" else _CN[raw]
+    return _number(raw)
 
 
 def _day_index(text: str) -> int | None:

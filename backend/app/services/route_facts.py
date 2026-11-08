@@ -48,14 +48,10 @@ def current(value, now=None):
         return False
 
 
-def cache_expiry(cache):
-    values=[fact.get("expires_at",EPOCH) for fact in cache.get("_route_facts",{}).values()]
-    return min(values,key=instant) if values else None
-
-
-def bind_day(day,cache):
-    expiry=cache_expiry(cache)
-    if expiry:
-        day.__pydantic_extra__["route_fact_expires_at"]=expiry
-    else:
-        day.__pydantic_extra__.pop("route_fact_expires_at",None)
+def bind_day(day):
+    for name in ("route_fact_expires_at", "route_fact_observed_at"):
+        value = day.feasibility.get(name)
+        if value:
+            day.__pydantic_extra__[name] = value
+        else:
+            day.__pydantic_extra__.pop(name, None)

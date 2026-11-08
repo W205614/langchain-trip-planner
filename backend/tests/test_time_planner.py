@@ -490,6 +490,7 @@ def test_cached_day_transport_buffer_gap_reaches_final_quality_without_resolving
                 'start_at':day.date+'T08:00:00+08:00','end_at':day.date+'T12:00:00+08:00','notes':[]})
         cached_day.feasibility={'status':'feasible','unknown':[],'conflicts':[],'omitted_activity_ids':[]}
         cached_day.__pydantic_extra__['route_fact_expires_at']=route_expiry
+        cached_day.__pydantic_extra__['route_fact_observed_at']=observed_at.isoformat()
         cached[day.day_index]={'day':cached_day.model_dump(mode='json')}
     def read(stage,digest):
         if stage=='routes':

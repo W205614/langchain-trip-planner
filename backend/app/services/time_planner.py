@@ -14,10 +14,10 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v10-adjustment-resume"
+RULE_VERSION = "time-windows-v11-independent-visits"
 from .planning_semantics import CONTRACT, FACT_TTLS
 from .travel_facts import boarding_minutes, relation_pairs
-from .route_facts import observation as route_observation, current as route_current, instant as route_instant, cache_expiry as route_cache_expiry, bind_day as bind_route_day, EPOCH as ROUTE_EPOCH
+from .route_facts import observation as route_observation, current as route_current, instant as route_instant, bind_day as bind_route_day, EPOCH as ROUTE_EPOCH
 
 
 def confirmed(commitment):
@@ -190,6 +190,20 @@ def _location(value):
         return None
 
 
+def _route_key(left, right, city, route_type):
+    if not left or not right or left == right:
+        return None
+    return (left.longitude, left.latitude, right.longitude, right.latitude, city, route_type)
+
+
+def _route_notes(minutes, known, unknown):
+    if known:
+        return []
+    if "route_fact_expired_or_unobserved" in unknown:
+        return ["路线证据已过期或缺少观测时间，原时长仅供参考；尚未核验可行性"]
+    return [f"路线未核实，暂以{minutes}分钟占位；尚未核验可行性"]
+
+
 def _route(left, right, planner, city, route_type, cache, unknown):
     from .execution import remaining
     from .amap_mcp_client import AmapMCPError
@@ -201,7 +215,7 @@ def _route(left, right, planner, city, route_type, cache, unknown):
         return 30, False
     if left == right:
         return 0, True
-    key = (left.longitude, left.latitude, right.longitude, right.latitude, city, route_type)
+    key = _route_key(left, right, city, route_type)
     if key not in cache:
         result = {}
         if planner and cache.get("_lookups",0) < max(1,int(os.getenv("PLANNER_ROUTE_LOOKUPS","120"))) and time.monotonic() < cache.get("_deadline",float("inf")):
@@ -270,7 +284,8 @@ def _nodes(day, inputs, low, high, zone, unknown):
         nodes.append(dict(activity_id=attraction.activity_id, title=attraction.name, kind="attraction", duration=duration,
             intervals=intervals, location=attraction.location, source=valid[0].get("source", "") if len(valid) == 1 else "", evidence_refs=[attraction.poi_id],
             optional=attraction.optional, priority=attraction.priority))
-    defaults = {"breakfast": ("08:00", "10:00", 30), "lunch": ("11:30", "14:00", 60), "dinner": ("17:30", "21:00", 60)}
+    from .plan_quality import DEFAULT_MEAL_WINDOWS
+    defaults = DEFAULT_MEAL_WINDOWS
     explicit_meal_types={window.get("type") for window in inputs.meal_windows}
     self_meals=[fact for fact in inputs.meal_resolutions if fact.get("day_index")==day.day_index and fact_current(fact,"verification")]
     for meal_type in explicit_meal_types-{meal.type for meal in day.meals}-{fact["type"] for fact in self_meals}:
@@ -475,26 +490,43 @@ def _fit_recommended_hotels(plan,request,planner,cache,allowed_days):
     return options
 
 
+def day_time_bounds(request, day_index, day_date):
+    """Return effective start/end and the unclipped daily hard start/end in minutes."""
+    inputs, zone = request.planning_input, ZoneInfo(request.planning_input.timezone)
+    low, high = _minutes(inputs.day_start), _minutes(inputs.day_end)
+    window = next((w for w in inputs.day_windows if w.day_index == day_index), None)
+    if window:
+        low, high = _minutes(window.start), _minutes(window.end)
+    hard_start, hard_end = low, high
+    midnight = datetime.fromisoformat(day_date).replace(tzinfo=zone)
+    for value, arrival in ((inputs.arrival_at, True), (inputs.departure_at, False)):
+        if value is not None:
+            instant = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+            if instant.tzinfo is None:
+                raise ValueError("Timezone required")
+            minute = int((instant.astimezone(zone) - midnight).total_seconds() // 60)
+            if arrival:
+                low = max(low, minute)
+            else:
+                high = min(high, minute)
+    return low, high, hard_start, hard_end
+
+
 def solve_day(day, request, route_planner=None, cache=None, seconds=None, previous_day=None):
     from ortools.sat.python import cp_model
     from .plan_quality import transport_to_route_type
     from .execution import remaining
     inputs, zone = request.planning_input, ZoneInfo(request.planning_input.timezone)
-    low, high = _minutes(inputs.day_start), _minutes(inputs.day_end)
-    window = next((w for w in inputs.day_windows if w.day_index == day.day_index), None)
-    if window:
-        low, high = _minutes(window.start), _minutes(window.end)
-    hard_start,hard_end = low,high
-    if inputs.arrival_at:
-        low = max(low, _local_minute(inputs.arrival_at, day, zone))
-    if inputs.departure_at:
-        high = min(high, _local_minute(inputs.departure_at, day, zone))
+    low, high, hard_start, hard_end = day_time_bounds(request, day.day_index, day.date)
     city = city_for_day(request,day.day_index)
     unknown, cache = set(), cache if cache is not None else {}
     route_type = transport_to_route_type(day.transportation or request.transportation)
     night_anchor,night_city = _hotel_anchor(inputs,request,day.day_index,day)
     prior_anchor,prior_city = _hotel_anchor(inputs,request,day.day_index-1,previous_day) if day.day_index else (night_anchor,night_city)
     bridges, connections, connection_conflicts, inbound_anchor, outbound_anchor = [], [], [], None, None
+    inbound_required, outbound_required = False, False
+    connection_route_keys, connection_missing_endpoint = set(), False
+    connection_route_rows = []
     proven_connection_conflicts=set()
     connection_minutes = 0
     for commitment in inputs.commitments:
@@ -509,9 +541,11 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                 connection_conflicts.append(f"fixed_transport_outside_day_window:{commitment['id']}")
                 proven_connection_conflicts.add(connection_conflicts[-1])
             if city == commitment["origin_city"] and 0 <= departure < 1440:
+                outbound_required = True
                 high = min(high,departure-buffer)
                 outbound_anchor = _location(commitment.get("origin_location") or commitment.get("location"))
             if city == commitment["destination_city"] and 0 <= arrival < 1440:
+                inbound_required = True
                 low = max(low,arrival)
                 inbound_anchor = _location(commitment.get("destination_location"))
                 # The arrival-day solver starts at the arrival station. Account
@@ -526,6 +560,11 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                     if origin is None:
                         unknown.add("origin_station_endpoint_unknown")
                     access,known = _route(prior_anchor,origin,route_planner,commitment["origin_city"],route_type,cache,unknown)
+                    connection_key = _route_key(prior_anchor, origin, commitment["origin_city"], route_type)
+                    if connection_key:
+                        connection_route_keys.add(connection_key)
+                    elif not known:
+                        connection_missing_endpoint = True
                     midnight = datetime.fromisoformat(day.date).replace(tzinfo=zone)
                     access_start = midnight+timedelta(minutes=departure-buffer-access)
                     if departure-buffer-access < hard_start or departure > hard_end:
@@ -544,7 +583,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
                     connections.append(dict(activity_id=f"connection:{commitment['id']}:origin",title="住宿前往跨城出发站",kind="travel",
                         start_at=access_start.isoformat(),end_at=(midnight+timedelta(minutes=departure-buffer)).isoformat(),status="confirmed" if known else "estimated",
                         source="map" if known else "conservative_allowance",evidence_refs=[str(commitment["id"])],
-                        notes=[] if known else ["住宿或站点资料不足，接驳仅为30分钟占位，尚未核验"]))
+                        notes=_route_notes(access, known, unknown)))
+                    connection_route_rows.append((connections[-1], connection_key, access))
                     connection_minutes += access
                 else:
                     unknown.add("origin_hotel_connection_before_current_day_unverified")
@@ -618,14 +658,22 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         return [], report, None
     # A hotel change affects both directed endpoints. Never ask a city route
     # provider to connect a previous hotel in a different city as a local edge.
-    start_anchor = inbound_anchor or (prior_anchor if prior_city == city else None)
-    end_anchor = outbound_anchor or (night_anchor if night_city == city else None)
+    arrival_today = bool(inputs.arrival_at and 0 <= _local_minute(inputs.arrival_at, day, zone) < 1440)
+    departure_today = bool(inputs.departure_at and 0 <= _local_minute(inputs.departure_at, day, zone) < 1440)
+    start_anchor = inbound_anchor if inbound_required else None if arrival_today else prior_anchor if prior_city == city else None
+    end_anchor = outbound_anchor if outbound_required else None if departure_today else night_anchor if night_city == city else None
+    needs_end_connection = bool(outbound_required or departure_today or day.hotel
+        or day.day_index < request.travel_days - 1
+        or any(h.get("day_index") == day.day_index for h in inputs.hotel_stays))
     if not inbound_anchor and prior_city != city:
         unknown.add("previous_hotel_in_other_city")
     if night_city != city:
         unknown.add("tonight_hotel_city_unverified")
-    if start_anchor is None or end_anchor is None:
-        unknown.add("hotel_endpoint_unknown")
+    if start_anchor is None:
+        unknown.add("arrival_endpoint_unknown" if inbound_required or arrival_today else
+                    "hotel_endpoint_unknown" if day.day_index else "start_endpoint_unknown")
+    if needs_end_connection and end_anchor is None:
+        unknown.add("departure_endpoint_unknown" if outbound_required or departure_today else "hotel_endpoint_unknown")
     model = cp_model.CpModel()
     starts = [model.new_int_var_from_domain(cp_model.Domain.from_intervals(n["intervals"]), f"start_{i}") for i, n in enumerate(nodes)]
     presence = [model.new_bool_var(f"present_{i}") for i in range(len(nodes))]
@@ -641,22 +689,31 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             model.add(sum(presence[i] for i in indices)<=1)
     if attraction_presence:
         model.add(sum(attraction_presence) >= 1)
-    for left in range(len(nodes)+1):
-        for right in range(len(nodes)+1):
-            if left == right:
-                continue
-            source = (nodes[left-1].get("departure_location") or nodes[left-1]["location"]) if left else start_anchor
-            destination = nodes[right-1]["location"] if right else end_anchor
-            travel, known = _route(source, destination, route_planner, city, route_type, cache, unknown)
-            literal = model.new_bool_var(f"edge_{left}_{right}")
-            arcs.append((left, right, literal))
-            literals[left, right], travels[left, right] = literal, (travel, known)
-            if left and right:
-                model.add(starts[right-1] >= starts[left-1] + nodes[left-1]["duration"] + travel).only_enforce_if(literal)
-            elif right:
-                model.add(starts[right-1] >= low + travel).only_enforce_if(literal)
-            else:
-                model.add(starts[left-1] + nodes[left-1]["duration"] + travel <= high).only_enforce_if(literal)
+    # Verify both directions of the essential connections before spending the
+    # shared lookup/time budget on discretionary pairs.
+    endpoints = sorted(range(1, len(nodes)+1), key=lambda i: nodes[i-1]["kind"] != "attraction")
+    edges = [(left, right) for index in endpoints for left, right in ((0, index), (index, 0))]
+    edges.extend((left, right) for left in endpoints for right in endpoints if left != right)
+    edge_unknown, edge_keys = {}, {}
+    for left, right in edges:
+        source = (nodes[left-1].get("departure_location") or nodes[left-1]["location"]) if left else start_anchor
+        destination = nodes[right-1]["location"] if right else end_anchor
+        edge_unknown[left, right] = set()
+        if not right and not needs_end_connection:
+            travel, known = 0, True
+            edge_keys[left, right] = None
+        else:
+            travel, known = _route(source, destination, route_planner, city, route_type, cache, edge_unknown[left, right])
+            edge_keys[left, right] = _route_key(source, destination, city, route_type)
+        literal = model.new_bool_var(f"edge_{left}_{right}")
+        arcs.append((left, right, literal))
+        literals[left, right], travels[left, right] = literal, (travel, known)
+        if left and right:
+            model.add(starts[right-1] >= starts[left-1] + nodes[left-1]["duration"] + travel).only_enforce_if(literal)
+        elif right:
+            model.add(starts[right-1] >= low + travel).only_enforce_if(literal)
+        else:
+            model.add(starts[left-1] + nodes[left-1]["duration"] + travel <= high).only_enforce_if(literal)
     model.add_circuit(arcs)
     # Preserve relative order of immutable content. Explicit time locks above
     # additionally preserve arrival and finish times when a prior timeline exists.
@@ -681,16 +738,17 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             drift.append(deviation)
     model.minimize(sum((1-presence[i]) * n.get("priority",50) * 100_000_000_000_000 for i,n in enumerate(nodes) if n["optional"])
         + sum(changed)*10_000_000_000 + sum(drift)*10000
+        + sum(literals[key] for key, (_, known) in travels.items() if not known) * 10_000_000
         + sum(travels[key][0] * literal for key, literal in literals.items()) * 100 + sum(starts))
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = min(remaining(), seconds if seconds is not None else float(os.getenv("PLANNER_DAY_SECONDS", "2")))
     solver.parameters.num_search_workers = 1
     solver.parameters.random_seed = 0
     status = solver.solve(model)
-    if any(not route_current(fact) for fact in cache.get("_route_facts",{}).values()):
-        unknown.add("route_fact_expired_or_unobserved")
-    report.update(solver_status=solver.status_name(status), unknown=sorted(unknown), omitted_activity_ids=forced_omissions)
+    report.update(solver_status=solver.status_name(status), omitted_activity_ids=forced_omissions)
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        unknown.update(gap for gaps in edge_unknown.values() for gap in gaps)
+        report["unknown"] = sorted(unknown)
         model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
         report["status"] = "infeasible" if status == cp_model.INFEASIBLE and not model_unknown else "not_found"
         report["conflicts"] = ["candidate_time_model_has_no_solution" if status == cp_model.INFEASIBLE else "solver_budget_exhausted"]
@@ -700,10 +758,32 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     timeline, order, total_travel = [], [], 0
     previous, cursor = 0, low
     omitted = forced_omissions + [node["activity_id"] for i,node in enumerate(nodes) if not solver.value(presence[i])]
+    unknown = {gap for gap in unknown if not any(gap.endswith(":"+identity) for identity in omitted)}
+    selected_edges = [key for key, literal in literals.items() if solver.value(literal)]
+    selected_facts = [cache["_route_facts"][key] for key in connection_route_keys]
+    for row, key, minutes in connection_route_rows:
+        if key and not route_current(cache["_route_facts"][key]):
+            unknown.add("route_fact_expired_or_unobserved")
+            row.update(status="estimated", notes=_route_notes(minutes, False, {"route_fact_expired_or_unobserved"}))
+    if connection_missing_endpoint:
+        selected_facts.append({"observed_at": None, "expires_at": ROUTE_EPOCH})
+    for edge in selected_edges:
+        key = edge_keys[edge]
+        if key:
+            fact = cache["_route_facts"][key]
+            selected_facts.append(fact)
+            if not route_current(fact):
+                edge_unknown[edge].add("route_fact_expired_or_unobserved")
+                travels[edge] = (travels[edge][0], False)
+        elif not travels[edge][1]:
+            selected_facts.append({"observed_at": None, "expires_at": ROUTE_EPOCH})
+        unknown.update(edge_unknown[edge])
     report["omitted_activity_ids"] = omitted
+    from .plan_quality import expected_meal_types
+    expected_meals = expected_meal_types(request, day.day_index, day.date)
     report["unmet_meals"]=[{"activity_id":meal.activity_id,"type":meal.type,"title":meal.name,
         "reason":"restaurant_candidate_does_not_fit_time_and_routes","action":"该餐厅未安排，需就近用餐并重新核验"}
-        for meal in day.meals if meal.activity_id in omitted]
+        for meal in day.meals if meal.activity_id in omitted and meal.type in expected_meals]
     unknown.update(f"meal_candidate_unassigned:{meal['type']}:{meal['activity_id']}" for meal in report["unmet_meals"])
     report["unknown"]=sorted(unknown)
     for _ in nodes:
@@ -714,7 +794,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         travel, known = travels[previous, following]
         if travel:
             timeline.append(dict(activity_id=f"route:{previous}:{node['activity_id']}", title=f"前往{node['title']}", kind="travel",
-                start_at=instant(cursor), end_at=instant(cursor+travel), status="confirmed" if known else "estimated", source="map" if known else "conservative_allowance", evidence_refs=[], notes=[] if known else ["路线缺失，暂以30分钟占位；未验证可行性"]))
+                start_at=instant(cursor), end_at=instant(cursor+travel), status="confirmed" if known else "estimated", source="map" if known else "conservative_allowance", evidence_refs=[], notes=_route_notes(travel, known, edge_unknown[previous, following])))
         start = solver.value(starts[following-1])
         if start > cursor+travel:
             timeline.append(dict(activity_id=f"wait:{node['activity_id']}", title="等待", kind="waiting", start_at=instant(cursor+travel), end_at=instant(start), status="estimated", source="solver", evidence_refs=[], notes=[]))
@@ -725,13 +805,17 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         cursor, previous = start+node["duration"], following
     travel, known = travels[previous, 0]
     if travel:
-        timeline.append(dict(activity_id="hotel:return", title="前往出发站" if outbound_anchor else "返回住宿", kind="travel", start_at=instant(cursor), end_at=instant(cursor+travel), status="confirmed" if known else "estimated", source="map" if known else "conservative_allowance", evidence_refs=[], notes=[]))
+        title = "前往出发站" if outbound_anchor else "离开接驳（终点待补充）" if outbound_required or departure_today else "返回住宿"
+        timeline.append(dict(activity_id="hotel:return", title=title, kind="travel", start_at=instant(cursor), end_at=instant(cursor+travel), status="confirmed" if known else "estimated", source="map" if known else "conservative_allowance", evidence_refs=[], notes=_route_notes(travel, known, edge_unknown[previous, 0])))
     timeline.extend(connections)
     timeline.extend(bridges)
     timeline.sort(key=lambda item:item["start_at"])
     unknown.update(_transport_buffer_gaps(timeline,inputs))
     report["unknown"]=sorted(unknown)
-    report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes, finish_at=instant(cursor+travel),route_fact_expires_at=route_cache_expiry(cache))
+    expiry = min((fact["expires_at"] for fact in selected_facts), key=route_instant) if selected_facts else None
+    observed = min((fact["observed_at"] for fact in selected_facts), key=route_instant) if selected_facts and all(fact.get("observed_at") for fact in selected_facts) else None
+    report.update(status="unverified" if unknown else "feasible", route_minutes=total_travel+travel+connection_minutes,
+                  finish_at=instant(cursor+travel), route_fact_expires_at=expiry, route_fact_observed_at=observed)
     return timeline, report, order
 
 
@@ -766,9 +850,8 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
             from ..models.schemas import DayPlan
             restored=DayPlan.model_validate(cached_day["day"])
             expiry=getattr(restored,"route_fact_expires_at",None)
-            try:route_fresh=bool(expiry and route_instant(expiry)>datetime.now(timezone.utc))
+            try:route_fresh=bool(expiry and route_current({"observed_at":getattr(restored,"route_fact_observed_at",None),"expires_at":expiry}))
             except (ValueError,TypeError):route_fresh=False
-            if any(not route_current(fact) for fact in cache.get("_route_facts",{}).values()):route_fresh=False
             if route_fresh and restored.feasibility.get("status") in {"feasible","unverified"} and restored.timeline and not any(gap.startswith("route_") for gap in restored.feasibility.get("unknown",[])):
                 buffer_gaps=_transport_buffer_gaps(restored.timeline,request.planning_input)
                 if buffer_gaps:
@@ -800,7 +883,7 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                 day.attractions.sort(key=lambda a:priority[a.activity_id])
                 day.meals[:] = [m for m in day.meals if m.activity_id in priority]
                 day.meals.sort(key=lambda a:priority[a.activity_id])
-        bind_route_day(day,cache)
+        bind_route_day(day)
         reports.append({"day_index":day.day_index, **day.feasibility})
         if day.timeline and day.feasibility.get("status") in {"feasible","unverified"}:
             save_checkpoint(checkpoint_stage,digest,{"day":day.model_dump(mode="json")})
@@ -841,7 +924,7 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                         previous_day=next((d for d in [*trial,*plan.days] if d.day_index==candidate.day_index-1),None)
                         timeline,report,order = solve_day(candidate,request,route_planner,cache,min(.3,max(.01,limit-(time.monotonic()-started))),previous_day)
                         candidate.timeline,candidate.feasibility = timeline,report
-                        bind_route_day(candidate,cache)
+                        bind_route_day(candidate)
                         if timeline and report["status"] in {"feasible","unverified"}:
                             candidate.__pydantic_extra__["schedule_stale"] = False
                         if order:

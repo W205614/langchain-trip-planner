@@ -15,6 +15,40 @@ test('reduced attraction count stays visible alongside the final itinerary', asy
   await expect(page.getByTestId('attraction-count-adjustment')).toContainText('如需保留原数量')
 })
 
+test('an unmet daily attraction target explains the final count without a duplicate reduction notice', async ({ page }) => {
+  await page.addInitScript(plan => {
+    sessionStorage.setItem('tripPlan', JSON.stringify(plan))
+    sessionStorage.setItem('tripQuality', JSON.stringify({
+      attraction_targets: [{ day_index: 0, target_count: 2, actual_count: 1, met: false }],
+      attraction_adjustments: [{ day_index: 0, before_count: 2, after_count: 1 }]
+    }))
+  }, plan)
+  await page.route('https://*.amap.com/**', route => route.abort())
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+  await page.goto('/result')
+  await expect(page.getByTestId('attraction-target-unmet')).toContainText('第1天要求2个景点，实际安排1个，数量目标尚未满足')
+  await expect(page.getByTestId('attraction-target-unmet')).toContainText('补充可用景点或调整每日时间')
+  await expect(page.getByTestId('attraction-count-adjustment')).toHaveCount(0)
+})
+
+for (const [code, phrase] of [
+  ['arrival_endpoint_unknown', '抵达地点尚未确认'],
+  ['departure_endpoint_unknown', '离开地点尚未确认'],
+  ['start_endpoint_unknown', '当天出发地点尚未确认']
+] as const) {
+  test(`${code} has a useful endpoint explanation`, async ({ page }) => {
+    await page.addInitScript(({ plan, code }) => {
+      sessionStorage.setItem('tripPlan', JSON.stringify(plan))
+      sessionStorage.setItem('tripQuality', JSON.stringify({ data_gaps: [code] }))
+    }, { plan, code })
+    await page.route('https://*.amap.com/**', route => route.abort())
+    await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+    await page.goto('/result')
+    await expect(page.getByText(new RegExp(phrase))).toBeVisible()
+    await expect(page.getByText(code, { exact: true })).toHaveCount(0)
+  })
+}
+
 test('fact warning lists only the unresolved evidence instead of fixed missing-fact claims', async ({ page }) => {
   await page.addInitScript(({ plan }) => {
     sessionStorage.setItem('tripPlan', JSON.stringify(plan))

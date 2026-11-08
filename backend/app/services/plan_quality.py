@@ -11,14 +11,25 @@ from math import asin, cos, radians, sin, sqrt
 from typing import Any, Iterable, Protocol
 import httpx
 
-from ..models.schemas import Attraction, DayPlan, TripPlan
+from ..models.schemas import Attraction, DayPlan, TripPlan, TripRequest
 from .amap_mcp_client import AmapMCPError
 from .execution import remaining
 
 
-REQUIRED_MEALS = {"breakfast", "lunch", "dinner"}
+DEFAULT_MEAL_WINDOWS = {"breakfast": ("08:00", "10:00", 30), "lunch": ("11:30", "14:00", 60),
+                        "dinner": ("17:30", "21:00", 60)}
+REQUIRED_MEALS = set(DEFAULT_MEAL_WINDOWS)
 MAX_VISIT_MINUTES_PER_DAY = 480
 MAX_ROUTE_MINUTES_PER_DAY = 120
+
+
+def expected_meal_types(request: TripRequest, day_index: int, day_date: str) -> set[str]:
+    """Default meals follow the effective day; explicit windows remain user requirements."""
+    from .time_planner import day_time_bounds, _minutes
+    low, high = day_time_bounds(request, day_index, day_date)[:2]
+    return {kind for kind, (start, end, _) in DEFAULT_MEAL_WINDOWS.items()
+            if max(low, _minutes(start)) < min(high, _minutes(end))} | {
+                window["type"] for window in request.planning_input.meal_windows}
 
 
 def recalculate_budget(plan: TripPlan, *, estimate_missing: bool = False, budget_limit: int | None = None) -> None:
@@ -134,7 +145,7 @@ def normalize_day(day: DayPlan) -> int:
     return removed
 
 
-def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
+def evaluate_plan(plan: TripPlan, expected_days: int, request: TripRequest | None = None) -> PlanQuality:
     """返回面向 API 与监控的质量报告，不将告警伪装成模型事实。"""
     warnings: list[str] = []
     data_gaps = ["opening_hours_unavailable"]
@@ -147,11 +158,18 @@ def evaluate_plan(plan: TripPlan, expected_days: int) -> PlanQuality:
         attraction_count += len(day.attractions)
         if not day.attractions:
             warnings.append(f"第 {index} 天没有可验证的景点")
-        meal_types = {meal.type for meal in day.meals}
-        missing_meals = REQUIRED_MEALS - meal_types
+        if request is None:
+            meal_types = {meal.type for meal in day.meals}
+            missing_meals = REQUIRED_MEALS - meal_types or any(not meal.poi_id for meal in day.meals)
+        else:
+            from .time_planner import fact_current
+            arranged = {meal.type for meal in day.meals if meal.poi_id} | {
+                fact["type"] for fact in request.planning_input.meal_resolutions
+                if fact.get("day_index") == day.day_index and fact_current(fact, "verification")}
+            missing_meals = expected_meal_types(request, day.day_index, day.date) - arranged
         # 餐饮只能来自可信 POI。上游无候选时宁可暴露数据缺口，也不能为了让
         # 质量门禁通过而编造餐厅；这不会破坏景点路线本身的可执行性。
-        if missing_meals or any(not meal.poi_id for meal in day.meals):
+        if missing_meals:
             if "meal_pois_unavailable" not in data_gaps:
                 data_gaps.append("meal_pois_unavailable")
         visit_minutes = sum(max(0, item.visit_duration) for item in day.attractions)

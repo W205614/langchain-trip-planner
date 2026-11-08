@@ -8,7 +8,7 @@ from math import isfinite
 import httpx
 
 from ..models.schemas import TripPlan, TripRequest
-from .plan_quality import REQUIRED_MEALS, evaluate_plan, recalculate_budget, transport_to_route_type
+from .plan_quality import evaluate_plan, recalculate_budget, transport_to_route_type
 from .amap_mcp_client import AmapMCPError
 from .execution import remaining
 
@@ -91,14 +91,16 @@ def refresh_saved_quality(plan, request, previous):
     if "usage" in previous:
         report["usage"] = previous["usage"]
     report["route_evidence_source"] = "saved_query"
-    if previous.get("attraction_adjustments"):
-        report["attraction_adjustments"] = previous["attraction_adjustments"]
+    explanations = ("attraction_adjustments", "attraction_targets")
+    if any(field in previous for field in explanations):
+        report.update({field: previous[field] for field in explanations if field in previous})
         from .result_policy import classify
         return classify(plan, request, report)
     return report
 
 
 def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, repair=True, allowed_days=None, enhanced=False):
+    initial_generation = repair and allowed_days is None
     plan.departure_city = request.departure_city
     plan.traveler_count = request.traveler_count
     plan.room_count = request.room_count
@@ -113,12 +115,6 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     repairs, violations, day_reports = [], [], []
     gaps = {"opening_hours_unavailable", "reservation_unverified", "in_attraction_walking_unknown",
             "hotel_and_meal_routes_unverified"}
-    if any(
-        REQUIRED_MEALS - {meal.type for meal in day.meals}
-        or any(not meal.poi_id for meal in day.meals)
-        for day in plan.days
-    ):
-        gaps.add("meal_pois_unavailable")
     seen = set()
     route_type = transport_to_route_type(request.transportation)
     cache = {}
@@ -282,7 +278,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             violations.append(f"第{index + 1}天：日期或天序号错误")
         if any(a.visit_duration <= 0 for a in day.attractions):
             violations.append(f"第{index + 1}天：游览时长必须为正数")
-    report = evaluate_plan(plan, request.travel_days).to_dict()
+    report = evaluate_plan(plan, request.travel_days, request=request).to_dict()
+    gaps.update(report["data_gaps"])
     if all(a.opening_hours for day in plan.days for a in day.attractions):
         gaps.discard("opening_hours_unavailable")
         gaps.add("opening_hours_travel_date_unverified")
@@ -341,8 +338,6 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             report["data_gaps"] = [gap for gap in report["data_gaps"] if gap != "hotel_and_meal_routes_unverified"]
         if all(any(f.get("poi_id")==a.poi_id and f.get("date")==day.date and f.get("status") in {"confirmed","not_required"} and fact_current(f,"verification") for f in request.planning_input.reservation_facts) for day in plan.days for a in day.attractions):
             report["data_gaps"]=[gap for gap in report["data_gaps"] if gap!="reservation_unverified"]
-        if all(REQUIRED_MEALS <= ({meal.type for meal in day.meals}|{f["type"] for f in request.planning_input.meal_resolutions if f.get("day_index")==day.day_index and fact_current(f,"verification")}) for day in plan.days):
-            report["data_gaps"]=[gap for gap in report["data_gaps"] if gap!="meal_pois_unavailable"]
         statuses = {s["status"] for s in schedules}
         report["feasibility_status"] = next((s for s in ("infeasible", "not_found", "unverified") if s in statuses), "feasible")
         report["facts_complete"] = bool(schedules) and all(not s["unknown"] for s in schedules)
@@ -395,5 +390,11 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                         for identity, name in before if identity not in selected]})
         if adjustments:
             report["attraction_adjustments"] = adjustments
+    if initial_generation:
+        from .assistant_intent import daily_attraction_target
+        target = daily_attraction_target(request.free_text_input or "")
+        if target is not None:
+            report["attraction_targets"] = [{"day_index": day.day_index, "target_count": target,
+                "actual_count": len(day.attractions), "met": len(day.attractions) == target} for day in plan.days]
     from .result_policy import classify
     return classify(plan, request, report)

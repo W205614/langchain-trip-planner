@@ -13,6 +13,7 @@ from ..models.schemas import TripRequest, WeatherInfo
 from .state import GraphState
 from ..services.attraction_names import valid_attraction
 from ..services.durable_execution import checkpoint_node
+from .candidates import day_candidate_limit, independent_candidate_count
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,8 @@ class TravelDataNodes:
         try:
             # 关键词: 优先用"城市+景点/必去景点", 避免用"美食"等偏好搜出餐馆
             keywords = request.preferences[0] if request.preferences else "景点"
+            from ..services.planning_constraints import name_key
+            avoided = {name_key(name) for name in request.constraints.avoid}
             if any(k in keywords for k in ("美食", "小吃", "餐厅", "购物")):
                 keywords = "必去景点"
             pois = self.amap_service.search_poi(keywords, request.city)
@@ -40,15 +43,15 @@ class TravelDataNodes:
             _NON_ATTRACTION_TYPES = ("餐饮", "中餐厅", "餐厅", "酒店", "宾馆", "住宿", "购物", "超市", "银行", "KTV", "酒吧", "足疗", "洗浴", "火锅", "烤肉", "快餐")
             def attraction_candidates(items):
                 return [p for p in items if valid_attraction(p, request.city)
+                    and name_key(p.name) not in avoided
                     and not any(t in (p.type or "") for t in _NON_ATTRACTION_TYPES)]
 
             pois = attraction_candidates(pois)
-            # A narrow preference query can return fewer POIs than the requested
-            # number of days. Broaden through Agent-owned MCP searches before
-            # splitting candidates, so a later day is not silently left empty.
-            desired = min(120, max(request.travel_days, request.travel_days * 2))
+            # Nested POIs do not create independent alternatives. Reuse the
+            # bounded broad searches to leave daily choices beyond the target.
+            desired = min(120, request.travel_days * day_candidate_limit(request))
             fallback_keywords = [k for k in ("景点", "博物馆", "公园") if k != keywords]
-            if len({p.id for p in pois}) < desired and fallback_keywords:
+            if independent_candidate_count(pois, request) < desired and fallback_keywords:
                 with ThreadPoolExecutor(max_workers=min(3, len(fallback_keywords))) as executor:
                     futures = {
                         executor.submit(copy_context().run, self.amap_service.search_poi, keyword, request.city): keyword
@@ -72,7 +75,6 @@ class TravelDataNodes:
             except Exception as e:
                 logger.warning(f"   ⚠️ 知识库景点补充失败(不影响主流程): {e}")
 
-            from ..services.planning_constraints import name_key
             must_visit = list(request.constraints.must_visit)
             known_names = {p.name for p in pois if p.name}
             lookup_names = list(dict.fromkeys([
@@ -114,7 +116,6 @@ class TravelDataNodes:
                         pois.append(match)
                 except Exception:
                     logger.warning("必去景点查询失败，保留其它已取得的候选")
-            avoided = {name_key(n) for n in request.constraints.avoid}
             unique = {p.id: p for p in pois if valid_attraction(p, request.city) and name_key(p.name) not in avoided}
             return {"attraction_pois": list(unique.values())}
         except Exception as e:

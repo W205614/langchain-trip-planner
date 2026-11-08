@@ -15,6 +15,11 @@ def classify(plan, request, report):
         add("ATTRACTION_COUNT_ADJUSTED", f"day:{change['day_index']}",
             f"第{change['day_index'] + 1}天经排程与约束调整，景点由{change['before_count']}个减少为{change['after_count']}个，原数量未保留",
             "如需保留原数量，请调整每日时间或景点选择后重新核验", False)
+    for target in report.get("attraction_targets", []):
+        if not target["met"]:
+            add("ATTRACTION_TARGET_UNMET", f"day:{target['day_index']}",
+                f"第{target['day_index'] + 1}天要求{target['target_count']}个景点，实际安排{target['actual_count']}个，数量目标尚未满足",
+                "请补充可用景点或调整每日时间后重新规划；当前行程仍可查看和编辑", False)
     for day in plan.days:
         for attraction in day.attractions:
             if not valid_attraction(attraction):
@@ -39,6 +44,13 @@ def classify(plan, request, report):
         elif gap.startswith("transport_predeparture_buffer_unverified:"):
             add("TRANSPORT_BUFFER_UNVERIFIED", "plan", "固定交通接驳仅按用户输入起止计算，尚未确认提前到站、安检和检票要求",
                 "向承运方确认所需提前量并预留到站时间；当前不能保证赶上班次", False)
+        elif gap.split(":", 1)[0] in {"arrival_endpoint_unknown", "departure_endpoint_unknown", "start_endpoint_unknown"}:
+            reason, action = {
+                "arrival_endpoint_unknown": ("抵达地点尚未确认，抵达后的首段接驳路线待核实", "补充实际到达车站、机场或其他抵达地点后重新核验"),
+                "departure_endpoint_unknown": ("离开地点尚未确认，离开前的末段接驳路线待核实", "补充实际离开车站、机场或其他离开地点后重新核验"),
+                "start_endpoint_unknown": ("当天出发地点尚未确认，首段接驳路线待核实", "补充当天酒店或其他实际出发地点后重新核验"),
+            }[gap.split(":", 1)[0]]
+            add("DATA_UNVERIFIED", "plan", reason, action, False)
         else:
             add("DATA_UNVERIFIED", "plan", gap, "出行前向官方来源确认", False)
     if plan.weather_notice:
@@ -54,7 +66,7 @@ def classify(plan, request, report):
     degraded = any(
         i["code"] in {
             "RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE",
-            "ROUTE_UNAVAILABLE", "MEAL_POI_UNAVAILABLE", "ATTRACTION_COUNT_ADJUSTED",
+            "ROUTE_UNAVAILABLE", "MEAL_POI_UNAVAILABLE", "ATTRACTION_COUNT_ADJUSTED", "ATTRACTION_TARGET_UNMET",
         }
         for i in issues
     )

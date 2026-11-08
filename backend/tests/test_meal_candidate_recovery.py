@@ -32,7 +32,22 @@ def test_saved_live_draft_and_paid_routes_recover_without_any_provider_send(monk
     assert quality['actual_route_distance_km'] is None
     assert [set(a.poi_id for a in day.attractions) for day in plan.days]==original_ids
     assert all(day.timeline and day.feasibility['status']=='unverified' for day in plan.days)
-    assert len(quality['unmet_meals'])==5
+    assert sorted((row['day_index'],row['type'],row['activity_id']) for row in quality['unmet_meals'])==[
+        (0,'breakfast','meal:0:breakfast:B000A82T8Y'),
+        (0,'dinner','meal:0:dinner:B0G035GU1E'),
+        (1,'breakfast','meal:1:breakfast:B000A82T8Y'),
+        (1,'dinner','meal:1:dinner:B0I3SSUU1F'),
+    ]
+    assert {(day.day_index,meal.type,meal.activity_id) for day in plan.days for meal in day.meals}=={
+        (0,'lunch','meal:0:lunch:B000A81B55'),
+        (1,'lunch','meal:1:lunch:B0FFME0OOQ'),
+    }
+    # Both lunches fit the meal window without certifying their missing route facts.
+    lunch_rows=[row for day in plan.days for row in day.timeline if row['kind']=='meal']
+    assert {row['activity_id'] for row in lunch_rows}=={'meal:0:lunch:B000A81B55','meal:1:lunch:B0FFME0OOQ'}
+    assert all(row['status']=='unverified' and
+        '11:30'<=datetime.fromisoformat(row['start_at']).strftime('%H:%M')<datetime.fromisoformat(row['end_at']).strftime('%H:%M')<='14:00'
+        for row in lunch_rows)
     assert all('需就近用餐' in row['action'] for row in quality['unmet_meals'])
     assert any(gap.startswith('meal_candidate_unassigned:breakfast:') for gap in quality['data_gaps'])
     for day in plan.days:
@@ -74,6 +89,9 @@ def test_explicit_meal_window_with_no_candidate_reports_conflict():
 
 def test_solver_rule_upgrade_reuses_only_unchanged_stages_and_valid_facts(monkeypatch):
     current=durable.compatibility()
+    current.pop('generation')
+    current['rules']='time-windows-v4-meal-candidates'
+    monkeypatch.setattr(durable,'compatibility',lambda:current)
     saved={**current,'rules':'time-windows-v3-hotel-nights'}
     for stage in ('draft','routes','day_draft:2026-10-30','restaurants:abc','attractions:abc','hotels:abc','weather:abc'):
         assert durable.checkpoint_compatible(stage,saved,current)
