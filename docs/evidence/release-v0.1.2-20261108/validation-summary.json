@@ -1,5 +1,5 @@
 {
-  "business_source": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "business_source": "1e555625670da110c91c8c92b8438f531e070086",
   "normal_api": {
     "passed_for_applicable_contracts": true,
     "raw_report_overwritten": false,
@@ -107,22 +107,27 @@
       "text": 60,
       "embedding": 23,
       "vision": 1,
-      "amap": 1572
+      "amap": 1588
     },
     "delta": {
       "text": 10,
-      "amap": 485,
+      "amap": 501,
       "embedding": 0,
       "vision": 0
     },
     "ledger_reset": false
   },
   "automation": {
-    "python_passed": 680,
+    "python_passed": 696,
     "python_skipped": 10,
     "native_checks_passed_separately": 9,
     "frontend_build": "passed",
-    "result_browser_passed": 13
+    "result_browser_passed": 13,
+    "tool_tests_passed": 81,
+    "offline_business_contracts_passed": 22,
+    "offline_role_checks_passed": 42,
+    "offline_planning_scenarios_passed": 66,
+    "nginx_result_browser_passed": 13
   },
   "limitations": [
     "Real external weather/opening/reservation/hotel details remain unverified",
@@ -130,5 +135,47 @@
     "Artificial31-second latency is test injection, not real supplier fault",
     "Legacy v1 generation has no deterministic timeline",
     "Intermediate failed and harness diagnostics retained privately"
-  ]
+  ],
+  "real_model_default_resume_source": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "fresh_actual_route_followup": {
+    "passed": true,
+    "source": "1e555625670da110c91c8c92b8438f531e070086",
+    "mode": "captured_real_openai_draft_with_fresh_actual_amap_mcp_routes",
+    "provider_delta": {
+      "text": 0,
+      "embedding": 0,
+      "vision": 0,
+      "amap": 16
+    },
+    "checks": {
+      "no_new_text_embedding_or_vision_call": true,
+      "real_amap_calls_sent": true,
+      "two_visits_retained": true,
+      "all_days_have_timeline": true,
+      "no_blocking_issue": true,
+      "unknown_endpoint_not_certified": true,
+      "actual_selected_route_expiry_is_current": true,
+      "no_synthetic_expired_endpoint_fact": true
+    },
+    "boundary": "No new model request. Real route lookups; in-memory test journal only, not another Java lifecycle test. Actual Java proposal/role/scenario flows are separately tested with offline providers. Default30s/120 lookup scheduler; daily data untouched."
+  },
+  "captured_actual_poi_relationship_replay": {
+    "passed": true,
+    "mode": "captured_actual_provider_and_model_POI_replay_no_external_requests",
+    "pairs_checked": 15,
+    "all_previously_observed_non_numeric_relationships_unchanged": true,
+    "historical_parent_and_internal_visit_preserved": true,
+    "boundary": "This is replay of recorded actual POIs, not another live model generation or a new sample-accuracy estimate."
+  },
+  "local_full_http_fixture_chain": {
+    "passed": true,
+    "services": 5,
+    "smoke": true,
+    "business_contracts": 22,
+    "assistant_confirmation": true,
+    "role_checks": 42,
+    "planning_scenarios": 66,
+    "providers": "synthetic_offline",
+    "paid_provider_calls": 0
+  }
 }

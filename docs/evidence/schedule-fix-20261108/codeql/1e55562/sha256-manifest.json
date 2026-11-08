@@ -1,0 +1,41 @@
+{
+  "revision": "1e555625670da110c91c8c92b8438f531e070086",
+  "workflow_run": 42482823055,
+  "files_sha256": {
+    "actions.sarif": "a1281d0697ebc3a2bc46056da9300ae695a4885d75d324e32696da4607053e09",
+    "business-source.diff": "b6633446c8255818df923aa75781a1ff579f11c2a721a9b659565e8a33cfc41e",
+    "comparison.json": "650c85a714be80ea356332de0ed6a7e454206fc692aa41be896e37c28212489d",
+    "download-receipts.json": "271858f2c4b51835af6b928ae17300fb1afee3fe0c4dd77d13609c466bd053c4",
+    "draft-sarif-summary.json": "b2696505fcf5f3416d8052fec7982c8f8340f547b53d64091f4bcec52772e0b6",
+    "java.sarif": "03550b7427dc50483161939520d2f39c968db0363ba9a170e6f923124ca73279",
+    "javascript.sarif": "1c644566afa9ad0cd5de660776eecc77b1e52f75073518688d00e447ce24fb64",
+    "policy-draft.json": "0d5f270e3d5269e6c0c7443def6ae8d329c6875746ac29969af0581e727601bc",
+    "python.sarif": "8123c13a7e61be194e06dcbfe4161c304029964dbb533a82315c8d57d60fb579",
+    "README.md": "404eca3554d8f0bc909196d3fa9859b0ce93929204a88b9c458b92b12cfb5fcf",
+    "remote-provenance.json": "db5c6c1c07e1ca9e29cfcc141aab5347a6f4a527dff2e83424fd00d34cd35d0f",
+    "security-tool.diff": "61888de410dfd3b81751d2e23f296120cbffc95c62c7d6abd8478ad5e96d09cf",
+    "source-review.json": "82ec9212c42255607abe10dd610b92e18e1c98f2f3635a6c72c02cb547fb3838",
+    "source-snapshot.json": "6e62c2461ecefb9d5ea3a7c05f5dce061ebea346cadaae3b3efc47cdd98f2853",
+    "tool-download-tests.log": "09974a71a9efea5e0e6e66059e66c390088a1686e8b25a5b99de015382c5487d",
+    "tool-source-review.json": "381297890fd2db2e252afab3c5bbf48f517026a76a5375858ac26f1d37c8e0f3",
+    "validation.json": "0f9bcf1a274d7aee9ca2e6eca03e18f8c873ecf924d9fab429abe7743eb55de3",
+    "independent-review.json": "759e8a24452474961571b4e940e9ed1b4de214f05af3ee93a8e5fef4ac3de315"
+  },
+  "business_tree_bindings": {
+    "backend": "2ccbd3d445a8d8a274a7f7a28789fc56bd8f1395",
+    "business-backend": "95f83be3d25ab116829cc1e70829dcc35948317a",
+    "frontend": "499857962d454e59359aabae1bc0e280a4e246c8",
+    "deploy": "b44af8caa7569e0fb017cb44a1d0e86f41b01e59",
+    "contracts": "acb8698d77c07c0e5f61bc42272c8a5039450888"
+  },
+  "unchanged_active_policy_sha256": "65dfa739d81943a61e5fe479f8327e7f28fb28c6248e9dcf8afc95544927dbec",
+  "additional_tool_source_evidence_lf": {
+    "tools/security_gate.py": "0f5a6b29863d535bc9e6cc9e38773eb50ed0cd15fca667c177476ec17c8da2bb",
+    "tools/tests/test_scanner_download.py": "03f2bdb882aedfed2f7cb67419bc173272098e7b5bd165ef080732f2c893fc0b"
+  },
+  "additional_tool_binding_is_automatic": false,
+  "activation": {
+    "reviewer": "root assistant",
+    "policy_sha256": "0d5f270e3d5269e6c0c7443def6ae8d329c6875746ac29969af0581e727601bc"
+  }
+}

@@ -1,0 +1,912 @@
+{
+  "checked_at_utc": "2026-11-08T13:04:16.962935+00:00",
+  "status": "fresh_artifacts_and_source_review_complete_draft_not_activated",
+  "revision": "1e555625670da110c91c8c92b8438f531e070086",
+  "workflow_run": 42482823055,
+  "baseline_revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "baseline_review_record": "docs/evidence/schedule-fix-20261108/codeql/fe9807b/source-review.json",
+  "baseline_review_sha256": "c4a1d5c6ee476bf22a288626fd553cab3d67098556eda4275f66109c8725b68e",
+  "analyses": [
+    {
+      "language": "java",
+      "path": "docs/evidence/schedule-fix-20261108/codeql/1e55562/java.sarif",
+      "sha256": "03550b7427dc50483161939520d2f39c968db0363ba9a170e6f923124ca73279",
+      "source_revision": "1e555625670da110c91c8c92b8438f531e070086",
+      "artifact_id": 13618053986,
+      "artifact_archive_digest": "sha256:402e7c14fedb8dd81da6f6b7ba395afbaf52911dd6202e5132af9c13a37e2bd5",
+      "official_job_id": 128738287587,
+      "official_analysis_and_upload_succeeded": true,
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      }
+    },
+    {
+      "language": "python",
+      "path": "docs/evidence/schedule-fix-20261108/codeql/1e55562/python.sarif",
+      "sha256": "8123c13a7e61be194e06dcbfe4161c304029964dbb533a82315c8d57d60fb579",
+      "source_revision": "1e555625670da110c91c8c92b8438f531e070086",
+      "artifact_id": 13618610289,
+      "artifact_archive_digest": "sha256:facc78c8776e985028274a370e67b798216001822dea6b365704fabcb8032338",
+      "official_job_id": 128738287636,
+      "official_analysis_and_upload_succeeded": true,
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      }
+    },
+    {
+      "language": "javascript",
+      "path": "docs/evidence/schedule-fix-20261108/codeql/1e55562/javascript.sarif",
+      "sha256": "1c644566afa9ad0cd5de660776eecc77b1e52f75073518688d00e447ce24fb64",
+      "source_revision": "1e555625670da110c91c8c92b8438f531e070086",
+      "artifact_id": 13617999048,
+      "artifact_archive_digest": "sha256:99cd568fa30e0761426565a29f0f7e3aa2601f7f0acf9c6ee28439f10dc8f11c",
+      "official_job_id": 128738287543,
+      "official_analysis_and_upload_succeeded": true,
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      }
+    },
+    {
+      "language": "actions",
+      "path": "docs/evidence/schedule-fix-20261108/codeql/1e55562/actions.sarif",
+      "sha256": "a1281d0697ebc3a2bc46056da9300ae695a4885d75d324e32696da4607053e09",
+      "source_revision": "1e555625670da110c91c8c92b8438f531e070086",
+      "artifact_id": 13618147183,
+      "artifact_archive_digest": "sha256:d1ea3660abe6be53745878eaba90a766636862ab435d2fea796602394286be26",
+      "official_job_id": 128738287749,
+      "official_analysis_and_upload_succeeded": true,
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      }
+    }
+  ],
+  "languages": [
+    {
+      "language": "java-kotlin",
+      "current_result_count": 21,
+      "prior_result_count": 21,
+      "complete_original_results_equal": true,
+      "tool_comparison": {
+        "complete_tool_equal": false,
+        "all_non_temporary_tool_fields_equal": true,
+        "reviewed_runner_temporary_uri_differences": [
+          {
+            "path": "tool/extensions/0/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/48265367-61f9-4f3c-bb00-981062b619fe/codeql/qlpacks/codeql/java-queries/1.12.0/",
+            "new": "file:///home/runner/work/_temp/eea5bbed-ee50-45e8-b98a-c08b2e62dc84/codeql/qlpacks/codeql/java-queries/1.12.0/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/"
+          },
+          {
+            "path": "tool/extensions/0/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/48265367-61f9-4f3c-bb00-981062b619fe/codeql/qlpacks/codeql/java-queries/1.12.0/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eea5bbed-ee50-45e8-b98a-c08b2e62dc84/codeql/qlpacks/codeql/java-queries/1.12.0/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/1/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/48265367-61f9-4f3c-bb00-981062b619fe/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/",
+            "new": "file:///home/runner/work/_temp/eea5bbed-ee50-45e8-b98a-c08b2e62dc84/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/"
+          },
+          {
+            "path": "tool/extensions/1/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/48265367-61f9-4f3c-bb00-981062b619fe/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eea5bbed-ee50-45e8-b98a-c08b2e62dc84/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/java-all/9.3.4/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/2/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/48265367-61f9-4f3c-bb00-981062b619fe/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "new": "file:///home/runner/work/_temp/eea5bbed-ee50-45e8-b98a-c08b2e62dc84/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/"
+          },
+          {
+            "path": "tool/extensions/2/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/48265367-61f9-4f3c-bb00-981062b619fe/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eea5bbed-ee50-45e8-b98a-c08b2e62dc84/codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/java-queries/1.12.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml"
+          }
+        ]
+      },
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      },
+      "individual_results": [
+        {
+          "language": "java-kotlin",
+          "result_index": 0,
+          "query": "java/spring-disabled-csrf-protection",
+          "path": "business-backend/src/main/java/com/tripplanner/security/SecurityConfiguration.java",
+          "region": {
+            "startLine": 124,
+            "startColumn": 20,
+            "endColumn": 31
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+          "blocking": true,
+          "raw_trace_sha256": "0bd7258e069cfd4952f3e9dd383efd440d35d71d8db60fc0cf1ffb8f5bee2d9f",
+          "resolved_rule_sha256": "854155e971a56a9869a31f6c60e196e10924f3708f201a89689a196205f790b8",
+          "primary_source_sha256_lf": "f04a42696118532e377a42407a50f5b5e3a199ac0dc15f7ccc123540f02a46ee",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 1,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/api/HistoryController.java",
+          "region": {
+            "startLine": 184,
+            "startColumn": 9,
+            "endColumn": 20
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "b4f0214029c9d45cef4bb97a28e28cd9b4815a5ec9701c848a8ce82210af052e",
+          "blocking": true,
+          "raw_trace_sha256": "1aa0c8d66cb3381804638f07f50e24f1aad419fa0ad3dd1c80e848ece61cabee",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "08305dccb16d74aa540524d152491ad795b17c45da74110898cad5877812b514",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 2,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+          "region": {
+            "startLine": 87,
+            "startColumn": 62,
+            "endColumn": 71
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "1c97ee41728a7ed4a383754b376554864179637940ccbbfc7f944abeb2da4778",
+          "blocking": true,
+          "raw_trace_sha256": "7947b61858a8ffc54c0c7532be2cd4c13ca29107669dec7ba9de0130ce906fe6",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 3,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+          "region": {
+            "startLine": 88,
+            "startColumn": 46,
+            "endColumn": 55
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "3c2b9271dc276146985f2ba06e3b10bcea177ad9aaa28e6ef817697af1b4d3d0",
+          "blocking": true,
+          "raw_trace_sha256": "b1ba89a138af679face310de1b5c4e5bce4341712481f594f466826e33200151",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "1a47bd2b5e392d494de450840233afb0f6a6d965d9e109923947bc0b83c48f88",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 4,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+          "region": {
+            "startLine": 74,
+            "startColumn": 81,
+            "endColumn": 91
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "77d7b560eaf8bb0b19c149de6bde35084ea1d2d3e0f9f442a50cc919572ce73d",
+          "blocking": true,
+          "raw_trace_sha256": "5fa33087cf5a44ec108595c94298c33f0b6c770d0bda4d4c2a24a7c077c4b9ce",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 5,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/domain/TripBookingExpenseService.java",
+          "region": {
+            "startLine": 75,
+            "startColumn": 46,
+            "endColumn": 56
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "e6491746a88c9f73eafcf2f40fa47cee890513938c51b78d1feeb06f5d9f8c64",
+          "blocking": true,
+          "raw_trace_sha256": "eb7b360d4ec95e39fa515acf6fff4312b8455af95600691af14404b25d28525a",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "af8809c1accba76757fd03c14047793082a954e163ef35de51502fdbb5de2608",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 6,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+          "region": {
+            "startLine": 100,
+            "startColumn": 60,
+            "endColumn": 70
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "7fb1cf22e4a32c041d654c06d559caa95fdf7ab8a851baff494ea021d4a5afae",
+          "blocking": true,
+          "raw_trace_sha256": "4655dcecbbbfb972fef04cddc3cd85382442ed607b117436ce1517515ab35543",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 7,
+          "query": "java/tainted-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/domain/TripCollaborationService.java",
+          "region": {
+            "startLine": 101,
+            "startColumn": 54,
+            "endColumn": 64
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "333edfb33402b3457bc8b7d16fc7fb633c85bea2e9e87954018faa03a374835a",
+          "blocking": true,
+          "raw_trace_sha256": "7ef5bbf021a789a24a32573f1dda99dbe45f5b79b040eca5a6dbd276c28f5526",
+          "resolved_rule_sha256": "d8275f4d73868613606c5b90eef2d83cde6302da21f6e415e23fca8261cea591",
+          "primary_source_sha256_lf": "7e6affa0e88a7aa290418960e0c73bfe27c737105d61d47fe27d1359444336b9",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 8,
+          "query": "java/uncontrolled-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/security/MailDeliveryService.java",
+          "region": {
+            "startLine": 75,
+            "startColumn": 69,
+            "endColumn": 96
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "84774ac69a12cce1274644ff1d882585f1c269e8e9cbee9de2a2108d63d03784",
+          "blocking": true,
+          "raw_trace_sha256": "9bb6b25c12d49d08f9279310a3be4f149cdc969ed8e8573738e8d867f533f0b1",
+          "resolved_rule_sha256": "96b4253836e7a35a8f37ed93c31f3d4eb2dacd245e845dad24bb9bcce5aad76f",
+          "primary_source_sha256_lf": "96c71c97360ecdbe863efc7fe72eb606962a5c57580b0954dbbc647f2dca4e8b",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 9,
+          "query": "java/uncontrolled-arithmetic",
+          "path": "business-backend/src/main/java/com/tripplanner/security/Totp.java",
+          "region": {
+            "startLine": 51,
+            "startColumn": 69,
+            "endColumn": 98
+          },
+          "security_severity": "8.6",
+          "semantic_flow_sha256": "a248c0cd203a8d96c92a868595fdd64e72caffb538ed1a35f76d64de70c710ac",
+          "blocking": true,
+          "raw_trace_sha256": "2125442733a3463f4a0b3758315af3ff89f0c7b27581e67dbc53967e0855eea1",
+          "resolved_rule_sha256": "96b4253836e7a35a8f37ed93c31f3d4eb2dacd245e845dad24bb9bcce5aad76f",
+          "primary_source_sha256_lf": "054c8f82d78da4ac647a951a5a89d3eedf335b75dfcbca1851b8a68ac48a2323",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 10,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 128,
+            "startColumn": 17,
+            "endColumn": 29
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "5596b7130019f5f3c5c7513afc3840b0c81118dc9b5f1bbc7fe45083cde9303b",
+          "blocking": true,
+          "raw_trace_sha256": "2a144877fa9a290ce268ecee2b65be059472cb239560df3d222d14b84d1cab23",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 11,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 123,
+            "startColumn": 17,
+            "endColumn": 27
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "cc948f33fd4c3c00b40bbed3974c9772c552ccbe8b897d0ee28690b631fc7c24",
+          "blocking": true,
+          "raw_trace_sha256": "f9da10cf202368e24915d9d1912ed532682b56a13b1d624953b31c0412af5d78",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 12,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 115,
+            "startColumn": 17,
+            "endColumn": 26
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "cd1844c931c1489b510a6bdee2db055d29fc592ed938b183228785ccb997a5cd",
+          "blocking": true,
+          "raw_trace_sha256": "d5eb86c5b7b29864fdd8f043b2e601cd942bbf78b416d2eef6f7a7f140b751f6",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 13,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 110,
+            "startColumn": 17,
+            "endColumn": 20
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "8ddaf5d9b825d53b6480c5bd3f1acdea38af8dd17e9d6fbbfc678dd57fcd26be",
+          "blocking": true,
+          "raw_trace_sha256": "ed3b45ad154431bf92c14dd507916f9636d3f2495f0c238d04a89a3ab8124269",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 14,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 86,
+            "startColumn": 17,
+            "endColumn": 24
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "0da0ead9e862efc91a5bd137c8a4ba9fed78dbec4ccb1c7fc358e8ae3ed481e2",
+          "blocking": true,
+          "raw_trace_sha256": "ea6e6a2993eb2a8f6b0ec763ab9e8d8be9e67cae1e8b0feba801cc9293c72c0c",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 15,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 81,
+            "startColumn": 17,
+            "endColumn": 23
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "764a9ce4f67688b63fac5e9b20cbc7f916398246b57e3cb00cae8437dbe89aea",
+          "blocking": true,
+          "raw_trace_sha256": "7a8ad6d7ae67ff7cd9e082b370ff41eb9ea30196a7859076bf9f3f23ae7fea25",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 16,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 75,
+            "startColumn": 17,
+            "endColumn": 23
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "8644975914d30799cb140bcd9133d472d35db36deadfa61fce34b886775fd722",
+          "blocking": true,
+          "raw_trace_sha256": "ab4650a64581228d41a55f76af4e57809a2be6817831af01c008e95ca1b380ed",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 17,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 66,
+            "startColumn": 17,
+            "endColumn": 20
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "0b2ee69e04a32ba10e4e9b191d2d83d17d3ce1081b4bf67386dce322dbcbb733",
+          "blocking": true,
+          "raw_trace_sha256": "86d58c3cca32cc59735812f7add9cb7f5eb65fddfafc63b9dbc42ed8490aceb5",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 18,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 61,
+            "startColumn": 17,
+            "endColumn": 27
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "8a82b36b06cc101327388907722e57dbe51cfac3c521cf451c397da4c3dfc449",
+          "blocking": true,
+          "raw_trace_sha256": "1e909f706cf29fd8e12df2e28cea62e016c7c9e1d07e77901df36e7b5ef2d09e",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 19,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+          "region": {
+            "startLine": 35,
+            "startColumn": 58,
+            "endColumn": 68
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "885949c4b91553c0910789c0770311ee83496584988f9626617604486cb32c15",
+          "blocking": true,
+          "raw_trace_sha256": "4697bdc946222d370dcb478c8105e4f95810f6295f9d2ad968caab9b1fb2ade5",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "7c157ee5ecd3d5f35b51f6d32b1dd65fa0b825806154019f39a5d5d2df935d2d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "java-kotlin",
+          "result_index": 20,
+          "query": "java/csrf-unprotected-request-type",
+          "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+          "region": {
+            "startLine": 18,
+            "startColumn": 17,
+            "endColumn": 23
+          },
+          "security_severity": "8.8",
+          "semantic_flow_sha256": "150cd77d52be1c4a84b5d0709f08900206824c9366f4adb0811b56121bbe1863",
+          "blocking": true,
+          "raw_trace_sha256": "69e67eed0b04886aa267d51ff25617a4afc247199d65e9289c6f29d253068d55",
+          "resolved_rule_sha256": "d7423c6f6cebf47fb56184a0ae891fcaac7126740fde2588c173ffadde391ffe",
+          "primary_source_sha256_lf": "bca040ebdbdc4bc17532ac22a10e26092855b57fd0b3a58e8b4a27167a141d17",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        }
+      ]
+    },
+    {
+      "language": "python",
+      "current_result_count": 2,
+      "prior_result_count": 2,
+      "complete_original_results_equal": true,
+      "tool_comparison": {
+        "complete_tool_equal": false,
+        "all_non_temporary_tool_fields_equal": true,
+        "reviewed_runner_temporary_uri_differences": [
+          {
+            "path": "tool/extensions/0/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/58c97c4e-9999-4570-8fb4-9b67520e86c1/codeql/qlpacks/codeql/python-queries/1.9.0/",
+            "new": "file:///home/runner/work/_temp/490ca187-90b4-46c7-bae4-7ec805ac6088/codeql/qlpacks/codeql/python-queries/1.9.0/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/"
+          },
+          {
+            "path": "tool/extensions/0/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/58c97c4e-9999-4570-8fb4-9b67520e86c1/codeql/qlpacks/codeql/python-queries/1.9.0/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/490ca187-90b4-46c7-bae4-7ec805ac6088/codeql/qlpacks/codeql/python-queries/1.9.0/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/1/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/58c97c4e-9999-4570-8fb4-9b67520e86c1/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/",
+            "new": "file:///home/runner/work/_temp/490ca187-90b4-46c7-bae4-7ec805ac6088/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/"
+          },
+          {
+            "path": "tool/extensions/1/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/58c97c4e-9999-4570-8fb4-9b67520e86c1/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/490ca187-90b4-46c7-bae4-7ec805ac6088/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/python-all/7.2.9/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/2/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/58c97c4e-9999-4570-8fb4-9b67520e86c1/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "new": "file:///home/runner/work/_temp/490ca187-90b4-46c7-bae4-7ec805ac6088/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/"
+          },
+          {
+            "path": "tool/extensions/2/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/58c97c4e-9999-4570-8fb4-9b67520e86c1/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/490ca187-90b4-46c7-bae4-7ec805ac6088/codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/python-queries/1.9.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml"
+          }
+        ]
+      },
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      },
+      "individual_results": [
+        {
+          "language": "python",
+          "result_index": 0,
+          "query": "py/clear-text-logging-sensitive-data",
+          "path": "backend/scripts/optimization_seed_admin.py",
+          "region": {
+            "startLine": 70,
+            "startColumn": 31,
+            "endColumn": 110
+          },
+          "security_severity": "7.5",
+          "semantic_flow_sha256": "009fbeec7ccee38a122e0ed4dca56c3e6ab083662621bd76f4f4f1b72eab90a8",
+          "blocking": true,
+          "raw_trace_sha256": "8af25d92f74b3ee2b89f373baeb8863450b486f95bbc83cd99c0ad6428a8745e",
+          "resolved_rule_sha256": "c8d7ba6cd77659a356445e64a400070872f9ebda1bdd8474f0bfe68750956b10",
+          "primary_source_sha256_lf": "7af73ebac34e749002f66b34e50c54716b3d7a463a7b79779ff4258522c28ce1",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "python",
+          "result_index": 1,
+          "query": "py/overly-permissive-file",
+          "path": "backend/scripts/install_runtime_security_patches.py",
+          "region": {
+            "startLine": 69,
+            "startColumn": 13,
+            "endColumn": 36
+          },
+          "security_severity": "7.8",
+          "semantic_flow_sha256": "a5598460b1a88d9ea7e98db964ee284248ee3c3e0a0789d500a1bcd53f516675",
+          "blocking": true,
+          "raw_trace_sha256": "5808958fabf6d75831fd03fd06674f5fc6dd22a66eb62c1367da4a271d009c85",
+          "resolved_rule_sha256": "066626d42e80719c511de0ffe0d2ad5b580bc8baadb1bfb3f9aabfa4e7ac903d",
+          "primary_source_sha256_lf": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        }
+      ]
+    },
+    {
+      "language": "javascript-typescript",
+      "current_result_count": 3,
+      "prior_result_count": 3,
+      "complete_original_results_equal": true,
+      "tool_comparison": {
+        "complete_tool_equal": false,
+        "all_non_temporary_tool_fields_equal": true,
+        "reviewed_runner_temporary_uri_differences": [
+          {
+            "path": "tool/extensions/0/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/45921dd9-3914-4f4f-be9f-a9d8644b1ab7/codeql/qlpacks/codeql/javascript-queries/2.5.0/",
+            "new": "file:///home/runner/work/_temp/28c264d0-5fb7-46ce-bc3c-45762aa21a75/codeql/qlpacks/codeql/javascript-queries/2.5.0/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/"
+          },
+          {
+            "path": "tool/extensions/0/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/45921dd9-3914-4f4f-be9f-a9d8644b1ab7/codeql/qlpacks/codeql/javascript-queries/2.5.0/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/28c264d0-5fb7-46ce-bc3c-45762aa21a75/codeql/qlpacks/codeql/javascript-queries/2.5.0/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/1/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/45921dd9-3914-4f4f-be9f-a9d8644b1ab7/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/",
+            "new": "file:///home/runner/work/_temp/28c264d0-5fb7-46ce-bc3c-45762aa21a75/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/"
+          },
+          {
+            "path": "tool/extensions/1/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/45921dd9-3914-4f4f-be9f-a9d8644b1ab7/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/28c264d0-5fb7-46ce-bc3c-45762aa21a75/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/2/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/45921dd9-3914-4f4f-be9f-a9d8644b1ab7/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "new": "file:///home/runner/work/_temp/28c264d0-5fb7-46ce-bc3c-45762aa21a75/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/"
+          },
+          {
+            "path": "tool/extensions/2/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/45921dd9-3914-4f4f-be9f-a9d8644b1ab7/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/28c264d0-5fb7-46ce-bc3c-45762aa21a75/codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/javascript-queries/2.5.0/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml"
+          }
+        ]
+      },
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      },
+      "individual_results": [
+        {
+          "language": "javascript-typescript",
+          "result_index": 0,
+          "query": "js/insecure-randomness",
+          "path": "frontend/e2e/operations.spec.ts",
+          "region": {
+            "startLine": 9,
+            "startColumn": 23,
+            "endColumn": 32
+          },
+          "security_severity": "7.8",
+          "semantic_flow_sha256": "0229a96b160962b03bae51247a9fd9109b732f28a1d1e084cf1029512fe54d22",
+          "blocking": true,
+          "raw_trace_sha256": "f714a4d955e63deab28702d3ac07ba195ec355ca7d81285a1b09b4c54620dfe8",
+          "resolved_rule_sha256": "3b1983a00bc0b70cb800a9922571b4d049d188f388c0a9e7115c52fa8e34b846",
+          "primary_source_sha256_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "javascript-typescript",
+          "result_index": 1,
+          "query": "js/insecure-randomness",
+          "path": "frontend/e2e/operations.spec.ts",
+          "region": {
+            "startLine": 12,
+            "startColumn": 23,
+            "endColumn": 33
+          },
+          "security_severity": "7.8",
+          "semantic_flow_sha256": "b5b4905156318bd726e40e2af3614dd56d1163fa46c1569cf0fe544b9ad072b9",
+          "blocking": true,
+          "raw_trace_sha256": "b3b0cfe373428f96ff8c693c067fab932ba8762df2cc7697800b75de78556a0e",
+          "resolved_rule_sha256": "3b1983a00bc0b70cb800a9922571b4d049d188f388c0a9e7115c52fa8e34b846",
+          "primary_source_sha256_lf": "ea2d235dd5894cd6cd68105cd51908c3596d47617ff34818134cb96c6d6ad0e0",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        },
+        {
+          "language": "javascript-typescript",
+          "result_index": 2,
+          "query": "js/insecure-randomness",
+          "path": "frontend/e2e/public-operations.spec.ts",
+          "region": {
+            "startLine": 12,
+            "startColumn": 20,
+            "endColumn": 84
+          },
+          "security_severity": "7.8",
+          "semantic_flow_sha256": "0f9179d44bddc68ba2abb3509f66c6a7f4b91a0709dc09b9243fad486a34c3ff",
+          "blocking": true,
+          "raw_trace_sha256": "3ccb5557dc7d6adb66468b3b78ed223d67669e79de56004a737d40ba82da3f5d",
+          "resolved_rule_sha256": "3b1983a00bc0b70cb800a9922571b4d049d188f388c0a9e7115c52fa8e34b846",
+          "primary_source_sha256_lf": "0e43292bae8df3c9da20ee2e6043a9992663cfa31ba8f5949f3758dee388471d",
+          "prior_match_count": 1,
+          "complete_original_result_equal": true,
+          "complete_resolved_rule_equal": true,
+          "primary_source_equal": true,
+          "ordered_semantic_flow_equal": true
+        }
+      ]
+    },
+    {
+      "language": "actions",
+      "current_result_count": 0,
+      "prior_result_count": 0,
+      "complete_original_results_equal": true,
+      "tool_comparison": {
+        "complete_tool_equal": false,
+        "all_non_temporary_tool_fields_equal": true,
+        "reviewed_runner_temporary_uri_differences": [
+          {
+            "path": "tool/extensions/0/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/"
+          },
+          {
+            "path": "tool/extensions/0/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/1/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/"
+          },
+          {
+            "path": "tool/extensions/1/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/actions-all/0.7.1/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/2/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/"
+          },
+          {
+            "path": "tool/extensions/2/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/javascript-all/3.0.0/qlpack.yml"
+          },
+          {
+            "path": "tool/extensions/3/locations/0/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/"
+          },
+          {
+            "path": "tool/extensions/3/locations/1/uri",
+            "old": "file:///home/runner/work/_temp/a89771ea-bbc9-4607-a4a9-296cbab2b817/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "new": "file:///home/runner/work/_temp/eb3cb8c4-f2ef-420a-aa58-b6e5047ca77e/codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml",
+            "unchanged_pack_path": "codeql/qlpacks/codeql/actions-queries/0.6.39/.codeql/libraries/codeql/threat-models/1.1.1/qlpack.yml"
+          }
+        ]
+      },
+      "original_context_gate": {
+        "status": "error",
+        "error_type": "RuntimeError",
+        "message": "CodeQL business source tree changed: backend"
+      },
+      "individual_results": []
+    }
+  ],
+  "historical_supporting_sources": 87,
+  "historical_supporting_source_changes": [
+    {
+      "path": "backend/app/services/time_planner.py",
+      "old": "d92f0e37543157a1794641e031864471796e7f0e8f8f2da5662b314158c92b36",
+      "new": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870"
+    },
+    {
+      "path": "backend/app/services/travel_facts.py",
+      "old": "7a1860c9ff65a882c931f9ba6c22dfbf29ee4d53b149ea094b73b8823801df4e",
+      "new": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f"
+    },
+    {
+      "path": "backend/tests/test_local_route_reliability.py",
+      "old": "c18f21d4a4c431dea3e8267eb54963c73f0741f516f748ed9e835577db9e791b",
+      "new": "2245ad69ce7b69fcbc82ab299fd82fcf777b436b75247a1fc5f556b92313e979"
+    }
+  ],
+  "changed_business_files": [
+    "backend/app/services/time_planner.py",
+    "backend/app/services/travel_facts.py",
+    "backend/tests/test_local_route_reliability.py",
+    "backend/tests/test_numeric_poi_relationship.py"
+  ],
+  "active_policy_sha256": "65dfa739d81943a61e5fe479f8327e7f28fb28c6248e9dcf8afc95544927dbec",
+  "active_policy_unchanged": true,
+  "requires_fresh_review_for_next_revision": true,
+  "new_findings": 0,
+  "changed_findings": 0,
+  "supporting_sources": 88,
+  "changed_business_sources_individually_reviewed": 4,
+  "additional_tool_source_evidence_paths": [
+    "tools/security_gate.py",
+    "tools/tests/test_scanner_download.py"
+  ],
+  "additional_tool_binding_is_automatic": false
+}

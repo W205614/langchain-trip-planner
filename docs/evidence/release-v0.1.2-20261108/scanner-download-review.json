@@ -1,0 +1,36 @@
+{
+  "reviewed_at_utc": "2026-11-08T12:25:03.371285+00:00",
+  "scope": "Pinned scanner acquisition only; scan execution and interpretation unchanged",
+  "evidence": [
+    "Security42477650314 Caddy attempt1 and attempt2: fixed Grype archive download read timeout after about120 seconds; no scanner log/results produced. Prior postgres/backend failures had the same acquisition phase.",
+    "These were errors, not clean scans and not new CVE findings. Original artifacts and digests retained."
+  ],
+  "changed_function": [
+    "tool"
+  ],
+  "old_security_gate_sha256_lf": "41ad0a37de9add84e2698f6e908670b8d7ec080d503f7a037bc03e1da016580a",
+  "new_security_gate_sha256_lf": "0f5a6b29863d535bc9e6cc9e38773eb50ed0cd15fca667c177476ec17c8da2bb",
+  "behavior": "Retry at most3 times only for TimeoutError or URLError wrapping TimeoutError; each connection/read timeout remains120seconds. Cache only complete bytes after original pinned SHA verification. HTTP errors, checksum mismatch and final timeout raise; unavailable/incomplete scanners still fail the gate.",
+  "unchanged_policy_functions": [
+    "write",
+    "run",
+    "report",
+    "classify",
+    "image_document",
+    "source_digest",
+    "load_vex",
+    "contextual_not_affected",
+    "dependencies",
+    "scan_repository",
+    "image",
+    "sarif",
+    "main"
+  ],
+  "validation": {
+    "new_download_tests_passed": 5,
+    "full_tool_tests_passed": 81,
+    "real_CI_download_and_scan": "required_on_final_commit"
+  },
+  "scanner_versions_or_pins_changed": false,
+  "thresholds_or_CVE_assessments_changed": false
+}

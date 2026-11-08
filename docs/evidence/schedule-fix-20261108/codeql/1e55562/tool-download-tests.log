@@ -1,0 +1,14 @@
+test_checksum_mismatch_is_not_retried_or_cached (tools.tests.test_scanner_download.ScannerDownloadTests.test_checksum_mismatch_is_not_retried_or_cached) ... ok
+test_http_error_is_not_retried_or_cached (tools.tests.test_scanner_download.ScannerDownloadTests.test_http_error_is_not_retried_or_cached) ... ok
+test_read_timeout_retries_then_caches_only_the_verified_complete_asset (tools.tests.test_scanner_download.ScannerDownloadTests.test_read_timeout_retries_then_caches_only_the_verified_complete_asset) ... fixture: pinned download timed out; retry 2/3
+ok
+test_three_timeouts_raise_and_do_not_cache_an_incomplete_asset (tools.tests.test_scanner_download.ScannerDownloadTests.test_three_timeouts_raise_and_do_not_cache_an_incomplete_asset) ... fixture: pinned download timed out; retry 2/3
+fixture: pinned download timed out; retry 3/3
+ok
+test_wrapped_connection_timeout_can_retry_without_retrying_http_errors (tools.tests.test_scanner_download.ScannerDownloadTests.test_wrapped_connection_timeout_can_retry_without_retrying_http_errors) ... fixture: pinned download timed out; retry 2/3
+ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.066s
+
+OK

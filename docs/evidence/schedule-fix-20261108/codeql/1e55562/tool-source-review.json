@@ -1,0 +1,46 @@
+{
+  "revision": "1e555625670da110c91c8c92b8438f531e070086",
+  "tool_diff_base_revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+  "unchanged_controls_compared_to_parent_of_revision": "1e555625670da110c91c8c92b8438f531e070086",
+  "source_bindings_lf_for_manual_final_commit_verification": {
+    "tools/security_gate.py": "0f5a6b29863d535bc9e6cc9e38773eb50ed0cd15fca667c177476ec17c8da2bb",
+    "tools/tests/test_scanner_download.py": "03f2bdb882aedfed2f7cb67419bc173272098e7b5bd165ef080732f2c893fc0b"
+  },
+  "automatic_policy_binding": false,
+  "boundary": "Existing CodeQL loader source_bindings accepts only backend/business-backend/frontend/deploy/contracts. These two tools paths are separately verified source evidence, not automatically fail-fast-bound policy sources. The loader and directory scope are not changed. Root will verify these exact bytes again in the clean final checkout.",
+  "ast_comparison": {
+    "revision": "1e555625670da110c91c8c92b8438f531e070086",
+    "compared_to": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
+    "changed_function_or_class_definitions": [
+      "tool"
+    ],
+    "only_other_ast_change": "from urllib.error import URLError",
+    "all_other_top_level_ast_identical": true,
+    "test_command": [
+      "python",
+      "-m",
+      "unittest",
+      "tools.tests.test_scanner_download",
+      "-v"
+    ],
+    "test_exit_code": 0,
+    "test_log_sha256": "09974a71a9efea5e0e6e66059e66c390088a1686e8b25a5b99de015382c5487d",
+    "test_log_hash_basis": "Exact saved UTF-8 bytes"
+  },
+  "unchanged_security_controls_lf": {
+    ".github/security-tool-pins.json": "46f7c204c830b249d014927a08957d689715931f9d7f489a93329d16afa11d39",
+    ".github/security-vex-remediated.json": "cb5e40250d99982bcd0f6dfe0f03f27537a338b64010febc8b84b699613fae94",
+    ".github/security-vendor-remediated.json": "9edd205e5a67c83ccd1197fc1d2cbf02cc5c73c9b5f15e8777850c5b9ae443fa",
+    ".github/workflows/security.yml": "78895a21b9358a3290d8ce9f95220708a73dc495cbf176e6c9fd53b70d56dc6c",
+    "tools/codeql_context.py": "434d2671f27d61e3025a789ea335960fe78c1f9ffdb8b0a132a8cd0204fc9366",
+    "tools/sarif_rules.py": "3289d7cd8cd5e297f24ccca06867270e5cbfb262a0c1e44a5fd32fde9414307b"
+  },
+  "diff_sha256": "61888de410dfd3b81751d2e23f296120cbffc95c62c7d6abd8478ad5e96d09cf",
+  "tests_log_sha256": "09974a71a9efea5e0e6e66059e66c390088a1686e8b25a5b99de015382c5487d",
+  "source_review": [
+    "Read the complete tool() change and all five tests. Only direct TimeoutError and URLError(reason=TimeoutError) are retried, at most three total attempts; each urlopen timeout remains 120 seconds. HTTPError is a URLError with a non-timeout reason and therefore propagates immediately. Other network errors, the final timeout, and all checksum mismatches remain failures.",
+    "The fixed official URL and expected SHA-256 still come from unchanged security-tool-pins.json. Download bytes are read completely, their SHA-256 is verified, and only then is a new archive written to cache. No partial timeout or checksum-failing asset is cached. Existing cached assets are still rehashed. Archive member selection, extracted-binary comparison, supported platforms and executable permissions are unchanged.",
+    "Independent complete top-level AST comparison shows only tool() differs, plus the explicit URLError import. All parsing, scanner exit/status interpretation, severity thresholds, contextual/VEX/vendor assessments, SARIF resolution, policy load and fail-fast paths are AST-identical to the parent revision. No scanner/policy version or allowance is broadened.",
+    "Ran the actual five unittest cases locally: opened-response read timeout recovery, three-timeout exhaustion/no cache, wrapped connection timeout recovery, HTTP failure/no retry/no cache, SHA mismatch/no retry/no cache. The download boundary is simulated deliberately; this is not a successful real scanner download or a successful vulnerability scan."
+  ]
+}

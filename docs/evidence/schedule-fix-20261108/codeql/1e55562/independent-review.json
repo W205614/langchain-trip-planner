@@ -1,0 +1,59 @@
+{
+  "source_revision": "1e555625670da110c91c8c92b8438f531e070086",
+  "workflow_run": 42482823055,
+  "reviewed_at_utc": "2026-11-08T13:10:21.298096+00:00",
+  "reviewer": "Root assistant independent of the delegate evidence generation; root implemented route/resume portions, so this is not an independent human audit.",
+  "languages": [
+    {
+      "language": "java",
+      "all_raw_results": 21,
+      "complete_results_identical": true,
+      "complete_tool_identical_except_runner_uuid": true
+    },
+    {
+      "language": "python",
+      "all_raw_results": 2,
+      "complete_results_identical": true,
+      "complete_tool_identical_except_runner_uuid": true
+    },
+    {
+      "language": "javascript",
+      "all_raw_results": 3,
+      "complete_results_identical": true,
+      "complete_tool_identical_except_runner_uuid": true
+    },
+    {
+      "language": "actions",
+      "all_raw_results": 0,
+      "complete_results_identical": true,
+      "complete_tool_identical_except_runner_uuid": true
+    }
+  ],
+  "context_entries_identical_to_previous_review": true,
+  "raw_findings": 26,
+  "new_exceptions": 0,
+  "blocking_findings": 0,
+  "support_sources_checked_against_commit_and_disk": 88,
+  "strict_gate_exit_code": 0,
+  "delegate_implementation_independently_checked": [
+    "SIGTERM handler sets a flag; bounded idle handle_request finishes the current atomic inbox update. Isolated actual PID1 evidence retains pre/post inbox checksums and graceful exit, without promising a bound for arbitrary slow clients.",
+    "Meal windows use the shared validated day bounds; explicit windows remain hard requirements. Final quality checks run after scheduling. User-facing Vue interpolation stays escaped; new target banners do not alter authorization.",
+    "Original finding entries and all complete SARIF results are unchanged. Candidate/meal/time/route changes add no dynamic code, command, URL, Chroma-server entrypoint or permission bypass. Existing server POI whitelist and bounded search remain.",
+    "Agent main moves existing notices before saving the draft. Internal constant-time authentication, live deadline/cancellation, execution registration and validation fixture opt-in remain unchanged. True public-API resume retained the same route hash/observation/expiry with zero additional model calls."
+  ],
+  "extra_tool_files_manually_verified": 2,
+  "tool_files_automatically_policy_bound": false,
+  "numeric_and_expiry_followup_review": [
+    "Complete decimal-token boundaries keep numeric POI identities distinct; actual90-POI fixture and true containing-name regressions pass.",
+    "Unknown endpoints contribute no provider fact. Actual selected failed/unobserved/expired facts retain their original invalid lifetime. Java proposal validity code is unchanged; full5-service assistant/roles42/scenarios66 pass.",
+    "Only pinned acquisition retries timeouts; scanner versions, checksums, thresholds and result interpretation remain unchanged. Complete AST and5 download tests verified."
+  ],
+  "limitations": [
+    "Automated source/context review does not prove production security or capacity",
+    "Real travel facts remain unverified",
+    "Final exact-commit CI required before release"
+  ],
+  "policy_sha256": "0d5f270e3d5269e6c0c7443def6ae8d329c6875746ac29969af0581e727601bc",
+  "review_record_sha256": "82ec9212c42255607abe10dd610b92e18e1c98f2f3635a6c72c02cb547fb3838",
+  "original_binding_failure_preserved": true
+}

@@ -1,0 +1,106 @@
+diff --git a/tools/security_gate.py b/tools/security_gate.py
+index b98cc9f..18dfdc2 100644
+--- a/tools/security_gate.py
++++ b/tools/security_gate.py
+@@ -23,6 +23,7 @@ import subprocess
+ import sys
+ import tarfile
+ import tempfile
++from urllib.error import URLError
+ from urllib.request import Request, urlopen
+ import zipfile
+ try:
+@@ -53,13 +54,24 @@ def tool(name: str) -> str:
+     folder = ROOT / '.cache/security-tools' / name / PINS[name]['version']
+     folder.mkdir(parents=True, exist_ok=True)
+     archive = folder / config['url'].rsplit('/', 1)[-1]
+-    if not archive.exists():
++    cached = archive.exists()
++    if not cached:
+         request = Request(config['url'], headers={'User-Agent': 'tripplanner-security-gate'})
+-        with urlopen(request, timeout=120) as source, archive.open('wb') as target:
+-            shutil.copyfileobj(source, target, length=64 * 1024)
+-    raw = archive.read_bytes()
++        for attempt in range(3):
++            try:
++                with urlopen(request, timeout=120) as source:
++                    raw = source.read()
++                break
++            except (TimeoutError, URLError) as error:
++                if (isinstance(error, URLError) and not isinstance(error.reason, TimeoutError)) or attempt == 2:
++                    raise
++                print(f'{name}: pinned download timed out; retry {attempt + 2}/3', file=sys.stderr)
++    else:
++        raw = archive.read_bytes()
+     if hashlib.sha256(raw).hexdigest() != config['sha256']:
+         raise RuntimeError(f'{name}: downloaded/cached asset failed pinned SHA256 verification')
++    if not cached:
++        archive.write_bytes(raw)
+     if config.get('member'):
+         member = config['member']
+         if archive.suffix == '.zip':
+diff --git a/tools/tests/test_scanner_download.py b/tools/tests/test_scanner_download.py
+new file mode 100644
+index 0000000..39faf3c
+--- /dev/null
++++ b/tools/tests/test_scanner_download.py
+@@ -0,0 +1,59 @@
++"""Pinned CLI downloads retry only timeouts and never cache partial/unverified bytes."""
++import hashlib
++import io
++from pathlib import Path
++import tempfile
++import unittest
++from unittest.mock import MagicMock, patch
++from urllib.error import HTTPError, URLError
++
++from tools import security_gate as gate
++
++
++class ScannerDownloadTests(unittest.TestCase):
++    payload=b'isolated-pinned-scanner-content'
++
++    def setUp(self):
++        self.temporary=tempfile.TemporaryDirectory()
++        self.addCleanup(self.temporary.cleanup)
++        self.root=Path(self.temporary.name)
++        pin={'version':'fixture','linux':{'url':'https://example.invalid/scanner','sha256':hashlib.sha256(self.payload).hexdigest()}}
++        for target,value in [('ROOT',self.root),('PINS',{'fixture':pin})]:
++            context=patch.object(gate,target,value);context.start();self.addCleanup(context.stop)
++        context=patch.object(gate.platform,'system',return_value='Linux');context.start();self.addCleanup(context.stop)
++        context=patch.object(gate.platform,'machine',return_value='x86_64');context.start();self.addCleanup(context.stop)
++        self.archive=self.root/'.cache/security-tools/fixture/fixture/scanner'
++
++    def test_read_timeout_retries_then_caches_only_the_verified_complete_asset(self):
++        response=MagicMock();response.__enter__.return_value=response
++        response.read.side_effect=TimeoutError('read timed out after response opened')
++        with patch.object(gate,'urlopen',side_effect=[response,io.BytesIO(self.payload)]) as fetch:
++            self.assertEqual(str(self.archive),gate.tool('fixture'))
++        self.assertEqual(2,fetch.call_count)
++        self.assertEqual(self.payload,self.archive.read_bytes())
++
++    def test_three_timeouts_raise_and_do_not_cache_an_incomplete_asset(self):
++        with patch.object(gate,'urlopen',side_effect=TimeoutError('read timed out')) as fetch:
++            with self.assertRaises(TimeoutError):gate.tool('fixture')
++        self.assertEqual(3,fetch.call_count)
++        self.assertFalse(self.archive.exists())
++
++    def test_wrapped_connection_timeout_can_retry_without_retrying_http_errors(self):
++        with patch.object(gate,'urlopen',side_effect=[URLError(TimeoutError('connect timed out')),io.BytesIO(self.payload)]) as fetch:
++            gate.tool('fixture')
++        self.assertEqual(2,fetch.call_count)
++
++    def test_http_error_is_not_retried_or_cached(self):
++        with patch.object(gate,'urlopen',side_effect=HTTPError('https://example.invalid/scanner',404,'not found',{},None)) as fetch:
++            with self.assertRaises(HTTPError):gate.tool('fixture')
++        self.assertEqual(1,fetch.call_count)
++        self.assertFalse(self.archive.exists())
++
++    def test_checksum_mismatch_is_not_retried_or_cached(self):
++        with patch.object(gate,'urlopen',return_value=io.BytesIO(b'wrong-content')) as fetch:
++            with self.assertRaisesRegex(RuntimeError,'SHA256'):gate.tool('fixture')
++        self.assertEqual(1,fetch.call_count)
++        self.assertFalse(self.archive.exists())
++
++
++if __name__=='__main__':unittest.main()
