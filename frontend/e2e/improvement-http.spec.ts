@@ -65,10 +65,17 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
   await test.step('enter a two-day request and reconnect after refreshing while it runs', async () => {
     await page.getByPlaceholder('例如: 北京', { exact: true }).fill('北京')
     const dates = page.getByPlaceholder('选择日期', { exact: true })
-    await dates.nth(0).click()
-    await page.locator('.ant-picker-dropdown:visible').getByTitle('2026-11-04', { exact: true }).click()
-    await dates.nth(1).click()
-    await page.locator('.ant-picker-dropdown:visible').getByTitle('2026-11-05', { exact: true }).click()
+    const visiblePopups = page.locator('.ant-picker-dropdown:visible')
+    for (const [index, value] of ['2026-11-04', '2026-11-05'].entries()) {
+      const input = dates.nth(index)
+      await expect(visiblePopups).toHaveCount(0)
+      await input.click()
+      const calendar = page.locator('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden):not(.ant-slide-up-leave):not(.ant-slide-up-leave-active):visible')
+      await expect(calendar).toHaveCount(1)
+      await calendar.locator(`td.ant-picker-cell-in-view[title="${value}"]`).click()
+      await expect(input).toHaveValue(value)
+      await expect(visiblePopups).toHaveCount(0)
+    }
     await page.getByPlaceholder('请输入您的额外要求,例如:想去看升旗、需要无障碍设施、对海鲜过敏等...').fill('北京两日游，每天保留休息时间，未知的营业、餐饮和路线条件请明确提示。')
     const submitted = page.waitForResponse(response => new URL(response.url()).pathname === '/api/trip/tasks' && response.request().method() === 'POST')
     await page.getByRole('button', { name: '开始规划我的旅行' }).click()
