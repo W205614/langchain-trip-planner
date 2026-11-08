@@ -11,6 +11,10 @@ def classify(plan, request, report):
                            blocking=blocking, retryable=retryable))
     for warning in report.get("warnings", []):
         add("CONSTRAINT_UNSATISFIED", "plan", warning, "修改要求或调整行程后重新检查")
+    for change in report.get("attraction_adjustments", []):
+        add("ATTRACTION_COUNT_ADJUSTED", f"day:{change['day_index']}",
+            f"第{change['day_index'] + 1}天经排程与约束调整，景点由{change['before_count']}个减少为{change['after_count']}个，原数量未保留",
+            "如需保留原数量，请调整每日时间或景点选择后重新核验", False)
     for day in plan.days:
         for attraction in day.attractions:
             if not valid_attraction(attraction):
@@ -50,7 +54,7 @@ def classify(plan, request, report):
     degraded = any(
         i["code"] in {
             "RULE_FALLBACK", "RAG_UNAVAILABLE", "WEATHER_UNAVAILABLE",
-            "ROUTE_UNAVAILABLE", "MEAL_POI_UNAVAILABLE",
+            "ROUTE_UNAVAILABLE", "MEAL_POI_UNAVAILABLE", "ATTRACTION_COUNT_ADJUSTED",
         }
         for i in issues
     )

@@ -154,6 +154,11 @@ def checkpoint_compatible(stage, saved, current):
         "time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure",
         "time-windows-v6-conflict-classification", "time-windows-v7-whole-day-budget", "time-windows-v8-fact-completion"}:
         allowed_upgrade = True
+    if current.get("rules") == "time-windows-v10-adjustment-resume" and saved.get("rules") in {
+        "time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure",
+        "time-windows-v6-conflict-classification", "time-windows-v7-whole-day-budget", "time-windows-v8-fact-completion",
+        "time-windows-v9-route-evidence"}:
+        allowed_upgrade = True
     return bool(unaffected and isinstance(saved,dict) and allowed_upgrade
         and {key:value for key,value in saved.items() if key!="rules"}=={key:value for key,value in current.items() if key!="rules"})
 

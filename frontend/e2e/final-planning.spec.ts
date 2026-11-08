@@ -3,6 +3,18 @@ import { expect, test } from '@playwright/test'
 const planning = { timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate' }
 const plan = { city: '北京', start_date: '2026-11-01', end_date: '2026-11-01', weather_info: [], overall_suggestions: '核对预约', days: [{ day_index: 0, date: '2026-11-01', attractions: [{ activity_id: 'activity-1', poi_id: 'P1', name: '故宫', address: '北京', description: '游览', visit_duration: 120, location: { longitude: 116.4, latitude: 39.9 } }], meals: [], transportation: '公共交通', accommodation: '酒店', description: '按预约游览', timeline: [{ activity_id: 'activity-1', title: '故宫', kind: 'attraction', status: 'estimated', start_at: '2026-11-01T09:00:00+08:00', end_at: '2026-11-01T11:00:00+08:00', notes: ['营业信息待核实'] }], feasibility: { status: 'unverified', unknown: ['opening_unknown_or_stale:activity-1'] } }] }
 
+test('reduced attraction count stays visible alongside the final itinerary', async ({ page }) => {
+  await page.addInitScript(({ plan }) => {
+    sessionStorage.setItem('tripPlan', JSON.stringify(plan))
+    sessionStorage.setItem('tripQuality', JSON.stringify({ attraction_adjustments: [{ day_index: 0, before_count: 2, after_count: 1 }] }))
+  }, { plan })
+  await page.route('https://*.amap.com/**', route => route.abort())
+  await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
+  await page.goto('/result')
+  await expect(page.getByTestId('attraction-count-adjustment')).toContainText('第1天的景点由2个减少为1个，原数量未保留')
+  await expect(page.getByTestId('attraction-count-adjustment')).toContainText('如需保留原数量')
+})
+
 test('fact warning lists only the unresolved evidence instead of fixed missing-fact claims', async ({ page }) => {
   await page.addInitScript(({ plan }) => {
     sessionStorage.setItem('tripPlan', JSON.stringify(plan))

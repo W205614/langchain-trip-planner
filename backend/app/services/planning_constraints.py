@@ -21,6 +21,14 @@ def name_key(value):
     return value.strip().casefold()
 
 
+def _sync_day_summary(day, city):
+    names = [attraction.name for attraction in day.attractions]
+    day.theme = f"{city}景点游览" if names else f"{city}行程待调整"
+    day.description = f"本日最终安排：{'、'.join(names)}。" if names else "当前约束下未安排景点，请调整要求后重新核验。"
+    # Free-form activity suggestions may still refer to removed or moved POIs.
+    day.activities = []
+
+
 def enforce_revision_reduction(plan, original, request, instruction, allowed_days):
     """Apply explicit quantity changes after restoring all protected activities."""
     from .assistant_intent import attraction_reduction
@@ -53,6 +61,8 @@ def enforce_revision_reduction(plan, original, request, instruction, allowed_day
             day.attractions.remove(attraction)
             repairs.append({"day_index": index, "removed_poi_id": attraction.poi_id,
                 "reason": "user_requested_attraction_reduction"})
+        if count:
+            _sync_day_summary(day, day.city or plan.city)
     return repairs
 
 
@@ -81,6 +91,10 @@ def refresh_saved_quality(plan, request, previous):
     if "usage" in previous:
         report["usage"] = previous["usage"]
     report["route_evidence_source"] = "saved_query"
+    if previous.get("attraction_adjustments"):
+        report["attraction_adjustments"] = previous["attraction_adjustments"]
+        from .result_policy import classify
+        return classify(plan, request, report)
     return report
 
 
@@ -91,6 +105,8 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
     plan.constraints = request.constraints.model_copy(deep=True)
     constraints = request.constraints
     allowed_days = set(range(len(plan.days))) if allowed_days is None else set(allowed_days)
+    original_attractions = {day.day_index: [(a.poi_id, a.name) for a in day.attractions]
+        for day in plan.days if day.day_index in allowed_days}
     protected_ids = set(request.planning_input.completed_activity_ids) | {lock.get("activity_id") for lock in request.planning_input.locks}
     required = {name_key(n) for n in constraints.must_visit}
     avoided = {name_key(n) for n in constraints.avoid}
@@ -359,5 +375,25 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
         if report["cost_summary"]["within_limit"] is None and plan.budget:
             plan.budget.within_limit = None
         report["score"] = max(0,100-15*len(report["warnings"]))
+    if repair:
+        adjustments = []
+        for day in plan.days:
+            if day.day_index not in allowed_days:
+                continue
+            before = original_attractions[day.day_index]
+            after = [(a.poi_id, a.name) for a in day.attractions]
+            if before == after:
+                continue
+            _sync_day_summary(day, day.city or plan.city)
+            report["repairs"].append({"day_index": day.day_index,
+                "reason": "summary_synced_to_final_attractions"})
+            if len(after) < len(before):
+                selected = {identity for identity, _ in after}
+                adjustments.append({"day_index": day.day_index, "before_count": len(before),
+                    "after_count": len(after), "reason": "schedule_or_constraint_adjustment",
+                    "removed_attractions": [{"poi_id": identity, "name": name}
+                        for identity, name in before if identity not in selected]})
+        if adjustments:
+            report["attraction_adjustments"] = adjustments
     from .result_policy import classify
     return classify(plan, request, report)

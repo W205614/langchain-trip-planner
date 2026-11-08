@@ -95,6 +95,10 @@
           <a-alert v-for="check in quality.day_checks || []" :key="`check-${check.day_index}`" type="info"
             :message="dayCheckMessage(check)" />
           <a-alert v-if="quality.repairs?.length" type="info" :message="`已调整 ${quality.repairs.length} 处候选安排；请检查省略的活动、餐饮缺口及必去要求是否满足。`" />
+          <a-alert v-for="change in quality.attraction_adjustments || []" :key="`attraction-count-${change.day_index}`"
+            data-testid="attraction-count-adjustment" type="warning" show-icon
+            :message="`第${change.day_index + 1}天的景点由${change.before_count}个减少为${change.after_count}个，原数量未保留`"
+            description="如需保留原数量，请调整每日时间或景点选择后重新核验。" />
           <a-alert v-if="unsaved" type="warning" show-icon message="当前修改尚未保存到服务器，请重新保存或从历史记录加载。" />
           <a-alert v-if="quality.degraded_days?.length" type="warning" show-icon
             :message="`第 ${quality.degraded_days.map((d: number) => d + 1).join('、')} 天使用规则兜底，请核对安排`" />

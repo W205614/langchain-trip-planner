@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from ..models.schemas import TripPlan, TripRequest
 from ..core.exceptions import BizException
 
-RULE_VERSION = "time-windows-v9-route-evidence"
+RULE_VERSION = "time-windows-v10-adjustment-resume"
 from .planning_semantics import CONTRACT, FACT_TTLS
 from .travel_facts import boarding_minutes, relation_pairs
 from .route_facts import observation as route_observation, current as route_current, instant as route_instant, cache_expiry as route_cache_expiry, bind_day as bind_route_day, EPOCH as ROUTE_EPOCH
@@ -210,6 +210,9 @@ def _route(left, right, planner, city, route_type, cache, unknown):
                 result = planner.plan_route_by_locations(left, right, route_type=route_type, city=city)
             except (httpx.HTTPError, AmapMCPError, TimeoutError, ValueError):
                 remaining()
+        else:
+            # An unsent lookup may run in the next stage; it is not a paid failure.
+            cache.setdefault("_deferred_routes",set()).add(key)
         remaining()
         try:
             seconds = float(result["duration"])
@@ -235,6 +238,8 @@ def _route(left, right, planner, city, route_type, cache, unknown):
             cache.setdefault("_expired_route_facts",set()).add(key)
     if not cache[key][1]:
         unknown.add("route_fact_expired_or_unobserved" if key in cache.get("_expired_route_facts",set()) else "route_duration_estimated_30_minutes")
+        if key in cache.get("_deferred_routes",set()):
+            unknown.add("route_lookup_deferred")
         if key in cache.get("_restored_unverified",set()):
             unknown.add("route_failure_not_retried_on_resume")
     return cache[key]
@@ -799,7 +804,9 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
         reports.append({"day_index":day.day_index, **day.feasibility})
         if day.timeline and day.feasibility.get("status") in {"feasible","unverified"}:
             save_checkpoint(checkpoint_stage,digest,{"day":day.model_dump(mode="json")})
-        save_checkpoint("routes",digest,{"routes":[{"key":list(key),"minutes":value[0],"verified":value[1],**cache.get("_route_facts",{}).get(key,{"observed_at":None,"expires_at":ROUTE_EPOCH})} for key,value in cache.items() if isinstance(key,tuple)]})
+        route_rows=[{"key":list(key),"minutes":value[0],"verified":value[1],**cache.get("_route_facts",{}).get(key,{"observed_at":None,"expires_at":ROUTE_EPOCH})}
+                    for key,value in cache.items() if isinstance(key,tuple) and key not in cache.get("_deferred_routes",set())]
+        save_checkpoint("routes",digest,{"routes":route_rows})
     # Two bounded neighboring-day exchanges improve balance without moving any
     # fixed date, appointment or protected activity. Revision scope forbids this
     # global improvement pass even when several days were explicitly selected.
