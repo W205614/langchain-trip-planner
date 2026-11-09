@@ -25,6 +25,7 @@ COPY nginx-public.conf.template /etc/nginx/templates/default.conf.template
 ENV TRUSTED_PROXY_CIDR=127.0.0.1/32 \
     NGINX_ENVSUBST_FILTER=TRUSTED_PROXY_CIDR
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY --chmod=755 40-trip-runtime-config.sh /docker-entrypoint.d/40-trip-runtime-config.sh
 
 EXPOSE 80
 ARG VCS_REF=unknown

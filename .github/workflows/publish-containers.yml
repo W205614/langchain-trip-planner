@@ -1,0 +1,49 @@
+name: Publish validated application images
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Reviewed draft Release version (vX.Y.Z)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  packages: write
+
+concurrency:
+  group: trip-container-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Download the reviewed candidate and sources
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          python -c 'import os,re; assert re.fullmatch(r"v\d+\.\d+\.\d+", os.environ["VERSION"])'
+          gh release download "$VERSION" --repo "$GITHUB_REPOSITORY" --dir candidate --pattern "application-images-$VERSION.tar.gz" --pattern "container-sources-$VERSION.zip" --pattern container-manifest.json --pattern SHA256SUMS
+      - name: Promote the same validated images without rebuilding
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: python tools/container_release.py --version "$VERSION" promote --directory candidate
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: container-publication
+          path: candidate/publication.json
+          retention-days: 14

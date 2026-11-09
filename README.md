@@ -131,6 +131,8 @@ docker compose ps
 
 ## 版本与许可证
 
+`v0.1.3` 修复页面停留或分享旧行程时，时间轴已经过期但活动仍显示“已确认安排”的矛盾。预制前端支持启动时配置浏览器地图 Key；三个应用镜像的获取、许可材料和发布流程见[应用镜像与源码材料](docs/operations/container-distribution.md)。本轮验证边界见[验收记录](docs/evidence/release-v0.1.3-20261109/README.md)。
+
 版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。`v0.1.2` 继续采用兼容修复版本，无新增数据库迁移或依赖变更，范围仍为单机部署与试用；见[验收与升级说明](docs/evidence/release-v0.1.2-20261108/README.md)。[v0.1.1](docs/evidence/release-v0.1.1-20261108/README.md)及[首次发布检查记录](docs/evidence/release-20261107/README.md)保留各自结果。源码发布不包含本机配置、数据库、备份或预构建镜像，使用对应 Tag 中的依赖文件和 Dockerfile 构建；内部组件的私有包版本不作为整仓发布版本。
 
 原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。仓库保存的上游补丁、OpenAPI schema、运行依赖和供应商地图素材遵循各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。PDF 资料渲染使用 PDFium；历史 PyMuPDF 版本的许可义务单独处理。

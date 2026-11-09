@@ -42,7 +42,7 @@ export function useTripMap(plan: Ref<TripPlan | null>) {
     if (pending) return pending
     pending = (async () => {
       try {
-        sdk = await AMapLoader.load({ key: import.meta.env.VITE_AMAP_WEB_JS_KEY, version: '2.0', plugins: ['AMap.Marker', 'AMap.Polyline', 'AMap.InfoWindow'] })
+        sdk = await AMapLoader.load({ key: window.__TRIP_CONFIG__?.amapWebJsKey || import.meta.env.VITE_AMAP_WEB_JS_KEY, version: '2.0', plugins: ['AMap.Marker', 'AMap.Polyline', 'AMap.InfoWindow'] })
         if (disposed || !document.getElementById('amap-container')) return
         map = new sdk.Map('amap-container', { zoom: 12, center: [116.397128, 39.916527] })
         redraw()
