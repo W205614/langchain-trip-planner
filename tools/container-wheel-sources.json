@@ -110,5 +110,7 @@
     "eigen_url": "https://github.com/eigen-mirror/eigen/archive/1d8b82b0740839c0de7f1242a3585e3390ff5f33/eigen-1d8b82b0740839c0de7f1242a3585e3390ff5f33.zip",
     "eigen_sha1": "05b19b49e6fbb91246be711d801160528c135e34",
     "boundary": "The MIT core is referenced at its immutable official source commit, with installed LICENSE and complete ThirdPartyNotices preserved. The bundled MPL Eigen sources are mirrored using the exact upstream recipe checksum; no huge permissive core source mirror is required."
-  }
+  },
+  "recipe_url": "https://raw.githubusercontent.com/google/or-tools/551ad10d94835c99e5e1e684500d3db398c0e345/cmake/dependencies/CMakeLists.txt",
+  "recipe_sha256": "ce090f1bcec6cf8afe400f683459b421c6a8255251a5f929574e1d4eaa4607ff"
 }

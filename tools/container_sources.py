@@ -239,6 +239,7 @@ def java_sources(collector, image):
     finally:
         subprocess.run(['docker', 'rm', container], check=True, stdout=subprocess.DEVNULL)
     packages = []
+    embedded_modules = []
     observed = set()
     with zipfile.ZipFile(jar_path) as application:
         for entry in application.namelist():
@@ -251,13 +252,13 @@ def java_sources(collector, image):
                 raise RuntimeError('Java dependency bytes differ from the reviewed inventory: ' + filename)
             observed.add(filename)
             with zipfile.ZipFile(io.BytesIO(raw)) as jar:
-                props = next((n for n in jar.namelist() if n.startswith('META-INF/maven/') and n.endswith('/pom.properties')), None)
-                if props:
-                    coordinates = dict(re.findall(r'^(groupId|artifactId|version)=(.+)$', jar.read(props).decode(), re.M))
-                    if coordinates != {k: declared[k] for k in ('groupId', 'artifactId', 'version')}:
-                        raise RuntimeError('Embedded Maven identity differs from the reviewed inventory')
-                else:
-                    coordinates = {k: declared[k] for k in ('groupId', 'artifactId', 'version')}
+                props = [n for n in jar.namelist() if n.startswith('META-INF/maven/') and n.endswith('/pom.properties')]
+                coordinates = {k: declared[k] for k in ('groupId', 'artifactId', 'version')}
+                declared_modules = [dict(line.split('=', 1) for line in jar.read(p).decode().splitlines()
+                                         if line.startswith(('groupId=', 'artifactId=', 'version='))) for p in props]
+                if declared_modules and coordinates not in declared_modules:
+                    raise RuntimeError('Outer Maven identity absent from embedded metadata: ' + filename)
+                embedded_modules.extend(row for row in declared_modules if row != coordinates)
                 name = coordinates['artifactId'] + '-' + coordinates['version']
                 destination = collector.root / 'licenses/java' / name
                 for item in jar.namelist():
@@ -270,12 +271,13 @@ def java_sources(collector, image):
                 packages.append(coordinates)
     if observed != set(coordinates_by_filename):
         raise RuntimeError('Java classpath differs from the reviewed inventory')
-    for row in packages:
+    sources = {(row['groupId'], row['artifactId'], row['version']): row for row in packages + embedded_modules}
+    for row in sources.values():
         base = f'https://repo.maven.apache.org/maven2/{row["groupId"].replace(".", "/")}/{row["artifactId"]}/{row["version"]}/'
         name = row['artifactId'] + '-' + row['version']
         for suffix in ('.pom', '-sources.jar'):
             collector.fetch(base + name + suffix, f'java/{row["groupId"]}/{name}{suffix}')
-    return {'release': release, 'packages': packages}
+    return {'release': release, 'packages': packages, 'bundled_modules': embedded_modules}
 
 
 def python_sources(collector, image):
@@ -308,13 +310,12 @@ print(json.dumps(packages))
                 raise RuntimeError('Missing Python source: ' + row['name'])
             repository, tag, commit = PYTHON_SOURCE_RELEASES[identity]
             row['source_release'] = {'repository': repository, 'tag': tag, 'commit': commit}
-            if row['name'].lower() == 'onnxruntime':
-                if not any(name.endswith('/ThirdPartyNotices.txt') for name in row['notices']):
-                    raise RuntimeError('ONNX Runtime bundled notices unavailable')
-                row['source_release']['url'] = f'https://github.com/{repository}/tree/{commit}'
-                row['source_release']['distribution'] = 'MIT core uses immutable upstream source access; bundled MPL Eigen source is mirrored separately'
-            else:
-                collector.fetch(f'https://codeload.github.com/{repository}/tar.gz/{commit}', f'python/{row["name"]}-{row["version"]}-{commit}.tar.gz', immutable=True)
+            if not row['notices']:
+                raise RuntimeError('Permissive core notices unavailable: ' + row['name'])
+            if row['name'].lower() == 'onnxruntime' and not any(name.endswith('/ThirdPartyNotices.txt') for name in row['notices']):
+                raise RuntimeError('ONNX Runtime bundled notices unavailable')
+            row['source_release']['url'] = f'https://github.com/{repository}/tree/{commit}'
+            row['source_release']['distribution'] = 'Permissive core uses immutable official source access and unchanged installed notices; required bundled copyleft source is mirrored separately'
     info = json.loads(run('docker', 'image', 'inspect', image))[0]
     env = dict(e.split('=', 1) for e in info['Config']['Env'])
     version = env['PYTHON_VERSION']
@@ -342,10 +343,7 @@ def wheel_library_sources(collector, image, packages):
     ortools = next(p for p in packages if p['name'].lower() == 'ortools')
     if ortools['version'] != recipe['ortools_version'] or ortools['source_release']['commit'] != recipe['upstream_source']:
         raise RuntimeError('OR-Tools wheel source recipe does not match the installed version')
-    source = collector.root / f'python/ortools-{ortools["version"]}-{recipe["upstream_source"]}.tar.gz'
-    with tarfile.open(source) as archive:
-        member, = [m for m in archive.getmembers() if m.name.endswith('/cmake/dependencies/CMakeLists.txt')]
-        cmake = archive.extractfile(member).read().decode()
+    cmake = collector.fetch(recipe['recipe_url'], 'wheel-libraries/ortools-dependencies.CMakeLists.txt', recipe['recipe_sha256']).read_text()
     for row in recipe['github_sources']:
         block, = [b for b in re.findall(r'FetchContent_Declare\((.*?)\n\s*\)', cmake, re.S) if b.split()[0] == row['component']]
         block = '\n'.join(line for line in block.splitlines() if not line.lstrip().startswith('#'))
@@ -353,9 +351,12 @@ def wheel_library_sources(collector, image, packages):
         ref = re.search(r'GIT_TAG\s+"?([^"\s]+)', block).group(1)
         if (repository, ref) != (row['repository'], row['ref']) or not re.fullmatch(r'[a-f0-9]{40}', row['commit']):
             raise RuntimeError('Bundled library source differs from the official OR-Tools recipe')
+        for patch in re.findall(r'\$\{CMAKE_CURRENT_LIST_DIR\}/../../(patches/[^"\s]+)', block):
+            collector.fetch(f'https://raw.githubusercontent.com/google/or-tools/{recipe["upstream_source"]}/{patch}', 'wheel-libraries/ortools/' + patch)
         path = collector.fetch(f'https://codeload.github.com/{repository}/tar.gz/{row["commit"]}', f'wheel-libraries/{row["component"]}-{row["commit"]}.tar.gz', immutable=True)
         archive_notices(collector, path, row['component'])
     eigen = collector.fetch(recipe['eigen']['url'], 'wheel-libraries/eigen-3.4.0.tar.gz')
+    collector.fetch(f'https://raw.githubusercontent.com/google/or-tools/{recipe["upstream_source"]}/patches/eigen3-3.4.0.patch', 'wheel-libraries/ortools/patches/eigen3-3.4.0.patch')
     archive_notices(collector, eigen, 'eigen')
     program = """
 import importlib.metadata as m

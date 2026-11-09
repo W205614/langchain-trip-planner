@@ -2,9 +2,9 @@
   "reviewer": "Root implementer code and artifact review; not an independent human audit",
   "automatic_policy_binding": false,
   "source_bindings_lf_for_final_commit_verification": {
-    "tools/container_sources.py": "6c4540eebe6432702a9edfb16831e29bdb325108f6e8d15165d683b5c88e0ffe",
+    "tools/container_sources.py": "59ca6cce34993ea06edb91467d60dcd0c80986d545908d1096179226f64ccb4a",
     "tools/container_release.py": "312e06347184de0804aa1c6c8c83afb05f3257bea43d985653f6ee1598719d0f",
-    "tools/container-wheel-sources.json": "f66eaa49b56f80cc25e743ceebf6ef33c6ca4c502ac7e27a0fb42fd00db076be",
+    "tools/container-wheel-sources.json": "9053df0115b6b3684b98f8501da6d7ddf0545e8b6ebfeb8ad6210f17427dbedf",
     "tools/container-java-dependencies.json": "876f43c5f31d1d3b767fbd070747a3219db606820424e5309e063a80dd83b221",
     "tools/tests/test_container_sources.py": "a6d169f916960d7ef370bfa6cb9ec515a6e8f3f5bead55c70b08c2f5bdce2d33",
     "tools/tests/test_container_release.py": "eb75eda5879d472165219fea5ef0a227e06c84445ad62d6b58995ea855953f7d",
