@@ -240,6 +240,7 @@ def java_sources(collector, image):
         subprocess.run(['docker', 'rm', container], check=True, stdout=subprocess.DEVNULL)
     packages = []
     embedded_modules = []
+    missing_notices = []
     observed = set()
     with zipfile.ZipFile(jar_path) as application:
         for entry in application.namelist():
@@ -261,6 +262,7 @@ def java_sources(collector, image):
                 embedded_modules.extend(row for row in declared_modules if row != coordinates)
                 name = coordinates['artifactId'] + '-' + coordinates['version']
                 destination = collector.root / 'licenses/java' / name
+                notices = 0
                 for item in jar.namelist():
                     if item.upper().startswith('META-INF/') and re.search(r'(LICENSE|NOTICE|COPYING)', item.upper()) and not item.endswith('/'):
                         target = destination / item
@@ -268,6 +270,9 @@ def java_sources(collector, image):
                             raise ValueError('Java notice escapes the bundle')
                         target.parent.mkdir(parents=True, exist_ok=True)
                         target.write_bytes(jar.read(item))
+                        notices += 1
+                if not notices:
+                    missing_notices.append(coordinates)
                 packages.append(coordinates)
     if observed != set(coordinates_by_filename):
         raise RuntimeError('Java classpath differs from the reviewed inventory')
@@ -281,6 +286,35 @@ def java_sources(collector, image):
             if not re.fullmatch(r'[a-f0-9]{40}', digest):
                 raise RuntimeError('Maven source checksum unavailable: ' + name)
             collector.fetch(base + name + suffix, relative, digest, 'sha1')
+    # Several published JARs omit separate license files. Preserve their actual
+    # source headers and CI-resolved upstream declarations, with canonical terms.
+    sbom = json.loads((root / 'docs/evidence/release-v0.1.3-20261109/java.cdx.json').read_bytes())
+    declarations = {(r['group'], r['name'], r['version']): r['licenses'] for r in sbom['components']}
+    terms_commit = '31846481de7ea17d92f2f46fad76abe58b2e9bb0'
+    for row in missing_notices:
+        name = row['artifactId'] + '-' + row['version']
+        destination = collector.root / 'licenses/java' / name
+        destination.mkdir(parents=True, exist_ok=True)
+        declared = declarations[(row['groupId'], row['artifactId'], row['version'])]
+        (destination / 'UPSTREAM-DECLARATION.json').write_text(json.dumps({'coordinates': row, 'licenses': declared,
+            'source': 'Exact CI CycloneDX and checksum-verified upstream Maven POM/source JAR; binary JAR contains no separate notice'}, indent=2) + '\n', encoding='utf-8')
+        shutil.copyfile(collector.root / 'java' / row['groupId'] / (name + '.pom'), destination / 'upstream.pom')
+        for license in declared:
+            identifier = license['license']['id']
+            if identifier not in ('Apache-2.0', 'CC0-1.0', 'MIT-0', 'EPL-2.0', 'LGPL-2.1-only'):
+                raise RuntimeError('Unreviewed Java license without original notice: ' + identifier)
+            terms = collector.fetch(f'https://raw.githubusercontent.com/spdx/license-list-data/{terms_commit}/text/{identifier}.txt',
+                                    'licenses/java-terms/' + identifier + '.txt')
+            shutil.copyfile(terms, destination / (identifier + '.txt'))
+        headers = []
+        with zipfile.ZipFile(collector.root / 'java' / row['groupId'] / (name + '-sources.jar')) as archive:
+            for member in archive.namelist():
+                if member.endswith('.java'):
+                    text = archive.read(member).decode('utf-8-sig')
+                    header = re.match(r'\s*(/\*.*?\*/|(?://[^\n]*\n)+)', text, re.S)
+                    if header:
+                        headers.append(member + '\n' + header.group(0) + '\n')
+        (destination / 'ORIGINAL-SOURCE-HEADERS.txt').write_text('\n'.join(headers), encoding='utf-8')
     return {'release': release, 'packages': packages, 'bundled_modules': embedded_modules}
 
 

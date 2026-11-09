@@ -33,6 +33,8 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 
 个别 npm 上游归档只在原始 `package.json` 声明 MIT，未附单独许可文件；材料保留其原始作者和发布声明，并随附标准 MIT 许可正文，不补造版权主体或年份。Java 依赖映射来自匹配源码的实际 CI SBOM，再按候选中 120 个 JAR 的实际字节核对。OR-Tools 捆绑库按该版本上游构建配方提供源仓库提交和补丁；这些材料不声称逐字节重现上游 wheel。
 
+22 个 Java 依赖 JAR 未附独立许可文件，镜像另行随附校验过的上游 POM、原始源码文件头、同一 CI 解析的许可声明及固定 SPDX 数据版本中的许可全文；原二进制和完整源码不改写。Logback 的 EPL/LGPL 双许可、LatencyUtils 的 CC0 和 reactive-streams 的 MIT-0 保留各自声明，不统一替换为项目 MIT。
+
 ## 维护发布
 
 1. 从最终干净源码构建候选，运行必要的业务、浏览器和安全检查。通过 `tools/container_sources.py` 盘点候选的实际依赖并收集来源；下载不完整、摘要不符或来源缺失时停止发布。
