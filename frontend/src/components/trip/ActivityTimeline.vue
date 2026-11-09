@@ -9,7 +9,7 @@
         <div class="time">{{ time(item.start_at) }}<span>{{ time(item.end_at) }}</span></div>
         <div class="activity-copy">
           <button v-if="item.location" class="title locate" type="button" @click="emit('locate', item); selected = item.activity_id">{{ item.title }} ↗</button><strong v-else class="title">{{ item.title }}</strong>
-          <div class="tags"><a-tag>{{ kindLabel(item.kind) }}</a-tag><a-tag :color="item.status === 'confirmed' ? 'green' : 'gold'">{{ item.status === 'confirmed' ? '已确认安排' : item.status === 'estimated' ? '时间估算' : '待核实' }}</a-tag><a-tag v-if="locked(item.activity_id)" color="blue">已锁定</a-tag><a-tag v-if="completed(item.activity_id)">已完成</a-tag></div>
+          <div class="tags"><a-tag>{{ kindLabel(item.kind) }}</a-tag><a-tag :color="current && item.status === 'confirmed' ? 'green' : 'gold'">{{ !current ? '待核实' : item.status === 'confirmed' ? '已确认安排' : item.status === 'estimated' ? '时间估算' : '待核实' }}</a-tag><a-tag v-if="locked(item.activity_id)" color="blue">已锁定</a-tag><a-tag v-if="completed(item.activity_id)">已完成</a-tag></div>
           <p v-for="note in item.notes || []" :key="note">{{ issueText(note) }}</p>
           <details v-if="item.source || item.evidence_refs?.length"><summary>查看依据</summary><p v-if="item.source">{{ item.source }}</p><p v-for="(evidence, i) in item.evidence_refs || []" :key="i">{{ typeof evidence === 'string' ? evidence : evidence.source || evidence.id }}</p></details>
         </div>
