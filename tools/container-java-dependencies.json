@@ -1,0 +1,862 @@
+{
+  "source_revision": "c90ab41c8f8ea16c46aa2aee678e34f45aa4526e",
+  "workflow_run": 42607872784,
+  "artifact_id": 13667364993,
+  "artifact_sha256": "9be8553a8b94120dc88568af616163fa138c83f11810b946f92340ed28852a02",
+  "raw_sbom_sha256": "0984fece96a3de8f6e734da8943c973bfa9d907089d318a515770f063e98505f",
+  "pom_sha256_lf": "9867218499cd871dc35e213ff5b9459ee63ccb4683e8f4d3ce0d02c6ea1a7fb3",
+  "boundary": "Every entry is resolved from exact-source official CI CycloneDX plus the actual embedded candidate JAR bytes. Boot jarmode tools is added by the Boot packager and resolved separately from its exact Boot version. Regenerate this inventory from fresh matching CI when dependencies change.",
+  "components": [
+    {
+      "filename": "logback-classic-1.5.38.jar",
+      "groupId": "ch.qos.logback",
+      "artifactId": "logback-classic",
+      "version": "1.5.38",
+      "sha256": "afb439c61fa287c9e1925523b13baab03617e724406a389d48b61c2c3e46b700"
+    },
+    {
+      "filename": "logback-core-1.5.38.jar",
+      "groupId": "ch.qos.logback",
+      "artifactId": "logback-core",
+      "version": "1.5.38",
+      "sha256": "a855a0fc97b1d06f4efb1c3bba5ebd0eb508d8b58e68e89e4bbc23a85135c883"
+    },
+    {
+      "filename": "log4j-to-slf4j-2.25.5.jar",
+      "groupId": "org.apache.logging.log4j",
+      "artifactId": "log4j-to-slf4j",
+      "version": "2.25.5",
+      "sha256": "b68e8b47342dbc9b35644a14fe2efc0b7bf18da703910cd05ad5501ffe07bba1"
+    },
+    {
+      "filename": "log4j-api-2.25.5.jar",
+      "groupId": "org.apache.logging.log4j",
+      "artifactId": "log4j-api",
+      "version": "2.25.5",
+      "sha256": "64777f73ea0b3104c04eb82befbdccc30a425a19e83ad06cb2f93aa303511863"
+    },
+    {
+      "filename": "jul-to-slf4j-2.0.20.jar",
+      "groupId": "org.slf4j",
+      "artifactId": "jul-to-slf4j",
+      "version": "2.0.20",
+      "sha256": "062249d0677a0e08039120a2292a8db064c69d04282bf562af2e54c53ff06976"
+    },
+    {
+      "filename": "spring-boot-autoconfigure-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-autoconfigure",
+      "version": "4.0.9",
+      "sha256": "6e02d87a0b165631992b97987c27dbf72ebc771d5431635abae94bc7290e727a"
+    },
+    {
+      "filename": "jakarta.annotation-api-3.0.0.jar",
+      "groupId": "jakarta.annotation",
+      "artifactId": "jakarta.annotation-api",
+      "version": "3.0.0",
+      "sha256": "b01f55552284cfb149411e64eabca75e942d26d2e1786b32914250e4330afaa2"
+    },
+    {
+      "filename": "snakeyaml-2.5.jar",
+      "groupId": "org.yaml",
+      "artifactId": "snakeyaml",
+      "version": "2.5",
+      "sha256": "e6682acf1ace77508ef13649cbf4f8d09d2cf5457bdb61d25ffb6ac0233d78dd"
+    },
+    {
+      "filename": "spring-boot-jackson-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-jackson",
+      "version": "4.0.9",
+      "sha256": "565688f52790841dcd2a7313ce5460f3fe0066cf7d626f2e0a01b786090a7b8d"
+    },
+    {
+      "filename": "jackson-databind-3.1.7.jar",
+      "groupId": "tools.jackson.core",
+      "artifactId": "jackson-databind",
+      "version": "3.1.7",
+      "sha256": "48c781de87e2016e1f0d973748a27130f11643e7ac080173f40e2d9669d84be3"
+    },
+    {
+      "filename": "jackson-core-3.1.7.jar",
+      "groupId": "tools.jackson.core",
+      "artifactId": "jackson-core",
+      "version": "3.1.7",
+      "sha256": "7608c367fd8a92666d28711519599543c180298259963184ce04d2947a8f71e7"
+    },
+    {
+      "filename": "spring-boot-web-server-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-web-server",
+      "version": "4.0.9",
+      "sha256": "f53a101278411339694a5a7a98e86226b8d955114ce90e3fe04fc383d27d821a"
+    },
+    {
+      "filename": "tomcat-embed-core-11.0.27.jar",
+      "groupId": "org.apache.tomcat.embed",
+      "artifactId": "tomcat-embed-core",
+      "version": "11.0.27",
+      "sha256": "b71785ff101c0df501064b3e3b8c4a02e4f9cc3047a7fa686c41fc4edc2f0cb4"
+    },
+    {
+      "filename": "tomcat-embed-websocket-11.0.27.jar",
+      "groupId": "org.apache.tomcat.embed",
+      "artifactId": "tomcat-embed-websocket",
+      "version": "11.0.27",
+      "sha256": "cbcd7ed6d7428fa71af6572d541a3ef74ceff42dfc523273950fe586062dc60f"
+    },
+    {
+      "filename": "spring-boot-tomcat-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-tomcat",
+      "version": "4.0.9",
+      "sha256": "82cf823c704265399e5da1efb2933e939d62b3ed1e485387d05e2afb4096305a"
+    },
+    {
+      "filename": "spring-boot-http-converter-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-http-converter",
+      "version": "4.0.9",
+      "sha256": "77a9fcd8f4f5c6287d753a67ac4d9ffa083da1596f23a17699fc326207bd53e5"
+    },
+    {
+      "filename": "spring-boot-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot",
+      "version": "4.0.9",
+      "sha256": "4c0a27620be3a2b28a98d4252f6d9c2815a7c6cfd3af7c0b9e08ad2bacedb6d1"
+    },
+    {
+      "filename": "spring-context-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-context",
+      "version": "7.0.10",
+      "sha256": "f0065166b6a5101a871ab8702d6c4011cf39faed370a64e7ef14a3ad2bf2a99a"
+    },
+    {
+      "filename": "spring-web-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-web",
+      "version": "7.0.10",
+      "sha256": "76ddb03d236547f6852def8cb303e1cf2cd2c1954dec5bf2abd87d11b89dfee7"
+    },
+    {
+      "filename": "spring-boot-webmvc-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-webmvc",
+      "version": "4.0.9",
+      "sha256": "88f46278448de7d738ae7e1fcbea63e2bbfa72605555dc6dbd87d3ddae8d4b4d"
+    },
+    {
+      "filename": "spring-boot-servlet-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-servlet",
+      "version": "4.0.9",
+      "sha256": "0f28cc1185025858ff2f068ec13a03f032b3ba9fcf1b16c9019d3da79185e38b"
+    },
+    {
+      "filename": "spring-webmvc-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-webmvc",
+      "version": "7.0.10",
+      "sha256": "8ad0e813999d0ef1c65b8d5e55c21e4a6c0d6895cd3df32a33f9cc57bf9d226a"
+    },
+    {
+      "filename": "spring-expression-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-expression",
+      "version": "7.0.10",
+      "sha256": "12067b66548f7613fa8938ca6051a6d1dd8c397bf478e0bb1adb9936358ec81d"
+    },
+    {
+      "filename": "spring-boot-security-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-security",
+      "version": "4.0.9",
+      "sha256": "c46e9666bcb709818108f89401d90d6779eca366a22c42b75785b88dbf352a94"
+    },
+    {
+      "filename": "spring-security-config-7.0.8.jar",
+      "groupId": "org.springframework.security",
+      "artifactId": "spring-security-config",
+      "version": "7.0.8",
+      "sha256": "7a5ea91f34129bcbf720c42f82f6c40d42dce64234f64255e80eba5422a16964"
+    },
+    {
+      "filename": "spring-security-core-7.0.8.jar",
+      "groupId": "org.springframework.security",
+      "artifactId": "spring-security-core",
+      "version": "7.0.8",
+      "sha256": "c486acbaaf36577cd9fc29edef36e7ce3fabc776de0f5b8b7aef53b75ab7a3d6"
+    },
+    {
+      "filename": "spring-security-crypto-7.0.8.jar",
+      "groupId": "org.springframework.security",
+      "artifactId": "spring-security-crypto",
+      "version": "7.0.8",
+      "sha256": "346e084a5c4df9f5d6837c7579307b7de10ae7a19d661806b1818f0fcb0353b1"
+    },
+    {
+      "filename": "spring-security-web-7.0.8.jar",
+      "groupId": "org.springframework.security",
+      "artifactId": "spring-security-web",
+      "version": "7.0.8",
+      "sha256": "9f194320c45940dfec09bde9ff756e1a913e8f6a16acb86e612413c7cdb15f72"
+    },
+    {
+      "filename": "spring-aop-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-aop",
+      "version": "7.0.10",
+      "sha256": "babf50a645f4f788e1267078cf891e472f657cabf65518055cf5214220574e3f"
+    },
+    {
+      "filename": "spring-beans-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-beans",
+      "version": "7.0.10",
+      "sha256": "bd67c6fc887afa30cbcb489ff4f82bf19f818e79ab1cf1bef98dff8a289108ec"
+    },
+    {
+      "filename": "spring-boot-validation-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-validation",
+      "version": "4.0.9",
+      "sha256": "1b04e5fa2da7ff2c5164e3ff0a45c1a1cd9884f0fe43087c42910450239f4fe3"
+    },
+    {
+      "filename": "tomcat-embed-el-11.0.27.jar",
+      "groupId": "org.apache.tomcat.embed",
+      "artifactId": "tomcat-embed-el",
+      "version": "11.0.27",
+      "sha256": "206d6c6b1b6ce67b1c9af9ed0f6f43b4dbbc26164dd47bb49b9aad1583191f33"
+    },
+    {
+      "filename": "hibernate-validator-9.0.2.Final.jar",
+      "groupId": "org.hibernate.validator",
+      "artifactId": "hibernate-validator",
+      "version": "9.0.2.Final",
+      "sha256": "eca96fd8ba7a2044cad5e7e5f621fb17b54af53818954092a55afed3a53130f5"
+    },
+    {
+      "filename": "jakarta.validation-api-3.1.1.jar",
+      "groupId": "jakarta.validation",
+      "artifactId": "jakarta.validation-api",
+      "version": "3.1.1",
+      "sha256": "63ce00156388c365f3ac1be71fcfaf114682fc0c452020b5df6e7ec236e142ab"
+    },
+    {
+      "filename": "jboss-logging-3.6.3.Final.jar",
+      "groupId": "org.jboss.logging",
+      "artifactId": "jboss-logging",
+      "version": "3.6.3.Final",
+      "sha256": "7c12ee575508f81e22b1db9334b969d0ec54ef0fd1dcba24eeab1a44235fc366"
+    },
+    {
+      "filename": "classmate-1.7.3.jar",
+      "groupId": "com.fasterxml",
+      "artifactId": "classmate",
+      "version": "1.7.3",
+      "sha256": "75fbda45456f123fb6e2028a6189442d8d0730b357adce4c0a6d7e789f70669b"
+    },
+    {
+      "filename": "spring-boot-mail-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-mail",
+      "version": "4.0.9",
+      "sha256": "aeba24249de68ad5bc021781bf10a30f0bb43a30f94627465c41c22e2129c889"
+    },
+    {
+      "filename": "spring-context-support-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-context-support",
+      "version": "7.0.10",
+      "sha256": "7fe3d85f5a5e20ef2476d964ff6f42bf94b447ba99550e1d404d577427e5260c"
+    },
+    {
+      "filename": "angus-mail-2.0.5.jar",
+      "groupId": "org.eclipse.angus",
+      "artifactId": "angus-mail",
+      "version": "2.0.5",
+      "sha256": "b4d8c30d35f455def6c7a05fe595a1e62ea2b80cac3efec1e9ccf4118b23168a"
+    },
+    {
+      "filename": "jakarta.activation-api-2.1.4.jar",
+      "groupId": "jakarta.activation",
+      "artifactId": "jakarta.activation-api",
+      "version": "2.1.4",
+      "sha256": "c9db52100ce6c8aac95cc39075f95720d2e561b11f8051b81c121ad4effd7004"
+    },
+    {
+      "filename": "jakarta.mail-api-2.1.5.jar",
+      "groupId": "jakarta.mail",
+      "artifactId": "jakarta.mail-api",
+      "version": "2.1.5",
+      "sha256": "aa493753acb7a8c45ba8f4c9cf1230a74e20237056dd5b5c8bc86c583e8cfa0e"
+    },
+    {
+      "filename": "angus-activation-2.0.3.jar",
+      "groupId": "org.eclipse.angus",
+      "artifactId": "angus-activation",
+      "version": "2.0.3",
+      "sha256": "a6bd35c538cf90fff941ad6258c40c08fca0b5c9c3f536c657114f27ce0527a7"
+    },
+    {
+      "filename": "spring-boot-micrometer-metrics-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-micrometer-metrics",
+      "version": "4.0.9",
+      "sha256": "43fcdc12cdd3f5635ca18efc910f47a07323a001c171d74ca77abca650902426"
+    },
+    {
+      "filename": "spring-boot-micrometer-observation-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-micrometer-observation",
+      "version": "4.0.9",
+      "sha256": "1edd428e92307d3e143e9678fcd4b4a18eec833a7acfc597399f3c144506f1ec"
+    },
+    {
+      "filename": "spring-boot-actuator-autoconfigure-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-actuator-autoconfigure",
+      "version": "4.0.9",
+      "sha256": "7950418dbd41de9d157c4ad044c2aa8b19e126d54953711735b5fdecce976fb8"
+    },
+    {
+      "filename": "spring-boot-actuator-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-actuator",
+      "version": "4.0.9",
+      "sha256": "cecc9016af4ebc3cd4bc6e946e38f0cac0efcd420c9f92e6d9afb2e4b098aedc"
+    },
+    {
+      "filename": "spring-boot-health-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-health",
+      "version": "4.0.9",
+      "sha256": "2f273d1cf602f719d99196c0c80101f981fe22d29bdcd3eb10d8d53631ac950b"
+    },
+    {
+      "filename": "micrometer-observation-1.16.8.jar",
+      "groupId": "io.micrometer",
+      "artifactId": "micrometer-observation",
+      "version": "1.16.8",
+      "sha256": "e9640e8a4c77fe458deada6db9b8e1c094e519ebc333a3d005c15eebb1be942c"
+    },
+    {
+      "filename": "micrometer-commons-1.16.8.jar",
+      "groupId": "io.micrometer",
+      "artifactId": "micrometer-commons",
+      "version": "1.16.8",
+      "sha256": "66ebb98b23ec65300b5b670f8ff49e1cc1400e71ebb7881390cd10bc6ed492ad"
+    },
+    {
+      "filename": "micrometer-jakarta9-1.16.8.jar",
+      "groupId": "io.micrometer",
+      "artifactId": "micrometer-jakarta9",
+      "version": "1.16.8",
+      "sha256": "d974d6d428281d48cc2f3fe5284be9b7acdc89adee4e1981f2c105d3583358ca"
+    },
+    {
+      "filename": "micrometer-registry-prometheus-1.16.8.jar",
+      "groupId": "io.micrometer",
+      "artifactId": "micrometer-registry-prometheus",
+      "version": "1.16.8",
+      "sha256": "318fd61c6bcbf592499f4a226fc8819d1107ae7f2ddaeb42e19c14359ac88d0d"
+    },
+    {
+      "filename": "jspecify-1.0.1.jar",
+      "groupId": "org.jspecify",
+      "artifactId": "jspecify",
+      "version": "1.0.1",
+      "sha256": "070d75f261fe4c5b8202508366715f7f2d4660f88c8ef7e6d3575e48c9683b66"
+    },
+    {
+      "filename": "micrometer-core-1.16.8.jar",
+      "groupId": "io.micrometer",
+      "artifactId": "micrometer-core",
+      "version": "1.16.8",
+      "sha256": "8a93d16b1f67ca9db42619cd85d5910900a61982af07b058a3a07358d0556b5b"
+    },
+    {
+      "filename": "HdrHistogram-2.2.2.jar",
+      "groupId": "org.hdrhistogram",
+      "artifactId": "HdrHistogram",
+      "version": "2.2.2",
+      "sha256": "22d1d4316c4ec13a68b559e98c8256d69071593731da96136640f864fa14fad8"
+    },
+    {
+      "filename": "LatencyUtils-2.0.3.jar",
+      "groupId": "org.latencyutils",
+      "artifactId": "LatencyUtils",
+      "version": "2.0.3",
+      "sha256": "a32a9ffa06b2f4e01c5360f8f9df7bc5d9454a5d373cd8f361347fa5a57165ec"
+    },
+    {
+      "filename": "prometheus-metrics-core-1.4.3.jar",
+      "groupId": "io.prometheus",
+      "artifactId": "prometheus-metrics-core",
+      "version": "1.4.3",
+      "sha256": "7ecd546d5238e3d3f5f312f580eaaab10cb05d147597978ab90b78080cc58255"
+    },
+    {
+      "filename": "prometheus-metrics-model-1.4.3.jar",
+      "groupId": "io.prometheus",
+      "artifactId": "prometheus-metrics-model",
+      "version": "1.4.3",
+      "sha256": "bc3f1825014a14006626086ea779b62893e647e71d1eab075c0bb65057c245f8"
+    },
+    {
+      "filename": "prometheus-metrics-config-1.4.3.jar",
+      "groupId": "io.prometheus",
+      "artifactId": "prometheus-metrics-config",
+      "version": "1.4.3",
+      "sha256": "3da2d5f0123af9e313bcf26f04c1248afeacd1b0d5c3a35f220034604ac0ec47"
+    },
+    {
+      "filename": "prometheus-metrics-tracer-common-1.4.3.jar",
+      "groupId": "io.prometheus",
+      "artifactId": "prometheus-metrics-tracer-common",
+      "version": "1.4.3",
+      "sha256": "b816aaf84e45d591e5f66c5b94c7a789dedf2d705e5bf3eec2ae8730f76c68cd"
+    },
+    {
+      "filename": "prometheus-metrics-exposition-formats-1.4.3.jar",
+      "groupId": "io.prometheus",
+      "artifactId": "prometheus-metrics-exposition-formats",
+      "version": "1.4.3",
+      "sha256": "502ad6b37c44b1a6311f6070a18fc921ffa2e26abb43eaaaf7626aa1b97984b6"
+    },
+    {
+      "filename": "prometheus-metrics-exposition-textformats-1.4.3.jar",
+      "groupId": "io.prometheus",
+      "artifactId": "prometheus-metrics-exposition-textformats",
+      "version": "1.4.3",
+      "sha256": "4aeee30d937ae5baf34ca9daced0f84400ec0f034e7beaa8331d9c519d84e3d7"
+    },
+    {
+      "filename": "HikariCP-7.0.2.jar",
+      "groupId": "com.zaxxer",
+      "artifactId": "HikariCP",
+      "version": "7.0.2",
+      "sha256": "f1e612fa27345be3107a85431e8a8aeb205c15364ab2f2d411e40a9d7bb08095"
+    },
+    {
+      "filename": "spring-boot-flyway-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-flyway",
+      "version": "4.0.9",
+      "sha256": "8b372a99f67dbb6ac81938db0d7abb69e048fe3192f29ce7abf3b51bf6343388"
+    },
+    {
+      "filename": "spring-boot-jdbc-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-jdbc",
+      "version": "4.0.9",
+      "sha256": "5085fe17cde440d56ea7bf2e7bdbe0b625969af38a0d51cfe808ad6b5f3097bd"
+    },
+    {
+      "filename": "spring-boot-sql-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-sql",
+      "version": "4.0.9",
+      "sha256": "6aaec7f51e950582d47889555063a16b1f87eee6c7ba3438c4ababf125aa7e58"
+    },
+    {
+      "filename": "spring-boot-transaction-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-transaction",
+      "version": "4.0.9",
+      "sha256": "7d19b81c74e1ed7dde2677ba329c4e9b8ab66930de47035eaf3f90b1b7c98ad2"
+    },
+    {
+      "filename": "spring-boot-persistence-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-persistence",
+      "version": "4.0.9",
+      "sha256": "200615a16a0022dad40cee10c6cd66df89baa0951439dee8f00530d99514933f"
+    },
+    {
+      "filename": "spring-tx-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-tx",
+      "version": "7.0.10",
+      "sha256": "9442610a8ed3d44e70fa97f49896ea810c831da62620101450f0feb522edb4cd"
+    },
+    {
+      "filename": "spring-jdbc-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-jdbc",
+      "version": "7.0.10",
+      "sha256": "bc4ba6bd242f2db2642938960ae27589b53dd6a611d700a260af7b3383cd0c6c"
+    },
+    {
+      "filename": "mybatis-spring-boot-starter-4.0.0.jar",
+      "groupId": "org.mybatis.spring.boot",
+      "artifactId": "mybatis-spring-boot-starter",
+      "version": "4.0.0",
+      "sha256": "497cb441e453b46ce7dbc13891a62008b89fd1708aa4b59d0cc2de3cc5b0f45b"
+    },
+    {
+      "filename": "mybatis-spring-boot-autoconfigure-4.0.0.jar",
+      "groupId": "org.mybatis.spring.boot",
+      "artifactId": "mybatis-spring-boot-autoconfigure",
+      "version": "4.0.0",
+      "sha256": "688044fa5a134596ac0f8926e7f933d31a02b48d5127d651a083eaeb7671becc"
+    },
+    {
+      "filename": "mybatis-3.5.19.jar",
+      "groupId": "org.mybatis",
+      "artifactId": "mybatis",
+      "version": "3.5.19",
+      "sha256": "93eea616ae355751bd5fbabb57f0732713fbe79f3196f33c51a0aeeb4255862a"
+    },
+    {
+      "filename": "mybatis-spring-4.0.0.jar",
+      "groupId": "org.mybatis",
+      "artifactId": "mybatis-spring",
+      "version": "4.0.0",
+      "sha256": "53d57084e5c6c6fae60b25576f35ab69cd24c2ecd03c420dbfa98819cba7ff08"
+    },
+    {
+      "filename": "flyway-database-postgresql-11.14.1.jar",
+      "groupId": "org.flywaydb",
+      "artifactId": "flyway-database-postgresql",
+      "version": "11.14.1",
+      "sha256": "d7142273706f225e6890ff971f0c8ccc4e7fe253ab6ab9f20556b155c68bca8a"
+    },
+    {
+      "filename": "flyway-core-11.14.1.jar",
+      "groupId": "org.flywaydb",
+      "artifactId": "flyway-core",
+      "version": "11.14.1",
+      "sha256": "45148edbcb55016418ff1ef7ecca3331b55f5216b3af4bd2db40063904db3715"
+    },
+    {
+      "filename": "jackson-databind-2.21.7.jar",
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-databind",
+      "version": "2.21.7",
+      "sha256": "1290c2795e93e8a6861a6c4d9ff0d844d32f5ea178362cb2721edf5561e828b1"
+    },
+    {
+      "filename": "jackson-annotations-2.21.jar",
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-annotations",
+      "version": "2.21",
+      "sha256": "53ca085f4a150f703f49e1aabd935bd03b43e1ea3d55d135438292af22cef56b"
+    },
+    {
+      "filename": "jackson-core-2.21.7.jar",
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-core",
+      "version": "2.21.7",
+      "sha256": "8c5623b98f32d5f7e1287ff61ed50e08ab7b11381e991fff89327faabba42261"
+    },
+    {
+      "filename": "postgresql-42.7.14.jar",
+      "groupId": "org.postgresql",
+      "artifactId": "postgresql",
+      "version": "42.7.14",
+      "sha256": "73914527305a40cce504b0d3d90b23caf565136912d607ae8ae7c5895512332c"
+    },
+    {
+      "filename": "checker-qual-3.55.1.jar",
+      "groupId": "org.checkerframework",
+      "artifactId": "checker-qual",
+      "version": "3.55.1",
+      "sha256": "857658c8bdcbff794949a8d9922f88d63ee3751c203c7cd7d21ea97f9e745288"
+    },
+    {
+      "filename": "nimbus-jose-jwt-10.0.2.jar",
+      "groupId": "com.nimbusds",
+      "artifactId": "nimbus-jose-jwt",
+      "version": "10.0.2",
+      "sha256": "960b978a6cd6cbc3319648adc73959789f6742a2bf1e8dd0c843dbc91624218a"
+    },
+    {
+      "filename": "bcrypt-0.10.2.jar",
+      "groupId": "at.favre.lib",
+      "artifactId": "bcrypt",
+      "version": "0.10.2",
+      "sha256": "0b1fb99db605955de904d8e61782a53dddbadd12619a0cf37dd88b5d14a61957"
+    },
+    {
+      "filename": "bytes-1.5.0.jar",
+      "groupId": "at.favre.lib",
+      "artifactId": "bytes",
+      "version": "1.5.0",
+      "sha256": "b933631573148647943040d8d7496a64458b432610e6da2eb87ec3458814dee5"
+    },
+    {
+      "filename": "caffeine-3.2.4.jar",
+      "groupId": "com.github.ben-manes.caffeine",
+      "artifactId": "caffeine",
+      "version": "3.2.4",
+      "sha256": "9d9d2cfd681fd9272ded3d27c9930db12f89f732345975aa113ebc223bbf1224"
+    },
+    {
+      "filename": "error_prone_annotations-2.49.0.jar",
+      "groupId": "com.google.errorprone",
+      "artifactId": "error_prone_annotations",
+      "version": "2.49.0",
+      "sha256": "3b1003e51b8ae56fdbd7c71073e81d1683b97e6c4dff5a9151164d59b769d13c"
+    },
+    {
+      "filename": "s3-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "s3",
+      "version": "2.57.3",
+      "sha256": "f09a188394c900081c53a76845121ed2a28976770ae0b89f54f159a7d5b19237"
+    },
+    {
+      "filename": "aws-xml-protocol-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "aws-xml-protocol",
+      "version": "2.57.3",
+      "sha256": "0b4a80dcd2cb504c9f56023eb39b8f9578b0883b30ff158507e1b2db83ccc372"
+    },
+    {
+      "filename": "aws-query-protocol-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "aws-query-protocol",
+      "version": "2.57.3",
+      "sha256": "0e8b5b6ca54162248dfa430f9fe9f98c36049fb0f8de7e1cf16cbf388cfd9598"
+    },
+    {
+      "filename": "protocol-core-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "protocol-core",
+      "version": "2.57.3",
+      "sha256": "cbba9c31acd3a0c2d1424160775a8b6357e80add4d92920b971819cd0f2dfe0d"
+    },
+    {
+      "filename": "arns-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "arns",
+      "version": "2.57.3",
+      "sha256": "c2fd909df91a86016b514ed473a9a0fbe17aa646374c6d8c933970413717d755"
+    },
+    {
+      "filename": "profiles-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "profiles",
+      "version": "2.57.3",
+      "sha256": "580759c088f92279cc41c9a9d3000bf05fd89636933f2301fd176a9000c7550d"
+    },
+    {
+      "filename": "crt-core-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "crt-core",
+      "version": "2.57.3",
+      "sha256": "46b9d59aad3c5622179ea0e7d6554e87304129f31ed824f5d1d259eb0723d3dd"
+    },
+    {
+      "filename": "http-auth-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "http-auth",
+      "version": "2.57.3",
+      "sha256": "286c880eb0e497e250fbb9890f805ed4b8ef388a211da7b2532ff4f65177af1a"
+    },
+    {
+      "filename": "identity-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "identity-spi",
+      "version": "2.57.3",
+      "sha256": "52c23241d021e6bcd562a3861f3ac1dee870748da3c746c9705cd632c9db37ba"
+    },
+    {
+      "filename": "http-auth-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "http-auth-spi",
+      "version": "2.57.3",
+      "sha256": "58c7109749bd2ee343ae6f27e7a83393515590d6fa8e015d1c8082a9d1ceebbc"
+    },
+    {
+      "filename": "reactive-streams-1.0.4.jar",
+      "groupId": "org.reactivestreams",
+      "artifactId": "reactive-streams",
+      "version": "1.0.4",
+      "sha256": "f75ca597789b3dac58f61857b9ac2e1034a68fa672db35055a8fb4509e325f28"
+    },
+    {
+      "filename": "http-auth-aws-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "http-auth-aws",
+      "version": "2.57.3",
+      "sha256": "35bbeb7d5b0e29b1ad860d253c84c560aea940db0762a06fc483a9b3881eba4b"
+    },
+    {
+      "filename": "checksums-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "checksums",
+      "version": "2.57.3",
+      "sha256": "6f91f35dbc66f3f7421a75e302a26c2c98e4a75c3e342b29784a4b7fb581c041"
+    },
+    {
+      "filename": "checksums-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "checksums-spi",
+      "version": "2.57.3",
+      "sha256": "2239d08f649a1995fd604576bdb630d696d450ccd1089bed658f2d7d9ec399fd"
+    },
+    {
+      "filename": "retries-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "retries-spi",
+      "version": "2.57.3",
+      "sha256": "b7c1b8a3ddb2605136de7bd090968d8f893718d7906b873567c2ae6800a3151d"
+    },
+    {
+      "filename": "sdk-core-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "sdk-core",
+      "version": "2.57.3",
+      "sha256": "720788f97ed2be929a9bbcc5cf9bc01683d17edcb76212a3a2ea39a95be362f7"
+    },
+    {
+      "filename": "retries-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "retries",
+      "version": "2.57.3",
+      "sha256": "995ca319bad6ed944595a463afd6aed4c50b1ee8f475625e1f792e32fea69a53"
+    },
+    {
+      "filename": "slf4j-api-2.0.20.jar",
+      "groupId": "org.slf4j",
+      "artifactId": "slf4j-api",
+      "version": "2.0.20",
+      "sha256": "7e1446499b359675d8aabe6af2de86b85e72ae8a2a932c0b40d0e5ba57097439"
+    },
+    {
+      "filename": "auth-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "auth",
+      "version": "2.57.3",
+      "sha256": "7966cc0348dd7305816faeeab79134e10da1c7728a910216e49c5f20706ab629"
+    },
+    {
+      "filename": "http-auth-aws-eventstream-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "http-auth-aws-eventstream",
+      "version": "2.57.3",
+      "sha256": "95fe1ecdefe126ea994c15d9249c9874449d5c7f624a6c85d8e0e55a9cf8a8a2"
+    },
+    {
+      "filename": "eventstream-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "eventstream",
+      "version": "2.57.3",
+      "sha256": "17517852d41e527b7f787ce9d7090bd73cc3763aae5bc9b9aa31f45752d4f0e0"
+    },
+    {
+      "filename": "http-client-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "http-client-spi",
+      "version": "2.57.3",
+      "sha256": "1fc77076839014fc416874936a1a21ef2d5ab07c21e1e14700f6ca508dafffc9"
+    },
+    {
+      "filename": "regions-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "regions",
+      "version": "2.57.3",
+      "sha256": "89c9e70b16d4b482bcee821f6f3dd8b38483c6fb5928b5d549c7b907cbe72ccd"
+    },
+    {
+      "filename": "annotations-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "annotations",
+      "version": "2.57.3",
+      "sha256": "3dee0006eb10176d718cdd877d926ba86a6673fe0dcbab5788f62ea64e4b24a2"
+    },
+    {
+      "filename": "utils-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "utils",
+      "version": "2.57.3",
+      "sha256": "0ced56cf81e52c16ebb110de7cd9b6b4e3976a52d82712dd3da0ee620e0def52"
+    },
+    {
+      "filename": "aws-core-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "aws-core",
+      "version": "2.57.3",
+      "sha256": "e53a3dcc896002fefccd56e83804b2becdd9bbf3d384a2c4a8cb72ca0a636417"
+    },
+    {
+      "filename": "utils-lite-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "utils-lite",
+      "version": "2.57.3",
+      "sha256": "38e69acc0409e2b96f0164dd394e72becb895cc68fff24b2608c3ba07929e9d9"
+    },
+    {
+      "filename": "metrics-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "metrics-spi",
+      "version": "2.57.3",
+      "sha256": "741a0892a10f6600ed4d07201dad124eaac0ff9af159ee8d091192d4822aaf01"
+    },
+    {
+      "filename": "json-utils-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "json-utils",
+      "version": "2.57.3",
+      "sha256": "b4d0a6e408cf79d265e5dba6ba45e9e0396c4696918645e6c5757bfc30709ffd"
+    },
+    {
+      "filename": "third-party-jackson-core-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "third-party-jackson-core",
+      "version": "2.57.3",
+      "sha256": "c1fc6cc0982b94d6b220bbc52b9244f3b8a2008ccab688c57195b695d6858af1"
+    },
+    {
+      "filename": "endpoints-spi-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "endpoints-spi",
+      "version": "2.57.3",
+      "sha256": "8a5098abdca50041d8f9d5513b2b49f2123ad9e827e8632af60261a2e1005fa9"
+    },
+    {
+      "filename": "url-connection-client-2.57.3.jar",
+      "groupId": "software.amazon.awssdk",
+      "artifactId": "url-connection-client",
+      "version": "2.57.3",
+      "sha256": "92305291ccb0170a8adfa1ae7346cc8dda7f0681a43fa64824a6aa24e756a21a"
+    },
+    {
+      "filename": "spring-core-7.0.10.jar",
+      "groupId": "org.springframework",
+      "artifactId": "spring-core",
+      "version": "7.0.10",
+      "sha256": "a236f31a7c07e3a1a8e7839ec5c0d47b5cc75709132db50416d5dad320341f12"
+    },
+    {
+      "filename": "commons-logging-1.3.6.jar",
+      "groupId": "commons-logging",
+      "artifactId": "commons-logging",
+      "version": "1.3.6",
+      "sha256": "f8ead8943401081dea0aa824b5b1ba40a0e4ed297a572a0f02258150a0b62357"
+    },
+    {
+      "filename": "spring-boot-jarmode-tools-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-jarmode-tools",
+      "version": "4.0.9",
+      "sha256": "3c5b84679f37ca53c309458a91e561882885723a50e9fb94f4cf226e3eebd162"
+    }
+  ],
+  "runtime_source": {
+    "implementor_version": "Temurin-21.0.13+9",
+    "source_commit": "2ab10ca20c191701c3a9f3153bfc6e93d63714c1",
+    "release_tag": "jdk-21.0.13+9",
+    "archive": {
+      "name": "OpenJDK21U-jdk-sources_21.0.13_9.tar.gz",
+      "size": 115231532,
+      "digest": "sha256:b5232c9980d8a0f0459676c084c41c6e2c771ed9e785890b03c6a438406ad1ca",
+      "browser_download_url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jdk-sources_21.0.13_9.tar.gz"
+    }
+  }
+}

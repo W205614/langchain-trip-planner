@@ -1,0 +1,28 @@
+{
+  "reviewer": "Root implementer code and artifact review; not an independent human audit",
+  "automatic_policy_binding": false,
+  "source_bindings_lf_for_final_commit_verification": {
+    "tools/container_sources.py": "6c4540eebe6432702a9edfb16831e29bdb325108f6e8d15165d683b5c88e0ffe",
+    "tools/container_release.py": "312e06347184de0804aa1c6c8c83afb05f3257bea43d985653f6ee1598719d0f",
+    "tools/container-wheel-sources.json": "f66eaa49b56f80cc25e743ceebf6ef33c6ca4c502ac7e27a0fb42fd00db076be",
+    "tools/container-java-dependencies.json": "876f43c5f31d1d3b767fbd070747a3219db606820424e5309e063a80dd83b221",
+    "tools/tests/test_container_sources.py": "a6d169f916960d7ef370bfa6cb9ec515a6e8f3f5bead55c70b08c2f5bdce2d33",
+    "tools/tests/test_container_release.py": "eb75eda5879d472165219fea5ef0a227e06c84445ad62d6b58995ea855953f7d",
+    ".github/workflows/publish-containers.yml": "d6ff7e007368b24dfcfa4695035f2970984cafc40fa27d67522de55f2fbaed1f"
+  },
+  "checks": [
+    "No scanner, finding threshold, contextual entry, policy loader or Chroma applicability scope is broadened. Fresh c90ab41 SARIF keeps all26 original results and exact identities. Final exact-commit CI remains mandatory for these additional tool changes.",
+    "Promotion requires this repository Actions identity, validated vX.Y.Z input, matching source, both completed/success push workflows, exact Tag and stable Release, all server asset digests, all file hashes, no existing destination version, actual loaded layers/config and matching registry config digest. Same archive is loaded, not rebuilt. Docker image Id representations differ across engines; operational config plus diffIDs are compared before push, and the original config blob digest is verified in the registry. Source archive is public before GHCR publication. Token is stdin-only for docker login and scoped to contents:read/actions:read/packages:write; no production deployment or persistent token creation.",
+    "Sealing requires clean committed source and matching project material bytes; each base must be Linux/amd64 and match collected source layers. COPY adds only /licenses and metadata; final runtime layer prefix is checked and the exact exported config blob is recorded. Runtime acceptance of the sealed images is still required.",
+    "Source transfers retain .part separately, reserve no paid API budget and never read service env files. At most12 transport attempts or10minutes per file were added after observed truncation. Range offsets and lengths are checked; HTTP errors, bad hashes, bad ranges and bad gzip CRC fail. Pinned Git archives also require a complete gzip stream. File output/notice paths cannot escape the source bundle. Independent categories are collected concurrently and every category result is inspected; any failure prevents a final source manifest.",
+    "Alpine uses exact installed origin/commit recipes and their checksums. libyuv is a bounded special case reflecting its existing official custom fetch/unpack contract: the real timestamp-variant archive has a different gzip hash but its sorted source-content SHA512 equals the original _libyuvchecksum exactly. No new checksum is invented. Other source archive checks remain unchanged. Normal templates and upstream recipes are data, not executable instructions for the host.",
+    "Java coordinates are from c90ab41 official CI CycloneDX, then matched to all120 actual embedded JAR SHA256 values and the exact POM. Unknown/new dependency bytes or identities fail instead of guessing groups. Temurin source release matches actual implementor and source commit and uses the official immutable asset SHA256. Runtime source/legal materials remain separate from project MIT.",
+    "Python package/source versions come from actual installed metadata and official PyPI checksums or reviewed official Git commits. MIT ONNX core uses its fixed public source link and complete installed notices; its MPL Eigen source uses the exact upstream recipe SHA1 plus recorded downloaded SHA256. OR-Tools bundled source refs match its actual version/source CMake recipe; no bit-for-bit upstream wheel rebuild claim is made. Missing npm license files are handled only where the unchanged upstream package explicitly declares MIT: preserve complete author/publisher manifest and standard permission text without inventing copyright.",
+    "89 maintenance unit tests pass; distribution subset8 passes. Real local TCP truncation/resume and malformed source/checksum/path rejection are covered. Publication negative tests prove local execution, shell-like version and mismatched source stop before external access. Actual source collection, package push and final daily acceptance remain separate stages."
+  ],
+  "limitations": [
+    "Root tooling is manually bound here because the unchanged CodeQL policy loader accepts only business directories",
+    "No claim of complete legal assurance, production security or capacity",
+    "Final candidate scan, public acquisition and daily runtime checks must still be recorded"
+  ]
+}

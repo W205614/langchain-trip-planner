@@ -1,0 +1,256 @@
+{
+  "run": 42607872784,
+  "source": "c90ab41c8f8ea16c46aa2aee678e34f45aa4526e",
+  "artifacts": [
+    {
+      "id": 13669725005,
+      "name": "security-codeql-python",
+      "size_in_bytes": 53383,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13669725005",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13669725005/zip",
+      "expired": false,
+      "created_at": "2026-11-09T11:18:55Z",
+      "expires_at": "2026-11-23T11:18:55Z",
+      "updated_at": "2026-11-09T11:18:55Z",
+      "digest": "sha256:9a0d0341b1c7e8fe6ce8c5bcb2a30af46601fea11d4e468adcb9099ecd24bed0",
+      "workflow_run": {
+        "id": 42607872784,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "c90ab41c8f8ea16c46aa2aee678e34f45aa4526e"
+      }
+    },
+    {
+      "id": 13669515234,
+      "name": "security-codeql-javascript-typescript",
+      "size_in_bytes": 87147,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13669515234",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13669515234/zip",
+      "expired": false,
+      "created_at": "2026-11-09T11:18:43Z",
+      "expires_at": "2026-11-23T11:18:42Z",
+      "updated_at": "2026-11-09T11:18:43Z",
+      "digest": "sha256:6f8a2a43bc00a7ce4e082ce478460b1eb609bef71ba90428ef5c1247554f3526",
+      "workflow_run": {
+        "id": 42607872784,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "c90ab41c8f8ea16c46aa2aee678e34f45aa4526e"
+      }
+    },
+    {
+      "id": 13668951906,
+      "name": "security-codeql-java-kotlin",
+      "size_in_bytes": 120590,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13668951906",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13668951906/zip",
+      "expired": false,
+      "created_at": "2026-11-09T11:19:41Z",
+      "expires_at": "2026-11-23T11:19:40Z",
+      "updated_at": "2026-11-09T11:19:41Z",
+      "digest": "sha256:155386ea8b394443b62140a8a74c1eac86ea19da47ae7077314203f4d3caf14b",
+      "workflow_run": {
+        "id": 42607872784,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "c90ab41c8f8ea16c46aa2aee678e34f45aa4526e"
+      }
+    },
+    {
+      "id": 13668512660,
+      "name": "security-codeql-actions",
+      "size_in_bytes": 21634,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13668512660",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13668512660/zip",
+      "expired": false,
+      "created_at": "2026-11-09T11:18:24Z",
+      "expires_at": "2026-11-23T11:18:24Z",
+      "updated_at": "2026-11-09T11:18:24Z",
+      "digest": "sha256:ecc7394ee8d416eda34f82e3564de866c9f3228b03b0bd2dabec135cbe6dbed7",
+      "workflow_run": {
+        "id": 42607872784,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "main",
+        "head_sha": "c90ab41c8f8ea16c46aa2aee678e34f45aa4526e"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "id": 129128349058,
+      "name": "CodeQL / actions",
+      "run_id": 42607872784,
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 129128349230,
+      "name": "CodeQL / python",
+      "run_id": 42607872784,
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    },
+    {
+      "id": 129128349298,
+      "name": "CodeQL / java-kotlin",
+      "run_id": 42607872784,
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        }
+      ]
+    },
+    {
+      "id": 129128349355,
+      "name": "CodeQL / javascript-typescript",
+      "run_id": 42607872784,
+      "steps": [
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        }
+      ]
+    }
+  ]
+}

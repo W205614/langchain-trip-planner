@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Reviewed draft Release version (vX.Y.Z)
+        description: Validated published Release version (vX.Y.Z)
         required: true
         type: string
 

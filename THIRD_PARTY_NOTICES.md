@@ -24,6 +24,8 @@ This product includes software developed by the University of California, Berkel
 
 Python、Java 和前端依赖由各自的依赖管理器安装，版本依据 `backend/requirements.lock`、`business-backend/pom.xml` 和 `frontend/package-lock.json`。它们不因项目采用 MIT 而改变许可。运行依赖中包括 MPL 等非 MIT 许可，分发时须保留所用版本随包提供的许可证和通知；不能只复制本项目 LICENSE。
 
+容器分发另按实际候选核对其系统包和 wheel/JAR/浏览器依赖；包括 OR-Tools 内的 Coin-OR/Eigen 等捆绑库、NumPy 的上游通知和 GCC Runtime Library Exception，以及 cryptography 实际链接的 OpenSSL。个别 npm 包只提供原始 MIT 声明时，保留发布元数据并附标准正文，不把项目自己的版权行移用于第三方。具体来源、源码和通知由对应 Release 的材料清单列出。
+
 当前 PDF 渲染使用 [pypdfium2 5.15.0](https://pypi.org/project/pypdfium2/5.15.0/)。绑定提供 Apache-2.0 / BSD-3-Clause 许可选项，PDFium 及其捆绑组件适用各自条款，详见 [pypdfium2 上游许可说明](https://pypdfium2-team.github.io/pypdfium2/readme.html#licensing)。安装时保留官方 wheel 内的许可证和第三方声明；再次分发 wheel、容器或其他二进制前，应核对实际安装包的许可文件，不能把所有捆绑组件统称为 BSD 或 MIT。
 
 此前使用 PyMuPDF 的历史版本仍需按 [Artifex 的 AGPL / 商业双许可](https://pymupdf.readthedocs.io/en/latest/about.html#license-and-copyright)单独核对，不因当前替换依赖而自动改变历史版本的许可或免除既有义务。

@@ -1,0 +1,114 @@
+{
+  "ortools_version": "9.15.6755",
+  "upstream_source": "551ad10d94835c99e5e1e684500d3db398c0e345",
+  "recipe": "cmake/dependencies/CMakeLists.txt",
+  "resolved_on": "2026-11-09",
+  "boundary": "Sources named by the official wheel release recipe. Does not claim a bit-for-bit reproduction of upstream wheels. Runtime SONAME inventory and installed upstream notices retained.",
+  "github_sources": [
+    {
+      "component": "ZLIB",
+      "repository": "madler/ZLIB",
+      "ref": "v1.3.1",
+      "commit": "51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf"
+    },
+    {
+      "component": "absl",
+      "repository": "abseil/abseil-cpp",
+      "ref": "20250814.1",
+      "commit": "d38452e1ee03523a208362186fd42248ff2609f6"
+    },
+    {
+      "component": "Protobuf",
+      "repository": "protocolbuffers/protobuf",
+      "ref": "v33.1",
+      "commit": "a8d85ffbc7158660b4247f732371d1b07780510e"
+    },
+    {
+      "component": "re2",
+      "repository": "google/re2",
+      "ref": "2025-08-12",
+      "commit": "0f6c07eae69151e606acb3d9232750c3442dff23"
+    },
+    {
+      "component": "pybind11",
+      "repository": "pybind/pybind11",
+      "ref": "v2.13.6",
+      "commit": "a2e59f0e7065404b44dfe92a28aca47ba1378dc4"
+    },
+    {
+      "component": "pybind11_abseil",
+      "repository": "pybind/pybind11_abseil",
+      "ref": "v202402.0",
+      "commit": "70f8b693b3b70573ca785ef62d9f48054f45d786"
+    },
+    {
+      "component": "pybind11_protobuf",
+      "repository": "pybind/pybind11_protobuf",
+      "ref": "f02a2b7653bc50eb5119d125842a3870db95d251",
+      "commit": "f02a2b7653bc50eb5119d125842a3870db95d251"
+    },
+    {
+      "component": "highs",
+      "repository": "ERGO-Code/HiGHS",
+      "ref": "v1.12.0",
+      "commit": "755a8e027a99a8d4ecf153a8dde4b2a767cdf384"
+    },
+    {
+      "component": "soplex",
+      "repository": "scipopt/soplex",
+      "ref": "v8.0.0",
+      "commit": "2207cfb274dbce5c2644911dd621438535733607"
+    },
+    {
+      "component": "scip",
+      "repository": "scipopt/scip",
+      "ref": "v10.0.0",
+      "commit": "0c80fdd8e91d7d9f23c0c7a55b68884209d5f27c"
+    },
+    {
+      "component": "CoinUtils",
+      "repository": "Mizux/CoinUtils",
+      "ref": "cmake/2.11.12",
+      "commit": "6fc9606ffd6b2120ba211bfec6fe99ab3db5dfd6"
+    },
+    {
+      "component": "Osi",
+      "repository": "Mizux/Osi",
+      "ref": "cmake/0.108.11",
+      "commit": "ab3d7568384854c7c2bcd53f608c7b4b31a3f033"
+    },
+    {
+      "component": "Clp",
+      "repository": "Mizux/Clp",
+      "ref": "cmake/1.17.10",
+      "commit": "14ab15c7dfc59b6bdb5455d42a2d5e9e1ec28a75"
+    },
+    {
+      "component": "Cgl",
+      "repository": "Mizux/Cgl",
+      "ref": "cmake/0.60.9",
+      "commit": "75d3994612b992a48574d297479d8aede41611a2"
+    },
+    {
+      "component": "Cbc",
+      "repository": "Mizux/Cbc",
+      "ref": "cmake/2.10.12",
+      "commit": "61358ddd277362186547caff464f2266c26ced10"
+    }
+  ],
+  "eigen": {
+    "url": "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz",
+    "version": "3.4.0"
+  },
+  "onnxruntime": {
+    "version": "1.29.0",
+    "repository": "microsoft/onnxruntime",
+    "commit": "2e2543fbe9fae542f921d47a72d21d5a4ef0b710",
+    "core_license": "MIT",
+    "deps_url": "https://raw.githubusercontent.com/microsoft/onnxruntime/2e2543fbe9fae542f921d47a72d21d5a4ef0b710/cmake/deps.txt",
+    "deps_sha256": "a088d88e42772db22c353006a8053ad7bb5372912500ae76f7d52e22390a8fd1",
+    "eigen_url": "https://github.com/eigen-mirror/eigen/archive/1d8b82b0740839c0de7f1242a3585e3390ff5f33/eigen-1d8b82b0740839c0de7f1242a3585e3390ff5f33.zip",
+    "eigen_sha1": "05b19b49e6fbb91246be711d801160528c135e34",
+    "boundary": "The MIT core is referenced at its immutable official source commit, with installed LICENSE and complete ThirdPartyNotices preserved. The bundled MPL Eigen sources are mirrored using the exact upstream recipe checksum; no huge permissive core source mirror is required."
+  }
+}

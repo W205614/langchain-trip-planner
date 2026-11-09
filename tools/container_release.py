@@ -20,6 +20,7 @@ from container_sources import checksum
 
 REPOSITORY = 'W205614/langchain-trip-planner'
 SERVICES = ('agent', 'backend', 'frontend')
+CONFIG_FIELDS = ('User', 'WorkingDir', 'Entrypoint', 'Cmd', 'Env', 'Labels', 'ExposedPorts', 'Volumes', 'Healthcheck', 'StopSignal', 'Shell')
 
 
 def inspect(image):
@@ -37,6 +38,14 @@ def api(path):
 def seal(args):
     sources = json.loads((args.sources / 'manifest.json').read_bytes())
     root = Path(__file__).resolve().parents[1]
+    if subprocess.check_output(['git', 'status', '--porcelain'], cwd=root).strip():
+        raise RuntimeError('Seal requires a clean committed source')
+    for path in (args.sources / 'project').rglob('*'):
+        if path.is_file():
+            relative = path.relative_to(args.sources / 'project').as_posix()
+            committed = subprocess.check_output(['git', 'show', 'HEAD:' + relative], cwd=root)
+            if path.read_bytes().replace(b'\r\n', b'\n') != committed.replace(b'\r\n', b'\n'):
+                raise RuntimeError('Source material differs from the release commit: ' + relative)
     args.output.mkdir(parents=True, exist_ok=False)
     source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
     manifest = {'version': args.version, 'source': source, 'platform': 'linux/amd64', 'images': {}}
@@ -54,6 +63,8 @@ def seal(args):
     for service in SERVICES:
         base = getattr(args, service)
         metadata = inspect(base)
+        if (metadata['Os'], metadata['Architecture']) != ('linux', 'amd64'):
+            raise RuntimeError('This distribution supports Linux/amd64 only')
         if metadata['RootFS']['Layers'] != sources['images'][service]['layers']:
             raise RuntimeError('Sources describe a different base image: ' + service)
         tag = 'ghcr.io/w205614/langchain-trip-planner-' + service + ':' + args.version
@@ -81,7 +92,10 @@ def seal(args):
         entries = json.load(bundle.extractfile('manifest.json'))
         for service, image in manifest['images'].items():
             entry = next(e for e in entries if image['tag'] in e['RepoTags'])
-            image['config_digest'] = 'sha256:' + hashlib.sha256(bundle.extractfile(entry['Config']).read()).hexdigest()
+            raw = bundle.extractfile(entry['Config']).read()
+            image['config_digest'] = 'sha256:' + hashlib.sha256(raw).hexdigest()
+            configuration = json.loads(raw)['config']
+            image['configuration'] = {field: configuration.get(field) or None for field in CONFIG_FIELDS}
     manifest['archive'] = {'name': archive.name, 'sha256': checksum(archive)}
     (args.output / 'container-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({'source': source, 'version': args.version, 'images': tags, 'archive_bytes': archive.stat().st_size}))
@@ -94,14 +108,16 @@ def promote(args):
     source = os.environ['GITHUB_SHA']
     if manifest['source'] != source or manifest['version'] != args.version or set(manifest['images']) != set(SERVICES):
         raise RuntimeError('Candidate version/source mismatch')
+    if manifest['archive']['name'] != 'application-images-' + args.version + '.tar.gz':
+        raise RuntimeError('Unexpected image archive name')
     runs = api(f'repos/{REPOSITORY}/actions/runs?head_sha={source}&event=push&per_page=100')['workflow_runs']
     for workflow in ('.github/workflows/ci.yml', '.github/workflows/security.yml'):
         run = next(r for r in runs if r['path'] == workflow)
         if run['status'] != 'completed' or run['conclusion'] != 'success':
             raise RuntimeError('Required exact-commit workflow did not pass: ' + workflow)
     release = api(f'repos/{REPOSITORY}/releases/tags/{args.version}')
-    if not release['draft'] or release['target_commitish'] != source or release['prerelease']:
-        raise RuntimeError('Expected reviewed draft Release for this source')
+    if release['draft'] or release['target_commitish'] != source or release['prerelease']:
+        raise RuntimeError('Expected published stable Release with matching source materials')
     reference = api(f'repos/{REPOSITORY}/git/ref/tags/{args.version}')['object']
     if reference['type'] == 'tag':
         reference = api(f'repos/{REPOSITORY}/git/tags/{reference["sha"]}')['object']
@@ -111,7 +127,7 @@ def promote(args):
     for line in (args.directory / 'SHA256SUMS').read_text().splitlines():
         digest, name = line.split(maxsplit=1)
         name = name.lstrip('*')
-        if Path(name).name != name or not re.fullmatch(r'[a-f0-9]{64}', digest):
+        if Path(name).name != name or name in sums or not re.fullmatch(r'[a-f0-9]{64}', digest):
             raise RuntimeError('Invalid checksum entry')
         sums[name] = digest
     required = (manifest['archive']['name'], 'container-manifest.json', 'container-sources-' + args.version + '.zip')
@@ -142,7 +158,8 @@ def promote(args):
     for service, image in manifest['images'].items():
         expected = f'ghcr.io/w205614/langchain-trip-planner-{service}:{args.version}'
         actual = inspect(expected)
-        if image['tag'] != expected or actual['RootFS']['Layers'] != image['layers'] or actual['Id'] != image['config_digest']:
+        configuration = {field: actual['Config'].get(field) or None for field in CONFIG_FIELDS}
+        if image['tag'] != expected or actual['RootFS']['Layers'] != image['layers'] or configuration != image['configuration']:
             raise RuntimeError('Loaded image differs from the validated archive: ' + service)
         if actual['Config']['Labels']['org.opencontainers.image.revision'] != source:
             raise RuntimeError('Image source label differs from candidate')
@@ -155,7 +172,14 @@ def promote(args):
             registry = json.loads(raw)
             if registry['config']['digest'] != image['config_digest']:
                 raise RuntimeError('Registry config differs from validated image')
-            receipts['images'][service] = {'tag': image['tag'], 'digest': 'sha256:' + hashlib.sha256(raw).hexdigest(), 'config_digest': image['config_digest']}
+            subprocess.run(['docker', 'pull', image['tag']], check=True)
+            pulled = inspect(image['tag'])
+            repository = image['tag'].rsplit(':', 1)[0]
+            reference, = [r for r in pulled['RepoDigests'] if r.startswith(repository + '@sha256:')]
+            configuration = {field: pulled['Config'].get(field) or None for field in CONFIG_FIELDS}
+            if pulled['RootFS']['Layers'] != image['layers'] or configuration != image['configuration']:
+                raise RuntimeError('Pulled image differs from validated image')
+            receipts['images'][service] = {'tag': image['tag'], 'digest': reference.split('@', 1)[1], 'config_digest': image['config_digest']}
     finally:
         (args.directory / 'publication.json').write_text(json.dumps(receipts, indent=2) + '\n', encoding='utf-8')
         subprocess.run(['docker', 'logout', 'ghcr.io'], check=True)
