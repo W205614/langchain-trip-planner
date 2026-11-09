@@ -113,7 +113,7 @@ def promote(args):
     runs = api(f'repos/{REPOSITORY}/actions/runs?head_sha={source}&event=push&per_page=100')['workflow_runs']
     for workflow in ('.github/workflows/ci.yml', '.github/workflows/security.yml'):
         run = next(r for r in runs if r['path'] == workflow)
-        if run['status'] != 'completed' or run['conclusion'] != 'success':
+        if run['head_sha'] != source or run['status'] != 'completed' or run['conclusion'] != 'success':
             raise RuntimeError('Required exact-commit workflow did not pass: ' + workflow)
     release = api(f'repos/{REPOSITORY}/releases/tags/{args.version}')
     if release['draft'] or release['target_commitish'] != source or release['prerelease']:

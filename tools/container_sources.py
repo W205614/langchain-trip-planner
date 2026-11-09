@@ -276,7 +276,11 @@ def java_sources(collector, image):
         base = f'https://repo.maven.apache.org/maven2/{row["groupId"].replace(".", "/")}/{row["artifactId"]}/{row["version"]}/'
         name = row['artifactId'] + '-' + row['version']
         for suffix in ('.pom', '-sources.jar'):
-            collector.fetch(base + name + suffix, f'java/{row["groupId"]}/{name}{suffix}')
+            relative = f'java/{row["groupId"]}/{name}{suffix}'
+            digest = collector.fetch(base + name + suffix + '.sha1', relative + '.sha1').read_text().split()[0]
+            if not re.fullmatch(r'[a-f0-9]{40}', digest):
+                raise RuntimeError('Maven source checksum unavailable: ' + name)
+            collector.fetch(base + name + suffix, relative, digest, 'sha1')
     return {'release': release, 'packages': packages, 'bundled_modules': embedded_modules}
 
 
@@ -311,7 +315,10 @@ print(json.dumps(packages))
             repository, tag, commit = PYTHON_SOURCE_RELEASES[identity]
             row['source_release'] = {'repository': repository, 'tag': tag, 'commit': commit}
             if not row['notices']:
-                raise RuntimeError('Permissive core notices unavailable: ' + row['name'])
+                if identity != ('flatbuffers', '25.12.19'):
+                    raise RuntimeError('Permissive core notices unavailable: ' + row['name'])
+                license_file = collector.fetch(f'https://raw.githubusercontent.com/{repository}/{commit}/LICENSE', 'licenses/python/' + row['name'] + '-' + row['version'] + '/UPSTREAM-LICENSE.txt')
+                row['notices']['upstream/LICENSE'] = license_file.read_text()
             if row['name'].lower() == 'onnxruntime' and not any(name.endswith('/ThirdPartyNotices.txt') for name in row['notices']):
                 raise RuntimeError('ONNX Runtime bundled notices unavailable')
             row['source_release']['url'] = f'https://github.com/{repository}/tree/{commit}'
