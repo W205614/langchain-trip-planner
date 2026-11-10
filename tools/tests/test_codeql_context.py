@@ -15,6 +15,13 @@ NOW = datetime(2026, 10, 27, tzinfo=timezone.utc)
 
 
 class CodeqlContextTests(unittest.TestCase):
+    def setUp(self):
+        # Loading and assessing the same dated fixture must use the same clock.
+        clock = patch.object(context, 'datetime', wraps=datetime)
+        self.clock = clock.start()
+        self.addCleanup(clock.stop)
+        self.clock.now.return_value = NOW
+
     def fixture(self, root):
         source = root / 'business-backend/Reviewed.java'; source.parent.mkdir()
         source.write_bytes(b'class Reviewed {}\n'); source_hash = context.digest(source.read_bytes())
@@ -113,7 +120,11 @@ class CodeqlContextTests(unittest.TestCase):
 
     def test_source_tree_review_expiry_and_missing_proof_fail_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp); path, policy, _, source, _ = self.fixture(root)
+            root = Path(tmp); path, policy, _, source, directory = self.fixture(root)
+            self.clock.now.return_value = datetime(2026, 11, 10, tzinfo=timezone.utc)
+            with self.assertRaisesRegex(RuntimeError, 'expired during analysis'):
+                gate.sarif(directory, policy)
+            self.clock.now.return_value = NOW
             with patch.object(context, 'EXPECTED_ENTRY_COUNT', 1), patch.object(context, 'git', side_effect=self.fake_git):
                 with self.assertRaises(RuntimeError): context.load(path, root, datetime(2026, 11, 10, tzinfo=timezone.utc))
                 source.write_bytes(b'changed source\n')
