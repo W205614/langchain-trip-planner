@@ -1,0 +1,23 @@
+name: Verify public v0.1.3 acquisition
+on:
+  push:
+    branches: [codex/release-consumer-v013]
+permissions:
+  contents: read
+jobs:
+  consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Acquire and use published bytes anonymously
+        run: python -m tools.public_consumer_v013
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: public-consumer-receipt
+          path: consumer-evidence/
+          retention-days: 14
