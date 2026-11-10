@@ -1,0 +1,519 @@
+{
+  "repository": "W205614/langchain-trip-planner",
+  "workflow_run": 42815262129,
+  "workflow_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42815262129",
+  "source_revision": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+  "acquisition": "GitHub connector download_workflow_artifact; redirected ZIP bytes verified against GitHub artifact digest before bounded safe extraction",
+  "zip_safety": "No absolute/traversal/backslash/symlink members; bounded member count and sizes; resolved targets stay in dedicated extraction directory",
+  "artifacts": [
+    {
+      "language": "java",
+      "id": 13764355734,
+      "name": "security-codeql-java-kotlin",
+      "size_in_bytes": 116798,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13764355734",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13764355734/zip",
+      "expired": false,
+      "created_at": "2026-11-10T12:24:34Z",
+      "expires_at": "2026-11-24T12:24:33Z",
+      "updated_at": "2026-11-10T12:24:34Z",
+      "digest": "sha256:84e9107940d690ed56780e17b3692ffe494fd6f5fb85058734b085ca605d96b2",
+      "workflow_run": {
+        "id": 42815262129,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "codex/security-quality-20261110",
+        "head_sha": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5"
+      },
+      "verified_zip_sha256": "84e9107940d690ed56780e17b3692ffe494fd6f5fb85058734b085ca605d96b2",
+      "members": [
+        {
+          "path": "java.sarif",
+          "size": 1098742,
+          "sha256": "ca57e975178731866ec198bc696d828f2781106b5518ae7c9eb4bc1f1ab961a1"
+        },
+        {
+          "path": "sarif-summary.json",
+          "size": 117,
+          "sha256": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3"
+        }
+      ]
+    },
+    {
+      "language": "javascript",
+      "id": 13764223917,
+      "name": "security-codeql-javascript-typescript",
+      "size_in_bytes": 85448,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13764223917",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13764223917/zip",
+      "expired": false,
+      "created_at": "2026-11-10T12:23:56Z",
+      "expires_at": "2026-11-24T12:23:55Z",
+      "updated_at": "2026-11-10T12:23:56Z",
+      "digest": "sha256:8e00afb13fca4a88ec4183aa3c1d4c72703d31ec465fe2cfb56b2d51385f744f",
+      "workflow_run": {
+        "id": 42815262129,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "codex/security-quality-20261110",
+        "head_sha": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5"
+      },
+      "verified_zip_sha256": "8e00afb13fca4a88ec4183aa3c1d4c72703d31ec465fe2cfb56b2d51385f744f",
+      "members": [
+        {
+          "path": "javascript.sarif",
+          "size": 637496,
+          "sha256": "bffb443775ecd7a1aa8bf52e6078ca739da968f0e9e5d9601209f9448872f775"
+        },
+        {
+          "path": "sarif-summary.json",
+          "size": 117,
+          "sha256": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3"
+        }
+      ]
+    },
+    {
+      "language": "python",
+      "id": 13763389375,
+      "name": "security-codeql-python",
+      "size_in_bytes": 49913,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13763389375",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13763389375/zip",
+      "expired": false,
+      "created_at": "2026-11-10T12:24:13Z",
+      "expires_at": "2026-11-24T12:24:11Z",
+      "updated_at": "2026-11-10T12:24:13Z",
+      "digest": "sha256:e66313f9658e42a3e3847f5a79c32440b8c9e14a68d21293e0a964c02273270d",
+      "workflow_run": {
+        "id": 42815262129,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "codex/security-quality-20261110",
+        "head_sha": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5"
+      },
+      "verified_zip_sha256": "e66313f9658e42a3e3847f5a79c32440b8c9e14a68d21293e0a964c02273270d",
+      "members": [
+        {
+          "path": "python.sarif",
+          "size": 404340,
+          "sha256": "d796bd6191da81f9a8723004d6846c2ef29cb568800d214a11ec6f8d86c206a2"
+        },
+        {
+          "path": "sarif-summary.json",
+          "size": 117,
+          "sha256": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3"
+        }
+      ]
+    },
+    {
+      "language": "actions",
+      "id": 13763879117,
+      "name": "security-codeql-actions",
+      "size_in_bytes": 19786,
+      "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13763879117",
+      "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13763879117/zip",
+      "expired": false,
+      "created_at": "2026-11-10T12:23:38Z",
+      "expires_at": "2026-11-24T12:23:37Z",
+      "updated_at": "2026-11-10T12:23:38Z",
+      "digest": "sha256:586d6c18b0cc45ff0fadb576f55ad8954f99e7cac7fb1304bdd78af95128c630",
+      "workflow_run": {
+        "id": 42815262129,
+        "repository_id": 1346935542,
+        "head_repository_id": 1346935542,
+        "head_branch": "codex/security-quality-20261110",
+        "head_sha": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5"
+      },
+      "verified_zip_sha256": "586d6c18b0cc45ff0fadb576f55ad8954f99e7cac7fb1304bdd78af95128c630",
+      "members": [
+        {
+          "path": "actions.sarif",
+          "size": 168104,
+          "sha256": "00b609771b5b829a74c96d188c38ed6084db854b29d992e64d4d3d3b52c704a7"
+        },
+        {
+          "path": "sarif-summary.json",
+          "size": 117,
+          "sha256": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3"
+        }
+      ]
+    }
+  ],
+  "jobs": [
+    {
+      "id": 129826618772,
+      "name": "CodeQL / javascript-typescript",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42815262129,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    },
+    {
+      "id": 129826618808,
+      "name": "CodeQL / python",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42815262129,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    },
+    {
+      "id": 129826618866,
+      "name": "CodeQL / java-kotlin",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42815262129,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    },
+    {
+      "id": 129826618968,
+      "name": "CodeQL / actions",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42815262129,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Require fresh job-owned CodeQL output",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build Java for semantic analysis (no tests)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Fail on high/critical CodeQL results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Analyze and publish SARIF",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Initialize official CodeQL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    }
+  ],
+  "complete_decoded_logs_retained": ".codex-release-review-20261110/remote-8182d40/*-job.log",
+  "public_files": {
+    "actions-original-failure.log": "b2b00ce7dd1dd0bf9f9220aab0b942aba4b2a753cde61248452a2b0bc0f0bd87",
+    "actions-original-gate.json": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3",
+    "actions.sarif": "00b609771b5b829a74c96d188c38ed6084db854b29d992e64d4d3d3b52c704a7",
+    "java-original-failure.log": "c78b0adef861e64b56aba61a9b0097cc17a1930056ac0fb565926b6f01ef83ca",
+    "java-original-gate.json": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3",
+    "java.sarif": "ca57e975178731866ec198bc696d828f2781106b5518ae7c9eb4bc1f1ab961a1",
+    "javascript-original-failure.log": "7cb0935cb84f01265266e265f4e70d5d86c46c029a1379b349eaec760b9ba01a",
+    "javascript-original-gate.json": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3",
+    "javascript.sarif": "bffb443775ecd7a1aa8bf52e6078ca739da968f0e9e5d9601209f9448872f775",
+    "python-original-failure.log": "4e61133d25ea5406b09e9cb9169408c0669013f833262d98497ee5162ea6eda3",
+    "python-original-gate.json": "55afc49c7cf4729e16bc10262b996eb0ea2719c9d6f9099c00aae41625ba1ab3",
+    "python.sarif": "d796bd6191da81f9a8723004d6846c2ef29cb568800d214a11ec6f8d86c206a2",
+    "source-review.json": "ce817aa1014a8f19d59e106f343bc267201cfe0601a8eb40e61489be797369a5",
+    "README.md": "a12bdecfa5f298cb124a0424e882b73bb06e2fe9720123f0521f67a97fbd0ae3"
+  }
+}

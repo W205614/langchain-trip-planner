@@ -179,9 +179,14 @@ def apt_sources(collector, image, distribution, suites):
     return packages
 
 
-def alpine_recipe_sources(collector, origin, commit, recipe_sha256=None):
-    raw = collector.fetch(f'https://gitlab.alpinelinux.org/alpine/aports/-/archive/{commit}/aports-{commit}.tar.gz?path=main/{origin}',
-                          f'alpine/recipes/{origin}-{commit}.tar.gz', recipe_sha256, immutable=True)
+def alpine_recipe_sources(collector, origin, commit, recipe_sha256=None, recipe_archive=None):
+    url = f'https://gitlab.alpinelinux.org/alpine/aports/-/archive/{commit}/aports-{commit}.tar.gz?path=main/{origin}'
+    relative = f'alpine/recipes/{origin}-{commit}.tar.gz'
+    raw = collector.fetch(recipe_archive.as_uri() if recipe_archive else url,
+                          relative, recipe_sha256, immutable=True)
+    if recipe_archive:
+        collector.downloads[relative].update(url=url, acquisition='vendored_project_input',
+                                             project_path='deploy/images/busybox-backport/' + recipe_archive.name)
     with tarfile.open(raw) as archive:
         files = {Path(member.name).name: archive.extractfile(member).read() for member in archive.getmembers() if member.isfile()}
     recipe = files['APKBUILD'].decode()
@@ -237,10 +242,12 @@ def busybox_provenance(collector, image, service, packages):
         raise RuntimeError('Unexpected installed downstream BusyBox package identity')
     path = '/usr/local/share/tripplanner/busybox-backport/'
     provenance = {name: docker(image, 'cat', path + name) for name in
-                  ('source.lock', 'CVE-2025-60876.patch', 'APKBUILD', 'runtime-sha256.txt', 'package-sha256.txt')}
-    for name in ('source.lock', 'CVE-2025-60876.patch'):
+                  ('source.lock', 'CVE-2025-60876.patch', 'aports-busybox.tar.gz', 'APKBUILD', 'runtime-sha256.txt', 'package-sha256.txt')}
+    for name in ('source.lock', 'CVE-2025-60876.patch', 'aports-busybox.tar.gz'):
         if provenance[name] != (canonical / name).read_bytes():
             raise RuntimeError('Installed BusyBox source provenance differs from the project: ' + name)
+    if hashlib.sha256(provenance['aports-busybox.tar.gz']).hexdigest() != lock['APKBUILD_SHA256']:
+        raise RuntimeError('Vendored BusyBox recipe archive checksum mismatch')
     docker(image, 'sha256sum', '-c', path + 'runtime-sha256.txt')
     destination = collector.root / 'runtime-provenance' / service / 'busybox'
     destination.mkdir(parents=True, exist_ok=True)
@@ -258,7 +265,10 @@ def alpine_sources(collector, image, service):
         raise RuntimeError('Alpine package lacks an immutable source recipe')
     origins.add(('busybox', lock['APKBUILD_COMMIT']))
     for origin, commit in sorted(origins):
-        files = alpine_recipe_sources(collector, origin, commit, lock['APKBUILD_SHA256'] if origin == 'busybox' else None)
+        files = alpine_recipe_sources(collector, origin, commit,
+                                      lock['APKBUILD_SHA256'] if origin == 'busybox' else None,
+                                      Path(__file__).resolve().parents[1] / 'deploy/images/busybox-backport/aports-busybox.tar.gz'
+                                      if origin == 'busybox' else None)
         if origin == 'busybox':
             verify_busybox_recipe(files['APKBUILD'].decode(), provenance['APKBUILD'].decode(),
                                   provenance['CVE-2025-60876.patch'], lock['PACKAGE_VERSION'])

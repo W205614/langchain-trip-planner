@@ -1,0 +1,24 @@
+{
+  "previous_image_id": "sha256:73b01d726fe6c1581400ea58a2d0373a1dcf6c639ec257d9214f4c8c3e18b3d2",
+  "current_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "package_versions_changed": {},
+  "common_file_hash_changes": {
+    "/usr/local/lib/python3.13/poplib.py": {
+      "before": "527e714523264093910a0a0b1a55c6583f952835c89061537fc40ad98c347056",
+      "after": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f"
+    },
+    "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": {
+      "before": "58030a9d1143c36db3b73aa8a02da5aacdbc461f685e7f27e7da53eb634bf154",
+      "after": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e"
+    },
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": {
+      "before": "82f0cd65634f89fe962b48a8d946a0c9dad0ec8b71cb60d15057aa4625917693",
+      "after": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+    }
+  },
+  "removed_parser_confirmed": true,
+  "new_elf_count": 968,
+  "parse_errors": 0,
+  "full_regression": "807 passed, 1 skipped, 50 subtests passed; skipped test is not counted as pass",
+  "full_regression_log_sha256": "268732816b17dcd63b31622d96452fb1f7fba7049828a8cdae50b2a2e18db261"
+}

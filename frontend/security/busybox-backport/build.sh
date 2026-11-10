@@ -11,9 +11,8 @@ fetch_source() {
         test "$attempt" -lt 3 || return 1
     done
 }
-fetch_source "https://gitlab.alpinelinux.org/alpine/aports/-/archive/$APKBUILD_COMMIT/aports-$APKBUILD_COMMIT.tar.gz?path=main/busybox" /tmp/recipe.tar.gz
-echo "$APKBUILD_SHA256  /tmp/recipe.tar.gz" | sha256sum -c -
-tar -xzf /tmp/recipe.tar.gz --strip-components=3 -C /work/main/busybox
+echo "$APKBUILD_SHA256  /trip-busybox/aports-busybox.tar.gz" | sha256sum -c -
+tar -xzf /trip-busybox/aports-busybox.tar.gz --strip-components=3 -C /work/main/busybox
 fetch_source "https://busybox.net/downloads/busybox-$UPSTREAM_VERSION.tar.bz2" "/var/cache/distfiles/busybox-$UPSTREAM_VERSION.tar.bz2"
 echo "$UPSTREAM_SHA256  /var/cache/distfiles/busybox-$UPSTREAM_VERSION.tar.bz2" | sha256sum -c -
 cd /work/main/busybox
@@ -46,6 +45,7 @@ for name in busybox busybox-binsh ssl_client; do
     cp "$package" /out/packages/
 done
 cp /root/.abuild/*.pub /out/keys/
-cp APKBUILD /trip-busybox/source.lock /trip-busybox/CVE-2025-60876.patch /out/provenance/
+cp APKBUILD /trip-busybox/source.lock /trip-busybox/CVE-2025-60876.patch \
+    /trip-busybox/aports-busybox.tar.gz /out/provenance/
 sha256sum /out/packages/*.apk > /out/provenance/package-sha256.txt
 cp /trip-busybox/install.sh /out/install.sh

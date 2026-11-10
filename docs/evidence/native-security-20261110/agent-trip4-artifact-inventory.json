@@ -1,0 +1,890 @@
+{
+  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "distribution": "debian",
+  "release": "13",
+  "architecture": "amd64",
+  "packages": {
+    "adduser": "3.152",
+    "apt": "3.0.4",
+    "base-files": "13.8+deb13u7",
+    "base-passwd": "3.6.7",
+    "bash": "5.2.37-2+b10",
+    "bsdutils": "1:2.41.5-0+deb13u1+trip2",
+    "ca-certificates": "20250419+deb13u1",
+    "coreutils": "9.7-3",
+    "dash": "0.5.12-12+trip1",
+    "debconf": "1.5.91",
+    "debian-archive-keyring": "2025.1",
+    "debianutils": "5.23.2",
+    "diffutils": "1:3.10-4",
+    "dpkg": "1.22.22",
+    "findutils": "4.10.0-3",
+    "gcc-14-base": "14.2.0-19",
+    "grep": "3.11-4",
+    "gzip": "1.13-1+deb13u1",
+    "hostname": "3.25",
+    "init-system-helpers": "1.69~deb13u1",
+    "libacl1": "2.4.0-1",
+    "libapt-pkg7.0": "3.0.4",
+    "libattr1": "1:2.5.2-3",
+    "libaudit-common": "1:4.0.2-2+deb13u1",
+    "libaudit1": "1:4.0.2-2+deb13u1",
+    "libblkid1": "2.41.5-0+deb13u1+trip2",
+    "libbsd0": "0.12.2-2",
+    "libbz2-1.0": "1.0.8-6",
+    "libc-bin": "2.41-12+deb13u4+trip4",
+    "libc6": "2.41-12+deb13u4+trip4",
+    "libcap-ng0": "0.8.5-4+b1",
+    "libcap2": "1:2.75-10+deb13u1+b3",
+    "libcrypt1": "1:4.4.38-1",
+    "libdb5.3t64": "5.3.28+dfsg2-9",
+    "libdebconfclient0": "0.280",
+    "libffi8": "3.4.8-2",
+    "libgcc-s1": "14.2.0-19",
+    "libgdbm6t64": "1.24-2",
+    "libgmp10": "2:6.3.0+dfsg-3",
+    "libhogweed6t64": "3.10.1-1",
+    "liblastlog2-2": "2.41.5-0+deb13u1+trip2",
+    "liblz4-1": "1.10.0-4",
+    "liblzma5": "5.8.1-1+deb13u2",
+    "libmd0": "1.1.0-2+b1",
+    "libmount1": "2.41.5-0+deb13u1+trip2",
+    "libncursesw6": "6.5+20250216-2",
+    "libnettle8t64": "3.10.1-1",
+    "libpam-modules": "1.7.0-5+trip1",
+    "libpam-modules-bin": "1.7.0-5+trip1",
+    "libpam-runtime": "1.7.0-5",
+    "libpam0g": "1.7.0-5+trip1",
+    "libpcre2-8-0": "10.46-1~deb13u3",
+    "libreadline8t64": "8.2-6",
+    "libseccomp2": "2.6.0-2",
+    "libselinux1": "3.8.1-1",
+    "libsemanage-common": "3.8.1-1",
+    "libsemanage2": "3.8.1-1",
+    "libsepol2": "3.8.1-1",
+    "libsmartcols1": "2.41.5-0+deb13u1+trip2",
+    "libsqlite3-0": "3.54.1-2",
+    "libssl3t64": "3.5.7-1~deb13u3",
+    "libstdc++6": "14.2.0-19+trip2",
+    "libsystemd0": "257.13-1~deb13u1",
+    "libtinfo6": "6.5+20250216-2",
+    "libudev1": "257.13-1~deb13u1",
+    "libuuid1": "2.41.5-0+deb13u1+trip2",
+    "libxxhash0": "0.8.3-2",
+    "libzstd1": "1.5.7+dfsg-1",
+    "login": "1:4.16.0-2+really2.41.5-0+deb13u1+trip2",
+    "login.defs": "1:4.17.4-2",
+    "mawk": "1.3.4.20250131-1",
+    "mount": "2.41.5-0+deb13u1+trip2",
+    "ncurses-base": "6.5+20250216-2",
+    "ncurses-bin": "6.5+20250216-2",
+    "netbase": "6.5",
+    "openssl": "3.5.7-1~deb13u3",
+    "openssl-provider-legacy": "3.5.7-1~deb13u3",
+    "passwd": "1:4.17.4-2",
+    "perl-base": "5.40.1-6+deb13u1",
+    "readline-common": "8.2-6",
+    "sed": "4.9-2+deb13u1",
+    "sqv": "1.3.0-3+b2",
+    "sysvinit-utils": "3.14-4",
+    "tar": "1.35+dfsg-3.1",
+    "tzdata": "2026f-0+deb13u1",
+    "util-linux": "2.41.5-0+deb13u1+trip2",
+    "zlib1g": "1:1.3.dfsg+really1.3.2-4"
+  },
+  "file_sha256": {
+    "/app/app/__init__.py": "cdc9dc78066510f68de15bedc37a62f96bb3d26238c4918fb0571a4535d65e21",
+    "/app/app/agent_api/__init__.py": "4cfcdeb0bfb086a471d297be25f31339e96a230d829eccbdd1922454bd83fd3d",
+    "/app/app/agent_api/business_client.py": "0c6944a636b1e4a4e09177bced44e295068930988795a873f7cf90d327f45c7a",
+    "/app/app/agent_api/contracts.py": "92cc2dd783c5b9432ca227c9aeaa760e8c3c374260b9e5899df8649b5b7ecaee",
+    "/app/app/agent_api/extraction.py": "8abf35f1824f5b707091e00becfafc4df86bd0f4c7a3b5ac0bb1347889b68915",
+    "/app/app/agent_api/index_versions.py": "81e9a4127a05c6bf2004ca6ceb7f39d9a6e3e5f21ed18456b0fdd87116320956",
+    "/app/app/agent_api/indexing.py": "14ce03362fad3c26b04e08e04c4a8ebc5df9fd8671eeb18f53df1ebdd648ce24",
+    "/app/app/agent_api/main.py": "e4f68324b0937fefbbf9fb3591008060bd78fe205abd0d8a479ad2271dfdd38b",
+    "/app/app/agent_api/rebuild.py": "df42234773f90f4fde20f99d52a94269d7729ecdc5ea7bcf9365fab58c5373ec",
+    "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
+    "/app/app/agents/__init__.py": "25532145a400564d3bf9bff5d0d52963a47eab5724d642151a682dc4b25ae3f3",
+    "/app/app/agents/candidates.py": "781ad9948ee57ee648b834a66a97bdbe3db83424259af5a3b5e33b19f3fe3cde",
+    "/app/app/agents/data_nodes.py": "d41c352e3cf40e755195d7063b73a46ed37e10005938308c08b921237f9646f5",
+    "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
+    "/app/app/agents/state.py": "5ff7ca94ac0d37f62d1df476c72a81a82d340acc884acc724048f9777454285f",
+    "/app/app/agents/trip_planner_agent.py": "98c9a78589ad5f19fd25054be6900da360f889118ba1f01f6b54bc1fc0f06f02",
+    "/app/app/config.py": "7ec9cc14468d40f31a75301a62c85ef1739cd7eb91f6bad3ef1968e67812ccd5",
+    "/app/app/core/__init__.py": "3a3e5fba992826e80faecc8d506c37cddbed6cac0b1d19ae1599e8a2c37dca5b",
+    "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
+    "/app/app/core/logging.py": "b679108282b1db84f699f0da5980f8f414eb0a4168543ce642e6d96b23ee26dc",
+    "/app/app/core/rag_metrics.py": "b9c9e5a5d565fd3b4aca7aa2d5cf5b1a294a6c11b85aa1aac8bbee4fec86120f",
+    "/app/app/core/trip_metrics.py": "d0de78eded33f5fb7461f9097920b4e99ad704c8a4daf29da2325122cf390215",
+    "/app/app/evals/__init__.py": "7ed5d2a9fbea712aac840a20a684f314da3374151775a492c2ad679d7afed00c",
+    "/app/app/evals/constraint_benchmark.py": "9388c7544c719a58a46d127193ec6459f7a60cb5c808abb14027567d07b20543",
+    "/app/app/evals/planning_benchmark.py": "4bc61adc36de4b86da17fd07936b610db00239c5ec7e4fb875f517af5ed3fdec",
+    "/app/app/evals/rag_benchmark.py": "be09264c6a037ad7a13d6fc80ed830c9f20264ca0ca672cff1256dfb2c288ee5",
+    "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
+    "/app/app/models/__init__.py": "48c31dc7aadd8cf05ab0dd9c671b06921986ea78baf27297888f82354cac75a2",
+    "/app/app/models/planning.py": "9718b8ad99245f05c4827ee6278902efe81ac131ed769737c18a4da1b76c3265",
+    "/app/app/models/schemas.py": "f2708dc73a76284f84d54a6ad39fa8bba960e30bf11feb1f9c8d26144db72701",
+    "/app/app/services/__init__.py": "44ee0d2fb7705f310fc341befbf1c910303ccbc7db5707d162b764a244e1ef28",
+    "/app/app/services/agent_paths.py": "3ff1bb47a9c2ade8fc80e756bc52c0938caa7d468ad95615eb153d3aed4b9e8a",
+    "/app/app/services/amap_mcp_client.py": "23104df00aba70fc4b626cb61e78b72342484f89386c5074a305bf8fe7c21d00",
+    "/app/app/services/amap_mcp_service.py": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+    "/app/app/services/amap_service.py": "70c0aead4c1ea4bcc008c17e8eb7aef6e4a09593ff9e630a4410462978538f65",
+    "/app/app/services/assistant_intent.py": "9fdaf96e4d43f2c6c93e0a61dfeac08e7779d17e53fd39f4a9dd5012c7217d9e",
+    "/app/app/services/attraction_names.py": "4b8adbb18abeababc3976374c638e97e5dc6722a7eb4fd454908db454f01a973",
+    "/app/app/services/call_budget.py": "e4d11675852eaf9fb6ef9d1b9d80927fb2601bad5e191f34170d987cfdac6646",
+    "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
+    "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
+    "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
+    "/app/app/services/durable_execution.py": "d338fcd6941252566a8de10521e0f080daaec59c6935da75692f087da247d79c",
+    "/app/app/services/embedding_identity.py": "9a9496194f4998c9ce7316963afb95f96ae0ab4b2d9ca7cc67effd59bb386739",
+    "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+    "/app/app/services/execution.py": "5618051ae1a86e598b6ea4e3025fe47e1417e7ff36d8439f6f2401f47d19a664",
+    "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
+    "/app/app/services/llm_service.py": "48063f496467eb7c2919b8ec6be44fc89827ab2155c20aed5fc5d56953d49812",
+    "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+    "/app/app/services/planning_constraints.py": "c43160921fbac18dcbdd770142dfae55f1890fbfec03540601cf6a639b7d0a74",
+    "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
+    "/app/app/services/poi_photos.py": "adb57d7f8b44f384d6a110d80777aa8be3c885d7999577ef832dd58ab96cdb87",
+    "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
+    "/app/app/services/rag_service.py": "b911f23849bb4ef9bb342771314d3607e3c34fa5ed15f301a6500d2b3fa18e95",
+    "/app/app/services/research_answer.py": "d011865f2303c7c2546b87c8268803d0c69335cd9ab4221a527c33819815e1d0",
+    "/app/app/services/research_evidence.py": "e25365a9f34a15ae88d0aaf0cb834106f32e67bfc2bec838c38bb6d121712f04",
+    "/app/app/services/result_policy.py": "a779d62b4a67b2f1b46c09dd310b4d7626d27dee89d8fa06c13459760f955871",
+    "/app/app/services/route_facts.py": "f3ecc459a21e4ada7ff1762d4e186c2510b2e105edbfc9e7e07d19340f067dbc",
+    "/app/app/services/time_planner.py": "8c3e4d86c6eb1a8eb417eaa79f24fc0df7b4e62171170cfdb237673fbe5ea384",
+    "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
+    "/etc/login.defs": "fbb7c9b77f020799f40dad0c6ec27f6b441120447ded71202b7cf79a6d634077",
+    "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/usr/bin/dash": "8d8b745cc8b090576a1ab0767497c8d65b44f7053a4f7e2f6b5be68de0cbadcc",
+    "/usr/lib/os-release": "e249e69c32d81350fdd6b05ac5575255f14e380ba14b8454acea14e49f088bfa",
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8",
+    "/usr/lib/x86_64-linux-gnu/libacl.so.1.2.2400": "f8bae3fdb384de06c68660b7b67e7b76d23692a38a31b8da115178a921e3d18e",
+    "/usr/lib/x86_64-linux-gnu/libattr.so.1.1.2502": "126e29f16f4a6da5cad9a0d9cf1cc817089ee41645a8581d19691a1b9a581172",
+    "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0": "25e027e41f9e0d29817e7971ffe8f3223996be30e14eb674443eff830ae020b8",
+    "/usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4": "c630f057efedc12f848710d71f40283895591e5b4608539f387895c64e0553da",
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": "30c61ab012a4241bed033725a09b61f5fdd3bb7df95ee852d0b096520524c7af",
+    "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
+    "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c",
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
+    "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "225ceb839db2c1dd484cfcaa5ef9fbdd429eb1d5f1e0c39fbd50150bca5fc7bc",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": "591a424c0f5c8b5c8f034c37e5c97a43c4435f5f452cc5f2c78fc44a8609137c",
+    "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+    "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
+    "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9",
+    "/usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0": "110b0403118c0b2f6a66277ac9a08010ad8dd0295a2ee15ecd9f6d870fe2dca8",
+    "/usr/lib/x86_64-linux-gnu/security/pam_userdb.so": "1e7620d4906999b94cbeb46727e3e8ab5880aed3a2b4bd417a96015f287287f7",
+    "/usr/local/bin/python3.13": "73efccb6aa17a74869ef6f11e0a0118b0f27693ea85f36c7a3758c307fd8914f",
+    "/usr/local/lib/libpython3.13.so.1.0": "0ac8cea8da81f9cf63f7059439b1c3be107de0b39b34a96510af5f2a9b2d6235",
+    "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
+    "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
+    "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+    "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
+    "/usr/local/lib/python3.13/pkgutil.py": "44300bc77f6f52ef2ad74d26e5053309c04f49eaa91c099356eb61426cde504f",
+    "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+    "/usr/local/lib/python3.13/re/__init__.py": "dbe158a677c6aaacf717ea2abc23c56233453d38024aef75b7c3d93612cabb93",
+    "/usr/local/lib/python3.13/site-packages/cryptography/fernet.py": "dac2c23ce99e8e13956ee75c4b742c3353c8b876f109e45c46d5a49dc437982a",
+    "/usr/local/lib/python3.13/site-packages/dateutil/zoneinfo/__init__.py": "298834a6d842323729e4c5d21220499f79cc8d978d65abfbae5270e7eb73d52e",
+    "/usr/local/lib/python3.13/site-packages/google/protobuf/json_format.py": "7b386cc56f648154f744b2d1b38f44e94dba27c8c33980002e158c235443c7a7",
+    "/usr/local/lib/python3.13/site-packages/jwt/utils.py": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+    "/usr/local/lib/python3.13/site-packages/kubernetes/config/kube_config.py": "d3d764a18c70338bc9364db6664d9960ece21e76d4dd1b5dfe2e138034dc025c",
+    "/usr/local/lib/python3.13/site-packages/kubernetes/stream/ws_client.py": "e1ac25931b2d61e84a853b8e8b70d9772abe3be9e9e82d39292d245e04a1b3fe",
+    "/usr/local/lib/python3.13/site-packages/langchain_openai/chatgpt_oauth.py": "f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da",
+    "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
+    "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
+    "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410",
+    "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e",
+    "/usr/local/share/tripplanner/dash-backport/dash-sha256.txt": "9ab0d4fe7064299ed7e6e59c029d795d0ff4417e8029bacf25eff3f24166ae9e",
+    "/usr/local/share/tripplanner/pam-backport/pam-userdb-sha256.txt": "17218e0a6ba56a278ad44787f5a08495e0e8c8955aa9df4d4ecc3cc079712eb0",
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+    "/var/lib/dpkg/status": "448c8c2ea3ef9d8a6b43d5faf35f6c64493461baeabcb69c1eff9f83526256ed",
+    "/var/log/btmp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_lf_sha256": {
+    "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
+    "/app/app/agent_api/__init__.py": "20a67725888e796306f2f6558e2f65e83c4f8ed63e5c2f29358c7049f4861064",
+    "/app/app/agent_api/business_client.py": "fad3370460e95191ca4d2e957ddb73958eca82c4d8b84c5184aa1dcbc9e2a8e9",
+    "/app/app/agent_api/contracts.py": "61a3e87e2529c9da585d477204ed370604cdd1caebfeda01fd0562cf1812e7a3",
+    "/app/app/agent_api/extraction.py": "f62ff5d35ffa546b5a0ad4eac120756041c75274521d1dffe11b69414480c61d",
+    "/app/app/agent_api/index_versions.py": "18830d400a35be133ab475a0b400b08da2d14786a8c9818c52438dc0326fd50a",
+    "/app/app/agent_api/indexing.py": "3ba50918edf7538f5b4eca3e89b87e5851b89cdd5592632d1de3e41897a6d23e",
+    "/app/app/agent_api/main.py": "d2ad33f656bb6c3aa51409352bb9c652117fc6ba6b3ebf2e31fe00a8902cc5a2",
+    "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
+    "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
+    "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
+    "/app/app/agents/candidates.py": "781ad9948ee57ee648b834a66a97bdbe3db83424259af5a3b5e33b19f3fe3cde",
+    "/app/app/agents/data_nodes.py": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+    "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
+    "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
+    "/app/app/agents/trip_planner_agent.py": "190eb469e6c0d3bc36d6d4a55fe54dd6b5415355529bc1a014ae6d2db5d19b3d",
+    "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
+    "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
+    "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
+    "/app/app/core/logging.py": "b679108282b1db84f699f0da5980f8f414eb0a4168543ce642e6d96b23ee26dc",
+    "/app/app/core/rag_metrics.py": "a171f227b13689a58195fce32d7ffe36a2fd69ac8f9dfaf8c1f33254075d86d8",
+    "/app/app/core/trip_metrics.py": "d0de78eded33f5fb7461f9097920b4e99ad704c8a4daf29da2325122cf390215",
+    "/app/app/evals/__init__.py": "30c94bf8a1a3fd7a9e85838dae1938690cb17b42a06eb39593f0c146c01a49ff",
+    "/app/app/evals/constraint_benchmark.py": "9388c7544c719a58a46d127193ec6459f7a60cb5c808abb14027567d07b20543",
+    "/app/app/evals/planning_benchmark.py": "4bc61adc36de4b86da17fd07936b610db00239c5ec7e4fb875f517af5ed3fdec",
+    "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
+    "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
+    "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
+    "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
+    "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+    "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
+    "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
+    "/app/app/services/amap_mcp_client.py": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+    "/app/app/services/amap_mcp_service.py": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+    "/app/app/services/amap_service.py": "abd45369ebe655c436521f3df0b6fc949f3088b6657259fae640b57a662acb72",
+    "/app/app/services/assistant_intent.py": "43d2bc7fd56a43b827f91e3dce741383ccfbc9ee4e00c31799c1e9f910b94552",
+    "/app/app/services/attraction_names.py": "4b8adbb18abeababc3976374c638e97e5dc6722a7eb4fd454908db454f01a973",
+    "/app/app/services/call_budget.py": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+    "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
+    "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
+    "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
+    "/app/app/services/durable_execution.py": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+    "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
+    "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+    "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
+    "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
+    "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
+    "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+    "/app/app/services/planning_constraints.py": "8941fd58c405ce12370ff078eebb6bf5838fa04b0cacdb397228d5a99bf158c8",
+    "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
+    "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
+    "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
+    "/app/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
+    "/app/app/services/research_answer.py": "d011865f2303c7c2546b87c8268803d0c69335cd9ab4221a527c33819815e1d0",
+    "/app/app/services/research_evidence.py": "e25365a9f34a15ae88d0aaf0cb834106f32e67bfc2bec838c38bb6d121712f04",
+    "/app/app/services/result_policy.py": "87b082919e8fc4ccfa480bed8c141dc455419ff5ae9e1972c51572b282c65127",
+    "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
+    "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+    "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
+    "/etc/login.defs": "fbb7c9b77f020799f40dad0c6ec27f6b441120447ded71202b7cf79a6d634077",
+    "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/usr/bin/dash": "8d8b745cc8b090576a1ab0767497c8d65b44f7053a4f7e2f6b5be68de0cbadcc",
+    "/usr/lib/os-release": "e249e69c32d81350fdd6b05ac5575255f14e380ba14b8454acea14e49f088bfa",
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "534e4b3d829a0a3731d1d229299a8646d8f93ce78878f9758fe0c0cf54cee6eb",
+    "/usr/lib/x86_64-linux-gnu/libacl.so.1.2.2400": "f8bae3fdb384de06c68660b7b67e7b76d23692a38a31b8da115178a921e3d18e",
+    "/usr/lib/x86_64-linux-gnu/libattr.so.1.1.2502": "126e29f16f4a6da5cad9a0d9cf1cc817089ee41645a8581d19691a1b9a581172",
+    "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0": "0178a05dc92d69e1e3520b83351e40bd535319be41e7685122e29fc9a984125d",
+    "/usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4": "c630f057efedc12f848710d71f40283895591e5b4608539f387895c64e0553da",
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": "7f8c010d8bd004074f3d6daa96bd52f52f6f4eacb104dbb8c9f4e081853429a6",
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": "95890b134308f6ec321a75d7e51c55eb01965da4a33fb01585e3557a689e32e8",
+    "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "225a8524ec1e95e62c9d9f998807011852a24bdc81858d1fcfdd8867da390826",
+    "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c",
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
+    "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "6bb3a7fc92ad7d7d9d5803749b0a553c3a243f63d1efa8b5991cc94352a8db3b",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": "e9bb95b9dd9714d505bc0f44652585b03954ee53f31d9958103eda140b73c4ee",
+    "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "3ae751fe7ec791c4a6584f2060fd68c9ebb54459a25e21c9ad3896a04b87a113",
+    "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "c06ba9d72d41f53264e368494f3e5de5ac2c02a0075b697c123b842d0d55b8d7",
+    "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "e60b5563f4489cf2f88a0b3bf9d44a13c98eec6ea47e84fc55307d0e35f50f2e",
+    "/usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0": "110b0403118c0b2f6a66277ac9a08010ad8dd0295a2ee15ecd9f6d870fe2dca8",
+    "/usr/lib/x86_64-linux-gnu/security/pam_userdb.so": "1e7620d4906999b94cbeb46727e3e8ab5880aed3a2b4bd417a96015f287287f7",
+    "/usr/local/bin/python3.13": "73efccb6aa17a74869ef6f11e0a0118b0f27693ea85f36c7a3758c307fd8914f",
+    "/usr/local/lib/libpython3.13.so.1.0": "86b48307042693f07e882855f95108675b0a85f03713e6ad3490f56dcb426785",
+    "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
+    "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
+    "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+    "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "89ab6c41c59f0e7406bea932f7af4e0cb7707e228d822d45cbf69619cb59dec8",
+    "/usr/local/lib/python3.13/pkgutil.py": "44300bc77f6f52ef2ad74d26e5053309c04f49eaa91c099356eb61426cde504f",
+    "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+    "/usr/local/lib/python3.13/re/__init__.py": "dbe158a677c6aaacf717ea2abc23c56233453d38024aef75b7c3d93612cabb93",
+    "/usr/local/lib/python3.13/site-packages/cryptography/fernet.py": "dac2c23ce99e8e13956ee75c4b742c3353c8b876f109e45c46d5a49dc437982a",
+    "/usr/local/lib/python3.13/site-packages/dateutil/zoneinfo/__init__.py": "298834a6d842323729e4c5d21220499f79cc8d978d65abfbae5270e7eb73d52e",
+    "/usr/local/lib/python3.13/site-packages/google/protobuf/json_format.py": "7b386cc56f648154f744b2d1b38f44e94dba27c8c33980002e158c235443c7a7",
+    "/usr/local/lib/python3.13/site-packages/jwt/utils.py": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+    "/usr/local/lib/python3.13/site-packages/kubernetes/config/kube_config.py": "d3d764a18c70338bc9364db6664d9960ece21e76d4dd1b5dfe2e138034dc025c",
+    "/usr/local/lib/python3.13/site-packages/kubernetes/stream/ws_client.py": "e1ac25931b2d61e84a853b8e8b70d9772abe3be9e9e82d39292d245e04a1b3fe",
+    "/usr/local/lib/python3.13/site-packages/langchain_openai/chatgpt_oauth.py": "f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da",
+    "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
+    "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
+    "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410",
+    "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e",
+    "/usr/local/share/tripplanner/dash-backport/dash-sha256.txt": "9ab0d4fe7064299ed7e6e59c029d795d0ff4417e8029bacf25eff3f24166ae9e",
+    "/usr/local/share/tripplanner/pam-backport/pam-userdb-sha256.txt": "17218e0a6ba56a278ad44787f5a08495e0e8c8955aa9df4d4ecc3cc079712eb0",
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+    "/var/lib/dpkg/status": "448c8c2ea3ef9d8a6b43d5faf35f6c64493461baeabcb69c1eff9f83526256ed",
+    "/var/log/btmp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "file_metadata": {
+    "/app/app/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/business_client.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/contracts.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/extraction.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/index_versions.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/indexing.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/main.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/rebuild.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agent_api/research.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agents/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agents/candidates.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agents/data_nodes.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agents/prompts.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agents/state.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/agents/trip_planner_agent.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/config.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/core/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/core/exceptions.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/core/logging.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/core/rag_metrics.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/core/trip_metrics.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/evals/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/evals/constraint_benchmark.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/evals/planning_benchmark.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/evals/rag_benchmark.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/evals/scenario_contracts.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/models/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/models/planning.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/models/schemas.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/__init__.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/agent_paths.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/amap_mcp_client.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/amap_mcp_service.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/amap_service.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/assistant_intent.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/attraction_names.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/call_budget.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/chroma_boundary.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/coordination.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/dataset_identity.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/durable_execution.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/embedding_identity.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/eval_budget.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/execution.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/knowledge_chunks.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/llm_service.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/plan_quality.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/planning_constraints.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/planning_semantics.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/poi_photos.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/rag_runtime.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/rag_service.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/research_answer.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/research_evidence.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/result_policy.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/route_facts.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/time_planner.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/app/app/services/travel_facts.py": {
+      "mode": 493,
+      "uid": 1000,
+      "gid": 1000
+    },
+    "/etc/login.defs": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/etc/subgid": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/etc/subuid": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/bin/dash": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/os-release": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libacl.so.1.2.2400": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libattr.so.1.1.2502": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/lib/x86_64-linux-gnu/security/pam_userdb.so": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/bin/python3.13": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/libpython3.13.so.1.0": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/base64.py": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/glob.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/http/client.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/pkgutil.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/poplib.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/re/__init__.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/cryptography/fernet.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/dateutil/zoneinfo/__init__.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/google/protobuf/json_format.py": {
+      "mode": 493,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/jwt/utils.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/kubernetes/config/kube_config.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/kubernetes/stream/ws_client.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/langchain_openai/chatgpt_oauth.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/pydantic/types.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/share/tripplanner/dash-backport/dash-sha256.txt": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/share/tripplanner/pam-backport/pam-userdb-sha256.txt": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/var/lib/dpkg/status": {
+      "mode": 420,
+      "uid": 0,
+      "gid": 0
+    },
+    "/var/log/btmp": {
+      "mode": 432,
+      "uid": 0,
+      "gid": 43
+    }
+  },
+  "absent_paths": [
+    "/usr/bin/apt-key",
+    "/usr/bin/bzip2recover",
+    "/usr/bin/chfn",
+    "/usr/bin/chgrp",
+    "/usr/bin/chown",
+    "/usr/bin/chsh",
+    "/usr/bin/diff3",
+    "/usr/bin/getfattr",
+    "/usr/bin/gunzip",
+    "/usr/bin/gzip",
+    "/usr/bin/infocmp",
+    "/usr/bin/login",
+    "/usr/bin/newgidmap",
+    "/usr/bin/newuidmap",
+    "/usr/bin/openssl",
+    "/usr/bin/passwd",
+    "/usr/bin/perl",
+    "/usr/bin/perl5.40.1",
+    "/usr/bin/setfattr",
+    "/usr/bin/sort",
+    "/usr/bin/systemd-tmpfiles",
+    "/usr/bin/tar",
+    "/usr/bin/tic",
+    "/usr/bin/toe",
+    "/usr/bin/unexpand",
+    "/usr/bin/uniq",
+    "/usr/bin/zcat",
+    "/usr/include/c++/14/bits/stl_bvector.h",
+    "/usr/include/c++/14/bitset",
+    "/usr/include/c++/14/ext/pb_ds/detail/binary_heap_/erase_fn_imps.hpp",
+    "/usr/include/c++/14/parallel/search.h",
+    "/usr/lib/systemd/systemd-homed",
+    "/usr/lib/systemd/systemd-journald",
+    "/usr/lib/systemd/systemd-oomd",
+    "/usr/lib/x86_64-linux-gnu/libtic.so.6",
+    "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
+    "/usr/sbin/grpconv",
+    "/usr/sbin/grpunconv",
+    "/usr/sbin/newusers",
+    "/usr/sbin/nscd",
+    "/usr/sbin/pwconv",
+    "/usr/sbin/pwunconv",
+    "/usr/sbin/useradd"
+  ],
+  "boundary": "Stopped exact image extraction with rootfs tar confirmation of Docker cp not-found/SONAME symlinks. Actual runtime --check verifies bounded CLI absence; final formal candidate requires identity/source rebind.",
+  "retained_rootfs_sha256": "3c9e7faba7b31a18271f1a2473189d147e18b4100127daae506e9149311c9a07"
+}

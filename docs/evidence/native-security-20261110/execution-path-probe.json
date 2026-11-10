@@ -1,0 +1,1054 @@
+{
+  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "native": {
+    "elf_files": 968,
+    "errors": [],
+    "sensitive_dynamic_imports": [
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libsmartcols.so.1.1.0",
+        "sha256": "819dce849a08e6211a0683f52c5c6951ed40b7f88062a18fe6991ae10fd0df1f",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libapt-private.so.0.0.0",
+        "sha256": "437380a0336b0f5e5338c290162bf3c698f215bcc8b3e0a49cee5971e5352bd7",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libsemanage.so.2",
+        "sha256": "1f0723499bf719b57845b67679f95e79f7a0c799d69601e40e166dcc11fff376",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libapt-pkg.so.7.0.0",
+        "sha256": "f23b1758d6c64c778776f6916ddb4a8fa2855df4c5d31ebacb174e9b30f5487b",
+        "imports": [
+          "glob",
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libformw.so.6.5",
+        "sha256": "10b2e85c3e0ebb8ebc6ef72892260bbede80bfaa4a89ecee6019513d879a25de",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_namespace.so",
+        "sha256": "61dffca1a9b82380cac07537ee5b7a221658af515d4e487b8d31c9345f584404",
+        "imports": [
+          "glob"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_access.so",
+        "sha256": "a9a1778c331a53a47668c66f0e89310c9354635eed39597d09614ae6dfe28900",
+        "imports": [
+          "glob"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_limits.so",
+        "sha256": "18ea49fdde7f1f6bf3cbc2c0b1da677b51eeb3f4096c78217838bdbeadd4d3d6",
+        "imports": [
+          "glob"
+        ]
+      },
+      {
+        "file": "/usr/bin/logger",
+        "sha256": "354d9247e9eb051744bcc2edbd9bb428ff35da5df9df5120233807fc820c79d2",
+        "imports": [
+          "sd_journal_sendv"
+        ]
+      },
+      {
+        "file": "/usr/bin/ptx",
+        "sha256": "4ad329af0c827f032df7c57dc32f5852fa1eb4f81460da2abfbcc4c1198197e8",
+        "imports": [
+          "re_compile_pattern",
+          "re_match",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/more",
+        "sha256": "4468b94bea0c7d66de54fa12bddd0471575f77746fd5cd4a8d4928d54701f770",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/tac",
+        "sha256": "995cb01180b93a1222cf4d42cdbcec004ec1a2401f87af409f78970bf12dba53",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/bash",
+        "sha256": "223fe8564b60636bc738b6178d3ba9a50ef7d791266b0efae6363bb716e4c47f",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/hardlink",
+        "sha256": "a66494a52d30678b4f9221f05b8ad48cda6e98b3a27466372870823eb1e7f2c9",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/du",
+        "sha256": "3c0b05db84b02f20521c548adbe76fe05012a24effa6116e0752a81dd0faa9ba",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/localedef",
+        "sha256": "375d046bfd35d5bc7cfdf24e8352e2171c42f0bf0cf1ef0384fa7df1a1df648f",
+        "imports": [
+          "regcomp"
+        ]
+      },
+      {
+        "file": "/usr/bin/grep",
+        "sha256": "bd6686bf7a650a9717fd7e73fdb07dc63b70547a1da41bce093c56df937a66eb",
+        "imports": [
+          "re_compile_pattern",
+          "re_match",
+          "re_search",
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/sed",
+        "sha256": "69ff7292c0d081bdf5866bc84dde96d5a14f4a7deafeb9483739be68c48ac2b3",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/nl",
+        "sha256": "65b5cf1b0e28c06585b03d00db8d2732d0ec86bd42a59c0da6dfc7180817d20d",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/run-parts",
+        "sha256": "5470f76b78b478b3ef0c8cb72247fbb63700e4df32f2fd323c7bc286c6b6cace",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/expr",
+        "sha256": "b3a702318c52f2b29984e289cac19c4966e0dca953d7107aa73e3593feae739f",
+        "imports": [
+          "re_compile_pattern",
+          "re_match"
+        ]
+      },
+      {
+        "file": "/usr/bin/lslogins",
+        "sha256": "a56a51fac2249b82dd10de5d9c95cbd317dc193899900b9dd69330e8c290e9e4",
+        "imports": [
+          "sd_journal_add_match",
+          "sd_journal_close",
+          "sd_journal_flush_matches",
+          "sd_journal_get_data",
+          "sd_journal_get_realtime_usec",
+          "sd_journal_next",
+          "sd_journal_open",
+          "sd_journal_open_directory",
+          "sd_journal_previous_skip",
+          "sd_journal_seek_tail"
+        ]
+      },
+      {
+        "file": "/usr/bin/csplit",
+        "sha256": "6b492d1b227657b17c9f6fadf7eb75dac5fe804d9aadbc5e8e775c25f06ae8b7",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/find",
+        "sha256": "91b75e72c495e68dd6aab198c2fd6c458fd51a2dc361045ee31f8e657417de26",
+        "imports": [
+          "re_compile_pattern",
+          "re_match"
+        ]
+      },
+      {
+        "file": "/usr/bin/diff",
+        "sha256": "ae8ef59bc4039e56ce184b6cd55e87526aceb72940e2c16a88113b2ae745613b",
+        "imports": [
+          "re_compile_pattern",
+          "re_search",
+          "regcomp",
+          "regexec"
+        ]
+      }
+    ],
+    "systemd_needed_libraries": [
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libapt-pkg.so.7.0.0",
+        "sha256": "f23b1758d6c64c778776f6916ddb4a8fa2855df4c5d31ebacb174e9b30f5487b",
+        "needed": [
+          "libz.so.1",
+          "libbz2.so.1.0",
+          "liblzma.so.5",
+          "liblz4.so.1",
+          "libzstd.so.1",
+          "libudev.so.1",
+          "libsystemd.so.0",
+          "libcrypto.so.3",
+          "libxxhash.so.0",
+          "libstdc++.so.6",
+          "libm.so.6",
+          "libgcc_s.so.1",
+          "libc.so.6",
+          "ld-linux-x86-64.so.2"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_timestamp.so",
+        "sha256": "bcdde31b64b6504abebf510ba9bee2d9e83979b7cb9ccd5f92ee89f9511aa936",
+        "needed": [
+          "libpam.so.0",
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_issue.so",
+        "sha256": "742a64fa2de8745c884e2df880b5d996cf7bbaa86cf62137a61c0c30e49977b8",
+        "needed": [
+          "libpam.so.0",
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_limits.so",
+        "sha256": "18ea49fdde7f1f6bf3cbc2c0b1da677b51eeb3f4096c78217838bdbeadd4d3d6",
+        "needed": [
+          "libpam.so.0",
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/lib/apt/methods/http",
+        "sha256": "8560079cec507b8fddf422f705c0be7beae0c637a494c20a842a23ece95b1e92",
+        "needed": [
+          "libapt-pkg.so.7.0",
+          "libseccomp.so.2",
+          "libssl.so.3",
+          "libsystemd.so.0",
+          "libcrypto.so.3",
+          "libstdc++.so.6",
+          "libgcc_s.so.1",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/sbin/pam_timestamp_check",
+        "sha256": "b7791e9defbf2c8f7f7437f6c50955c084a946095911c331633710a6f1129687",
+        "needed": [
+          "libpam.so.0",
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/sbin/agetty",
+        "sha256": "129e74d0a9c4f140161cc06100dcadb3c4688839ce8c548a74413748ef074257",
+        "needed": [
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/logger",
+        "sha256": "354d9247e9eb051744bcc2edbd9bb428ff35da5df9df5120233807fc820c79d2",
+        "needed": [
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/who",
+        "sha256": "4a23d89ae2e0ff021ba1344b4b96d3967ebd998ccb9cf16f38cf706819b498cd",
+        "needed": [
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/lsblk",
+        "sha256": "f1eedfcbdd24955bd7fc6dcacd828e8aa229526ba40270c88e74df6870192dbf",
+        "needed": [
+          "libblkid.so.1",
+          "libmount.so.1",
+          "libsmartcols.so.1",
+          "libtinfo.so.6",
+          "libudev.so.1",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/wall",
+        "sha256": "7ca605b6fe88b6a84127b60f453242397b08235ef27bab8940f83f771152ffaa",
+        "needed": [
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/users",
+        "sha256": "c3594d0b6fe8ebb9d2b7161a2cf16c3a128914bbdbc1c09b734cd38f4decec8c",
+        "needed": [
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/findmnt",
+        "sha256": "745cb09ac88f163d10c0840b5a69a8bfd4a6c96cbecb2fb773bad3d7e4fdfa7c",
+        "needed": [
+          "libmount.so.1",
+          "libblkid.so.1",
+          "libsmartcols.so.1",
+          "libudev.so.1",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/lslogins",
+        "sha256": "a56a51fac2249b82dd10de5d9c95cbd317dc193899900b9dd69330e8c290e9e4",
+        "needed": [
+          "libsmartcols.so.1",
+          "libselinux.so.1",
+          "libsystemd.so.0",
+          "liblastlog2.so.2",
+          "libc.so.6"
+        ]
+      },
+      {
+        "file": "/usr/bin/pinky",
+        "sha256": "2a777f5dfd547927e8cbee4523de1a710eba70dd123c52263da955f73b678d0c",
+        "needed": [
+          "libsystemd.so.0",
+          "libc.so.6"
+        ]
+      }
+    ],
+    "installed_python_source_files": 10042,
+    "journal_source_candidates": [],
+    "parse_errors": [],
+    "installed_distributions": [
+      {
+        "name": "absl-py",
+        "version": "2.5.1"
+      },
+      {
+        "name": "aiohappyeyeballs",
+        "version": "2.7.1"
+      },
+      {
+        "name": "aiohttp",
+        "version": "3.14.5"
+      },
+      {
+        "name": "aiosignal",
+        "version": "1.4.0"
+      },
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5"
+      },
+      {
+        "name": "annotated-types",
+        "version": "0.8.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.14.2"
+      },
+      {
+        "name": "attrs",
+        "version": "26.1.0"
+      },
+      {
+        "name": "bcrypt",
+        "version": "5.0.0"
+      },
+      {
+        "name": "build",
+        "version": "1.6.0"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.10.23"
+      },
+      {
+        "name": "cffi",
+        "version": "2.1.1"
+      },
+      {
+        "name": "charset-normalizer",
+        "version": "3.5.1"
+      },
+      {
+        "name": "chromadb",
+        "version": "1.5.9"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0"
+      },
+      {
+        "name": "cryptography",
+        "version": "50.0.1"
+      },
+      {
+        "name": "distro",
+        "version": "1.9.0"
+      },
+      {
+        "name": "durationpy",
+        "version": "0.11"
+      },
+      {
+        "name": "fastapi",
+        "version": "0.141.1"
+      },
+      {
+        "name": "filelock",
+        "version": "4.2.4"
+      },
+      {
+        "name": "flatbuffers",
+        "version": "25.12.19"
+      },
+      {
+        "name": "frozenlist",
+        "version": "1.8.0"
+      },
+      {
+        "name": "fsspec",
+        "version": "2026.7.0"
+      },
+      {
+        "name": "googleapis-common-protos",
+        "version": "1.75.2"
+      },
+      {
+        "name": "grpcio",
+        "version": "1.83.1"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "hf-xet",
+        "version": "1.6.0"
+      },
+      {
+        "name": "httpcore",
+        "version": "1.0.9"
+      },
+      {
+        "name": "httpcore2",
+        "version": "2.12.0"
+      },
+      {
+        "name": "httptools",
+        "version": "0.8.0"
+      },
+      {
+        "name": "httpx",
+        "version": "0.28.1"
+      },
+      {
+        "name": "httpx-sse",
+        "version": "0.4.3"
+      },
+      {
+        "name": "httpx2",
+        "version": "2.12.0"
+      },
+      {
+        "name": "huggingface_hub",
+        "version": "1.29.0"
+      },
+      {
+        "name": "idna",
+        "version": "3.19"
+      },
+      {
+        "name": "immutabledict",
+        "version": "4.3.1"
+      },
+      {
+        "name": "importlib_resources",
+        "version": "7.1.0"
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.0"
+      },
+      {
+        "name": "jiter",
+        "version": "0.16.0"
+      },
+      {
+        "name": "jsonpatch",
+        "version": "1.33"
+      },
+      {
+        "name": "jsonpointer",
+        "version": "3.1.1"
+      },
+      {
+        "name": "jsonschema",
+        "version": "4.26.0"
+      },
+      {
+        "name": "jsonschema-specifications",
+        "version": "2025.9.1"
+      },
+      {
+        "name": "kubernetes",
+        "version": "36.0.3"
+      },
+      {
+        "name": "langchain",
+        "version": "1.3.18"
+      },
+      {
+        "name": "langchain-chroma",
+        "version": "1.1.0"
+      },
+      {
+        "name": "langchain-core",
+        "version": "1.6.1"
+      },
+      {
+        "name": "langchain-openai",
+        "version": "1.6.0"
+      },
+      {
+        "name": "langchain-protocol",
+        "version": "0.0.19"
+      },
+      {
+        "name": "langchain-text-splitters",
+        "version": "1.1.2"
+      },
+      {
+        "name": "langgraph",
+        "version": "1.2.14"
+      },
+      {
+        "name": "langgraph-checkpoint",
+        "version": "4.2.0"
+      },
+      {
+        "name": "langgraph-prebuilt",
+        "version": "1.1.0"
+      },
+      {
+        "name": "langgraph-sdk",
+        "version": "0.4.6"
+      },
+      {
+        "name": "langsmith",
+        "version": "0.11.2"
+      },
+      {
+        "name": "markdown-it-py",
+        "version": "4.2.0"
+      },
+      {
+        "name": "mcp",
+        "version": "1.30.0"
+      },
+      {
+        "name": "mdurl",
+        "version": "0.1.2"
+      },
+      {
+        "name": "mmh3",
+        "version": "5.3.0"
+      },
+      {
+        "name": "multidict",
+        "version": "6.9.1"
+      },
+      {
+        "name": "numpy",
+        "version": "2.4.6"
+      },
+      {
+        "name": "oauthlib",
+        "version": "4.0.1"
+      },
+      {
+        "name": "onnxruntime",
+        "version": "1.29.0"
+      },
+      {
+        "name": "openai",
+        "version": "3.6.0"
+      },
+      {
+        "name": "opentelemetry-api",
+        "version": "1.45.1"
+      },
+      {
+        "name": "opentelemetry-exporter-otlp-common",
+        "version": "0.66b1"
+      },
+      {
+        "name": "opentelemetry-exporter-otlp-proto-common",
+        "version": "1.45.1"
+      },
+      {
+        "name": "opentelemetry-exporter-otlp-proto-grpc",
+        "version": "1.45.1"
+      },
+      {
+        "name": "opentelemetry-proto",
+        "version": "1.45.1"
+      },
+      {
+        "name": "opentelemetry-sdk",
+        "version": "1.45.1"
+      },
+      {
+        "name": "opentelemetry-semantic-conventions",
+        "version": "0.66b1"
+      },
+      {
+        "name": "orjson",
+        "version": "3.12.0"
+      },
+      {
+        "name": "ormsgpack",
+        "version": "1.12.2"
+      },
+      {
+        "name": "ortools",
+        "version": "9.15.6755"
+      },
+      {
+        "name": "overrides",
+        "version": "7.7.0"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pandas",
+        "version": "3.0.6"
+      },
+      {
+        "name": "pillow",
+        "version": "13.0.0"
+      },
+      {
+        "name": "pip",
+        "version": "26.2.2"
+      },
+      {
+        "name": "pluggy",
+        "version": "1.6.0"
+      },
+      {
+        "name": "prometheus-fastapi-instrumentator",
+        "version": "8.1.0"
+      },
+      {
+        "name": "prometheus_client",
+        "version": "0.26.0"
+      },
+      {
+        "name": "propcache",
+        "version": "0.5.2"
+      },
+      {
+        "name": "protobuf",
+        "version": "6.33.6"
+      },
+      {
+        "name": "pybase64",
+        "version": "1.5.0"
+      },
+      {
+        "name": "pycparser",
+        "version": "3.0"
+      },
+      {
+        "name": "pydantic",
+        "version": "2.13.5"
+      },
+      {
+        "name": "pydantic-settings",
+        "version": "2.15.0"
+      },
+      {
+        "name": "pydantic_core",
+        "version": "2.46.5"
+      },
+      {
+        "name": "Pygments",
+        "version": "2.21.0"
+      },
+      {
+        "name": "PyJWT",
+        "version": "2.15.1"
+      },
+      {
+        "name": "pypdfium2",
+        "version": "5.15.0"
+      },
+      {
+        "name": "PyPika",
+        "version": "0.51.1"
+      },
+      {
+        "name": "pyproject_hooks",
+        "version": "1.2.0"
+      },
+      {
+        "name": "pytest",
+        "version": "9.1.1"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "2.9.0.post0"
+      },
+      {
+        "name": "python-dotenv",
+        "version": "1.2.3"
+      },
+      {
+        "name": "python-multipart",
+        "version": "0.0.32"
+      },
+      {
+        "name": "PyYAML",
+        "version": "6.0.3"
+      },
+      {
+        "name": "referencing",
+        "version": "0.37.0"
+      },
+      {
+        "name": "regex",
+        "version": "2026.9.3"
+      },
+      {
+        "name": "requests",
+        "version": "2.34.2"
+      },
+      {
+        "name": "requests-oauthlib",
+        "version": "2.0.0"
+      },
+      {
+        "name": "requests-toolbelt",
+        "version": "1.0.0"
+      },
+      {
+        "name": "rich",
+        "version": "15.0.0"
+      },
+      {
+        "name": "rpds-py",
+        "version": "2026.6.3"
+      },
+      {
+        "name": "setuptools",
+        "version": "84.2.1"
+      },
+      {
+        "name": "shellingham",
+        "version": "1.5.4"
+      },
+      {
+        "name": "six",
+        "version": "1.17.0"
+      },
+      {
+        "name": "sniffio",
+        "version": "1.3.1"
+      },
+      {
+        "name": "sse-starlette",
+        "version": "3.4.11"
+      },
+      {
+        "name": "starlette",
+        "version": "1.6.0"
+      },
+      {
+        "name": "tenacity",
+        "version": "9.1.4"
+      },
+      {
+        "name": "tiktoken",
+        "version": "0.14.0"
+      },
+      {
+        "name": "tokenizers",
+        "version": "0.23.1"
+      },
+      {
+        "name": "tqdm",
+        "version": "4.70.0"
+      },
+      {
+        "name": "truststore",
+        "version": "0.10.4"
+      },
+      {
+        "name": "typer",
+        "version": "0.27.2"
+      },
+      {
+        "name": "typing-inspection",
+        "version": "0.4.4"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "urllib3",
+        "version": "2.8.0"
+      },
+      {
+        "name": "uuid_utils",
+        "version": "0.17.0"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.52.4"
+      },
+      {
+        "name": "uvloop",
+        "version": "0.22.1"
+      },
+      {
+        "name": "watchfiles",
+        "version": "1.2.0"
+      },
+      {
+        "name": "websocket-client",
+        "version": "1.9.2"
+      },
+      {
+        "name": "websockets",
+        "version": "16.1.1"
+      },
+      {
+        "name": "xxhash",
+        "version": "4.0.1"
+      },
+      {
+        "name": "yarl",
+        "version": "1.25.1"
+      },
+      {
+        "name": "zstandard",
+        "version": "0.25.0"
+      }
+    ],
+    "boundary": "Actual dynamic imports and direct source candidates; no claim about arbitrary dlsym, static code or future plugins."
+  },
+  "python": {
+    "python": "3.13.18",
+    "site_packages": "/usr/local/lib/python3.13/site-packages",
+    "scope": "AST scan of installed Python sources; direct imported aliases only, not reflection or compiled extension code",
+    "candidate_files_examined": 107,
+    "parse_errors": [],
+    "calls": [
+      {
+        "file": "cryptography/fernet.py",
+        "sha256": "dac2c23ce99e8e13956ee75c4b742c3353c8b876f109e45c46d5a49dc437982a",
+        "calls": [
+          {
+            "line": 39,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(key)"
+          },
+          {
+            "line": 116,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(token)"
+          }
+        ]
+      },
+      {
+        "file": "dateutil/zoneinfo/__init__.py",
+        "sha256": "298834a6d842323729e4c5d21220499f79cc8d978d65abfbae5270e7eb73d52e",
+        "calls": [
+          {
+            "line": 24,
+            "function": "pkgutil.get_data",
+            "expression": "get_data(__name__, ZONEFILENAME)"
+          }
+        ]
+      },
+      {
+        "file": "google/protobuf/json_format.py",
+        "sha256": "7b386cc56f648154f744b2d1b38f44e94dba27c8c33980002e158c235443c7a7",
+        "calls": [
+          {
+            "line": 945,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(padded_value)"
+          }
+        ]
+      },
+      {
+        "file": "jwt/utils.py",
+        "sha256": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+        "calls": [
+          {
+            "line": 33,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(input_bytes)"
+          }
+        ]
+      },
+      {
+        "file": "kubernetes/config/kube_config.py",
+        "sha256": "d3d764a18c70338bc9364db6664d9960ece21e76d4dd1b5dfe2e138034dc025c",
+        "calls": [
+          {
+            "line": 365,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(parts[1] + padding)"
+          }
+        ]
+      },
+      {
+        "file": "kubernetes/stream/ws_client.py",
+        "sha256": "e1ac25931b2d61e84a853b8e8b70d9772abe3be9e9e82d39292d245e04a1b3fe",
+        "calls": [
+          {
+            "line": 570,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "urlsafe_b64decode(b64value)"
+          }
+        ]
+      },
+      {
+        "file": "langchain_openai/chatgpt_oauth.py",
+        "sha256": "f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da",
+        "calls": [
+          {
+            "line": 148,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(segment + padding)"
+          }
+        ]
+      },
+      {
+        "file": "pybase64/_fallback.py",
+        "sha256": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
+        "calls": [
+          {
+            "line": 137,
+            "function": "base64.b64decode",
+            "expression": "builtin_decode(s, altchars, **kwargs)"
+          }
+        ]
+      },
+      {
+        "file": "pydantic/types.py",
+        "sha256": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
+        "calls": [
+          {
+            "line": 2451,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(data)"
+          }
+        ]
+      },
+      {
+        "file": "setuptools/_vendor/wheel/wheelfile.py",
+        "sha256": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410",
+        "calls": [
+          {
+            "line": 45,
+            "function": "base64.urlsafe_b64decode",
+            "expression": "base64.urlsafe_b64decode(data + pad)"
+          }
+        ]
+      }
+    ],
+    "alternate_alphabet_probe": {
+      "decoded": [
+        251
+      ],
+      "accepted_plus_with_altchars": true,
+      "warnings": []
+    },
+    "stdlib": {
+      "base64": {
+        "file": "/usr/local/lib/python3.13/base64.py",
+        "sha256": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993"
+      },
+      "pkgutil": {
+        "file": "/usr/local/lib/python3.13/pkgutil.py",
+        "sha256": "44300bc77f6f52ef2ad74d26e5053309c04f49eaa91c099356eb61426cde504f"
+      },
+      "glob": {
+        "file": "/usr/local/lib/python3.13/glob.py",
+        "sha256": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07"
+      },
+      "re": {
+        "file": "/usr/local/lib/python3.13/re/__init__.py",
+        "sha256": "dbe158a677c6aaacf717ea2abc23c56233453d38024aef75b7c3d93612cabb93"
+      }
+    }
+  },
+  "cli_check": {
+    "status": "verified_absent",
+    "remaining_entries": [],
+    "manifest": "/usr/local/share/tripplanner/restricted-runtime-tools.json",
+    "limits": "Bounded name/dpkg/exact-binary-identity inventory; does not prove absence of arbitrary recompiled helpers or vulnerability absence in retained libraries/static native consumers."
+  }
+}

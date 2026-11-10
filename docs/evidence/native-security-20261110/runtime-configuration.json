@@ -1,0 +1,17 @@
+{
+  "login_unknown_failure_setting": [
+    "LOG_UNKFAIL_ENAB\tno"
+  ],
+  "subuid_assignment_lines": 0,
+  "subgid_assignment_lines": 0,
+  "btmp": {
+    "mode": 432,
+    "uid": 0,
+    "gid": 43,
+    "readable_by_appuser": false
+  },
+  "runtime_uid": 1000,
+  "compiler_paths_absent": true,
+  "gcc14_header_directory_absent": true,
+  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87"
+}

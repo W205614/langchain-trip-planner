@@ -1,0 +1,57 @@
+{
+  "ncurses-6.5-20250216/ncurses/modules": {
+    "archive": "ncurses_6.5+20250216.orig.tar.gz",
+    "archive_sha256": "b37baafa436e7133bb12a185cb8f60e1599b1947e9f0181c76f3190acf28b6eb",
+    "member_sha256": "4576cedd5b4b4d6cb751bee159c070582df8bd5b7efb292e3eed180cfd33feb6",
+    "selected_lines": [
+      {
+        "line": 216,
+        "text": "@ ticlib"
+      },
+      {
+        "line": 222,
+        "text": "parse_entry\tlib\t\t$(tinfo)\t$(HEADER_DEPS)\t$(INCDIR)/tic.h ../include/parametrized.h"
+      }
+    ]
+  },
+  "debian/rules": {
+    "archive": "ncurses_6.5+20250216-2.debian.tar.xz",
+    "archive_sha256": "546930a8992ae3325d8c38378f290265d969cf6333cfae9648ac6d69e1e8a8a6",
+    "member_sha256": "0abf821de0d6d291cb369f9ef3f4d786d095940f58cc176e42118e2c64f33111",
+    "selected_lines": [
+      {
+        "line": 142,
+        "text": "\t\t--with-ticlib=tic \\"
+      },
+      {
+        "line": 345,
+        "text": "\t# We need the tinfo and tic libraries from the wide build, so install the"
+      },
+      {
+        "line": 346,
+        "text": "\t# non-wide libraries first and overwrite their tinfo tic libraries later."
+      },
+      {
+        "line": 347,
+        "text": "\t$(MAKE) -C $(objdir) install.libs"
+      },
+      {
+        "line": 348,
+        "text": "\trm -f $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libtinfo.so*"
+      },
+      {
+        "line": 349,
+        "text": "\trm -f $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libtic.so*"
+      },
+      {
+        "line": 350,
+        "text": "\tinstall -m 644 $(objdir)/man/ncurses6-config.1 $(wobjdir)/man"
+      },
+      {
+        "line": 351,
+        "text": "\t$(MAKE) -C $(wobjdir) install"
+      }
+    ]
+  },
+  "correction": "Debian lines345-351 replace non-wide tinfo/tic libraries with the wide build; rm libtic alone was not a final removal. Actual libtic is present in libtinfo6. No component-absence decision is supported by this source excerpt."
+}

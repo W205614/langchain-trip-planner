@@ -91,3 +91,8 @@ docs/evidence/release-v0.1.2-20261108/*.json -text whitespace=trailing-space,spa
 docs/evidence/release-v0.1.3-20261109/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/release-v0.1.3-20261109/codeql/**/*.sarif -text -whitespace
 docs/evidence/release-v0.1.3-20261109/java.cdx.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/security-quality-20261110/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/security-quality-20261110/**/*.sarif -text -whitespace
+docs/evidence/native-security-20261110/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/native-security-20261110/**/*.sarif -text -whitespace
+docs/evidence/native-security-20261110/**/*.log -text -whitespace

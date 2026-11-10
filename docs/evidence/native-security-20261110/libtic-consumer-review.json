@@ -1,0 +1,47 @@
+{
+  "elf_files": 966,
+  "readelf_errors": [],
+  "dt_needed_consumers": [
+    {
+      "path": "/usr/bin/toe",
+      "needed": [
+        "libtic.so.6",
+        "libtinfo.so.6",
+        "libc.so.6"
+      ],
+      "sha256": "71e4db9f095b22a02f01507ad4268edefa04b706fa1fec56226f1edeecedb45a"
+    }
+  ],
+  "literal_soname_references": [
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
+      "sha256": "120c0d6252a56295db06db3a0a615ddffecf39c2989b82653b29efd2d1e7ec6e"
+    },
+    {
+      "path": "/usr/bin/toe",
+      "sha256": "71e4db9f095b22a02f01507ad4268edefa04b706fa1fec56226f1edeecedb45a"
+    }
+  ],
+  "installed_python_sources": 10042,
+  "python_libtic_candidates": [],
+  "payload": {
+    "path": "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
+    "sha256": "120c0d6252a56295db06db3a0a615ddffecf39c2989b82653b29efd2d1e7ec6e",
+    "owner": "libtinfo6:amd64: /usr/lib/x86_64-linux-gnu/libtic.so.6.5",
+    "aliases": [
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
+        "symlink": false,
+        "target": "/usr/lib/x86_64-linux-gnu/libtic.so.6.5"
+      },
+      {
+        "path": "/usr/lib/x86_64-linux-gnu/libtic.so.6",
+        "symlink": true,
+        "target": "/usr/lib/x86_64-linux-gnu/libtic.so.6.5"
+      }
+    ]
+  },
+  "boundary": "Actual ELF dependency and literal-name inventory plus installed Python text candidates. No claim about arbitrary synthesized dlopen names or hostile operator-added native code.",
+  "image_id": "sha256:73b01d726fe6c1581400ea58a2d0373a1dcf6c639ec257d9214f4c8c3e18b3d2",
+  "status": "Prior retained-parser investigation; final corrected image removes toe and parser. Not a claim that libtic remains in the current artifact."
+}

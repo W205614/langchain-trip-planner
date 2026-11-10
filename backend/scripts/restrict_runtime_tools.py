@@ -108,7 +108,7 @@ def collect_fingerprints(root):
         if path.is_file():
             info = path.stat()
             found[digest(path)] = {'sha256': digest(path), 'size': info.st_size}
-    return list(found.values())
+    return [found[value] for value in sorted(found)]
 
 
 def scan(root, fingerprints, capability_reader=capabilities):

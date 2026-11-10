@@ -1,17 +1,70 @@
 import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import io
 import json
 from pathlib import Path
 import subprocess
+import tarfile
 import tempfile
 from threading import Thread
 import unittest
 from unittest.mock import patch
+from urllib.request import urlopen
 
-from tools.container_sources import Collector, PROJECT_SOURCE_PATHS, copy_project_sources, glibc_hardening_provenance, paragraphs, verify_busybox_recipe
+from tools.container_sources import Collector, PROJECT_SOURCE_PATHS, alpine_recipe_sources, busybox_provenance, copy_project_sources, glibc_hardening_provenance, paragraphs, verify_busybox_recipe
 
 
 class SourceCollectionTests(unittest.TestCase):
+    def test_busybox_runtime_cannot_supply_an_archive_different_from_the_canonical_input(self):
+        canonical = Path(__file__).resolve().parents[2] / 'deploy/images/busybox-backport'
+        lock = dict(line.split('=', 1) for line in (canonical / 'source.lock').read_text().splitlines())
+        packages = [{'P': name, 'V': lock['PACKAGE_VERSION'] + '-r0', 'o': 'busybox'}
+                    for name in ('busybox', 'busybox-binsh', 'ssl_client')]
+
+        def image_content(image, *args):
+            self.assertEqual(args[0], 'cat')
+            name = args[1].rsplit('/', 1)[1]
+            if name in ('source.lock', 'CVE-2025-60876.patch'):
+                return (canonical / name).read_bytes()
+            if name == 'aports-busybox.tar.gz':
+                return b'changed original source archive'
+            return b'fixture metadata'
+
+        with tempfile.TemporaryDirectory() as temporary:
+            collector = Collector(Path(temporary))
+            with patch('tools.container_sources.docker', side_effect=image_content):
+                with self.assertRaisesRegex(RuntimeError, 'source provenance differs.*aports-busybox'):
+                    busybox_provenance(collector, 'immutable-image', 'fixture', packages)
+            self.assertFalse((collector.root / 'runtime-provenance').exists())
+
+    def test_vendored_alpine_recipe_collection_uses_local_bytes_and_preserves_origin(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / 'aports-busybox.tar.gz'
+            local_input = b'original Alpine input\n'
+            recipe = ('pkgver=1.37.0\nsha512sums="\n' + hashlib.sha512(local_input).hexdigest()
+                      + '  original.patch\n"\n').encode()
+            with tarfile.open(source, 'w:gz') as archive:
+                for name, content in {'APKBUILD': recipe, 'original.patch': local_input}.items():
+                    entry = tarfile.TarInfo('aports/main/busybox/' + name)
+                    entry.size = len(content)
+                    archive.addfile(entry, io.BytesIO(content))
+
+            def local_only(request, **kwargs):
+                self.assertTrue(request.full_url.startswith('file:'), request.full_url)
+                return urlopen(request, **kwargs)
+
+            collector = Collector(root / 'bundle')
+            with patch('tools.container_sources.urlopen', side_effect=local_only):
+                files = alpine_recipe_sources(collector, 'busybox', 'a' * 40,
+                                              hashlib.sha256(source.read_bytes()).hexdigest(), source)
+            self.assertEqual(files['APKBUILD'], recipe)
+            record, = collector.downloads.values()
+            self.assertEqual(record['acquisition'], 'vendored_project_input')
+            self.assertTrue(record['url'].startswith('https://gitlab.alpinelinux.org/'))
+            self.assertNotIn('file:', record['url'])
+            self.assertEqual(record['sha256'], hashlib.sha256(source.read_bytes()).hexdigest())
+
     def glibc_fixture(self, root):
         canonical = root / 'backend/security/glibc-hardening'
         canonical.mkdir(parents=True)

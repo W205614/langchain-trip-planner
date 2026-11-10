@@ -1,0 +1,19 @@
+{
+  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "image_tag": "trip-review-agent-8182d40:20261110",
+  "source_revision": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+  "architecture": "amd64",
+  "user": "appuser",
+  "command": [
+    "uvicorn",
+    "app.agent_api.main:app",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "9000",
+    "--workers",
+    "1"
+  ],
+  "entrypoint": null,
+  "business_worktree_delta": []
+}

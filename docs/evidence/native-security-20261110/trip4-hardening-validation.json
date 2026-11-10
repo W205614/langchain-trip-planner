@@ -1,0 +1,205 @@
+{
+  "result": "passed",
+  "gate_image": "trip-review-glibc-hardening-gate:20261110",
+  "gate_image_id": "sha256:3974a4f151aae461a59eb84ccd1e238763fa52902d61359b93bce8f212f1b148",
+  "installed_image": "trip-review-agent-trip4:20261110",
+  "installed_image_id": "sha256:73b01d726fe6c1581400ea58a2d0373a1dcf6c639ec257d9214f4c8c3e18b3d2",
+  "prototype_source_note": "FROM clean trip4 compiled image; late stage only reorders support_mem_access in support/Makefile to fix real lint failure. ELF code is unchanged by this Makefile ordering. Final main build must apply updated TLS patch cleanly and regenerate proof against its own packaged ELF.",
+  "tls_patch_sha256": "87cc178e7471cce21045b05fc7be238d51af0c69949128d2d2ae1dada5e1036d",
+  "upstream_nptl_pass": 11,
+  "upstream_malloc_pass": 45,
+  "packaged_independent_executions": 31,
+  "arena_samples_per_hugetlb": 8,
+  "runtime_cases": [
+    {
+      "binary": "tls-guard-regression",
+      "args": [],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-randomization-regression",
+      "args": [
+        "verify"
+      ],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-randomization-regression",
+      "args": [
+        "entropy-denied"
+      ],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-randomization-regression",
+      "args": [
+        "verify"
+      ],
+      "tunables": "glibc.pthread.stack_cache_size=41943040",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-independent-lifecycle",
+      "args": [],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [],
+      "tunables": "glibc.malloc.hugetlb=0",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [],
+      "tunables": "glibc.malloc.hugetlb=1",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [],
+      "tunables": "glibc.malloc.hugetlb=2",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [
+        "--block-entropy"
+      ],
+      "tunables": "",
+      "status": -6,
+      "passed": true
+    }
+  ],
+  "runtime_flags": [
+    "--read-only",
+    "--cap-drop ALL",
+    "--security-opt no-new-privileges",
+    "--network none",
+    "--pids-limit 256",
+    "--memory 1g",
+    "/tmp tmpfs rw,nosuid,nodev,size=32m (noexec)"
+  ],
+  "runtime_user": "inherited appuser (non-root)",
+  "runtime_loader": "default ELF PT_INTERP /lib64/ld-linux-x86-64.so.2, no explicit SDK loader/library path",
+  "packaged_elf_sha256": {
+    "ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8",
+    "libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
+    "libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7"
+  },
+  "proof_files_sha256": {
+    "arena-regression": "133253fdcf151ba650dd9decbf9f241f171cbe0c4d398f241bafce713b50f734",
+    "packaged-elf-sha256.txt": "0091c93a397e0e204961c50f59cddd993a8cddd3c86c87b3f3ee606fdbe585f4",
+    "RUN-CHECKS.txt": "c5e4532ae5d76eec81130c1d7a25103efc7cd1f764a789b644a98b080e409299",
+    "runtime-check.sh": "80354eac3eae339fb441f0c858e960810f5528a92fa829a44a4a3742bf873d53",
+    "SHA256SUMS": "7d90bc3e8b9d2051a399018e3bec35aff45733ecc8afee54e734034cab68c470",
+    "SOURCE-INPUTS.sha256": "696eb1ebd673666f19a7e9f1413203d9fbf19457890102c227fcf40b7bd66b23",
+    "stack-independent-lifecycle": "a93cbf92b423fb8310b31f042196bfbdaf8c4ffdb73972921d8b6076543fdc17",
+    "stack-randomization-regression": "dc7f53c407d8788478fbddc441ba22590365ff37c755c49cfbe3cad9e36d5745",
+    "summary.json": "ce2b422e45da549b12476164026fbc45ece208159e191b63025a98b8a90279a6",
+    "tls-guard-regression": "1db4977442ca9dcdd18de3fce279eab9425d8600c8423e865809313fd5d764cd"
+  },
+  "proof_bytes": 90397,
+  "failure_records": [
+    "build-attempt1-extract-mode.log",
+    "build-attempt2-lint-failure.log",
+    "lint-actual-failure.log",
+    "build-attempt3-result-format.log"
+  ],
+  "limits": [
+    "Linux x86_64 LP64 only",
+    "Finite address samples do not prove CSPRNG quality",
+    "Physical hugepage success is not established when HugePages_Total is zero",
+    "Stack cache intentionally disabled; TLS test does not require reuse",
+    "SDK gate is followed by final installed runtime checks",
+    "Linux/glibc fork-while-thread-churn probe does not establish a portable POSIX guarantee.",
+    "Detached stack mappings can remain until subsequent create/reaping observes clear-tid; test verifies eventual eligible reclamation."
+  ],
+  "current_rebound_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "current_installed_runtime_cases": [
+    {
+      "binary": "tls-guard-regression",
+      "args": [],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-randomization-regression",
+      "args": [
+        "verify"
+      ],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-randomization-regression",
+      "args": [
+        "entropy-denied"
+      ],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-randomization-regression",
+      "args": [
+        "verify"
+      ],
+      "tunables": "glibc.pthread.stack_cache_size=41943040",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "stack-independent-lifecycle",
+      "args": [],
+      "tunables": "",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [],
+      "tunables": "glibc.malloc.hugetlb=0",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [],
+      "tunables": "glibc.malloc.hugetlb=1",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [],
+      "tunables": "glibc.malloc.hugetlb=2",
+      "status": 0,
+      "passed": true
+    },
+    {
+      "binary": "arena-regression",
+      "args": [
+        "--block-entropy"
+      ],
+      "tunables": "",
+      "status": -6,
+      "passed": true
+    }
+  ],
+  "rebinding_method": "Identical exact libc/loader/resolv bytes plus new9-case installed default-loader check; formal main build will repeat against its own package/source."
+}

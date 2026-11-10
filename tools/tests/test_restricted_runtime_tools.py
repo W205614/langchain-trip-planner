@@ -1,8 +1,11 @@
 """CLI-only image cleanup must be precise and read-only verification fail closed."""
 import importlib.util
+import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -55,6 +58,23 @@ class RestrictedToolsTests(unittest.TestCase):
             self.assertEqual('restricted_binary_identity', rows[0]['reason'])
             self.assertEqual('fixture-capability', rows[0]['file_capability'])
             self.assertTrue((binary / 'unexpected-helper').exists())
+
+    def test_build_manifest_is_identical_across_interpreter_hash_seeds(self):
+        with tempfile.TemporaryDirectory() as folder:
+            results = []
+            for seed in ('1', '99'):
+                root = Path(folder) / seed; self.fixture(root)
+                code = (
+                    'import importlib.util,json,sys; from pathlib import Path; '
+                    "s=importlib.util.spec_from_file_location('runtime_tools',sys.argv[1]); "
+                    'm=importlib.util.module_from_spec(s); s.loader.exec_module(m); '
+                    'print(json.dumps(m.restrict(Path(sys.argv[2]),lambda path:None),sort_keys=True))'
+                )
+                env = {**os.environ, 'PYTHONHASHSEED': seed}
+                result = subprocess.check_output([sys.executable, '-X', 'utf8', '-c', code,
+                                                  tools.__file__, str(root)], env=env, text=True)
+                results.append(json.loads(result))
+            self.assertEqual(results[0], results[1])
 
     def test_unused_tic_parser_and_aliases_removed_while_tinfo_ncurses_remain(self):
         with tempfile.TemporaryDirectory() as folder:

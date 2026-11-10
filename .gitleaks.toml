@@ -3,6 +3,22 @@ title = "Default Gitleaks rules with reviewed offline fixture values"
 useDefault = true
 
 [[allowlists]]
+description = "One recomputed public langchain-openai source-file SHA256 repeated in exact native-review receipts; both path and literal digest required"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/evidence/native-security-20261110/agent-trip4-(artifact-inventory|review)\.json$''']
+regexTarget = "secret"
+regexes = ['''^f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da$''']
+
+[[allowlists]]
+description = "Two Git-verified public frontend source SHA256 values in the exact 8182d40 CodeQL review, not credentials"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)docs/evidence/native-security-20261110/codeql/8182d40/source-review\.json$''']
+regexTarget = "secret"
+regexes = ['''^(f133a97a179955497243ef2a55dfad06f83cef66b5a80282a924f5b5e70736c3|f0fda988393a3704b49ad25638e48aa6212bb0b053b4a0f7bf9e6add95b1c95a)$''']
+
+[[allowlists]]
 description = "Exact public offline test credentials; path AND value, no production files excluded"
 condition = "AND"
 targetRules = ["generic-api-key"]

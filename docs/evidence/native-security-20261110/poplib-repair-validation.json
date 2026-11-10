@@ -1,0 +1,25 @@
+{
+  "python_version": "3.13.18",
+  "poplib_path": "/usr/local/lib/python3.13/poplib.py",
+  "poplib_sha256": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+  "installed_hash_check": "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so: OK\n/usr/local/lib/python3.13/http/client.py: OK\n/usr/local/lib/python3.13/poplib.py: OK\n",
+  "canonical_provenance": {
+    "patches.sha256": "d7d25fe12f22b04d92716be7677ccf1599f486864f44cacde95237f850f64f78",
+    "CVE-2026-116566.patch": "d8cb1998e30dc71474c5f9d3a9093e7de6af4dceffdb42ec93a52347ab8ec1f1",
+    "installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e",
+    "CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
+    "CVE-2026-103995.patch": "cd937a80f6abef62507997a0cf1012450348857a245e86fc13bff27caf127476",
+    "README.md": "4e58a54659239a6102ef387546b3a94b3460db8452b506ed14e079924e4bd333",
+    "upstream-poplib-b234a2b.patch": "606aa1bd8124cb0d777744dfe1a89d1ba983638115372cc508f4ed4a154f3abf"
+  },
+  "image_tag": "trip-review-python313-poplib-dependencies:20261110",
+  "image_id": "sha256:d5de20a456e6827b3bb0a4f685285ff717d7f7ec5ecb8598bcc56addfc59e633",
+  "pytest_exit_code": 0,
+  "pytest_output": "........................................................................ [ 80%]\n.................                                                        [100%]\n89 passed in 0.15s\n",
+  "test_source_sha256": "ad2dd9dbb5ac1ac456aaf7b66bde59809abd5e73b243a92702397ecdee1e47be",
+  "upstream_commit": "b234a2b67539f787e191d2ef19a7cbdce32874e7",
+  "boundary": "Dependency image only. Final native-hardened Agent integration, final source rebinding and scans remain required.",
+  "current_agent_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "current_agent_installed_poplib_sha256": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+  "current_agent_provenance_sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e"
+}

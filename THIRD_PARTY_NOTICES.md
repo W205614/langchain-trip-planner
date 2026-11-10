@@ -22,7 +22,7 @@
 | `backend/security/cpython-backports/` | CPython 3.13.18 及所列 Python 官方提交；保留官方 `LICENSE` 中完整许可链、PSF 及历史贡献者声明。对应源码材料包含固定的原始发行源码、三项安全回补、保留的 POP3 上游原补丁及构建说明 |
 | `backend/security/pam-backport/` | Linux-PAM 完整上游安全提交及 Debian 原配方。`pam_userdb.c` 保留 Cristian Gafton 的原 BSD 风格条款及 GPL 替代许可；其他文件按各自原声明处理，实际 Debian copyright 随包保留，不把整个 PAM 概括为单一许可 |
 | `backend/security/dash-backport/` | 保留 dash 原始源码、Debian 全部补丁及逐文件版权/许可；本项目只修改已有 `fnmatch` 构建选项并记录下游版本，原 Debian copyright 随实际包保留 |
-| `deploy/images/busybox-backport/` 及两份生成的镜像构建输入 | BusyBox 1.37.0、原 Alpine 配方及其补丁、Radoslav Kolev 的上游 wget 修复；沿用 GPL-2.0，保留原作者、完整对应源码、配置与构建/安装脚本。下游包不代表新的 BusyBox 上游发行版 |
+| `deploy/images/busybox-backport/` 及两份生成的镜像构建输入 | BusyBox 1.37.0、原 Alpine 配方及其补丁、Radoslav Kolev 的上游 wget 修复；BusyBox 和配方中的 `bbsuid.c` 使用 GPL-2.0-only，其他材料保留各自原声明、作者和条款。仓库携带的 `aports-busybox.tar.gz` 是既定摘要的完整 80 文件原配方归档；原字节、配置、补丁与构建/安装脚本一起保留在对应源码材料中。下游包不代表新的 BusyBox 上游发行版 |
 
 上游版权与逐文件声明保存在 [NATIVE-NOTICES.txt](docs/licenses/NATIVE-NOTICES.txt)，包括 ISC、public domain 和 Berkeley BSD 原文。其他适用许可全文：[LGPL-2.1](docs/licenses/LGPL-2.1.txt)、[GPL-2.0](docs/licenses/GPL-2.0.txt)、[GPL-3.0](docs/licenses/GPL-3.0.txt)、[GCC Runtime Library Exception 3.1](docs/licenses/GCC-exception-3.1.txt)。补丁的来源提交、变更说明和固定摘要见 [native-backports/README.md](backend/security/native-backports/README.md)、`patches.sha256`、`sources.sha256` 及构建脚本；添加通知不改变补丁字节。
 
