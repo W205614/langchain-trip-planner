@@ -166,9 +166,10 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Card as ACard, Col as ACol, Collapse as ACollapse, CollapsePanel as ACollapsePanel, Empty as AEmpty, Input as AInput, InputNumber as AInputNumber, List as AList, ListItem as AListItem, ListItemMeta as AListItemMeta, Modal as AModal, Row as ARow, Select as ASelect, SelectOption as ASelectOption, Space as ASpace, Spin as ASpin, Statistic as AStatistic, TabPane as ATabPane, Tabs as ATabs, Tag as ATag, Textarea as ATextarea, message, Modal } from 'ant-design-vue'
+
 import { computed, onMounted, onBeforeUnmount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { message, Modal } from 'ant-design-vue'
 import { tripOperations, tripPlanning, clearTripCache } from '@/services/api'
 import PlanningInputEditor from '@/components/trip/PlanningInputEditor.vue'
 import FactCompletionEditor from '@/components/trip/FactCompletionEditor.vue'

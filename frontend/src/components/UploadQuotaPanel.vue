@@ -12,6 +12,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Table as ATable } from 'ant-design-vue'
+
 import { ref, onMounted } from 'vue'
 import { accountSecurity } from '@/services/api'
 const props = defineProps<{ admin?: boolean }>()

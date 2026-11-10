@@ -27,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Form as AForm, FormItem as AFormItem, Input as AInput, InputPassword as AInputPassword } from 'ant-design-vue'
+
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { accountEmail } from '@/services/api'

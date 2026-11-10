@@ -1,6 +1,9 @@
-"""Build-only removal and read-only verification of four unused runtime CLIs.
+"""Build-only removal and read-only verification of unused runtime components.
 
-Does not remove packages, libraries or their vulnerability records. The manifest
+Does not remove packages or their vulnerability records. The unused libtic
+terminal-database compiler/parser is removed with its sole retained CLI caller,
+toe; ncurses/tinfo and the application's other runtime libraries are retained.
+The manifest
 binds the original binaries so a renamed hardlink or byte-identical copy in the
 bounded executable search directories is also rejected by runtime verification.
 """
@@ -14,11 +17,26 @@ import os
 from pathlib import Path, PurePosixPath
 import stat
 
-TOOLS = frozenset({'mount', 'umount', 'nsenter', 'unshare'})
+# The Agent invokes Python libraries directly. Archive, Perl, terminal database,
+# diff and these GNU text/ownership tools have no application runtime caller.
+# Keep the shell and packaging/inventory commands used by verification tools.
+TOOLS = frozenset({'mount', 'umount', 'nsenter', 'unshare', 'tar', 'perl',
+                   'diff3', 'tic', 'toe', 'uniq', 'unexpand', 'chown', 'chgrp', 'sort',
+                   'chage', 'chfn', 'chsh', 'expiry', 'gpasswd', 'passwd',
+                   'chgpasswd', 'chpasswd', 'groupadd', 'groupdel', 'groupmod',
+                   'grpck', 'newusers', 'pwck', 'useradd', 'userdel', 'usermod',
+                   'vipw', 'vigr', 'grpconv', 'grpunconv', 'pwconv', 'pwunconv',
+                   'login', 'newgrp', 'sg', 'openssl', 'gzip', 'gunzip', 'zcat',
+                   'uncompress', 'zcmp', 'zdiff', 'zforce', 'zgrep', 'zless',
+                   'zmore', 'znew'})
 BIN_DIRS = ('usr/bin', 'bin', 'usr/sbin', 'sbin', 'usr/local/bin', 'usr/local/sbin')
+PARSER_LIBRARY_DIRS = ('usr/lib/x86_64-linux-gnu', 'lib/x86_64-linux-gnu')
+PARSER_LIBRARIES = frozenset({'libtic.so.6', 'libtic.so.6.5'})
 LIBRARIES = ('usr/lib/x86_64-linux-gnu/libc.so.6', 'usr/lib/x86_64-linux-gnu/libstdc++.so.6',
              'usr/lib/x86_64-linux-gnu/libmount.so.1', 'usr/lib/x86_64-linux-gnu/libblkid.so.1',
-             'usr/lib/x86_64-linux-gnu/libgcc_s.so.1')
+             'usr/lib/x86_64-linux-gnu/libgcc_s.so.1',
+             'usr/lib/x86_64-linux-gnu/libtinfo.so.6',
+             'usr/lib/x86_64-linux-gnu/libncursesw.so.6')
 DEFAULT_MANIFEST = '/usr/local/share/tripplanner/restricted-runtime-tools.json'
 
 
@@ -68,7 +86,7 @@ def package_paths(root):
 
 def candidates(root):
     result = package_paths(root)
-    for relative in BIN_DIRS:
+    for relative in (*BIN_DIRS, *PARSER_LIBRARY_DIRS):
         directory = safe(root, relative)
         if directory.is_dir():
             result.update(directory.iterdir())
@@ -79,12 +97,13 @@ def candidates(root):
 
 def collect_fingerprints(root):
     found = {}
-    for relative in BIN_DIRS:
-        for tool in TOOLS:
-            path = safe(root, relative + '/' + tool)
-            if path.is_file():
-                info = path.stat()
-                found[digest(path)] = {'sha256': digest(path), 'size': info.st_size}
+    for directories, names in ((BIN_DIRS, TOOLS), (PARSER_LIBRARY_DIRS, PARSER_LIBRARIES)):
+        for relative in directories:
+            for tool in names:
+                path = safe(root, relative + '/' + tool)
+                if path.is_file():
+                    info = path.stat()
+                    found[digest(path)] = {'sha256': digest(path), 'size': info.st_size}
     for path in package_paths(root):
         if path.is_file():
             info = path.stat()
@@ -102,7 +121,7 @@ def scan(root, fingerprints, capability_reader=capabilities):
             continue
         # Name, then content identity covers usrmerge aliases, hardlinks and
         # exact copied binaries without deleting unrelated executable files.
-        named = path.name in TOOLS
+        named = path.name in TOOLS or path.name in PARSER_LIBRARIES
         matched = False
         if path.is_file():
             info = path.stat()
@@ -135,11 +154,12 @@ def restrict(root, capability_reader=capabilities):
     if remaining:
         raise RuntimeError('Restricted CLI alias/copy still present after image cleanup')
     if any(not safe(root, name).is_file() or digest(safe(root, name)) != value for name, value in libraries.items()):
-        raise RuntimeError('Core library changed during CLI-only cleanup')
+        raise RuntimeError('Retained core library changed during component cleanup')
     if before_dpkg is not None and digest(database) != before_dpkg:
         raise RuntimeError('Package database changed during CLI-only cleanup')
     return {'schema_version': 1, 'status': 'verified_absent', 'tools': sorted(TOOLS),
-            'search_directories': list(BIN_DIRS), 'fingerprints': fingerprints,
+            'search_directories': list((*BIN_DIRS, *PARSER_LIBRARY_DIRS)),
+            'parser_libraries': sorted(PARSER_LIBRARIES), 'fingerprints': fingerprints,
             'removed_entries': before, 'remaining_entries': remaining,
             'unchanged_library_sha256': libraries, 'package_database_sha256': before_dpkg,
             'limits': 'Bounded name/dpkg/exact-binary-identity inventory; does not prove absence of arbitrary recompiled helpers or vulnerability absence in retained libraries/static native consumers.'}
@@ -163,7 +183,9 @@ def main():
         print(json.dumps(manifest))
         return 0
     manifest = json.loads(args.manifest.read_text(encoding='utf-8'))
-    if set(manifest.get('tools', [])) != TOOLS or not manifest.get('fingerprints'):
+    if (set(manifest.get('tools', [])) != TOOLS
+            or set(manifest.get('parser_libraries', [])) != PARSER_LIBRARIES
+            or not manifest.get('fingerprints')):
         raise RuntimeError('Restricted CLI manifest is absent or incomplete')
     remaining = scan(root, manifest['fingerprints'])
     print(json.dumps({'status': 'verified_absent' if not remaining else 'restricted_tools_present',

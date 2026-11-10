@@ -442,9 +442,10 @@
 </template>
 
 <script setup lang="ts">
+import { Affix as AAffix, Alert as AAlert, BackTop as ABackTop, Button as AButton, Card as ACard, Collapse as ACollapse, CollapsePanel as ACollapsePanel, Descriptions as ADescriptions, DescriptionsItem as ADescriptionsItem, Divider as ADivider, Dropdown as ADropdown, Empty as AEmpty, Input as AInput, InputNumber as AInputNumber, List as AList, ListItem as AListItem, Menu as AMenu, MenuItem as AMenuItem, Modal as AModal, Space as ASpace, SubMenu as ASubMenu, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
+
 import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { useAssistantProposal } from '@/composables/useAssistantProposal'
 import { useAttractionPhotos } from '@/composables/useAttractionPhotos'
@@ -762,7 +763,8 @@ const goBack = () => {
 }
 
 // 滚动到指定区域
-const scrollToSection = ({ key }: { key: string }) => {
+const scrollToSection = ({ key: selectedKey }: { key: string | number }) => {
+  const key = String(selectedKey)
   activeSection.value = key
   // 每日行程: 先展开对应面板再滚动定位
   if (key.startsWith('day-')) {

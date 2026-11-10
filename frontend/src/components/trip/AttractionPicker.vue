@@ -18,6 +18,8 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Empty as AEmpty, InputSearch as AInputSearch, List as AList, ListItem as AListItem, ListItemMeta as AListItemMeta, Modal as AModal } from 'ant-design-vue'
+
 import { ref, watch } from 'vue'
 import { searchAttractionPOIs } from '@/services/map'
 import type { POIInfo } from '@/types'

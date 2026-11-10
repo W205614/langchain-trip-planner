@@ -246,7 +246,9 @@ def scan_repository(destination: Path, include_untracked=False):
 
 
 def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False,
-          approval=None, runtime_proof=None, retained_inventory=None, source_mode=None):
+          approval=None, runtime_proof=None, retained_inventory=None, source_mode=None, all_severities=False):
+    if all_severities and approval:
+        raise RuntimeError('All-severity release verification does not accept residual vulnerable findings')
     if source_mode is not None:
         try:
             from . import source_equivalence_delta
@@ -265,10 +267,11 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
     environment.setdefault('GRYPE_DB_CACHE_DIR', str(ROOT / '.cache/grype-db'))
     environment.setdefault('GRYPE_CHECK_FOR_APP_UPDATE', 'false')
     scan_started = datetime.now(timezone.utc)
-    code = run([executable, 'docker:' + identity, '--fail-on', 'high', '--output', 'json', '--file', str(output)], destination / 'image-scan.log', timeout=1800, env=environment)
+    code = run([executable, 'docker:' + identity, '--fail-on', 'negligible' if all_severities else 'high', '--output', 'json', '--file', str(output)], destination / 'image-scan.log', timeout=1800, env=environment)
     data = report(output)
     matches = data.get('matches', []) if isinstance(data, dict) else []
-    count = sum(match.get('vulnerability', {}).get('severity', '').lower() in ('high', 'critical') for match in matches)
+    high_critical = sum(match.get('vulnerability', {}).get('severity', '').lower() in ('high', 'critical') for match in matches)
+    count = len(matches) if all_severities else high_critical
     if approval and (code not in (0, 2) or not image_document(data)):
         raise RuntimeError('Failed/missing image scan cannot establish temporary risk acceptance; raw receipt retained')
     contextual = 0
@@ -289,14 +292,15 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         if context_verified and policy:
             for match in matches:
                 vulnerability = match.get('vulnerability', {})
-                if vulnerability.get('severity', '').lower() not in ('high', 'critical'):
+                if not all_severities and vulnerability.get('severity', '').lower() not in ('high', 'critical'):
                     continue
                 artifact = match.get('artifact', {})
                 ids = [vulnerability.get('id'), *[item.get('id') for item in match.get('relatedVulnerabilities', [])]]
                 if artifact.get('type') == 'python' and contextual_not_affected(policy, artifact.get('name', ''), artifact.get('version', ''), ids):
                     contextual += 1
     classifications = {'fixed_by_distribution_backport': 0, 'fixed_by_pinned_security_upgrade': 0,
-                       'still_vulnerable_vendor_minor': 0, 'not_affected_component_absent': 0}
+                       'still_vulnerable_vendor_minor': 0, 'not_affected_component_absent': 0,
+                       'not_affected_execution_path': 0, 'not_affected_build_configuration': 0}
     assessed = []
     acceptance_metadata = None
     if vendor_policy and context_verified:
@@ -309,7 +313,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
             write(destination / 'risk-acceptance-verification.json', acceptance_metadata)
         for match in matches:
             vulnerability, artifact = match.get('vulnerability', {}), match.get('artifact', {})
-            if vulnerability.get('severity', '').lower() not in ('high', 'critical'):
+            if not all_severities and vulnerability.get('severity', '').lower() not in ('high', 'critical'):
                 continue
             classification = image_policy.assess(vendor_policy, match, evidence, acceptance_metadata)
             if classification:
@@ -327,7 +331,8 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         state = ('pass_temporary_risk_acceptance' if classifications['still_vulnerable_vendor_minor']
                  else 'pass_vendor_policy' if sum(classifications.values()) else 'pass_contextual')
     return [{'scanner': 'grype-image', 'target': name, 'image_id': identity, 'status': state, 'blocking_findings': remaining,
-             'raw_high_critical_findings': count, 'contextual_not_affected': contextual, 'all_findings': len(matches), 'exit_code': code,
+             'raw_high_critical_findings': high_critical, 'severity_scope': 'all' if all_severities else 'high_critical',
+             'contextual_not_affected': contextual, 'all_findings': len(matches), 'exit_code': code,
              'vex_expires_on': policy.get('expires_on') if policy else None,
              'vex_review_policy': policy.get('review_policy', 'time_limited') if policy else None,
              'distribution_assessments': classifications,
@@ -403,6 +408,7 @@ def main():
     parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
     parser.add_argument('--vex', type=Path, help='Explicit opt-in to an exact source/component-bound contextual assessment; raw findings remain in reports')
     parser.add_argument('--vendor-policy', type=Path, help='Explicit source/revision/dpkg-bound distribution backport or vendor severity assessment; vulnerable entries stay visible')
+    parser.add_argument('--all-severities', action='store_true', help='Image release check: every raw finding, including unknown severity, requires exact applicable fix/context evidence; residual risk acceptance is forbidden')
     parser.add_argument('--risk-acceptance', type=Path, help='Explicit human-approved, expiring local-demo-only acceptance with exact business/native/package/runtime bindings; never a fix')
     parser.add_argument('--runtime-proof', type=Path, help='Fresh actual-container proof from tools/runtime_constraint_probe.py; mandatory for residual risk acceptance')
     parser.add_argument('--inventory-container', help='Reuse exact-image UUID-owned stopped inventory object that has never started; always retained even with CI cleanup flag')
@@ -411,6 +417,8 @@ def main():
     destination = args.reports.resolve()
     destination.mkdir(parents=True, exist_ok=True)
     try:
+        if args.all_severities and args.mode != 'image':
+            raise RuntimeError('--all-severities applies only to image scans')
         policy = load_vex(args.vex) if args.vex else None
         vendor_policy = image_policy.load_policy(args.vendor_policy, ROOT) if args.vendor_policy else None
         if args.risk_acceptance and (args.mode != 'image' or not vendor_policy or not args.runtime_proof):
@@ -435,7 +443,7 @@ def main():
             if not args.image:
                 raise RuntimeError('--image is required')
             records = image(destination, args.image, policy, vendor_policy, args.cleanup_owned_resources,
-                            approval, runtime_proof, args.inventory_container, args.source_equivalence)
+                            approval, runtime_proof, args.inventory_container, args.source_equivalence, args.all_severities)
         elif args.mode == 'secrets':
             records = scan_repository(destination, args.include_untracked)
         else:

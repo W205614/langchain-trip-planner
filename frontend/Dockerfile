@@ -1,3 +1,9 @@
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS busybox-security
+RUN apk upgrade --no-cache \
+    && apk add --no-cache alpine-sdk linux-headers openssl-dev utmps-dev utmps-static perl zip
+COPY security/busybox-backport /trip-busybox
+RUN sh /trip-busybox/build.sh
+
 FROM node:22-alpine AS build
 
 WORKDIR /app
@@ -18,6 +24,8 @@ RUN npm run build
 FROM nginx:1.30.6-alpine
 # Upstream Nginx tags can predate signed Alpine security package updates.
 RUN apk upgrade --no-cache
+COPY --from=busybox-security /out/ /tmp/trip-busybox/
+RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/trip-common.conf
 RUN sed -i 's/X-Forwarded-Proto $scheme;/X-Forwarded-Proto $trip_request_scheme;/g' /etc/nginx/trip-common.conf

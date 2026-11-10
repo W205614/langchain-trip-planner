@@ -52,6 +52,8 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Col as ACol, Empty as AEmpty, Input as AInput, InputSearch as AInputSearch, Pagination as APagination, Row as ARow, Select as ASelect, SelectOption as ASelectOption, Tag as ATag } from 'ant-design-vue'
+
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { searchAttractionPOIs } from '@/services/map'

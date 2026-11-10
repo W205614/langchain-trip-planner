@@ -30,10 +30,16 @@ class RestrictedToolsTests(unittest.TestCase):
             root = Path(folder); binary = self.fixture(root)
             os.link(binary / 'nsenter', binary / 'renamed-hardlink')
             shutil.copyfile(binary / 'unshare', binary / 'renamed-copy')
+            os.link(binary / 'perl', binary / 'perl5.40.1')
+            (binary / 'cp').write_bytes(b'keep-packaging-copy')
+            (binary / 'sha256sum').write_bytes(b'keep-source-verification')
             result = tools.restrict(root, lambda path: None)
             self.assertEqual('verified_absent', result['status'])
             self.assertFalse((binary / 'renamed-hardlink').exists())
             self.assertFalse((binary / 'renamed-copy').exists())
+            self.assertFalse((binary / 'perl5.40.1').exists())
+            self.assertEqual(b'keep-packaging-copy', (binary / 'cp').read_bytes())
+            self.assertEqual(b'keep-source-verification', (binary / 'sha256sum').read_bytes())
             self.assertEqual(b'keep-python', (binary / 'python3.11').read_bytes())
             self.assertEqual(b'keep-libc', (root / 'usr/lib/x86_64-linux-gnu/libc.so.6').read_bytes())
             self.assertEqual(b'keep-essential-package-database', (root / 'var/lib/dpkg/status').read_bytes())
@@ -49,6 +55,28 @@ class RestrictedToolsTests(unittest.TestCase):
             self.assertEqual('restricted_binary_identity', rows[0]['reason'])
             self.assertEqual('fixture-capability', rows[0]['file_capability'])
             self.assertTrue((binary / 'unexpected-helper').exists())
+
+    def test_unused_tic_parser_and_aliases_removed_while_tinfo_ncurses_remain(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); self.fixture(root)
+            libraries = root / 'usr/lib/x86_64-linux-gnu'
+            (libraries / 'libtic.so.6.5').write_bytes(b'unused-terminal-compiler-parser')
+            if os.name == 'nt':
+                # Windows host lacks symlink privilege; Linux CI exercises the
+                # SONAME symlink, while this host exercises the hardlink alias.
+                os.link(libraries / 'libtic.so.6.5', libraries / 'libtic.so.6')
+            else:
+                (libraries / 'libtic.so.6').symlink_to('libtic.so.6.5')
+            shutil.copyfile(libraries / 'libtic.so.6.5', libraries / 'renamed-parser.so')
+            (libraries / 'libtinfo.so.6').write_bytes(b'keep-terminal-runtime')
+            (libraries / 'libncursesw.so.6').write_bytes(b'keep-curses-runtime')
+            result = tools.restrict(root, lambda path: None)
+            self.assertEqual('verified_absent', result['status'])
+            self.assertFalse((root / 'usr/bin/toe').exists())
+            for name in ('libtic.so.6', 'libtic.so.6.5', 'renamed-parser.so'):
+                self.assertFalse((libraries / name).exists() or (libraries / name).is_symlink())
+            self.assertEqual(b'keep-terminal-runtime', (libraries / 'libtinfo.so.6').read_bytes())
+            self.assertEqual(b'keep-curses-runtime', (libraries / 'libncursesw.so.6').read_bytes())
 
     def test_dpkg_parent_traversal_is_rejected_before_any_target_is_removed(self):
         with tempfile.TemporaryDirectory() as folder:

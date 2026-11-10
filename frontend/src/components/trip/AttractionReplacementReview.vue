@@ -5,6 +5,8 @@
   </a-modal>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Modal as AModal } from 'ant-design-vue'
+
 import type { Attraction, POIInfo } from '@/types'
 defineProps<{ original?: Attraction; candidate?: POIInfo }>()
 const emit = defineEmits<{ confirm: []; cancel: [] }>()

@@ -17,6 +17,8 @@
   </a-modal>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Modal as AModal, Space as ASpace, Textarea as ATextarea } from 'ant-design-vue'
+
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import api from '@/services/api'
 const props = defineProps<{ id: number }>(), emit = defineEmits(['close'])

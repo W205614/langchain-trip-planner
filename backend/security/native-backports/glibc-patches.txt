@@ -1,0 +1,15 @@
+patches/glibc-19499-sourceware.patch
+patches/glibc-5435-trixie.patch
+patches/glibc-84243-trixie.patch
+patches/glibc-6238-prereq.patch
+patches/glibc-6238.patch
+patches/glibc-6238-tests.patch
+patches/glibc-6368.patch
+patches/glibc-6368-followup.patch
+patches/glibc-6791.patch
+patches/glibc-77117.patch
+patches/glibc-80489.patch
+patches/glibc-18374.patch
+patches/glibc-19542.patch
+patches/glibc-8674.patch
+patches/glibc-origin-trixie.patch

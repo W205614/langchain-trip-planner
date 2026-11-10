@@ -105,6 +105,8 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Collapse as ACollapse, CollapsePanel as ACollapsePanel, Space as ASpace } from 'ant-design-vue'
+
 import { computed, ref, watch } from 'vue'
 import type { PlanningInput, Location, PlanningCommitment } from '@/types'
 const props = withDefaults(defineProps<{ modelValue?: PlanningInput; days?: number; startDate?: string; disabled?: boolean; commitmentsReadOnly?: boolean; activities?: { id: string; name: string }[] }>(), { days: 1, disabled: false, commitmentsReadOnly: false, activities: () => [] })

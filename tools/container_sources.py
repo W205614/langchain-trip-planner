@@ -30,6 +30,16 @@ PYTHON_SOURCE_RELEASES = {
     ('ortools', '9.15.6755'): ('google/or-tools', 'v9.15', '551ad10d94835c99e5e1e684500d3db398c0e345'),
 }
 
+PROJECT_SOURCE_PATHS = (
+    'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/licenses', 'backend/security/native-backports',
+    'backend/security/glibc-hardening', 'backend/security/cpython-backports',
+    'backend/security/pam-backport', 'backend/security/dash-backport',
+    'deploy/images/busybox-backport', 'tools/sync_busybox_inputs.py',
+    'backend/Dockerfile', 'business-backend/Dockerfile', 'frontend/Dockerfile',
+    'tools/container_sources.py', 'tools/container_release.py', 'tools/container-wheel-sources.json',
+    'tools/container-java-dependencies.json',
+)
+
 
 def run(*args):
     return subprocess.check_output(args)
@@ -169,47 +179,105 @@ def apt_sources(collector, image, distribution, suites):
     return packages
 
 
-def alpine_sources(collector, image):
+def alpine_recipe_sources(collector, origin, commit, recipe_sha256=None):
+    raw = collector.fetch(f'https://gitlab.alpinelinux.org/alpine/aports/-/archive/{commit}/aports-{commit}.tar.gz?path=main/{origin}',
+                          f'alpine/recipes/{origin}-{commit}.tar.gz', recipe_sha256, immutable=True)
+    with tarfile.open(raw) as archive:
+        files = {Path(member.name).name: archive.extractfile(member).read() for member in archive.getmembers() if member.isfile()}
+    recipe = files['APKBUILD'].decode()
+    sums = re.search(r'sha512sums="(.*?)"', recipe, re.S)
+    if not sums:
+        if re.search(r'^source=', recipe, re.M):
+            raise RuntimeError('Missing Alpine checksums: ' + origin)
+        return files
+    for digest, filename in re.findall(r'([a-f0-9]{128})\s+(\S+)', sums.group(1)):
+        if filename in files:
+            if hashlib.sha512(files[filename]).hexdigest() != digest:
+                raise RuntimeError('Alpine recipe checksum mismatch: ' + filename)
+        else:
+            url = 'https://distfiles.alpinelinux.org/distfiles/v3.24/' + filename
+            relative = 'alpine/distfiles/' + filename
+            if origin == 'libyuv' and filename.startswith('libyuv-'):
+                # Its official fetch/unpack overrides validate sorted source
+                # contents because Gitiles changes archive timestamps.
+                expected = re.search(r'^_libyuvchecksum=([a-f0-9]{128})$', recipe, re.M).group(1)
+                path = collector.fetch(url, relative)
+                content_hash = hashlib.sha512()
+                with tarfile.open(path) as source:
+                    for member in sorted(source.getmembers(), key=lambda item: item.name):
+                        if member.isfile():
+                            content_hash.update(source.extractfile(member).read())
+                if content_hash.hexdigest() != expected:
+                    raise RuntimeError('Alpine libyuv source content checksum mismatch')
+                collector.downloads[relative]['upstream_source_content_sha512'] = expected
+            else:
+                collector.fetch(url, relative, digest, 'sha512')
+    return files
+
+
+def verify_busybox_recipe(original, modified, patch, version):
+    def sums(recipe):
+        block = re.search(r'sha512sums="(.*?)"', recipe, re.S)
+        if not block:
+            raise RuntimeError('BusyBox recipe checksums missing')
+        return {name: digest for digest, name in re.findall(r'([a-f0-9]{128})\s+(\S+)', block.group(1))}
+    expected = sums(original)
+    expected['CVE-2025-60876.patch'] = hashlib.sha512(patch).hexdigest()
+    if sums(modified) != expected or not re.search(r'^pkgver=' + re.escape(version) + '$', modified, re.M):
+        raise RuntimeError('Downstream BusyBox inputs differ from the reviewed original plus security patch')
+
+
+def busybox_provenance(collector, image, service, packages):
+    names = {'busybox', 'busybox-binsh', 'ssl_client'}
+    installed = {p['P']: p for p in packages if p['P'] in names}
+    root = Path(__file__).resolve().parents[1]
+    canonical = root / 'deploy/images/busybox-backport'
+    lock = dict(line.split('=', 1) for line in (canonical / 'source.lock').read_text().splitlines())
+    if set(installed) != names or any(p['V'] != lock['PACKAGE_VERSION'] + '-r0' or p['o'] != 'busybox' for p in installed.values()):
+        raise RuntimeError('Unexpected installed downstream BusyBox package identity')
+    path = '/usr/local/share/tripplanner/busybox-backport/'
+    provenance = {name: docker(image, 'cat', path + name) for name in
+                  ('source.lock', 'CVE-2025-60876.patch', 'APKBUILD', 'runtime-sha256.txt', 'package-sha256.txt')}
+    for name in ('source.lock', 'CVE-2025-60876.patch'):
+        if provenance[name] != (canonical / name).read_bytes():
+            raise RuntimeError('Installed BusyBox source provenance differs from the project: ' + name)
+    docker(image, 'sha256sum', '-c', path + 'runtime-sha256.txt')
+    destination = collector.root / 'runtime-provenance' / service / 'busybox'
+    destination.mkdir(parents=True, exist_ok=True)
+    for name, content in provenance.items():
+        (destination / name).write_bytes(content)
+    return lock, provenance
+
+
+def alpine_sources(collector, image, service):
     packages = list(paragraphs(docker(image, 'cat', '/lib/apk/db/installed').decode()))
     packages = [{k: row.get(k) for k in ('P', 'V', 'L', 'o', 'c')} for row in packages]
-    origins = {(row['o'], row['c']) for row in packages if row['c']}
+    lock, provenance = busybox_provenance(collector, image, service, packages)
+    origins = {(row['o'], row['c']) for row in packages if row['o'] != 'busybox' and row['c']}
+    if any(not row['c'] and row['o'] != 'busybox' for row in packages):
+        raise RuntimeError('Alpine package lacks an immutable source recipe')
+    origins.add(('busybox', lock['APKBUILD_COMMIT']))
     for origin, commit in sorted(origins):
-        raw = collector.fetch(f'https://gitlab.alpinelinux.org/alpine/aports/-/archive/{commit}/aports-{commit}.tar.gz?path=main/{origin}', f'alpine/recipes/{origin}-{commit}.tar.gz', immutable=True)
-        with tarfile.open(raw) as archive:
-            files = {Path(member.name).name: archive.extractfile(member).read() for member in archive.getmembers() if member.isfile()}
-        recipe = files['APKBUILD'].decode()
-        sums = re.search(r'sha512sums="(.*?)"', recipe, re.S)
-        if not sums:
-            if re.search(r'^source=', recipe, re.M):
-                raise RuntimeError('Missing Alpine checksums: ' + origin)
-            continue
-        for digest, filename in re.findall(r'([a-f0-9]{128})\s+(\S+)', sums.group(1)):
-            if filename in files:
-                if hashlib.sha512(files[filename]).hexdigest() != digest:
-                    raise RuntimeError('Alpine recipe checksum mismatch: ' + filename)
-            else:
-                url = 'https://distfiles.alpinelinux.org/distfiles/v3.24/' + filename
-                relative = 'alpine/distfiles/' + filename
-                if origin == 'libyuv' and filename.startswith('libyuv-'):
-                    # Its official fetch/unpack overrides validate sorted source
-                    # contents because Gitiles changes archive timestamps.
-                    expected = re.search(r'^_libyuvchecksum=([a-f0-9]{128})$', recipe, re.M).group(1)
-                    path = collector.fetch(url, relative)
-                    content_hash = hashlib.sha512()
-                    with tarfile.open(path) as source:
-                        for member in sorted(source.getmembers(), key=lambda item: item.name):
-                            if member.isfile():
-                                content_hash.update(source.extractfile(member).read())
-                    if content_hash.hexdigest() != expected:
-                        raise RuntimeError('Alpine libyuv source content checksum mismatch')
-                    collector.downloads[relative]['upstream_source_content_sha512'] = expected
-                else:
-                    collector.fetch(url, relative, digest, 'sha512')
-    nginx = next(p for p in packages if p['P'] == 'nginx')['V'].split('-r')[0]
-    collector.fetch(f'https://nginx.org/download/nginx-{nginx}.tar.gz', f'runtimes/nginx-{nginx}.tar.gz')
-    njs = next(p for p in packages if p['P'] == 'nginx-module-njs')['V'].removeprefix(nginx + '.').split('-r')[0]
-    collector.fetch(f'https://codeload.github.com/nginx/njs/tar.gz/refs/tags/{njs}', f'runtimes/njs-{njs}.tar.gz')
+        files = alpine_recipe_sources(collector, origin, commit, lock['APKBUILD_SHA256'] if origin == 'busybox' else None)
+        if origin == 'busybox':
+            verify_busybox_recipe(files['APKBUILD'].decode(), provenance['APKBUILD'].decode(),
+                                  provenance['CVE-2025-60876.patch'], lock['PACKAGE_VERSION'])
+            source = collector.root / 'alpine/distfiles' / ('busybox-' + lock['UPSTREAM_VERSION'] + '.tar.bz2')
+            if checksum(source) != lock['UPSTREAM_SHA256']:
+                raise RuntimeError('BusyBox original source SHA-256 mismatch')
+    nginx = next((p for p in packages if p['P'] == 'nginx'), None)
+    if nginx:
+        version = nginx['V'].split('-r')[0]
+        collector.fetch(f'https://nginx.org/download/nginx-{version}.tar.gz', f'runtimes/nginx-{version}.tar.gz')
+        njs = next(p for p in packages if p['P'] == 'nginx-module-njs')['V'].removeprefix(version + '.').split('-r')[0]
+        collector.fetch(f'https://codeload.github.com/nginx/njs/tar.gz/refs/tags/{njs}', f'runtimes/njs-{njs}.tar.gz')
     return packages
+
+
+def alpine_images_sources(collector, images):
+    # Both application images share Alpine recipe/source paths; collect them
+    # sequentially so a shared checksum-bound download has only one writer.
+    return {service: alpine_sources(collector, image, service) for service, image in images.items()}
 
 
 def java_sources(collector, image):
@@ -288,8 +356,7 @@ def java_sources(collector, image):
             collector.fetch(base + name + suffix, relative, digest, 'sha1')
     # Several published JARs omit separate license files. Preserve their actual
     # source headers and CI-resolved upstream declarations, with canonical terms.
-    sbom = json.loads((root / 'docs/evidence/release-v0.1.3-20261109/java.cdx.json').read_bytes())
-    declarations = {(r['group'], r['name'], r['version']): r['licenses'] for r in sbom['components']}
+    declarations = {(r['groupId'], r['artifactId'], r['version']): r['licenses'] for r in inventory['components']}
     terms_commit = '31846481de7ea17d92f2f46fad76abe58b2e9bb0'
     for row in missing_notices:
         name = row['artifactId'] + '-' + row['version']
@@ -361,6 +428,36 @@ print(json.dumps(packages))
     env = dict(e.split('=', 1) for e in info['Config']['Env'])
     version = env['PYTHON_VERSION']
     collector.fetch(f'https://www.python.org/ftp/python/{version}/Python-{version}.tar.xz', f'runtimes/Python-{version}.tar.xz', env['PYTHON_SHA256'])
+    root = Path(__file__).resolve().parents[1]
+    canonical = root / 'backend/security/cpython-backports'
+    path = '/usr/local/share/tripplanner/cpython-backports/'
+    provenance = {}
+    for source in sorted(canonical.iterdir()):
+        if source.suffix == '.patch' or source.name in ('patches.sha256', 'README.md'):
+            content = docker(image, 'cat', path + source.name)
+            if content != source.read_bytes():
+                raise RuntimeError('Installed CPython source provenance differs from the project: ' + source.name)
+            provenance[source.name] = content
+    provenance['installed-files.sha256'] = docker(image, 'cat', path + 'installed-files.sha256')
+    docker(image, 'sha256sum', '-c', path + 'installed-files.sha256')
+    destination = collector.root / 'runtime-provenance/agent/cpython'
+    destination.mkdir(parents=True, exist_ok=True)
+    for name, content in provenance.items():
+        (destination / name).write_bytes(content)
+    for component, hashes in (('pam', 'pam-userdb-sha256.txt'), ('dash', 'dash-sha256.txt')):
+        canonical = root / f'backend/security/{component}-backport'
+        path = f'/usr/local/share/tripplanner/{component}-backport/'
+        destination = collector.root / 'runtime-provenance/agent' / component
+        destination.mkdir(parents=True, exist_ok=True)
+        for source in sorted(canonical.iterdir()):
+            if source.is_file():
+                content = docker(image, 'cat', path + source.name)
+                if content != source.read_bytes():
+                    raise RuntimeError(f'Installed {component} source provenance differs from the project: ' + source.name)
+                (destination / source.name).write_bytes(content)
+        content = docker(image, 'cat', path + hashes)
+        docker(image, 'sha256sum', '-c', path + hashes)
+        (destination / hashes).write_bytes(content)
     native = wheel_library_sources(collector, image, packages)
     return {'packages': [{k: v for k, v in r.items() if k != 'notices'} for r in packages], 'native_libraries': native}
 
@@ -464,6 +561,95 @@ def npm_sources(collector, root):
     return result
 
 
+def copy_project_sources(collector, root):
+    for relative in PROJECT_SOURCE_PATHS:
+        source = root / relative
+        target = collector.root / 'project' / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if source.is_dir():
+            shutil.copytree(source, target, dirs_exist_ok=True)
+        else:
+            shutil.copyfile(source, target)
+
+
+def sha256_entries(content, label):
+    entries = {}
+    for line in content.decode('utf-8').splitlines():
+        match = re.fullmatch(r'([a-f0-9]{64})  (.+)', line)
+        if not match or match[2] in entries:
+            raise RuntimeError('Invalid or duplicate SHA256 entry: ' + label)
+        entries[match[2]] = match[1]
+    return entries
+
+
+def glibc_hardening_provenance(collector, image, root):
+    version = docker(image, 'dpkg-query', '-W', '-f=${Version}', 'libc6').decode('ascii').strip()
+    revision = re.search(r'\+trip(\d+)$', version)
+    record = {'installed_libc6': version, 'required': bool(revision and int(revision[1]) >= 4)}
+    if not record['required']:
+        return {**record, 'status': 'not_required_for_this_package_revision'}
+
+    path = '/usr/local/share/tripplanner/glibc-hardening/'
+    binaries = {'tls-guard-regression', 'stack-randomization-regression',
+                'arena-regression', 'stack-independent-lifecycle'}
+    texts = {'runtime-check.sh', 'summary.json', 'packaged-elf-sha256.txt',
+             'SOURCE-INPUTS.sha256', 'RUN-CHECKS.txt'}
+    proof = {'SHA256SUMS': docker(image, 'cat', path + 'SHA256SUMS')}
+    hashes = sha256_entries(proof['SHA256SUMS'], 'glibc proof')
+    if hashes.keys() != binaries | texts:
+        raise RuntimeError('Unexpected glibc hardening proof members')
+    proof_check = docker(image, 'sh', '-c', 'cd ' + path + ' && sha256sum -c SHA256SUMS').decode()
+    for name in sorted(texts):
+        proof[name] = docker(image, 'cat', path + name)
+        if hashlib.sha256(proof[name]).hexdigest() != hashes[name]:
+            raise RuntimeError('glibc proof text checksum mismatch: ' + name)
+
+    canonical = root / 'backend/security/glibc-hardening'
+    inputs = {}
+    for manifest in ('tests.sha256', 'hardening-patches.sha256'):
+        content = (canonical / manifest).read_bytes()
+        for name, expected in sha256_entries(content, manifest).items():
+            source = canonical / name
+            if not source.resolve().is_relative_to(canonical.resolve()):
+                raise RuntimeError('glibc source input escapes canonical directory: ' + name)
+            actual = checksum(source)
+            if actual != expected:
+                raise RuntimeError('Canonical glibc source checksum mismatch: ' + name)
+            inputs[name] = actual
+        inputs[manifest] = hashlib.sha256(content).hexdigest()
+    if sha256_entries(proof['SOURCE-INPUTS.sha256'], 'glibc source inputs') != inputs:
+        raise RuntimeError('Installed glibc source inputs differ from canonical inputs')
+    if proof['runtime-check.sh'] != (canonical / 'runtime-check.sh').read_bytes():
+        raise RuntimeError('Installed glibc runtime checker differs from canonical input')
+
+    library_path = '/usr/lib/x86_64-linux-gnu/'
+    libraries = {'libc.so.6', 'ld-linux-x86-64.so.2', 'libresolv.so.2'}
+    elf_hashes = sha256_entries(proof['packaged-elf-sha256.txt'], 'glibc packaged ELFs')
+    if elf_hashes.keys() != {library_path + name for name in libraries}:
+        raise RuntimeError('Unexpected glibc packaged ELF paths')
+    elf_check = docker(image, 'sha256sum', '-c', path + 'packaged-elf-sha256.txt').decode()
+    summary = json.loads(proof['summary.json'])
+    tests = (canonical / 'upstream-tests.txt').read_text().splitlines()
+    if (summary.get('result') != 'passed'
+            or summary.get('packaged_libc') != f'libc6_{version}_amd64.deb'
+            or summary.get('packaged_elf_sha256') != {name: elf_hashes[library_path + name] for name in libraries}
+            or summary.get('upstream_results') != ['PASS: ' + test for test in tests]
+            or summary.get('upstream_nptl_pass') != sum(test.startswith('nptl/') for test in tests)
+            or summary.get('upstream_malloc_pass') != sum(not test.startswith('nptl/') for test in tests)):
+        raise RuntimeError('glibc proof summary differs from installed package or source-bound tests')
+
+    destination = collector.root / 'runtime-provenance/agent/glibc-hardening'
+    destination.mkdir(parents=True, exist_ok=True)
+    for name, content in proof.items():
+        (destination / name).write_bytes(content)
+    record.update(status='verified_provenance', image=image, proof_hash_check=proof_check,
+                  installed_elf_hash_check=elf_check, source_inputs_sha256=inputs,
+                  proof_binary_sha256={name: hashes[name] for name in sorted(binaries)},
+                  binary_payloads_in_source_bundle=False, runtime_checks_executed_by_collector=False)
+    (destination / 'collection.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+    return record
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for service in ('agent', 'backend', 'frontend'):
@@ -478,12 +664,12 @@ def main():
     collector = Collector(args.output.resolve())
     images = {k: json.loads(run('docker', 'image', 'inspect', getattr(args, k)))[0] for k in ('agent', 'backend', 'frontend')}
     metadata = {'images': {k: {'id': v['Id'], 'layers': v['RootFS']['Layers'], 'labels': v['Config']['Labels']} for k, v in images.items()}}
+    metadata['glibc_hardening'] = glibc_hardening_provenance(collector, images['agent']['Id'], root)
     with ThreadPoolExecutor(max_workers=3) as pool:
         jobs = {
             pool.submit(apt_sources, collector, args.agent, 'debian', [('deb.debian.org', 'trixie'), ('deb.debian.org', 'trixie-updates'), ('security.debian.org', 'trixie-security')]): 'debian',
-            pool.submit(apt_sources, collector, args.backend, 'ubuntu', [('archive.ubuntu.com', 'resolute'), ('archive.ubuntu.com', 'resolute-updates'), ('security.ubuntu.com', 'resolute-security')]): 'ubuntu',
             pool.submit(python_sources, collector, args.agent): 'python',
-            pool.submit(alpine_sources, collector, args.frontend): 'alpine',
+            pool.submit(alpine_images_sources, collector, {'backend': args.backend, 'frontend': args.frontend}): 'alpine',
             pool.submit(java_sources, collector, args.backend): 'java',
             pool.submit(npm_sources, collector, root): 'npm',
         }
@@ -498,21 +684,12 @@ def main():
                 print('Failed component: ' + name + ': ' + failures[name], flush=True)
         if failures:
             raise RuntimeError('Source collection incomplete: ' + json.dumps(failures))
-    for relative in ('LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/licenses', 'backend/security/native-backports',
-                     'tools/container_sources.py', 'tools/container_release.py', 'tools/container-wheel-sources.json',
-                     'tools/container-java-dependencies.json', 'docs/evidence/release-v0.1.3-20261109/java.cdx.json'):
-        source = root / relative
-        target = collector.root / 'project' / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        if source.is_dir():
-            shutil.copytree(source, target, dirs_exist_ok=True)
-        else:
-            shutil.copyfile(source, target)
+    copy_project_sources(collector, root)
     metadata['downloads'] = dict(sorted(collector.downloads.items()))
     (collector.root / 'manifest.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     if args.version:
         files = {collector.root / p for p in collector.downloads}
-        files.update(p for folder in ('licenses', 'project') for p in (collector.root / folder).rglob('*') if p.is_file())
+        files.update(p for folder in ('licenses', 'project', 'runtime-provenance') for p in (collector.root / folder).rglob('*') if p.is_file())
         files.add(collector.root / 'manifest.json')
         sums = ''.join(f'{checksum(p)}  {p.relative_to(collector.root).as_posix()}\n' for p in sorted(files))
         (collector.root / 'SHA256SUMS').write_text(sums, encoding='utf-8')

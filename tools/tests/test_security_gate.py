@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import date
 
 spec = importlib.util.spec_from_file_location('security_gate', Path(__file__).resolve().parents[1] / 'security_gate.py')
@@ -12,6 +13,67 @@ spec.loader.exec_module(gate)
 
 
 class GateFailureTests(unittest.TestCase):
+    def test_new_not_affected_classes_are_counted_separately_while_unknown_raw_finding_blocks(self):
+        base = {'distribution': 'debian', 'release': '13', 'artifact_type': 'deb',
+                'artifact_versions': {'libc6': 'reviewed'}, 'requires_dpkg': {'libc6': 'reviewed'},
+                'review_record': 'review.md'}
+        execution = dict(base, classification='not_affected_execution_path', ids=['reviewed-execution'],
+                         requires_source_lf_sha256={'/app/app/main.py': 'a'*64})
+        configuration = dict(base, classification='not_affected_build_configuration', ids=['reviewed-configuration'],
+                             file_sha256={'/lib/libc.so.6': 'b'*64}, requires_architecture='amd64')
+        policy = {'schema_version': 2, 'review_policy': 'source_and_artifact_bound',
+                  'source_bindings': {'review.md': 'c'*64}, 'assessments': [execution, configuration]}
+        evidence = {'distribution': 'debian', 'release': '13', 'packages': {'libc6': 'reviewed'},
+                    'source_lf_sha256': {'/app/app/main.py': 'a'*64},
+                    'file_sha256': {'/lib/libc.so.6': 'b'*64}, 'architecture': 'amd64'}
+        sample = {'source': {'type': 'image'}, 'matches': [
+            {'artifact': {'type': 'deb', 'name': 'libc6', 'version': 'reviewed'},
+             'vulnerability': {'id': identifier, 'severity': 'Unknown'}}
+            for identifier in ('reviewed-execution', 'reviewed-configuration', 'raw-unknown')]}
+        def inspection(command, **kwargs):
+            field = command[-2]
+            if field == '{{json .Id}}': output = '"sha256:fixture"'
+            elif field == '{{json .Config.Cmd}}': output = json.dumps(['uvicorn', 'app.agent_api.main:app', '--host', '0.0.0.0', '--port', '9000', '--workers', '1'])
+            else: output = 'reviewed-head'
+            return type('Inspection', (), {'returncode': 0, 'stdout': output})()
+        with tempfile.TemporaryDirectory() as folder, \
+             patch.object(gate, 'tool', return_value='grype'), \
+             patch.object(gate.subprocess, 'run', side_effect=inspection), \
+             patch.object(gate.subprocess, 'check_output', return_value='reviewed-head'), \
+             patch.object(gate, 'run', return_value=2), \
+             patch.object(gate, 'report', return_value=sample), \
+             patch.object(gate.image_policy, 'inventory', return_value=evidence):
+            result = gate.image(Path(folder), 'candidate', vendor_policy=policy, all_severities=True)[0]
+            self.assertEqual('blocked_findings', result['status'])
+            self.assertEqual(1, result['blocking_findings'])
+            self.assertEqual(1, result['distribution_assessments']['not_affected_execution_path'])
+            self.assertEqual(1, result['distribution_assessments']['not_affected_build_configuration'])
+            self.assertEqual(0, result['distribution_assessments']['not_affected_component_absent'])
+            sample['matches'].pop()
+            result = gate.image(Path(folder), 'candidate', vendor_policy=policy, all_severities=True)[0]
+            self.assertEqual('pass_vendor_policy', result['status'])
+            self.assertEqual(0, result['blocking_findings'])
+
+    def test_all_severity_image_gate_blocks_low_and_unknown_even_if_scanner_exit_is_zero(self):
+        sample = {'matches': [{'vulnerability': {'id': 'low-fixture', 'severity': 'Low'}},
+                              {'vulnerability': {'id': 'unknown-fixture', 'severity': 'Unknown'}}],
+                  'source': {'type': 'image'}}
+        with tempfile.TemporaryDirectory() as folder:
+            with patch.object(gate, 'tool', return_value='grype'), \
+                 patch.object(gate.subprocess, 'run', return_value=type('Inspection', (), {'returncode': 0, 'stdout': '"sha256:fixture"'})()), \
+                 patch.object(gate, 'run', return_value=0), \
+                 patch.object(gate, 'report', return_value=sample):
+                records = gate.image(Path(folder), 'candidate', all_severities=True)
+                self.assertEqual('blocked_findings', records[0]['status'])
+                self.assertEqual(2, records[0]['blocking_findings'])
+                self.assertEqual(0, records[0]['raw_high_critical_findings'])
+                self.assertEqual('all', records[0]['severity_scope'])
+                self.assertEqual(2, records[0]['all_findings'])
+
+    def test_all_severity_image_gate_cannot_apply_residual_risk_acceptance(self):
+        with self.assertRaisesRegex(RuntimeError, 'does not accept residual'):
+            gate.image(Path('.'), 'candidate', approval={'approved': True}, all_severities=True)
+
     def test_unavailable_nonzero_empty_and_skipped_results_cannot_pass(self):
         self.assertEqual('error', gate.classify(125, {}, 0))
         self.assertEqual('error', gate.classify(0, None, 0))

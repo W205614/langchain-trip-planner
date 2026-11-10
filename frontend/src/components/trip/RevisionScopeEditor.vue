@@ -9,6 +9,8 @@
   </section>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Select as ASelect, SelectOption as ASelectOption } from 'ant-design-vue'
+
 import { computed, ref, watch } from 'vue'
 import type { TripPlan, RevisionScope } from '@/types'
 const props = defineProps<{ plan: TripPlan; dayIndex: number }>()

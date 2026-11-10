@@ -18,6 +18,8 @@
           </section>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton } from 'ant-design-vue'
+
 import { proposalConflictMessage } from '@/utils/proposalConflict'
 import type { AssistantProposal } from '@/types'
 defineProps<{ details: AssistantProposal | null; detailsError: string; confirmError: string; changes: string[]; busy: boolean }>()

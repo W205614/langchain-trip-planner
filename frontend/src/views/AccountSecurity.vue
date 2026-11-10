@@ -73,9 +73,10 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Checkbox as ACheckbox, Form as AForm, FormItem as AFormItem, Input as AInput, InputPassword as AInputPassword, Popconfirm as APopconfirm, Space as ASpace, message } from 'ant-design-vue'
+
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { accountSecurity, accountEmail } from '@/services/api'
 import { clearAuth, getUsername, isAdmin } from '@/services/auth'
 const router = useRouter()

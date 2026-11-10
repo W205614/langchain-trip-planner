@@ -1,2 +1,2 @@
-# Locked Python 3.11 runtime; original direct dependencies: requirements.in
+# Locked Python 3.13 runtime; original direct dependencies: requirements.in
 -r requirements.lock

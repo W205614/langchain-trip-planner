@@ -1,0 +1,3 @@
+87cc178e7471cce21045b05fc7be238d51af0c69949128d2d2ae1dada5e1036d  tls-guard.patch
+a0cbc52df2af9fbc44a16e61548d9ca3e3dc5d982dec3028fcf87805f60b1185  stack-randomization.patch
+23e1ef94cad39ce7098c37be6cb2039495b2d9b71f8235f6f5c3285053966cff  arena-randomization.patch

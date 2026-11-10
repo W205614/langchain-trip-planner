@@ -158,9 +158,10 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Card as ACard, Empty as AEmpty, Input as AInput, List as AList, ListItem as AListItem, ListItemMeta as AListItemMeta, Modal as AModal, Pagination as APagination, Popconfirm as APopconfirm, RadioButton as ARadioButton, RadioGroup as ARadioGroup, Spin as ASpin, TabPane as ATabPane, Tabs as ATabs, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
+
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { formatDateTime } from '@/utils/datetime'
 import { fetchHistory, fetchHistoryDetail, deleteHistory, createAssistantConversation, fetchAssistantMessages, sendAssistantMessage, reverifyTrip, fetchTasks, fetchTask, cancelTask, retryTask, resumeTask, submitCommunityCard } from '@/services/api'
 
@@ -217,8 +218,8 @@ onUnmounted(() => {
   if (taskTimer) clearInterval(taskTimer)
 })
 
-const handleTabChange = (key: string) => {
-  activeTab.value = key
+const handleTabChange = (key: string | number) => {
+  activeTab.value = String(key)
   router.replace({ path: '/history', query: key === 'tasks' ? { tab: 'tasks' } : {} })
   if (key === 'tasks') loadTasks()
 }

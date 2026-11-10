@@ -11,8 +11,9 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, List as AList, ListItem as AListItem, Select as ASelect, SelectOption as ASelectOption, message } from 'ant-design-vue'
+
 import { onMounted, ref } from 'vue'
-import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { approveKnowledge, deleteKnowledge, fetchAdminKnowledge, rejectKnowledge } from '@/services/api'
 import KnowledgeReview from '@/components/KnowledgeReview.vue'

@@ -43,9 +43,10 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Card as ACard, Descriptions as ADescriptions, DescriptionsItem as ADescriptionsItem, InputNumber as AInputNumber, List as AList, ListItem as AListItem, ListItemMeta as AListItemMeta, Space as ASpace, message } from 'ant-design-vue'
+
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { tripOperations } from '@/services/api'
 import { formatDateTime } from '@/utils/datetime'
 

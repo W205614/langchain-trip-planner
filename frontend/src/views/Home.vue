@@ -109,7 +109,7 @@
                   <span class="form-label">开始日期</span>
                 </template>
                 <a-date-picker
-                  v-model:value="formData.start_date"
+                  v-model:value="formData.start_date!"
                   style="width: 100%"
                   size="large"
                   class="custom-input"
@@ -123,7 +123,7 @@
                   <span class="form-label">结束日期</span>
                 </template>
                 <a-date-picker
-                  v-model:value="formData.end_date"
+                  v-model:value="formData.end_date!"
                   style="width: 100%"
                   size="large"
                   class="custom-input"
@@ -161,7 +161,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item name="budget_total" label="整段总预算（元，可选）">
-                <a-input-number v-model:value="formData.budget_total" :min="100" :max="10000000" :step="100" style="width:100%" size="large" />
+                <a-input-number v-model:value="formData.budget_total!" :min="100" :max="10000000" :step="100" style="width:100%" size="large" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -243,7 +243,7 @@
             <a-input-number v-model:value="planningConstraints.daily_minutes" :min="120" :max="900" :step="30" />
           </a-form-item>
           <a-form-item label="景点间步行上限（公里，不含景区内部，可留空）">
-            <a-input-number v-model:value="planningConstraints.max_inter_stop_walking_km" :min="0.1" :max="30" :step="0.5" />
+            <a-input-number v-model:value="planningConstraints.max_inter_stop_walking_km!" :min="0.1" :max="30" :step="0.5" />
           </a-form-item>
           <a-form-item name="free_text_input">
             <a-textarea
@@ -308,9 +308,10 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Card as ACard, Checkbox as ACheckbox, CheckboxGroup as ACheckboxGroup, Col as ACol, DatePicker as ADatePicker, Form as AForm, FormItem as AFormItem, Input as AInput, InputNumber as AInputNumber, Progress as AProgress, Row as ARow, Select as ASelect, SelectOption as ASelectOption, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
+
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { fetchCapabilities, fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences, logout } from '@/services/api'
 import { isAuthenticated, getUsername, isAdmin } from '@/services/auth'
 import type { TripFormData, PlanningInput } from '@/types'
@@ -340,6 +341,7 @@ const handleLogout = async () => {
   message.success('已退出登录')
 }
 
+// Ant Design 4 的可清空控件运行时接受 null，但 value 声明未包含它；模板中的 ! 仅补齐该类型缺口，保留受控 null 和清空事件。
 // 表单数据类型: 日期在表单里是 Dayjs 对象, 提交时再格式化为字符串
 type FormDataType = Omit<TripFormData, 'start_date' | 'end_date'> & {
   start_date: Dayjs | null

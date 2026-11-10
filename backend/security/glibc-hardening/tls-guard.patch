@@ -1,0 +1,681 @@
+From: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Subject: [DOWNSTREAM REBASE] nptl x86_64 TLS guard, glibc 2.41 mprotect fallback
+
+Source: https://sourceware.org/pipermail/libc-alpha/2026-May/177104.html
+Rebased for glibc 2.41; not an upstream merged commit.
+
+--- a/nptl/Makefile
++++ b/nptl/Makefile
+@@ -386,6 +386,7 @@
+   tst-sem13 \
+   tst-setgetname \
+   tst-signal7 \
++  tst-tls-guard \
+   # tests-internal
+ 
+ xtests = \
+--- a/nptl/allocatestack.c
++++ b/nptl/allocatestack.c
+@@ -36,6 +36,10 @@
+ #include <intprops.h>
+ #include <setvmaname.h>
+ 
++#ifndef ARCH_HAS_TLS_GUARD
++# define ARCH_HAS_TLS_GUARD 0
++#endif
++
+ /* Default alignment of stack.  */
+ #ifndef STACK_ALIGN
+ # define STACK_ALIGN __alignof__ (long double)
+@@ -159,18 +163,51 @@
+ #endif
+ }
+ 
++#if ARCH_HAS_TLS_GUARD
++/* RFC TLS guard: page-aligned below static TLS, without changing the TCB
++   layout or any public pthread object.  This backport enables x86_64 only.  */
++static __always_inline char *
++tls_guard_end_position (const struct pthread *pd,
++                        size_t tls_static_size_for_stack,
++                        size_t pagesize_m1)
++{
++  char *tls_start = (char *) (pd + 1) - tls_static_size_for_stack;
++  return (char *) ((uintptr_t) tls_start & ~pagesize_m1);
++}
++
++static __always_inline char *
++tls_guard_position (const struct pthread *pd,
++                    size_t tls_static_size_for_stack,
++                    size_t guardsize, size_t pagesize_m1)
++{
++  return tls_guard_end_position (pd, tls_static_size_for_stack, pagesize_m1)
++    - guardsize;
++}
++#endif
++
+ /* Based on stack allocated with PROT_NONE, setup the required portions with
+    'prot' flags based on the guard page position.  */
+ static inline int
+ setup_stack_prot (char *mem, size_t size, char *guard, size_t guardsize,
+-		  const int prot)
++                  const int prot, const struct pthread *pd,
++                  size_t tls_static_size_for_stack, size_t pagesize_m1)
+ {
+   char *guardend = guard + guardsize;
+ #if _STACK_GROWS_DOWN
+   /* As defined at guard_position, for architectures with downward stack
+      the guard page is always at start of the allocated area.  */
++# if ARCH_HAS_TLS_GUARD
++  char *tls_guard = tls_guard_position (pd, tls_static_size_for_stack,
++                                      guardsize, pagesize_m1);
++  if (__mprotect (guardend, tls_guard - guardend, prot) != 0)
++    return errno;
++  char *tls_guardend = tls_guard + guardsize;
++  if (__mprotect (tls_guardend, (mem + size) - tls_guardend, prot) != 0)
++    return errno;
++# else
+   if (__mprotect (guardend, size - guardsize, prot) != 0)
+     return errno;
++# endif
+ #else
+   size_t mprots1 = (uintptr_t) guard - (uintptr_t) mem;
+   if (__mprotect (mem, mprots1, prot) != 0)
+@@ -325,7 +362,9 @@
+       /* Allocate some anonymous memory.  If possible use the cache.  */
+       size_t guardsize;
+       size_t reported_guardsize;
++#if !ARCH_HAS_TLS_GUARD
+       size_t reqsize;
++#endif
+       void *mem;
+       const int prot = (PROT_READ | PROT_WRITE
+ 			| ((GL(dl_stack_flags) & PF_X) ? PROT_EXEC : 0));
+@@ -342,23 +381,35 @@
+ 	 before POSIX 2008 the guardsize was specified to be one page
+ 	 by default which is observable via pthread_attr_getguardsize
+ 	 and pthread_getattr_np.  */
+-      guardsize = (attr->guardsize + pagesize_m1) & ~pagesize_m1;
++      if (INT_ADD_WRAPV (attr->guardsize, pagesize_m1, &guardsize))
++        return EINVAL;
++      guardsize &= ~pagesize_m1;
+       reported_guardsize = guardsize;
+       if (guardsize > 0 && guardsize < ARCH_MIN_GUARD_SIZE)
+-	guardsize = ARCH_MIN_GUARD_SIZE;
+-      if (guardsize < attr->guardsize || size + guardsize < guardsize)
+-	/* Arithmetic overflow.  */
+-	return EINVAL;
+-      size += guardsize;
+-      if (__builtin_expect (size < ((guardsize + tls_static_size_for_stack
+-				     + MINIMAL_REST_STACK + pagesize_m1)
+-				    & ~pagesize_m1),
+-			    0))
+-	/* The stack is too small (or the guard too large).  */
+-	return EINVAL;
++        guardsize = ARCH_MIN_GUARD_SIZE;
++      if (INT_ADD_WRAPV (size, guardsize, &size))
++        return EINVAL;
++#if ARCH_HAS_TLS_GUARD
++      /* Allocate the second guard on top of the requested stack size.  */
++      if (INT_ADD_WRAPV (size, guardsize, &size))
++        return EINVAL;
++#endif
++      size_t min_size;
++      if (INT_ADD_WRAPV (guardsize, tls_static_size_for_stack, &min_size)
++#if ARCH_HAS_TLS_GUARD
++          || INT_ADD_WRAPV (min_size, guardsize, &min_size)
++#endif
++          || INT_ADD_WRAPV (min_size, (size_t) MINIMAL_REST_STACK, &min_size)
++          || INT_ADD_WRAPV (min_size, pagesize_m1, &min_size))
++        return EINVAL;
++      min_size &= ~pagesize_m1;
++      if (__glibc_unlikely (size < min_size))
++        return EINVAL;
+ 
+       /* Try to get a stack from the cache.  */
++#if !ARCH_HAS_TLS_GUARD
+       reqsize = size;
++#endif
+       pd = get_cached_stack (&size, &mem);
+       if (pd == NULL)
+ 	{
+@@ -398,7 +449,8 @@
+ 	    {
+ 	      char *guard = guard_position (mem, size, guardsize, pd,
+ 					    pagesize_m1);
+-	      if (setup_stack_prot (mem, size, guard, guardsize, prot) != 0)
++	      if (setup_stack_prot (mem, size, guard, guardsize, prot, pd,
++                               tls_static_size_for_stack, pagesize_m1) != 0)
+ 		{
+ 		  __munmap (mem, size);
+ 		  return errno;
+@@ -484,10 +536,20 @@
+ 	      return errno;
+ 	    }
+ 
+-	  pd->guardsize = guardsize;
+-	}
++#if ARCH_HAS_TLS_GUARD
++          char *tls_guard = tls_guard_position (pd, tls_static_size_for_stack,
++                                              guardsize, pagesize_m1);
++          if (__mprotect (tls_guard, guardsize, PROT_NONE) != 0)
++            goto mprot_error;
++#endif
++          pd->guardsize = guardsize;
++        }
++#if ARCH_HAS_TLS_GUARD
++      else if (pd->guardsize > guardsize)
++#else
+       else if (__builtin_expect (pd->guardsize - guardsize > size - reqsize,
+-				 0))
++                                0))
++#endif
+ 	{
+ 	  /* The old guard area is too large.  */
+ 
+@@ -506,9 +568,15 @@
+              && __mprotect (old_guard, new_guard - old_guard, prot) != 0)
+ 	    goto mprot_error;
+ #endif
+-
+-	  pd->guardsize = guardsize;
+-	}
++#if ARCH_HAS_TLS_GUARD
++          char *old_tls_guard =
++            tls_guard_end_position (pd, tls_static_size_for_stack, pagesize_m1)
++            - pd->guardsize;
++          if (__mprotect (old_tls_guard, pd->guardsize - guardsize, prot) != 0)
++            goto mprot_error;
++#endif
++          pd->guardsize = guardsize;
++        }
+       /* The pthread_getattr_np() calls need to get passed the size
+ 	 requested in the attribute, regardless of how large the
+ 	 actually used guardsize is.  */
+@@ -536,9 +604,14 @@
+ 
+   void *stacktop;
+ 
++#if ARCH_HAS_TLS_GUARD
++  if (!pd->user_stack && pd->guardsize > 0)
++    stacktop = tls_guard_position (pd, tls_static_size_for_stack,
++                                   pd->guardsize, pagesize_m1);
++  else
++#endif
+ #if TLS_TCB_AT_TP
+-  /* The stack begins before the TCB and the static TLS block.  */
+-  stacktop = ((char *) (pd + 1) - tls_static_size_for_stack);
++    stacktop = ((char *) (pd + 1) - tls_static_size_for_stack);
+ #elif TLS_DTV_AT_TP
+   stacktop = (char *) (pd - 1);
+ #endif
+@@ -574,6 +647,17 @@
+   void *stack = pd->stackblock;
+ #endif
+   size_t stacksize = pd->stackblock_size - pd->guardsize;
++#if ARCH_HAS_TLS_GUARD
++  /* mprotect splits TLS, guard and usable stack into separate VMAs.
++     Name only the usable stack, as in the upstream RFC fallback.  */
++  if (!pd->user_stack && pd->guardsize > 0)
++    {
++      size_t tls_size = __nptl_tls_static_size_for_stack ();
++      char *tls_guard = tls_guard_position (pd, tls_size, pd->guardsize,
++                                           __getpagesize () - 1);
++      stacksize = tls_guard - (char *) stack;
++    }
++#endif
+ 
+   if (!set)
+     __set_vma_name (stack, stacksize, NULL);
+--- a/nptl/pthread_getattr_np.c
++++ b/nptl/pthread_getattr_np.c
+@@ -61,8 +61,18 @@
+   /* The sizes are subject to alignment.  */
+   if (__glibc_likely (thread->stackblock != NULL))
+     {
+-      /* The stack size reported to the user should not include the
+-	 guard size.  */
++      /* Neither guard is part of the public stack size.  The TLS guard
++         is allocated on top of the user-requested size, as in the RFC.  */
++#if defined ARCH_HAS_TLS_GUARD && ARCH_HAS_TLS_GUARD
++      if (!thread->user_stack && thread->guardsize > 0)
++        {
++          iattr->stacksize = thread->stackblock_size - 2 * thread->guardsize;
++          iattr->stackaddr = (char *) thread->stackblock
++                            + thread->stackblock_size - thread->guardsize;
++        }
++      else
++#endif
++        {
+       iattr->stacksize = thread->stackblock_size - thread->guardsize;
+ #if _STACK_GROWS_DOWN
+       iattr->stackaddr = (char *) thread->stackblock
+@@ -70,6 +80,7 @@
+ #else
+       iattr->stackaddr = (char *) thread->stackblock;
+ #endif
++        }
+     }
+   else
+     {
+--- /dev/null
++++ b/nptl/tst-tls-guard.c
+@@ -0,0 +1,281 @@
++/* Tests for the TLS guard page between stack and static TLS.
++   Copyright (C) 2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* For architectures that set ARCH_HAS_TLS_GUARD, glibc inserts a guard page
++   between the thread stack and the static TLS / struct pthread area.
++   This test verifies:
++     1. The TLS guard is inaccessible (traps on read/write).
++     2. The stack area below the TLS guard is accessible.
++     3. When guardsize == 0 no TLS guard is added.
++     4. The complete PROT_NONE fallback works on this glibc 2.41 rebase.
++   The post-2.41 MADV_GUARD_INSTALL implementation is not introduced.  */
++
++#include <array_length.h>
++#include <pthread.h>
++#include <pthreaddef.h>
++#include <setjmp.h>
++#include <stackinfo.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <support/capture_subprocess.h>
++#include <support/check.h>
++#include <support/check_mem_access.h>
++#include <support/test-driver.h>
++#include <support/xsignal.h>
++#include <support/xthread.h>
++#include <support/xunistd.h>
++#include <tls.h>
++
++#if ARCH_HAS_TLS_GUARD
++
++static long int pagesz;
++
++/* Locate the TLS guard region by probing pages backward from STACK_TOP
++   (which equals (char *)stack + stacksize from pthread_attr_getstack, i.e.
++   approximately the first byte above the TLS guard) down to SCAN_LIMIT.
++   Works for both MADV_GUARD_INSTALL (guard stays inside one RW VMA but
++   pages are inaccessible) and the PROT_NONE fallback (separate ---p VMA).
++   Returns 1 and fills the output pointers on success, 0 if no inaccessible
++   region is found within the scan range.  */
++static int
++find_tls_guard (char *stack_top, char *scan_limit, long pagesize,
++                char **guard_start_out, size_t *guard_size_out)
++{
++  char *guard_end = NULL;
++  char *guard_start = NULL;
++  char *p = stack_top;
++  /* Probe at most 128 pages.  The TLS guard sits within a few pages of
++     stack_top (static-TLS alignment overhead is typically 1–2 pages);
++     128 pages gives ample headroom for large-TLS workloads.  */
++  char *stop = stack_top - 128 * pagesize;
++  if (stop < scan_limit)
++    stop = scan_limit;
++
++  while (p > stop)
++    {
++      p -= pagesize;
++      if (!check_mem_access (p, false))
++        {
++          if (guard_end == NULL)
++            guard_end = p + pagesize;
++          guard_start = p;
++        }
++      else if (guard_end != NULL)
++        break;
++    }
++
++  if (guard_end == NULL)
++    return 0;
++
++  *guard_start_out = guard_start;
++  *guard_size_out  = (size_t) (guard_end - guard_start);
++  return 1;
++}
++
++struct thread_args
++{
++  int expect_tls_guard;  /* 1: TLS guard expected, 0: not expected */
++};
++
++static void *
++tf (void *closure)
++{
++  struct thread_args *args = closure;
++
++  pthread_attr_t attr;
++  TEST_VERIFY_EXIT (pthread_getattr_np (pthread_self (), &attr) == 0);
++
++  void *stack;
++  size_t stacksize;
++  TEST_VERIFY_EXIT (pthread_attr_getstack (&attr, &stack, &stacksize) == 0);
++
++  size_t guardsize;
++  TEST_VERIFY_EXIT (pthread_attr_getguardsize (&attr, &guardsize) == 0);
++  if (guardsize != 0 && guardsize < ARCH_MIN_GUARD_SIZE)
++    guardsize = ARCH_MIN_GUARD_SIZE;
++  pthread_attr_destroy (&attr);
++
++  /* Verify the stack area is accessible (start and midpoint are always in
++     the usable stack region below the TLS guard).  */
++  TEST_VERIFY (check_mem_access (stack, false));
++  TEST_VERIFY (check_mem_access ((char *) stack + stacksize / 4, false));
++
++  /* pthread_getattr_np reports stacksize as the user-requested size (both
++     the stack guard and the TLS guard are excluded) and stackaddr as the
++     top of that region.  For _STACK_GROWS_DOWN:
++       stack              == stackblock + guardsize  (low end of usable stack)
++       stack + stacksize + guardsize == end of the mmap'd allocation
++     Scan from the end of the allocation downward; the TLS guard is the
++     first inaccessible region encountered.  */
++  char *scan_top = (char *) stack + stacksize + guardsize;
++  char  *guard_start = NULL;
++  size_t guard_size  = 0;
++  int    found = find_tls_guard (scan_top, (char *) stack,
++                                 pagesz, &guard_start, &guard_size);
++
++  if (args->expect_tls_guard)
++    {
++      TEST_VERIFY (found != 0);
++      if (!found)
++        return NULL;
++
++      if (test_verbose)
++        printf ("debug: [tid=%jd] TLS guard at %p+%#zx, guardsize=%#zx\n",
++                (intmax_t) gettid (), guard_start, guard_size, guardsize);
++
++      /* The TLS guard should be the same size as the stack guard.  */
++      TEST_COMPARE (guard_size, guardsize);
++
++      /* Every byte of the TLS guard must be inaccessible.  */
++      TEST_VERIFY (!check_mem_access (guard_start, false));
++      TEST_VERIFY (!check_mem_access (guard_start, true));
++      TEST_VERIFY (!check_mem_access (guard_start + guard_size / 2, false));
++      TEST_VERIFY (!check_mem_access (guard_start + guard_size - 1, false));
++
++      /* The byte just below the TLS guard must be accessible (stack area).  */
++      TEST_VERIFY (check_mem_access (guard_start - 1, false));
++    }
++  else
++    {
++      /* With guardsize == 0 there must be no TLS guard.  */
++      TEST_VERIFY (found == 0);
++    }
++
++  return NULL;
++}
++
++/* Test with default pthread attributes (guard present).  */
++static void
++do_test_default (void *closure)
++{
++  struct thread_args args = {
++    .expect_tls_guard = 1
++  };
++  pthread_t t = xpthread_create (NULL, tf, &args);
++  void *status = xpthread_join (t);
++  TEST_VERIFY (status == 0);
++}
++
++/* Test with explicit guard size > 0 (guard present).  */
++static void
++do_test_with_guard (void *closure)
++{
++  pthread_attr_t attr;
++  xpthread_attr_init (&attr);
++  xpthread_attr_setstacksize (&attr, 2 * 1024 * 1024);
++  xpthread_attr_setguardsize (&attr, pagesz);
++
++  struct thread_args args = {
++    .expect_tls_guard = 1
++  };
++  pthread_t t = xpthread_create (&attr, tf, &args);
++  void *status = xpthread_join (t);
++  TEST_VERIFY (status == 0);
++
++  xpthread_attr_destroy (&attr);
++}
++
++/* Test with guardsize == 0 (no TLS guard expected).  */
++static void
++do_test_no_guard (void *closure)
++{
++  pthread_attr_t attr;
++  xpthread_attr_init (&attr);
++  /* Use a larger stack so the thread still fits after removing the guard.  */
++  xpthread_attr_setstacksize (&attr, 2 * 1024 * 1024);
++  xpthread_attr_setguardsize (&attr, 0);
++
++  struct thread_args args = {
++    .expect_tls_guard = 0
++  };
++  pthread_t t = xpthread_create (&attr, tf, &args);
++  void *status = xpthread_join (t);
++  TEST_VERIFY (status == 0);
++
++  xpthread_attr_destroy (&attr);
++}
++
++/* Test guard after cache reuse: create without guard, then with guard.  */
++static void
++do_test_cache_reuse (void *closure)
++{
++  /* First thread: no guard, puts stack in cache.  */
++  do_test_no_guard (NULL);
++
++  /* Second thread: default guard, retrieves cached stack and installs guard.  */
++  do_test_default (NULL);
++
++  /* Third thread: larger guard, exercises guard expansion.  */
++  pthread_attr_t attr;
++  xpthread_attr_init (&attr);
++  xpthread_attr_setstacksize (&attr, 2 * 1024 * 1024);
++  xpthread_attr_setguardsize (&attr, 2 * pagesz);
++
++  struct thread_args args = {
++    .expect_tls_guard = 1
++  };
++  pthread_t t = xpthread_create (&attr, tf, &args);
++  xpthread_join (t);
++  xpthread_attr_destroy (&attr);
++}
++#endif /* ARCH_HAS_TLS_GUARD */
++
++static int
++do_test (void)
++{
++#if ARCH_HAS_TLS_GUARD
++  pagesz = sysconf (_SC_PAGESIZE);
++
++  static const struct
++  {
++    const char *descr;
++    void (*fn) (void *);
++  } tests[] = {
++    { "default attributes (TLS guard expected)",       do_test_default     },
++    { "explicit guard size > 0 (TLS guard expected)",  do_test_with_guard  },
++    { "guardsize == 0 (no TLS guard expected)",        do_test_no_guard    },
++    { "cache reuse: no-guard then with-guard",         do_test_cache_reuse },
++  };
++
++  /* Run each sub-test in a forked subprocess for isolation.  */
++  for (size_t i = 0; i < array_length (tests); i++)
++    {
++      printf ("info: fork: %s\n", tests[i].descr);
++      struct support_capture_subprocess r =
++        support_capture_subprocess (tests[i].fn, NULL);
++      support_capture_subprocess_check (&r, tests[i].descr, 0,
++                                        sc_allow_none);
++      support_capture_subprocess_free (&r);
++    }
++
++  /* Then run them without fork so the stack cache is exercised.  */
++  for (size_t i = 0; i < array_length (tests); i++)
++    {
++      printf ("info: %s\n", tests[i].descr);
++      tests[i].fn (NULL);
++    }
++
++  return 0;
++#else
++  puts ("SKIP: TLS guard not enabled for this architecture");
++  return EXIT_SUCCESS;
++#endif
++}
++
++#include <support/test-driver.c>
+--- a/support/Makefile
++++ b/support/Makefile
+@@ -66,6 +66,7 @@
+   support_format_netent \
+   support_fuse \
+   support_isolate_in_subprocess \
++  support_mem_access \
+   support_mutex_pi_monotonic \
+   support_need_proc \
+   support_open_and_compare_file_bytes \
+--- /dev/null
++++ b/support/check_mem_access.h
+@@ -0,0 +1,38 @@
++/* Test verification functions for memory access checks.
++   Copyright (C) 2025-2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#ifndef SUPPORT_CHECK_MEM_ACCESS_H
++#define SUPPORT_CHECK_MEM_ACCESS_H
++
++#include <stdbool.h>
++#include <sys/cdefs.h>
++
++__BEGIN_DECLS
++
++/* To check if the a memory region is inaccessible, this function tries
++   read / write on the provided address ADDR and checks if a SIGSEGV is
++   generated.  This function is not thread-safe and it changes signal
++   handlers for SIGSEGV and SIGBUS.
++   If WRITE is true, only the write operation is checked, otherwise only
++   the read operation is checked. */
++bool check_mem_access (const void *addr, bool write);
++
++__END_DECLS
++
++#endif // SUPPORT_CHECK_MEM_ACCESS_H
++
+--- /dev/null
++++ b/support/support_mem_access.c
+@@ -0,0 +1,68 @@
++/* Implementation of the test verification functions for memory access
++   checks.
++   Copyright (C) 2025-2026 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* glibc 2.41 include/setjmp.h otherwise exposes hidden libc-only aliases.
++   The support helper must use the public, still-fortified siglongjmp API.  */
++#define _ISOMAC 1
++#include <setjmp.h>
++#include <signal.h>
++#include <stddef.h>
++#include <support/xsignal.h>
++
++#include "check_mem_access.h"
++
++static sigjmp_buf sigsegv_jmp_buf;
++
++static void
++__sigsegv_handler (int signum)
++{
++  siglongjmp (sigsegv_jmp_buf, signum);
++}
++
++bool check_mem_access (const void *addr, bool write)
++{
++  /* This is obviously not thread-safe.  */
++  static bool handler_set_up;
++  if (!handler_set_up)
++    {
++      struct sigaction sa = {
++	.sa_handler = __sigsegv_handler,
++	.sa_flags = SA_NODEFER,
++      };
++      sigemptyset (&sa.sa_mask);
++      xsigaction (SIGSEGV, &sa, NULL);
++      /* Some system generates SIGBUS accessing the guard area when it is
++	 setup with madvise.  */
++      xsigaction (SIGBUS, &sa, NULL);
++      handler_set_up = true;
++    }
++  int r = sigsetjmp (sigsegv_jmp_buf, 0);
++  if (r == 0)
++    {
++      if (write)
++        *(volatile char *)addr = 'x';
++      else
++        *(volatile char *)addr;
++      return true;
++    }
++  if (r == SIGSEGV || r == SIGBUS)
++    return false;
++  return true;
++}
++
+--- a/sysdeps/x86/nptl/pthreaddef.h
++++ b/sysdeps/x86/nptl/pthreaddef.h
+@@ -20,6 +20,13 @@
+ 
+ /* Minimum guard size.  */
+ #define ARCH_MIN_GUARD_SIZE 0
++
++/* Downstream rebase of the upstream TLS-guard RFC, x86_64 LP64 only.  */
++#if defined __x86_64__ && defined __LP64__
++# define ARCH_HAS_TLS_GUARD 1
++#else
++# define ARCH_HAS_TLS_GUARD 0
++#endif
+ 
+ /* Required stack pointer alignment at beginning.  SSE requires 16
+    bytes.  */

@@ -19,9 +19,10 @@
 </template>
 
 <script setup lang="ts">
+import { Button as AButton, Empty as AEmpty, Space as ASpace, Table as ATable, TableColumn as ATableColumn, message } from 'ant-design-vue'
+
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { fetchCommunityReviewQueue, reviewCommunityCard } from '@/services/api'
 import { formatDateTime } from '@/utils/datetime'
 const router=useRouter(); const rows=ref<any[]>([]); const loading=ref(false)

@@ -37,6 +37,8 @@
   </section>
 </template>
 <script setup lang="ts">
+import { Button as AButton, Space as ASpace } from 'ant-design-vue'
+
 import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import type { PlanningInput, TripPlan, TravelFact } from '@/types'
 import { factChecklist, factTimeError, type FactGap } from '@/utils/factChecklist'

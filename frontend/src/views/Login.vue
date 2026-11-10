@@ -104,9 +104,10 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Form as AForm, FormItem as AFormItem, Input as AInput, InputPassword as AInputPassword, message } from 'ant-design-vue'
+
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { login, register, accountSecurity, accountEmail } from '@/services/api'
 import { setAuth } from '@/services/auth'
 

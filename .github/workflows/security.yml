@@ -29,7 +29,9 @@ jobs:
         with:
           python-version: '3.11.18'
       - name: Verify gate failure policy
-        run: python -m unittest discover -s tools/tests -v
+        run: |
+          python tools/sync_busybox_inputs.py --check
+          python -m unittest discover -s tools/tests -v
       - name: Checksum-verified Gitleaks CLI (redacted reports)
         run: python tools/security_gate.py secrets --reports security-reports/secrets
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # verified v6, Node 24
@@ -114,7 +116,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
-          python-version: '3.11.18'
+          python-version: '3.13.18'
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # verified v6, Node 24
         with:
           node-version: '22'
@@ -244,15 +246,26 @@ jobs:
           PY
       - name: Verify the changed Agent native library ABI without provider calls
         if: matrix.service == 'agent'
-        run: docker run --rm --network none --read-only --memory 1g --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests,target=/fixture,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py /fixture/test_runtime_security_backports.py
+        run: docker run --rm --network none --read-only --memory 1g --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests,target=/fixture,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py /fixture/test_runtime_security_backports.py /fixture/test_cpython_security_backports.py
+      - name: Verify installed PAM module with real isolated Berkeley DB authentication
+        if: matrix.service == 'agent'
+        run: docker run --rm --network none --read-only --memory 512m --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=128m --entrypoint python -e TRIP_RUNTIME_PAM_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_pam_security_backport.py,target=/fixture/test_pam_security_backport.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_pam_security_backport.py
+      - name: Verify installed TLS stack and allocator hardening with actual system loader
+        if: matrix.service == 'agent'
+        run: docker run --rm --network none --read-only --memory 1g --cpus 2.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint sh "$SECURITY_IMAGE" /usr/local/share/tripplanner/glibc-hardening/runtime-check.sh
+      - name: Verify actual shell bounded matching and retained printf contracts
+        if: matrix.service == 'agent'
+        run: docker run --rm --network none --read-only --memory 512m --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=128m --entrypoint python -e TRIP_RUNTIME_DASH_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_dash_security_backport.py,target=/fixture/test_dash_security_backport.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_dash_security_backport.py
       - name: Scan the exact artifact without the retired native CVE risk acceptance
+        # Includes unknown and negligible severities; source-context reviews are
+        # exact and visible, and residual vulnerable findings cannot be waived.
         env:
           MATRIX_SERVICE: ${{ matrix.service }}
         run: |
           if [ "$MATRIX_SERVICE" = agent ]; then
-            python tools/security_gate.py image --image "$SECURITY_IMAGE" --vex .github/security-vex-remediated.json --vendor-policy .github/security-vendor-remediated.json --cleanup-owned-resources --reports security-reports/image
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --all-severities --vex .github/security-vex-remediated.json --vendor-policy .github/security-vendor-remediated.json --cleanup-owned-resources --reports security-reports/image
           else
-            python tools/security_gate.py image --image "$SECURITY_IMAGE" --reports security-reports/image
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --all-severities --reports security-reports/image
           fi
       - name: Clean only this CI job's recorded runtime-proof resources
         if: always() && matrix.service == 'agent'

@@ -1,0 +1,145 @@
+--- a/nptl/allocatestack.c
++++ b/nptl/allocatestack.c
+@@ -54,11 +54,23 @@
+ # define MAP_STACK 0
+ #endif
+ 
++#include "stack-randomization.h"
++
+ /* Get a stack frame from the cache.  We have to match by size since
+    some blocks might be too small or far too large.  */
+ static struct pthread *
+ get_cached_stack (size_t *sizep, void **memp)
+ {
++#if defined __linux__ && defined __x86_64__ && !defined __ILP32__
++  /* Do not reuse an address made predictable by a previously joined thread.
++     Busy detached stacks remain queued until the kernel clears their tid. */
++  (void) sizep;
++  (void) memp;
++  lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
++  __nptl_free_stacks (0);
++  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
++  return NULL;
++#else
+   size_t size = *sizep;
+   struct pthread *result = NULL;
+   list_t *entry;
+@@ -144,6 +156,7 @@
+   _dl_allocate_tls_init (TLS_TPADJ (result), false);
+ 
+   return result;
++#endif
+ }
+ 
+ /* Return the guard page position on allocated stack.  */
+@@ -365,8 +378,13 @@
+ 	  /* If a guard page is required, avoid committing memory by first
+ 	     allocate with PROT_NONE and then reserve with required permission
+ 	     excluding the guard page.  */
+-	  mem = __mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
++	  #if defined __linux__ && defined __x86_64__ && !defined __ILP32__
++          mem = allocate_random_stack (size, (guardsize == 0) ? prot : PROT_NONE,
++                                       GLRO (dl_pagesize));
++#else
++          mem = __mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
+ 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
++#endif
+ 
+ 	  if (__glibc_unlikely (mem == MAP_FAILED))
+ 	    return errno;
+--- a/nptl/nptl-stack.c
++++ b/nptl/nptl-stack.c
+@@ -20,7 +20,11 @@
+ #include <ldsodefs.h>
+ #include <pthreadP.h>
+ 
++#if defined __linux__ && defined __x86_64__ && !defined __ILP32__
++size_t __nptl_stack_cache_maxsize = 0;
++#else
+ size_t __nptl_stack_cache_maxsize = 40 * 1024 * 1024;
++#endif
+ int32_t __nptl_stack_hugetlb = 1;
+ 
+ void
+--- a/nptl/pthread_mutex_conf.c
++++ b/nptl/pthread_mutex_conf.c
+@@ -41,7 +41,12 @@
+ static void
+ TUNABLE_CALLBACK (set_stack_cache_size) (tunable_val_t *valp)
+ {
++#if defined __linux__ && defined __x86_64__ && !defined __ILP32__
++  (void) valp;
++  __nptl_stack_cache_maxsize = 0;
++#else
+   __nptl_stack_cache_maxsize = valp->numval;
++#endif
+ }
+ 
+ static void
+--- /dev/null
++++ b/nptl/stack-randomization.h
+@@ -0,0 +1,64 @@
++/* Copyright (C) 2026 W205614.
++   Downstream GNU C Library modification.
++   SPDX-License-Identifier: LGPL-2.1-or-later
++
++   This library is free software; you can redistribute it and/or modify it
++   under the terms of the GNU Lesser General Public License as published by
++   the Free Software Foundation; either version 2.1 of the License, or
++   (at your option) any later version.
++   This library is distributed in the hope that it will be useful, but
++   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++   or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
++   License for more details. */
++
++#ifndef TRIP_NPTL_STACK_RANDOMIZATION_H
++#define TRIP_NPTL_STACK_RANDOMIZATION_H
++#if defined __linux__ && defined __x86_64__ && !defined __ILP32__
++# include <sys/random.h>
++# include <sysdep.h>
++
++/* Use the original x86-64 low canonical range, including on LA57 kernels.
++   Ordinary mmap never overwrites an occupied hint. Reject its alternate
++   address, which could restore predictable kernel allocation. */
++static void *
++allocate_random_stack (size_t size, int prot, size_t pagesize)
++{
++  const uintptr_t lower = UINT64_C (1) << 32;
++  const uintptr_t upper = UINT64_C (1) << 46;
++  if (size > upper - lower)
++    {
++      __set_errno (ENOMEM);
++      return MAP_FAILED;
++    }
++  uint64_t slots = (upper - lower - size) / pagesize + 1;
++  uint64_t threshold = -slots % slots;
++  for (unsigned int attempt = 0; attempt < 32; ++attempt)
++    {
++      uint64_t sample;
++      /* pthread_create must not gain a cancellation point. An unavailable
++         entropy source is an error, never a predictable fallback. */
++      ssize_t count = INLINE_SYSCALL_CALL (getrandom, &sample, sizeof sample,
++                                           GRND_NONBLOCK);
++      if (count != (ssize_t) sizeof sample)
++        {
++          if (count >= 0)
++            __set_errno (EIO);
++          return MAP_FAILED;
++        }
++      if (sample < threshold)
++        continue;
++      void *hint = (void *) (lower + (sample % slots) * pagesize);
++      void *mapping = __mmap (hint, size, prot,
++                              MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
++      if (mapping == MAP_FAILED)
++        return MAP_FAILED;
++      if (mapping == hint)
++        return mapping;
++      if (__munmap (mapping, size) != 0)
++        return MAP_FAILED;
++    }
++  __set_errno (EAGAIN);
++  return MAP_FAILED;
++}
++#endif
++#endif

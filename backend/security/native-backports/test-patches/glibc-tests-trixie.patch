@@ -1,0 +1,78 @@
+Trip Planner test-only compatibility for Debian glibc 2.41.
+
+Keep its existing unknown-RR diagnostic and numeric TKEY/A6 spelling in
+the upstream resolver assertions. Supply the missing before-guard test
+allocator using the existing mmap/mprotect helpers; all upstream
+under-run/over-run cases remain. No runtime implementation is changed.
+
+--- a/resolv/tst-ns_sprintrr.c
++++ b/resolv/tst-ns_sprintrr.c
+@@ -295,30 +295,30 @@
+   T (ns_t_wks, "\xc0\0\2\1\6\0\0\0\0\0\0\0\0\0\0\200",
+      "www.example.org.\t1D IN WKS\t192.0.2.1 6 ( \n\t\t\t\t80 )");
+   T (ns_t_cert, "\0\1\x04\xd2\0blob",
+-     "www.example.org.\t1D IN CERT\t\\# 9 (\n"
++     "www.example.org.\t1D IN CERT\t\\# 9 (\t; unknown RR type 37\n"
+      "\t00 01 04 d2 00 62 6c 6f 62 )\t\t\t; .....blob");
+   T (ns_t_tkey, "\4algo\0\0\0\0\1\0\0\0\2\0\3\0\4"
+      "\0\5\xa1\xa2\xa3\xa4\xa5\0\3\xb1\xb2\xb3",
+-     "www.example.org.\t1D IN TYPE249\t\\# 30 (\n"
++     "www.example.org.\t1D IN 249\t\\# 30 (\t; unknown RR type 249\n"
+      "\t04 61 6c 67 6f 00 00 00 00 01 00 00 00 02 00 03 ; .algo...........\n"
+      "\t00 04 00 05 a1 a2 a3 a4 a5 00 03 b1 b2 b3 )\t; ..............");
+   T (ns_t_tsig, "\4algo\0"
+      "\0\20\xdd\xcd\x64\x10\xe9\x21\x34\x1a\x8e\xe0\xa1\x9a\x30\xfc\x3b\xd1"
+      "\0\2\0\3\0\5other",
+-     "www.example.org.\t1D IN TSIG\t\\# 35 (\n"
++     "www.example.org.\t1D IN TSIG\t\\# 35 (\t; unknown RR type 250\n"
+      "\t04 61 6c 67 6f 00 00 10 dd cd 64 10 e9 21 34 1a ; .algo.....d..!4.\n"
+      "\t8e e0 a1 9a 30 fc 3b d1 00 02 00 03 00 05 6f 74 ; ....0.;.......ot\n"
+      "\t68 65 72 )\t\t\t\t\t; her");
+   T (ns_t_a6,
+      "\0\x20\x01\x0d\xb8\0\0\0\0\0\0\0\0\0\0\x12\x34\6prefix\xc0\x10",
+-     "www.example.org.\t1D IN A6\t0 2001:db8::1234");
++     "www.example.org.\t1D IN 38\t0 2001:db8::1234");
+   T (ns_t_a6,
+      "\0\x20\x01\x0d\xb8\0\0\0\0\0\0\0\0\0\0\x12\x35",
+-     "www.example.org.\t1D IN A6\t0 2001:db8::1235");
++     "www.example.org.\t1D IN 38\t0 2001:db8::1235");
+   T (ns_t_a6, "\200\6prefix\xc0\x10",
+-     "www.example.org.\t1D IN A6\t128  prefix.example.org.");
++     "www.example.org.\t1D IN 38\t128  prefix.example.org.");
+   T (ns_t_a6, "\x20\0\0\0\0\0\0\0\0\0\0\x12\x36\6prefix\xc0\x10",
+-     "www.example.org.\t1D IN A6\t32 ::1236 prefix.example.org.");
++     "www.example.org.\t1D IN 38\t32 ::1236 prefix.example.org.");
+ #undef T
+ 
+   support_next_to_fault_free (&ntf_in);
+--- a/elf/tst-dl-path-normalize.c
++++ b/elf/tst-dl-path-normalize.c
+@@ -22,6 +22,28 @@
+ #include <string.h>
+ #include <support/check.h>
+ #include <support/next_to_fault.h>
++#include <support/xunistd.h>
++#include <sys/mman.h>
++#include <unistd.h>
++
++/* glibc 2.41 has only the trailing-guard allocator.  Keep the upstream
++   leading-guard cases using the same mmap/mprotect contract locally.  */
++static struct support_next_to_fault
++support_next_to_fault_allocate_before (size_t size)
++{
++  long page_size = sysconf (_SC_PAGESIZE);
++  TEST_VERIFY_EXIT (page_size > 0);
++  TEST_VERIFY_EXIT (size <= (size_t) page_size);
++  struct support_next_to_fault result;
++  result.region_size = 2 * page_size;
++  result.region_start = xmmap (NULL, result.region_size,
++                              PROT_READ | PROT_WRITE,
++                              MAP_PRIVATE | MAP_ANONYMOUS, -1);
++  xmprotect (result.region_start, page_size, PROT_NONE);
++  result.buffer = (char *) result.region_start + page_size;
++  result.length = size;
++  return result;
++}
+ 
+ static void
+ check_one_guarded (const char *input, const char *expected, bool before)

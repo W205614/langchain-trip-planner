@@ -9,7 +9,7 @@
         <a-table :data-source="users" :columns="userColumns" row-key="id" :pagination="false" :scroll="{ x: 680 }">
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'email'">{{ record.email || '未绑定' }}<a-tag v-if="record.email_verified_at">已验证</a-tag></template>
-            <template v-if="column.key === 'actions'"><a-button type="link" @click="editQuota(record)">配额</a-button><a-button v-if="['active', 'disabled'].includes(record.account_state)" type="link" :danger="record.account_state === 'active'" @click="editState(record)">{{ record.account_state === 'active' ? '停用' : '启用' }}</a-button></template>
+            <template v-if="column.key === 'actions'"><a-button type="link" @click="editQuota(record as OperationalUser)">配额</a-button><a-button v-if="['active', 'disabled'].includes(record.account_state)" type="link" :danger="record.account_state === 'active'" @click="editState(record as OperationalUser)">{{ record.account_state === 'active' ? '停用' : '启用' }}</a-button></template>
           </template>
         </a-table>
         <a-pagination v-model:current="page" :page-size="50" :total="total" :show-size-changer="false" @change="refresh" />
@@ -35,7 +35,7 @@
     </a-modal>
     <a-modal v-model:open="quotaOpen" :title="`${selectedUser?.username || ''} 的配额`" :confirm-loading="busy" @ok="saveQuota">
       <p>清空字段表示继承部署默认值；0表示拒绝新的对应操作。日期按 UTC 计算。</p>
-      <a-form layout="vertical"><a-form-item v-for="field in quotaFields" :key="field.key" :label="`${field.label}（当前有效值 ${effective[field.key] ?? '—'}）`"><a-input-number v-model:value="quota[field.key]" :min="0" :max="field.maximum" style="width:100%" /></a-form-item></a-form>
+      <a-form layout="vertical"><a-form-item v-for="field in quotaFields" :key="field.key" :label="`${field.label}（当前有效值 ${effective[field.key] ?? '—'}）`"><a-input-number v-model:value="quota[field.key]!" :min="0" :max="field.maximum" style="width:100%" /></a-form-item></a-form>
     </a-modal>
     <a-modal v-model:open="feedbackOpen" title="处理反馈" :confirm-loading="busy" @ok="saveFeedback">
       <a-form layout="vertical"><a-form-item label="处理状态"><a-select v-model:value="replyStatus" :options="statusOptions.filter(o => o.value)" /></a-form-item><a-form-item label="回复（关闭时必填）"><a-textarea v-model:value="reply" :rows="5" :maxlength="3000" /></a-form-item></a-form>
@@ -43,15 +43,17 @@
   </main>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Empty as AEmpty, Form as AForm, FormItem as AFormItem, InputNumber as AInputNumber, InputSearch as AInputSearch, Modal as AModal, Pagination as APagination, Select as ASelect, Space as ASpace, TabPane as ATabPane, Table as ATable, Tabs as ATabs, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
+
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
 import { isAdmin } from '@/services/auth'
 import { publicOperations, type OperationalUser, type FeedbackItem, type DataJob, type QuotaValues } from '@/services/publicOperations'
 const router = useRouter(), tab = ref('users'), error = ref(''), busy = ref(false)
 const users = ref<OperationalUser[]>([]), query = ref(''), page = ref(1), total = ref(0)
 const feedback = ref<FeedbackItem[]>([]), feedbackStatus = ref(''), deliveries = ref<any[]>([]), mailNote = ref(''), jobs = ref<DataJob[]>([])
 const selectedUser = ref<OperationalUser>(), stateOpen = ref(false), stateReason = ref(''), quotaOpen = ref(false)
+// InputNumber 的运行时清空值为 null；模板 ! 只兼容上游声明，保持覆盖值的 null（继承默认）语义。
 const quota = ref<QuotaValues>({ daily_tasks: null, active_tasks: null, daily_text: null, daily_embedding: null, daily_amap: null }), effective = ref<Record<string, number>>({})
 const selectedFeedback = ref<FeedbackItem>(), feedbackOpen = ref(false), reply = ref(''), replyStatus = ref('processing')
 const quotaFields: { key: keyof QuotaValues; label: string; maximum: number }[] = [{ key: 'daily_tasks', label: '每日规划任务', maximum: 100000 }, { key: 'active_tasks', label: '同时活动任务', maximum: 1000 }, { key: 'daily_text', label: '每日文本／视觉调用', maximum: 1000000 }, { key: 'daily_embedding', label: '每日向量化调用', maximum: 1000000 }, { key: 'daily_amap', label: '每日地图调用', maximum: 1000000 }]

@@ -23,6 +23,8 @@
   </section>
 </template>
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Tag as ATag } from 'ant-design-vue'
+
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { scheduleCurrent } from '@/utils/scheduleValidity'
 import type { DayPlan, PlanningInput, TimelineItem } from '@/types'

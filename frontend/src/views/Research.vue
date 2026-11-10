@@ -40,8 +40,9 @@
 </template>
 
 <script setup lang="ts">
+import { Alert as AAlert, Button as AButton, Card as ACard, Empty as AEmpty, Form as AForm, FormItem as AFormItem, Input as AInput, List as AList, ListItem as AListItem, Space as ASpace, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
+
 import { reactive, ref } from 'vue'
-import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { researchTravel, answerTravelQuestion } from '@/services/api'
 
