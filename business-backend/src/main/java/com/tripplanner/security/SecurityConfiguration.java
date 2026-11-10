@@ -58,7 +58,8 @@ public class SecurityConfiguration {
 
   @Bean
   SecurityFilterChain security(
-      HttpSecurity http, TokenService tokens, AccountSecurityService accounts,@Value("${trip.internal-key}") String internalKey)
+      HttpSecurity http, TokenService tokens, AccountSecurityService accounts, BrowserSession sessions,
+      @Value("${trip.internal-key}") String internalKey)
       throws Exception {
     if (internalKey.getBytes(StandardCharsets.UTF_8).length < 32)
       throw new IllegalArgumentException("INTERNAL_SERVICE_KEY requires at least 32 bytes");
@@ -82,17 +83,10 @@ public class SecurityConfiguration {
                             "agent", null, List.of(new SimpleGrantedAuthority("ROLE_SERVICE"))));
               } else {
                 String bearer = req.getHeader("Authorization");
-                boolean credentialEndpoint=List.of("/api/auth/login","/api/auth/register","/api/auth/recover","/api/auth/email/confirm","/api/auth/email/request-reset","/api/auth/email/reset","/api/auth/options").contains(req.getRequestURI()) || req.getRequestURI().startsWith("/api/auth/erasure/");
+                boolean credentialEndpoint=sessions.credentialEndpoint(req);
                 String credential = bearer != null && bearer.startsWith("Bearer ") ? bearer.substring(7) : null;
                 if (credential == null && !credentialEndpoint) {
                   credential = BrowserSession.cookie(req,BrowserSession.COOKIE);
-                  if(credential != null && !List.of("GET","HEAD","OPTIONS").contains(req.getMethod())) {
-                    String csrf = req.getHeader("X-CSRF-Token");
-                    if(csrf == null || !MessageDigest.isEqual(BrowserSession.csrf(credential).getBytes(StandardCharsets.UTF_8),csrf.getBytes(StandardCharsets.UTF_8))) {
-                      res.setStatus(403);res.setContentType("application/json;charset=UTF-8");
-                      res.getWriter().write("{\"detail\":\"安全校验已失效，请刷新页面\",\"code\":\"CSRF_REQUIRED\"}");return;
-                    }
-                  }
                 }
                 if(credentialEndpoint)credential=null;
                 if (credential != null) {
@@ -120,8 +114,14 @@ public class SecurityConfiguration {
             }
           }
         };
+    var csrfHandler=new org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler() {
+      @Override public String resolveCsrfTokenValue(HttpServletRequest request,org.springframework.security.web.csrf.CsrfToken token) {
+        return request.getHeader(token.getHeaderName());
+      }
+    };
     return http.cors(org.springframework.security.config.Customizer.withDefaults())
-        .csrf(c -> c.disable())
+        .csrf(c -> c.csrfTokenRepository(sessions).csrfTokenRequestHandler(csrfHandler)
+            .requireCsrfProtectionMatcher(sessions::requiresCsrf))
         .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .formLogin(c -> c.disable())
         .httpBasic(c -> c.disable())
@@ -162,7 +162,13 @@ public class SecurityConfiguration {
                     .authenticated())
         .exceptionHandling(
             c ->
-                c.authenticationEntryPoint(
+                c.accessDeniedHandler((req,res,error) -> {
+                      if(error instanceof org.springframework.security.web.csrf.CsrfException) {
+                        res.setStatus(403);res.setContentType("application/json;charset=UTF-8");
+                        res.getWriter().write("{\"detail\":\"安全校验已失效，请刷新页面\",\"code\":\"CSRF_REQUIRED\"}");
+                      } else new org.springframework.security.web.access.AccessDeniedHandlerImpl().handle(req,res,error);
+                    })
+                    .authenticationEntryPoint(
                     (req, res, e) -> {
                       res.setStatus(401);
                       res.setContentType("application/json");

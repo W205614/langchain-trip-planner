@@ -11,6 +11,12 @@ import tools.jackson.databind.node.ObjectNode;
 public final class TripRequests {
   private TripRequests() {}
 
+  public static int nextVersion(int current) {
+    if (current < 1 || current == Integer.MAX_VALUE)
+      throw new ApiException(422, "版本号无效或已达到上限", "INVALID_VERSION");
+    return Math.incrementExact(current);
+  }
+
   public static ObjectNode normalize(ObjectNode input) {
     ObjectNode body = input.deepCopy();
     // Match Pydantic's public request whitelist; execution metadata is never client-controlled.

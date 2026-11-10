@@ -7,10 +7,13 @@ import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.DefaultCsrfToken;
 
 /** Explicit browser mode avoids changing the established non-browser Bearer contract. */
 @Service
-public class BrowserSession {
+public class BrowserSession implements CsrfTokenRepository {
   public static final String COOKIE = "trip_session";
   private final long minutes;
   public BrowserSession(@Value("${trip.token-minutes}") long minutes,
@@ -40,5 +43,27 @@ public class BrowserSession {
     try { return Base64.getUrlEncoder().withoutPadding().encodeToString(MessageDigest.getInstance("SHA-256")
         .digest(("trip-csrf:"+token).getBytes(StandardCharsets.UTF_8))); }
     catch(java.security.NoSuchAlgorithmException ex){throw new IllegalStateException(ex);}
+  }
+  public boolean credentialEndpoint(HttpServletRequest request) {
+    String path=request.getRequestURI();
+    return java.util.List.of("/api/auth/login","/api/auth/register","/api/auth/recover","/api/auth/email/confirm",
+        "/api/auth/email/request-reset","/api/auth/email/reset","/api/auth/options").contains(path)
+        || path.startsWith("/api/auth/erasure/");
+  }
+  public boolean requiresCsrf(HttpServletRequest request) {
+    if(java.util.List.of("GET","HEAD","OPTIONS").contains(request.getMethod())
+        || request.getRequestURI().startsWith("/internal/") || credentialEndpoint(request))return false;
+    String authorization=request.getHeader("Authorization");
+    return (authorization==null || !authorization.startsWith("Bearer ")) && cookie(request,COOKIE)!=null;
+  }
+  @Override public CsrfToken loadToken(HttpServletRequest request) {
+    String credential=cookie(request,COOKIE);
+    return credential==null?null:new DefaultCsrfToken("X-CSRF-Token","_csrf",csrf(credential));
+  }
+  @Override public CsrfToken generateToken(HttpServletRequest request) {
+    return new DefaultCsrfToken("X-CSRF-Token","_csrf",java.util.UUID.randomUUID().toString());
+  }
+  @Override public void saveToken(CsrfToken token,HttpServletRequest request,HttpServletResponse response) {
+    // The expected token is derived from the authenticated session; issue/clear own its cookies.
   }
 }

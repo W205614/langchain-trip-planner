@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test'
+import { randomInt } from 'node:crypto'
 
 test('saved trip supports checks, expense ledger and accepted editor changes', async ({ page, request }) => {
   test.setTimeout(120_000)
-  const suffix = `${Date.now()}_${Math.floor(Math.random() * 10000)}`
+  const suffix = `${Date.now()}_${randomInt(10000)}`
   const ownerName = `ops_owner_${suffix}`
   const editorName = `ops_editor_${suffix}`
   const ownerResponse = await request.post('/api/auth/register', {

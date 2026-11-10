@@ -10,6 +10,17 @@ import tools.jackson.databind.node.ObjectNode;
 class TripRequestsTest {
   final JsonMapper json = new JsonMapper();
 
+  @Test
+  void advancesVersionsWithoutWrappingClientInput() {
+    assertEquals(2, TripRequests.nextVersion(1));
+    assertEquals(Integer.MAX_VALUE, TripRequests.nextVersion(Integer.MAX_VALUE - 1));
+    for (int invalid : new int[]{0, -1, Integer.MAX_VALUE}) {
+      var error = assertThrows(ApiException.class, () -> TripRequests.nextVersion(invalid));
+      assertEquals(422, error.status);
+      assertEquals("INVALID_VERSION", error.code);
+    }
+  }
+
   ObjectNode request() {
     return (ObjectNode)
         json.readTree(

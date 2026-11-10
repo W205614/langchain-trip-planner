@@ -431,10 +431,11 @@ def cancel(execution_id: UUID):
     return {"success": True}
 
 
-@app.post("/internal/v1/capabilities/{kind}", dependencies=[Depends(authorize)])
-def capability(kind: str, body: dict):
+@app.get("/internal/v1/capabilities/{kind}", dependencies=[Depends(authorize)])
+def read_capability(kind: str, http_request: Request):
     from ..services.rag_service import get_rag_service
-    from ..models.schemas import TravelResearchRequest, POISearchRequest, POIDetailRequest
+    from ..models.schemas import POISearchRequest, POIDetailRequest
+    body = dict(http_request.query_params)
     if kind == "validation":
         if os.environ.get("APP_ENV") != "validation" or os.environ.get("VALIDATION_ALLOW_FIXTURES") != "yes":
             raise HTTPException(404, "Not available")
@@ -442,17 +443,6 @@ def capability(kind: str, body: dict):
     elif kind == "eval-policy":
         from ..services.eval_budget import policy
         return policy()
-    elif kind in {"research", "research-retrieve", "research-answer"}:
-        with capacity("research", _slow_slots):
-            from .research import run
-            result = run(kind, body)
-    elif kind == "assistant-intent":
-        from ..services.assistant_intent import classify_assistant_intent
-        content = str(body.get("content") or "").strip()
-        travel_days = body.get("travel_days", 0)
-        if len(content) < 2 or len(content) > 1000 or not isinstance(travel_days, int) or not 1 <= travel_days <= 30:
-            raise HTTPException(422, "Invalid assistant intent request")
-        result = classify_assistant_intent(content, travel_days)
     elif kind == "poi-search":
         with capacity("tool", _tool_slots):
             request = POISearchRequest.model_validate(body)
@@ -486,6 +476,24 @@ def capability(kind: str, body: dict):
         return {"success": True, "rag": "available" if rag.enabled else "disabled",
                 "map": "mcp" if cfg.amap_transport == "mcp" and bool(cfg.amap_api_key) else "not_configured",
                 "vision": "available" if cfg.vision_model and (cfg.vision_api_key or cfg.llm_api_key) else "not_configured"}
+    else:
+        raise HTTPException(404, "Unknown capability")
+    return {"success": True, "message": "查询完成", "data": result}
+
+
+@app.post("/internal/v1/capabilities/{kind}", dependencies=[Depends(authorize)])
+def capability(kind: str, body: dict):
+    if kind in {"research", "research-retrieve", "research-answer"}:
+        with capacity("research", _slow_slots):
+            from .research import run
+            result = run(kind, body)
+    elif kind == "assistant-intent":
+        from ..services.assistant_intent import classify_assistant_intent
+        content = str(body.get("content") or "").strip()
+        travel_days = body.get("travel_days", 0)
+        if len(content) < 2 or len(content) > 1000 or not isinstance(travel_days, int) or not 1 <= travel_days <= 30:
+            raise HTTPException(422, "Invalid assistant intent request")
+        result = classify_assistant_intent(content, travel_days)
     else:
         raise HTTPException(404, "Unknown capability")
     return {"success": True, "message": "查询完成", "data": result}

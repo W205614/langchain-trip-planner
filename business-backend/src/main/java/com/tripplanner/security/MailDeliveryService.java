@@ -72,7 +72,7 @@ public class MailDeliveryService {
       cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(Totp.key(encryptionKey), "AES"), new GCMParameterSpec(128, nonce));
       cipher.updateAAD(AAD);
       byte[] value = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
-      return Base64.getEncoder().encodeToString(ByteBuffer.allocate(nonce.length + value.length).put(nonce).put(value).array());
+      return Base64.getEncoder().encodeToString(ByteBuffer.allocate(Math.addExact(nonce.length, value.length)).put(nonce).put(value).array());
     } catch (java.security.GeneralSecurityException ex) { throw new IllegalStateException("Mail payload encryption failed", ex); }
   }
 

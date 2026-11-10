@@ -67,4 +67,6 @@ if __name__ == '__main__':
     p.add_argument('--output', type=Path, default=Path('.codex-optimization/admin.json'))
     p.add_argument('--project', default='trip-opt-candidate-20261026')
     p.add_argument('--allow-optional-admin-mfa',action='store_true',help='Explicit legacy CI-fixture preparation only; default candidates require MFA')
-    a = p.parse_args(); print(json.dumps(prepare(a.base_url, a.output, a.project,a.allow_optional_admin_mfa)))
+    a = p.parse_args()
+    prepare(a.base_url, a.output, a.project, a.allow_optional_admin_mfa)
+    print('{"synthetic_admin_ready":true,"credentials":"ignored local file only"}')

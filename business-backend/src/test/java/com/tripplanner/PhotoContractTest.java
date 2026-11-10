@@ -15,7 +15,7 @@ class PhotoContractTest {
   void transientPlaceholderMustNeverBeCachedAsRealPhoto() {
     var agent = mock(AgentClient.class);
     var amap = mock(AmapGateway.class);
-    when(agent.post(eq("/capabilities/poi-detail"), any())).thenReturn(
+    when(agent.get(eq("/capabilities/poi-detail"), any())).thenReturn(
         JsonMapper.builder().build().createObjectNode().set("data", JsonMapper.builder().build().createObjectNode()));
     when(amap.imageFromPoi(anyString(), any()))
         .thenReturn(new AmapGateway.Image("<svg/>".getBytes(), "image/svg+xml", true));
@@ -29,7 +29,7 @@ class PhotoContractTest {
   void realPhotoRetainsBoundedCache() {
     var agent = mock(AgentClient.class);
     var amap = mock(AmapGateway.class);
-    when(agent.post(eq("/capabilities/poi-detail"), any())).thenReturn(
+    when(agent.get(eq("/capabilities/poi-detail"), any())).thenReturn(
         JsonMapper.builder().build().createObjectNode().set("data", JsonMapper.builder().build().createObjectNode()));
     when(amap.imageFromPoi(anyString(), any()))
         .thenReturn(new AmapGateway.Image(new byte[] {(byte) 0xff, (byte) 0xd8}, "image/jpeg", false));

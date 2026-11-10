@@ -149,7 +149,7 @@ public class HistoryController {
     long uid = UsersController.uid(req);
     var row = owned(uid, id);
     requireRegularTrip(row);
-    if (version < 1) throw new ApiException(422, "版本无效");
+    int nextVersion = TripRequests.nextVersion(version);
     if (!plan.path("days").isArray()) throw new ApiException(422, "行程结构无效");
     var original = json.readTree(row.get("plan_json").toString());
     var pois = new HashMap<String, tools.jackson.databind.JsonNode>();
@@ -181,7 +181,7 @@ public class HistoryController {
         "id",
         id,
         "version",
-        version + 1,
+        nextVersion,
         "data",
         plan,
         "quality",

@@ -2,6 +2,8 @@
 
 [`public-operations.openapi.yaml`](public-operations.openapi.yaml) 是公开运营增量的 OpenAPI 3.1 契约，覆盖邮箱账号、反馈、配额、运营后台、邮件发件箱、导出、注销及对象存储迁移。既有行程接口与 `internal-v1`/`internal-v2` 另行维护。
 
+Java 到 Agent 的 `/internal/v1/capabilities/{kind}` 按操作语义绑定 HTTP 方法，均要求 `X-Service-Key`：`validation`、`eval-policy`、`poi-search`、`poi-detail`、`rag-status` 和 `status` 使用 GET。POI 查询字段通过 URL 查询参数传递，数据结构仍使用 `internal-v1/POISearchRequest.schema.json` 与 `POIDetailRequest.schema.json`。`research`、`research-retrieve`、`research-answer` 与 `assistant-intent` 使用 POST JSON；流式研究仍使用独立 POST 路由。Java 公开 API 的方法与响应结构保持原约定；Cookie 写请求继续只接受 `X-CSRF-Token` 请求头，不接受查询参数代替。
+
 修改相关 Controller、请求 record、返回白名单或权限时，同步更新本文件。`x-java-record` 指向实际请求类型；返回结构以服务层显式 SELECT 列表及 `AccountAccess.publicUser` 为准。Cookie 与 Bearer 认证、CSRF、管理员 MFA、反馈 `If-Match`、注销回执均在各操作中说明。契约不含密钥、令牌样例或投递正文。
 
 在仓库根目录使用已安装后端依赖的 Python 执行：

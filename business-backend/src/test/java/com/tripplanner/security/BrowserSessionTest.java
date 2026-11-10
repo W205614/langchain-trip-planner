@@ -6,6 +6,24 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 class BrowserSessionTest {
+  @Test void csrfProtectionTracksTheExistingCookieAuthenticationContract() {
+    var browser=new BrowserSession(120,true);
+    var request=new MockHttpServletRequest("POST","/api/auth/logout");
+    assertFalse(browser.requiresCsrf(request));
+    request.setCookies(new jakarta.servlet.http.Cookie(BrowserSession.COOKIE,"session-one"));
+    assertTrue(browser.requiresCsrf(request));
+    var first=browser.loadToken(request);
+    assertEquals("X-CSRF-Token",first.getHeaderName());
+    assertEquals(BrowserSession.csrf("session-one"),first.getToken());
+    request.setCookies(new jakarta.servlet.http.Cookie(BrowserSession.COOKIE,"session-two"));
+    assertNotEquals(first.getToken(),browser.loadToken(request).getToken());
+    request.addHeader("Authorization","Bearer explicit-client-token");
+    assertFalse(browser.requiresCsrf(request));
+    request.removeHeader("Authorization");request.setMethod("GET");
+    assertFalse(browser.requiresCsrf(request));
+    request.setMethod("POST");request.setRequestURI("/api/auth/login");
+    assertFalse(browser.requiresCsrf(request));
+  }
   @Test void legacyFalseFlagCannotDowngradeRemoteCookiesButLoopbackDevelopmentRemainsUsable(){
     var browser=new BrowserSession(120,false);
     var remote=new MockHttpServletRequest();remote.setServerName("trips.example.com");remote.setSecure(false);

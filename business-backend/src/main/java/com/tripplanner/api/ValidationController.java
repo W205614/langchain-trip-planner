@@ -16,6 +16,6 @@ public class ValidationController {
 
   @GetMapping("/api/validation/fixture")
   public Object marker() {
-    return agent.post("/capabilities/validation", Map.of());
+    return agent.get("/capabilities/validation", Map.of());
   }
 }

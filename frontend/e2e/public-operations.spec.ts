@@ -1,4 +1,5 @@
 import { test, expect, type APIRequestContext } from '@playwright/test'
+import { randomBytes } from 'node:crypto'
 import { guardOfflineResources } from './offline-provider-boundary'
 
 const origin = process.env.PUBLIC_E2E_BASE_URL
@@ -9,7 +10,7 @@ test.setTimeout(120_000)
 test.beforeEach(async ({ context, baseURL }) => { await guardOfflineResources(context, baseURL!) })
 
 function identity() {
-  const username = `public_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
+  const username = `public_${Date.now()}_${randomBytes(3).toString('hex').slice(0, 5)}`
   return { username, email: `${username}@example.test`, password: 'public-browser-password-123' }
 }
 

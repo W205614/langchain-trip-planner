@@ -48,7 +48,7 @@ public final class Totp {
       cipher.init(Cipher.ENCRYPT_MODE,new SecretKeySpec(key(key),"AES"),new GCMParameterSpec(128,nonce));
       cipher.updateAAD("trip-account-totp-v1".getBytes(StandardCharsets.US_ASCII));
       byte[] encrypted=cipher.doFinal(secret.getBytes(StandardCharsets.US_ASCII));
-      return Base64.getEncoder().encodeToString(ByteBuffer.allocate(nonce.length+encrypted.length).put(nonce).put(encrypted).array());
+      return Base64.getEncoder().encodeToString(ByteBuffer.allocate(Math.addExact(nonce.length,encrypted.length)).put(nonce).put(encrypted).array());
     }catch(GeneralSecurityException ex){throw new IllegalStateException(ex);}
   }
   public static String decrypt(String stored,String key) {

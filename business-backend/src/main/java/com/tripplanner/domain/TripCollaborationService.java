@@ -58,6 +58,7 @@ public class TripCollaborationService {
   public Object reorder(long actor,long id,int expected,ObjectNode input,String requestId) {
     var found=ctx.access(actor,id,true);
     ctx.version(found,expected);
+    int nextVersion=TripRequests.nextVersion(expected);
     int dayIndex=ctx.day(found,input);
     JsonNode ids=input.path("poi_ids");
     if(!ids.isArray() || ids.size()>20) throw new ApiException(422,"景点顺序无效");
@@ -97,8 +98,8 @@ public class TripCollaborationService {
         throw new ApiException(409,"行程版本冲突，请重新加载","VERSION_CONFLICT");
       history.outbox(id,owner,"draft".equals(quality.path("outcome").asText(""))?"delete":"upsert");
       ledger.captureOnBehalf(owner,actor,id,"user_edit",requestId);
-      notifications.notifyUser(owner,id,"reorder:"+id+":"+(expected+1),"trip_change","同行人调整了行程","第"+(dayIndex+1)+"天顺序已变更，请核对路线。");
-      return Map.of("success",true,"id",id,"version",expected+1,"quality",quality,"data",plan);
+      notifications.notifyUser(owner,id,"reorder:"+id+":"+nextVersion,"trip_change","同行人调整了行程","第"+(dayIndex+1)+"天顺序已变更，请核对路线。");
+      return Map.of("success",true,"id",id,"version",nextVersion,"quality",quality,"data",plan);
     });
   }
 

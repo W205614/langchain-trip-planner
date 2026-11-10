@@ -57,10 +57,13 @@ def test_only_agent_owned_mcp_poi_capabilities_are_exposed(client, monkeypatch):
     )
     monkeypatch.setattr(amap_service, "get_amap_service", lambda: fake)
     headers={"X-Service-Key": "internal-test-key-01234567890123456789"}
-    search = client.post("/internal/v1/capabilities/poi-search", json={"keywords":"故宫","city":"北京"}, headers=headers)
+    search = client.get("/internal/v1/capabilities/poi-search", params={"keywords":"故宫","city":"北京"}, headers=headers)
     assert search.status_code == 200 and search.json()["data"][0]["id"] == "B0001"
-    detail = client.post("/internal/v1/capabilities/poi-detail", json={"poi_id":"B0001"}, headers=headers)
+    detail = client.get("/internal/v1/capabilities/poi-detail", params={"poi_id":"B0001"}, headers=headers)
     assert detail.status_code == 200 and detail.json()["data"]["photos"] == poi["photos"]
+    assert client.get("/internal/v1/capabilities/poi-detail", params={"poi_id":"B0001"}).status_code == 401
+    assert client.post("/internal/v1/capabilities/poi-detail", json={"poi_id":"B0001"}, headers=headers).status_code == 404
+    assert client.get("/internal/v1/capabilities/assistant-intent", params={"content":"规划行程","travel_days":1}, headers=headers).status_code == 404
     assert client.post("/internal/v1/capabilities/photo-image", json={"name": "故宫"}, headers=headers).status_code == 404
     assert client.post("/internal/v1/capabilities/route", json={}, headers=headers).status_code == 404
     assert client.post("/internal/v1/capabilities/weather", json={}, headers=headers).status_code == 404

@@ -62,12 +62,15 @@ public class AgentClient {
     this(base, key, json, 8, 5, 15, new SimpleMeterRegistry());
   }
 
-  private HttpRequest request(String path, Object body, Duration timeout) {
-    var builder = HttpRequest.newBuilder(URI.create(base + (path.startsWith("/v2/") ? "/internal" : "/internal/v1") + path))
+  private URI endpoint(String path) {
+    return URI.create(base + (path.startsWith("/v2/") ? "/internal" : "/internal/v1") + path);
+  }
+
+  private HttpRequest.Builder request(String path, Object body, Duration timeout) {
+    var builder = HttpRequest.newBuilder(endpoint(path))
         .timeout(timeout)
         .header("X-Service-Key", key)
-        .header("Content-Type", "application/json")
-        .POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body)));
+        .header("Content-Type", "application/json");
     String requestId = MDC.get("request_id");
     if ((requestId == null || requestId.isBlank()) && body instanceof JsonNode node)
       requestId = node.path("request_id").asText("");
@@ -79,7 +82,7 @@ public class AgentClient {
       String operation = actors.forAgent(path, body);
       if (operation != null) builder.header("X-Outbound-Operation", operation);
     }
-    return builder.build();
+    return builder;
   }
 
   public JsonNode post(String path, Object body) {
@@ -91,11 +94,25 @@ public class AgentClient {
   }
 
   public JsonNode post(String path, Object body, Duration timeout) {
+    return exchange(request(path, body, timeout)
+        .POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build());
+  }
+
+  public JsonNode get(String path, java.util.Map<String, ?> parameters) {
+    String query = parameters.entrySet().stream().map(entry ->
+        java.net.URLEncoder.encode(entry.getKey(), java.nio.charset.StandardCharsets.UTF_8) + "="
+            + java.net.URLEncoder.encode(String.valueOf(entry.getValue()), java.nio.charset.StandardCharsets.UTF_8))
+        .collect(java.util.stream.Collectors.joining("&"));
+    return exchange(request(path, parameters, Duration.ofSeconds(30))
+        .uri(endpoint(path + (query.isEmpty() ? "" : "?" + query))).GET().build());
+  }
+
+  private JsonNode exchange(HttpRequest request) {
     try {
       return guard.execute(
           () -> {
             var response =
-                http.send(request(path, body, timeout), HttpResponse.BodyHandlers.ofString());
+                http.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 422)
               throw new ApiException(422, "请求参数不符合能力接口契约", "INVALID_REQUEST");
             if (response.statusCode() == 429)
@@ -174,7 +191,9 @@ public class AgentClient {
       String path, Object body, Duration timeout, BiConsumer<String, JsonNode> consumer)
       throws IOException, InterruptedException {
     var response =
-        http.send(request(path, body, timeout), HttpResponse.BodyHandlers.ofInputStream());
+        http.send(request(path, body, timeout)
+            .POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build(),
+            HttpResponse.BodyHandlers.ofInputStream());
     if (response.statusCode() / 100 != 2) {
       int status = response.statusCode();
       response.body().close();

@@ -67,10 +67,12 @@ class SecurityOptimizationIntegrationTest {
     assertTrue(session.contains("HttpOnly"));assertTrue(session.contains("SameSite=Strict"));
     String cookie=session.split(";",2)[0],raw=cookie.substring("trip_session=".length());
     String csrf=registered.headers().allValues("Set-Cookie").stream().filter(c->c.startsWith("trip_csrf=")).findFirst().orElseThrow().split(";",2)[0].substring("trip_csrf=".length());
+    var missing=request("POST","/api/auth/logout",Map.of(),null,cookie,null,false);
+    assertEquals(403,missing.statusCode());assertEquals("CSRF_REQUIRED",body(missing).path("code").asText());
+    assertEquals(403,request("POST","/api/auth/logout",Map.of(),null,cookie,"wrong-token",false).statusCode());
+    assertEquals(403,request("POST","/api/auth/logout?_csrf="+csrf,Map.of(),null,cookie,null,false).statusCode());
     assertEquals("no-store",registered.headers().firstValue("Cache-Control").orElse(""));
     assertEquals(200,request("GET","/api/auth/me",null,null,cookie,null,false).statusCode());
-    assertEquals(403,request("POST","/api/auth/logout",Map.of(),null,cookie,null,false).statusCode());
-    assertEquals(403,request("POST","/api/auth/logout",Map.of(),null,cookie,"wrong",false).statusCode());
     assertEquals(200,request("GET","/api/auth/me",null,raw,null,null,false).statusCode());
     assertEquals(200,request("POST","/api/auth/logout",Map.of(),null,cookie,csrf,false).statusCode());
     assertEquals(401,request("GET","/api/auth/me",null,raw,null,null,false).statusCode());

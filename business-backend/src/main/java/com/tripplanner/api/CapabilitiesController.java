@@ -40,7 +40,7 @@ public class CapabilitiesController {
     tools.jackson.databind.JsonNode poi = tools.jackson.databind.node.MissingNode.getInstance();
     if (!poi_id.isBlank()) {
       try {
-        var response = agent.post("/capabilities/poi-detail", Map.of("poi_id", poi_id));
+        var response = agent.get("/capabilities/poi-detail", Map.of("poi_id", poi_id));
         if (response != null) poi = response.path("data");
       } catch (ApiException ignored) {
         // A missing or unavailable MCP image is rendered as an explicit placeholder.
@@ -59,7 +59,7 @@ public class CapabilitiesController {
 
   @GetMapping("/trip/eval-policy")
   public Object evalPolicy() {
-    return agent.post("/capabilities/eval-policy", Map.of());
+    return agent.get("/capabilities/eval-policy", Map.of());
   }
 
   @GetMapping("/map/poi")
@@ -67,7 +67,7 @@ public class CapabilitiesController {
       @RequestParam String keywords,
       @RequestParam String city,
       @RequestParam(defaultValue = "true") boolean citylimit) {
-    return agent.post("/capabilities/poi-search", Map.of(
+    return agent.get("/capabilities/poi-search", Map.of(
         "keywords", keywords, "city", city, "citylimit", citylimit));
   }
 
@@ -79,7 +79,7 @@ public class CapabilitiesController {
 
   @GetMapping("/poi/detail/{id}")
   public Object detail(@PathVariable String id) {
-    return agent.post("/capabilities/poi-detail", Map.of("poi_id", id));
+    return agent.get("/capabilities/poi-detail", Map.of("poi_id", id));
   }
 
   @GetMapping("/map/weather")
@@ -108,13 +108,13 @@ public class CapabilitiesController {
 
   @GetMapping("/rag/status")
   public Object rag() {
-    return agent.post("/capabilities/rag-status", Map.of());
+    return agent.get("/capabilities/rag-status", Map.of());
   }
 
   @GetMapping("/map/health")
   public Object mapHealth() {
     if (!agent.available()) return Map.of("status", "unavailable", "service", "agent-amap-mcp");
-    var status = agent.post("/capabilities/status", Map.of());
+    var status = agent.get("/capabilities/status", Map.of());
     return Map.of("status", status.path("map").asText("not_configured"),
         "service", "agent-amap-mcp", "connectivity_checked", false);
   }
@@ -132,7 +132,7 @@ public class CapabilitiesController {
     String map = ai ? "unknown" : "waiting_for_agent";
     if (ai) {
       try {
-        var status = agent.post("/capabilities/status", Map.of());
+        var status = agent.get("/capabilities/status", Map.of());
         rag = status.path("rag").asText("unknown");
         vision = status.path("vision").asText("unknown");
         map = status.path("map").asText("unknown");

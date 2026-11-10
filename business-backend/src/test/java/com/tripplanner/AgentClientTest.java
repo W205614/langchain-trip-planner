@@ -14,6 +14,30 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
 
 class AgentClientTest {
+  @Test void readCapabilitiesUseAnAuthenticatedGetWithEncodedQueryParameters() throws Exception {
+    var server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
+    var observed=new java.util.concurrent.atomic.AtomicReference<Map<String,String>>();
+    server.createContext("/internal/v1/capabilities/poi-search",exchange -> {
+      assertEquals("GET",exchange.getRequestMethod());
+      assertEquals("test-key",exchange.getRequestHeaders().getFirst("X-Service-Key"));
+      assertEquals(0,exchange.getRequestBody().readAllBytes().length);
+      var query=new HashMap<String,String>();
+      for(String parameter:exchange.getRequestURI().getRawQuery().split("&")) {
+        String[] pair=parameter.split("=",2);
+        query.put(java.net.URLDecoder.decode(pair[0],StandardCharsets.UTF_8),
+            java.net.URLDecoder.decode(pair[1],StandardCharsets.UTF_8));
+      }
+      observed.set(query);
+      byte[] body="{\"success\":true,\"data\":[]}".getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200,body.length);exchange.getResponseBody().write(body);exchange.close();
+    });
+    server.start();
+    try {
+      var client=new AgentClient("http://127.0.0.1:"+server.getAddress().getPort(),"test-key",new JsonMapper());
+      assertTrue(client.get("/capabilities/poi-search",Map.of("keywords","故宫 & 天坛","city","北京","citylimit",false)).path("success").asBoolean());
+      assertEquals(Map.of("keywords","故宫 & 天坛","city","北京","citylimit","false"),observed.get());
+    } finally {server.stop(0);}
+  }
   @Test
   void agentCapacityRejectionDoesNotOpenTheDependencyCircuit() throws Exception {
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);

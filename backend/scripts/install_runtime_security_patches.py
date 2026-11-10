@@ -66,7 +66,9 @@ def apply(lock_path):
         print(simulation, flush=True)
         validate_simulation(simulation, set(lock['packages']))
         with tempfile.TemporaryDirectory(prefix='trip-security-libraries-') as folder:
-            os.chmod(folder, 0o755)
+            import pwd
+            os.chown(folder, pwd.getpwnam('_apt').pw_uid, -1)
+            os.chmod(folder, 0o700)
             run('apt-get', 'download', *requested, cwd=folder)
             archives = sorted(Path(folder).glob('*.deb'))
             if len(archives) != len(lock['packages']):

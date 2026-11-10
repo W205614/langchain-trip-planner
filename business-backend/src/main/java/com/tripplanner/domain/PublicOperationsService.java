@@ -75,8 +75,9 @@ public class PublicOperationsService {
   }
   public Object feedback(long uid,int page,boolean admin,String status) {
     if(page<1||page>100000||!Set.of("","open","processing","closed").contains(status))throw new ApiException(422,"反馈筛选无效");
+    int offset=Math.multiplyExact(Math.subtractExact(page,1),50);
     String condition=admin?"(?='' OR status=?)":"user_id=?";
-    Object[] args=admin?new Object[]{status,status,(page-1)*50}:new Object[]{uid,(page-1)*50};
+    Object[] args=admin?new Object[]{status,status,offset}:new Object[]{uid,offset};
     return Map.of("data",db.queryForList("SELECT id,user_id,category,subject,message,trip_id,task_id,request_id,status,reply,version,created_at,updated_at FROM user_feedback WHERE "+condition+" ORDER BY created_at DESC,id DESC LIMIT 50 OFFSET ?",args),"page",page);
   }
   public Object respond(long actor,long id,int version,String status,String reply,String requestId) {

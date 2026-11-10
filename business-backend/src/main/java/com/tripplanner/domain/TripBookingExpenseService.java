@@ -61,6 +61,7 @@ public class TripBookingExpenseService {
 
   public Object updateCommitment(long actor,long id,long commitment,int expected,ObjectNode body,String requestId) {
     ctx.access(actor,id,true);
+    int nextVersion=TripRequests.nextVersion(expected);
     String status=ctx.choice(body,"status",Set.of("planned","confirmed","cancelled"));
     String note=ctx.optional(body,"note",500);
     Long amount=ctx.cents(body,false);
@@ -71,8 +72,8 @@ public class TripBookingExpenseService {
           status,amount,note,commitment,id,expected);
       if(changed!=1) throw new ApiException(409,"预订事项版本冲突","VERSION_CONFLICT");
       requirePlanningDetailOwner(actor,id,body);saveCommitmentDetails(id,commitment,body);
-      audit.success(actor,"trip.commitment_update","trip_commitment",commitment,expected+1,requestId);
-      return Map.of("success",true,"version",expected+1);
+      audit.success(actor,"trip.commitment_update","trip_commitment",commitment,nextVersion,requestId);
+      return Map.of("success",true,"version",nextVersion);
     });
   }
 
