@@ -1,6 +1,6 @@
 {
   "previous_image_id": "sha256:73b01d726fe6c1581400ea58a2d0373a1dcf6c639ec257d9214f4c8c3e18b3d2",
-  "current_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "current_image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
   "package_versions_changed": {},
   "common_file_hash_changes": {
     "/usr/local/lib/python3.13/poplib.py": {
@@ -13,12 +13,18 @@
     },
     "/usr/local/share/tripplanner/restricted-runtime-tools.json": {
       "before": "82f0cd65634f89fe962b48a8d946a0c9dad0ec8b71cb60d15057aa4625917693",
-      "after": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+      "after": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
     }
   },
   "removed_parser_confirmed": true,
   "new_elf_count": 968,
   "parse_errors": 0,
-  "full_regression": "807 passed, 1 skipped, 50 subtests passed; skipped test is not counted as pass",
-  "full_regression_log_sha256": "268732816b17dcd63b31622d96452fb1f7fba7049828a8cdae50b2a2e18db261"
+  "full_regression": {
+    "result": "807 passed, 1 skipped, 50 subtests passed",
+    "executed_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+    "executed_source_revision": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+    "reused_for_current_image": true,
+    "log_sha256": "268732816b17dcd63b31622d96452fb1f7fba7049828a8cdae50b2a2e18db261",
+    "boundary": "Full pytest was executed on the named source image. Current source is additionally checked for exact package/ELF/app equality and its manifest-ordering change has6 directly relevant tool tests. This is not a new full pytest run."
+  }
 }

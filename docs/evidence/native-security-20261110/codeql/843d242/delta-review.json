@@ -1,0 +1,33 @@
+{
+  "from": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+  "to": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
+  "archives": [
+    {
+      "path": "business-backend/security/busybox-backport/aports-busybox.tar.gz",
+      "bytes": 75751,
+      "sha256": "950940b6fa4239604286b6e9c7eade8161e071d76867c1ec075a22c2e3c38f4a",
+      "matches_existing_source_lock": true,
+      "build_script_sha256_lf": "18af91140297106a455227c0ef7b24613d621b4290b720263908e9ef1454906b"
+    },
+    {
+      "path": "frontend/security/busybox-backport/aports-busybox.tar.gz",
+      "bytes": 75751,
+      "sha256": "950940b6fa4239604286b6e9c7eade8161e071d76867c1ec075a22c2e3c38f4a",
+      "matches_existing_source_lock": true,
+      "build_script_sha256_lf": "18af91140297106a455227c0ef7b24613d621b4290b720263908e9ef1454906b"
+    },
+    {
+      "path": "deploy/images/busybox-backport/aports-busybox.tar.gz",
+      "bytes": 75751,
+      "sha256": "950940b6fa4239604286b6e9c7eade8161e071d76867c1ec075a22c2e3c38f4a",
+      "matches_existing_source_lock": true,
+      "build_script_sha256_lf": "18af91140297106a455227c0ef7b24613d621b4290b720263908e9ef1454906b"
+    }
+  ],
+  "fingerprint_delta": {
+    "path": "backend/scripts/restrict_runtime_tools.py",
+    "only_list_order_changed": true,
+    "old_sha256_lf": "2243bd312e90f7334fedbcdcc54a1ea3854f4da7a92f00e99fae2becf9b9840d",
+    "new_sha256_lf": "81a7c044062c51dafe3bf5862df253d395f54a39692c8d43387e91f340290858"
+  }
+}

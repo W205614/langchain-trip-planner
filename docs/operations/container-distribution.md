@@ -7,7 +7,7 @@
 获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
 
 ```dotenv
-TRIP_VERSION=v0.1.3
+TRIP_VERSION=v0.1.4
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 
@@ -37,7 +37,7 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 
 ## 维护发布
 
-1. 从最终干净源码构建候选，运行必要的业务、浏览器和安全检查。通过 `tools/container_sources.py` 盘点候选的实际依赖并收集来源；下载不完整、摘要不符或来源缺失时停止发布。
+1. 从最终干净源码构建候选，运行必要的业务、浏览器和安全检查。通过 `tools/container_sources.py` 盘点候选的实际依赖并收集来源；随后运行 `tools/container_license_supplements.py --sources <收集目录> --bundle <输出目录>/container-sources-vX.Y.Z.zip`，补齐三个 wheel 的原始通知及原生 Rust 源码锁对应的来源和许可。前一步不传 `--version`，由补齐步骤生成最终 ZIP 和完整摘要清单，避免将尚未补齐通知的初步归档当作最终附件。补齐工具随源码和分发材料提供；下载不完整、摘要不符或来源缺失时停止发布。
 2. 使用 `tools/container_release.py --version vX.Y.Z seal ...` 添加许可层并导出候选。该步骤核对源材料对应的应用层；对最终候选补验实际启动和流程，记录摘要。
 3. 最终提交的 CI 和 Security gates 全部通过后创建新的 Tag 和草稿 Release，将候选镜像归档、源码材料、manifest 和校验文件上传到草稿。核对草稿后发布，使对应源码先于 GHCR 镜像公开可取。
 4. 手动运行 `Publish validated application images`，填写该版本。工作流核对同一 SHA 的两条检查、Tag、正式 Release 及附件摘要，加载和推广同一镜像，不重新构建、不覆盖已有版本、不部署生产。下载公开附件只需 `contents: read`，工作流不获得仓库内容写权限。

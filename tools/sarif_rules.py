@@ -77,7 +77,7 @@ def resolve_rule(tool, result):
     return rule
 
 
-def is_blocking(rule, result):
+def is_blocking(rule, result, all_severities=False):
     properties = rule.get('properties', {})
     defaults = rule.get('defaultConfiguration', {})
     if not isinstance(properties, dict) or not isinstance(defaults, dict):
@@ -88,8 +88,7 @@ def is_blocking(rule, result):
     if 'security-severity' not in properties:
         if 'security' in properties.get('tags', []):
             raise RuntimeError('CodeQL security rule lacks numeric security severity')
-        # Preserve non-security diagnostic behavior; an error remains blocking.
-        return level == 'error'
+        return all_severities or level == 'error'
     raw = properties['security-severity']
     try:
         if isinstance(raw, bool):
@@ -99,4 +98,4 @@ def is_blocking(rule, result):
         raise RuntimeError('Invalid CodeQL security severity') from error
     if not math.isfinite(severity) or not 0 <= severity <= 10:
         raise RuntimeError('Invalid CodeQL security severity range')
-    return severity >= 7 or (severity == 0 and level == 'error')
+    return all_severities or severity >= 7 or (severity == 0 and level == 'error')

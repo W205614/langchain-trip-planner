@@ -127,7 +127,7 @@
     "Linux/glibc fork-while-thread-churn probe does not establish a portable POSIX guarantee.",
     "Detached stack mappings can remain until subsequent create/reaping observes clear-tid; test verifies eventual eligible reclamation."
   ],
-  "current_rebound_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "current_rebound_image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
   "current_installed_runtime_cases": [
     {
       "binary": "tls-guard-regression",

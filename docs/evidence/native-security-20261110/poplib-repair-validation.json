@@ -19,7 +19,7 @@
   "test_source_sha256": "ad2dd9dbb5ac1ac456aaf7b66bde59809abd5e73b243a92702397ecdee1e47be",
   "upstream_commit": "b234a2b67539f787e191d2ef19a7cbdce32874e7",
   "boundary": "Dependency image only. Final native-hardened Agent integration, final source rebinding and scans remain required.",
-  "current_agent_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "current_agent_image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
   "current_agent_installed_poplib_sha256": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
   "current_agent_provenance_sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e"
 }

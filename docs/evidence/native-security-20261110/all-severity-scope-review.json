@@ -1,0 +1,71 @@
+{
+  "source": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
+  "change": "Strengthen release npm and SARIF scopes to include all severities and quality results; workflow selects the explicit all-severities mode.",
+  "previous_security_gate_lf_sha256": "f987aee65ac4dc18f97ba737f55abd5b94302f8462149b73d21fe1ffec3a2d67",
+  "current_security_gate_lf_sha256": "9bd6a6c2b106b0e79360d53e20dbe2795b5e72fea8038e9dae19a166a4e9d13e",
+  "unchanged_image_and_vex_predicate_function_asts": [
+    "image",
+    "load_vex",
+    "contextual_not_affected",
+    "image_document",
+    "classify"
+  ],
+  "actual_image_assessments_unchanged": true,
+  "residual_risk_authorization_used": false,
+  "validation": {
+    "result": "passed",
+    "source_scope": "tools/security_gate.py, tools/sarif_rules.py, directly related tests, workflow call sites only",
+    "tests": {
+      "count": 32,
+      "result": "passed",
+      "log": "tests.log"
+    },
+    "actual_fresh_843_sarif_all_scope_replay": [
+      {
+        "file": "actions.sarif",
+        "status": "pass",
+        "severity_scope": "all",
+        "all_findings": 0,
+        "raw_high_critical_findings": 0,
+        "not_affected_context_findings": 0,
+        "blocking_findings": 0
+      },
+      {
+        "file": "java.sarif",
+        "status": "pass_codeql_context",
+        "severity_scope": "all",
+        "all_findings": 11,
+        "raw_high_critical_findings": 11,
+        "not_affected_context_findings": 11,
+        "blocking_findings": 0
+      },
+      {
+        "file": "javascript.sarif",
+        "status": "pass",
+        "severity_scope": "all",
+        "all_findings": 0,
+        "raw_high_critical_findings": 0,
+        "not_affected_context_findings": 0,
+        "blocking_findings": 0
+      },
+      {
+        "file": "python.sarif",
+        "status": "pass",
+        "severity_scope": "all",
+        "all_findings": 0,
+        "raw_high_critical_findings": 0,
+        "not_affected_context_findings": 0,
+        "blocking_findings": 0
+      }
+    ],
+    "source_sha256_lf": {
+      "tools/security_gate.py": "9bd6a6c2b106b0e79360d53e20dbe2795b5e72fea8038e9dae19a166a4e9d13e",
+      "tools/sarif_rules.py": "dbf1a07b1e9c749977e57a3ca5f0143e3717fda0d4ed0d880c33703936ebe5db",
+      "tools/tests/test_security_gate.py": "2171965a9ee68f970742876743fd8e89922615f8348101de2c4946d2c731b3ae",
+      "tools/tests/test_sarif_rules.py": "e752dd1ba65c04dbfa962f0450eaaf69d082a60ed1711ee88e6fab4f61919792",
+      ".github/workflows/security.yml": "eedf56f9eae6f7c34c1601fd7434e02382b6ea6b13cb0f260b2ddc1811195e54"
+    },
+    "boundary": "Local all-scope replay is not fresh CI. No active policy/source binding was edited by this task; vendor/VEX security_gate binding deliberately remains for root to independently review."
+  },
+  "reviewer": "Root independent diff and AST review; implementation and regression by frontend_bundle"
+}

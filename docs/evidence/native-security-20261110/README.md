@@ -1,13 +1,13 @@
 # Agent 原生组件逐身份审查（2026-11-10）
 
-本记录是候选审查，**不是发布完成或告警归零的证明**。对象为
-`trip-review-agent-8182d40:20261110`，image ID `sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87`，源码`8182d40757c60a9c695d3d37b9bc4c41e1a830e5`，已核对真实backend/Dockerfile构建入口和源码标签。
+本记录是候选来源和制品审查，**本地全级别镜像门禁的未解决计数为0；远端发布及日常验收另行记录**。对象为
+`trip-review-agent-843d242:20261110`，image ID `sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e`，源码`843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce`，已核对真实backend/Dockerfile构建入口和源码标签。
 同一2026-11-10 Grype数据库保留207条raw，逐artifact ID/包/版本/CVE/等级、证据和绑定见[矩阵](agent-trip4-review.json)。
 
 复核发现并实际补齐了两个遗漏：poplib CVE-2025-15367原真实方法可发送注入命令，现已完整回补上游两行拒绝控制字符，真实安装回归通过；
 ncurses CVE-2025-6141原先仍保留libtic解析器，现已在核对其唯一消费者toe后，将toe/解析器全别名和同字节副本一并移除，保留tinfo/ncurses和包数据库。
-见[修复增量](corrective-delta.json)、[poplib证据](poplib-repair-validation.json)。207条raw全部保留并逐身份提供候选分类；本地草稿并未代替正式源码/CI/镜像标签的最终绑定验收。
-3项glibc实验硬化在本精确原型已完成组合及实际非root/default-loader验收：11项NPTL、45项malloc、31次独立打包执行及9项安装后检查通过，见[结果](trip4-hardening-validation.json)。正式VCS候选仍需用最终源码干净重建并重绑。
+见[修复增量](corrective-delta.json)、[poplib证据](poplib-repair-validation.json)。207条raw全部保留并逐身份分类；这些评估不能替代提交后的CI、封装镜像、Registry及日常环境验收。
+3项glibc实验硬化已完成组合及实际非root/default-loader验收；当前源码镜像的libc/loader/resolv与11项NPTL、45项malloc、31次独立打包执行的制品字节相同，另在当前镜像重跑9项安装后检查通过，见[结果](trip4-hardening-validation.json)。最终Dockerfile构建与源码已绑定；相关CI和目标分支结果以最终交付记录为准。
 
 | 结论类型 | 实际边界 |
 | --- | --- |
@@ -34,12 +34,14 @@ Docker cp --follow-link对部分SONAME产生假缺失，实际libtic也被误报
 rootfs tar逐目录/链接解析核验，无宿主解包或执行镜像；5个真实SONAME可读取，libtic实际存在，原失败记录保留。
 早先“删除tic即无parser”推断不成立，原失败和纠正前库证据保留；新分类必须依赖后续真实toe/libtic移除结果，不能沿用旧假缺失。
 
-候选policy只在本地草稿，没有修改实际.github policy或刷新其source绑定。
+活动policy已按真实源码和制品绑定：197项vendor评估覆盖203条raw，另4条由独立Chroma VEX评估；本地阻断0、未修复风险接受0。原始207条不改成“零漏洞”，见[三镜像门禁记录](base-image-gates-843d242.json)。文档状态及公开摘要说明的后续变化见[独立绑定增量](documentation-binding-delta.json)，不改变漏洞身份、评估结论或运行条件。
 execution_path须绑定冻结审查材料和真实/app/app/*.py及必要已装依赖LF哈希；
 configuration还须内容SHA及架构或mode/uid/gid。正式VCS候选需再次核验入口、源码、库与包、上传类型、
 固定索引目录及挂载；运营者新加journal/ELF/DB导入或插件会使相应判断失效。
 
-首次pytest缺少contracts/已发布SQL只读夹具的5失败保留；补齐真实只读夹具的新镜像检查为807 passed/1 skipped/50 subtests。跳过项不称通过。
+首次pytest缺少contracts/已发布SQL只读夹具的5失败保留；807 passed/1 skipped/50 subtests的实际执行镜像及复用范围见[验证复用记录](validation-reuse.json)。最终排序改动另有6项直接工具测试；未把复用结果冒称最后镜像新跑全量pytest，跳过项不称通过。
+
+清单fingerprints曾因frozenset遍历而在同源码两次构建间改变顺序。最终源码已修复排序：[实际镜像字节验证](manifest-order-validation.json)证明新清单恰等于原清单仅排序该数组后的完整序列化字节；跨进程PYTHONHASHSEED=1/99测试比较完整清单一致。策略仍要求原始文件SHA，不以归一化代替实际绑定。
 一手引用逐CVE列于矩阵。实现与对应源码入口：[glibc/GCC/util-linux回补](../../../backend/security/native-backports/README.md)、
 [逐patch清单](../../../backend/security/native-backports/glibc-patches.txt)、[实验硬化](../../../backend/security/glibc-hardening/STACK-RANDOMIZATION.md)、
 [CPython](../../../backend/security/cpython-backports/README.md)、[PAM](../../../backend/security/pam-backport/README.md)、[dash](../../../backend/security/dash-backport/README.md)。

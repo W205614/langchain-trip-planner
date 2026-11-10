@@ -1,0 +1,19 @@
+{
+  "image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
+  "status": "passed",
+  "manifest_sha256": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
+  "fingerprints_sorted_by_sha256": true,
+  "all_other_manifest_content_unchanged": true,
+  "actual_bytes_equal_previous_manifest_with_only_fingerprints_sorted": true,
+  "cross_process_hash_seed_evidence": {
+    "seeds": [
+      "1",
+      "99"
+    ],
+    "test_file": "tools/tests/test_restricted_runtime_tools.py",
+    "test_source_sha256_lf": "3747787b12cc60dd0391971a88eac8f48d17ff11f8bf82c77580b7fc7ce6fb1a",
+    "tests": "6 passed in26.71s",
+    "log_sha256": "97d4537937c64ab0582d8831a6152d8ab84297ff25f1654787079454b002baee"
+  },
+  "boundary": "Real final-image bytes plus two-process real restriction implementation fixture; not a claim that a second full image build ran. Exact raw manifest SHA remains required by policy."
+}

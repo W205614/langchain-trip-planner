@@ -36,6 +36,8 @@ Python、Java 和前端依赖由各自的依赖管理器安装，版本依据 `b
 
 容器分发另按实际候选核对其系统包和 wheel/JAR/浏览器依赖；包括 OR-Tools 内的 Coin-OR/Eigen 等捆绑库、NumPy 的上游通知和 GCC Runtime Library Exception，以及 cryptography 实际链接的 OpenSSL。个别 npm 包只提供原始 MIT 声明时，保留发布元数据并附标准正文，不把项目自己的版权行移用于第三方。具体来源、源码和通知由对应 Release 的材料清单列出。
 
+前端官方 NGINX 包与 Alpine aports 包分别记录来源。NGINX 核心、GeoIP、image-filter、XSLT 和 njs 保留实际安装的版权声明及官方固定 `pkg-oss` 配方；njs 所带 QuickJS 另保留其 MIT 声明。ACME 模块使用 Apache-2.0，Rust 依赖分别保留自己的许可、通知与锁定来源，不能按 APK 元数据中的通用 BSD 标签概括整个模块。源码材料保留这些官方源码、构建材料及 ACME `Cargo.lock` 对应的 registry 源档；系统共享库中适用 copyleft 的组件继续提供其 Alpine 对应源码，不将官方 NGINX 包伪记为 aports 提交，也不声称重现了上游发布平台的逐字节构建。
+
 当前 PDF 渲染使用 [pypdfium2 5.15.0](https://pypi.org/project/pypdfium2/5.15.0/)。绑定提供 Apache-2.0 / BSD-3-Clause 许可选项，PDFium 及其捆绑组件适用各自条款，详见 [pypdfium2 上游许可说明](https://pypdfium2-team.github.io/pypdfium2/readme.html#licensing)。安装时保留官方 wheel 内的许可证和第三方声明；再次分发 wheel、容器或其他二进制前，应核对实际安装包的许可文件，不能把所有捆绑组件统称为 BSD 或 MIT。
 
 此前使用 PyMuPDF 的历史版本仍需按 [Artifex 的 AGPL / 商业双许可](https://pymupdf.readthedocs.io/en/latest/about.html#license-and-copyright)单独核对，不因当前替换依赖而自动改变历史版本的许可或免除既有义务。

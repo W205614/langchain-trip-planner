@@ -1,0 +1,22 @@
+{
+  "source": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
+  "artifact": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
+  "changed_documents": [
+    {
+      "document": "docs/evidence/native-security-20261110/gitleaks-source-digest-review.md",
+      "previous_bound_lf_sha256": "ed209be8658944883dc7962493153d875ba1b27b1270442beeb1823f5555938b",
+      "current_lf_sha256": "905f4e34ad91a4c13febb99cd7c1d146c2d24dcf03a73162aa8f75279981a631",
+      "baseline_evidence": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce:docs/evidence/native-security-20261110/gitleaks-source-digest-review.md"
+    },
+    {
+      "document": "docs/evidence/native-security-20261110/README.md",
+      "previous_bound_lf_sha256": "2293df793b42435f236fa9e9703d36ac5062d0769aa4ff0bd5e0319cc831aae8",
+      "current_lf_sha256": "c138b8483e1e2aa469a3cada7bfdd8e2f33e91edf8f3d113c443241ebe1911da",
+      "baseline_evidence": "docs/evidence/native-security-20261110/pre-activation-review-readme.md"
+    }
+  ],
+  "reviewed_delta": "Update candidate evidence status to the observed local gate; append independently recomputed public source-file/signing-key fingerprint explanations. Preserve original raw reports and prior Git versions.",
+  "assessments_unchanged": true,
+  "runtime_source_bindings_unchanged": true,
+  "boundary": "No application/native code, package/ELF, runtime condition, advisory identity, classification or source-to-artifact predicate changed."
+}

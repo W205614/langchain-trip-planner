@@ -1,5 +1,5 @@
 {
-  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
   "distribution": "debian",
   "release": "13",
   "architecture": "amd64",
@@ -196,7 +196,7 @@
     "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e",
     "/usr/local/share/tripplanner/dash-backport/dash-sha256.txt": "9ab0d4fe7064299ed7e6e59c029d795d0ff4417e8029bacf25eff3f24166ae9e",
     "/usr/local/share/tripplanner/pam-backport/pam-userdb-sha256.txt": "17218e0a6ba56a278ad44787f5a08495e0e8c8955aa9df4d4ecc3cc079712eb0",
-    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
     "/var/lib/dpkg/status": "448c8c2ea3ef9d8a6b43d5faf35f6c64493461baeabcb69c1eff9f83526256ed",
     "/var/log/btmp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
@@ -304,7 +304,7 @@
     "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e",
     "/usr/local/share/tripplanner/dash-backport/dash-sha256.txt": "9ab0d4fe7064299ed7e6e59c029d795d0ff4417e8029bacf25eff3f24166ae9e",
     "/usr/local/share/tripplanner/pam-backport/pam-userdb-sha256.txt": "17218e0a6ba56a278ad44787f5a08495e0e8c8955aa9df4d4ecc3cc079712eb0",
-    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
     "/var/lib/dpkg/status": "448c8c2ea3ef9d8a6b43d5faf35f6c64493461baeabcb69c1eff9f83526256ed",
     "/var/log/btmp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
@@ -886,5 +886,5 @@
     "/usr/sbin/useradd"
   ],
   "boundary": "Stopped exact image extraction with rootfs tar confirmation of Docker cp not-found/SONAME symlinks. Actual runtime --check verifies bounded CLI absence; final formal candidate requires identity/source rebind.",
-  "retained_rootfs_sha256": "3c9e7faba7b31a18271f1a2473189d147e18b4100127daae506e9149311c9a07"
+  "retained_rootfs_sha256": "07ca6cf280f3f9daa590780ac53d0d22db7ce44492044b9ea7684212707f4c2d"
 }

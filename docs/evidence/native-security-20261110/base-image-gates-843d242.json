@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-11-10T13:09:44.851951+00:00",
+  "application_source": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
+  "platform": "linux/amd64",
+  "artifact_stage": "Local actual unsealed base images; license sealing, final CI, Registry and daily acceptance remain separate",
+  "images": {
+    "agent": {
+      "scanner": "grype-image",
+      "target": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
+      "image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
+      "status": "pass_vendor_policy",
+      "blocking_findings": 0,
+      "raw_high_critical_findings": 69,
+      "severity_scope": "all",
+      "contextual_not_affected": 4,
+      "all_findings": 207,
+      "exit_code": 2,
+      "vex_expires_on": null,
+      "vex_review_policy": "source_and_execution_path_bound",
+      "distribution_assessments": {
+        "fixed_by_distribution_backport": 0,
+        "fixed_by_pinned_security_upgrade": 64,
+        "still_vulnerable_vendor_minor": 0,
+        "not_affected_component_absent": 118,
+        "not_affected_execution_path": 15,
+        "not_affected_build_configuration": 6
+      },
+      "still_vulnerable_vendor_minor_ids": [],
+      "vendor_policy_expires_on": null,
+      "vendor_policy_review_policy": "source_and_artifact_bound",
+      "unfixed_risk_accepted_findings": 0,
+      "risk_acceptance": null,
+      "image_revision_context_verified": true
+    },
+    "backend": {
+      "image_id": "sha256:d44f00074740f3e91f85e11aac504bfc9bc412e73021ae8bd9ba4a32794ebdcb",
+      "raw_findings": 0,
+      "blocking_findings": 0,
+      "database_built": "2026-11-10T06:21:20Z",
+      "raw_report_sha256": "4d458787c562a75fa1d81737badcae6fc1e69f204007425e8967f911cf1fea52"
+    },
+    "frontend": {
+      "image_id": "sha256:881cc5ad55e30a88dc02e46bd60d944ccb177ae8be9a32efa08cd9488853cafd",
+      "raw_findings": 0,
+      "blocking_findings": 0,
+      "database_built": "2026-11-10T06:21:20Z",
+      "raw_report_sha256": "af5991e7ddab4fa1ee8cfda17d2e9ce9a3b490c8345c8ebfcdc60da2491913f6"
+    }
+  },
+  "raw_reports_retained": true,
+  "bound_review_policy_sha256": {
+    "security-vendor-remediated.json": "d45d094556280958b71b6833e8bc419ea8d522af1493a249decc7ebf724444b4",
+    "security-vex-remediated.json": "19d87d0dc3f2bdea1a6e84203e931cf83045364951abe3914aea79876e1a0c7d"
+  },
+  "scope": "All reported severity levels on these three exact application images; no residual-risk authorization used"
+}

@@ -1,7 +1,7 @@
 {
-  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
-  "image_tag": "trip-review-agent-8182d40:20261110",
-  "source_revision": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+  "image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
+  "image_tag": "trip-review-agent-843d242:20261110",
+  "source_revision": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
   "architecture": "amd64",
   "user": "appuser",
   "command": [

@@ -127,7 +127,7 @@ jobs:
       - name: Install pinned scanner tooling from official PyPI
         run: python -m pip install --index-url https://pypi.org/simple -r tools/security-requirements.txt
       - name: Audit lockfiles and all resolved production Java dependencies
-        run: python tools/security_gate.py dependencies --vex .github/security-vex-remediated.json --reports security-reports/dependencies
+        run: python tools/security_gate.py dependencies --all-severities --vex .github/security-vex-remediated.json --reports security-reports/dependencies
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
@@ -189,10 +189,10 @@ jobs:
           category: /language:${{ matrix.language }}
           output: security-reports/codeql
           upload: always
-      - name: Fail on high/critical CodeQL results
+      - name: Fail on all unresolved CodeQL security and quality results
         env:
           TRIP_CODEQL_ANALYZE_OUTCOME: ${{ steps.codeql_analyze.outcome }}
-        run: python tools/security_gate.py sarif --directory security-reports/codeql --codeql-context .github/codeql-context-remediated.json --reports security-reports/codeql
+        run: python tools/security_gate.py sarif --all-severities --directory security-reports/codeql --codeql-context .github/codeql-context-remediated.json --reports security-reports/codeql
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:

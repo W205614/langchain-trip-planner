@@ -166,7 +166,7 @@ def contextual_not_affected(policy, name, version, identifiers):
     return False
 
 
-def dependencies(destination: Path, policy=None):
+def dependencies(destination: Path, policy=None, all_severities=False):
     records = []
     pip_report = destination / 'pip-audit.json'
     code = run([sys.executable, '-m', 'pip_audit', '--no-deps', '--disable-pip', '--strict', '--timeout', '90', '--progress-spinner', 'off',
@@ -187,12 +187,21 @@ def dependencies(destination: Path, policy=None):
 
     npm = shutil.which('npm.cmd' if os.name == 'nt' else 'npm') or 'npm'
     npm_report = destination / 'npm-audit.json'
-    code = run([npm, 'audit', '--package-lock-only', '--audit-level=high', '--registry=https://registry.npmjs.org', '--json', '--ignore-scripts'],
+    command = [npm, 'audit', '--package-lock-only', '--registry=https://registry.npmjs.org', '--json', '--ignore-scripts']
+    if not all_severities:
+        command.append('--audit-level=high')
+    code = run(command,
                destination / 'npm-audit.log', cwd=ROOT / 'frontend', stdout_json=npm_report)
     data = report(npm_report)
     totals = data.get('metadata', {}).get('vulnerabilities', {}) if isinstance(data, dict) else {}
-    count = totals.get('high', 0) + totals.get('critical', 0)
-    records.append({'scanner': 'npm-audit', 'status': classify(code, data if totals else None, count), 'blocking_findings': count, 'all_severities': totals, 'exit_code': code})
+    high_critical = totals.get('high', 0) + totals.get('critical', 0)
+    count = totals.get('total') if all_severities else high_critical
+    if type(count) is not int or count < 0:
+        raise RuntimeError('Invalid npm vulnerability count for selected severity scope')
+    records.append({'scanner': 'npm-audit', 'status': classify(code, data if totals else None, count),
+                    'blocking_findings': count, 'raw_high_critical_findings': high_critical,
+                    'severity_scope': 'all' if all_severities else 'high_critical',
+                    'all_severities': totals, 'exit_code': code})
 
     maven = shutil.which('mvn.cmd' if os.name == 'nt' else 'mvn') or 'mvn'
     code = run([maven, '-B', '-ntp', '-f', str(ROOT / 'business-backend/pom.xml'),
@@ -344,7 +353,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
              'image_revision_context_verified': context_verified}]
 
 
-def sarif(directory: Path, context=None, source_mode=None, language=None):
+def sarif(directory: Path, context=None, source_mode=None, language=None, all_severities=False):
     delta_proof = None
     if source_mode is not None:
         try:
@@ -364,6 +373,8 @@ def sarif(directory: Path, context=None, source_mode=None, language=None):
         if not isinstance(data, dict) or not isinstance(data.get('runs'), list) or not data['runs']:
             raise RuntimeError('Invalid CodeQL SARIF')
         count = 0
+        all_findings = 0
+        high_critical = 0
         contextual = []
         for run_data in data['runs']:
             driver = run_data.get('tool', {}).get('driver', {})
@@ -372,9 +383,15 @@ def sarif(directory: Path, context=None, source_mode=None, language=None):
             results = run_data.get('results', [])
             if not isinstance(results, list):
                 raise RuntimeError('Invalid CodeQL SARIF results array')
+            all_findings += len(results)
             for result in results:
                 rule = sarif_rules.resolve_rule(run_data['tool'], result)
-                if sarif_rules.is_blocking(rule, result):
+                blocking = sarif_rules.is_blocking(rule, result, all_severities=all_severities)
+                # Severity has been validated above, including nonfinite values.
+                properties = rule.get('properties', {})
+                if 'security-severity' in properties and float(properties['security-severity']) >= 7:
+                    high_critical += 1
+                if blocking:
                     count += 1
                     assessed = codeql_context.assess(context, rule, result, run_data)
                     if assessed:
@@ -384,7 +401,9 @@ def sarif(directory: Path, context=None, source_mode=None, language=None):
                             contextual.append(assessed)
         remaining = count - len(contextual)
         records.append({'scanner': 'codeql-policy', 'file': path.name,
-                        'raw_high_critical_findings': count, 'not_affected_context_findings': len(contextual),
+                        'raw_high_critical_findings': high_critical, 'all_findings': all_findings,
+                        'severity_scope': 'all' if all_severities else 'high_critical',
+                        'findings_in_scope': count, 'not_affected_context_findings': len(contextual),
                         'context_assessments': contextual,
                         'context_expires_at': context.get('expires_at') if context else None,
                         'context_review_policy': context.get('review_policy', 'time_limited') if context else None,
@@ -408,7 +427,7 @@ def main():
     parser.add_argument('--include-untracked', action='store_true', help='Also scan new nonignored local files before commit')
     parser.add_argument('--vex', type=Path, help='Explicit opt-in to an exact source/component-bound contextual assessment; raw findings remain in reports')
     parser.add_argument('--vendor-policy', type=Path, help='Explicit source/revision/dpkg-bound distribution backport or vendor severity assessment; vulnerable entries stay visible')
-    parser.add_argument('--all-severities', action='store_true', help='Image release check: every raw finding, including unknown severity, requires exact applicable fix/context evidence; residual risk acceptance is forbidden')
+    parser.add_argument('--all-severities', action='store_true', help='Image, dependency and SARIF release checks: include every finding, including quality results; image residual risk acceptance is forbidden')
     parser.add_argument('--risk-acceptance', type=Path, help='Explicit human-approved, expiring local-demo-only acceptance with exact business/native/package/runtime bindings; never a fix')
     parser.add_argument('--runtime-proof', type=Path, help='Fresh actual-container proof from tools/runtime_constraint_probe.py; mandatory for residual risk acceptance')
     parser.add_argument('--inventory-container', help='Reuse exact-image UUID-owned stopped inventory object that has never started; always retained even with CI cleanup flag')
@@ -417,8 +436,8 @@ def main():
     destination = args.reports.resolve()
     destination.mkdir(parents=True, exist_ok=True)
     try:
-        if args.all_severities and args.mode != 'image':
-            raise RuntimeError('--all-severities applies only to image scans')
+        if args.all_severities and args.mode not in ('image', 'dependencies', 'sarif'):
+            raise RuntimeError('--all-severities applies only to image, dependencies or SARIF scans')
         policy = load_vex(args.vex) if args.vex else None
         vendor_policy = image_policy.load_policy(args.vendor_policy, ROOT) if args.vendor_policy else None
         if args.risk_acceptance and (args.mode != 'image' or not vendor_policy or not args.runtime_proof):
@@ -438,7 +457,8 @@ def main():
             print(tool(args.tool or 'osv-scanner'))
             return 0
         if args.mode == 'sarif':
-            records = sarif(args.directory or destination, context, args.source_equivalence, args.codeql_language)
+            records = sarif(args.directory or destination, context, args.source_equivalence, args.codeql_language,
+                            all_severities=args.all_severities)
         elif args.mode == 'image':
             if not args.image:
                 raise RuntimeError('--image is required')
@@ -447,7 +467,7 @@ def main():
         elif args.mode == 'secrets':
             records = scan_repository(destination, args.include_untracked)
         else:
-            records = dependencies(destination, policy)
+            records = dependencies(destination, policy, all_severities=args.all_severities)
         write(destination / (args.mode + '-summary.json'), {'tool_pins_verified_date': PINS['verified_date'], 'results': records})
         print(json.dumps(records, ensure_ascii=False))
         return 0 if all(record['status'] in ('pass', 'pass_contextual', 'pass_vendor_policy', 'pass_temporary_risk_acceptance', 'pass_codeql_context') for record in records) else 1

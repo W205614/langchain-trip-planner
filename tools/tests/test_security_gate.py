@@ -1,5 +1,6 @@
 """Security policy counterexamples: incomplete scans never count as clean."""
 import importlib.util
+import io
 import json
 from pathlib import Path
 import tempfile
@@ -13,6 +14,51 @@ spec.loader.exec_module(gate)
 
 
 class GateFailureTests(unittest.TestCase):
+    def test_npm_low_report_blocks_all_mode_even_with_successful_cli_exit(self):
+        documents = [
+            {'dependencies': [{'name': 'fixture', 'version': '1', 'vulns': []}]},
+            {'metadata': {'vulnerabilities': {'info': 0, 'low': 1, 'moderate': 0, 'high': 0, 'critical': 0, 'total': 1}}},
+            {'components': [{'name': 'fixture'}]},
+            {'results': [{'packages': [{'vulnerabilities': []}]}]},
+        ]
+        for all_severities in (False, True):
+            with self.subTest(all_severities=all_severities), tempfile.TemporaryDirectory() as folder, \
+                 patch.object(gate, 'run', return_value=0) as scanner, \
+                 patch.object(gate, 'report', side_effect=documents), \
+                 patch.object(gate, 'tool', return_value='osv-scanner'):
+                result = next(r for r in gate.dependencies(Path(folder), all_severities=all_severities)
+                              if r['scanner'] == 'npm-audit')
+                self.assertEqual('blocked_findings' if all_severities else 'pass', result['status'])
+                self.assertEqual(1 if all_severities else 0, result['blocking_findings'])
+                self.assertEqual(0, result['raw_high_critical_findings'])
+                command = next(call.args[0] for call in scanner.call_args_list if 'audit' in call.args[0])
+                self.assertEqual(not all_severities, '--audit-level=high' in command)
+
+    def test_all_mode_requires_valid_npm_total_instead_of_assuming_zero(self):
+        for total in (None, True, '1', -1):
+            documents = [{'dependencies': [{'name': 'fixture', 'vulns': []}]},
+                         {'metadata': {'vulnerabilities': {'high': 0, 'critical': 0, 'total': total}}}]
+            with self.subTest(total=total), tempfile.TemporaryDirectory() as folder, \
+                 patch.object(gate, 'run', return_value=0), patch.object(gate, 'report', side_effect=documents), \
+                 self.assertRaisesRegex(RuntimeError, 'Invalid npm vulnerability count'):
+                gate.dependencies(Path(folder), all_severities=True)
+
+    def test_all_severity_cli_allows_only_image_dependencies_and_sarif(self):
+        for mode in ('image', 'dependencies', 'sarif', 'secrets', 'install'):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as folder, \
+                 patch('sys.argv', ['security_gate.py', mode, '--all-severities', '--image', 'fixture', '--reports', folder]), \
+                 patch('sys.stdout', new_callable=io.StringIO), patch('sys.stderr', new_callable=io.StringIO), \
+                 patch.object(gate, 'image', return_value=[{'status': 'pass'}]) as image, \
+                 patch.object(gate, 'dependencies', return_value=[{'status': 'pass'}]) as dependencies, \
+                 patch.object(gate, 'sarif', return_value=[{'status': 'pass'}]) as sarif:
+                allowed = mode in ('image', 'dependencies', 'sarif')
+                self.assertEqual(0 if allowed else 2, gate.main())
+                if mode == 'image': self.assertTrue(image.call_args.args[-1])
+                elif mode == 'dependencies': self.assertTrue(dependencies.call_args.kwargs['all_severities'])
+                elif mode == 'sarif': self.assertTrue(sarif.call_args.kwargs['all_severities'])
+                else:
+                    self.assertFalse(image.called or dependencies.called or sarif.called)
+
     def test_new_not_affected_classes_are_counted_separately_while_unknown_raw_finding_blocks(self):
         base = {'distribution': 'debian', 'release': '13', 'artifact_type': 'deb',
                 'artifact_versions': {'libc6': 'reviewed'}, 'requires_dpkg': {'libc6': 'reviewed'},
@@ -97,6 +143,32 @@ class GateFailureTests(unittest.TestCase):
             (folder / 'test.sarif').write_text(json.dumps(sample), encoding='utf-8')
             self.assertEqual(1, gate.sarif(folder)[0]['blocking_findings'])
             self.assertEqual('blocked_findings', gate.sarif(folder)[0]['status'])
+            all_levels = gate.sarif(folder, all_severities=True)[0]
+            self.assertEqual(2, all_levels['blocking_findings'])
+            self.assertEqual(1, all_levels['raw_high_critical_findings'])
+
+    def test_all_severity_codeql_gate_counts_low_medium_and_quality_warnings(self):
+        rules = [
+            {'id': 'low', 'properties': {'security-severity': '2.0'}},
+            {'id': 'medium', 'properties': {'security-severity': '5.0'}},
+            {'id': 'quality-warning', 'defaultConfiguration': {'level': 'warning'}},
+            {'id': 'quality-note'},
+            {'id': 'quality-none'},
+        ]
+        results = [{'ruleId': r['id']} for r in rules]
+        results[3]['level'] = 'note'
+        results[4]['level'] = 'none'
+        with tempfile.TemporaryDirectory() as name:
+            folder = Path(name)
+            sample = {'runs': [{'tool': {'driver': {'name': 'CodeQL', 'rules': rules}}, 'results': results}]}
+            (folder / 'quality.sarif').write_text(json.dumps(sample), encoding='utf-8')
+            self.assertEqual('pass', gate.sarif(folder)[0]['status'])
+            record = gate.sarif(folder, all_severities=True)[0]
+            self.assertEqual('blocked_findings', record['status'])
+            self.assertEqual(5, record['blocking_findings'])
+            self.assertEqual(5, record['all_findings'])
+            self.assertEqual('all', record['severity_scope'])
+            self.assertEqual(0, record['raw_high_critical_findings'])
 
     def test_missing_or_malformed_codeql_output_is_failure(self):
         with tempfile.TemporaryDirectory() as name:

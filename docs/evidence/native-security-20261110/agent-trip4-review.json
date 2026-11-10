@@ -2,10 +2,10 @@
   "schema_version": 1,
   "review_date": "2026-11-10",
   "status": "candidate_review_not_release_acceptance",
-  "image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
-  "source_revision": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+  "image_id": "sha256:f2f76598f3eda36f86223b2e61428f3490eb31f15ed7f1e0aa927bf626550d6e",
+  "source_revision": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
   "raw_findings": 207,
-  "scan_sha256": "adea82604eaca814fdb24e522fefd6021719442acc0db6190bb0b1efeab98a4a",
+  "scan_sha256": "d7a345f91f142b13d3557ec7f1de907e035728557a32ba41ea1d1bfc86642649",
   "database_built": "2026-11-10T06:21:20Z",
   "classifications": {
     "not_affected_execution_path": 19,
@@ -159,7 +159,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-82560"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -189,7 +189,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-9538"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -217,7 +217,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -246,7 +246,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -278,7 +278,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -309,7 +309,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -954,7 +954,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-5704"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -984,7 +984,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1012,7 +1012,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1040,7 +1040,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1068,7 +1068,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1096,7 +1096,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1124,7 +1124,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1163,7 +1163,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1193,7 +1193,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1227,7 +1227,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1328,7 +1328,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1701,7 +1701,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2005-2541"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -2096,7 +2096,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2122,7 +2122,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2148,7 +2148,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2199,7 +2199,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2225,7 +2225,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2262,7 +2262,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2290,7 +2290,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2506,7 +2506,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2532,7 +2532,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2558,7 +2558,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2609,7 +2609,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2635,7 +2635,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2672,7 +2672,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -2700,7 +2700,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3239,7 +3239,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3265,7 +3265,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3291,7 +3291,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3342,7 +3342,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3368,7 +3368,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3405,7 +3405,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3433,7 +3433,7 @@
       ],
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": []
     },
@@ -3619,7 +3619,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -3660,7 +3660,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -4874,7 +4874,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -4907,7 +4907,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -4943,7 +4943,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -4978,7 +4978,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -5102,7 +5102,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-15534"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -5591,7 +5591,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-18508"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -5789,7 +5789,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2011-3374"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
@@ -5817,7 +5817,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2011-3374"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
@@ -5994,7 +5994,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-18477"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -6335,7 +6335,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2011-4116"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -6476,7 +6476,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6505,7 +6505,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6534,7 +6534,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6563,7 +6563,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6592,7 +6592,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6621,7 +6621,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6661,7 +6661,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6692,7 +6692,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6727,7 +6727,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -6829,7 +6829,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -7090,7 +7090,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2017-18018"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/chown",
@@ -7689,7 +7689,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2025-5278"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/sort"
@@ -7719,7 +7719,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-53910"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/diff3"
@@ -7749,7 +7749,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-56392"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/unexpand"
@@ -7779,7 +7779,7 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-56391"
       ],
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "d0b5bf04bad2938031705da8448e0659ab1b2a23b3b2c098d10a9d80a00ca38d"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f"
       },
       "absent_paths": [
         "/usr/bin/uniq"

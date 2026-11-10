@@ -53,13 +53,26 @@ class SarifRuleTests(unittest.TestCase):
         with self.assertRaises(RuntimeError): parser.resolve_rule(duplicate, {'ruleId': 'same-id'})
 
     def test_security_severity_invalid_unknown_and_default_error_cannot_be_downgraded(self):
-        for value in ['NaN', 'Infinity', '-1', '10.1', 'unrated', None, True]:
-            with self.subTest(value=value), self.assertRaises(RuntimeError):
-                parser.is_blocking({'properties': {'security-severity': value}}, {})
-        with self.assertRaises(RuntimeError): parser.is_blocking({'properties': {'tags': ['security']}}, {})
+        for all_severities in (False, True):
+            for value in ['NaN', 'Infinity', '-1', '10.1', 'unrated', None, True]:
+                with self.subTest(value=value, all_severities=all_severities), self.assertRaises(RuntimeError):
+                    parser.is_blocking({'properties': {'security-severity': value}}, {}, all_severities)
+            with self.assertRaises(RuntimeError):
+                parser.is_blocking({'properties': {'tags': ['security']}}, {}, all_severities)
+            with self.assertRaises(RuntimeError):
+                parser.is_blocking({}, {'level': 'unknown'}, all_severities)
         self.assertTrue(parser.is_blocking({'defaultConfiguration': {'level': 'error'}}, {}))
         self.assertFalse(parser.is_blocking({'properties': {'security-severity': '6.9'}}, {}))
         self.assertTrue(parser.is_blocking({'properties': {'security-severity': '7.0'}}, {}))
+
+    def test_all_severities_includes_low_medium_and_every_actual_quality_result(self):
+        for severity in ('0', '2.0', '5.0'):
+            rule = {'properties': {'security-severity': severity}}
+            self.assertFalse(parser.is_blocking(rule, {}))
+            self.assertTrue(parser.is_blocking(rule, {}, all_severities=True))
+        for level in ('none', 'note', 'warning'):
+            self.assertFalse(parser.is_blocking({}, {'level': level}))
+            self.assertTrue(parser.is_blocking({}, {'level': level}, all_severities=True))
 
 
 if __name__ == '__main__':

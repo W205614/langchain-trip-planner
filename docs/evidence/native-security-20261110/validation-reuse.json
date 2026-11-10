@@ -1,0 +1,8 @@
+{
+  "result": "807 passed, 1 skipped, 50 subtests passed",
+  "executed_image_id": "sha256:e7c9075d385cd1333e42772214849374534d7f348e00c000331e31f8ab0a7f87",
+  "executed_source_revision": "8182d40757c60a9c695d3d37b9bc4c41e1a830e5",
+  "reused_for_current_image": true,
+  "log_sha256": "268732816b17dcd63b31622d96452fb1f7fba7049828a8cdae50b2a2e18db261",
+  "boundary": "Full pytest was executed on the named source image. Current source is additionally checked for exact package/ELF/app equality and its manifest-ordering change has6 directly relevant tool tests. This is not a new full pytest run."
+}

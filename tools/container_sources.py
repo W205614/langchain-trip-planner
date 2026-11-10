@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import tarfile
 import time
+import tomllib
 from urllib.parse import quote
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -30,13 +31,27 @@ PYTHON_SOURCE_RELEASES = {
     ('ortools', '9.15.6755'): ('google/or-tools', 'v9.15', '551ad10d94835c99e5e1e684500d3db398c0e345'),
 }
 
+# Reviewed against the official Dockerfiles and signed nginx.org APK index.
+# A new upstream package release needs a matching packaging/source review.
+NGINX_RELEASE = {
+    'version': '1.30.6', 'release': '1', 'njs': '1.0.2', 'acme': '0.4.1',
+    'quickjs': '2025.09.13', 'quickjs_commit': 'fa628f8c523ecac8ce560c081411e91fcaba2d20',
+    'pkg_oss_commit': '3e9e3b9f85308c0bb7b1cf849c87d1f7df98dfc3',
+    'pkg_oss_sha512': 'c16280934a44f7358992d39bb1d876a58e978c58371b96fd212de3f58c7ba40c31a683c54ee46c85d0844ca18fd7addeafbb29a8e06a9d1e164a8628a4739eee',
+    'docker_commit': 'd99174e2cecfc7e5db51c05aff54c2c9dee45803',
+    'key_sha512': 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655',
+}
+NGINX_PACKAGES = {'nginx', 'nginx-module-acme', 'nginx-module-geoip',
+                  'nginx-module-image-filter', 'nginx-module-njs', 'nginx-module-xslt'}
+
 PROJECT_SOURCE_PATHS = (
     'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/licenses', 'backend/security/native-backports',
     'backend/security/glibc-hardening', 'backend/security/cpython-backports',
     'backend/security/pam-backport', 'backend/security/dash-backport',
     'deploy/images/busybox-backport', 'tools/sync_busybox_inputs.py',
     'backend/Dockerfile', 'business-backend/Dockerfile', 'frontend/Dockerfile',
-    'tools/container_sources.py', 'tools/container_release.py', 'tools/container-wheel-sources.json',
+    'tools/container_sources.py', 'tools/container_license_supplements.py',
+    'tools/container_release.py', 'tools/container-wheel-sources.json',
     'tools/container-java-dependencies.json',
 )
 
@@ -74,8 +89,9 @@ class Collector:
     def fetch(self, url, relative, expected=None, algorithm='sha256', *, immutable=False):
         relative = relative.replace(':', '%3A')
         path = self.root / relative
-        if not path.resolve().is_relative_to(self.root.resolve()):
-            raise ValueError('Source output path escapes the bundle')
+        resolved, bundle = path.resolve(), self.root.resolve()
+        if not resolved.is_relative_to(bundle):
+            raise ValueError(f'Source output path escapes the bundle: {relative} ({resolved}; root={bundle})')
         path.parent.mkdir(parents=True, exist_ok=True)
         if not path.exists():
             print('Downloading ' + relative, flush=True)
@@ -256,13 +272,188 @@ def busybox_provenance(collector, image, service, packages):
     return lock, provenance
 
 
+def validate_official_nginx_packages(packages, environment):
+    release = NGINX_RELEASE
+    expected_env = {'NGINX_VERSION': release['version'], 'PKG_RELEASE': release['release'],
+                    'DYNPKG_RELEASE': '1', 'NJS_VERSION': release['njs'],
+                    'NJS_RELEASE': '1', 'ACME_VERSION': release['acme']}
+    if any(environment.get(name) != value for name, value in expected_env.items()):
+        raise RuntimeError('Official NGINX package source review requires the exact reviewed release: '
+                           + json.dumps({name: environment.get(name) for name in expected_env}))
+    if {p['P'] for p in packages} != NGINX_PACKAGES or len(packages) != len(NGINX_PACKAGES):
+        raise RuntimeError('Unreviewed NGINX package group: ' + ', '.join(p['P'] + '=' + p['V'] for p in packages))
+    versions = {name: release['version'] + '-r1' for name in NGINX_PACKAGES}
+    versions['nginx-module-njs'] = release['version'] + '.' + release['njs'] + '-r1'
+    versions['nginx-module-acme'] = release['version'] + '.' + release['acme'] + '-r1'
+    for row in packages:
+        if (row['V'] != versions[row['P']] or row.get('m') != 'NGINX Packaging <nginx-packaging@f5.com>'
+                or row.get('U') != 'https://nginx.org/' or row.get('o') != row['P']
+                or row.get('A') != 'x86_64' or row.get('c')):
+            raise RuntimeError('Unreviewed NGINX package identity: ' + json.dumps(row))
+
+
+def nginx_acme_crate_sources(collector, source):
+    with tarfile.open(source) as archive:
+        member, = [m for m in archive.getmembers() if m.name.endswith('/Cargo.lock')]
+        lock = archive.extractfile(member).read()
+        license_member, = [m for m in archive.getmembers() if m.name.endswith('/LICENSE') and len(Path(m.name).parts) == 2]
+        apache_terms = archive.extractfile(license_member).read()
+    packages = tomllib.loads(lock.decode())['package']
+    rows = []
+    for row in packages:
+        if 'source' not in row:
+            continue  # Workspace source is already in the complete ACME archive.
+        if row['source'] != 'registry+https://github.com/rust-lang/crates.io-index' or not row.get('checksum'):
+            raise RuntimeError('Unreviewed NGINX ACME dependency source: ' + json.dumps(row))
+        rows.append(row)
+
+    def collect(row):
+        name, version = row['name'], row['version']
+        path = collector.fetch(f'https://static.crates.io/crates/{name}/{name}-{version}.crate',
+                               f'nginx/crates/{name}-{version}.crate', row['checksum'])
+        archive_notices(collector, path, f'nginx-acme-crates/{name}-{version}')
+        with tarfile.open(path) as archive:
+            member, = [m for m in archive.getmembers() if m.name == f'{name}-{version}/Cargo.toml']
+            manifest = archive.extractfile(member).read()
+            package = tomllib.loads(manifest.decode())['package']
+        if not package.get('license') and not package.get('license-file'):
+            raise RuntimeError(f'Missing NGINX ACME crate license metadata: {name}={version}')
+        notices = collector.root / 'licenses/native/nginx-acme-crates' / f'{name}-{version}'
+        if not any(p.is_file() for p in notices.rglob('*')):
+            if (name, version, package.get('license')) != ('http-serde', '2.1.1', 'Apache-2.0 OR MIT'):
+                raise RuntimeError(f'Missing NGINX ACME crate license text: {name}={version}')
+            notices.mkdir(parents=True, exist_ok=True)
+            (notices / 'UPSTREAM-Cargo.toml').write_bytes(manifest)
+            (notices / 'Apache-2.0.txt').write_bytes(apache_terms)
+            (notices / 'LICENSE-CHOICE.txt').write_text(
+                'The unchanged published Cargo.toml declares Apache-2.0 OR MIT but contains no standalone LICENSE/NOTICE.\n'
+                'This distribution selects Apache-2.0 and supplies its unchanged standard text from the pinned Apache-2.0 ACME source.\n'
+                'Upstream author/repository metadata is preserved; no copyright holder or year has been invented.\n', encoding='utf-8')
+        return {'name': name, 'version': version, 'sha256': row['checksum'],
+                'license': package.get('license'), 'license_file': package.get('license-file')}
+
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        crates = list(pool.map(collect, rows))
+    return {'cargo_lock_sha256': hashlib.sha256(lock).hexdigest(), 'crates': crates,
+            'rebuild': 'The preserved pkg-oss recipe uses cargo vendor --locked. Every registry archive named by its Cargo.lock is included and checksum-verified; toolchain/index setup follows that recipe.'}
+
+
+def verify_nginx_index(collector, image):
+    repository = 'file:///nginx-source-proof/indexes/nginx/v3.24'
+    command = ['docker', 'run', '--rm', '--network', 'none', '--cap-drop', 'ALL',
+               '--security-opt', 'no-new-privileges', '--mount',
+               f'type=bind,source={collector.root.resolve().as_posix()},target=/nginx-source-proof,readonly',
+               '--entrypoint', 'sh', image, '-c',
+               'mkdir -p /tmp/nginx-index-cache && apk --repositories-file /dev/null '
+               '--keys-dir /nginx-source-proof/licenses/nginx/signing-key '
+               '--cache-dir /tmp/nginx-index-cache --repository ' + repository + ' --no-network update']
+    result = subprocess.run(command, capture_output=True, text=True)
+    # apk update can return zero after rejecting an untrusted index, because
+    # installed packages remain available. Require the actual repository open
+    # and reject its signature warning instead of treating exit zero as proof.
+    if result.returncode or result.stderr.strip() or '[' + repository + ']' not in result.stdout:
+        raise RuntimeError('Official NGINX index signature verification failed: '
+                           + result.stdout + result.stderr)
+    return result.stdout
+
+
+def official_nginx_sources(collector, image, service, packages):
+    environment = dict(value.split('=', 1) for value in json.loads(run('docker', 'image', 'inspect', image))[0]['Config']['Env'])
+    validate_official_nginx_packages(packages, environment)
+    release = NGINX_RELEASE
+    key_path = collector.fetch('https://nginx.org/keys/nginx_signing.rsa.pub',
+                               'licenses/nginx/signing-key/nginx_signing.rsa.pub', release['key_sha512'], 'sha512')
+    if docker(image, 'cat', '/etc/apk/keys/nginx_signing.rsa.pub') != key_path.read_bytes():
+        raise RuntimeError('Installed NGINX signing key differs from the reviewed official Docker key')
+    alpine = docker(image, 'cat', '/etc/alpine-release').decode().strip()
+    if not alpine.startswith('3.24.'):
+        raise RuntimeError('Unreviewed NGINX Alpine repository release: ' + alpine)
+    index = collector.fetch('https://nginx.org/packages/alpine/v3.24/main/x86_64/APKINDEX.tar.gz',
+                            'indexes/nginx/v3.24/x86_64/APKINDEX.tar.gz')
+    with tarfile.open(index) as archive:
+        if '.SIGN.RSA256.nginx_signing.rsa.pub' not in archive.getnames():
+            raise RuntimeError('NGINX repository lacks the expected signature member')
+        index_packages = list(paragraphs(archive.extractfile('APKINDEX').read().decode()))
+    # apk writes its private cache/log in this disposable container. The mounted
+    # source material is read-only and the verifier has no network access.
+    verified = verify_nginx_index(collector, image)
+    for row in packages:
+        matches = [p for p in index_packages if p.get('P') == row['P'] and p.get('V') == row['V']]
+        if len(matches) != 1 or any(matches[0].get(field) != row.get(field) for field in ('C', 'm', 'o', 'U', 'A', 'L')):
+            raise RuntimeError('Installed NGINX package differs from signed official index: ' + row['P'] + '=' + row['V'])
+
+    recipe = collector.fetch('https://github.com/nginx/pkg-oss/archive/1.30.6-1.tar.gz',
+                             'nginx/pkg-oss-1.30.6-1.tar.gz', release['pkg_oss_sha512'], 'sha512', immutable=True)
+    docker_source = collector.fetch(f'https://codeload.github.com/nginx/docker-nginx/tar.gz/{release["docker_commit"]}',
+                                    f'nginx/docker-nginx-{release["docker_commit"]}.tar.gz', immutable=True)
+    archive_notices(collector, recipe, 'nginx-pkg-oss')
+    archive_notices(collector, docker_source, 'nginx-docker')
+    with tarfile.open(recipe) as archive:
+        files = {m.name.split('/', 1)[1]: archive.extractfile(m).read() for m in archive.getmembers() if m.isfile()}
+    filenames = {'nginx': 'nginx-1.30.6.tar.gz', 'njs': 'njs-1.0.2.tar.gz',
+                 'nginx-acme': 'nginx-acme-0.4.1.tar.gz',
+                 'quickjs': 'quickjs-2025.09.13-fa628f8c523ecac8ce560c081411e91fcaba2d20.tar.gz'}
+    sources = {}
+    for component, filename in filenames.items():
+        sums = dict((name, digest) for digest, name in
+                    re.findall(r'^([a-f0-9]{128})\s+(\S+)$', files[f'contrib/src/{component}/SHA512SUMS'].decode(), re.M))
+        path = collector.fetch(f'https://packages.nginx.org/contrib/{component}/{filename}',
+                               'nginx/sources/' + filename, sums[filename], 'sha512')
+        archive_notices(collector, path, 'nginx-' + component)
+        sources[component] = path
+
+    copyrights = {}
+    for row in packages:
+        name = row['P']
+        copyright_name = name if name in ('nginx-module-njs', 'nginx-module-acme') else 'nginx'
+        content = docker(image, 'cat', '/usr/share/licenses/' + name + '/COPYRIGHT')
+        if content != files['docs/' + copyright_name + '.copyright']:
+            raise RuntimeError('Installed NGINX copyright differs from official recipe: ' + name)
+        destination = collector.root / 'licenses/nginx' / name / 'COPYRIGHT'
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(content)
+        copyrights[name] = hashlib.sha256(content).hexdigest()
+    cargo = nginx_acme_crate_sources(collector, sources['nginx-acme'])
+    (collector.root / 'licenses/nginx/SOURCE-MATERIALS.txt').write_text(
+        'Official NGINX packages have no Alpine aports commit field. They are not assigned a synthetic one.\n'
+        'Installed package names, versions, vendor/origin/architecture and C identifiers match the signed nginx.org APK index.\n'
+        'The isolated apk verifier trusts only the official NGINX key pinned by the preserved Dockerfiles.\n'
+        'nginx/pkg-oss 1.30.6-1 (commit ' + release['pkg_oss_commit'] + ') provides original Alpine recipes, patches and per-module notices.\n'
+        'Its full archive and the pinned official docker-nginx archive are under nginx/.\n'
+        'nginx/sources/ contains checksum-bound nginx, njs, QuickJS and nginx-acme sources.\n'
+        'GeoIP, image-filter and XSLT module implementations are part of the nginx core source.\n'
+        'The pkg-oss QuickJS build patch is retained with that recipe.\n'
+        'nginx/crates/ preserves every registry source in the official ACME Cargo.lock, including build/target-only entries; this is not a claim they are all linked at runtime.\n'
+        'The preserved pkg-oss recipe documents cargo vendor --locked; source-toolchain/index setup follows upstream.\n'
+        'Actual installed COPYRIGHT files and extracted upstream/crate notices are preserved under licenses/.\n'
+        'ACME uses Apache-2.0 plus dependency terms; the generic APK BSD label is not a complete license description.\n'
+        'QuickJS retains its own MIT notice. Shared-library dependencies retain separate Alpine source/notices.\n'
+        'runtime-provenance/<service>/nginx/ records exact signed package identities and this source mapping.\n'
+        'These are official source/build materials for unchanged upstream packages, not a claim of byte-for-byte binary reproduction.\n',
+        encoding='utf-8')
+    destination = collector.root / 'runtime-provenance' / service / 'nginx'
+    destination.mkdir(parents=True, exist_ok=True)
+    record = {'packages': packages, 'source_provider': 'NGINX official packages, not Alpine aports',
+              'recipe': NGINX_RELEASE, 'index_signature_verification': verified,
+              'installed_copyright_sha256': copyrights, 'acme_cargo': cargo,
+              'core_modules': 'geoip, image-filter and xslt are built from the collected nginx core source; their Alpine shared-library dependencies retain their own sources/notices.',
+              'license_boundary': 'The APK label is not the full license inventory. ACME includes Apache-2.0 and separately licensed Rust crates; QuickJS has its own MIT notice.'}
+    (destination / 'collection.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+    (destination / 'nginx-V.txt').write_bytes(docker(image, 'sh', '-c', 'nginx -V 2>&1'))
+
+
 def alpine_sources(collector, image, service):
     packages = list(paragraphs(docker(image, 'cat', '/lib/apk/db/installed').decode()))
-    packages = [{k: row.get(k) for k in ('P', 'V', 'L', 'o', 'c')} for row in packages]
+    packages = [{k: row.get(k) for k in ('P', 'V', 'L', 'o', 'c', 'm', 'U', 'A', 'C')} for row in packages]
     lock, provenance = busybox_provenance(collector, image, service, packages)
+    missing = [row for row in packages if not row['c'] and row['o'] != 'busybox']
+    unknown = [row for row in missing if row['P'] not in NGINX_PACKAGES]
+    if unknown:
+        raise RuntimeError('Alpine package lacks an immutable source recipe: '
+                           + ', '.join(f'{p["P"]}={p["V"]} (origin={p["o"]}, maintainer={p["m"]})' for p in unknown))
+    if missing:
+        official_nginx_sources(collector, image, service, missing)
     origins = {(row['o'], row['c']) for row in packages if row['o'] != 'busybox' and row['c']}
-    if any(not row['c'] and row['o'] != 'busybox' for row in packages):
-        raise RuntimeError('Alpine package lacks an immutable source recipe')
     origins.add(('busybox', lock['APKBUILD_COMMIT']))
     for origin, commit in sorted(origins):
         files = alpine_recipe_sources(collector, origin, commit,
@@ -275,12 +466,6 @@ def alpine_sources(collector, image, service):
             source = collector.root / 'alpine/distfiles' / ('busybox-' + lock['UPSTREAM_VERSION'] + '.tar.bz2')
             if checksum(source) != lock['UPSTREAM_SHA256']:
                 raise RuntimeError('BusyBox original source SHA-256 mismatch')
-    nginx = next((p for p in packages if p['P'] == 'nginx'), None)
-    if nginx:
-        version = nginx['V'].split('-r')[0]
-        collector.fetch(f'https://nginx.org/download/nginx-{version}.tar.gz', f'runtimes/nginx-{version}.tar.gz')
-        njs = next(p for p in packages if p['P'] == 'nginx-module-njs')['V'].removeprefix(version + '.').split('-r')[0]
-        collector.fetch(f'https://codeload.github.com/nginx/njs/tar.gz/refs/tags/{njs}', f'runtimes/njs-{njs}.tar.gz')
     return packages
 
 
@@ -511,8 +696,13 @@ import importlib.metadata as m
 import json
 from cryptography.hazmat.backends.openssl.backend import backend
 from PIL import features
+# This server uses image codecs, not Pillow's optional Tk GUI bridge. Probing
+# every module attempts to load absent GUI libraries in the headless image.
+names = [name for name in features.modules if name != 'tkinter']
+names += list(features.codecs) + list(features.features)
 print(json.dumps({'openssl': backend.openssl_version_text(),
-    'pillow': {name: features.version(name) for name in features.get_supported()},
+    'pillow': {name: features.version(name) for name in names if features.check(name)},
+    'pillow_optional_gui': {'tkinter': 'Not probed: outside the headless application capability'},
     'ortools_libraries': [str(f) for f in m.distribution('ortools').files if '/.libs/' in str(f)]}))
 """
     native = json.loads(docker(image, 'python', '-c', program))
