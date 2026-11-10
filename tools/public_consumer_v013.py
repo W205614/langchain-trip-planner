@@ -1,7 +1,7 @@
 """Read-only anonymous acquisition of this immutable public release."""
 import hashlib, io, json, os, subprocess, urllib.request, zipfile
 from pathlib import Path
-from tools.container_release import CONFIG_FIELDS
+from container_release import CONFIG_FIELDS
 
 SOURCE='46dca1d2e8e2a45995134bb0f0600ae924c6de2d'
 EXPECTED={'application-images-v0.1.3.tar.gz':'fb1b0cca49dc66ac7a35b721ecfdf5cc89d28ab79ade54e0262112b70a1fcb51','container-manifest.json':'5315d56afca4e1884f101cc1b7afe8aebe124b22b563f3c3cf5eeea6c6ed1a99','container-sources-v0.1.3.zip':'2ed36ed1386bc27cbae0587f23b71b48ca9903ddafd35cb918db4a7b11cbbf4b','SHA256SUMS':'e7291d408f4fccba05c80bd3f6ba4055779ecb53bb9828236313977eac3cc4b7'}
@@ -54,6 +54,6 @@ for service,digest in DIGESTS.items():
     if service=='agent':command=['python','-c',"from pathlib import Path;print(Path('/licenses/SOURCE-ACCESS.txt').read_text());import app.agent_api.main;print('Agent import OK')"]
     elif service=='backend':command=['java','-version']
     else:command=['/docker-entrypoint.sh','nginx','-t']
-    subprocess.run(prefix+['run','--rm','--network','none','--entrypoint',command[0],reference,*command[1:]],check=True)
+    subprocess.run(prefix+['run','--rm','--network','none','--add-host','backend:127.0.0.1','--entrypoint',command[0],reference,*command[1:]],check=True)
     images[service]={'reference':reference,'image_id':actual['Id'],'layers_and_configuration_match':True,'registry_config_digest_verified':True,'anonymous_pull':True,'runtime_command_passed':True}
 save('public-acquisition.json',{'passed':True,'source':SOURCE,'version':'v0.1.3','anonymous_release_assets_downloaded':True,'all_outer_and_inner_hashes_verified':True,'source_downloads':len(source_manifest['downloads']),'images':images,'assets':EXPECTED,'location':'GitHub-hosted clean Linux consumer; no registry or asset authorization header','boundary':'Same images as isolated candidate core-flow acceptance; no model/map calls or deployments'})

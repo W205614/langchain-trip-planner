@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Acquire and use published bytes anonymously
-        run: python -m tools.public_consumer_v013
+        run: python tools/public_consumer_v013.py
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
