@@ -39,7 +39,7 @@ COPY requirements.lock .
 # 公网镜像源偶发慢速读取时重试；仍不在最终镜像保留 pip 缓存。
 RUN --mount=type=cache,target=/root/.cache/pip \
     for attempt in 1 2 3; do \
-      pip install --retries 5 --timeout 120 --upgrade pip==26.2.2 setuptools==80.10.2 \
+      pip install --retries 5 --timeout 120 --upgrade pip==26.2.2 setuptools==84.2.1 \
         && pip install --retries 5 --timeout 120 -r requirements.txt && pip check && exit 0; \
       if [ "$attempt" -lt 3 ]; then sleep 2; fi; \
     done; exit 1
