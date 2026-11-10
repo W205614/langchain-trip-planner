@@ -3,11 +3,11 @@
   "reviewed_on": "2026-11-07",
   "scope": "Exact Debian 13 amd64 stable security backports and reviewed component applicability. No still-vulnerable risk acceptance; raw findings and unknown advisories remain blocking.",
   "source_bindings": {
-    "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
+    "backend/Dockerfile": "872d0a976fe688e4d6d6e149aeed526fa26a0158fd4b6b7bf2993589bbc59ce0",
     "docker-compose.yml": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
     "docker-compose.production.yml": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
     "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
-    "backend/scripts/install_runtime_security_patches.py": "3f29cace28fdd27fa115c725efe1096ed1951732df243fe737084eeda4677a45",
+    "backend/scripts/install_runtime_security_patches.py": "526b7addac6af9c2a20ae765b0656986143ded3537932f7759a13d422e479519",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
     "backend/security/native-backports/build-glibc.sh": "326779f227eaab5af78002a1fe75a6c987b555111e402b535d9d76dcde3fa7e5",
     "backend/security/native-backports/build-inputs.sh": "0aa6f7186c4dc6d0232d84b8361adacc64fd1bfd86b3f3cdaaaec4f4321f8c09",
@@ -451,11 +451,11 @@
     }
   ],
   "review_policy": "source_and_artifact_bound",
-  "review_note": "2026-11-07: Reassessed the sole production Compose change: the Alertmanager read-only config source is now selectable. Agent command, privileges, persistent mounts, native source/patches and locked package installation remain identical. All nine native ABI/backport image regressions passed against the rebuilt artifact. No new advisory or version is suppressed by this metadata update.",
+  "review_note": "2026-11-10: see source_binding_review for actual delta and tests. No new vulnerability IDs, versions or exceptions.",
   "source_binding_review": {
-    "path": "docs/evidence/release-20261107/startup-dependency-review.json",
-    "sha256": "13c0f7af5715b0321af84c69de5b4853aa776f5d73082fef283ad17851add167",
-    "base_revision": "33a6d5dfa47ac027955eaac0ae667e9ce31e7ff1",
-    "scope": "Dependency-only Compose startup ordering; assessments and scanner policy unchanged."
+    "path": "docs/evidence/security-quality-20261110/runtime-source-review.json",
+    "sha256": "7430de580f695b231c364cf9a8e713bb96d76ba9759f436d6752f0fda20dcc0e",
+    "base_revision": "c1acec9d04578389184e575ac7a65729870c52fd",
+    "scope": "Reviewed authenticated read dispatch/private APT directory/packaging dependency; original exact assessment coverage unchanged."
   }
 }

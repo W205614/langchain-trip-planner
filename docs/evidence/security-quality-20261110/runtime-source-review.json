@@ -1,0 +1,16 @@
+{
+  "source": "c1acec9d04578389184e575ac7a65729870c52fd",
+  "date": "2026-11-10",
+  "reviewer": "Root assistant self-review",
+  "changed_bound_sources": {
+    "backend/app/agent_api/main.py": "Read-only internal capabilities moved to authenticated GET; write/research kinds stay POST; no Chroma route or client construction changed.",
+    "backend/Dockerfile": "Only setuptools 80.10.2 to verified official 84.2.1; Debian base, native build recipes, runtime command and restrictions unchanged.",
+    "backend/scripts/install_runtime_security_patches.py": "APT temporary download directory is _apt-owned mode0700 instead of world-readable/executable0755; signed-index package/hash/ABI constraints unchanged."
+  },
+  "evidence": [
+    "pip check in derived actual Agent image succeeded",
+    "15 Python interface/contract/Chroma-boundary tests pass with setuptools84.2.1; 15 also pass with original runtime",
+    "Official c1acec9 Python CodeQL raw zero"
+  ],
+  "scope": "Existing assessment IDs, package/ELF versions and classifications retained exactly. No new lower-severity findings accepted. Current image inventory and final runtime/native CI remain required. Chroma remains contextual not-affected, never upstream-fixed."
+}

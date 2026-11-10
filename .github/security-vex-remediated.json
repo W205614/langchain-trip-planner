@@ -9,8 +9,8 @@
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
     "backend/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
     "backend/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
-    "backend/app/agent_api/main.py": "2236e85335a676c712bbee9d9ec65971a127161a6aa0a94dba0e175ca3fed528",
-    "backend/Dockerfile": "dc0208305ade94ff520a4f17c87865575a92680f3bd08862a65d39a8220dde8a",
+    "backend/app/agent_api/main.py": "d2ad33f656bb6c3aa51409352bb9c652117fc6ba6b3ebf2e31fe00a8902cc5a2",
+    "backend/Dockerfile": "872d0a976fe688e4d6d6e149aeed526fa26a0158fd4b6b7bf2993589bbc59ce0",
     "docker-compose.yml": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
     "backend/scripts/restrict_runtime_tools.py": "78e48da3e7ec11969f82558664ec74b0d9527866cd7a51f1f4135a6b4f2d030b",
     "backend/app/agent_api/indexing.py": "3ba50918edf7538f5b4eca3e89b87e5851b89cdd5592632d1de3e41897a6d23e"
@@ -90,12 +90,11 @@
       ]
     }
   ],
-  "review_note": "2026-11-07: Reassessed OpenAI identity, resumable rebuild and all-generation erasure paths. Every Chroma constructor still uses explicit embedded_settings; Java authenticates internal operations; no Chroma HTTP, tenant or embedding-configuration API was introduced. The three embedded-boundary regression tests passed against current source. This does not assert an upstream fix. 2026-11-07 itinerary revision postprocessing adds only quantity constraints after scope protection; Agent HTTP capabilities, Chroma initialization and embedded-only network isolation are unchanged. 2026-11-08: Re-read the notices-before-draft move and the full internal API/embedded-index boundary; the three no-network embedded Chroma tests pass. Four existing CVE assessments and package versions are unchanged; raw findings are not suppressed or described as upstream-fixed.",
+  "review_note": "2026-11-10: see source_binding_review for actual delta and tests. No new vulnerability IDs, versions or exceptions.",
   "source_binding_review": {
-    "path": "docs/evidence/release-v0.1.2-20261108/embedded-chroma-review.json",
-    "sha256": "b1e93c379ff7d810edb09f5d011d889fbb948c69ef53db04beed453d89e87180",
-    "base_revision": "225908f9410a14ceb8460b13c638f79d0a8c144f",
-    "reviewed_source_revision": "fe9807b38695d2a102dbc4437ca6888866cf5fc7",
-    "scope": "Notices are included before draft persistence; embedded Chroma entrypoint, authorization and assessments unchanged."
+    "path": "docs/evidence/security-quality-20261110/runtime-source-review.json",
+    "sha256": "7430de580f695b231c364cf9a8e713bb96d76ba9759f436d6752f0fda20dcc0e",
+    "base_revision": "c1acec9d04578389184e575ac7a65729870c52fd",
+    "scope": "Reviewed authenticated read dispatch/private APT directory/packaging dependency; original exact assessment coverage unchanged."
   }
 }
