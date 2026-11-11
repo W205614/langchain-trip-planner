@@ -1,15 +1,15 @@
 {
   "schema_version": 2,
   "review_policy": "source_and_execution_path_bound",
-  "assessment_date": "2026-11-10",
+  "assessment_date": "2026-11-11",
   "product": "langchain-trip-planner internal Agent embedded derived index",
   "assessment_kind": "contextual_not_affected_not_upstream_fixed",
-  "application": "INACTIVE DRAFT: exact final source/image review; original embedded-only Chroma conditions retained. No actual .github policy activated by this file.",
+  "application": "ACTIVE explicitly selected embedded-only Chroma assessment. Four original upstream-not-fixed execution-path records remain unchanged; e817 typed-budget source propagation has been re-reviewed. No Chroma HTTP server, tenant API, remote embedding loader or SimpleRBAC path is enabled. New actual image validation remains separate.",
   "source_bindings": {
     "backend/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
     "backend/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
     "backend/app/agents/candidates.py": "781ad9948ee57ee648b834a66a97bdbe3db83424259af5a3b5e33b19f3fe3cde",
-    "backend/app/agents/data_nodes.py": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+    "backend/app/agents/data_nodes.py": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64",
     "backend/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
     "backend/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
     "backend/app/agents/trip_planner_agent.py": "190eb469e6c0d3bc36d6d4a55fe54dd6b5415355529bc1a014ae6d2db5d19b3d",
@@ -37,16 +37,16 @@
     "backend/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
     "backend/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
     "backend/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
-    "backend/app/services/amap_mcp_client.py": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
-    "backend/app/services/amap_mcp_service.py": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+    "backend/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
+    "backend/app/services/amap_mcp_service.py": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601",
     "backend/app/services/amap_service.py": "abd45369ebe655c436521f3df0b6fc949f3088b6657259fae640b57a662acb72",
     "backend/app/services/assistant_intent.py": "43d2bc7fd56a43b827f91e3dce741383ccfbc9ee4e00c31799c1e9f910b94552",
     "backend/app/services/attraction_names.py": "4b8adbb18abeababc3976374c638e97e5dc6722a7eb4fd454908db454f01a973",
-    "backend/app/services/call_budget.py": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+    "backend/app/services/call_budget.py": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2",
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
     "backend/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
     "backend/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-    "backend/app/services/durable_execution.py": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+    "backend/app/services/durable_execution.py": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355",
     "backend/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
     "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
     "backend/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
@@ -187,7 +187,9 @@
     "docs/evidence/runtime-support-security-20261110/gate-review/actual-receiver-contract.json": "03e28292eba59f7de2c9cee12f01bf62977cff877339f97d2603384744dd03d2",
     "docs/evidence/runtime-support-security-20261110/gate-review/debian-and-agent-regression.json": "4907c885a3d12750cc28fa88dce7b13f91f9e8f9dda20c55383c486816ed4c4d",
     "docs/evidence/runtime-support-security-20261110/gate-review/direct-tests.log": "28dc6b0ee0517956392fc0bfb6fce3d1aa4e2635e0f0bfb1a7886408983ffd2e",
-    "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc"
+    "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc",
+    "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
+    "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
@@ -264,7 +266,7 @@
       ]
     }
   ],
-  "review_note": "2026-11-10: see source_binding_review for actual delta and tests. No new vulnerability IDs, versions or exceptions.",
+  "review_note": "2026-11-11: budget_source_binding_delta documents the five application LF updates and preserves all four full original assessment payloads. Earlier source_binding_review remains historical evidence. No new IDs, versions, exemptions, taxonomy or risk acceptance.",
   "source_binding_review": {
     "path": "docs/evidence/security-quality-20261110/runtime-source-review.json",
     "sha256": "7430de580f695b231c364cf9a8e713bb96d76ba9759f436d6752f0fda20dcc0e",
@@ -278,5 +280,13 @@
   "gate_scope_binding_delta": {
     "path": "docs/evidence/native-security-20261110/all-severity-scope-review.json",
     "sha256": "26420794c46988c6b8bdd5f73773a20be3ca41875f44fb7bdc7361a6bac803a6"
+  },
+  "budget_source_binding_delta": {
+    "path": "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json",
+    "sha256": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
+    "patch_path": "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch",
+    "patch_sha256": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
+    "reviewed_source": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+    "boundary": "Exact reviewed source delta only; new actual image validation remains mandatory."
   }
 }

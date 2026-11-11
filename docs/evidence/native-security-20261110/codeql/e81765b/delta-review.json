@@ -1,0 +1,92 @@
+{
+  "predecessor_source": "881817b01cf778da6b546197d85af0534922428f",
+  "reviewed_source": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+  "changed_business_paths": [
+    "backend/app/agents/data_nodes.py",
+    "backend/app/services/amap_mcp_client.py",
+    "backend/app/services/amap_mcp_service.py",
+    "backend/app/services/call_budget.py",
+    "backend/app/services/durable_execution.py",
+    "backend/tests/test_agent_internal.py",
+    "backend/tests/test_amap_mcp.py",
+    "backend/tests/test_campaign_token_budget.py",
+    "backend/tests/test_exceptions.py",
+    "backend/tests/test_trusted_pois.py"
+  ],
+  "changed_file_sha256_lf": {
+    "backend/app/agents/data_nodes.py": {
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    "backend/app/services/amap_mcp_client.py": {
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    "backend/app/services/amap_mcp_service.py": {
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    "backend/app/services/call_budget.py": {
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    "backend/app/services/durable_execution.py": {
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    "backend/tests/test_agent_internal.py": {
+      "previous": "7453241e466f7c6b5c85d522043e51cbb0b2757d22353d079177172c294a778b",
+      "reviewed": "ed362571352c10e8133e7d07dea5cf9eaf7dc1b9e0c38b96033a459a9389f9e7"
+    },
+    "backend/tests/test_amap_mcp.py": {
+      "previous": "f43324cb2eacaa9f3829a3dcc64d67f37f2109d99d97162fe43b678978758726",
+      "reviewed": "4968c237b16c7a370b73e7ec60f10006f1fc8c4b94778e19f5b0c2d787f4aebf"
+    },
+    "backend/tests/test_campaign_token_budget.py": {
+      "previous": "597f30c06db212ca88e90ba29e46d9212089beef0fc23d78bfe4b540222923d3",
+      "reviewed": "73b963ed6deaba61f68c3d10e46179f19126d298a0e4309917057987d934a73f"
+    },
+    "backend/tests/test_exceptions.py": {
+      "previous": "924f44a9563d980b6f311413dd1ec499ae80d56162977f49cdf69637e206b3a5",
+      "reviewed": "120dffffb27a597079e4d8a85d8dfd57be7488bb3ef977ec6466f9caefa7dd28"
+    },
+    "backend/tests/test_trusted_pois.py": {
+      "previous": "1864a2c3be1a4ed14a07b1ce00fabdb4c5ce9ff80f8c4cf346587146a24c57e2",
+      "reviewed": "cb7d6df20495a0aa152977e75ae88f0de28e89ad751dae580756a12d4d5fa515"
+    }
+  },
+  "unchanged_full_directories": [
+    "business-backend",
+    "frontend",
+    "deploy",
+    "contracts"
+  ],
+  "changed_supporting_source_fingerprints": [
+    "backend/app/agents/data_nodes.py",
+    "backend/app/services/amap_mcp_service.py",
+    "backend/app/services/call_budget.py",
+    "backend/app/services/durable_execution.py",
+    "backend/tests/test_agent_internal.py"
+  ],
+  "supporting_source_count": 106,
+  "complete_flows_reviewed": 44,
+  "same_complete_raw_result_objects": 11,
+  "same_complete_resolved_rules": 11,
+  "source_review": [
+    "durable_execution.reserve_outbound converts only HTTP429 carrying OUTBOUND_BUDGET_EXHAUSTED or CAMPAIGN_BUDGET_EXHAUSTED to the existing typed budget exception. Other HTTP status, malformed JSON, non-object bodies or unrelated codes preserve the actual original exception. Actor, opaque operation registration, reserve payload, endpoint and authentication are unchanged.",
+    "call_budget.CallBudgetExceeded now carries existing BizException429 status/code while preserving RuntimeError compatibility. Existing ledger writes, caps, campaign selection and reservation accounting are unchanged; rejected calls do not reset or bypass the ledger.",
+    "amap_mcp_client.call preserves the exact budget exception from the invoked operation before generic MCP-error wrapping. amap_mcp_service distinguishes ordinary upstream detail errors from malformed/missing coordinates without swallowing typed budget exhaustion.",
+    "data_nodes rethrows CallBudgetExceeded before existing optional-data fallbacks at attraction discovery, knowledge augmentation, specific lookups, weather, accommodation and food collection. It does not turn exhaustion into an empty candidate success or continue towards broad/model work.",
+    "Five direct tests verify actual invoked client cancellation/no tool send on rejection, central429 code and zero local accounting, existing HTTP429/error SSE contracts without a result, preserved ordinary detail behavior, and real graph propagation before model lookup. Source-level review does not claim these fixtures are new live-provider results.",
+    "All eleven Java GET entry points, four concrete flow objects each, fixed status-path early returns, Operation receiver identity, authenticated actor and cookie/header CSRF boundary remain exact from881. Python endpoint definitions, HTTP methods and allowed actors did not change; the new failure propagation does not expose a trip/account/permission mutation through GET."
+  ],
+  "raw_results": {
+    "java": 11,
+    "python": 0,
+    "javascript": 0,
+    "actions": 0
+  },
+  "risk_accepted": 0,
+  "new_platform_dismissals": 0,
+  "provider_boundary": "User explicitly authorized subsequent offline validation after the real budget was exhausted. The failed real attempt and ledger remain unchanged; no model/Amap call or successful live acceptance is newly claimed."
+}

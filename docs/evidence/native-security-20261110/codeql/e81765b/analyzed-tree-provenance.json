@@ -1,0 +1,41 @@
+{
+  "requested_head_revision": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+  "artifact_workflow_head_sha": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+  "actual_log_verified_checkout": {
+    "java": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+    "python": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+    "javascript": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+    "actions": "e81765b257a2b88b1d463a02c6263e754d5cce00"
+  },
+  "actual_analyzed_commit": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+  "analyzed_full_git_tree": "8bfe4465055c231bb027fb0065ab20e78cc7a43f",
+  "five_business_trees": {
+    "backend": {
+      "previous": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b",
+      "reviewed": "764e86e4b4ff2c9e28cac74ccb1d298e711f4b2b",
+      "actual_analyzed": "764e86e4b4ff2c9e28cac74ccb1d298e711f4b2b"
+    },
+    "business-backend": {
+      "previous": "1dfb2034bfb496ca5a99e54940ac5d8ab1dfc3f3",
+      "reviewed": "1dfb2034bfb496ca5a99e54940ac5d8ab1dfc3f3",
+      "actual_analyzed": "1dfb2034bfb496ca5a99e54940ac5d8ab1dfc3f3"
+    },
+    "frontend": {
+      "previous": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96",
+      "reviewed": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96",
+      "actual_analyzed": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96"
+    },
+    "deploy": {
+      "previous": "12cdbc46ad227228ddfa86b8292b388de0716907",
+      "reviewed": "12cdbc46ad227228ddfa86b8292b388de0716907",
+      "actual_analyzed": "12cdbc46ad227228ddfa86b8292b388de0716907"
+    },
+    "contracts": {
+      "previous": "b054131d898b536495bf7623bded73893ad812ef",
+      "reviewed": "b054131d898b536495bf7623bded73893ad812ef",
+      "actual_analyzed": "b054131d898b536495bf7623bded73893ad812ef"
+    }
+  },
+  "coverage": "Full main analysis for all four languages. No incrementalMode and no pr-diff-range extension; main Java job explicitly reports no diff-informed analysis.",
+  "boundary": "Actual main commit, not a PR merge substitute. Later evidence-only commits still require actual final CI and exact business-source verification."
+}

@@ -1,0 +1,168 @@
+diff --git a/backend/app/agents/data_nodes.py b/backend/app/agents/data_nodes.py
+index f35d968..b1a59fe 100644
+--- a/backend/app/agents/data_nodes.py
++++ b/backend/app/agents/data_nodes.py
+@@ -13,6 +13,7 @@ from ..models.schemas import TripRequest, WeatherInfo
+ from .state import GraphState
+ from ..services.attraction_names import valid_attraction
+ from ..services.durable_execution import checkpoint_node
++from ..services.call_budget import CallBudgetExceeded
+ from .candidates import day_candidate_limit, independent_candidate_count
+ 
+ logger = logging.getLogger(__name__)
+@@ -61,6 +62,8 @@ class TravelDataNodes:
+                         try:
+                             pois.extend(attraction_candidates(future.result()))
+                             pois = list({p.id: p for p in pois}.values())
++                        except CallBudgetExceeded:
++                            raise
+                         except Exception:
+                             logger.warning("补充景点候选失败 keyword=%s", futures[future])
+             logger.info(f"   找到 {len(pois)} 个景点")
+@@ -72,6 +75,8 @@ class TravelDataNodes:
+                 knowledge_names = get_rag_service().get_knowledge_attractions(
+                     request.city, ensure_city=False
+                 )
++            except CallBudgetExceeded:
++                raise
+             except Exception as e:
+                 logger.warning(f"   ⚠️ 知识库景点补充失败(不影响主流程): {e}")
+ 
+@@ -91,6 +96,8 @@ class TravelDataNodes:
+                     for future in as_completed(futures):
+                         try:
+                             lookups[futures[future]] = future.result()
++                        except CallBudgetExceeded:
++                            raise
+                         except Exception:
+                             logger.warning("指定景点查询失败 name=%s", futures[future])
+ 
+@@ -118,6 +125,8 @@ class TravelDataNodes:
+                     logger.warning("必去景点查询失败，保留其它已取得的候选")
+             unique = {p.id: p for p in pois if valid_attraction(p, request.city) and name_key(p.name) not in avoided}
+             return {"attraction_pois": list(unique.values())}
++        except CallBudgetExceeded:
++            raise
+         except Exception as e:
+             logger.warning(f"   ⚠️ 景点搜索失败: {e}")
+             return {"attraction_pois": []}
+@@ -136,6 +145,8 @@ class TravelDataNodes:
+             relevant_weather, weather_notice = self._filter_weather_for_trip(weather, request)
+             logger.info(f"   获取 {len(weather)} 天预报，其中 {len(relevant_weather)} 天与行程日期匹配")
+             return {"weather_info": relevant_weather, "weather_notice": weather_notice}
++        except CallBudgetExceeded:
++            raise
+         except Exception as e:
+             logger.warning(f"   ⚠️ 天气查询失败: {e}")
+             return {"weather_info": [], "weather_notice": "暂时无法获取天气预报，请出行前再次确认。"}
+@@ -167,6 +178,8 @@ class TravelDataNodes:
+             hotels = self.amap_service.search_poi(request.accommodation, request.city)
+             logger.info(f"   找到 {len(hotels)} 个酒店")
+             return {"hotel_pois": hotels}
++        except CallBudgetExceeded:
++            raise
+         except Exception as e:
+             logger.warning(f"   ⚠️ 酒店搜索失败: {e}")
+             return {"hotel_pois": []}
+@@ -186,6 +199,8 @@ class TravelDataNodes:
+             restaurant_types = ("餐饮", "餐厅", "小吃", "火锅", "咖啡", "快餐", "甜品")
+             restaurants = [p for p in restaurants if any(t in (p.type or "") for t in restaurant_types)]
+             return {"restaurant_pois": list({p.id: p for p in restaurants if p.id}.values())[:12]}
++        except CallBudgetExceeded:
++            raise
+         except Exception as exc:
+             logger.warning("餐饮候选查询失败: %s", type(exc).__name__)
+             return {"restaurant_pois": []}
+diff --git a/backend/app/services/amap_mcp_client.py b/backend/app/services/amap_mcp_client.py
+index 296a93d..76d09ed 100644
+--- a/backend/app/services/amap_mcp_client.py
++++ b/backend/app/services/amap_mcp_client.py
+@@ -17,6 +17,7 @@ from mcp import ClientSession
+ from mcp.client.streamable_http import streamable_http_client
+ 
+ from .execution import remaining
++from .call_budget import CallBudgetExceeded
+ 
+ 
+ class AmapMCPError(RuntimeError):
+@@ -126,7 +127,7 @@ class AmapMCPClient:
+         except (FutureTimeout, TimeoutError):
+             future.cancel()
+             raise TimeoutError("高德 MCP 工具调用超时") from None
+-        except AmapMCPError:
++        except (AmapMCPError, CallBudgetExceeded):
+             raise
+         except Exception:
+             raise AmapMCPError(f"高德 MCP 工具调用失败：{name}") from None
+diff --git a/backend/app/services/amap_mcp_service.py b/backend/app/services/amap_mcp_service.py
+index 7edd1a2..72d19c3 100644
+--- a/backend/app/services/amap_mcp_service.py
++++ b/backend/app/services/amap_mcp_service.py
+@@ -109,7 +109,10 @@ class AmapMCPService(AmapService):
+                         continue
+                 except TimeoutError:
+                     raise
+-                except (AmapMCPError, ValueError, TypeError, ValidationError):
++                except AmapMCPError:
++                    logger.warning("MCP POI 详情查询失败，已跳过该候选")
++                    continue
++                except (ValueError, TypeError, ValidationError):
+                     logger.warning("MCP POI 缺少可验证坐标，已跳过该候选")
+                     continue
+                 pois.append(item)
+diff --git a/backend/app/services/call_budget.py b/backend/app/services/call_budget.py
+index cfb3a6a..7e948d3 100644
+--- a/backend/app/services/call_budget.py
++++ b/backend/app/services/call_budget.py
+@@ -7,12 +7,14 @@ import os
+ import json
+ import sqlite3
+ from pathlib import Path
++from ..core.exceptions import BizException
+ 
+ LIMITS = {"text": 12, "vision": 1, "embedding": 40, "amap": 120}
+ 
+ 
+-class CallBudgetExceeded(RuntimeError):
+-    pass
++class CallBudgetExceeded(BizException, RuntimeError):
++    def __init__(self, detail: str, *, code: str = "OUTBOUND_BUDGET_EXHAUSTED"):
++        super().__init__(detail, status_code=429, code=code)
+ 
+ 
+ def reserve(kind: str, *, reserved_tokens: int | None = None, map_protocol: str = "rest") -> None:
+diff --git a/backend/app/services/durable_execution.py b/backend/app/services/durable_execution.py
+index 3b704df..faa95ba 100644
+--- a/backend/app/services/durable_execution.py
++++ b/backend/app/services/durable_execution.py
+@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
+ import hashlib
+ import json
+ import os
++import httpx
+ from uuid import uuid4
+ from functools import wraps
+ from threading import RLock
+@@ -60,7 +61,21 @@ def reserve_outbound(kind, *, reserved_tokens=None,map_protocol="rest"):
+         payload["reserved_tokens"]=reserved_tokens
+     if kind=="amap":payload["map_protocol"]=map_protocol
+     # The business service pins the campaign. Caller-provided run IDs never select a budget.
+-    receipt=_call("POST", "/internal/v2/outbound/reserve",payload)
++    try:
++        receipt=_call("POST", "/internal/v2/outbound/reserve",payload)
++    except httpx.HTTPStatusError as error:
++        if error.response.status_code == 429:
++            try:
++                rejection = error.response.json()
++            except ValueError:
++                raise error from None
++            if isinstance(rejection, dict) and rejection.get("code") in {
++                "OUTBOUND_BUDGET_EXHAUSTED", "CAMPAIGN_BUDGET_EXHAUSTED"
++            }:
++                from .call_budget import CallBudgetExceeded
++                raise CallBudgetExceeded("External call budget exhausted; execution stopped",
++                    code=rejection["code"]) from None
++        raise
+     return {"request_key":payload["request_key"],"run_id":receipt.get("run_id","")}
+ 
+ 

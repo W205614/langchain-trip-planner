@@ -1,0 +1,769 @@
+{
+  "source": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+  "future_clock": "2040-01-01",
+  "actual_active_policy_loads": {
+    "vendor_assessments": 197,
+    "vex_assessments": 4,
+    "source_bindings_each": 184,
+    "passed": true
+  },
+  "positive_predicate_fixtures": [
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 10
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 11
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 74
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 75
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 98
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 99
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 105
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 106
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 131
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 177
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 179
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 181
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 183
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 184
+    },
+    {
+      "kind": "actual native entry predicate fixture",
+      "assessment_index": 186
+    },
+    {
+      "kind": "actual reviewed libstdc++ ELF predicate fixture",
+      "assessment_index": 9
+    },
+    {
+      "kind": "actual Chroma entry identity fixture",
+      "assessment_index": 0
+    },
+    {
+      "kind": "actual Chroma entry identity fixture",
+      "assessment_index": 1
+    },
+    {
+      "kind": "actual Chroma entry identity fixture",
+      "assessment_index": 2
+    },
+    {
+      "kind": "actual Chroma entry identity fixture",
+      "assessment_index": 3
+    }
+  ],
+  "negative_controls": [
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 10,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 10,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 10,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 10,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 10,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 10,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 10,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 11,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 11,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 11,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 11,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 11,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 11,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 11,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 74,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 74,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 74,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 74,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 74,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 74,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 74,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 75,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 75,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 75,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 75,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 75,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 75,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 75,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 98,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 98,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 98,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 98,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 98,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 98,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 98,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 99,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 99,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 99,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 99,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 99,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 99,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 99,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 105,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 105,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 105,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 105,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 105,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 105,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 105,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 106,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 106,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 106,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 106,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 106,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 106,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 106,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 131,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 131,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 131,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 131,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 131,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 131,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 131,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 177,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 177,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 177,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 177,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 177,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 177,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 177,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 179,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 179,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 179,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 179,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 179,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 179,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 179,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 181,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 181,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 181,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 181,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 181,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 181,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 181,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 183,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 183,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 183,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 183,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 183,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 183,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 183,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 184,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 184,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 184,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 184,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 184,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 184,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 184,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 186,
+      "path": "/app/app/agents/data_nodes.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 186,
+      "path": "/app/app/services/amap_mcp_client.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 186,
+      "path": "/app/app/services/amap_mcp_service.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 186,
+      "path": "/app/app/services/call_budget.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed app LF",
+      "assessment_index": 186,
+      "path": "/app/app/services/durable_execution.py",
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed CVE",
+      "assessment_index": 186,
+      "matched": false
+    },
+    {
+      "kind": "actual entry changed version",
+      "assessment_index": 186,
+      "matched": false
+    },
+    {
+      "kind": "actual native ELF changed",
+      "assessment_index": 9,
+      "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33",
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed CVE",
+      "assessment_index": 0,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed version",
+      "assessment_index": 0,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed CVE",
+      "assessment_index": 1,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed version",
+      "assessment_index": 1,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed CVE",
+      "assessment_index": 2,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed version",
+      "assessment_index": 2,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed CVE",
+      "assessment_index": 3,
+      "matched": false
+    },
+    {
+      "kind": "actual Chroma unreviewed version",
+      "assessment_index": 3,
+      "matched": false
+    },
+    {
+      "kind": "actual vendor source loader changed file",
+      "path": "backend/app/agents/data_nodes.py",
+      "rejected": true,
+      "message": "Distribution source binding changed: backend/app/agents/data_nodes.py"
+    },
+    {
+      "kind": "actual vex source loader changed file",
+      "path": "backend/app/agents/data_nodes.py",
+      "rejected": true,
+      "message": "VEX source binding changed: backend/app/agents/data_nodes.py"
+    },
+    {
+      "kind": "actual vendor source loader changed file",
+      "path": "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json",
+      "rejected": true,
+      "message": "Distribution source binding changed: docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json"
+    },
+    {
+      "kind": "actual vex source loader changed file",
+      "path": "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json",
+      "rejected": true,
+      "message": "VEX source binding changed: docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json"
+    }
+  ],
+  "negative_count": 118,
+  "passed": true,
+  "existing_codeql_controls": "../codeql/e81765b/negative-controls.json",
+  "existing_codeql_direct_tests": "../codeql/e81765b/context-tests.log",
+  "boundary": "Actual policy files and actual recorded assessment identities are used for predicate controls; constructed evidence is explicitly a fixture, not fresh image evidence. Source mutation occurs only in a retained private mirror. No Docker resources or actual app sources are mutated, no supplier calls occur, and new artifact PASS is not claimed."
+}

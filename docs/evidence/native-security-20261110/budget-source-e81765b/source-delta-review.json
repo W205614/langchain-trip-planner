@@ -1,0 +1,919 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-11-11",
+  "status": "source_delta_reviewed_new_artifact_pending",
+  "previous_application_source": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
+  "reviewed_application_source": "e81765b257a2b88b1d463a02c6263e754d5cce00",
+  "reviewer": "Assistant independent delta and active predicate review, not an independent human audit.",
+  "source_delta_lf_sha256": {
+    "backend/app/agents/data_nodes.py": {
+      "previous_lf_sha256": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed_lf_sha256": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64",
+      "image_path": "/app/app/agents/data_nodes.py"
+    },
+    "backend/app/services/amap_mcp_client.py": {
+      "previous_lf_sha256": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed_lf_sha256": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
+      "image_path": "/app/app/services/amap_mcp_client.py"
+    },
+    "backend/app/services/amap_mcp_service.py": {
+      "previous_lf_sha256": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed_lf_sha256": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601",
+      "image_path": "/app/app/services/amap_mcp_service.py"
+    },
+    "backend/app/services/call_budget.py": {
+      "previous_lf_sha256": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed_lf_sha256": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2",
+      "image_path": "/app/app/services/call_budget.py"
+    },
+    "backend/app/services/durable_execution.py": {
+      "previous_lf_sha256": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed_lf_sha256": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355",
+      "image_path": "/app/app/services/durable_execution.py"
+    }
+  },
+  "source_patch": {
+    "path": "budget-source.patch",
+    "sha256": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f"
+  },
+  "previous_policy_file_sha256": {
+    "security-vendor-remediated.json": "ad53f317854f1b85381dc2b1fd261dbb5d0538c8f2f0cdcf427ddc9e1bb9dc68",
+    "security-vex-remediated.json": "b276ded8f761fa00248995f2c1606da94870ac41a9b84506e6e8a1c86d015c0f"
+  },
+  "assessment_payload_comparison": {
+    "security-vendor-remediated.json": {
+      "count": 197,
+      "previous_complete_payload_sha256": "93f84f70d48d2610b8fe211a68fc39434b19d16e9cf8d7a8920fde09208c260a",
+      "reviewed_complete_payload_sha256": "38037bcd0ca811a8ab0bf9d5b60a95a63c75bd1fa6adfc93755fe889e7d09a16",
+      "complete_payload_equal": false,
+      "exact_source_hash_value_changes": 75,
+      "assessment_records_with_source_binding_delta": 15,
+      "after_reversing_only_the_enumerated_75_values_sha256": "93f84f70d48d2610b8fe211a68fc39434b19d16e9cf8d7a8920fde09208c260a",
+      "all_other_assessment_content_exactly_equal": true
+    },
+    "security-vex-remediated.json": {
+      "count": 4,
+      "previous_complete_payload_sha256": "4345bc0607afb32e2cffcb21bc3a639564428e0ec8c39cf4a9cc33fe25346e45",
+      "reviewed_complete_payload_sha256": "4345bc0607afb32e2cffcb21bc3a639564428e0ec8c39cf4a9cc33fe25346e45",
+      "complete_payload_equal": true
+    }
+  },
+  "native_15_exact_record_reviews": [
+    {
+      "assessment_index": 10,
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "reviewed_impact": "The five source changes add typed-error imports/propagation and HTTP429 handling, not any regex/glibc binding or subprocess call. No external pattern is routed to libc regex; the existing Python regex and immutable wheel/ELF evidence remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 11,
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "reviewed_impact": "The five source changes add typed-error imports/propagation and HTTP429 handling, not any regex/glibc binding or subprocess call. No external pattern is routed to libc regex; the existing Python regex and immutable wheel/ELF evidence remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 74,
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "Loader/ldd remains. App has no user DSO/plugin/ldd entry. Uploaded bytes are magic-restricted PDF/images with UUID storage and numeric internal identifiers, not executable ELF input.",
+      "reviewed_impact": "No loader, dlopen, ctypes, plugin, ELF upload, ldd invocation or import-source selection is added. Only known budget rejection codes are translated; existing authenticated PDF/image input and UUID storage remain unchanged.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 75,
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "Loader/ldd remains. App has no user DSO/plugin/ldd entry. Uploaded bytes are magic-restricted PDF/images with UUID storage and numeric internal identifiers, not executable ELF input.",
+      "reviewed_impact": "No loader, dlopen, ctypes, plugin, ELF upload, ldd invocation or import-source selection is added. Only known budget rejection codes are translated; existing authenticated PDF/image input and UUID storage remain unchanged.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 98,
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "Application glob is a fixed *.md pattern under its configured knowledge directory through Python pathlib. No HTTP pattern reaches libc glob or shell. Arbitrary administrator glob use is excluded.",
+      "reviewed_impact": "No glob pattern, shell or subprocess path changes. Fixed knowledge-directory *.md traversal and Python pathlib use remain unchanged. Typed errors stop optional gathering rather than selecting native glob work.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 99,
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "Application glob is a fixed *.md pattern under its configured knowledge directory through Python pathlib. No HTTP pattern reaches libc glob or shell. Arbitrary administrator glob use is excluded.",
+      "reviewed_impact": "No glob pattern, shell or subprocess path changes. Fixed knowledge-directory *.md traversal and Python pathlib use remain unchanged. Typed errors stop optional gathering rather than selecting native glob work.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 105,
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "reviewed_impact": "The five source changes add typed-error imports/propagation and HTTP429 handling, not any regex/glibc binding or subprocess call. No external pattern is routed to libc regex; the existing Python regex and immutable wheel/ELF evidence remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 106,
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "reviewed_impact": "The five source changes add typed-error imports/propagation and HTTP429 handling, not any regex/glibc binding or subprocess call. No external pattern is routed to libc regex; the existing Python regex and immutable wheel/ELF evidence remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 131,
+      "ids": [
+        "CVE-2021-45346"
+      ],
+      "artifact_versions": {
+        "libsqlite3-0": "3.54.1-2"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "SQLite remains and is not called fixed for this disputed record. DB files come from administrator-selected fixed index/database paths; request inputs are bound SQL values or text/metadata, not arbitrary corrupted .db imports or raw SQL. Filesystem replacement/manual imports excluded.",
+      "reviewed_impact": "Budget ledger sqlite3.connect still receives the same absolute administrator-selected path; bound SQL statements and counters are unchanged. No arbitrary .db import, raw SQL or corrupted DB input is introduced. The new exception can exit earlier, not expand DB input authority.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 177,
+      "ids": [
+        "CVE-2023-31439"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "reviewed_impact": "Only ordinary application warning/error propagation changes. No binary journal input, libsystemd binding, journal reader/verifier or system CLI invocation is introduced. Existing Python/wheel/ELF checks and PDF/image upload boundaries remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 179,
+      "ids": [
+        "CVE-2023-31439"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "reviewed_impact": "Only ordinary application warning/error propagation changes. No binary journal input, libsystemd binding, journal reader/verifier or system CLI invocation is introduced. Existing Python/wheel/ELF checks and PDF/image upload boundaries remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 181,
+      "ids": [
+        "CVE-2023-31437"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "reviewed_impact": "Only ordinary application warning/error propagation changes. No binary journal input, libsystemd binding, journal reader/verifier or system CLI invocation is introduced. Existing Python/wheel/ELF checks and PDF/image upload boundaries remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 183,
+      "ids": [
+        "CVE-2023-31437"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "reviewed_impact": "Only ordinary application warning/error propagation changes. No binary journal input, libsystemd binding, journal reader/verifier or system CLI invocation is introduced. Existing Python/wheel/ELF checks and PDF/image upload boundaries remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 184,
+      "ids": [
+        "CVE-2023-31438"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "reviewed_impact": "Only ordinary application warning/error propagation changes. No binary journal input, libsystemd binding, journal reader/verifier or system CLI invocation is introduced. Existing Python/wheel/ELF checks and PDF/image upload boundaries remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    },
+    {
+      "assessment_index": 186,
+      "ids": [
+        "CVE-2023-31438"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "original_reason_unchanged": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "reviewed_impact": "Only ordinary application warning/error propagation changes. No binary journal input, libsystemd binding, journal reader/verifier or system CLI invocation is introduced. Existing Python/wheel/ELF checks and PDF/image upload boundaries remain required.",
+      "exact_changed_image_source_paths": [
+        "/app/app/agents/data_nodes.py",
+        "/app/app/services/amap_mcp_client.py",
+        "/app/app/services/amap_mcp_service.py",
+        "/app/app/services/call_budget.py",
+        "/app/app/services/durable_execution.py"
+      ]
+    }
+  ],
+  "only_permitted_assessment_value_deltas": [
+    {
+      "assessment_index": 10,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 10,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 10,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 10,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 10,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 11,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 11,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 11,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 11,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 11,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 74,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 74,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 74,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 74,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 74,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 75,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 75,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 75,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 75,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 75,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 98,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 98,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 98,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 98,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 98,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 99,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 99,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 99,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 99,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 99,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 105,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 105,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 105,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 105,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 105,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 106,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 106,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 106,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 106,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 106,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 131,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 131,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 131,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 131,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 131,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 177,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 177,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 177,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 177,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 177,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 179,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 179,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 179,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 179,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 179,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 181,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 181,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 181,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 181,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 181,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 183,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 183,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 183,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 183,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 183,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 184,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 184,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 184,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 184,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 184,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    },
+    {
+      "assessment_index": 186,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/agents/data_nodes.py",
+      "previous": "49847dc1d6d6fdd0bcfdb4706228d07c1cf8e2da17212cdf71b1c30b4e82b01a",
+      "reviewed": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64"
+    },
+    {
+      "assessment_index": 186,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_client.py",
+      "previous": "4e2e8795ec254a254fc55e6e3cfe86835a90426499841419a2ffd5a3c4980fa7",
+      "reviewed": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94"
+    },
+    {
+      "assessment_index": 186,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/amap_mcp_service.py",
+      "previous": "8b5500c193e75c6e3241cd7ab05a042eb6ffcdde02c1cd71658083df0b41f905",
+      "reviewed": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601"
+    },
+    {
+      "assessment_index": 186,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/call_budget.py",
+      "previous": "28b73ddfac7fba8700b79a3d9691cd13ab8303bba0ec7796082904b75ae76917",
+      "reviewed": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2"
+    },
+    {
+      "assessment_index": 186,
+      "field": "requires_source_lf_sha256",
+      "exact_key": "/app/app/services/durable_execution.py",
+      "previous": "40c1b096f9d6f89d8a675c4e291a4f00353fa94b8d9947f5af6f5b6181335135",
+      "reviewed": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355"
+    }
+  ],
+  "normalization_rule": "For equality comparison only, reverse exactly the75 enumerated requires_source_lf_sha256 values from their asserted reviewed hash to their asserted original hash. No field deletion, wildcard exclusion, order normalization beyond canonical JSON keys, or other assessment change is permitted. Full vendor payload hashes intentionally differ; the complete four-entry VEX payload hash is unchanged.",
+  "chroma_four_reviews": [
+    {
+      "ids": [
+        "PYSEC-2026-311",
+        "CVE-2026-45829",
+        "GHSA-f4j7-r4q5-qw2c"
+      ],
+      "unchanged_affected_upstream_capability": "Unauthenticated collection-create endpoint can load a remote repository with trust_remote_code.",
+      "reviewed_impact": "No Chroma server route, tenant/authz provider, client implementation, embedding configuration or storage trust boundary changes. Explicit RustBindingsAPI embedded settings and operator-supplied embeddings remain unchanged. Typed budget errors only stop work or preserve an existing429 contract; they do not enable remote embedding loaders or HTTP tenant collection operations."
+    },
+    {
+      "ids": [
+        "PYSEC-2026-3814",
+        "CVE-2026-45833",
+        "GHSA-36p7-vc44-83pf"
+      ],
+      "unchanged_affected_upstream_capability": "Authenticated server collection-update endpoint can load a remote repository with trust_remote_code.",
+      "reviewed_impact": "No Chroma server route, tenant/authz provider, client implementation, embedding configuration or storage trust boundary changes. Explicit RustBindingsAPI embedded settings and operator-supplied embeddings remain unchanged. Typed budget errors only stop work or preserve an existing429 contract; they do not enable remote embedding loaders or HTTP tenant collection operations."
+    },
+    {
+      "ids": [
+        "PYSEC-2026-3815",
+        "CVE-2026-45831",
+        "GHSA-xph7-9rjv-w5fr"
+      ],
+      "unchanged_affected_upstream_capability": "Chroma HTTP server SimpleRBAC provider fails to scope permissions to tenant resources.",
+      "reviewed_impact": "No Chroma server route, tenant/authz provider, client implementation, embedding configuration or storage trust boundary changes. Explicit RustBindingsAPI embedded settings and operator-supplied embeddings remain unchanged. Typed budget errors only stop work or preserve an existing429 contract; they do not enable remote embedding loaders or HTTP tenant collection operations."
+    },
+    {
+      "ids": [
+        "PYSEC-2026-3813",
+        "CVE-2026-45830",
+        "GHSA-2wm9-hf6c-p5cr"
+      ],
+      "unchanged_affected_upstream_capability": "Chroma HTTP server tenant collection authorization permits cross-tenant actions.",
+      "reviewed_impact": "No Chroma server route, tenant/authz provider, client implementation, embedding configuration or storage trust boundary changes. Explicit RustBindingsAPI embedded settings and operator-supplied embeddings remain unchanged. Typed budget errors only stop work or preserve an existing429 contract; they do not enable remote embedding loaders or HTTP tenant collection operations."
+    }
+  ],
+  "unchanged_native_constraints": "All vulnerability IDs, classifications, artifact/package versions, file/ELF hashes, modes/UID/GID, absent paths, architecture, dependency source hashes, original reason/reference/review_record values and risk rules remain exact. Existing source bindings other than the five application modules are byte/LF verified unchanged. No package, native recipe, RAG client configuration, application entrypoint, Java authentication source, upload policy or template path changed in this patch.",
+  "active_use": "Both .github policies are already explicitly selected by security.yml; stale INACTIVE DRAFT text is corrected. Active source review is not a declaration that a new image has passed.",
+  "validation_record": "validation.json",
+  "artifact_boundary": "New Agent image is not yet claimed passed. It must prove exact frozen native layers/ELF/package/configuration, actual new application LF hashes and all existing predicates, then pass the final actual all-severity scanner. No source loader, assessment taxonomy, matcher or image guard changes are made.",
+  "provider_boundary": "No model/Amap request is performed. Exhausted live-budget failure remains failed; subsequent validation is explicitly offline-user-authorized."
+}
