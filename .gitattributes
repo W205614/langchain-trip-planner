@@ -96,3 +96,4 @@ docs/evidence/security-quality-20261110/**/*.sarif -text -whitespace
 docs/evidence/native-security-20261110/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/native-security-20261110/**/*.sarif -text -whitespace
 docs/evidence/native-security-20261110/**/*.log -text -whitespace
+docs/evidence/runtime-support-security-20261110/** -text whitespace=trailing-space,space-before-tab,cr-at-eol

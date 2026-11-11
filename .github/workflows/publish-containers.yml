@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: read
-  actions: read
-  packages: write
 
 concurrency:
   group: trip-container-publication
@@ -19,6 +17,10 @@ concurrency:
 
 jobs:
   publish:
+    permissions:
+      contents: read
+      actions: read
+      packages: write
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -46,4 +48,30 @@ jobs:
         with:
           name: container-publication
           path: candidate/publication.json
+          retention-days: 14
+  consumer:
+    name: Anonymous public release and image consumer
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ inputs.version }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Acquire immutable public assets and images without credentials
+        env:
+          VERSION: ${{ inputs.version }}
+        run: python tools/public_container_consumer.py --version "$VERSION" --source "$GITHUB_SHA"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: anonymous-public-consumer
+          path: consumer-evidence/
           retention-days: 14

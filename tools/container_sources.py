@@ -151,10 +151,11 @@ class Collector:
         return json.loads(self.fetch(url, relative).read_bytes())
 
 
-def apt_sources(collector, image, distribution, suites):
+def apt_sources(collector, image, distribution, suites, *, additional_packages=()):
     installed = docker(image, 'dpkg-query', '-W', '-f=${binary:Package}\t${Version}\t${source:Package}\t${source:Version}\n').decode()
     packages = [dict(zip(('package', 'version', 'source', 'source_version'), row.split('\t'))) for row in installed.splitlines()]
-    needed = {(p['source'], re.sub(r'\+trip\d+$', '', p['source_version'])) for p in packages}
+    needed = {(p['source'], re.sub(r'\+trip\d+$', '', p['source_version']))
+              for p in [*packages, *additional_packages]}
     found = {}
     for host, suite in suites:
         archive = 'debian-security' if host == 'security.debian.org' else distribution
@@ -190,8 +191,21 @@ def apt_sources(collector, image, distribution, suites):
                 details = collector.json(f'https://snapshot.debian.org/mr/file/{digest}/info', f'indexes/debian-file-{digest}.json')
                 filename = details['result'][0]['name']
                 tasks.append((f'https://snapshot.debian.org/file/{digest}', 'debian/' + filename, digest, 'sha1'))
+    grouped = {}
+    for task in tasks:
+        grouped.setdefault(task[1], []).append(task)
+
+    def fetch_shared_source(rows):
+        path = collector.fetch(*rows[0])
+        for row in rows[1:]:
+            algorithm = row[3] if len(row) == 4 else 'sha256'
+            if checksum(path, algorithm) != row[2]:
+                raise RuntimeError('Conflicting source checksum for shared archive: ' + row[1])
+
+    # Multiple Debian revisions can share the same orig archive. One writer
+    # fetches it; each revision's recorded checksum is still verified.
     with ThreadPoolExecutor(max_workers=6) as pool:
-        list(pool.map(lambda task: collector.fetch(*task), tasks))
+        list(pool.map(fetch_shared_source, grouped.values()))
     return packages
 
 
@@ -473,6 +487,135 @@ def alpine_images_sources(collector, images):
     # Both application images share Alpine recipe/source paths; collect them
     # sequentially so a shared checksum-bound download has only one writer.
     return {service: alpine_sources(collector, image, service) for service, image in images.items()}
+
+
+def image_layer_databases(collector, archive_path, images, database_path, database_name):
+    """Copy one package database from every byte-verified original image layer."""
+    with tarfile.open(archive_path) as archive:
+        entries = json.load(archive.extractfile('manifest.json'))
+        layers, result = {}, {}
+        for service, image in images.items():
+            expected = image['RootFS']['Layers']
+            matches = []
+            for entry in entries:
+                configuration = json.load(archive.extractfile(entry['Config']))
+                if configuration['rootfs']['diff_ids'] == expected and configuration['config'] == image['Config']:
+                    matches.append(entry)
+            if len(matches) != 1 or len(matches[0]['Layers']) != len(expected):
+                raise RuntimeError('Layer archive does not uniquely describe the actual image: ' + service)
+            for index, name in enumerate(matches[0]['Layers']):
+                layers.setdefault(name, []).append((service, index, expected[index]))
+            result[service] = {'image_id': image['Id'], 'ordered_layers': expected, 'databases': []}
+
+    class HashedReader:
+        def __init__(self, stream):
+            self.stream, self.digest = stream, hashlib.sha256()
+
+        def read(self, size=-1):
+            content = self.stream.read(size)
+            self.digest.update(content)
+            return content
+
+    seen = set()
+    # Streaming twice over the existing archive avoids exporting/rebuilding images
+    # or repeatedly seeking backwards through a large compressed archive.
+    with tarfile.open(archive_path, 'r|*') as archive:
+        for member in archive:
+            if member.name not in layers:
+                continue
+            seen.add(member.name)
+            raw = io.BufferedReader(archive.extractfile(member))
+            stream = gzip.GzipFile(fileobj=raw) if raw.peek(2)[:2] == b'\x1f\x8b' else raw
+            hashed = HashedReader(stream)
+            databases = []
+            with tarfile.open(fileobj=hashed, mode='r|') as layer:
+                for item in layer:
+                    if item.name.lstrip('./') == database_path and item.isfile():
+                        databases.append(layer.extractfile(item).read())
+            while hashed.read(1024 * 1024):
+                pass
+            if any('sha256:' + hashed.digest.hexdigest() != identity[2] for identity in layers[member.name]):
+                raise RuntimeError('Layer bytes differ from the actual image diff-ID: ' + member.name)
+            for service, index, diff_id in layers[member.name]:
+                for content in databases:
+                    relative = f'runtime-provenance/{service}/historical-layers/{index}-{database_name}.txt'
+                    target = collector.root / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(content)
+                    result[service]['databases'].append({'layer_index': index, 'diff_id': diff_id,
+                        'path': relative, 'sha256': hashlib.sha256(content).hexdigest()})
+    if seen != layers.keys():
+        raise RuntimeError('Layer archive is incomplete')
+    if any(not row['databases'] for row in result.values()):
+        raise RuntimeError('No historical ' + database_name + ' database for the selected image')
+    return result
+
+
+def historical_debian_packages(collector, archive_path, image):
+    result = image_layer_databases(collector, archive_path, {'agent': image}, 'var/lib/dpkg/status', 'dpkg-status')['agent']
+    packages = {}
+    for database in result['databases']:
+        for package in paragraphs((collector.root / database['path']).read_text(encoding='utf-8')):
+            if package.get('Status') != 'install ok installed':
+                continue
+            source = re.fullmatch(r'(\S+)(?: \(([^)]+)\))?', package.get('Source', package['Package']))
+            row = {'package': package['Package'], 'version': package['Version'], 'source': source[1],
+                   'source_version': source[2] or package['Version']}
+            packages[(row['package'], row['version'], row['source_version'])] = row
+    result['packages'] = sorted(packages.values(), key=lambda row: (row['package'], row['version']))
+    result['archive_sha256'] = checksum(archive_path)
+    result['boundary'] = 'Every original Agent layer status database; exact Debian source versions are collected alongside any separately recorded downstream +trip patches.'
+    return result
+
+
+def historical_alpine_sources(collector, archive_path, images):
+    """Read APK identities from every actual base layer, including later whiteouts."""
+    result = image_layer_databases(collector, archive_path, images, 'lib/apk/db/installed', 'apk-installed')
+    origins = set()
+    busybox_lock = dict(line.split('=', 1) for line in
+                        (Path(__file__).resolve().parents[1] / 'deploy/images/busybox-backport/source.lock').read_text().splitlines())
+    for service, row in result.items():
+        versions = {}
+        for database in row['databases']:
+            for package in paragraphs((collector.root / database['path']).read_text(encoding='utf-8')):
+                identity = package['P'] + '=' + package['V']
+                package = {key: package.get(key) for key in ('P', 'V', 'L', 'o', 'c', 'm', 'U', 'A', 'C')}
+                if identity in versions and versions[identity] != package:
+                    raise RuntimeError('Conflicting historical APK identity: ' + identity)
+                versions[identity] = package
+        packages = list(versions.values())
+        missing = []
+        for package in packages:
+            if package['c']:
+                origins.add((package['o'], package['c']))
+            elif package['o'] == 'busybox' and package['P'] in {'busybox', 'busybox-binsh', 'ssl_client'}:
+                if package['V'] != busybox_lock['PACKAGE_VERSION'] + '-r0':
+                    raise RuntimeError('Unknown historical downstream BusyBox: ' + package['P'] + '=' + package['V'])
+            else:
+                missing.append(package)
+        if missing:
+            unknown = [package for package in missing if package['P'] not in NGINX_PACKAGES]
+            if unknown:
+                raise RuntimeError('Historical Alpine package lacks an immutable source recipe: '
+                                   + ', '.join(p['P'] + '=' + p['V'] for p in unknown))
+            environment = dict(value.split('=', 1) for value in images[service]['Config'].get('Env', []))
+            validate_official_nginx_packages(missing, environment)
+        row['packages'] = sorted(packages, key=lambda package: (package['P'], package['V']))
+    before = set(collector.downloads)
+    for origin, commit in sorted(origins):
+        vendored = origin == 'busybox' and commit == busybox_lock['APKBUILD_COMMIT']
+        alpine_recipe_sources(collector, origin, commit,
+                              busybox_lock['APKBUILD_SHA256'] if vendored else None,
+                              Path(__file__).resolve().parents[1] / 'deploy/images/busybox-backport/aports-busybox.tar.gz'
+                              if vendored else None)
+    # Newly discovered lower-layer components retain their own notices alongside
+    # the complete source archives; source-package labels do not replace them.
+    for relative in sorted(set(collector.downloads) - before):
+        path = collector.root / relative
+        if relative.startswith('alpine/') and tarfile.is_tarfile(path):
+            archive_notices(collector, path, 'historical-alpine-' + path.name)
+    return {'archive_sha256': checksum(archive_path), 'images': result,
+            'boundary': 'All exact original application-base layers and configuration, including packages removed or upgraded in later layers; input is a pre-seal Docker save archive.'}
 
 
 def java_sources(collector, image):
@@ -855,6 +998,8 @@ def main():
     for service in ('agent', 'backend', 'frontend'):
         parser.add_argument('--' + service, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--image-archive', type=Path, required=True,
+                        help='Pre-seal Docker save archive of the exact unwrapped candidate image inputs')
     parser.add_argument('--version', help='Also write container-sources-vX.Y.Z.zip after collection')
     args = parser.parse_args()
     if args.version and not re.fullmatch(r'v\d+\.\d+\.\d+', args.version):
@@ -865,9 +1010,11 @@ def main():
     images = {k: json.loads(run('docker', 'image', 'inspect', getattr(args, k)))[0] for k in ('agent', 'backend', 'frontend')}
     metadata = {'images': {k: {'id': v['Id'], 'layers': v['RootFS']['Layers'], 'labels': v['Config']['Labels']} for k, v in images.items()}}
     metadata['glibc_hardening'] = glibc_hardening_provenance(collector, images['agent']['Id'], root)
+    metadata['historical_debian'] = historical_debian_packages(collector, args.image_archive, images['agent'])
     with ThreadPoolExecutor(max_workers=3) as pool:
         jobs = {
-            pool.submit(apt_sources, collector, args.agent, 'debian', [('deb.debian.org', 'trixie'), ('deb.debian.org', 'trixie-updates'), ('security.debian.org', 'trixie-security')]): 'debian',
+            pool.submit(apt_sources, collector, args.agent, 'debian', [('deb.debian.org', 'trixie'), ('deb.debian.org', 'trixie-updates'), ('security.debian.org', 'trixie-security')],
+                        additional_packages=metadata['historical_debian']['packages']): 'debian',
             pool.submit(python_sources, collector, args.agent): 'python',
             pool.submit(alpine_images_sources, collector, {'backend': args.backend, 'frontend': args.frontend}): 'alpine',
             pool.submit(java_sources, collector, args.backend): 'java',
@@ -884,6 +1031,8 @@ def main():
                 print('Failed component: ' + name + ': ' + failures[name], flush=True)
         if failures:
             raise RuntimeError('Source collection incomplete: ' + json.dumps(failures))
+    metadata['historical_alpine'] = historical_alpine_sources(collector, args.image_archive,
+                                                            {key: images[key] for key in ('backend', 'frontend')})
     copy_project_sources(collector, root)
     metadata['downloads'] = dict(sorted(collector.downloads.items()))
     (collector.root / 'manifest.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

@@ -118,3 +118,14 @@ targetRules = ["generic-api-key"]
 paths = ['''(^|/)docs/evidence/schedule-fix-20261108/codeql/fe9807b/business-source\.diff$''']
 regexTarget = "secret"
 regexes = ['''^0123456789abcdefghijklmnopqrstuv$''']
+
+[[allowlists]]
+description = "Official Python release public GPG fingerprint in two exact frozen base64 image-config scan reports"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = [
+  '''(^|/)docs/evidence/runtime-support-security-20261110/receiver-(before|after)-sqlite-removal-grype\.json$''',
+  '''(^|/)docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review\.json$'''
+]
+regexTarget = "secret"
+regexes = ['''^7169605F62C751356D054A26A821E680E5FA6305$''']

@@ -1,0 +1,13 @@
+*
+!backend/
+!backend/scripts/
+!backend/scripts/operational_alert_receiver.py
+!backend/security/
+!backend/security/cpython-backports/
+!backend/security/cpython-backports/**
+!deploy/
+!deploy/images/
+!deploy/images/alert-receiver.Dockerfile
+!deploy/images/alert-receiver.Dockerfile.dockerignore
+!deploy/images/busybox-backport/
+!deploy/images/busybox-backport/**

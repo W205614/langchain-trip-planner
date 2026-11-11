@@ -1,0 +1,63 @@
+{
+  "image_id": "sha256:94c86df3050b7036d88b75c504b8eb5bc9d920936d02853f87e780d57ee9bd0d",
+  "policy_draft_sha256": "b7bde5c5b4aabe0d6875fa650cd0ccca18fbc6c3eb04b158e613d8e1c6dd2757",
+  "raw_sha256": "0b49e56f25430cae0eb81c678e127956438fd448bfe72452fc1dac531c6861b4",
+  "raw_findings": 3,
+  "fixed_findings": 3,
+  "blocking_findings": 0,
+  "package_count": 27,
+  "actual_elfs": 7,
+  "snapshot_source_label": "unknown",
+  "cli_source_verified": false,
+  "assessments": [
+    {
+      "id": "CVE-2025-15367",
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "id": "CVE-2026-116566",
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "id": "CVE-2026-103995",
+      "classification": "fixed_by_pinned_security_upgrade"
+    }
+  ],
+  "negative_controls": [
+    {
+      "carrier": "/usr/local/bin/python3.13",
+      "policy_without_hash_and_elf_rejected": "APK backport requires the exact reviewed Python primary/supporting ELF locations",
+      "missing_actual_hash_rejected": true,
+      "wrong_actual_hash_rejected": true,
+      "non_elf_actual_rejected": true
+    },
+    {
+      "carrier": "/usr/local/lib/libpython3.13.so.1.0",
+      "policy_without_hash_and_elf_rejected": "APK backport requires the exact reviewed Python primary/supporting ELF locations",
+      "missing_actual_hash_rejected": true,
+      "wrong_actual_hash_rejected": true,
+      "non_elf_actual_rejected": true
+    },
+    {
+      "carrier": "/usr/local/lib/python3.13/http/client.py",
+      "policy_without_hash_and_elf_rejected": "APK receiver backport must bind the actual socket, HTTP and POP3 patch carriers",
+      "missing_actual_hash_rejected": true,
+      "wrong_actual_hash_rejected": true,
+      "non_elf_actual_rejected": false
+    },
+    {
+      "carrier": "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so",
+      "policy_without_hash_and_elf_rejected": "APK receiver backport must bind the actual socket, HTTP and POP3 patch carriers",
+      "missing_actual_hash_rejected": true,
+      "wrong_actual_hash_rejected": true,
+      "non_elf_actual_rejected": true
+    },
+    {
+      "carrier": "/usr/local/lib/python3.13/poplib.py",
+      "policy_without_hash_and_elf_rejected": "APK receiver backport must bind the actual socket, HTTP and POP3 patch carriers",
+      "missing_actual_hash_rejected": true,
+      "wrong_actual_hash_rejected": true,
+      "non_elf_actual_rejected": false
+    }
+  ]
+}

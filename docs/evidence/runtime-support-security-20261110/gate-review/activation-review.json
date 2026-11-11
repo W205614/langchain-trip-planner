@@ -1,0 +1,59 @@
+{
+  "review_date": "2026-11-11",
+  "scope": "Add the fixed Alpine receiver APK contract and all-level runtime CI coverage; preserve original Debian and language VEX predicates.",
+  "tools_and_workflow": {
+    "tools/image_policy.py": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240",
+    "tools/security_gate.py": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea",
+    ".github/workflows/security.yml": "a833c6ced12a09b9090a1f9fa0bf4ab31b243b19647cb6f854c2afc3b6793318"
+  },
+  "changed_bindings": [
+    {
+      "policy": "vendor",
+      "source": "tools/image_policy.py",
+      "previous_lf_sha256": "5f2565a54111cbc502a7f63429eccc90355829e115d43ce39a20936647e0bb46",
+      "reviewed_lf_sha256": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240"
+    },
+    {
+      "policy": "vex",
+      "source": "tools/image_policy.py",
+      "previous_lf_sha256": "5f2565a54111cbc502a7f63429eccc90355829e115d43ce39a20936647e0bb46",
+      "reviewed_lf_sha256": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240"
+    },
+    {
+      "policy": "vendor",
+      "source": "tools/security_gate.py",
+      "previous_lf_sha256": "9bd6a6c2b106b0e79360d53e20dbe2795b5e72fea8038e9dae19a166a4e9d13e",
+      "reviewed_lf_sha256": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea"
+    },
+    {
+      "policy": "vex",
+      "source": "tools/security_gate.py",
+      "previous_lf_sha256": "9bd6a6c2b106b0e79360d53e20dbe2795b5e72fea8038e9dae19a166a4e9d13e",
+      "reviewed_lf_sha256": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea"
+    },
+    {
+      "policy": "vendor",
+      "source": ".github/workflows/security.yml",
+      "previous_lf_sha256": "eedf56f9eae6f7c34c1601fd7434e02382b6ea6b13cb0f260b2ddc1811195e54",
+      "reviewed_lf_sha256": "a833c6ced12a09b9090a1f9fa0bf4ab31b243b19647cb6f854c2afc3b6793318"
+    },
+    {
+      "policy": "vex",
+      "source": ".github/workflows/security.yml",
+      "previous_lf_sha256": "eedf56f9eae6f7c34c1601fd7434e02382b6ea6b13cb0f260b2ddc1811195e54",
+      "reviewed_lf_sha256": "a833c6ced12a09b9090a1f9fa0bf4ab31b243b19647cb6f854c2afc3b6793318"
+    }
+  ],
+  "existing_vendor_assessment_count": 197,
+  "existing_vendor_assessments_sha256": "93f84f70d48d2610b8fe211a68fc39434b19d16e9cf8d7a8920fde09208c260a",
+  "existing_language_vex_entries_sha256": "4345bc0607afb32e2cffcb21bc3a639564428e0ec8c39cf4a9cc33fe25346e45",
+  "receiver_assessment_count": 3,
+  "receiver_assessments_sha256": "5b42d66b6c1bbb9b882a06eefafdfaa089f78869569c8fe97c6ed735e635a2e8",
+  "evidence": [
+    "actual-receiver-contract.json",
+    "debian-and-agent-regression.json",
+    "direct-tests.log"
+  ],
+  "guards": "Fixed receiver Entrypoint/Cmd/User; exact APK P/V/A, Alpine release/architecture, five mandatory patch carriers and real ELF/hash/artifact-location checks. Source revision must equal HEAD; no receiver Python VEX or risk acceptance.",
+  "limitations": "This is actual stopped snapshot inventory and source/tool review, not a final source-labeled image CLI scan or CI success. The snapshot retains revision unknown. New official CodeQL analyses are required for the changed deploy tree."
+}

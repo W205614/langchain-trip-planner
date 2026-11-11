@@ -52,15 +52,23 @@ jobs:
           - service: postgres
             image: trip-security-postgres:${{ github.sha }}
             dockerfile: postgres.Dockerfile
+            context: deploy/images
           - service: caddy
             image: trip-security-caddy:${{ github.sha }}
             dockerfile: caddy.Dockerfile
+            context: deploy/images
           - service: prometheus
             image: trip-security-prometheus:${{ github.sha }}
             dockerfile: prometheus.Dockerfile
+            context: deploy/images
           - service: alertmanager
             image: trip-security-alertmanager:${{ github.sha }}
             dockerfile: alertmanager.Dockerfile
+            context: deploy/images
+          - service: alert-receiver
+            image: trip-security-alert-receiver:${{ github.sha }}
+            dockerfile: alert-receiver.Dockerfile
+            context: .
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
@@ -72,7 +80,8 @@ jobs:
         env:
           RUNTIME_IMAGE: ${{ matrix.image }}
           MONITOR_DOCKERFILE: ${{ matrix.dockerfile }}
-        run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --file "deploy/images/$MONITOR_DOCKERFILE" --tag "$RUNTIME_IMAGE" deploy/images
+          RUNTIME_BUILD_CONTEXT: ${{ matrix.context }}
+        run: docker build --pull --build-arg VCS_REF=${{ github.sha }} --file "deploy/images/$MONITOR_DOCKERFILE" --tag "$RUNTIME_IMAGE" "$RUNTIME_BUILD_CONTEXT"
       - name: Verify Caddy standard ACME and reverse proxy modules
         if: matrix.service == 'caddy'
         env:
@@ -95,10 +104,21 @@ jobs:
           docker run --rm --network none --read-only --entrypoint amtool -v "$PWD/deploy:/rules:ro" "$RUNTIME_IMAGE" check-config /rules/alertmanager.yml
           docker pull python:3.11-slim-trixie
           python tools/monitoring_image_smoke.py --image "$RUNTIME_IMAGE" --cleanup-owned-resources
+      - name: Verify installed receiver backports and isolated HTTP shutdown contracts
+        if: matrix.service == 'alert-receiver'
+        env:
+          RUNTIME_IMAGE: ${{ matrix.image }}
+        run: docker run --rm --network none --hostname receiver-smoke --add-host receiver-smoke:127.0.0.1 --read-only --tmpfs /tmp:rw,noexec,nosuid,size=32m,uid=1000,gid=1000 --cap-drop ALL --security-opt no-new-privileges:true --mount "type=bind,source=$PWD/deploy/images/tests/receiver_security_check.py,target=/proof.py,readonly" --entrypoint python "$RUNTIME_IMAGE" -B /proof.py
       - name: Scan the actual pulled immutable image ID
         env:
           RUNTIME_IMAGE: ${{ matrix.image }}
-        run: python tools/security_gate.py image --image "$RUNTIME_IMAGE" --reports security-reports/runtime-image
+          RUNTIME_SERVICE: ${{ matrix.service }}
+        run: |
+          if [ "$RUNTIME_SERVICE" = 'alert-receiver' ]; then
+            python tools/security_gate.py image --image "$RUNTIME_IMAGE" --all-severities --vendor-policy .github/security-vendor-policy-receiver.json --reports security-reports/runtime-image
+          else
+            python tools/security_gate.py image --image "$RUNTIME_IMAGE" --all-severities --reports security-reports/runtime-image
+          fi
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:

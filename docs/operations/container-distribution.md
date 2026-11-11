@@ -37,7 +37,7 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 
 ## 维护发布
 
-1. 从最终干净源码构建候选，运行必要的业务、浏览器和安全检查。通过 `tools/container_sources.py` 盘点候选的实际依赖并收集来源；随后运行 `tools/container_license_supplements.py --sources <收集目录> --bundle <输出目录>/container-sources-vX.Y.Z.zip`，补齐三个 wheel 的原始通知及原生 Rust 源码锁对应的来源和许可。前一步不传 `--version`，由补齐步骤生成最终 ZIP 和完整摘要清单，避免将尚未补齐通知的初步归档当作最终附件。补齐工具随源码和分发材料提供；下载不完整、摘要不符或来源缺失时停止发布。
+1. 从最终干净源码构建候选，运行必要的业务、浏览器和安全检查。先以 `docker image save --output <审计归档> <Agent镜像> <Java镜像> <前端镜像>` 导出三个未封装的实际输入；通过 `tools/container_sources.py --image-archive <审计归档> ...` 盘点实际依赖并收集来源。工具核对归档配置、全部有序层和解压层摘要，并收集各历史层 APK 或 dpkg 数据库所指向的来源；最终层中被替换或移除的组件也在分发材料范围内。该归档产生于许可封装之前，不依赖下一步 seal 的输出。随后运行 `tools/container_license_supplements.py --sources <收集目录> --bundle <输出目录>/container-sources-vX.Y.Z.zip`，补齐三个 wheel 的原始通知及原生 Rust 源码锁对应的来源和许可。收集步骤不传 `--version`，由补齐步骤生成最终 ZIP 和完整摘要清单，避免将初步归档当作最终附件。补齐工具随源码和分发材料提供；下载不完整、摘要不符或来源缺失时停止发布。
 2. 使用 `tools/container_release.py --version vX.Y.Z seal ...` 添加许可层并导出候选。该步骤核对源材料对应的应用层；对最终候选补验实际启动和流程，记录摘要。
 3. 最终提交的 CI 和 Security gates 全部通过后创建新的 Tag 和草稿 Release，将候选镜像归档、源码材料、manifest 和校验文件上传到草稿。核对草稿后发布，使对应源码先于 GHCR 镜像公开可取。
 4. 手动运行 `Publish validated application images`，填写该版本。工作流核对同一 SHA 的两条检查、Tag、正式 Release 及附件摘要，加载和推广同一镜像，不重新构建、不覆盖已有版本、不部署生产。下载公开附件只需 `contents: read`，工作流不获得仓库内容写权限。

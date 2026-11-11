@@ -1,0 +1,25 @@
+{
+  "historical_raw": 207,
+  "historical_policy_records": 197,
+  "source_bindings_reloaded_or_changed": false,
+  "ordered_results_identical": true,
+  "classifications": {
+    "None": 4,
+    "not_affected_component_absent": 118,
+    "fixed_by_pinned_security_upgrade": 64,
+    "not_affected_execution_path": 15,
+    "not_affected_build_configuration": 6
+  },
+  "dpkg_helpers_ast_unchanged": {
+    "bound_assessment_error": true,
+    "dpkg_inventory": true,
+    "exported_file_inventory": true,
+    "exported_requested_files": true
+  },
+  "vex_and_failure_helpers_ast_unchanged": {
+    "load_vex": true,
+    "contextual_not_affected": true,
+    "classify": true,
+    "image_document": true
+  }
+}

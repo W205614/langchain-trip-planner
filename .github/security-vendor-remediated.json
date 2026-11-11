@@ -71,8 +71,8 @@
     "docker-compose.production.yml": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
     "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java": "adef1c4dcabf75c49bf079bef80c4e22286379b4cae3425242450c5f9e03c38c",
     "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc",
-    "tools/image_policy.py": "5f2565a54111cbc502a7f63429eccc90355829e115d43ce39a20936647e0bb46",
-    "tools/security_gate.py": "9bd6a6c2b106b0e79360d53e20dbe2795b5e72fea8038e9dae19a166a4e9d13e",
+    "tools/image_policy.py": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240",
+    "tools/security_gate.py": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea",
     "backend/security/native-backports/build-glibc.sh": "0ecd4eab6eee3ceaaeca43f06b0bef1793652d0d3051ffa6ccfb85904590daeb",
     "backend/security/native-backports/build-inputs.sh": "b84ba4e746da5abd74316c0b72c3ba45616aaf1411c7e9f3795259d64c746d3b",
     "backend/security/native-backports/build-libstdcxx.sh": "c6e00212b7ea7db93b2820ebdd8c7d6fa18c37e3526a1144958fac53c3bf4407",
@@ -179,8 +179,13 @@
     "docs/evidence/native-security-20261110/documentation-binding-delta.json": "0128b7c855e4c73cf1ebfd45baad13238e0c4d4e75b3de3f0f3e679db1c0e396",
     "docs/evidence/native-security-20261110/pre-activation-review-readme.md": "2293df793b42435f236fa9e9703d36ac5062d0769aa4ff0bd5e0319cc831aae8",
     "tools/sarif_rules.py": "dbf1a07b1e9c749977e57a3ca5f0143e3717fda0d4ed0d880c33703936ebe5db",
-    ".github/workflows/security.yml": "eedf56f9eae6f7c34c1601fd7434e02382b6ea6b13cb0f260b2ddc1811195e54",
-    "docs/evidence/native-security-20261110/all-severity-scope-review.json": "26420794c46988c6b8bdd5f73773a20be3ca41875f44fb7bdc7361a6bac803a6"
+    ".github/workflows/security.yml": "a833c6ced12a09b9090a1f9fa0bf4ab31b243b19647cb6f854c2afc3b6793318",
+    "docs/evidence/native-security-20261110/all-severity-scope-review.json": "26420794c46988c6b8bdd5f73773a20be3ca41875f44fb7bdc7361a6bac803a6",
+    "docs/evidence/runtime-support-security-20261110/gate-review/activation-review.json": "a8fa28a70b61872b9e0ca436c7f8537817fc062a216522e6fd172b42116b588a",
+    "docs/evidence/runtime-support-security-20261110/gate-review/actual-receiver-contract.json": "03e28292eba59f7de2c9cee12f01bf62977cff877339f97d2603384744dd03d2",
+    "docs/evidence/runtime-support-security-20261110/gate-review/debian-and-agent-regression.json": "4907c885a3d12750cc28fa88dce7b13f91f9e8f9dda20c55383c486816ed4c4d",
+    "docs/evidence/runtime-support-security-20261110/gate-review/direct-tests.log": "28dc6b0ee0517956392fc0bfb6fce3d1aa4e2635e0f0bfb1a7886408983ffd2e",
+    "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc"
   },
   "assessments": [
     {

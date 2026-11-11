@@ -38,6 +38,8 @@ Python、Java 和前端依赖由各自的依赖管理器安装，版本依据 `b
 
 前端官方 NGINX 包与 Alpine aports 包分别记录来源。NGINX 核心、GeoIP、image-filter、XSLT 和 njs 保留实际安装的版权声明及官方固定 `pkg-oss` 配方；njs 所带 QuickJS 另保留其 MIT 声明。ACME 模块使用 Apache-2.0，Rust 依赖分别保留自己的许可、通知与锁定来源，不能按 APK 元数据中的通用 BSD 标签概括整个模块。源码材料保留这些官方源码、构建材料及 ACME `Cargo.lock` 对应的 registry 源档；系统共享库中适用 copyleft 的组件继续提供其 Alpine 对应源码，不将官方 NGINX 包伪记为 aports 提交，也不声称重现了上游发布平台的逐字节构建。
 
+OCI 镜像后续层移除或升级文件，不会删除较早层中实际分发的原始字节。源码收集因此同时读取候选归档中每个应用基础层的 APK 或 dpkg 数据库，按实际包版本及 aports 提交或准确 Debian 源版本保留原配方、摘要绑定的完整输入和适用通知；例如 Temurin 基础层中后来移除的 GNU coreutils、GnuPG 及其库，不能因最终 APK 数据库已无这些包而省略对应材料。不同 Debian 更新版本分别收集，项目 `+trip` 回补另保留其准确原始版本与补丁。`manifest.json` 的历史层记录与 `runtime-provenance/` 中的原始数据库保留此映射；未知来源或不匹配的层摘要会阻断收集。
+
 当前 PDF 渲染使用 [pypdfium2 5.15.0](https://pypi.org/project/pypdfium2/5.15.0/)。绑定提供 Apache-2.0 / BSD-3-Clause 许可选项，PDFium 及其捆绑组件适用各自条款，详见 [pypdfium2 上游许可说明](https://pypdfium2-team.github.io/pypdfium2/readme.html#licensing)。安装时保留官方 wheel 内的许可证和第三方声明；再次分发 wheel、容器或其他二进制前，应核对实际安装包的许可文件，不能把所有捆绑组件统称为 BSD 或 MIT。
 
 此前使用 PyMuPDF 的历史版本仍需按 [Artifex 的 AGPL / 商业双许可](https://pymupdf.readthedocs.io/en/latest/about.html#license-and-copyright)单独核对，不因当前替换依赖而自动改变历史版本的许可或免除既有义务。

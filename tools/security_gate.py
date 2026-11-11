@@ -256,6 +256,15 @@ def scan_repository(destination: Path, include_untracked=False):
 
 def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False,
           approval=None, runtime_proof=None, retained_inventory=None, source_mode=None, all_severities=False):
+    receiver_vendor = bool(vendor_policy and any('requires_apk' in row for row in vendor_policy.get('assessments', [])))
+    if receiver_vendor:
+        if policy is not None or approval is not None:
+            raise RuntimeError('Receiver backport verification forbids Python VEX and risk acceptance')
+        if (not vendor_policy.get('assessments')
+                or any(image_policy.assessment_package_manager(row) != 'apk'
+                       or image_policy.apk_assessment_error(vendor_policy, row)
+                       for row in vendor_policy['assessments'])):
+            raise RuntimeError('Receiver vendor policy lacks the exact fixed APK backport contract')
     if all_severities and approval:
         raise RuntimeError('All-severity release verification does not accept residual vulnerable findings')
     if source_mode is not None:
@@ -285,6 +294,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         raise RuntimeError('Failed/missing image scan cannot establish temporary risk acceptance; raw receipt retained')
     contextual = 0
     context_verified = False
+    receiver_context_verified = False
     if policy or vendor_policy:
         command_info = subprocess.run(['docker', 'image', 'inspect', '--format', '{{json .Config.Cmd}}', identity], capture_output=True, text=True, timeout=30)
         embedded_entrypoint = command_info.returncode == 0 and json.loads(command_info.stdout) == ['uvicorn', 'app.agent_api.main:app', '--host', '0.0.0.0', '--port', '9000', '--workers', '1']
@@ -298,6 +308,14 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
             context_verified = True
         if approval and not context_verified:
             raise RuntimeError('Risk acceptance requires the exact approved embedded Agent command and business source context')
+        if receiver_vendor:
+            configuration_info = subprocess.run(['docker', 'image', 'inspect', '--format',
+                '{"Entrypoint":{{json .Config.Entrypoint}},"Cmd":{{json .Config.Cmd}},"User":{{json .Config.User}}}', identity],
+                capture_output=True, text=True, timeout=30)
+            receiver_context_verified = (configuration_info.returncode == 0
+                and json.loads(configuration_info.stdout) == image_policy.APK_RECEIVER_CONFIGURATION
+                and command_info.returncode == 0 and json.loads(command_info.stdout) is None
+                and revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision)
         if context_verified and policy:
             for match in matches:
                 vulnerability = match.get('vulnerability', {})
@@ -312,7 +330,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
                        'not_affected_execution_path': 0, 'not_affected_build_configuration': 0}
     assessed = []
     acceptance_metadata = None
-    if vendor_policy and context_verified:
+    if vendor_policy and (receiver_context_verified if receiver_vendor else context_verified):
         scan_receipt = risk_acceptance.validate_scan_receipt(data, identity, scan_started) if approval else None
         evidence = image_policy.inventory(identity, vendor_policy, destination, cleanup_owned_resources,
                                           include_native_elf=approval is not None, retained_container=retained_inventory)
@@ -350,7 +368,8 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
              'vendor_policy_review_policy': vendor_policy.get('review_policy', 'time_limited') if vendor_policy else None,
              'unfixed_risk_accepted_findings': classifications['still_vulnerable_vendor_minor'],
              'risk_acceptance': acceptance_metadata,
-             'image_revision_context_verified': context_verified}]
+             'image_revision_context_verified': receiver_context_verified if receiver_vendor else context_verified,
+             'receiver_vendor_context_verified': receiver_context_verified}]
 
 
 def sarif(directory: Path, context=None, source_mode=None, language=None, all_severities=False):

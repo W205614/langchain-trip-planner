@@ -2,6 +2,7 @@
 import importlib.util
 import io
 import json
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -14,6 +15,102 @@ spec.loader.exec_module(gate)
 
 
 class GateFailureTests(unittest.TestCase):
+    def test_fixed_receiver_vendor_requires_actual_profile_and_exact_current_source(self):
+        from tools.tests.test_image_policy import AlpineBackportTests
+        policy, match, evidence = AlpineBackportTests().sample()
+        raw = {'source': {'type': 'image'}, 'matches': [match]}
+        good = gate.image_policy.APK_RECEIVER_CONFIGURATION
+        profiles = [good, {**good, 'User': '0'}, {**good, 'Entrypoint': ['sh']},
+                    {**good, 'Cmd': ['other']},
+                    {**good, 'Cmd': ['uvicorn', 'app.agent_api.main:app', '--host', '0.0.0.0', '--port', '9000', '--workers', '1']}]
+        for profile, revision in [(p, 'a' * 40) for p in profiles] + [(good, 'unknown')]:
+            def inspection(command, **kwargs):
+                field = command[-2]
+                if field == '{{json .Id}}': value = json.dumps('sha256:fixture')
+                elif field == '{{json .Config.Cmd}}': value = json.dumps(profile['Cmd'])
+                elif field.startswith('{{index .Config.Labels'): value = revision
+                else: value = json.dumps(profile)
+                return type('Inspection', (), {'returncode': 0, 'stdout': value})()
+            with self.subTest(profile=profile, revision=revision), tempfile.TemporaryDirectory() as name, \
+                 patch.object(gate, 'tool', return_value='grype'), patch.object(gate, 'run', return_value=2), \
+                 patch.object(gate, 'report', return_value=raw), \
+                 patch.object(gate.subprocess, 'run', side_effect=inspection), \
+                 patch.object(gate.subprocess, 'check_output', return_value='a' * 40), \
+                 patch.object(gate.image_policy, 'inventory', return_value=evidence) as inventory:
+                record = gate.image(Path(name), 'fixture', vendor_policy=policy, all_severities=True)[0]
+                valid = profile == good and revision == 'a' * 40
+                self.assertEqual('pass_vendor_policy' if valid else 'blocked_findings', record['status'])
+                self.assertEqual(valid, record['receiver_vendor_context_verified'])
+                self.assertEqual(valid, record['image_revision_context_verified'])
+                self.assertEqual(0 if valid else 1, record['blocking_findings'])
+                self.assertEqual(valid, inventory.called)
+                self.assertEqual(0, record['contextual_not_affected'])
+
+    def test_fixed_receiver_branch_forbids_python_vex_risk_acceptance_and_broad_policy(self):
+        from tools.tests.test_image_policy import AlpineBackportTests
+        policy, _, _ = AlpineBackportTests().sample()
+        for option in ({'policy': {}}, {'approval': {}}, {'approval': {'approved': True}}):
+            with self.subTest(option=option), patch.object(gate, 'tool') as tool, \
+                 self.assertRaisesRegex(RuntimeError, 'forbids Python VEX and risk acceptance'):
+                gate.image(Path('.'), 'fixture', vendor_policy=policy, **option)
+            self.assertFalse(tool.called)
+        bad = json.loads(json.dumps(policy)); bad['assessments'][0]['requires_image_configuration']['User'] = '0'
+        with patch.object(gate, 'tool') as tool, self.assertRaisesRegex(RuntimeError, 'exact fixed APK backport'):
+            gate.image(Path('.'), 'fixture', vendor_policy=bad)
+        self.assertFalse(tool.called)
+
+    def test_runtime_matrix_covers_existing_derivatives_and_receiver_root_context(self):
+        workflow = (gate.ROOT / '.github/workflows/security.yml').read_text(encoding='utf-8')
+        runtime = workflow.split('  runtime-image-scan:\n', 1)[1].split('\n  dependency-scan:', 1)[0]
+        entries = {}
+        for service, body in re.findall(r'^          - service: ([^\n]+)\n((?:            [^\n]+\n)+)', runtime, re.MULTILINE):
+            entries[service] = dict(re.findall(r'^            ([a-z_]+): ([^\n]+)$', body, re.MULTILINE))
+        expected = {'postgres', 'caddy', 'prometheus', 'alertmanager', 'alert-receiver'}
+        self.assertTrue(expected <= set(entries))
+        for service in expected:
+            with self.subTest(service=service):
+                self.assertEqual('.' if service == 'alert-receiver' else 'deploy/images', entries[service]['context'])
+                self.assertTrue((gate.ROOT / 'deploy/images' / entries[service]['dockerfile']).is_file())
+        self.assertIn('RUNTIME_BUILD_CONTEXT: ${{ matrix.context }}', runtime)
+        build = next(line for line in runtime.splitlines() if 'run: docker build ' in line)
+        self.assertIn('"$RUNTIME_BUILD_CONTEXT"', build)
+
+    def test_only_receiver_uses_its_fixed_vendor_policy_and_real_installed_runtime_probe(self):
+        workflow = (gate.ROOT / '.github/workflows/security.yml').read_text(encoding='utf-8')
+        runtime = workflow.split('  runtime-image-scan:\n', 1)[1].split('\n  dependency-scan:', 1)[0]
+        self.assertTrue((gate.ROOT / 'deploy/images/tests/receiver_security_check.py').is_file())
+        probe = runtime.split('      - name: Verify installed receiver backports', 1)[1].split('      - name: Scan ', 1)[0]
+        self.assertIn("if: matrix.service == 'alert-receiver'", probe)
+        for required in ('--network none', '--hostname receiver-smoke', '--add-host receiver-smoke:127.0.0.1',
+                         '--read-only', '--cap-drop ALL', 'no-new-privileges:true', 'target=/proof.py,readonly', '-B /proof.py'):
+            self.assertIn(required, probe)
+        branch = runtime.split("if [ \"$RUNTIME_SERVICE\" = 'alert-receiver' ]; then", 1)[1].split('          fi', 1)[0]
+        receiver, other = branch.split('          else', 1)
+        self.assertIn('--vendor-policy .github/security-vendor-policy-receiver.json', receiver)
+        self.assertNotIn('--vex', receiver)
+        self.assertNotIn('--risk-acceptance', receiver)
+        self.assertNotIn('--vendor-policy', other)
+        self.assertIn('--all-severities', other)
+
+    def test_all_release_workflow_scanner_call_sites_declare_all_severities(self):
+        found = {'image': [], 'dependencies': [], 'sarif': []}
+        folder = gate.ROOT / '.github/workflows'
+        for workflow in [*folder.glob('*.yml'), *folder.glob('*.yaml')]:
+            text = workflow.read_text(encoding='utf-8').replace('\\\n', ' ')
+            for number, line in enumerate(text.splitlines(), 1):
+                if line.lstrip().startswith('#'):
+                    continue
+                match = re.search(r'\btools/security_gate\.py\s+(image|dependencies|sarif)\b', line)
+                if match:
+                    mode = match.group(1)
+                    with self.subTest(workflow=workflow.name, line=number, mode=mode):
+                        self.assertIn('--all-severities', line[match.start():].split())
+                    found[mode].append((workflow.name, number))
+        # The runtime scan and both application branches must remain covered.
+        self.assertGreaterEqual(len(found['image']), 3)
+        self.assertTrue(found['dependencies'])
+        self.assertTrue(found['sarif'])
+
     def test_npm_low_report_blocks_all_mode_even_with_successful_cli_exit(self):
         documents = [
             {'dependencies': [{'name': 'fixture', 'version': '1', 'vulns': []}]},

@@ -1,0 +1,28 @@
+{
+  "review_date": "2026-11-11",
+  "kind": "public_release_signing_key_fingerprint_not_an_API_credential",
+  "official_source": "https://github.com/docker-library/python/blob/master/3.13/alpine3.24/Dockerfile",
+  "observed_official_lines": {
+    "GPG_KEY": "7169605F62C751356D054A26A821E680E5FA6305",
+    "PYTHON_VERSION": "3.13.18",
+    "PYTHON_SHA256": "abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68"
+  },
+  "observations": [
+    {
+      "report": "docs/evidence/runtime-support-security-20261110/receiver-before-sqlite-removal-grype.json",
+      "original_report_sha256": "cf7469bc2e2d1b407f0cf7864c3a0c717a958b3da2dd02dfaa84d6d55700ed13",
+      "decoded_public_fingerprint": "7169605F62C751356D054A26A821E680E5FA6305",
+      "encoding": "Grype embeds the unmodified public image config as base64; Gitleaks reports decoded:base64/depth1"
+    },
+    {
+      "report": "docs/evidence/runtime-support-security-20261110/receiver-after-sqlite-removal-grype.json",
+      "original_report_sha256": "0b49e56f25430cae0eb81c678e127956438fd448bfe72452fc1dac531c6861b4",
+      "decoded_public_fingerprint": "7169605F62C751356D054A26A821E680E5FA6305",
+      "encoding": "Grype embeds the unmodified public image config as base64; Gitleaks reports decoded:base64/depth1"
+    }
+  ],
+  "original_gitleaks_findings_retained": 4,
+  "calibration": "Only generic-api-key AND the exact two raw-report paths or this exact review path AND the literal 40-hex public fingerprint. No rule/directory disable, raw report rewrite or arbitrary-key allowance.",
+  "boundary": "The value is the official public source-release signature verification fingerprint, visible in the pinned Python base image; it is not a private signing key or a service secret.",
+  "followup_review": "The initial review filename included the word key, making its document SHA in three source-binding maps look like an API key. Rename this fingerprint-only document; retain both redacted failed scanner reports."
+}

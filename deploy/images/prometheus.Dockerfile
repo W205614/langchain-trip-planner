@@ -1,7 +1,14 @@
 # Official Prometheus source and UI, with only the x/net security dependency raised.
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS busybox-security
+RUN apk upgrade --no-cache \
+    && apk add --no-cache alpine-sdk linux-headers openssl-dev utmps-dev utmps-static perl zip
+COPY busybox-backport /trip-busybox
+RUN sh /trip-busybox/build.sh
+
 FROM prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06 AS upstream
 FROM golang:1.27.3-alpine AS build
-ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOWORK=off GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org
+# The local build proxy truncates Go HTTP/2 downloads; this affects build fetches only.
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOWORK=off GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org GODEBUG=http2client=0
 WORKDIR /src
 ADD --checksum=sha256:5691de55569c79ac40b5ddef0336cfd13f8b50ae85e541f401af16be45b9a270 https://codeload.github.com/prometheus/prometheus/tar.gz/e2e28adeee2c5883d000fc82aca6008cfbf7e96d /tmp/source.tar.gz
 RUN tar -xzf /tmp/source.tar.gz --strip-components=1 -C /src
@@ -28,6 +35,8 @@ FROM alpine:3.24
 RUN apk upgrade --no-cache && apk add --no-cache ca-certificates tzdata \
     && mkdir -p /prometheus /etc/prometheus \
     && chown -R 65534:65534 /prometheus /etc/prometheus && chmod g+w /prometheus
+COPY --from=busybox-security /out/ /tmp/trip-busybox/
+RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
 COPY --from=build /out/prometheus /bin/prometheus
 COPY --from=build /out/promtool /bin/promtool
 COPY --from=upstream /etc/prometheus/prometheus.yml /etc/prometheus/prometheus.yml

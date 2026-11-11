@@ -8,7 +8,8 @@
   "dependency_patches": {
     "golang.org/x/net": "v0.60.0",
     "google.golang.org/grpc": "v1.83.2",
-    "github.com/klauspost/compress": "v1.20.3"
+    "github.com/klauspost/compress": "v1.20.3",
+    "go.opentelemetry.io/otel": "v1.45.0"
   },
   "additional_minimum_version_selection": {
     "golang.org/x/crypto": "v0.57.0",
@@ -16,11 +17,12 @@
     "golang.org/x/sync": "v0.23.0",
     "golang.org/x/sys": "v0.48.0",
     "golang.org/x/text": "v0.42.0",
-    "go_directive": "1.26.0"
+    "go_directive": "1.26.0",
+    "otel_family": "v1.45.0"
   },
   "lock_sha256": {
-    "alertmanager.go.mod": "d5bd317913734f2dca7411cce7bf66db10157dc2fabe054a2cceb4b33714ec1b",
-    "alertmanager.go.sum": "82bc73c1783fb20254370add212a40a9d057061729604b31805dbdffc4540401"
+    "alertmanager.go.mod": "210431ee24c7df9f33ddeddbdf2e4585764448c000816acae77cee8334a9715d",
+    "alertmanager.go.sum": "c9f5032e1af984ed3220fe8e205b88823f30ca79f6e0fba0447fe3cfeb980d95"
   },
   "prometheus": {
     "version": "3.16.0",
