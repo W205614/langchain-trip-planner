@@ -69,12 +69,27 @@ def verify_source_bundle(path, manifest, project_archive):
             require(sums.get(name) == row['sha256'], 'Source download record differs from bundled bytes: ' + name)
         project = [name for name in names if name.startswith('project/')]
         require(bool(project), 'Source bundle contains no project rebuild materials')
+        tag_names = set(tag.namelist())
+        normalized = []
         for name in project:
             relative = name.removeprefix('project/')
-            require(relative in tag.namelist() and archive.read(name) == tag.read(relative),
-                    'Bundled project source differs from the canonical Tag: ' + relative)
+            message = 'Bundled project source differs from the canonical Tag: ' + relative
+            require(relative in tag_names, message)
+            bundled, committed = archive.read(name), tag.read(relative)
+            if bundled != committed:
+                # Windows source collection can retain CRLF; inner hashes still bind raw bytes.
+                require(b'\0' not in bundled and b'\0' not in committed, message)
+                try:
+                    bundled.decode('utf-8')
+                    committed.decode('utf-8')
+                except UnicodeDecodeError:
+                    raise RuntimeError(message) from None
+                require(bundled.replace(b'\r\n', b'\n') == committed.replace(b'\r\n', b'\n'), message)
+                normalized.append(relative)
         return {'members': len(names), 'source_downloads': len(source['downloads']),
-                'all_inner_hashes_verified': True, 'zip_crc_passed': True, 'project_files_match_tag': True}
+                'all_inner_hashes_verified': True, 'zip_crc_passed': True, 'project_files_match_tag': True,
+                'project_comparison': 'exact_bytes_or_utf8_non_nul_crlf_to_lf',
+                'project_crlf_normalized_files': normalized}
 
 
 def private_source_path(name):

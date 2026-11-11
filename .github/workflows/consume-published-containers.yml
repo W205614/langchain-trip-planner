@@ -1,0 +1,58 @@
+name: Anonymous published container consumer
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Immutable public Release version (vX.Y.Z)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trip-container-public-consumer
+  cancel-in-progress: false
+
+jobs:
+  consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Resolve the immutable published Tag source
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python - <<'PY'
+          import os, re, subprocess
+          version = os.environ['VERSION']
+          if not re.fullmatch(r'v\d+\.\d+\.\d+', version):
+              raise RuntimeError('Version must be vX.Y.Z')
+          source = subprocess.check_output(['git', 'rev-parse', '--verify', f'refs/tags/{version}^{{commit}}'], text=True).strip()
+          if not re.fullmatch(r'[a-f0-9]{40}', source):
+              raise RuntimeError('Published Tag must resolve to one full commit SHA')
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as environment:
+              environment.write('PUBLISHED_SOURCE=' + source + '\n')
+          print('Immutable published Tag source: ' + source)
+          PY
+      - name: Acquire public assets and images without credentials
+        env:
+          VERSION: ${{ inputs.version }}
+        run: python tools/public_container_consumer.py --version "$VERSION" --source "$PUBLISHED_SOURCE"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: anonymous-public-consumer-only
+          path: consumer-evidence/
+          retention-days: 14
