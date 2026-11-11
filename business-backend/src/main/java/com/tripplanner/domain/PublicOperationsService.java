@@ -82,11 +82,12 @@ public class PublicOperationsService {
   }
   public Object respond(long actor,long id,int version,String status,String reply,String requestId) {
     if(version<1||!Set.of("open","processing","closed").contains(status)||reply.length()>3000||status.equals("closed")&&reply.isBlank())throw new ApiException(422,"反馈状态、版本或回复无效");
+    int nextVersion=TripRequests.nextVersion(version);
     return tx.execute(s->{
-      if(db.update("UPDATE user_feedback SET status=?,reply=?,replied_by=?,version=version+1,updated_at=timezone('UTC',now()) WHERE id=? AND version=?",status,reply.strip(),actor,id,version)!=1)
+      if(db.update("UPDATE user_feedback SET status=?,reply=?,replied_by=?,version=?,updated_at=timezone('UTC',now()) WHERE id=? AND version=?",status,reply.strip(),actor,nextVersion,id,version)!=1)
         throw new ApiException(409,"反馈已被其他管理员更新，请刷新","VERSION_CONFLICT");
-      audit.success(actor,"feedback.responded","feedback",id,version+1,requestId);
-      return Map.of("success",true,"version",version+1);
+      audit.success(actor,"feedback.responded","feedback",id,nextVersion,requestId);
+      return Map.of("success",true,"version",nextVersion);
     });
   }
 }

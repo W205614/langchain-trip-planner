@@ -121,7 +121,10 @@ class PublicOperationsIntegrationTest {
     long uid=user(false),other=user(false),admin=user(true),foreign=trip(other,"他人反馈关联不能泄露");
     assertEquals(404,assertThrows(ApiException.class,()->operations.createFeedback(uid,"planning","主题","内容",foreign,null,"")).status);
     @SuppressWarnings("unchecked") var created=(Map<String,Object>)operations.createFeedback(uid,"planning","主题","内容",null,null,"request-42");
-    long id=((Number)created.get("id")).longValue();operations.respond(admin,id,1,"closed","已处理","ops");
+    long id=((Number)created.get("id")).longValue();
+    @SuppressWarnings("unchecked") var updated=(Map<String,Object>)operations.respond(admin,id,1,"closed","已处理","ops");
+    assertEquals(2,updated.get("version"));
+    assertEquals(2,db.queryForObject("SELECT version FROM user_feedback WHERE id=?",Integer.class,id));
     assertEquals("VERSION_CONFLICT",assertThrows(ApiException.class,()->operations.respond(admin,id,1,"processing","旧版本","ops")).code);
     String credential=tokens.issue(users.byId(uid));var client=HttpClient.newHttpClient();
     var response=client.send(HttpRequest.newBuilder(URI.create("http://localhost:"+port+"/api/admin/operations/users")).header("Authorization","Bearer "+credential).GET().build(),HttpResponse.BodyHandlers.ofString());
@@ -130,6 +133,23 @@ class PublicOperationsIntegrationTest {
     assertEquals(403,response.statusCode());
     response=client.send(HttpRequest.newBuilder(URI.create("http://localhost:"+port+"/api/feedback")).header("Authorization","Bearer "+credential).GET().build(),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());assertTrue(response.body().contains("已处理"));assertFalse(response.body().contains("他人反馈关联不能泄露"));
+  }
+
+  @Test void feedbackVersionLimitRejectsWithoutChangingDataOrAudit() {
+    long uid=user(false),admin=user(true);
+    @SuppressWarnings("unchecked") var created=(Map<String,Object>)operations.createFeedback(uid,"planning","版本边界","隔离测试",null,null,"version-boundary");
+    long id=((Number)created.get("id")).longValue();
+    db.update("UPDATE user_feedback SET version=? WHERE id=?",Integer.MAX_VALUE-1,id);
+    @SuppressWarnings("unchecked") var updated=(Map<String,Object>)operations.respond(admin,id,Integer.MAX_VALUE-1,"processing","最后可用版本","version-boundary");
+    assertEquals(Integer.MAX_VALUE,updated.get("version"));
+    assertEquals(Integer.MAX_VALUE,db.queryForObject("SELECT version FROM user_feedback WHERE id=?",Integer.class,id));
+    assertEquals(Integer.MAX_VALUE,db.queryForObject("SELECT resource_version FROM business_audit_events WHERE action='feedback.responded' AND resource_id=?",Integer.class,Long.toString(id)));
+    var before=db.queryForMap("SELECT status,reply,replied_by,version,updated_at FROM user_feedback WHERE id=?",id);
+    long audits=db.queryForObject("SELECT count(*) FROM business_audit_events WHERE resource_type='feedback' AND resource_id=?",Long.class,Long.toString(id));
+    var invalid=assertThrows(ApiException.class,()->operations.respond(admin,id,Integer.MAX_VALUE,"closed","不能写入","version-boundary"));
+    assertEquals(422,invalid.status);assertEquals("INVALID_VERSION",invalid.code);
+    assertEquals(before,db.queryForMap("SELECT status,reply,replied_by,version,updated_at FROM user_feedback WHERE id=?",id));
+    assertEquals(audits,db.queryForObject("SELECT count(*) FROM business_audit_events WHERE resource_type='feedback' AND resource_id=?",Long.class,Long.toString(id)));
   }
 
   @Test void exportContainsOnlyOwnedDataAndActualOriginalBytes() throws Exception {
