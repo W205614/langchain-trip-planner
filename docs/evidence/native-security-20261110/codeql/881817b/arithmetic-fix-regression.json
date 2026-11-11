@@ -1,0 +1,130 @@
+{
+  "source": "881817b01cf778da6b546197d85af0534922428f",
+  "before_full_analysis_source": "ad28553bb94eb4a08aa4067cbcc07d74498ce455",
+  "before_raw_java": 13,
+  "after_full_analysis_raw_java": 11,
+  "fixed_rule": "java/tainted-arithmetic",
+  "fixed_findings": [
+    {
+      "locations": [
+        {
+          "physicalLocation": {
+            "artifactLocation": {
+              "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+              "uriBaseId": "%SRCROOT%",
+              "index": 0
+            },
+            "region": {
+              "startLine": 88,
+              "startColumn": 62,
+              "endColumn": 71
+            }
+          }
+        }
+      ],
+      "message": {
+        "text": "This arithmetic expression depends on a [user-provided value](1), potentially causing an overflow."
+      }
+    },
+    {
+      "locations": [
+        {
+          "physicalLocation": {
+            "artifactLocation": {
+              "uri": "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+              "uriBaseId": "%SRCROOT%",
+              "index": 0
+            },
+            "region": {
+              "startLine": 89,
+              "startColumn": 46,
+              "endColumn": 55
+            }
+          }
+        }
+      ],
+      "message": {
+        "text": "This arithmetic expression depends on a [user-provided value](1), potentially causing an overflow."
+      }
+    }
+  ],
+  "before_artifact": {
+    "id": 13826235451,
+    "name": "security-codeql-java-kotlin",
+    "size_in_bytes": 121642,
+    "url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13826235451",
+    "archive_download_url": "https://api.github.com/repos/W205614/langchain-trip-planner/actions/artifacts/13826235451/zip",
+    "expired": false,
+    "created_at": "2026-11-11T03:27:44Z",
+    "expires_at": "2026-11-25T03:27:44Z",
+    "updated_at": "2026-11-11T03:27:44Z",
+    "digest": "sha256:3cc078d7c799504c77156808db933e58eafee45c631ab128993b611e4187a3d4",
+    "workflow_run": {
+      "id": 42952707970,
+      "repository_id": 1346935542,
+      "head_repository_id": 1346935542,
+      "head_branch": "main",
+      "head_sha": "ad28553bb94eb4a08aa4067cbcc07d74498ce455"
+    },
+    "language": "java",
+    "verified_zip_sha256": "3cc078d7c799504c77156808db933e58eafee45c631ab128993b611e4187a3d4",
+    "members": [
+      {
+        "path": "java.sarif",
+        "size": 1162335,
+        "sha256": "53c8d02222d7a09e1f667301f90203a1baecd2b6a423a47ee98f8c4e60e98985"
+      },
+      {
+        "path": "sarif-summary.json",
+        "size": 11701,
+        "sha256": "e67cdfff192224fd1209fffe47b153747c720ee88e4c9d56de1f11c215db43d6"
+      }
+    ]
+  },
+  "fix": "PublicOperationsService.respond computes TripRequests.nextVersion before transaction. The exact checked value is bound to SQL UPDATE, audit and return. Upper bound is rejected with422/INVALID_VERSION; stale writable version remains409.",
+  "test_command": [
+    "cmd.exe",
+    "/d",
+    "/c",
+    "E:\\project\\langchain-trip-planner\\business-backend\\mvnw.cmd",
+    "-B",
+    "-ntp",
+    "-f",
+    "business-backend/pom.xml",
+    "-Dtest=PublicOperationsIntegrationTest#feedbackValidatesOwnershipAndUsesVersionsAndHttpAdminBoundary+feedbackVersionLimitRejectsWithoutChangingDataOrAudit,TripRequestsTest",
+    "test"
+  ],
+  "test_reports": [
+    {
+      "name": "com.tripplanner.PublicOperationsIntegrationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "13.41",
+      "cases": [
+        "feedbackVersionLimitRejectsWithoutChangingDataOrAudit",
+        "feedbackValidatesOwnershipAndUsesVersionsAndHttpAdminBoundary"
+      ]
+    },
+    {
+      "name": "com.tripplanner.domain.TripRequestsTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.446",
+      "cases": [
+        "normalizesPlanningFactsAndRejectsTooManyRooms",
+        "advancesVersionsWithoutWrappingClientInput",
+        "splitsDeduplicatesAndRejectsConflictingNames",
+        "publicInputCannotSmuggleExecutionMetadata",
+        "rejectsImpossibleDatesAndMismatchedDayCounts"
+      ]
+    }
+  ],
+  "isolated_postgresql_image": "sha256:889da19d2b6f7e9497180773de534ee85b597f1deb5be57fbada01f99af0f680",
+  "scope": "Fresh PostgreSQL fixture with synthetic users/feedback only; no mounted daily data or supplier configuration.",
+  "fixture_stopped": true,
+  "boundary": "Seven selected real tests passed; two integration methods use fresh isolated PostgreSQL and existing AgentClient isolation. No supplier or daily-data validation is claimed. Two actual findings were repaired, not dismissed."
+}

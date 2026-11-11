@@ -1,0 +1,27 @@
+{
+  "predecessor_source": "c54ae53a8bb92c2241a598aac4047d929c07c77e",
+  "reviewed_source": "881817b01cf778da6b546197d85af0534922428f",
+  "changed_business_paths": [
+    "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java",
+    "business-backend/src/test/java/com/tripplanner/PublicOperationsIntegrationTest.java"
+  ],
+  "unchanged_full_directories": [
+    "backend",
+    "frontend",
+    "deploy",
+    "contracts"
+  ],
+  "changed_supporting_source_fingerprints": [
+    "business-backend/src/main/java/com/tripplanner/domain/PublicOperationsService.java"
+  ],
+  "supporting_source_count": 106,
+  "flow_count": 44,
+  "same_complete_ordered_flow_sets": 11,
+  "raw_result_delta": "The only result-object difference fromc54 is rule.toolComponent.index1 to0. References resolve to identical complete rules. Fresh raw hashes are recorded; policy loader or semantic equivalence was not widened.",
+  "source_review": "All eleven exact GET methods, fixed status-path early returns, actor resolution, concrete Operation dispatch, four full flows each and cookie/header CSRF boundary rechecked. PublicOperationsService feedback response is an unsafe admin operation, not a safe-GET route. Only that response version arithmetic and its direct tests changed.",
+  "coverage_change": "PRc54 was diff-informed; mainad was full and revealed two genuine arithmetic findings on otherwise unchanged five business trees. Those were repaired before main881 full analysis. Both the original raw13 and new raw11 are retained.",
+  "fixed_real_findings": 2,
+  "context_false_positives": 11,
+  "risk_accepted": 0,
+  "new_platform_dismissals": 0
+}

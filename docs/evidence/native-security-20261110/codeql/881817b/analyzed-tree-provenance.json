@@ -1,0 +1,41 @@
+{
+  "requested_head_revision": "881817b01cf778da6b546197d85af0534922428f",
+  "artifact_workflow_head_sha": "881817b01cf778da6b546197d85af0534922428f",
+  "actual_log_verified_checkout": {
+    "java": "881817b01cf778da6b546197d85af0534922428f",
+    "python": "881817b01cf778da6b546197d85af0534922428f",
+    "javascript": "881817b01cf778da6b546197d85af0534922428f",
+    "actions": "881817b01cf778da6b546197d85af0534922428f"
+  },
+  "actual_analyzed_commit": "881817b01cf778da6b546197d85af0534922428f",
+  "analyzed_full_git_tree": "205af4d5a411999a6b4b7bf9d2ad16b6f9550f66",
+  "five_business_trees": {
+    "backend": {
+      "previous": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b",
+      "reviewed": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b",
+      "actual_analyzed": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b"
+    },
+    "business-backend": {
+      "previous": "a664d99b96d7369fdff2ba5c7f70115bbdf213a9",
+      "reviewed": "1dfb2034bfb496ca5a99e54940ac5d8ab1dfc3f3",
+      "actual_analyzed": "1dfb2034bfb496ca5a99e54940ac5d8ab1dfc3f3"
+    },
+    "frontend": {
+      "previous": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96",
+      "reviewed": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96",
+      "actual_analyzed": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96"
+    },
+    "deploy": {
+      "previous": "12cdbc46ad227228ddfa86b8292b388de0716907",
+      "reviewed": "12cdbc46ad227228ddfa86b8292b388de0716907",
+      "actual_analyzed": "12cdbc46ad227228ddfa86b8292b388de0716907"
+    },
+    "contracts": {
+      "previous": "b054131d898b536495bf7623bded73893ad812ef",
+      "reviewed": "b054131d898b536495bf7623bded73893ad812ef",
+      "actual_analyzed": "b054131d898b536495bf7623bded73893ad812ef"
+    }
+  },
+  "coverage": "Full main analysis for all four languages. No incrementalMode and no pr-diff-range extension; main Java job explicitly reports no diff-informed analysis.",
+  "boundary": "This is the actual main commit, not a PR merge substitute. Later evidence-only commits still require their actual final CI and source-equivalence checks."
+}

@@ -1,0 +1,2 @@
+2026-11-11T03:44:36.9202776Z Security gate unavailable: RuntimeError: CodeQL business source tree changed: business-backend
+2026-11-11T03:44:36.9317479Z ##[error]Process completed with exit code 2.
