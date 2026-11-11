@@ -1,0 +1,41 @@
+{
+  "predecessor": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce",
+  "reviewed_source": "c54ae53a8bb92c2241a598aac4047d929c07c77e",
+  "changed_business_paths": [
+    "deploy/images/.dockerignore",
+    "deploy/images/alert-receiver.Dockerfile",
+    "deploy/images/alert-receiver.Dockerfile.dockerignore",
+    "deploy/images/alertmanager.Dockerfile",
+    "deploy/images/alertmanager.go.mod",
+    "deploy/images/alertmanager.go.sum",
+    "deploy/images/caddy.Dockerfile",
+    "deploy/images/monitoring-source.lock.json",
+    "deploy/images/postgres.Dockerfile",
+    "deploy/images/prometheus.Dockerfile",
+    "deploy/images/tests/receiver_security_check.py"
+  ],
+  "unchanged_full_directories": [
+    "backend",
+    "business-backend",
+    "frontend",
+    "contracts"
+  ],
+  "change_review": [
+    "PostgreSQL runtime keeps upstream PostgreSQL17.11 and server entrypoint; adds verified BusyBox and official gosu1.20 rebuilt from checksum-pinned source.",
+    "Prometheus/Alertmanager/Caddy keep their service roles, signed build inputs and standard entrypoints; BusyBox security derivative and reviewed OTel modules change native/runtime content, not Java safe-GET handlers.",
+    "Receiver Dockerfile reuses the exact unchanged canonical stdlib HTTP script and three CPython backports; its private data mounts are not included in the source context. The new isolated stdlib proof is deployment test code.",
+    "No Java controller, concrete lambda/callback receiver, authenticated actor resolution, Spring cookie/header CSRF filter, Python capability route or frontend authentication source changed.",
+    "Binary safety, corresponding-source closure, runtime compatibility, provider tests and daily upgrade acceptance remain separate from this CodeQL source/trace result."
+  ],
+  "all_supporting_source_fingerprints_unchanged_from_previous": true,
+  "flow_count": 44,
+  "same_complete_result_objects": 11,
+  "raw_results": {
+    "java": 11,
+    "python": 0,
+    "javascript": 0,
+    "actions": 0
+  },
+  "risk_accepted": 0,
+  "new_platform_dismissals": 0
+}

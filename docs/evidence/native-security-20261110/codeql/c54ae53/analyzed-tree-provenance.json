@@ -1,0 +1,45 @@
+{
+  "requested_head_revision": "c54ae53a8bb92c2241a598aac4047d929c07c77e",
+  "artifact_workflow_head_sha": "c54ae53a8bb92c2241a598aac4047d929c07c77e",
+  "actual_log_verified_checkout": {
+    "java": "af570655d56b1fde0832e1d1ee8d0d8785d695ff",
+    "python": "af570655d56b1fde0832e1d1ee8d0d8785d695ff",
+    "javascript": "af570655d56b1fde0832e1d1ee8d0d8785d695ff",
+    "actions": "af570655d56b1fde0832e1d1ee8d0d8785d695ff"
+  },
+  "actual_analyzed_merge_commit": "af570655d56b1fde0832e1d1ee8d0d8785d695ff",
+  "merge_parents": [
+    "252c8019ce002ff26157c53a40b14ad6832b8afc",
+    "c54ae53a8bb92c2241a598aac4047d929c07c77e"
+  ],
+  "analyzed_full_git_tree": "fb38cb1efd32568908ec52770076cf909d3de031",
+  "head_full_git_tree_equal": true,
+  "five_business_trees": {
+    "backend": {
+      "previous": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b",
+      "reviewed": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b",
+      "analyzed_merge": "d811e7d59c30a3ab35d58ca12d3e7df3809e768b"
+    },
+    "business-backend": {
+      "previous": "a664d99b96d7369fdff2ba5c7f70115bbdf213a9",
+      "reviewed": "a664d99b96d7369fdff2ba5c7f70115bbdf213a9",
+      "analyzed_merge": "a664d99b96d7369fdff2ba5c7f70115bbdf213a9"
+    },
+    "frontend": {
+      "previous": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96",
+      "reviewed": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96",
+      "analyzed_merge": "d17b7ec0ad6a983a043203f973d75a3a4a16fa96"
+    },
+    "deploy": {
+      "previous": "ef8b36945c79a3cd85bd88aef4725b400234a44f",
+      "reviewed": "12cdbc46ad227228ddfa86b8292b388de0716907",
+      "analyzed_merge": "12cdbc46ad227228ddfa86b8292b388de0716907"
+    },
+    "contracts": {
+      "previous": "b054131d898b536495bf7623bded73893ad812ef",
+      "reviewed": "b054131d898b536495bf7623bded73893ad812ef",
+      "analyzed_merge": "b054131d898b536495bf7623bded73893ad812ef"
+    }
+  },
+  "boundary": "Official Actions analyzed the PR merge object, not the head commit object. Their entire Git trees are identical; source/trace review is attached to the requested c54 source tree."
+}
