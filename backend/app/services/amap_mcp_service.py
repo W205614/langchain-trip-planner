@@ -109,7 +109,10 @@ class AmapMCPService(AmapService):
                         continue
                 except TimeoutError:
                     raise
-                except (AmapMCPError, ValueError, TypeError, ValidationError):
+                except AmapMCPError:
+                    logger.warning("MCP POI 详情查询失败，已跳过该候选")
+                    continue
+                except (ValueError, TypeError, ValidationError):
                     logger.warning("MCP POI 缺少可验证坐标，已跳过该候选")
                     continue
                 pois.append(item)

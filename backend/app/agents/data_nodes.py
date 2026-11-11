@@ -13,6 +13,7 @@ from ..models.schemas import TripRequest, WeatherInfo
 from .state import GraphState
 from ..services.attraction_names import valid_attraction
 from ..services.durable_execution import checkpoint_node
+from ..services.call_budget import CallBudgetExceeded
 from .candidates import day_candidate_limit, independent_candidate_count
 
 logger = logging.getLogger(__name__)
@@ -61,6 +62,8 @@ class TravelDataNodes:
                         try:
                             pois.extend(attraction_candidates(future.result()))
                             pois = list({p.id: p for p in pois}.values())
+                        except CallBudgetExceeded:
+                            raise
                         except Exception:
                             logger.warning("补充景点候选失败 keyword=%s", futures[future])
             logger.info(f"   找到 {len(pois)} 个景点")
@@ -72,6 +75,8 @@ class TravelDataNodes:
                 knowledge_names = get_rag_service().get_knowledge_attractions(
                     request.city, ensure_city=False
                 )
+            except CallBudgetExceeded:
+                raise
             except Exception as e:
                 logger.warning(f"   ⚠️ 知识库景点补充失败(不影响主流程): {e}")
 
@@ -91,6 +96,8 @@ class TravelDataNodes:
                     for future in as_completed(futures):
                         try:
                             lookups[futures[future]] = future.result()
+                        except CallBudgetExceeded:
+                            raise
                         except Exception:
                             logger.warning("指定景点查询失败 name=%s", futures[future])
 
@@ -118,6 +125,8 @@ class TravelDataNodes:
                     logger.warning("必去景点查询失败，保留其它已取得的候选")
             unique = {p.id: p for p in pois if valid_attraction(p, request.city) and name_key(p.name) not in avoided}
             return {"attraction_pois": list(unique.values())}
+        except CallBudgetExceeded:
+            raise
         except Exception as e:
             logger.warning(f"   ⚠️ 景点搜索失败: {e}")
             return {"attraction_pois": []}
@@ -136,6 +145,8 @@ class TravelDataNodes:
             relevant_weather, weather_notice = self._filter_weather_for_trip(weather, request)
             logger.info(f"   获取 {len(weather)} 天预报，其中 {len(relevant_weather)} 天与行程日期匹配")
             return {"weather_info": relevant_weather, "weather_notice": weather_notice}
+        except CallBudgetExceeded:
+            raise
         except Exception as e:
             logger.warning(f"   ⚠️ 天气查询失败: {e}")
             return {"weather_info": [], "weather_notice": "暂时无法获取天气预报，请出行前再次确认。"}
@@ -167,6 +178,8 @@ class TravelDataNodes:
             hotels = self.amap_service.search_poi(request.accommodation, request.city)
             logger.info(f"   找到 {len(hotels)} 个酒店")
             return {"hotel_pois": hotels}
+        except CallBudgetExceeded:
+            raise
         except Exception as e:
             logger.warning(f"   ⚠️ 酒店搜索失败: {e}")
             return {"hotel_pois": []}
@@ -186,6 +199,8 @@ class TravelDataNodes:
             restaurant_types = ("餐饮", "餐厅", "小吃", "火锅", "咖啡", "快餐", "甜品")
             restaurants = [p for p in restaurants if any(t in (p.type or "") for t in restaurant_types)]
             return {"restaurant_pois": list({p.id: p for p in restaurants if p.id}.values())[:12]}
+        except CallBudgetExceeded:
+            raise
         except Exception as exc:
             logger.warning("餐饮候选查询失败: %s", type(exc).__name__)
             return {"restaurant_pois": []}

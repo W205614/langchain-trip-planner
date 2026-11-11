@@ -75,3 +75,38 @@ def test_each_retry_needs_a_new_irrevocable_reservation_key(monkeypatch):
     durable_execution.reserve_outbound("embedding",reserved_tokens=5000)
     assert len(calls)==2 and calls[0]["request_key"]!=calls[1]["request_key"]
     assert sum(call["reserved_tokens"] for call in calls)==10000
+
+
+@pytest.mark.parametrize("code", ["OUTBOUND_BUDGET_EXHAUSTED", "CAMPAIGN_BUDGET_EXHAUSTED"])
+def test_java_budget_rejection_preserves_code_before_local_accounting(code, tmp_path, monkeypatch):
+    import sqlite3
+    ledger = tmp_path / "budget.sqlite3"
+    with sqlite3.connect(ledger) as db:
+        db.execute("CREATE TABLE calls(kind TEXT PRIMARY KEY,used INTEGER NOT NULL)")
+        db.execute("INSERT INTO calls VALUES('amap',0)")
+    monkeypatch.setenv("ACCEPTANCE_BUDGET_FILE", str(ledger))
+    monkeypatch.setenv("OUTBOUND_LEDGER_REQUIRED", "true")
+    attempts = []
+    def rejected(method, path, payload):
+        attempts.append(payload)
+        httpx.Response(429, json={"code": code}, request=httpx.Request(method, "http://business-test"+path)).raise_for_status()
+    monkeypatch.setattr(durable_execution, "_call", rejected)
+    with pytest.raises(call_budget.CallBudgetExceeded) as error:
+        call_budget.reserve("amap", map_protocol="mcp")
+    assert error.value.code == code and error.value.status_code == 429
+    assert len(attempts) == 1
+    with sqlite3.connect(ledger) as db:
+        assert db.execute("SELECT used FROM calls WHERE kind='amap'").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize("status,body", [(429, b'not json'), (429, b'[]'),
+    (429, b'{"code":"CAPACITY_EXHAUSTED"}'), (503, b'{"code":"OUTBOUND_BUDGET_EXHAUSTED"}')])
+def test_other_internal_http_errors_are_not_reclassified_as_budget(status, body, monkeypatch):
+    monkeypatch.setenv("OUTBOUND_LEDGER_REQUIRED", "true")
+    response = httpx.Response(status, content=body, request=httpx.Request("POST", "http://business-test/reserve"))
+    original = httpx.HTTPStatusError("original HTTP failure", request=response.request, response=response)
+    def rejected(*_args): raise original
+    monkeypatch.setattr(durable_execution, "_call", rejected)
+    with pytest.raises(httpx.HTTPStatusError) as error:
+        durable_execution.reserve_outbound("amap", map_protocol="mcp")
+    assert error.value is original

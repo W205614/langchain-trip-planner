@@ -7,12 +7,14 @@ import os
 import json
 import sqlite3
 from pathlib import Path
+from ..core.exceptions import BizException
 
 LIMITS = {"text": 12, "vision": 1, "embedding": 40, "amap": 120}
 
 
-class CallBudgetExceeded(RuntimeError):
-    pass
+class CallBudgetExceeded(BizException, RuntimeError):
+    def __init__(self, detail: str, *, code: str = "OUTBOUND_BUDGET_EXHAUSTED"):
+        super().__init__(detail, status_code=429, code=code)
 
 
 def reserve(kind: str, *, reserved_tokens: int | None = None, map_protocol: str = "rest") -> None:

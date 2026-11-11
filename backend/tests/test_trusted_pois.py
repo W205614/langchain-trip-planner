@@ -9,6 +9,7 @@ from app.agents.trip_planner_agent import MultiAgentTripPlanner, _restaurant_ope
 from app.core.exceptions import BizException
 from app.models.schemas import Attraction, DayPlan, DayPlanDraft, Location, POIInfo, TripPlan, TripRequest
 from app.services.plan_quality import evaluate_plan
+from app.services.call_budget import CallBudgetExceeded
 
 
 def _request() -> TripRequest:
@@ -84,6 +85,39 @@ def test_fallback_day_never_invents_attractions_without_candidates():
     planner = object.__new__(MultiAgentTripPlanner)
     day = planner._fallback_day(_request(), 0, "2026-08-01", {"attraction_pois": []})
     assert day.attractions == []
+
+
+def test_real_graph_budget_rejection_never_reaches_model_or_broad_search(monkeypatch, caplog):
+    from types import SimpleNamespace
+    planner = object.__new__(MultiAgentTripPlanner)
+    attempts = []
+    def stopped(keyword, _city):
+        attempts.append(keyword)
+        raise CallBudgetExceeded("Acceptance amap budget exhausted")
+    planner.amap_service = SimpleNamespace(search_poi=stopped, get_weather=lambda _city: [])
+    planner._build_rag_context = lambda _state: {"rag_context": ""}
+    monkeypatch.setattr("app.agents.trip_planner_agent.get_llm", lambda **kw: pytest.fail("Budget rejection must stop before LLM"))
+    planner.graph = planner._build_graph()
+    request = _request().model_copy(update={"preferences": ["历史文化"]})
+    with pytest.raises(CallBudgetExceeded) as error:
+        planner.plan_trip(request)
+    assert error.value.code == "OUTBOUND_BUDGET_EXHAUSTED"
+    assert set(attempts) <= {"历史文化", request.accommodation, "当地美食 餐厅"}
+    assert attempts.count("历史文化") == 1
+    assert "缺少可验证坐标" not in caplog.text
+
+
+def test_broad_search_budget_rejection_is_not_a_partial_candidate_result(monkeypatch):
+    planner = object.__new__(MultiAgentTripPlanner)
+    planner.amap_service = MagicMock()
+    def search(keyword, _city):
+        if keyword == "历史文化": return []
+        raise CallBudgetExceeded("Acceptance amap budget exhausted")
+    planner.amap_service.search_poi.side_effect = search
+    request = _request().model_copy(update={"preferences": ["历史文化"]})
+    with pytest.raises(CallBudgetExceeded):
+        planner._search_attractions({"request": request})
+    assert planner.amap_service.search_poi.call_count <= 4
 
 
 def test_plan_rejects_one_empty_day_even_when_other_days_have_verified_pois():

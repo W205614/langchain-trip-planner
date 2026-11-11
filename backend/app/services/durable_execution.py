@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 import os
+import httpx
 from uuid import uuid4
 from functools import wraps
 from threading import RLock
@@ -60,7 +61,21 @@ def reserve_outbound(kind, *, reserved_tokens=None,map_protocol="rest"):
         payload["reserved_tokens"]=reserved_tokens
     if kind=="amap":payload["map_protocol"]=map_protocol
     # The business service pins the campaign. Caller-provided run IDs never select a budget.
-    receipt=_call("POST", "/internal/v2/outbound/reserve",payload)
+    try:
+        receipt=_call("POST", "/internal/v2/outbound/reserve",payload)
+    except httpx.HTTPStatusError as error:
+        if error.response.status_code == 429:
+            try:
+                rejection = error.response.json()
+            except ValueError:
+                raise error from None
+            if isinstance(rejection, dict) and rejection.get("code") in {
+                "OUTBOUND_BUDGET_EXHAUSTED", "CAMPAIGN_BUDGET_EXHAUSTED"
+            }:
+                from .call_budget import CallBudgetExceeded
+                raise CallBudgetExceeded("External call budget exhausted; execution stopped",
+                    code=rejection["code"]) from None
+        raise
     return {"request_key":payload["request_key"],"run_id":receipt.get("run_id","")}
 
 

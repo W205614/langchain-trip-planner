@@ -5,7 +5,9 @@ from datetime import datetime, timedelta, timezone
 import socket
 from threading import Thread
 import time
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
+from types import SimpleNamespace
+import sqlite3
 
 import pytest
 import uvicorn
@@ -16,6 +18,7 @@ from app.models.schemas import Location
 from app.services.amap_mcp_client import AmapMCPClient, AmapMCPError, decode_tool_result
 from app.services.amap_mcp_service import AmapMCPService, normalize_route
 from app.services.execution import execution_deadline
+from app.services.call_budget import CallBudgetExceeded
 
 
 @pytest.fixture
@@ -49,6 +52,64 @@ def test_search_fetches_details_preserves_facts_and_caches(service):
 def test_missing_or_mismatched_coordinates_are_not_fabricated(service, detail):
     service.mcp_client.call.side_effect = [{"pois": [{"id": "P1", "name": "候选"}]}, detail]
     assert service.search_poi("候选", "北京") == []
+
+
+def test_detail_budget_rejection_stops_before_next_candidate_without_coordinate_warning(service, caplog):
+    rejection = CallBudgetExceeded("Acceptance amap budget exhausted")
+    service.mcp_client.call.side_effect = [
+        {"pois": [{"id": "P1", "name": "候选一"}, {"id": "P2", "name": "候选二"}]},
+        rejection,
+    ]
+    with pytest.raises(CallBudgetExceeded) as error:
+        service.search_poi("候选", "北京")
+    assert error.value is rejection
+    assert service.mcp_client.call.call_count == 2
+    assert "缺少可验证坐标" not in caplog.text
+
+
+def test_ordinary_detail_failure_keeps_other_valid_coordinates(service, caplog):
+    service.mcp_client.call.side_effect = [
+        {"pois": [{"id": "P1", "name": "不可用详情"},
+                  {"id": "P2", "name": "可用景点", "location": "116.4,39.9"}]},
+        AmapMCPError("ordinary detail unavailable"),
+    ]
+    pois = service.search_poi("景点", "北京")
+    assert [p.id for p in pois] == ["P2"]
+    assert pois[0].location == Location(longitude=116.4, latitude=39.9)
+    assert service.mcp_client.call.call_count == 2
+    assert "详情查询失败" in caplog.text
+    assert "缺少可验证坐标" not in caplog.text
+
+
+def test_actual_invoke_budget_rejection_survives_client_without_tool_send(tmp_path, monkeypatch):
+    import anyio
+    from anyio.from_thread import start_blocking_portal
+    from app.services import call_budget, durable_execution
+
+    ledger = tmp_path / "exhausted.sqlite3"
+    with sqlite3.connect(ledger) as db:
+        db.execute("CREATE TABLE calls(kind TEXT PRIMARY KEY,used INTEGER NOT NULL)")
+        db.execute("INSERT INTO calls VALUES('amap',8)")
+    monkeypatch.setenv("ACCEPTANCE_BUDGET_FILE", str(ledger))
+    monkeypatch.setitem(call_budget.LIMITS, "amap", 8)
+    central = []
+    monkeypatch.setattr(durable_execution, "reserve_outbound", lambda *a, **kw: central.append(1))
+    client = AmapMCPClient("http://127.0.0.1/mcp", "test-key")
+    monkeypatch.setattr(client, "_connect", lambda *_args: None)
+    client._tools = {"maps_search_detail": SimpleNamespace(inputSchema={})}
+    sender = AsyncMock()
+    client._session = SimpleNamespace(call_tool=sender)
+    with start_blocking_portal() as portal:
+        client._portal = portal
+        client._call_lock = portal.call(anyio.Lock)
+        with pytest.raises(CallBudgetExceeded) as error:
+            client.call("maps_search_detail", {"id": "P1"})
+    assert error.value.code == "OUTBOUND_BUDGET_EXHAUSTED"
+    assert isinstance(error.value, RuntimeError)
+    sender.assert_not_called()
+    assert central == [1]
+    with sqlite3.connect(ledger) as db:
+        assert db.execute("SELECT used FROM calls WHERE kind='amap'").fetchone()[0] == 8
 
 
 def test_weather_uses_city_directly_and_caches_flat_forecasts(service):

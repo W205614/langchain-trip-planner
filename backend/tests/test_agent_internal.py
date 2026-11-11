@@ -162,3 +162,22 @@ def test_duplicate_execution_never_calls_planner_twice(client, monkeypatch):
     assert calls==[1]
     assert reservations[0]["execution_id"] == body["execution_id"]
     assert validation_routes == [route_planner]
+
+
+@pytest.mark.parametrize("code", ["OUTBOUND_BUDGET_EXHAUSTED", "CAMPAIGN_BUDGET_EXHAUSTED"])
+def test_execution_forwards_existing_budget_code_without_result(client, monkeypatch, code):
+    from types import SimpleNamespace
+    from app.agents import trip_planner_agent
+    from app.services.call_budget import CallBudgetExceeded
+    def stopped(*args, **kwargs):
+        raise CallBudgetExceeded("External call budget exhausted", code=code)
+    monkeypatch.setattr(trip_planner_agent, "get_trip_planner_agent", lambda: SimpleNamespace(plan_trip=stopped))
+    response = client.post("/internal/v1/executions", headers={"X-Service-Key":"internal-test-key-01234567890123456789"}, json={
+        "protocol_version":1, "task_id":str(uuid.uuid4()), "execution_id":str(uuid.uuid4()),
+        "request_id":"budget-stop", "user_id":1,
+        "deadline_at":(datetime.now(timezone.utc)+timedelta(seconds=20)).isoformat(),
+        "request":{"city":"北京", "start_date":"2026-10-01", "end_date":"2026-10-01", "travel_days":1, "transportation":"步行", "accommodation":"经济"},
+    })
+    assert response.status_code == 200
+    assert "event: error" in response.text and f'"code": "{code}"' in response.text
+    assert "event: result" not in response.text

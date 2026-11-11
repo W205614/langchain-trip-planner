@@ -17,6 +17,7 @@ from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 
 from .execution import remaining
+from .call_budget import CallBudgetExceeded
 
 
 class AmapMCPError(RuntimeError):
@@ -126,7 +127,7 @@ class AmapMCPClient:
         except (FutureTimeout, TimeoutError):
             future.cancel()
             raise TimeoutError("高德 MCP 工具调用超时") from None
-        except AmapMCPError:
+        except (AmapMCPError, CallBudgetExceeded):
             raise
         except Exception:
             raise AmapMCPError(f"高德 MCP 工具调用失败：{name}") from None
