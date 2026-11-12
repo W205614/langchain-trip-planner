@@ -8,6 +8,7 @@ condition = "AND"
 targetRules = ["generic-api-key"]
 paths = [
   '''(^|/)docs/evidence/native-security-20261110/agent-trip4-(artifact-inventory|review)\.json$''',
+  '''(^|/)docs/evidence/normal-use-20261112/agent-source-native-review\.json$''',
   '''(^|/)\.github/security-vendor-remediated\.json$'''
 ]
 regexTarget = "secret"
@@ -21,6 +22,7 @@ paths = [
   '''(^|/)docs/evidence/native-security-20261110/codeql/(8182d40|843d242|c54ae53|881817b|e81765b)/source-review\.json$''',
   '''(^|/)docs/evidence/native-security-20261112/codeql-028e3be/source-review\.json$''',
   '''(^|/)docs/evidence/native-security-20261112/codeql-f4ca5c5/source-review\.json$''',
+  '''(^|/)docs/evidence/normal-use-20261112/codeql/source-review\.json$''',
   '''(^|/)\.github/codeql-context-remediated\.json$'''
 ]
 regexTarget = "secret"
@@ -127,7 +129,8 @@ condition = "AND"
 targetRules = ["generic-api-key"]
 paths = [
   '''(^|/)docs/evidence/runtime-support-security-20261110/receiver-(before|after)-sqlite-removal-grype\.json$''',
-  '''(^|/)docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review\.json$'''
+  '''(^|/)docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review\.json$''',
+  '''(^|/)docs/evidence/normal-use-20261112/agent-raw-vulnerabilities\.json$'''
 ]
 regexTarget = "secret"
 regexes = ['''^7169605F62C751356D054A26A821E680E5FA6305$''']
