@@ -254,7 +254,7 @@ test('changed planning input disables obsolete time actions and real HTML export
   expect((await api(page, 'GET', `/api/trips/${tripId}/planning-input`)).data.planning_revision).toBe(changed.planning_revision)
   await page.screenshot({ path: testInfo.outputPath('fact-checklist.png'), fullPage: true })
   await page.getByRole('button', { name: '打开行程并按日改排', exact: true }).click()
-  await expect(page.locator('.timeline').first().getByText('此时间轴的条件或事实已过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。', { exact: true })).toBeVisible()
+  await expect(page.locator('.timeline').first().getByText('此时间轴的条件或事实已变化或过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。', { exact: true })).toBeVisible()
   const activity = page.getByTestId(`activity-${timed.activity_id}`).first()
   await expect(activity.getByRole('button', { name: '锁定时段', exact: true })).toBeDisabled()
   await expect(activity.getByRole('button', { name: '标记完成', exact: true })).toBeDisabled()

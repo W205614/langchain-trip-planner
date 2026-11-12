@@ -24,6 +24,7 @@ paths = [
   '''(^|/)docs/evidence/native-security-20261112/codeql-f4ca5c5/source-review\.json$''',
   '''(^|/)docs/evidence/normal-use-20261112/codeql/source-review\.json$''',
   '''(^|/)docs/evidence/normal-use-20261112/codeql-go1274/source-review\.json$''',
+  '''(^|/)docs/evidence/normal-use-20261112/codeql-ui-contract-tests/source-review\.json$''',
   '''(^|/)\.github/codeql-context-remediated\.json$'''
 ]
 regexTarget = "secret"

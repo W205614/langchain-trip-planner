@@ -63,20 +63,27 @@ test('fact warning lists only the unresolved evidence instead of fixed missing-f
   await expect(page.getByText(/部分景点或餐厅的出行日开放时间待核实/)).toHaveCount(0)
 })
 
-test('legacy missing or stale schedule explains why the unchanged day still needs verification', async ({ page }) => {
+for (const missing of [true, false]) {
+test(`legacy ${missing ? 'missing' : 'stale'} schedule explains why the unchanged day still needs verification`, async ({ page }) => {
   const code = 'schedule_unknown_or_stale'
-  const sample = { ...plan, days: [{ ...plan.days[0], timeline: [], feasibility: { status: 'unverified', unknown: [code] } }] }
+  const sample = { ...plan, days: [{ ...plan.days[0], timeline: missing ? [] : plan.days[0].timeline, feasibility: { status: 'unverified', unknown: [code] } }] }
   await page.addInitScript(({ sample, code }) => { sessionStorage.setItem('tripPlan', JSON.stringify(sample)); sessionStorage.setItem('tripQuality', JSON.stringify({ data_gaps: [code], feasibility_status: 'unverified', facts_complete: false })) }, { sample, code })
   await page.route('https://*.amap.com/**', route => route.abort())
   await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
   await page.goto('/result')
   await expect(page.locator('.timeline')).toContainText('旧时间轴缺失或已过期，请重新核验或改排。')
-  await expect(page.locator('.timeline')).toContainText('时间轴待重新核验')
-  await expect(page.locator('.timeline')).toContainText('此时间轴的条件或事实已过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。')
+  if (missing) {
+    await expect(page.locator('.timeline')).toContainText('尚未生成可用时间轴，请先处理下列约束或缺失条件后重新排程。')
+    await expect(page.locator('.timeline').getByText('时间轴待重新核验', { exact: true })).toHaveCount(0)
+  } else {
+    await expect(page.locator('.timeline')).toContainText('时间轴待重新核验')
+    await expect(page.locator('.timeline')).toContainText('此时间轴的条件或事实已变化或过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。')
+  }
   await expect(page.getByText(/部分日期的旧时间轴缺失或已过期，请重新核验或改排/)).toBeVisible()
   await expect(page.getByText(code, { exact: true })).toHaveCount(0)
   await expect(page.locator('.timeline').getByText('满足已知时间约束', { exact: true })).toHaveCount(0)
 })
+}
 
 test('omitted restaurant candidate remains an explicit dated meal gap', async ({ page }) => {
   const code = 'meal_candidate_unassigned:lunch:omitted-lunch'
@@ -148,7 +155,7 @@ test('owner timeline state action sends concurrency guards and scope keeps one a
     return route.fulfill({ json: { data: { planning_input: { ...planning, locks: [{ activity_id: 'activity-1', mode: 'content' }] }, planning_revision: 5, trip_version: 3, plan } } })
   })
   await page.goto('/result')
-  await expect(page.getByText('故宫：景点营业信息未知或已过期，请核对出行日期的开放与最后入场时间。')).toBeVisible()
+  await expect(page.getByText('故宫：尚无本次出行日期的有效营业信息，请核对开放与最后入场时间。')).toBeVisible()
   await expect(page.getByText('opening_unknown_or_stale:activity-1', { exact: true })).toHaveCount(0)
   await page.getByTestId('activity-activity-1').getByRole('button', { name: '锁定安排' }).click()
   await expect.poll(() => stateSaved).toBe(true)
