@@ -56,7 +56,9 @@ def classify(plan, request, report):
     if plan.weather_notice:
         add("WEATHER_UNAVAILABLE", "plan", plan.weather_notice, "出行前查询天气", False, True)
     for notice in plan.enrichment_notices:
-        if notice == "部分攻略资料暂无可靠匹配，请以官方信息为准":
+        if notice == "攻略资料检索已关闭，本次行程未使用知识库增强":
+            add("RAG_DISABLED", "plan", notice, "如需攻略资料，请启用并配置知识库检索", False)
+        elif notice == "部分攻略资料暂无可靠匹配，请以官方信息为准":
             add("RAG_NO_MATCH", "plan", notice, "可继续查看行程；以官方信息为准", False)
         else:
             add("RAG_UNAVAILABLE", "plan", notice, "可继续查看行程，攻略资料请稍后查询", False, True)

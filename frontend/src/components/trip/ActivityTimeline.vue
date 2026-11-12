@@ -2,7 +2,7 @@
   <section v-if="day.timeline?.length || day.feasibility" class="timeline" :aria-label="`第 ${day.day_index + 1} 天时间轴`">
     <header><h3>{{ day.city ? `${day.city} · ` : '' }}每日时间轴</h3><a-tag :color="feasibilityColor">{{ feasibilityText }}</a-tag></header>
     <p class="hint">估算和未核实安排不等于已确认营业或完成预订。点击有位置的活动可在地图定位。</p>
-    <a-alert v-if="!current" type="warning" message="此时间轴的条件或事实已过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。" />
+    <a-alert v-if="!current" type="warning" :message="day.timeline?.length ? '此时间轴的条件或事实已变化或过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。' : '尚未生成可用时间轴，请先处理下列约束或缺失条件后重新排程。'" />
     <a-alert v-for="issue in [...(day.feasibility?.conflicts || []), ...(day.feasibility?.unknown || [])]" :key="issue" type="warning" :message="issueText(issue)" class="issue" />
     <ol>
       <li v-for="(item, index) in day.timeline || []" :key="`${item.activity_id || index}-${item.kind}`" :data-testid="item.activity_id ? `activity-${item.activity_id}` : undefined" :class="{ selected: selected === item.activity_id }">
@@ -40,13 +40,17 @@ const time = (value?: string | null) => value && Number.isFinite(Date.parse(valu
 const kindLabel = (kind: string) => ({ attraction: '游览', meal: '用餐', commitment: '固定安排', hotel: '住宿', travel: '交通', waiting: '等待' } as Record<string, string>)[kind] || kind
 const locked = (id?: string) => props.planning?.locks?.some(lock => lock.activity_id === id) || false
 const completed = (id?: string) => !!id && !!props.planning?.completed_activity_ids?.includes(id)
-const feasibilityText = computed(() => !current.value ? '时间轴待重新核验' : ({ feasible: '满足已知时间约束', unverified: '部分条件待核实', not_found: '计算预算内未找到方案', infeasible: '当前条件下无可行解' } as Record<string, string>)[props.day.feasibility?.status || 'unverified'])
+const feasibilityText = computed(() => !current.value && props.day.timeline?.length ? '时间轴待重新核验' : ({ feasible: '满足已知时间约束', unverified: '部分条件待核实', not_found: '计算预算内未找到方案', infeasible: '当前条件下无可行解' } as Record<string, string>)[props.day.feasibility?.status || 'unverified'])
 const feasibilityColor = computed(() => !current.value ? 'gold' : props.day.feasibility?.status === 'feasible' ? 'green' : props.day.feasibility?.status === 'infeasible' ? 'red' : 'gold')
 function issueText(issue: string) {
   if (/[\u3400-\u9fff]/.test(issue)) return issue
   const separator = issue.indexOf(':'), code = separator < 0 ? issue : issue.slice(0, separator), id = separator < 0 ? '' : issue.slice(separator + 1)
   if (code === 'meal_candidate_unassigned') { const meal = ({ breakfast: '早餐', lunch: '午餐', dinner: '晚餐', snack: '小吃' } as Record<string, string>)[id.split(':')[0]] || '餐饮'; return `${meal}候选未安排，需就近用餐并重新核验。` }
   const title = props.day.timeline?.find(item => item.activity_id === id)?.title || props.planning?.commitments?.find(item => String(item.id) === id)?.title
+  if (code === 'opening_unknown_or_stale') {
+    const attraction = props.day.attractions.find(item => item.activity_id === id)
+    return `${title ? `${title}：` : ''}${attraction?.opening_hours ? `高德参考开放时间为“${attraction.opening_hours}”；尚无本次出行日期的有效营业核验，请确认临时闭园和最后入场时间。` : '尚无本次出行日期的有效营业信息，请核对开放与最后入场时间。'}`
+  }
   const labels: Record<string, string> = {
     schedule_unknown_or_stale: '旧时间轴缺失或已过期，请重新核验或改排。',
     reservation_unverified: '预约要求或取得预约的状态尚未核实，请在行程工作台补充来源与有效期。',
@@ -55,6 +59,9 @@ function issueText(issue: string) {
     opening_unknown_or_stale: '景点营业信息未知或已过期，请核对出行日期的开放与最后入场时间。', opening_conflict: '景点营业信息存在冲突，请根据官方来源核对。',
     meal_opening_unverified: '餐厅营业时间尚未核实。', meal_opening_conflict: '餐厅营业信息存在冲突。', meal_location_unknown: '餐厅位置未知，接驳时间尚无法核实。',
     route_endpoint_unknown: '部分路线起终点位置未知，交通时间尚未核实。', route_duration_estimated_30_minutes: '部分路段暂按 30 分钟估算，请核实真实交通时间。',
+    arrival_endpoint_unknown: '尚未填写实际抵达地点，首段接驳仅为估算；请在工作台补充。',
+    departure_endpoint_unknown: '尚未填写实际离开地点，末段接驳仅为估算；请在工作台补充。',
+    start_endpoint_unknown: '尚未填写当天出发地点，首段接驳仅为估算；请在工作台补充。',
     route_fact_expired_or_unobserved: '路线观测已过期或旧记录缺少获取时间；当前时长仅供对照，不能证明可行。请显式重新核验。',
     commitment_time_unknown: '固定事项缺少明确起止时间，请补充后重新校验。', invalid_commitment: '固定事项时间无效，请检查起止时间与日期。',
     locked_duration_changed: '活动时长与锁定时段冲突，请检查锁定事项。', invalid_time_lock: '锁定时段无效，请重新确认起止时间。', no_time_window: '没有可用时间窗口，请检查营业、预约与每日时间边界。',

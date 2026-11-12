@@ -1,5 +1,7 @@
 # 接口契约
 
+行程 `days[].schedule_dependencies.expires_at` 为 ISO 时间或显式 `null`：时间值绑定实际使用事实中的最早有效期；`null` 表示本次排程没有带有效期的已核验事实，不另造 30 分钟期限。`null` 不会把估算交通或未知营业、预约提升为已核验。缺失绑定、缺少该字段、输入／事实哈希变化以及已有事实到期仍使时间轴失效；旧记录不会因读取而续期。`/api/capabilities` 的 `rag` 区分 `available`、主动 `disabled`、配置后运行 `unavailable` 及等待 Agent 的状态。
+
 [`public-operations.openapi.yaml`](public-operations.openapi.yaml) 是公开运营增量的 OpenAPI 3.1 契约，覆盖邮箱账号、反馈、配额、运营后台、邮件发件箱、导出、注销及对象存储迁移。既有行程接口与 `internal-v1`/`internal-v2` 另行维护。
 
 Java 到 Agent 的 `/internal/v1/capabilities/{kind}` 按操作语义绑定 HTTP 方法，均要求 `X-Service-Key`：`validation`、`eval-policy`、`poi-search`、`poi-detail`、`rag-status` 和 `status` 使用 GET。POI 查询字段通过 URL 查询参数传递，数据结构仍使用 `internal-v1/POISearchRequest.schema.json` 与 `POIDetailRequest.schema.json`。`research`、`research-retrieve`、`research-answer` 与 `assistant-intent` 使用 POST JSON；流式研究仍使用独立 POST 路由。Java 公开 API 的方法与响应结构保持原约定；Cookie 写请求继续只接受 `X-CSRF-Token` 请求头，不接受查询参数代替。

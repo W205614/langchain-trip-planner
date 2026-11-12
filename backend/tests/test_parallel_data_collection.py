@@ -1,6 +1,7 @@
 """LangGraph 数据节点并行回归：避免景点、天气、酒店查询退回串行。"""
 
 import time
+from threading import Barrier
 from types import SimpleNamespace
 
 from app.agents.trip_planner_agent import MultiAgentTripPlanner
@@ -10,10 +11,11 @@ from app.models.schemas import TripPlan, TripRequest
 def test_data_nodes_run_in_parallel_before_generation():
     planner = object.__new__(MultiAgentTripPlanner)
     completed = []
+    parallel = Barrier(4)
 
     def delayed_node(name, payload):
         def node(_state):
-            time.sleep(0.12)
+            parallel.wait(timeout=3)
             completed.append(name)
             return payload
         return node
@@ -21,7 +23,13 @@ def test_data_nodes_run_in_parallel_before_generation():
     planner._search_attractions = delayed_node("attractions", {"attraction_pois": []})
     planner._get_weather = delayed_node("weather", {"weather_info": [], "weather_notice": ""})
     planner._search_hotels = delayed_node("hotels", {"hotel_pois": []})
-    planner._build_rag_context = delayed_node("rag", {"rag_context": ""})
+    planner._search_restaurants = delayed_node("restaurants", {"restaurant_pois": []})
+    def rag_context(state):
+        assert "attractions" in completed
+        assert state["attraction_pois"] == []
+        completed.append("rag")
+        return {"rag_context": ""}
+    planner._build_rag_context = rag_context
     planner._generate_trip_plan = lambda state: {
         "trip_plan": TripPlan(
             city=state["request"].city,
@@ -42,10 +50,9 @@ def test_data_nodes_run_in_parallel_before_generation():
     result = graph.invoke({"request": request})
     elapsed = time.perf_counter() - started
 
-    assert set(completed) == {"attractions", "weather", "hotels", "rag"}
+    assert set(completed) == {"attractions", "weather", "hotels", "restaurants", "rag"}
     assert result["trip_plan"].city == "北京"
-    # 四个各 0.12s 的节点，串行需约 0.48s；给慢机器留出合理余量。
-    assert elapsed < 0.30
+    # The barrier proves independent queries overlap; RAG consumes their actual candidate output.
 
 
 def test_attraction_fallback_queries_run_in_parallel_and_do_not_rebuild_city_index(monkeypatch):

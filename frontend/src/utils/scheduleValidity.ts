@@ -3,7 +3,7 @@ import type { TripPlan, DayPlan } from '@/types'
 export function scheduleCurrent(day: DayPlan, now = Date.now()): boolean {
   const binding = day.schedule_dependencies
   return !day.schedule_stale && !!binding?.input_hash && !!binding.fact_hash &&
-    Number.isFinite(Date.parse(binding.expires_at)) && Date.parse(binding.expires_at) > now
+    (binding.expires_at === null || Number.isFinite(Date.parse(binding.expires_at)) && Date.parse(binding.expires_at) > now)
 }
 
 export function refreshScheduleValidity(plan: TripPlan, forceStale = false): boolean {

@@ -727,6 +727,7 @@ class RagService:
         top_k: int = 3,
         user_id: Optional[int] = None,
         max_chunk_chars: Optional[int] = None,
+        candidate_pois=None,
     ) -> str:
         """为规划请求构建 RAG 上下文文本 (注入 LLM prompt 用)。
 
@@ -734,14 +735,15 @@ class RagService:
         检索或评测使用的原始结果；用于对延迟敏感的规划 prompt。
         """
         if not self.enabled:
-            from .execution import note_rag_degradation
-            note_rag_degradation()
+            if self.settings.rag_enabled:
+                from .execution import note_rag_degradation
+                note_rag_degradation()
             return ""
         if max_chunk_chars is not None and max_chunk_chars < 1:
             raise ValueError("max_chunk_chars 必须为正数")
-        # 任意城市增强: 若该城市尚无高德自动入库数据, 先用高德实时搜索自动建知识
+        # 规划已有可信候选时复用同一份数据，避免另一次城市搜索失败造成空索引。
         with observe_rag_operation("context_build"):
-            self.ensure_city_index(request.city)
+            self.ensure_city_index(request.city, pois=candidate_pois)
             query = (
                 f"{request.city} {request.travel_days}天旅行 "
                 f"{','.join(request.preferences) if request.preferences else ''} "
@@ -760,34 +762,36 @@ class RagService:
         return header + "\n" + "\n\n".join(f"- {c}" for c in visible_chunks) if visible_chunks else ""
 
     @serialized
-    def ensure_city_index(self, city: str) -> bool:
+    def ensure_city_index(self, city: str, *, pois=None) -> bool:
         """确保任意城市在知识库中有可检索数据 (幂等)。
 
-        手写知识库(md)覆盖的城市直接用精选内容; 未覆盖的城市, 用高德实时搜索
-        该城市热门景点并生成结构化知识文本, 写入知识库(带 source="gaode:<城市>" 标记)。
-        这样任意城市查一次即获得增强, 且不会重复写入膨胀向量库。
+        规划入口提供已取得的可信候选，按 POI 身份更新参考资料；独立研究入口
+        无候选时才搜索城市景点。参考资料不自动成为已确认的营业或预约事实。
 
         Returns:
             True 表示该城市知识已可用; False 表示写入失败或无需写入
         """
         if not self.enabled or not city:
             return False
+        supplied = pois is not None
         try:
             self._refresh_store("_knowledge_store", _KNOWLEDGE_COLLECTION)
             # 幂等: 该城市是否已有高德自动数据(或手写md数据)
             existing = self._knowledge_store.get(where={"source": f"{_GAODE_SOURCE_PREFIX}{city}"})
-            if existing and existing.get("ids"):
+            if not supplied and existing and existing.get("ids"):
                 return True
 
             from ..services.amap_service import get_amap_service
 
-            amap = get_amap_service()
-            # 用「城市名 + 景点」搜索, 让高德返回偏旅游景点的POI(纯城市名会混入餐饮/住宿)
-            with observe_rag_operation("city_index_build"):
-                pois = amap.search_poi(f"{city}必去景点", city)
-            if not pois:
+            if not supplied:
+                amap = get_amap_service()
                 with observe_rag_operation("city_index_build"):
-                    pois = amap.search_poi(city, city)
+                    pois = amap.search_poi(f"{city}必去景点", city)
+                if not pois:
+                    with observe_rag_operation("city_index_build"):
+                        pois = amap.search_poi(city, city)
+            else:
+                pois = list({poi.id: poi for poi in pois}.values())
             if not pois:
                 # 高德没搜到(输入可能是乡镇/国外等), 不强写, 退回现有检索
                 return False
@@ -805,7 +809,8 @@ class RagService:
                     f"### {poi.name}\n"
                     f"- 地址: {poi.address or '不详'}\n"
                     f"- 坐标: {poi.location.longitude},{poi.location.latitude}\n"
-                    f"- 类别: {poi.type or '景点'}"
+                    f"- 类别: {poi.type or '景点'}\n"
+                    f"- 高德参考开放时间: {poi.opening_hours or '未提供'}（出行日期和临时调整仍需核实）"
                 )
                 chunks.append(Document(
                     page_content=line,
@@ -814,11 +819,14 @@ class RagService:
 
             if chunks:
                 with observe_rag_operation("city_index_embedding"):
-                    self._write_documents("_knowledge_store", chunks, ids=[f"gaode:{city}:{i}" for i in range(len(chunks))])
+                    identities = [f"gaode:{city}:poi:{poi.id}" for poi in pois[:_GAODE_CITY_MAX_CHUNKS]] if supplied else [f"gaode:{city}:{i}" for i in range(len(chunks))]
+                    self._write_documents("_knowledge_store", chunks, ids=identities)
                 logger.info(f"📍 任意城市增强: 已为「{city}」自动写入 {len(chunks)} 个景点知识块")
             return True
         except Exception as e:
             logger.warning(f"⚠️  任意城市增强失败(不影响主流程): {e}")
+            from .execution import note_rag_degradation
+            note_rag_degradation()
             return False
 
     @serialized

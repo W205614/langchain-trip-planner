@@ -10,6 +10,31 @@ import org.junit.jupiter.api.*;
 import tools.jackson.databind.json.JsonMapper;
 
 class AmapGatewayTest {
+  @Test
+  void failedPhotoIsNotCachedButSuccessfulBytesAreReusedWithoutAnotherProviderReservation() throws Exception {
+    var gateway = new AmapGateway("http://127.0.0.1:" + server.getAddress().getPort(), "fixture",
+        0, 0, 0, 10, "test", "no", JsonMapper.builder().build());
+    var transport = org.mockito.Mockito.mock(java.net.http.HttpClient.class);
+    var budget = org.mockito.Mockito.mock(ExecutionGovernanceService.class);
+    @SuppressWarnings("unchecked")
+    var response = (java.net.http.HttpResponse<java.io.InputStream>) org.mockito.Mockito.mock(java.net.http.HttpResponse.class);
+    org.mockito.Mockito.when(response.statusCode()).thenReturn(503, 200);
+    byte[] bytes = {1, 2, 3};
+    org.mockito.Mockito.when(response.body()).thenReturn(new java.io.ByteArrayInputStream(bytes), new java.io.ByteArrayInputStream(bytes));
+    org.mockito.Mockito.when(response.headers()).thenReturn(java.net.http.HttpHeaders.of(
+        java.util.Map.of("Content-Type", java.util.List.of("image/png")), (name, value) -> true));
+    org.mockito.Mockito.when(transport.send(org.mockito.Mockito.any(java.net.http.HttpRequest.class),
+        org.mockito.ArgumentMatchers.<java.net.http.HttpResponse.BodyHandler<java.io.InputStream>>any())).thenReturn(response);
+    org.springframework.test.util.ReflectionTestUtils.setField(gateway, "http", transport);
+    org.springframework.test.util.ReflectionTestUtils.setField(gateway, "governance", budget);
+    var poi = JsonMapper.builder().build().createObjectNode();poi.putArray("photos").add("https://photos.amap.com/photo.png");
+    assertTrue(gateway.imageFromPoi("景点", poi).placeholder());
+    assertArrayEquals(bytes, gateway.imageFromPoi("景点", poi).body());
+    assertArrayEquals(bytes, gateway.imageFromPoi("景点", poi).body());
+    org.mockito.Mockito.verify(transport, org.mockito.Mockito.times(2)).send(org.mockito.Mockito.any(java.net.http.HttpRequest.class),
+        org.mockito.ArgumentMatchers.<java.net.http.HttpResponse.BodyHandler<java.io.InputStream>>any());
+    org.mockito.Mockito.verify(budget, org.mockito.Mockito.times(2)).reserveAmap();
+  }
   @org.junit.jupiter.params.ParameterizedTest
   @org.junit.jupiter.params.provider.CsvSource({"503,image/png", "200,text/plain"})
   void rejectedPhotoResponseClosesItsInputStream(int status, String media) throws Exception {

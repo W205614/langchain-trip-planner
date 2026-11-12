@@ -473,7 +473,7 @@ def read_capability(kind: str, http_request: Request):
         from ..config import get_settings
         cfg = get_settings()
         rag = get_rag_service()
-        return {"success": True, "rag": "available" if rag.enabled else "disabled",
+        return {"success": True, "rag": "available" if rag.enabled else "unavailable" if cfg.rag_enabled else "disabled",
                 "map": "mcp" if cfg.amap_transport == "mcp" and bool(cfg.amap_api_key) else "not_configured",
                 "vision": "available" if cfg.vision_model and (cfg.vision_api_key or cfg.llm_api_key) else "not_configured"}
     else:

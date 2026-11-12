@@ -16,3 +16,14 @@ def test_missing_optional_guide_is_informational_but_retrieval_outage_degrades()
     fallback = classify(plan, request, {"day_checks": []})
     assert fallback["outcome"] == "degraded"
     assert [issue["code"] for issue in fallback["issues"]] == ["RAG_UNAVAILABLE"]
+
+
+def test_explicitly_disabled_retrieval_remains_visible_without_claiming_an_outage():
+    request = SimpleNamespace(constraints=SimpleNamespace(max_inter_stop_walking_km=None))
+    plan = SimpleNamespace(days=[], weather_notice="", enrichment_notices=[
+        "攻略资料检索已关闭，本次行程未使用知识库增强"
+    ])
+    report = classify(plan, request, {"day_checks": []})
+    assert report["outcome"] == "complete"
+    assert [issue["code"] for issue in report["issues"]] == ["RAG_DISABLED"]
+    assert report["issues"][0]["retryable"] is False

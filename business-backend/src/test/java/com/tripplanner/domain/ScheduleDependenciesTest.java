@@ -30,6 +30,23 @@ class ScheduleDependenciesTest {
     input.withArray("reservation_facts").addObject().put("poi_id","p0").put("date","2026-11-01").put("confirmed",true).put("source","user notice").put("observed_at",now.minusSeconds(21000).toString()).put("expires_at",now.plusSeconds(86400).toString());
     rules.stamp(p,input,1,null);var expiry=Instant.parse(p.path("days").get(0).path("schedule_dependencies").path("expires_at").asText());assertFalse(expiry.isAfter(now.plusSeconds(600)));}
   @Test void aNearExpiryRouteCheckpointDoesNotReceiveAnotherThirtyMinutes(){var input=input();var p=plan();String expiry=Instant.now().plusSeconds(5).toString();((ObjectNode)p.path("days").get(0)).put("route_fact_expires_at",expiry);rules.stamp(p,input,1,null);assertEquals(expiry,p.path("days").get(0).path("schedule_dependencies").path("expires_at").asText());}
+  @Test void estimatesHaveNoInventedExpiryAndRemainUnverifiedAfterThirtyMinutes(){
+    var input=input();var p=plan();var day=(ObjectNode)p.path("days").get(0);
+    day.putNull("route_fact_expires_at");day.withObject("/feasibility").put("status","unverified").withArray("unknown").add("route_endpoint_unknown");
+    day.withArray("timeline").addObject().put("kind","travel").put("status","estimated");
+    rules.stamp(p,input,1,null);
+    assertTrue(day.path("schedule_dependencies").has("expires_at"));assertTrue(day.path("schedule_dependencies").path("expires_at").isNull());
+    assertTrue(rules.current(day,input,Instant.now().plusSeconds(7200)));
+    assertEquals("unverified",day.path("feasibility").path("status").asText());assertEquals("estimated",day.path("timeline").get(1).path("status").asText());
+    var legacy=day.deepCopy();((ObjectNode)legacy.path("schedule_dependencies")).remove("expires_at");assertFalse(rules.current(legacy,input,Instant.now()));
+  }
+  @Test void datedOpeningEvidenceUsesItsActualExpiryBeyondThirtyMinutes(){
+    var input=input();var p=plan();var now=Instant.now();var expiry=now.plusSeconds(7200);
+    input.withArray("opening_windows").addObject().put("poi_id","p0").put("date","2026-11-01").put("confirmed",true).put("source","official notice").put("observed_at",now.toString()).put("expires_at",expiry.toString());
+    rules.stamp(p,input,1,null);var day=p.path("days").get(0);
+    assertEquals(expiry.toString(),day.path("schedule_dependencies").path("expires_at").asText());
+    assertTrue(rules.current(day,input,now.plusSeconds(3600)));assertFalse(rules.current(day,input,expiry));
+  }
   @Test void manualClientCannotRenewBindingsOrChangeOnlyTheTimeline(){var original=PlanningInputService.stableIds(plan());rules.stamp(original,input(),1,null);
     var service=new PlanningInputService(org.mockito.Mockito.mock(org.springframework.jdbc.core.JdbcTemplate.class),json,org.mockito.Mockito.mock(org.springframework.transaction.support.TransactionTemplate.class),rules);
     var client=original.deepCopy();((ObjectNode)client.path("days").get(0).path("schedule_dependencies")).put("expires_at",Instant.now().plusSeconds(999999).toString());

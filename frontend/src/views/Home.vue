@@ -55,7 +55,9 @@
       <p class="page-subtitle">首页创建新行程，历史记录中继续问攻略或让 Agent 修改</p>
       <a-alert v-if="capabilities.agent==='unavailable'" type="warning" show-icon class="capability-alert"
         message="Agent 暂不可用，行程创建、景点发现、攻略问答和智能修改暂时无法执行。" />
-      <a-alert v-else-if="capabilities.rag==='disabled'||capabilities.rag==='waiting_for_agent'" type="info" show-icon class="capability-alert"
+      <a-alert v-else-if="capabilities.rag==='disabled'" type="info" show-icon class="capability-alert"
+        message="攻略资料检索已关闭；行程仍可生成，本次不会使用知识库增强。需要资料检索时请启用并配置 RAG。" />
+      <a-alert v-else-if="capabilities.rag==='unavailable'||capabilities.rag==='waiting_for_agent'" type="warning" show-icon class="capability-alert"
         message="攻略资料检索暂不可用；行程生成仍可使用，但我的行程问答可能缺少资料来源。" />
       <!-- 热门目的地快捷选择 -->
       <div class="hot-cities">

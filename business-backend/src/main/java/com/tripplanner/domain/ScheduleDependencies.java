@@ -75,14 +75,13 @@ public class ScheduleDependencies {
       var binding = day.putObject("schedule_dependencies");
       binding.put("planning_revision", revision).put("input_hash", fingerprint(input, day)).put("fact_hash",factHash(day)).put("computed_at", Instant.now().toString());
       String earliest = earliestExpiry(effective(input, day));
-      // Routes are volatile even when the upstream format has no declared validity.
-      Instant routeExpiry=Instant.now().plusSeconds(1800);
-      if(earliest!=null&&Instant.parse(earliest).isBefore(routeExpiry))routeExpiry=Instant.parse(earliest);
-      if(day.has("route_fact_expires_at")){
-        try{Instant actual=Instant.parse(day.path("route_fact_expires_at").asText(""));if(actual.isBefore(routeExpiry))routeExpiry=actual;}
-        catch(Exception ex){routeExpiry=Instant.EPOCH;}
+      // Expire actual evidence, not an estimate which was never verified.
+      Instant expiry=earliest==null?null:Instant.parse(earliest);
+      if(day.hasNonNull("route_fact_expires_at")){
+        try{Instant actual=Instant.parse(day.path("route_fact_expires_at").asText(""));if(expiry==null||actual.isBefore(expiry))expiry=actual;}
+        catch(Exception ex){expiry=Instant.EPOCH;}
       }
-      binding.put("expires_at",routeExpiry.toString());
+      if(expiry==null)binding.putNull("expires_at");else binding.put("expires_at",expiry.toString());
     }
   }
   private String earliestExpiry(JsonNode effective) {
@@ -103,7 +102,7 @@ public class ScheduleDependencies {
   public boolean current(JsonNode day, JsonNode input, Instant now) {
     var deps = day.path("schedule_dependencies");
     if (day.path("schedule_stale").asBoolean(false) || !deps.path("input_hash").asText("").equals(fingerprint(input, day)) || !deps.path("fact_hash").asText("").equals(factHash(day))) return false;
-    try { return deps.hasNonNull("expires_at") && Instant.parse(deps.path("expires_at").asText("")).isAfter(now); }
+    try { return deps.has("expires_at") && (deps.path("expires_at").isNull() || Instant.parse(deps.path("expires_at").asText("")).isAfter(now)); }
     catch (Exception ex) { return false; }
   }
   private String factHash(JsonNode day){

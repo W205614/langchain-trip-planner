@@ -133,6 +133,22 @@ def test_ensure_city_index_no_poi_returns_false(rag, monkeypatch):
     assert ok is False
 
 
+def test_city_index_reuses_trusted_candidates_and_updates_stable_poi_identity(rag):
+    poi = SimpleNamespace(id="real-provider-poi", name="公园", address="公园路", type="风景名胜",
+                          location=SimpleNamespace(longitude=118.8, latitude=32.1), opening_hours="08:00-18:00")
+    with patch("app.services.amap_service.get_amap_service") as amap:
+        assert rag.ensure_city_index("南京", pois=[poi])
+        poi.opening_hours = "09:00-17:00"
+        assert rag.ensure_city_index("南京", pois=[poi, poi])
+        amap.assert_not_called()
+    indexed = rag._knowledge_store.get(where={"city": "南京"})
+    assert len(indexed["ids"]) == 1
+    assert "09:00-17:00" in indexed["documents"][0]
+    assert "出行日期和临时调整仍需核实" in indexed["documents"][0]
+    evidence = rag.retrieve_research_evidence("公园", "南京", local_only=True)
+    assert evidence and evidence[0]["source"] == "gaode:南京"
+
+
 def test_rebuild_markdown_preserves_reviewed_multimodal_knowledge(rag, monkeypatch):
     """管理员已发布的资料与静态 Markdown 共用 collection 时不能被重建误删。"""
     rag._knowledge_store.add_documents([
@@ -256,6 +272,20 @@ def test_attraction_enrichment_can_distinguish_timeout_from_no_match(rag):
         assert rag.get_attraction_rag_texts(["故宫"], "北京") == {}
         with pytest.raises(TimeoutError):
             rag.get_attraction_rag_texts(["故宫"], "北京", raise_on_error=True)
+
+
+@pytest.mark.parametrize("configured", [False, True])
+def test_disabled_configuration_is_distinguished_from_failed_rag_initialization(rag, configured):
+    from app.services.execution import rag_degradation_var
+    rag.settings.rag_enabled = configured
+    rag._embedding = None
+    notices = []
+    token = rag_degradation_var.set(notices)
+    try:
+        assert rag.build_rag_context(SimpleNamespace()) == ""
+    finally:
+        rag_degradation_var.reset(token)
+    assert notices == (["资料检索或可见性校验暂不可用，受影响资料已排除"] if configured else [])
 
 
 def test_research_evidence_uses_only_public_city_knowledge(rag):

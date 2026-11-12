@@ -23,6 +23,7 @@ import tools.jackson.databind.node.*;
 /** Deterministic AMap adapter plus a constrained proxy for Agent/MCP image URLs. */
 @Service
 public class AmapGateway {
+  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AmapGateway.class);
   public record Image(byte[] body, String mediaType, boolean placeholder) {}
 
   @Autowired private ExecutionGovernanceService governance;
@@ -34,6 +35,10 @@ public class AmapGateway {
   private final Cache<String, JsonNode> weatherCache;
   private final Cache<String, JsonNode> detailCache;
   private final Cache<String, JsonNode> routeCache;
+  // Reuse verified public photo bytes across page refreshes; failed loads are never cached.
+  private final Cache<URI, Image> imageCache = Caffeine.newBuilder()
+      .maximumWeight(32L * 1024 * 1024).weigher((URI key, Image image) -> image.body().length)
+      .expireAfterWrite(Duration.ofHours(1)).build();
   private final UpstreamGuard guard;
   private final AtomicLong requests = new AtomicLong(), failures = new AtomicLong();
 
@@ -363,6 +368,8 @@ public class AmapGateway {
         URI uri = URI.create(raw);
         String host = Objects.toString(uri.getHost(), "").toLowerCase(Locale.ROOT);
         if (!"https".equals(uri.getScheme()) || !(host.endsWith(".amap.com") || host.endsWith(".autonavi.com"))) continue;
+        Image cached = imageCache.getIfPresent(uri);
+        if (cached != null) return cached;
         Image downloaded = guard.execute(() -> {
           if(governance!=null)governance.reserveAmap();
           var response = http.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(8)).GET().build(),
@@ -379,9 +386,11 @@ public class AmapGateway {
             return new Image(output.toByteArray(), media, false);
           }
         });
+        imageCache.put(uri, downloaded);
         return downloaded;
       }
-    } catch (Exception ignored) {
+    } catch (Exception error) {
+      logger.warn("poi_photo_unavailable error_type={}", error.getClass().getSimpleName());
     }
     return placeholder(name);
   }

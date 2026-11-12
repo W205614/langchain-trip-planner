@@ -74,7 +74,7 @@ export interface Budget {
 export interface DayPlan {
   schedule_stale?: boolean
   route_fact_expires_at?: string | null
-  schedule_dependencies?: { planning_revision: number; input_hash: string; fact_hash: string; computed_at: string; expires_at: string }
+  schedule_dependencies?: { planning_revision: number; input_hash: string; fact_hash: string; computed_at: string; expires_at: string | null }
   city?: string
   timeline?: TimelineItem[]
   feasibility?: { status: 'feasible' | 'unverified' | 'not_found' | 'infeasible'; solver_status?: string; unknown?: string[]; conflicts?: string[]; omitted_activity_ids?: string[] }

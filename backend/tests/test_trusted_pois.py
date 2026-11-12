@@ -242,7 +242,7 @@ def test_daily_rag_context_receives_current_user_id():
         result = planner._build_rag_context({"request": _request(), "user_id": 42})
     assert result == {"rag_context": ""}
     rag.build_rag_context.assert_called_once_with(
-        _request(), top_k=2, max_chunk_chars=600, user_id=42
+        _request(), top_k=2, max_chunk_chars=600, user_id=42, candidate_pois=[]
     )
 
 

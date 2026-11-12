@@ -68,7 +68,7 @@ class TravelDataNodes:
                             logger.warning("补充景点候选失败 keyword=%s", futures[future])
             logger.info(f"   找到 {len(pois)} 个景点")
 
-            # 城市索引由并行 RAG 节点负责。这里只读取已有知识，避免在景点分支重复建库。
+            # 后续 RAG 节点复用本分支的可信候选建库，这里只读取已有知识。
             knowledge_names = []
             try:
                 from ..services.rag_service import get_rag_service

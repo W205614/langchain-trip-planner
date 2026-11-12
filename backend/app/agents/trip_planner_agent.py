@@ -161,6 +161,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
                     f"{base_info}\n"
                     f"本日有效游览时间窗口：{window_text}（{request.planning_input.timezone}）；抵达前和离开后不得安排。\n"
                     f"到达约束：{request.planning_input.arrival_at or '未提供'}；离开约束：{request.planning_input.departure_at or '未提供'}。\n"
+                    "该窗口包含游览、用餐、交通与等待；起终地点未确定的接驳段在求解时各预留30分钟，游览时长必须扣除这些占时，不得把整个窗口都分配给景点。\n"
                     f"**本天可选景点(仅从这些里选, 勿选其他):**\n{sub_text}\n"
                     f"**本天就近餐厅候选（只能返回其中的poi_id；距离排序不代表路线已核验）:**\n{self._pois_to_text(restaurants[i]) or '无'}\n"
                     f"请生成第 {i + 1} 天的行程 (日期 {current_date}, 天序号 day_index={i})。\n"
@@ -709,7 +710,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         return base
 
     def _build_rag_context(self, state: GraphState) -> dict:
-        """与地图 I/O 并行准备一次 RAG 上下文，供所有单日 prompt 复用。"""
+        """复用已查到的可信景点准备一次 RAG 上下文，供所有单日 prompt 复用。"""
         started_at = time.perf_counter()
         outcome = "success"
         try:
@@ -717,6 +718,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             context = get_rag_service().build_rag_context(
                 state["request"], top_k=_DAY_RAG_TOP_K,
                 max_chunk_chars=_DAY_RAG_MAX_CHUNK_CHARS, user_id=state.get("user_id"),
+                candidate_pois=state.get("attraction_pois", []),
             )
             return {"rag_context": context}
         except Exception:
@@ -751,7 +753,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         graph.add_edge(START, "get_weather")
         graph.add_edge(START, "search_hotels")
         graph.add_edge(START, "search_restaurants")
-        graph.add_edge(START, "build_rag_context")
+        graph.add_edge("search_attractions", "build_rag_context")
         graph.add_edge(
             ["search_attractions", "get_weather", "search_hotels", "search_restaurants", "build_rag_context"],
             "generate_trip_plan",
@@ -859,7 +861,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         trip_plan.constraints = request.constraints.model_copy(deep=True)
 
         # 知识库增强: 给每个景点追加知识库详情(门票/开放时间/交通/避坑),
-        # 让知识库内容真正落到前端每个景点上。失败/未启用时静默跳过。
+        # 主动停用与检索故障分别向调用方说明。
         enrichment_started_at = time.perf_counter()
         enrichment_outcome = "success"
         try:
@@ -871,8 +873,11 @@ class MultiAgentTripPlanner(TravelDataNodes):
             ]
             details = rag.get_attraction_rag_texts(attraction_names, trip_plan.city,
                 poi_ids={a.name: a.poi_id for day in trip_plan.days for a in day.attractions},
-                raise_on_error=True)
-            if len(details) < len(set(attraction_names)):
+                raise_on_error=True) if rag.settings.rag_enabled else {}
+            if not rag.settings.rag_enabled:
+                enrichment_outcome = "disabled"
+                trip_plan.enrichment_notices.append("攻略资料检索已关闭，本次行程未使用知识库增强")
+            elif len(details) < len(set(attraction_names)):
                 trip_plan.enrichment_notices.append("部分攻略资料暂无可靠匹配，请以官方信息为准")
             for day in trip_plan.days:
                 for attr in day.attractions:
