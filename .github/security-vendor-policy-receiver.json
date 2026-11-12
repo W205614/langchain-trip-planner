@@ -20,12 +20,13 @@
     "docs/evidence/runtime-support-security-20261110/receiver-after-sqlite-removal-grype.json": "0b49e56f25430cae0eb81c678e127956438fd448bfe72452fc1dac531c6861b4",
     "tools/image_policy.py": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240",
     "tools/security_gate.py": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea",
-    ".github/workflows/security.yml": "a833c6ced12a09b9090a1f9fa0bf4ab31b243b19647cb6f854c2afc3b6793318",
+    ".github/workflows/security.yml": "c224fd4cf08962232f0d34e074022354290c7fb0e57b865b521b8afdd338f463",
     "docs/evidence/runtime-support-security-20261110/gate-review/activation-review.json": "a8fa28a70b61872b9e0ca436c7f8537817fc062a216522e6fd172b42116b588a",
     "docs/evidence/runtime-support-security-20261110/gate-review/actual-receiver-contract.json": "03e28292eba59f7de2c9cee12f01bf62977cff877339f97d2603384744dd03d2",
     "docs/evidence/runtime-support-security-20261110/gate-review/debian-and-agent-regression.json": "4907c885a3d12750cc28fa88dce7b13f91f9e8f9dda20c55383c486816ed4c4d",
     "docs/evidence/runtime-support-security-20261110/gate-review/direct-tests.log": "28dc6b0ee0517956392fc0bfb6fce3d1aa4e2635e0f0bfb1a7886408983ffd2e",
-    "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc"
+    "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc",
+    "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021"
   },
   "assessments": [
     {

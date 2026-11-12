@@ -179,7 +179,7 @@
     "docs/evidence/native-security-20261110/documentation-binding-delta.json": "0128b7c855e4c73cf1ebfd45baad13238e0c4d4e75b3de3f0f3e679db1c0e396",
     "docs/evidence/native-security-20261110/pre-activation-review-readme.md": "2293df793b42435f236fa9e9703d36ac5062d0769aa4ff0bd5e0319cc831aae8",
     "tools/sarif_rules.py": "dbf1a07b1e9c749977e57a3ca5f0143e3717fda0d4ed0d880c33703936ebe5db",
-    ".github/workflows/security.yml": "a833c6ced12a09b9090a1f9fa0bf4ab31b243b19647cb6f854c2afc3b6793318",
+    ".github/workflows/security.yml": "c224fd4cf08962232f0d34e074022354290c7fb0e57b865b521b8afdd338f463",
     "docs/evidence/native-security-20261110/all-severity-scope-review.json": "26420794c46988c6b8bdd5f73773a20be3ca41875f44fb7bdc7361a6bac803a6",
     "docs/evidence/runtime-support-security-20261110/gate-review/activation-review.json": "a8fa28a70b61872b9e0ca436c7f8537817fc062a216522e6fd172b42116b588a",
     "docs/evidence/runtime-support-security-20261110/gate-review/actual-receiver-contract.json": "03e28292eba59f7de2c9cee12f01bf62977cff877339f97d2603384744dd03d2",
@@ -206,7 +206,8 @@
     "backend/security/openssl-backport/README.md": "d0e8fe5a7f170c22d1e81b475623b4abe71cfbcc159b42396f5a8db8cfd98149",
     "backend/security/openssl-backport/sources.sha256": "60d6dc5cbfdcc14d2cd6c186179657b608a445db5596c0a5ec6956d75d95baa9",
     "backend/security/openssl-backport/test-dgram-detect-peer.c": "3d3b2a276a5308235b22a44a425af88bdfadaba760cf3e55e8efc3391d3b874c",
-    "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json": "eedcdc9031b7ffee22ab928b505c60f1d455bff9e6bcf80fdfeda87a3ed401ab"
+    "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json": "eedcdc9031b7ffee22ab928b505c60f1d455bff9e6bcf80fdfeda87a3ed401ab",
+    "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021"
   },
   "assessments": [
     {
