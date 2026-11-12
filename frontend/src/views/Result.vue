@@ -691,7 +691,13 @@ const formatDistance = (km: number): string => {
 }
 
 const dayCheckMessage = (check: any): string => {
-  const schedule = `第${check.day_index + 1}天：安排 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）`
+  const timeline = tripPlan.value?.days[check.day_index]?.timeline
+  const durations = timeline?.map(item => (Date.parse(item.end_at || '') - Date.parse(item.start_at || '')) / 60000)
+  const scheduledMinutes = durations?.length && durations.every(minutes => Number.isFinite(minutes) && minutes >= 0)
+    ? durations.reduce((sum, minutes) => sum + minutes, 0) : null
+  const schedule = scheduledMinutes == null
+    ? `第${check.day_index + 1}天：预计占用 ${check.planned_minutes == null ? '待核实' : check.planned_minutes + ' 分钟'}（含用餐与缓冲预留）`
+    : `第${check.day_index + 1}天：已排程合计 ${scheduledMinutes} 分钟（含时间轴中的交通、用餐与缓冲）`
   if (check.walking_status === 'no_attractions') return `${schedule}；当天没有可验证景点，无法统计景点间距离`
   if (check.walking_status === 'single_stop') return `${schedule}；当天只有一个景点，无景点间步行`
   if (check.walking_status === 'not_applicable') return `${schedule}；自驾路线不含停车后步行`

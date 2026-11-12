@@ -83,6 +83,26 @@ test('a one-attraction day is not displayed as zero walking distance', async ({ 
   await expect(page.getByText(/景点间步行 0\.0 公里/)).toHaveCount(0)
 })
 
+for (const withTimeline of [true, false]) {
+  test(`timeline summary uses scheduled intervals instead of the legacy estimate: ${withTimeline}`, async ({ page }) => {
+    // The real 2026-11-12 sample scheduled 30 + 120 + 30 minutes; its legacy check estimated 240.
+    const day = { day_index: 0, date: '2026-11-13', attractions: [], meals: [],
+      timeline: withTimeline ? [
+        { activity_id: 'arrival', kind: 'transfer', title: '抵达', start_at: '2026-11-13T14:30:00+08:00', end_at: '2026-11-13T15:00:00+08:00' },
+        { activity_id: 'visit', kind: 'visit', title: '游览', start_at: '2026-11-13T15:00:00+08:00', end_at: '2026-11-13T17:00:00+08:00' },
+        { activity_id: 'departure', kind: 'transfer', title: '离开', start_at: '2026-11-13T17:00:00+08:00', end_at: '2026-11-13T17:30:00+08:00' }
+      ] : undefined }
+    await page.route('**/api/**', route => route.fulfill({ status: 503, json: { message: '离线展示测试' } }))
+    await page.addInitScript(day => {
+      sessionStorage.setItem('tripPlan', JSON.stringify({ city: '南京', start_date: day.date, end_date: day.date, days: [day] }))
+      sessionStorage.setItem('tripQuality', JSON.stringify({ day_checks: [{ day_index: 0, planned_minutes: 240, walking_status: 'single_stop' }] }))
+    }, day)
+    await page.goto('/result')
+    await expect(page.getByText(withTimeline ? /已排程合计 180 分钟/ : /预计占用 240 分钟/)).toBeVisible()
+    await expect(page.getByText(/安排 240 分钟/)).toHaveCount(0)
+  })
+}
+
 test('cross-city activities with the same name keep separate photo identities', async ({ page }) => {
   const plan = { city: '杭州', start_date: '2026-11-01', end_date: '2026-11-02', overall_suggestions: '已确认跨城交通', weather_info: [], days: ['杭州', '上海'].map((city, index) => ({ city, day_index: index, date: `2026-11-0${index + 1}`, description: city, transportation: '公共交通', accommodation: '酒店', meals: [], attractions: [{ activity_id: `a${index}`, poi_id: `P${index}`, name: '博物馆', address: city, location: { longitude: 120 + index, latitude: 30 }, visit_duration: 120, description: city }] })) }
   await page.addInitScript(plan => sessionStorage.setItem('tripPlan', JSON.stringify(plan)), plan)
