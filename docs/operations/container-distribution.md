@@ -1,13 +1,13 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 和告警接收器按本仓配方在本地构建／运行；它们不是这三个 GHCR 应用包。当前v0.1.5升级三个应用；四个已验收配套镜像保持。范围见[当前版本证据](../evidence/release-v0.1.5-20261112/README.md)。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 和告警接收器按本仓配方在本地构建／运行；它们不是这三个 GHCR 应用包。当前v0.1.6升级三个应用及Go工具链配套镜像，告警接收器保持原已验收镜像。范围见[当前版本证据](../evidence/release-v0.1.6-20261112/README.md)。
 
 ## 首次使用镜像
 
 获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
 
 ```dotenv
-TRIP_VERSION=v0.1.5
+TRIP_VERSION=v0.1.6
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 
@@ -46,6 +46,18 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 5. 按公开发布范围设置新建 GHCR 包可见性，匿名拉取并核对 registry 摘要和许可入口；完成实际使用者验收后更新本机日常环境。
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
+
+## v0.1.6 的不可变身份
+
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6)源码为`2648d33576c987294facc7b797bbcea74af2214e`，Linux/amd64、PUBLIC。三个应用的实际Registry/config摘要如下，标签`:v0.1.6`；部署使用仓库加`@`和完整digest。四附件、真实联网验收及备份/停止边界见[本版证据](../evidence/release-v0.1.6-20261112/README.md)。
+
+| 应用 | Registry digest | Config digest |
+| --- | --- | --- |
+| `agent` | `sha256:1667ee0245448902cab188ee64d82cd4ecd35acec8a078bcf4436fa581872907` | `sha256:a9727a4dbcaef100b8e56f8d95f7e41d38972d79e9ed8710039969ff4eb98a93` |
+| `backend` | `sha256:666a01c19ef4f65eaf648ba8136e5f2e7a6ab0c92f3b8f4b82d69b19ff56845b` | `sha256:56e9b5099f354498870774e6d6a6f686e9fa5ee0e3adbb5a369b7cae081b47dc` |
+| `frontend` | `sha256:2bbbaf799d47606226504bd4dff327811a98c19b83ad07e4da23e4e2029c482e` | `sha256:d6b6f8c16c2c59485d2cbaf13aa9d9dd52c6c22cdf54d21cedbaa96d8b3b738e` |
+
+最终候选与匿名拉取的镜像有序层、配置及来源一致。来源ZIP6712成员与2743下载记录全部校验。历史v0.1.5及更早版本保留；下面是各版本当时的身份和验收边界。
 
 ## v0.1.5 的不可变身份
 

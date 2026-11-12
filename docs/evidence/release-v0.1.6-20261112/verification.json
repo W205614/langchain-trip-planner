@@ -1,0 +1,193 @@
+{
+  "release_source": "2648d33576c987294facc7b797bbcea74af2214e",
+  "version": "v0.1.6",
+  "release_id": 442818361,
+  "release_url": "https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6",
+  "platform": "linux/amd64",
+  "assets": {
+    "application-images-v0.1.6.tar.gz": {
+      "id": 739127905,
+      "size": 478568357,
+      "digest": "sha256:706f371e32a3842e7c2eda92bc78fb2df652c89bfb537e9bd66c1622c81c0c4a",
+      "state": "uploaded"
+    },
+    "container-manifest.json": {
+      "id": 739197736,
+      "size": 16809,
+      "digest": "sha256:f792c92475fe341958fcec2d7bf15db741e3164827067b7ed05c29062fdeb1ef",
+      "state": "uploaded"
+    },
+    "container-sources-v0.1.6.zip": {
+      "id": 739169359,
+      "size": 1392487767,
+      "digest": "sha256:0fb1c5874c75eba5ae3b990160c9fa46b492a743304fd8bf173082c2cc2fd0ae",
+      "state": "uploaded"
+    },
+    "SHA256SUMS": {
+      "id": 739199027,
+      "size": 284,
+      "digest": "sha256:c66a7a182f07f4b1a9c752d8f8cea4a4a0f308b0cf89d7aab10c0dd4d9005a7d",
+      "state": "uploaded"
+    }
+  },
+  "images": {
+    "agent": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-agent:v0.1.6",
+      "digest": "sha256:1667ee0245448902cab188ee64d82cd4ecd35acec8a078bcf4436fa581872907",
+      "config_digest": "sha256:a9727a4dbcaef100b8e56f8d95f7e41d38972d79e9ed8710039969ff4eb98a93"
+    },
+    "backend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-backend:v0.1.6",
+      "digest": "sha256:666a01c19ef4f65eaf648ba8136e5f2e7a6ab0c92f3b8f4b82d69b19ff56845b",
+      "config_digest": "sha256:56e9b5099f354498870774e6d6a6f686e9fa5ee0e3adbb5a369b7cae081b47dc"
+    },
+    "frontend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-frontend:v0.1.6",
+      "digest": "sha256:2bbbaf799d47606226504bd4dff327811a98c19b83ad07e4da23e4e2029c482e",
+      "config_digest": "sha256:d6b6f8c16c2c59485d2cbaf13aa9d9dd52c6c22cdf54d21cedbaa96d8b3b738e"
+    }
+  },
+  "ci": [
+    {
+      "id": 43197515299,
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43197515299",
+      "source": "2648d33576c987294facc7b797bbcea74af2214e",
+      "status": "completed",
+      "conclusion": "success",
+      "successful_jobs": 4
+    },
+    {
+      "id": 43197515132,
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43197515132",
+      "source": "2648d33576c987294facc7b797bbcea74af2214e",
+      "status": "completed",
+      "conclusion": "success",
+      "successful_jobs": 14
+    }
+  ],
+  "promotion": {
+    "id": 43208313513,
+    "publisher_and_anonymous_consumer_passed": true
+  },
+  "real_generation": {
+    "passed": true,
+    "record_id": 2,
+    "started_at": "2026-11-12T07:51:53.301890+00:00",
+    "finished_at": "2026-11-12T07:52:28.572737+00:00",
+    "provider_delta": {
+      "text": 1,
+      "embedding": 5,
+      "vision": 0,
+      "amap": 34
+    },
+    "timeline_minutes": 180,
+    "earlier_infeasible_draft_retained": true
+  },
+  "public_runtime": {
+    "passed": true,
+    "existing_real_record": 2,
+    "new_generation_calls": 0,
+    "capture_phase": "final-sealed-before-publication",
+    "sealed_capture_identity_reused": true,
+    "public_restore_provider_delta": {
+      "text": 0,
+      "embedding": 0,
+      "vision": 0,
+      "amap": 0
+    },
+    "images_pulled_anonymously": true,
+    "refresh_passed": true,
+    "real_photo": true,
+    "map_tile_responses": 117,
+    "retrieval_sources": 5,
+    "provider_global_delta": {
+      "text": 0,
+      "embedding": 0,
+      "vision": 0,
+      "amap": 1
+    },
+    "provider_database_delta": {
+      "amap": 2,
+      "text": 0,
+      "embedding": 0
+    },
+    "global_final": {
+      "text": 66,
+      "embedding": 30,
+      "vision": 1,
+      "amap": 1768
+    },
+    "application_final": {
+      "amap": 85,
+      "text": 2,
+      "embedding": 7
+    }
+  },
+  "daily": {
+    "passed": true,
+    "all_seven_stopped": true,
+    "backup_task_disabled": true,
+    "full_validation_sha256": "77c624dd15fe24fdc19ca7eda53e067fcb1847bea1eda05ad54a25134c9923c9",
+    "data": {
+      "table_count": 46,
+      "counts": {
+        "users": 45,
+        "trips": 61,
+        "documents": 3,
+        "flyway": "20"
+      },
+      "upload_files": 4,
+      "all_table_row_hashes_unchanged": true,
+      "all_upload_hashes_unchanged": true
+    },
+    "provider_ledger_unchanged": true
+  },
+  "security": {
+    "severity_scope": "all",
+    "agent_raw_matches": 226,
+    "agent_raw_high_critical": 69,
+    "applicable_unresolved": 0,
+    "risk_accepted": 0,
+    "backend_raw_matches": 0,
+    "frontend_raw_matches": 0,
+    "codeql_java_raw": 11,
+    "codeql_complete_flows": 44,
+    "codeql_contextually_not_affected": 11,
+    "codeql_other_languages_raw": 0,
+    "dependabot": "disabled; API403, not a clean scan",
+    "github_code_scanning_open": 0,
+    "github_secret_scanning_open": 0,
+    "packages_list": "API403 missing read:packages; no token scope expansion; public acquisition verified independently"
+  },
+  "source_transport": {
+    "workflow_run": 43206536923,
+    "definition_sha": "ed57169bb53c6cd76da173497a35c469faf35d83",
+    "actual_receipt": {
+      "passed": true,
+      "source": "2648d33576c987294facc7b797bbcea74af2214e",
+      "definition_sha": "ed57169bb53c6cd76da173497a35c469faf35d83",
+      "release_id": 442818361,
+      "version": "v0.1.6",
+      "asset": {
+        "id": 739169359,
+        "name": "container-sources-v0.1.6.zip",
+        "size": 1392487767,
+        "digest": "sha256:0fb1c5874c75eba5ae3b990160c9fa46b492a743304fd8bf173082c2cc2fd0ae",
+        "state": "uploaded"
+      },
+      "rebuild": false,
+      "published": false,
+      "base_sha256": "93c5c7f7abec550f18b3a8236778ce939c6bc8c076cff7531956568b74ecd8ff",
+      "spans": 6708,
+      "recipe_sha256": "4c9f6b8bed1c07e44eab9d5b69f01e97102181683f3e61b371abc56d6a55996c",
+      "skeleton_sha256": "439b7f9dbec92f5409c40479d65ecad275546988bdf5a13782648e6064bf4b23"
+    }
+  },
+  "source_material": {
+    "zip_bytes": 1392487767,
+    "members": 6712,
+    "source_downloads": 2743,
+    "all_inner_hashes_verified": true
+  },
+  "boundary": "Single real sample and restored same record, normal external services. Unknown travel facts remain explicit; no new SMTP/S3/vision/public production or seven-service clone recovery claim."
+}

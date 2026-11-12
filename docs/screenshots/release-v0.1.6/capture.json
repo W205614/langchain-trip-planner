@@ -1,0 +1,86 @@
+{
+  "source": "2648d33576c987294facc7b797bbcea74af2214e",
+  "version": "v0.1.6",
+  "started_at": "2026-11-12T11:01:31.981Z",
+  "finished_at": "2026-11-12T11:02:03.918Z",
+  "real_provider_configuration": true,
+  "synthetic_account": true,
+  "existing_real_record": 2,
+  "new_generation_calls_during_capture": 0,
+  "intercepted_requests": 0,
+  "software_gpu": "Chromium SwiftShader; visible roads, lake, POI marker and complete attribution manually inspected.",
+  "images": {
+    "agent": {
+      "reference": "ghcr.io/w205614/langchain-trip-planner-agent@sha256:1667ee0245448902cab188ee64d82cd4ecd35acec8a078bcf4436fa581872907",
+      "actual_id": "sha256:1667ee0245448902cab188ee64d82cd4ecd35acec8a078bcf4436fa581872907",
+      "anonymous_pull": true,
+      "layers_and_configuration_match": true,
+      "runtime_environment_map_sha256": "65cc8e7d297738aa9be6d8d7bb477c9738d07d9774ab4e592dfed6b5aadb7ce3"
+    },
+    "backend": {
+      "reference": "ghcr.io/w205614/langchain-trip-planner-backend@sha256:666a01c19ef4f65eaf648ba8136e5f2e7a6ab0c92f3b8f4b82d69b19ff56845b",
+      "actual_id": "sha256:666a01c19ef4f65eaf648ba8136e5f2e7a6ab0c92f3b8f4b82d69b19ff56845b",
+      "anonymous_pull": true,
+      "layers_and_configuration_match": true,
+      "runtime_environment_map_sha256": "63a0f62046f5371d3df63eee2eeebeed47102f349b2f06bdb63daba011e4e62d"
+    },
+    "frontend": {
+      "reference": "ghcr.io/w205614/langchain-trip-planner-frontend@sha256:2bbbaf799d47606226504bd4dff327811a98c19b83ad07e4da23e4e2029c482e",
+      "actual_id": "sha256:2bbbaf799d47606226504bd4dff327811a98c19b83ad07e4da23e4e2029c482e",
+      "anonymous_pull": true,
+      "layers_and_configuration_match": true,
+      "runtime_environment_map_sha256": "afe2f88318f421af1a255dee29608aea58b015c5748b19f34149e5203e9163da"
+    }
+  },
+  "provider_global_delta": {
+    "text": 0,
+    "embedding": 0,
+    "vision": 0,
+    "amap": 1
+  },
+  "provider_database_delta": {
+    "amap": 2,
+    "text": 0,
+    "embedding": 0
+  },
+  "real_photo": [
+    {
+      "status": 200,
+      "type": "image/jpeg",
+      "source": "agent-amap-mcp",
+      "bytes": 271509,
+      "sha256": "475f4113a014389dd4b1ea642309e539f8a8f3950512c998179ae31e1841fd74"
+    },
+    {
+      "status": 200,
+      "type": "image/jpeg",
+      "source": "agent-amap-mcp",
+      "bytes": 271509,
+      "sha256": "475f4113a014389dd4b1ea642309e539f8a8f3950512c998179ae31e1841fd74"
+    }
+  ],
+  "retrieval_sources": 5,
+  "screenshots": [
+    {
+      "file": "01-normal-plan.png",
+      "sha256": "c6a69d54a2d53cc7c509cd4b4cfe3a9decab130b571299b918c9a09a0a6ca930",
+      "bytes": 1122642,
+      "width": 1440,
+      "height": 3689
+    },
+    {
+      "file": "02-normal-map.png",
+      "sha256": "6ad900547a5468a803a08e875cd62440c76452c630889eefb3a07a5250997f88",
+      "bytes": 191465,
+      "width": 716,
+      "height": 930
+    },
+    {
+      "file": "03-normal-retrieval.png",
+      "sha256": "d6bb13849e369f482b10d2377daaa3e784e9f84963826404eadafd12f6f51966",
+      "bytes": 556447,
+      "width": 1440,
+      "height": 1933
+    }
+  ]
+}

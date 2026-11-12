@@ -4,7 +4,7 @@
 
 模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-当前版本：[**v0.1.5 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.5) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/evidence/release-v0.1.5-20261112/README.md)
+当前版本：[**v0.1.6 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/evidence/release-v0.1.6-20261112/README.md)
 
 ## 可以做什么
 
@@ -16,26 +16,26 @@
 | 使用旅行资料 | 上传资料、审核事实、攻略问答和可选 RAG；Chroma/关键词召回在本地，向量与图文解析依赖外部模型 |
 | 管理个人数据 | 账号与权限、配额、反馈、数据导出及注销；邮件、S3、公网 HTTPS 需另配相应外部服务 |
 
-各项是否经过本轮验收，与源码中是否已实现分开记录。SMTP、S3、RAG、视觉及浏览器高德底图没有本轮新增真实联调结论。
+各项是否经过本轮验收，与源码中是否已实现分开记录。本轮真实验证覆盖 RAG、浏览器高德底图和景点图片；SMTP、S3 和视觉没有新增真实联调结论。
 
 ## 真实运行画面
 
-下面来自**最终v0.1.5镜像的隔离恢复回放**：使用合成账号，展示本轮真实模型／高德生成并保存的南京行程。真实生成用1次模型、34次高德MCP；截图阶段没有再次生成或调用供应商。Agent/Java运行层与真实生成时保持一致，最终前端已修复时长摘要。采集后公开制品又完成独立匿名获取与运行验收。
+下面使用**正常联网配置与合成账号**，展示真实模型和高德生成、保存并刷新后的南京行程。最终成功样本生成使用1次文本模型、34次高德MCP和5次Embedding；整轮还包含保留的先前草稿及排障调用，不能将样本计数当作总费用。
 
-时间轴实际为14:30–17:30，合计180分钟。自然过期的事实如实标注待核验，营业、预约与接驳未知没有改成已确认：
+地图底图、景点照片和资料检索均实际可用；时间轴为14:30–17:30，共180分钟。营业、预约和未知接驳如实保留待核验说明：
 
-![南京真实生成行程刷新后的时间轴和待核验提示](docs/screenshots/release-v0.1.5/03-refreshed-timeline.PNG)
+![南京行程：真实底图、景点照片、180分钟时间轴及待核验事实](docs/screenshots/release-v0.1.6/01-normal-plan.png)
 
 <details>
-<summary>查看需求表单与完整行程页面</summary>
+<summary>查看地图实拍与资料检索来源</summary>
 
-![合成测试账号登录后的实际需求表单](docs/screenshots/release-v0.1.5/01-home.PNG)
+![高德道路、景点标记与完整版权审图信息](docs/screenshots/release-v0.1.6/02-normal-map.png)
 
-![真实生成并恢复的南京行程及180分钟合计](docs/screenshots/release-v0.1.5/02-real-plan.PNG)
+![正常资料检索返回五条来源，纯检索不调用生成模型](docs/screenshots/release-v0.1.6/03-normal-retrieval.png)
 
 </details>
 
-[素材来源、摘要与采集边界](docs/screenshots/release-v0.1.5/README.md)。地图SDK和照片请求发送前阻断，不算真实地图/图片验收；两份早期真实失败仍保留。正式生成需要自己的有效凭据、网络及额度，恢复回放不是免配置生成模式。
+[实拍来源、摘要与调用边界](docs/screenshots/release-v0.1.6/README.md)。没有拦截响应、注入行程或隐藏错误。旧截图属于限制外部请求的历史回放，不能用来判断正常配置下高德MCP整体不可用；历史失败记录保留。正式使用仍需自己的有效凭据、网络与额度。
 
 ## 架构与目录
 
@@ -78,7 +78,7 @@ Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、
 ### 1. 获取固定版本并准备配置
 
 ```powershell
-git clone --branch v0.1.5 https://github.com/W205614/langchain-trip-planner.git
+git clone --branch v0.1.6 https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
@@ -113,12 +113,12 @@ $env:BUILD_REVISION = (git rev-parse HEAD).Trim()
 在项目根新建 `.env`；已有文件只补充所需项，不覆盖其他配置：
 
 ```dotenv
-TRIP_VERSION=v0.1.5
+TRIP_VERSION=v0.1.6
 APP_PORT=8380
 AMAP_WEB_JS_KEY=
 ```
 
-浏览器 JS Key 可暂留空查看文本行程；需要地图时填写自己的 JS API Key。本轮没有验证真实 SDK。`APP_PORT=8381` 可避开被占用的 8380 端口。
+浏览器 JS Key 可暂留空查看文本行程；需要地图时填写自己的 JS API Key。服务端 MCP Key 与浏览器 JS Key 是不同配置。`APP_PORT=8381` 可避开被占用的 8380 端口。
 
 ### 2A. 使用预构建应用镜像
 
@@ -142,7 +142,7 @@ docker compose up -d --build --wait
 docker compose ps
 ```
 
-此路线重新构建，不承诺与公开镜像逐字节相同。复现随发行物保留的历史评估输入时，先按[源码与历史输入说明](docs/operations/container-distribution.md)准备并验证原始文件；不设置伪造的 CI 环境变量，也不将历史报告视为新一轮模型测试。
+此路线重新构建，不承诺与公开镜像逐字节相同。已有构建缓存时，获取前端系统安全更新可执行`docker compose build --pull --no-cache frontend`，再按原Compose启动。复现随发行物保留的历史评估输入时，先按[源码与历史输入说明](docs/operations/container-distribution.md)准备并验证原始文件；不设置伪造的 CI 环境变量，也不将历史报告视为新一轮模型测试。
 
 ### 3. 打开并验证
 
@@ -164,9 +164,9 @@ docker compose @imageCompose stop
 
 ## 验证、开发与运维
 
-本轮真实模型／高德链路完成一条生成、持久化及刷新流程（1次模型、34次MCP）；最终镜像恢复回放及公开后的独立四服务验收均无新增供应商调用。当前源码CI4/4、Security gates14/14成功，适用未解决告警0、风险接受0；原始匹配和语义误报分列保留。已有七服务升级验收后，46张业务表及4个上传摘要不变，并恢复停止。
+本轮修复并真实验证了资料检索、地图、图片与完整时间轴；最终封装镜像恢复同一真实记录、登录和刷新通过，封装恢复检查没有新增供应商调用。过期按实际参与规划的已核实事实计算，不再给所有估算统一套用30分钟过期；输入、事实或真实有效期变化仍要求重新核验。
 
-完整验证方法、修复与上下文评估分列在[v0.1.5 证据](docs/evidence/release-v0.1.5-20261112/README.md)。正常历史版本保留，不为验收、工具修正或文档提交重打公开 Tag、重发镜像。
+发布、公开镜像验收、CI与日常环境的最终状态见[v0.1.6证据](docs/evidence/release-v0.1.6-20261112/README.md)。原始安全匹配、逐项适用性结论和历史失败分列保留；未知营业、预约、票价和路线条件不会被改成已确认。正常历史版本保留。
 
 - [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
 - [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)
@@ -177,4 +177,4 @@ SMTP、S3、公网 TLS、异地恢复和完整七服务克隆恢复需独立联�
 
 ## 许可证
 
-原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。第三方运行时、原生补丁、schema、依赖和供应商地图素材保留各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。镜像中的 `/licenses` 与 Release 对应源码包共同提供原始通知、许可及必要构建材料；项目 MIT 不重新授权第三方组件。
+原创代码采用 [MIT License](LICENSE)，版权署名 `W205614`。运行截图中的地图、供应商照片与其他第三方素材保留各自条款。第三方运行时、原生补丁、schema、依赖和供应商地图素材保留各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。镜像中的 `/licenses` 与 Release 对应源码包共同提供原始通知、许可及必要构建材料；项目 MIT 不重新授权第三方组件。
