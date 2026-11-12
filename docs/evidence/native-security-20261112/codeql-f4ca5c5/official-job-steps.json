@@ -1,0 +1,328 @@
+{
+  "actions": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 3
+    },
+    {
+      "name": "Require fresh job-owned CodeQL output",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Build Java for semantic analysis (no tests)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 6
+    },
+    {
+      "name": "Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Fail on all unresolved CodeQL security and quality results",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 8
+    },
+    {
+      "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Post Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Post Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    }
+  ],
+  "python": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 3
+    },
+    {
+      "name": "Require fresh job-owned CodeQL output",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Build Java for semantic analysis (no tests)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 6
+    },
+    {
+      "name": "Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Fail on all unresolved CodeQL security and quality results",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 8
+    },
+    {
+      "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Post Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Post Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    }
+  ],
+  "javascript": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 3
+    },
+    {
+      "name": "Require fresh job-owned CodeQL output",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Build Java for semantic analysis (no tests)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 6
+    },
+    {
+      "name": "Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Fail on all unresolved CodeQL security and quality results",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 8
+    },
+    {
+      "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Post Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Post Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    }
+  ],
+  "java": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Require fresh job-owned CodeQL output",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Build Java for semantic analysis (no tests)",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Fail on all unresolved CodeQL security and quality results",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 8
+    },
+    {
+      "name": "Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Post Analyze and publish SARIF",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Post Initialize official CodeQL",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Post Run actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    }
+  ]
+}
