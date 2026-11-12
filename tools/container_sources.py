@@ -910,7 +910,8 @@ def copy_project_sources(collector, root):
         target = collector.root / 'project' / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         if source.is_dir():
-            shutil.copytree(source, target, dirs_exist_ok=True)
+            shutil.copytree(source, target, dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.pyo'))
         else:
             shutil.copyfile(source, target)
 

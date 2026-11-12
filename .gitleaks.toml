@@ -14,11 +14,12 @@ regexTarget = "secret"
 regexes = ['''^f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da$''']
 
 [[allowlists]]
-description = "Two Git-verified public frontend source SHA256 values in the exact 8182d40, 843d242, c54ae53, 881817b and e81765b CodeQL reviews, not credentials"
+description = "Two Git-verified public frontend source SHA256 values in the exact historical and 028e3be CodeQL reviews, not credentials"
 condition = "AND"
 targetRules = ["generic-api-key"]
 paths = [
   '''(^|/)docs/evidence/native-security-20261110/codeql/(8182d40|843d242|c54ae53|881817b|e81765b)/source-review\.json$''',
+  '''(^|/)docs/evidence/native-security-20261112/codeql-028e3be/source-review\.json$''',
   '''(^|/)\.github/codeql-context-remediated\.json$'''
 ]
 regexTarget = "secret"

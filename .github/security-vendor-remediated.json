@@ -188,7 +188,7 @@
     "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc",
     "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
     "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
-    "tools/container_sources.py": "1d8cfa23adfaf18ccd79124a84cb89a9f44bf3b691bf4352a366b89b7d4c2563",
+    "tools/container_sources.py": "09fe69774ab691c3fd5407fa11816677c9e60a3ece46489dad12034949628e85",
     "backend/tests/test_openssl_security_backport.py": "88021594218ea0e3fb9a8637336133645c2023b259e481b14cb7e8feab057b05",
     "backend/security/openssl-backport/adapt_aad_regression.py": "8a3659bead4b7bb6bc0e4a1b1859eee052e4b7f21bae3a7742b01705f2c6f427",
     "backend/security/openssl-backport/build-inputs.sh": "86c133f200ace2d6d5b4af89e13e4959ff5ccced421be459251032cd30154722",
