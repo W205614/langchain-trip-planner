@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "review_policy": "source_and_execution_path_bound",
-  "assessment_date": "2026-11-11",
+  "assessment_date": "2026-11-12",
   "product": "langchain-trip-planner internal Agent embedded derived index",
   "assessment_kind": "contextual_not_affected_not_upstream_fixed",
   "application": "ACTIVE explicitly selected embedded-only Chroma assessment. Four original upstream-not-fixed execution-path records remain unchanged; e817 typed-budget source propagation has been re-reviewed. No Chroma HTTP server, tenant API, remote embedding loader or SimpleRBAC path is enabled. New actual image validation remains separate.",
@@ -9,17 +9,17 @@
     "backend/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
     "backend/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
     "backend/app/agents/candidates.py": "781ad9948ee57ee648b834a66a97bdbe3db83424259af5a3b5e33b19f3fe3cde",
-    "backend/app/agents/data_nodes.py": "66fe9056643164f7c71ba3f451220865fd1a95125ee17c5305b08817b9c65d64",
+    "backend/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
     "backend/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
     "backend/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-    "backend/app/agents/trip_planner_agent.py": "190eb469e6c0d3bc36d6d4a55fe54dd6b5415355529bc1a014ae6d2db5d19b3d",
+    "backend/app/agents/trip_planner_agent.py": "c2af0754e5b75c201f6ae9286309b59aa7fbd8da6893b5b206ce9b3b59cfb786",
     "backend/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
     "backend/app/agent_api/business_client.py": "fad3370460e95191ca4d2e957ddb73958eca82c4d8b84c5184aa1dcbc9e2a8e9",
     "backend/app/agent_api/contracts.py": "61a3e87e2529c9da585d477204ed370604cdd1caebfeda01fd0562cf1812e7a3",
     "backend/app/agent_api/extraction.py": "f62ff5d35ffa546b5a0ad4eac120756041c75274521d1dffe11b69414480c61d",
     "backend/app/agent_api/indexing.py": "3ba50918edf7538f5b4eca3e89b87e5851b89cdd5592632d1de3e41897a6d23e",
     "backend/app/agent_api/index_versions.py": "18830d400a35be133ab475a0b400b08da2d14786a8c9818c52438dc0326fd50a",
-    "backend/app/agent_api/main.py": "d2ad33f656bb6c3aa51409352bb9c652117fc6ba6b3ebf2e31fe00a8902cc5a2",
+    "backend/app/agent_api/main.py": "490b2fd43f7a5d3d8cc27cdeadd5c755100b8c887d004cdce5c7d084868f75b0",
     "backend/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
     "backend/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
     "backend/app/agent_api/__init__.py": "20a67725888e796306f2f6558e2f65e83c4f8ed63e5c2f29358c7049f4861064",
@@ -57,10 +57,10 @@
     "backend/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
     "backend/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
     "backend/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
-    "backend/app/services/rag_service.py": "aae932fbcbfd8e51a8df3798a5a0183b1a1dea5aa8b64c5fdea28357617c2d8b",
+    "backend/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
     "backend/app/services/research_answer.py": "d011865f2303c7c2546b87c8268803d0c69335cd9ab4221a527c33819815e1d0",
     "backend/app/services/research_evidence.py": "e25365a9f34a15ae88d0aaf0cb834106f32e67bfc2bec838c38bb6d121712f04",
-    "backend/app/services/result_policy.py": "87b082919e8fc4ccfa480bed8c141dc455419ff5ae9e1972c51572b282c65127",
+    "backend/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
     "backend/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
     "backend/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
     "backend/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
@@ -190,7 +190,10 @@
     "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc",
     "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
     "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
-    "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021"
+    "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021",
+    "docs/evidence/normal-use-20261112/agent-source-native-review.json": "d66ef90ee587c22fd392142c30d1adfbd938a94a13a6889b80233a3a5dc1dc40",
+    "docs/evidence/normal-use-20261112/native-regex-wide-scanf-probe.json": "8b4ec0c96e8687274ffd96195eb2dd1e924724a6e1b86063b6ee22b42d05a914",
+    "docs/evidence/normal-use-20261112/agent-source-delta.patch": "9ad36f11de8a2ead47cbf6b9b36c9767da27f388ca40f1b3b665b564e6aa93dd"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
@@ -267,7 +270,7 @@
       ]
     }
   ],
-  "review_note": "2026-11-11: budget_source_binding_delta documents the five application LF updates and preserves all four full original assessment payloads. Earlier source_binding_review remains historical evidence. No new IDs, versions, exemptions, taxonomy or risk acceptance.",
+  "review_note": "2026-11-11: budget_source_binding_delta documents the five application LF updates and preserves all four full original assessment payloads. Earlier source_binding_review remains historical evidence. No new IDs, versions, exemptions, taxonomy or risk acceptance. Normal-use98e32a0: five reviewed source deltas reuse typed POIs/plain text with the existing embedded-only client; four Chroma assessments unchanged. Exact current image dependency/source bindings verified.",
   "source_binding_review": {
     "path": "docs/evidence/security-quality-20261110/runtime-source-review.json",
     "sha256": "7430de580f695b231c364cf9a8e713bb96d76ba9759f436d6752f0fda20dcc0e",
@@ -289,5 +292,10 @@
     "patch_sha256": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
     "reviewed_source": "e81765b257a2b88b1d463a02c6263e754d5cce00",
     "boundary": "Exact reviewed source delta only; new actual image validation remains mandatory."
+  },
+  "normal_use_source_binding_delta": {
+    "path": "docs/evidence/normal-use-20261112/agent-source-native-review.json",
+    "sha256": "d66ef90ee587c22fd392142c30d1adfbd938a94a13a6889b80233a3a5dc1dc40",
+    "reviewed_source": "98e32a09bd7390d7e54df2c4ab766c785ae985e5"
   }
 }
