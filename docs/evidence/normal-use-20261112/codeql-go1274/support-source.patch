@@ -1,0 +1,65 @@
+diff --git a/deploy/images/alertmanager.Dockerfile b/deploy/images/alertmanager.Dockerfile
+index 18d5f81..b389d87 100644
+--- a/deploy/images/alertmanager.Dockerfile
++++ b/deploy/images/alertmanager.Dockerfile
+@@ -5,7 +5,7 @@ RUN apk upgrade --no-cache \
+ COPY busybox-backport /trip-busybox
+ RUN sh /trip-busybox/build.sh
+ 
+-FROM golang:1.27.3-alpine AS build
++FROM golang:1.27.4-alpine AS build
+ # The local build proxy truncates Go HTTP/2 downloads; this affects build fetches only.
+ ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org GODEBUG=http2client=0
+ WORKDIR /src
+diff --git a/deploy/images/caddy.Dockerfile b/deploy/images/caddy.Dockerfile
+index 555c8df..ce6b6cc 100644
+--- a/deploy/images/caddy.Dockerfile
++++ b/deploy/images/caddy.Dockerfile
+@@ -5,7 +5,7 @@ RUN apk upgrade --no-cache \
+ COPY busybox-backport /trip-busybox
+ RUN sh /trip-busybox/build.sh
+ 
+-FROM golang:1.27.3-alpine AS build
++FROM golang:1.27.4-alpine AS build
+ # The local build proxy truncates Go HTTP/2 downloads; this affects build fetches only.
+ ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org GODEBUG=http2client=0
+ WORKDIR /src
+diff --git a/deploy/images/monitoring-source.lock.json b/deploy/images/monitoring-source.lock.json
+index ce1b56a..ed0c988 100644
+--- a/deploy/images/monitoring-source.lock.json
++++ b/deploy/images/monitoring-source.lock.json
+@@ -4,7 +4,7 @@
+   "archive_url": "https://codeload.github.com/prometheus/alertmanager/tar.gz/73c6bfe7393929211294c1954f30d8ed78e4d0ad",
+   "archive_sha256": "5c5c72ec6b4c4746d523f2ed1994dfec4b94f7457e530ee6fb16cfec158e545e",
+   "archive_bytes": 819451,
+-  "go_toolchain": "1.27.3",
++  "go_toolchain": "1.27.4",
+   "dependency_patches": {
+     "golang.org/x/net": "v0.60.0",
+     "google.golang.org/grpc": "v1.83.2",
+diff --git a/deploy/images/postgres.Dockerfile b/deploy/images/postgres.Dockerfile
+index dc6ab8f..bba9ac4 100644
+--- a/deploy/images/postgres.Dockerfile
++++ b/deploy/images/postgres.Dockerfile
+@@ -5,7 +5,7 @@ RUN apk upgrade --no-cache \
+ COPY busybox-backport /trip-busybox
+ RUN sh /trip-busybox/build.sh
+ 
+-FROM golang:1.27.3-alpine AS gosu-security
++FROM golang:1.27.4-alpine AS gosu-security
+ ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org
+ WORKDIR /src
+ ADD --checksum=sha256:2b70da8a5480fafedc16bb1fc91b572f064d03df736cbd91a616af2f1b66ab51 https://codeload.github.com/tianon/gosu/tar.gz/29b939aa5bd4dc588af765b8248f6e39150d2565 /tmp/gosu-source.tar.gz
+diff --git a/deploy/images/prometheus.Dockerfile b/deploy/images/prometheus.Dockerfile
+index a66daa2..29e418a 100644
+--- a/deploy/images/prometheus.Dockerfile
++++ b/deploy/images/prometheus.Dockerfile
+@@ -6,7 +6,7 @@ COPY busybox-backport /trip-busybox
+ RUN sh /trip-busybox/build.sh
+ 
+ FROM prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06 AS upstream
+-FROM golang:1.27.3-alpine AS build
++FROM golang:1.27.4-alpine AS build
+ # The local build proxy truncates Go HTTP/2 downloads; this affects build fetches only.
+ ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOWORK=off GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org GODEBUG=http2client=0
+ WORKDIR /src

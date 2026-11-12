@@ -109,3 +109,4 @@ docs/evidence/runtime-support-security-20261110/** -text whitespace=trailing-spa
 docs/evidence/normal-use-20261112/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/normal-use-20261112/**/*.sarif -text -whitespace
 docs/evidence/normal-use-20261112/*.patch -text -whitespace
+docs/evidence/normal-use-20261112/**/*.patch -text -whitespace
