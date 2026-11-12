@@ -1,0 +1,19 @@
+{
+  "source": "759c9d0411b8f80af7bd9ae68830cf17be6d5491",
+  "browser_contract_cases": 19,
+  "actual_fixture_html_export_cases": 1,
+  "unchanged_production_code": true,
+  "changed_business_files": [
+    "frontend/e2e/final-planning.spec.ts",
+    "frontend/e2e/optimization-flows.spec.ts"
+  ],
+  "patch_sha256": "f4d087d0283f2404f2d39ce7ff298f54fe70207f3ced9a7b8240645121049cb1",
+  "paid_provider_ledger_unchanged": {
+    "text": 66,
+    "embedding": 30,
+    "vision": 1,
+    "amap": 1767
+  },
+  "original_failed_ci": 43186725544,
+  "real_supplier_validation": "Separate retained normal-use record2, not replaced by these offline regression tests."
+}
