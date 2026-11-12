@@ -4,7 +4,7 @@
   "archive_url": "https://codeload.github.com/prometheus/alertmanager/tar.gz/73c6bfe7393929211294c1954f30d8ed78e4d0ad",
   "archive_sha256": "5c5c72ec6b4c4746d523f2ed1994dfec4b94f7457e530ee6fb16cfec158e545e",
   "archive_bytes": 819451,
-  "go_toolchain": "1.27.3",
+  "go_toolchain": "1.27.4",
   "dependency_patches": {
     "golang.org/x/net": "v0.60.0",
     "google.golang.org/grpc": "v1.83.2",

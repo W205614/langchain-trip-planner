@@ -5,7 +5,7 @@ RUN apk upgrade --no-cache \
 COPY busybox-backport /trip-busybox
 RUN sh /trip-busybox/build.sh
 
-FROM golang:1.27.3-alpine AS build
+FROM golang:1.27.4-alpine AS build
 # The local build proxy truncates Go HTTP/2 downloads; this affects build fetches only.
 ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org GODEBUG=http2client=0
 WORKDIR /src

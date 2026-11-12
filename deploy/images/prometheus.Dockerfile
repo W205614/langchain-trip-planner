@@ -6,7 +6,7 @@ COPY busybox-backport /trip-busybox
 RUN sh /trip-busybox/build.sh
 
 FROM prom/prometheus:v3.16.0@sha256:e04987641b57704f408e31f6373ba4138ecf27cb4a165d24aabb6c38fddd0f06 AS upstream
-FROM golang:1.27.3-alpine AS build
+FROM golang:1.27.4-alpine AS build
 # The local build proxy truncates Go HTTP/2 downloads; this affects build fetches only.
 ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOWORK=off GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org GODEBUG=http2client=0
 WORKDIR /src

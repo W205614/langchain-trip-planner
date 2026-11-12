@@ -5,7 +5,7 @@ RUN apk upgrade --no-cache \
 COPY busybox-backport /trip-busybox
 RUN sh /trip-busybox/build.sh
 
-FROM golang:1.27.3-alpine AS gosu-security
+FROM golang:1.27.4-alpine AS gosu-security
 ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOPROXY=https://proxy.golang.org GOSUMDB=sum.golang.org
 WORKDIR /src
 ADD --checksum=sha256:2b70da8a5480fafedc16bb1fc91b572f064d03df736cbd91a616af2f1b66ab51 https://codeload.github.com/tianon/gosu/tar.gz/29b939aa5bd4dc588af765b8248f6e39150d2565 /tmp/gosu-source.tar.gz
