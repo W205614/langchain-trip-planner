@@ -186,7 +186,7 @@
           <div class="right-map">
             <a-card id="map" title="📍 景点地图" :bordered="false" class="map-card">
               <p>虚线为景点游览顺序示意，非实际导航路线。</p>
-              <div id="amap-container" style="width: 100%; height: 100%"></div>
+              <div id="amap-container" style="width: 100%; flex: 1; min-height: 360px"></div>
             </a-card>
           </div>
         </div>
@@ -1322,6 +1322,8 @@ const getMealLabel = (type: string): string => {
 .map-card :deep(.ant-card-body) {
   height: calc(100% - 57px);
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 每日行程卡片 */
