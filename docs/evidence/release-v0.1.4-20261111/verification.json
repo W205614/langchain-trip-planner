@@ -1,0 +1,197 @@
+{
+  "version": "v0.1.4",
+  "release_source": "272c64b016115e357377b107daefd9bd934a361a",
+  "platform": "linux/amd64",
+  "published": true,
+  "visibility": "public",
+  "images": {
+    "agent": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-agent:v0.1.4",
+      "digest": "sha256:5785bdc6d48633638066799b1653eeb6bb827b70daa206e118c1e21bd945ea34",
+      "config_digest": "sha256:23cc0bafb8bb0d0dd3e19fd3f3afac33065982b83bafec8acb8056b7c9535f5c",
+      "application_revision": "e81765b257a2b88b1d463a02c6263e754d5cce00"
+    },
+    "backend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-backend:v0.1.4",
+      "digest": "sha256:65058254ba29c7f67124725208645269a9d8d4d4168d5ba1ae9247ad5f384693",
+      "config_digest": "sha256:9ab0b4a35d028596f7dfda5af8c9a0333dee29d292929b54a30cadb158dfa38f",
+      "application_revision": "881817b01cf778da6b546197d85af0534922428f"
+    },
+    "frontend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-frontend:v0.1.4",
+      "digest": "sha256:16b10ea4b4be3c32e89a8df3c950346b712b868818377500eaaa244c7d91e24d",
+      "config_digest": "sha256:5a887b9b5f0241d820098f1dee3a4f592d4c3a27f0939064de1461bbf95bb110",
+      "application_revision": "843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce"
+    }
+  },
+  "release_ci": [
+    {
+      "id": 42962698002,
+      "name": "CI",
+      "source": "272c64b016115e357377b107daefd9bd934a361a",
+      "status": "completed",
+      "conclusion": "success",
+      "successful_jobs": 4
+    },
+    {
+      "id": 42962697955,
+      "name": "Security gates",
+      "source": "272c64b016115e357377b107daefd9bd934a361a",
+      "status": "completed",
+      "conclusion": "success",
+      "successful_jobs": 14
+    }
+  ],
+  "publication": {
+    "run": 42978056488,
+    "publisher_job": 130381690616,
+    "publisher_conclusion": "success",
+    "original_consumer_job": 130382055415,
+    "original_consumer_conclusion": "failure",
+    "failure_retained": true,
+    "cause": "Raw project source comparison rejected nine UTF8 text CRLF/LF differences"
+  },
+  "anonymous_consumer": {
+    "run": 42979536910,
+    "job": 130386432915,
+    "verifier_source": "ab15bb4dc8df3300453113fe94e381784ba865e5",
+    "conclusion": "success",
+    "source_material": {
+      "members": 6678,
+      "source_downloads": 2743,
+      "all_inner_hashes_verified": true,
+      "zip_crc_passed": true,
+      "project_files_match_tag": true,
+      "project_comparison": "exact_bytes_or_utf8_non_nul_crlf_to_lf",
+      "project_crlf_normalized_files": [
+        "backend/Dockerfile",
+        "business-backend/Dockerfile",
+        "frontend/Dockerfile",
+        "THIRD_PARTY_NOTICES.md",
+        "tools/container-java-dependencies.json",
+        "tools/container-wheel-sources.json",
+        "tools/container_license_supplements.py",
+        "tools/container_sources.py",
+        "tools/sync_busybox_inputs.py"
+      ]
+    },
+    "all_outer_and_inner_hashes_verified": true,
+    "anonymous_image_pull": true,
+    "no_account_credentials_used": true
+  },
+  "runtime": {
+    "evidence_mode": "explicit-offline-user-authorized",
+    "passed": true,
+    "real_supplier_calls": 0,
+    "real_provider_acceptance_passed": false,
+    "all_four_stopped": true,
+    "history_refresh_mode": "honest_existing_expiry_projection",
+    "clock_or_binding_modified": false,
+    "browser_passed": true,
+    "screenshots": [
+      {
+        "file": "01-offline-home.PNG",
+        "caption": "离线供应商夹具样例：实际前端登录、持久化行程与刷新。图片与地图供应商资源在发送前阻断，未验收真实模型、高德、图片或地图。未知、失效与降级提示为应用原始输出。",
+        "evidence_mode": "explicit-offline-user-authorized",
+        "encoding": "PNG",
+        "sha256": "6d79196227f683003693db31e0510a53de8484e3b1937d75ffe86c1b401b4708",
+        "bytes": 1257698,
+        "width": 1440,
+        "height": 2490
+      },
+      {
+        "file": "02-offline-plan.PNG",
+        "caption": "离线供应商夹具样例：实际前端登录、持久化行程与刷新。图片与地图供应商资源在发送前阻断，未验收真实模型、高德、图片或地图。未知、失效与降级提示为应用原始输出。",
+        "evidence_mode": "explicit-offline-user-authorized",
+        "encoding": "PNG",
+        "sha256": "e258044a0e9c81d19e2a4793bebdd455065d7bcb47190c03aa0f3e809393635c",
+        "bytes": 728992,
+        "width": 1440,
+        "height": 3238
+      },
+      {
+        "file": "03-offline-refreshed-timeline.PNG",
+        "caption": "离线供应商夹具样例：实际前端登录、持久化行程与刷新。图片与地图供应商资源在发送前阻断，未验收真实模型、高德、图片或地图。未知、失效与降级提示为应用原始输出。",
+        "evidence_mode": "explicit-offline-user-authorized",
+        "encoding": "PNG",
+        "sha256": "dd8d049ff4c0a96a5093cbc8c640709cd47124a2f3fe77aaa84544cfb50e303e",
+        "bytes": 67267,
+        "width": 1054,
+        "height": 841
+      }
+    ]
+  },
+  "daily": {
+    "passed": true,
+    "all_seven_stopped": true,
+    "backup_task_disabled": true,
+    "data": {
+      "table_count": 46,
+      "counts": {
+        "users": 45,
+        "trips": 61,
+        "documents": 3,
+        "flyway": "20"
+      },
+      "upload_files": 4,
+      "all_table_row_hashes_unchanged": true,
+      "all_upload_hashes_unchanged": true
+    },
+    "seven_exact_target_images_verified": true,
+    "mounts_ports_security_and_explicit_configuration_preserved": true,
+    "monitoring": {
+      "trip": "up",
+      "trip-agent": "up"
+    },
+    "support_contracts": {
+      "postgres": {
+        "version": "17.11"
+      },
+      "prometheus": {
+        "version": "3.16.0",
+        "before_version": "3.16.0"
+      },
+      "alertmanager": {
+        "version": "0.34.1",
+        "before_version": "0.34.1"
+      },
+      "alert-receiver": {
+        "uid": 1000,
+        "inbox": "/inbox/alerts.jsonl"
+      }
+    },
+    "business_outbound_tables_and_global_ledger_unchanged": true
+  },
+  "security_at_release_source": {
+    "source": "272c64b016115e357377b107daefd9bd934a361a",
+    "checked_at": "2026-11-11T05:26:37.858286+00:00",
+    "code_scanning_open_main": 0,
+    "secret_scanning_open": 0,
+    "dependabot_status": "disabled; not a clean-scan conclusion",
+    "unfixed_risk_acceptance": 0
+  },
+  "maintainer_tool_ci": {
+    "source": "ab15bb4dc8df3300453113fe94e381784ba865e5",
+    "runs": [
+      42979412635,
+      42979412699
+    ],
+    "state": "actual_failure",
+    "not_reported_as_passed": true,
+    "ci_successful_jobs": 4,
+    "ci_total_jobs": 4,
+    "security_successful_jobs": 13,
+    "security_total_jobs": 14,
+    "agent_blocking_findings": 15,
+    "unknown_openssl_cve_ids": [
+      "CVE-2026-107496",
+      "CVE-2026-88822",
+      "CVE-2026-88823",
+      "CVE-2026-95691",
+      "CVE-2026-95692"
+    ],
+    "source_and_distribution_review": "in_progress; no dismissal or risk acceptance"
+  },
+  "raw_images_modified_for_documentation": false,
+  "real_failed_samples_relabelled": false
+}

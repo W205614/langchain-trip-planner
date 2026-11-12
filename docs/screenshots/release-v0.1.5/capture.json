@@ -1,0 +1,62 @@
+{
+  "version": "v0.1.5",
+  "source": "7cceca80eb8524b9fbef34a385796224426de81e",
+  "captured_at": "2026-11-12T02:52:24.032Z",
+  "evidence_mode": "captured-real-generation-read-replay",
+  "new_generation_submissions": 0,
+  "new_supplier_calls": 0,
+  "original_real_generation_calls": {
+    "model": 1,
+    "amap_mcp": 34
+  },
+  "paid_generation_on_exact_final_wrapper": false,
+  "provider_agent_and_java_base_images_unchanged": true,
+  "images": {
+    "agent": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-agent:v0.1.5",
+      "digest": "sha256:c85d5a2d3922d7635f138da741ead33c839471568cecd7ca87cdd5b359c5dbac",
+      "config_digest": "sha256:15d0ab81bb1cc01cbdb4c2e157814c3c90493a66e1defd8ae3bf0fceaaf83087"
+    },
+    "backend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-backend:v0.1.5",
+      "digest": "sha256:e07bf6b87db08f28608d5fd71db8edba53dc6cea44b8345e7a11eaa25f885cc0",
+      "config_digest": "sha256:3c61c0ea12606e3d9e711752d662d23e562a18f54af0f66ccbc864bdaeb11609"
+    },
+    "frontend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-frontend:v0.1.5",
+      "digest": "sha256:7911df66b5393c649138f6d232f939d22a65b18697cf75b289f8913aed8fcdd7",
+      "config_digest": "sha256:66422c85ed2e0d740776dcce9692992a273400cd206178d2c8a6e672524233b5"
+    }
+  },
+  "screenshots": [
+    {
+      "file": "01-home.PNG",
+      "encoding": "PNG",
+      "bytes": 1277268,
+      "sha256": "4c20a38b572d92bbc15ab1659067b8ff61db20a658a76d98d1b862b468f386a6",
+      "width": 1440,
+      "height": 2548
+    },
+    {
+      "file": "02-real-plan.PNG",
+      "encoding": "PNG",
+      "bytes": 824281,
+      "sha256": "8da21587499c0e3bc1a7f1a7021ae1db274162284affe1b0b25f3be364a5d553",
+      "width": 1440,
+      "height": 3705
+    },
+    {
+      "file": "03-refreshed-timeline.PNG",
+      "encoding": "PNG",
+      "bytes": 66833,
+      "sha256": "fa6d204bef125e69f5bdacdd1da40968c8a6edadbe5954793137d44c4e8e90d2",
+      "width": 1054,
+      "height": 841
+    }
+  ],
+  "same_saved_record_refresh_passed": true,
+  "summary_180_minutes_verified": true,
+  "clock_or_binding_modified": false,
+  "caption": "最终封装镜像恢复真实生成的合成账号行程；实际登录、读取及刷新，无新增供应商调用。采集在Registry发布前进行，后续公开镜像的运行配置/层身份另行核对。地图及照片发送前阻断，未知和过期提示保留。",
+  "credentials_and_private_paths_included": false
+}

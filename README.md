@@ -1,138 +1,180 @@
 # AI 旅行规划助手
 
-基于 **Vue 3、Spring Boot 和 LangGraph** 的国内旅行规划应用。填写出发地、目的地、日期、人数、预算与偏好，生成可以查看、编辑和导出的逐日行程。
+面向国内旅行的单机行程工作台。填写目的地、日期、预算、偏好及固定到离时间，由 **Vue 3、Spring Boot 和 LangGraph** 串起候选查询、逐日规划、时间求解、保存与后续调整。
 
-它把景点查询、路线安排、预算整理和出行记录集中到一个应用中，帮助你从“到处查攻略”走到“有一份可以继续调整的旅行计划”。
+模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-## 界面预览
+当前版本：[**v0.1.5 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.5) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/evidence/release-v0.1.5-20261112/README.md)
 
-以下为仓库已有的功能截图，具体布局和字段以当前运行页面为准。
+## 可以做什么
 
-**填写旅行需求**
+| 操作 | 实际能力 |
+| --- | --- |
+| 创建行程 | 按日期、人数、预算、景点偏好、每日时窗与固定预约整理候选，生成逐日安排和费用说明 |
+| 继续调整 | 保存后在行程工作台修改需求、预览并确认改排；刷新或重新登录后继续查看历史记录 |
+| 检查与分享 | 展示事实来源、时间轴、失效和待核验项；支持共享及 PNG、PDF、离线 HTML 导出 |
+| 使用旅行资料 | 上传资料、审核事实、攻略问答和可选 RAG；Chroma/关键词召回在本地，向量与图文解析依赖外部模型 |
+| 管理个人数据 | 账号与权限、配额、反馈、数据导出及注销；邮件、S3、公网 HTTPS 需另配相应外部服务 |
 
-![旅行需求表单](docs/screenshots/home.png)
+各项是否经过本轮验收，与源码中是否已实现分开记录。SMTP、S3、RAG、视觉及浏览器高德底图没有本轮新增真实联调结论。
 
-**查看每日安排、预算与地图**
+## 真实运行画面
 
-![行程概览与地图](docs/screenshots/result.png)
+下面来自**最终v0.1.5镜像的隔离恢复回放**：使用合成账号，展示本轮真实模型／高德生成并保存的南京行程。真实生成用1次模型、34次高德MCP；截图阶段没有再次生成或调用供应商。Agent/Java运行层与真实生成时保持一致，最终前端已修复时长摘要。采集后公开制品又完成独立匿名获取与运行验收。
+
+时间轴实际为14:30–17:30，合计180分钟。自然过期的事实如实标注待核验，营业、预约与接驳未知没有改成已确认：
+
+![南京真实生成行程刷新后的时间轴和待核验提示](docs/screenshots/release-v0.1.5/03-refreshed-timeline.PNG)
 
 <details>
-<summary>展开查看行程详情与历史记录</summary>
+<summary>查看需求表单与完整行程页面</summary>
 
-![每日行程详情](docs/screenshots/result1.png)
+![合成测试账号登录后的实际需求表单](docs/screenshots/release-v0.1.5/01-home.PNG)
 
-![历史行程管理](docs/screenshots/history.png)
+![真实生成并恢复的南京行程及180分钟合计](docs/screenshots/release-v0.1.5/02-real-plan.PNG)
 
 </details>
 
-## 服务与目录地图
+[素材来源、摘要与采集边界](docs/screenshots/release-v0.1.5/README.md)。地图SDK和照片请求发送前阻断，不算真实地图/图片验收；两份早期真实失败仍保留。正式生成需要自己的有效凭据、网络及额度，恢复回放不是免配置生成模式。
 
-浏览器从前端进入，Java API 处理账号、行程和任务并写入 PostgreSQL，需要规划或检索时调用 Python Agent。
+## 架构与目录
 
-| Compose 服务 | 源码或配置 | 改什么时看这里 |
-|---|---|---|
-| `frontend` | [Vue 前端](frontend/) | [页面](frontend/src/views/)、[行程交互组件](frontend/src/components/trip/) |
-| `backend` | [Java 业务服务](business-backend/) | 账号、行程保存、任务调度、资料审核 |
-| `agent` | [Python Agent](backend/) | LangGraph 规划、时间求解、高德工具、知识检索 |
-| `postgres` | [Compose 配置](docker-compose.yml) | 业务数据持久化，表结构由 Java 的 Flyway 迁移管理 |
+```mermaid
+flowchart LR
+    U[浏览器] --> F[Vue 前端 / Nginx]
+    F --> J[Java 业务 API]
+    J --> P[(PostgreSQL)]
+    J --> A[Python / LangGraph Agent]
+    J --> R[高德 Web 服务]
+    A --> M[文本 / 视觉 / Embedding 模型]
+    A --> T[高德 MCP]
+    A --> C[(Chroma / 本地检索)]
+    U -. 可选 JS Key .-> S[高德浏览器 SDK]
+```
 
-- [contracts/](contracts/) 存放跨服务契约。[deploy/](deploy/) 存放部署模板与监控配置，首次安装生成的 `deploy/runtime/` 包含私有凭据。
-- [tools/](tools/) 存放仓库级安全检查与主机维护工具。[脚本索引](docs/operations/scripts.md)按运行环境说明服务端脚本用途。
-- [docs/](docs/) 的[单机运行手册](docs/operations/single-host.md)用于日常操作，[验收记录索引](docs/evidence/README.md)用于查历史结果。
+Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、时间求解、工具调用与资料检索。外部模型和高德提供的数据仍受权限、额度、时效及覆盖范围约束。
 
-**首次安装使用下方四服务模板；已有七服务环境请直接打开[单机运行手册](docs/operations/single-host.md#现有七服务部署操作)。**
+| Compose 服务 | 目录 | 职责 |
+| --- | --- | --- |
+| `frontend` | [frontend/](frontend/) | 页面、行程工作台、导出与浏览器地图 |
+| `backend` | [business-backend/](business-backend/) | Java 业务服务、Flyway 迁移与任务调度 |
+| `agent` | [backend/](backend/) | Python Agent、LangGraph、高德工具和 RAG |
+| `postgres` | [deploy/images/](deploy/images/) | 本地 PostgreSQL 镜像配方与业务数据 |
 
-## 快速部署
+[contracts/](contracts/) 管理跨服务契约，[deploy/](deploy/) 放部署与监控模板，[tools/](tools/) 放仓库维护工具；[脚本索引](docs/operations/scripts.md)说明各运行入口。
 
-下面使用 Docker 首次创建四核心服务环境。命令以 **Windows PowerShell** 为例，均在项目根目录执行；已有七服务部署沿用[运行手册](docs/operations/single-host.md)中的原 Compose 文件和私有配置，不执行这里的配置生成或首次构建命令。
+## 选择启动方式
 
-### 1. 准备环境并下载项目
+以下命令在项目根目录使用 **PowerShell** 执行，面向**全新四服务安装**。已有七服务环境沿用[原 Compose、挂载与私有配置](docs/operations/single-host.md#现有七服务部署操作)，不执行首次配置生成器。
 
-需要安装并启动 **Docker Desktop**（包含 Docker Compose），另外准备 **Git、Python 3.11+ 与 pip**。Python 仅用于生成部署配置；Java、Node.js 和应用依赖由镜像构建，无需在本机单独安装。
+| 路线 | 使用场景 | 实际构建范围 |
+| --- | --- | --- |
+| 预构建应用镜像 | 使用已发布并验收的三个应用 | 拉取 Agent、Java、前端；配套 PostgreSQL 仍需本地构建 |
+| 源码 Docker 构建 | 修改应用或复查构建 | 从对应源码构建四个核心服务，包含原生安全回补 |
+| 宿主源码开发 | 调试某个模块 | 见[贡献指南](CONTRIBUTING.md)，需要对应 Java、Python、Node 环境 |
 
-还需要可用的文本模型 API、高德 Web 服务 Key，以及用于浏览器地图的高德 Web 端（JS API）Key。构建需要联网下载镜像与依赖，生成行程需要访问模型服务和高德 MCP，相关调用可能产生费用。
+已验证发布平台为 **Linux/amd64**，本机使用 Windows Docker Desktop。两条 Docker 路线都需要 Docker Compose、Git、用于配置生成的 Python 3.11+ 与 pip；无需在宿主安装 JDK 或 Node。源码冷构建还会下载编译工具和依赖，时间及资源需求明显高于拉取应用镜像。
+
+### 1. 获取固定版本并准备配置
 
 ```powershell
-git clone https://github.com/W205614/langchain-trip-planner.git
+git clone --branch v0.1.5 https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
 python -m pip install python-dotenv==1.2.3
 ```
 
-### 2. 填写必要配置
+完整 clone 保留维护工具需要的历史对象，不加 `--depth`。GitHub 自动源码 ZIP 可以阅读源码，但不代替完整安全复核环境。
 
-用文本编辑器打开以下两个文件，将示例占位值替换为自己的配置：
+编辑自己的配置，示例占位值须替换为有效配置：
 
-| 文件 | 配置项 | 填写内容 |
-|---|---|---|
-| `backend/.env` | `LLM_MODEL_ID` | 默认 `gpt-6.1-sol` |
-| `backend/.env` | `LLM_API_KEY` | 对应的模型 API Key |
-| `backend/.env` | `LLM_BASE_URL` | OpenAI 官方 API：`https://api.openai.com/v1` |
-| `backend/.env` | `AMAP_REST_API_KEY` | 高德 Web 服务 Key，供 Java 使用 |
-| `backend/.env` | `AMAP_MCP_API_KEY` | 高德 MCP 使用的 Web 服务 Key；开发时可与上一项相同 |
-| `frontend/.env` | `VITE_AMAP_WEB_JS_KEY` | 高德 Web 端（JS API）Key，用于显示地图 |
+| 文件 / 变量 | 用途 |
+| --- | --- |
+| `backend/.env`：`LLM_API_KEY`、`LLM_BASE_URL`、`LLM_MODEL_ID` | 后端文本模型；模板默认 `https://api.openai.com/v1` 与 `gpt-6.1-sol`，须具备对应模型权限 |
+| `backend/.env`：`AMAP_REST_API_KEY` | Java 使用的高德 Web 服务 Key |
+| `backend/.env`：`AMAP_MCP_API_KEY` | Agent 使用的高德 MCP Key；生成器映射为 Agent 的 `AMAP_API_KEY` |
+| `frontend/.env`：`VITE_AMAP_WEB_JS_KEY` | 自行构建或 Vite 开发时使用的公开浏览器 JS API Key |
+| 项目根 `.env`：`AMAP_WEB_JS_KEY` | 预构建前端启动时使用的公开浏览器 JS API Key |
 
-`LLM_BASE_URL` 保持 `https://api.openai.com/v1`，不要填成完整的 `/chat/completions` 请求地址。前端地图 Key 与服务端 Web 服务 Key 类型不同，不能混用；模型 Key 只放在后端配置。
+`LLM_BASE_URL` 填 API 根路径，不附加 `/chat/completions`。模型、Embedding、服务端高德密钥只能放后端；浏览器 Key 类型不同，不能混用。
 
-**首次只体验行程规划时，将 `backend/.env` 中的 `RAG_ENABLED` 改为 `false`**，其余未列出的配置可先保留模板值。开启知识检索时使用默认的 `text-embedding-3-large`（3072 维），图文解析使用默认 `gpt-6.1-sol`；两者均连接 OpenAI 官方端点，可复用 `LLM_API_KEY`，对应项目须有模型访问权限。已有向量数据先按[索引迁移手册](docs/operations/openai-migration.md)重建。
+首次只体验行程规划，可将 `RAG_ENABLED=false`。开启 RAG 时模板使用 `text-embedding-3-large`／3072 维，视觉默认 `gpt-6.1-sol`；各自密钥留空时按模板继承后端模型密钥。已有向量数据切换模型、端点或维度前，先按[索引迁移手册](docs/operations/openai-migration.md)处理。
 
-### 3. 生成配置并启动
+仅全新安装执行：
 
 ```powershell
 python backend/scripts/prepare_java_deployment.py
+$env:BUILD_REVISION = (git rev-parse HEAD).Trim()
+```
+
+生成器创建私有 `deploy/runtime/{postgres,business,agent}.env` 及随机数据库、JWT、内部服务凭据；已有目录会拒绝覆盖。不要删除旧目录后重生成，也不要提交这些文件。默认普通部署不要改 `--output`，Compose 使用固定的 `deploy/runtime/` 路径。
+
+在项目根新建 `.env`；已有文件只补充所需项，不覆盖其他配置：
+
+```dotenv
+TRIP_VERSION=v0.1.5
+APP_PORT=8380
+AMAP_WEB_JS_KEY=
+```
+
+浏览器 JS Key 可暂留空查看文本行程；需要地图时填写自己的 JS API Key。本轮没有验证真实 SDK。`APP_PORT=8381` 可避开被占用的 8380 端口。
+
+### 2A. 使用预构建应用镜像
+
+```powershell
+$imageCompose = @('-f', 'docker-compose.yml', '-f', 'docker-compose.images.yml')
+docker compose @imageCompose config --quiet
+docker compose @imageCompose build postgres
+docker compose @imageCompose pull backend agent frontend
+docker compose @imageCompose up -d --no-build --wait
+docker compose @imageCompose ps
+```
+
+必须先准备 PostgreSQL 镜像；三个 GHCR 应用镜像不包含数据库、私有配置、真实上传或向量索引。这里的 `--no-build` 保证应用来自已发布镜像。完整 Registry/config 摘要、对应源码与许可材料见[镜像分发手册](docs/operations/container-distribution.md)。
+
+### 2B. 从源码构建
+
+```powershell
+$env:BUILD_REVISION = (git rev-parse HEAD).Trim()
+docker compose config --quiet
 docker compose up -d --build --wait
 docker compose ps
 ```
 
-配置脚本会生成私有的 `deploy/runtime/postgres.env`、`business.env` 和 `agent.env`，自动创建数据库密码、JWT 与内部服务密钥。**只在首次部署执行，不要删除已有目录后重新生成，也不要提交这些私有文件。** 数据库表由 Flyway 在启动时自动初始化。
+此路线重新构建，不承诺与公开镜像逐字节相同。复现随发行物保留的历史评估输入时，先按[源码与历史输入说明](docs/operations/container-distribution.md)准备并验证原始文件；不设置伪造的 CI 环境变量，也不将历史报告视为新一轮模型测试。
 
-首次构建需下载依赖，耗时取决于网络与机器。`docker compose ps` 中应看到 `frontend`、`backend`、`agent`、`postgres` 四个服务，启动完成后健康状态应为 `healthy`。随后按“第一次使用”生成一份短行程，检查模型与高德链路。
+### 3. 打开并验证
 
-打开 **[http://localhost:8380](http://localhost:8380)**，注册自己的账号并登录即可使用，无默认账号密码。默认仅允许本机访问。
+打开 [http://127.0.0.1:8380](http://127.0.0.1:8380)，注册自己的账号并登录；没有默认账号密码。数据库由 Flyway 初始化。模板仅把前端端口绑定到本机，Java、Agent 和 PostgreSQL 不开放宿主端口。
 
-如果 8380 已被占用，可先在项目根目录新建 `.env`，写入 `APP_PORT=8381`，再执行启动命令，之后访问 `http://localhost:8381`。
+1. 首次选择一个城市、一天行程，填写必要的每日时窗与已知预约。确认供应商额度后提交。
+2. 查看任务进度和结果中的待核验项；刷新页面，再从“我的行程”打开同一记录，确认持久化与恢复。
+3. 需要调整时在工作台预览并确认改排，检查事实与时间轴后再导出或分享。营业、预约和接驳信息仍应在实际出行前核实。
 
-## 第一次使用
+`healthy` 只说明服务就绪，不代表供应商凭据或真实旅行事实已通过验证。四服务使用结束后保留数据并停止：
 
-1. 注册并登录，填写出发地、目的地、未来日期、人数和预算。第一次可选一个城市、一天行程。有预约或固定到离时间时，在提交前展开时间约束填写。
-2. 提交后查看生成进度。刷新或离开页面，可以在“我的行程”中继续查看。打开结果，先看每天的时间轴、事实来源以及仍需核实的项目。
-3. 需要调整时，选择活动或日期，预览变化并确认。满意后可导出 PNG、PDF 或离线 HTML。
+```powershell
+# 预构建路线继续使用同一组 -f 参数
+docker compose @imageCompose stop
+# 源码路线使用 docker compose stop
+```
 
-## 开发与运维
+不要用 `down -v` 处理配置或启动问题。数据位置、已有七服务的启动与升级、备份及回退边界见[单机运行手册](docs/operations/single-host.md)。
 
-### OpenAI 模型与公开运营
+## 验证、开发与运维
 
-文本规划、改排和问答默认使用 `gpt-6.1-sol`，图文事实提取也使用该模型；RAG 文档和查询向量使用 OpenAI 官方 `text-embedding-3-large`（3072 维）。三类请求均默认连接 `https://api.openai.com/v1`，视觉和 Embedding 密钥留空时复用后端 `LLM_API_KEY`。高德继续提供地图、POI、天气及路线，Chroma、关键词召回和时间求解在本地运行。
+本轮真实模型／高德链路完成一条生成、持久化及刷新流程（1次模型、34次MCP）；最终镜像恢复回放及公开后的独立四服务验收均无新增供应商调用。当前源码CI4/4、Security gates14/14成功，适用未解决告警0、风险接受0；原始匹配和语义误报分列保留。已有七服务升级验收后，46张业务表及4个上传摘要不变，并恢复停止。
 
-配置切换、真实请求检查和旧索引迁移见 [OpenAI 接入与索引迁移](docs/operations/openai-migration.md)。现有第三方端点生成的向量必须通过新一代索引重建迁移；即使模型名相同，也不能直接混用。历史验收材料保留原供应商名称。
+完整验证方法、修复与上下文评估分列在[v0.1.5 证据](docs/evidence/release-v0.1.5-20261112/README.md)。正常历史版本保留，不为验收、工具修正或文档提交重打公开 Tag、重发镜像。
 
-| 能力 | 交付方式与外部条件 |
-|---|---|
-| 邮箱注册、验证、密码找回、通知订阅 | 已实现；公开模式需配置可用的 TLS SMTP、发件域和 HTTPS 站点地址，参见 [账号与邮件](docs/operations/email-accounts.md) |
-| 用户停用、配额、反馈、个人数据导出与注销 | 已实现前后端闭环，参见 [运营与数据管理](docs/operations/public-operations.md) |
-| 本地／S3 原文件存储和迁移 | 已实现真实 S3 SDK 适配；Bucket、权限、端点及凭据由部署者提供，参见 [对象存储](docs/operations/object-storage.md) |
-| HTTPS、外部告警、云 PostgreSQL | 提供部署配置与联调步骤；域名、DNS、网络和平台账号仍需实际配置，参见 [公开部署](docs/operations/public-deployment.md) |
-| 备份、加密归档和隔离恢复 | 提供工具与恢复流程，参见 [公开部署](docs/operations/public-deployment.md#备份与恢复)；本机保留两套数据和配置快照，已核对数据库恢复，无离线镜像归档，完整服务克隆恢复本轮未验证，定时任务仍停用 |
+- [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
+- [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)
+- [账号与邮件](docs/operations/email-accounts.md) · [运营及个人数据](docs/operations/public-operations.md) · [对象存储](docs/operations/object-storage.md)
+- [公开部署模板](docs/operations/public-deployment.md) · [运行治理](docs/operations/optimization-governance.md) · [历史验收索引](docs/evidence/README.md)
 
-新安装的公开环境使用独立配置及 `docker-compose.production.yml`、`docker-compose.public.yml`；已有本机环境沿用原安装路径。公网模板要求邮箱验证和管理员 MFA。账号注销会撤回本人共享行程与投稿，索引和文件清理完成前显示处理中；已下载的导出文件、其他人的独立副本及已有备份按各自保留策略管理。
+SMTP、S3、公网 TLS、异地恢复和完整七服务克隆恢复需独立联调；本轮没有新增这些结论。项目没有承诺多实例高可用、生产容量或真实预订支付。
 
-项目按单机部署，支持离线集成验证和真实模型抽样。SMTP、S3、云数据库及公网入口还需在选定平台完成联调；多实例高可用和真实预订支付未纳入实现。
+## 许可证
 
-`v0.1.2` 按独立景点数量准备候选，将到达、离开和每日时间窗口传给规划模型，并优先给短日安排紧凑候选。餐次按当天可用时段核对，路线状态只依据最终使用的接驳；明确数量未满足时会单独提示。景点数量仍受候选与真实时间约束，不保证强行排满。用法与恢复兼容边界见[时间规划与任务恢复](docs/operations/final-planning.md)，验证范围见[本轮验收记录](docs/evidence/release-v0.1.2-20261108/README.md)。
-
-本机单机部署保留原挂载，验收后暂停七服务，日常使用时按[运行手册](docs/operations/single-host.md#现有七服务部署操作)启动。日常全量 RAG 已迁移到 OpenAI `text-embedding-3-large`（3072维），迁移时覆盖46条可索引行程、125块。此前的[事实核验](docs/evidence/itinerary-facts-20261107/report.md)、[浏览器验收](docs/evidence/personal-closure-20261107/browser-navigation.md)、[运行安全](docs/evidence/personal-closure-20261107/runtime-security.md)和[收尾记录](docs/evidence/personal-closure-20261107/report.md)保留各自时点的结果。营业、预约、住宿等实际旅行资料通过工作台补充来源后重新核验，云平台与正式公网入口按手册联调。
-
-- [四服务日常操作与常见问题](docs/operations/single-host.md#首次安装后的四服务维护) · [迁移和升级](docs/operations/java-migration.md)
-- [时间规划与任务恢复](docs/operations/final-planning.md) · [协作与费用](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)
-- [规划、账号与运行治理](docs/operations/optimization-governance.md) · [性能与可靠性](docs/operations/performance-reliability.md) · [原生安全回补](backend/security/native-backports/README.md)
-
-开发环境、按改动选择测试及提交说明见 [贡献指南](CONTRIBUTING.md)；漏洞报告见 [安全政策](SECURITY.md)。[CI 工作流](.github/workflows/ci.yml) 包含 Java/PostgreSQL、Python、前端构建及隔离浏览器流程，默认使用离线供应商和专用数据卷。
-
-## 版本与许可证
-
-`v0.1.3` 修复页面停留或分享旧行程时，时间轴已经过期但活动仍显示“已确认安排”的矛盾。预制前端支持启动时配置浏览器地图 Key；三个应用镜像的获取、许可材料和发布流程见[应用镜像与源码材料](docs/operations/container-distribution.md)。本轮验证边界见[验收记录](docs/evidence/release-v0.1.3-20261109/README.md)。
-
-版本化发布见 [GitHub Releases](https://github.com/W205614/langchain-trip-planner/releases)。`v0.1.3` 保留单机定位，没有新增数据库迁移或运行依赖；可用镜像和源码材料以对应 Release 与 Packages 的实际条目为准。[v0.1.2](docs/evidence/release-v0.1.2-20261108/README.md)、[v0.1.1](docs/evidence/release-v0.1.1-20261108/README.md)及[首次发布检查记录](docs/evidence/release-20261107/README.md)保留各自时点的结果。GitHub 自动源码归档不包含本机配置、数据库、备份或预构建镜像；镜像归档和许可材料作为独立附件核验，内部组件的私有包版本不作为整仓发布版本。
-
-原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。仓库保存的上游补丁、OpenAPI schema、运行依赖和供应商地图素材遵循各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。PDF 资料渲染使用 PDFium；历史 PyMuPDF 版本的许可义务单独处理。
+原创代码及已获授权的项目截图采用 [MIT License](LICENSE)，版权署名 `W205614`。第三方运行时、原生补丁、schema、依赖和供应商地图素材保留各自条款，见[第三方许可与分发说明](THIRD_PARTY_NOTICES.md)。镜像中的 `/licenses` 与 Release 对应源码包共同提供原始通知、许可及必要构建材料；项目 MIT 不重新授权第三方组件。

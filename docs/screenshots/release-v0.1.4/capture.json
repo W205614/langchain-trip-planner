@@ -1,0 +1,65 @@
+{
+  "version": "v0.1.4",
+  "source": "272c64b016115e357377b107daefd9bd934a361a",
+  "verifier_source": "ab15bb4dc8df3300453113fe94e381784ba865e5",
+  "captured_at": "2026-11-11T07:30:23.726Z",
+  "evidence_mode": "explicit-offline-user-authorized",
+  "real_provider_acceptance_passed": false,
+  "real_supplier_calls": 0,
+  "images": {
+    "agent": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-agent:v0.1.4",
+      "digest": "sha256:5785bdc6d48633638066799b1653eeb6bb827b70daa206e118c1e21bd945ea34",
+      "config_digest": "sha256:23cc0bafb8bb0d0dd3e19fd3f3afac33065982b83bafec8acb8056b7c9535f5c"
+    },
+    "backend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-backend:v0.1.4",
+      "digest": "sha256:65058254ba29c7f67124725208645269a9d8d4d4168d5ba1ae9247ad5f384693",
+      "config_digest": "sha256:9ab0b4a35d028596f7dfda5af8c9a0333dee29d292929b54a30cadb158dfa38f"
+    },
+    "frontend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-frontend:v0.1.4",
+      "digest": "sha256:16b10ea4b4be3c32e89a8df3c950346b712b868818377500eaaa244c7d91e24d",
+      "config_digest": "sha256:5a887b9b5f0241d820098f1dee3a4f592d4c3a27f0939064de1461bbf95bb110"
+    }
+  },
+  "screenshots": [
+    {
+      "file": "01-offline-home.PNG",
+      "encoding": "PNG",
+      "sha256": "6d79196227f683003693db31e0510a53de8484e3b1937d75ffe86c1b401b4708",
+      "bytes": 1257698,
+      "width": 1440,
+      "height": 2490
+    },
+    {
+      "file": "02-offline-plan.PNG",
+      "encoding": "PNG",
+      "sha256": "e258044a0e9c81d19e2a4793bebdd455065d7bcb47190c03aa0f3e809393635c",
+      "bytes": 728992,
+      "width": 1440,
+      "height": 3238
+    },
+    {
+      "file": "03-offline-refreshed-timeline.PNG",
+      "encoding": "PNG",
+      "sha256": "dd8d049ff4c0a96a5093cbc8c640709cd47124a2f3fe77aaa84544cfb50e303e",
+      "bytes": 67267,
+      "width": 1054,
+      "height": 841
+    }
+  ],
+  "unchanged_original_png_bytes": true,
+  "synthetic_data": "稀疏城市 / 验证景点0 / isolated synthetic account",
+  "caption": "离线供应商夹具样例：实际前端登录、持久化行程与刷新。图片与地图供应商资源在发送前阻断，未验收真实模型、高德、图片或地图。未知、失效与降级提示为应用原始输出。",
+  "blocked_resource_categories": [
+    "external-resource",
+    "supplier-photo-resource"
+  ],
+  "same_saved_record_refresh_passed": true,
+  "expired_schedule_shown_as_unverified": true,
+  "clock_or_binding_modified": false,
+  "capture_script_sha256": "f0bbab3b11356121ca27d2d8ca1a93c73dbc31cb31e71dc7df735bf2f19b4c5f",
+  "credentials_and_private_paths_included": false,
+  "public_consumer_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/42979536910"
+}

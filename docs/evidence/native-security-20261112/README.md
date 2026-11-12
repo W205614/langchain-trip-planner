@@ -9,3 +9,9 @@ The local complete Agent image gate passed across all severities: 222 raw matche
 [Manifest delta review](openssl-manifest-delta-review.json) compares the previous published Agent with the new candidate. Removed-tool entries and retained-library fingerprints match exactly; only the package database fingerprint changes, with exactly the three OpenSSL records changed. The active assessment still checks exact package versions, retained ELF hashes, absent CLI paths and source bindings.
 
 The changed backend tree invalidates the previous CodeQL source-context review. Fresh official source analysis and a new exact review are required before publication. Previous 11 reviewed Java findings are not automatically transferred to this tree.
+
+## Subsequent release verification
+
+The paragraphs above preserve the original local-candidate checkpoint. Fresh official four-language CodeQL analysis and a complete source/trace review subsequently completed: [f4 source review](codeql-f4ca5c5/source-review.json), including all 11 Java results and all 44 flows. The release source 7cceca8 retains the same reviewed business trees. Its [CI](https://github.com/W205614/langchain-trip-planner/actions/runs/43140025791) completed 4/4 successfully and [Security gates](https://github.com/W205614/langchain-trip-planner/actions/runs/43140025836) completed 14/14 successfully.
+
+[v0.1.5 release evidence](../release-v0.1.5-20261112/README.md) records the published immutable images, corresponding sources, anonymous acquisition, real-provider sample, exact final-image restored read replay and local daily acceptance. These later receipts do not rewrite the original failed runs or turn the original local checkpoint into a claim that publication had already happened at that time.

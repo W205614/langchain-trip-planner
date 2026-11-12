@@ -1,0 +1,153 @@
+{
+  "version": "v0.1.5",
+  "release_source": "7cceca80eb8524b9fbef34a385796224426de81e",
+  "release_id": 442450824,
+  "release_url": "https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.5",
+  "published_at": "2026-11-12T03:47:17Z",
+  "images": {
+    "agent": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-agent:v0.1.5",
+      "digest": "sha256:c85d5a2d3922d7635f138da741ead33c839471568cecd7ca87cdd5b359c5dbac",
+      "config_digest": "sha256:15d0ab81bb1cc01cbdb4c2e157814c3c90493a66e1defd8ae3bf0fceaaf83087"
+    },
+    "backend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-backend:v0.1.5",
+      "digest": "sha256:e07bf6b87db08f28608d5fd71db8edba53dc6cea44b8345e7a11eaa25f885cc0",
+      "config_digest": "sha256:3c61c0ea12606e3d9e711752d662d23e562a18f54af0f66ccbc864bdaeb11609"
+    },
+    "frontend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-frontend:v0.1.5",
+      "digest": "sha256:7911df66b5393c649138f6d232f939d22a65b18697cf75b289f8913aed8fcdd7",
+      "config_digest": "sha256:66422c85ed2e0d740776dcce9692992a273400cd206178d2c8a6e672524233b5"
+    }
+  },
+  "assets": {
+    "application-images-v0.1.5.tar.gz": {
+      "id": 737862544,
+      "size": 431902603,
+      "digest": "sha256:234b06b6d2f89e759046b22580f8d029bf0512ca2f0d6fc2fb4b096e7d0f07ae",
+      "state": "uploaded"
+    },
+    "container-manifest.json": {
+      "id": 737953698,
+      "size": 16137,
+      "digest": "sha256:6a715edce8e65f1bfa0fd2358377e8653347dd98e6e4b1ddd854a8740776167b",
+      "state": "uploaded"
+    },
+    "container-sources-v0.1.5.zip": {
+      "id": 737953399,
+      "size": 1392486212,
+      "digest": "sha256:93c5c7f7abec550f18b3a8236778ce939c6bc8c076cff7531956568b74ecd8ff",
+      "state": "uploaded"
+    },
+    "SHA256SUMS": {
+      "id": 737954020,
+      "size": 284,
+      "digest": "sha256:f46dc31a877380b7b740b3297f4a2b1685cb9f333032c63ef09c3e88520b0c65",
+      "state": "uploaded"
+    }
+  },
+  "ci": [
+    {
+      "id": 43140025791,
+      "head_sha": "7cceca80eb8524b9fbef34a385796224426de81e",
+      "html_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43140025791",
+      "run_attempt": 1,
+      "workflow": ".github/workflows/ci.yml",
+      "successful_jobs": 4
+    },
+    {
+      "id": 43140025836,
+      "head_sha": "7cceca80eb8524b9fbef34a385796224426de81e",
+      "html_url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43140025836",
+      "run_attempt": 1,
+      "workflow": ".github/workflows/security.yml",
+      "successful_jobs": 14
+    }
+  ],
+  "image_scans": {
+    "agent": {
+      "all_findings": 222,
+      "blocking_findings": 0,
+      "unfixed_risk_accepted_findings": 0,
+      "severity_scope": "all",
+      "status": "pass_vendor_policy"
+    },
+    "backend": {
+      "all_findings": 0,
+      "blocking_findings": 0,
+      "unfixed_risk_accepted_findings": 0,
+      "severity_scope": "all",
+      "status": "pass"
+    },
+    "frontend": {
+      "all_findings": 0,
+      "blocking_findings": 0,
+      "unfixed_risk_accepted_findings": 0,
+      "severity_scope": "all",
+      "status": "pass"
+    }
+  },
+  "real_generation": {
+    "passed": true,
+    "model_calls": 1,
+    "amap_mcp_calls": 34,
+    "earlier_wrapper": true,
+    "provider_runtime_exactly_unchanged": true,
+    "original_failed_attempts_retained": 2
+  },
+  "final_sealed_read_replay": {
+    "passed": true,
+    "new_provider_calls": 0,
+    "all_four_stopped": true,
+    "input_dump_full_restore_exercised": true,
+    "raw_saved_record_unchanged": true,
+    "all_eight_outbound_tables_unchanged": true,
+    "global_full_logical_ledger_unchanged": true,
+    "summary_180_minutes_verified": true
+  },
+  "public_acquisition": {
+    "passed": true,
+    "anonymous_release_assets_downloaded": true,
+    "all_outer_and_inner_hashes_verified": true,
+    "local_registry_pull_passed": true
+  },
+  "public_runtime": {
+    "passed": true,
+    "new_provider_calls": 0,
+    "all_four_stopped": true,
+    "input_dump_full_restore_exercised": true,
+    "raw_saved_record_unchanged": true,
+    "all_eight_outbound_tables_unchanged": true
+  },
+  "daily": {
+    "passed": true,
+    "all_seven_stopped": true,
+    "backup_task_disabled": true,
+    "data": {
+      "table_count": 46,
+      "counts": {
+        "users": 45,
+        "trips": 61,
+        "documents": 3,
+        "flyway": "20"
+      },
+      "upload_files": 4,
+      "all_table_row_hashes_unchanged": true,
+      "all_upload_hashes_unchanged": true
+    }
+  },
+  "dependabot_alerts": "disabled; not a clean finding result",
+  "risk_acceptance": 0,
+  "codeql_false_positive_review": {
+    "java_alerts": 11,
+    "complete_flows": 44
+  },
+  "source_bundle": {
+    "sha256": "93c5c7f7abec550f18b3a8236778ce939c6bc8c076cff7531956568b74ecd8ff",
+    "files": 6712,
+    "verified_source_downloads": 2743,
+    "project_files_matching_release_git": 128
+  },
+  "document_delivery": "This document commit is distinct from the immutable release source. Actual document CI is observable in repository Actions; local final delivery receipts record the verified terminal result."
+}

@@ -1,13 +1,13 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 等配套组件仍沿用部署配置，不在本轮重新分发。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 和告警接收器按本仓配方在本地构建／运行；它们不是这三个 GHCR 应用包。当前v0.1.5升级三个应用；四个已验收配套镜像保持。范围见[当前版本证据](../evidence/release-v0.1.5-20261112/README.md)。
 
 ## 首次使用镜像
 
 获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
 
 ```dotenv
-TRIP_VERSION=v0.1.4
+TRIP_VERSION=v0.1.5
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 
@@ -15,11 +15,13 @@ AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 
 ```powershell
 $imageCompose = @('-f', 'docker-compose.yml', '-f', 'docker-compose.images.yml')
+docker compose @imageCompose config --quiet
+docker compose @imageCompose build postgres
 docker compose @imageCompose pull backend agent frontend
 docker compose @imageCompose up -d --no-build --wait
 ```
 
-这组命令面向已按 README 准备好配套 PostgreSQL 镜像的首次四服务安装。已有七服务环境沿用原 Compose、挂载和私有配置，仅将三个应用服务绑定到验收后的 registry 摘要，并为前端传入浏览器 Key；不要用首次配置脚本重置既有密钥，不使用 `down -v`。
+这组命令面向全新四服务安装：首次必须执行 `build postgres`，仅拉取三个应用不足以准备新机器的数据库镜像。`up --no-build` 保证应用使用已发布制品；不要改成 `up --build` 后声称仍是公开候选。已有七服务环境沿用原 Compose、挂载和私有配置，仅将三个应用服务绑定到验收后的 registry 摘要，并为前端传入浏览器 Key；不要用首次配置脚本重置既有密钥，不使用 `down -v`。
 
 ## 许可、来源和替换
 
@@ -44,3 +46,90 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 5. 按公开发布范围设置新建 GHCR 包可见性，匿名拉取并核对 registry 摘要和许可入口；完成实际使用者验收后更新本机日常环境。
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
+
+## v0.1.5 的不可变身份
+
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.5)源码为`7cceca80eb8524b9fbef34a385796224426de81e`，Linux/amd64、PUBLIC。下面来自实际Registry推广及匿名获取，不是本地ID推算；标签`:v0.1.5`，部署可用仓库加`@`和精确digest。
+
+| 应用 | Registry digest | Config digest |
+| --- | --- | --- |
+| `agent` | `sha256:c85d5a2d3922d7635f138da741ead33c839471568cecd7ca87cdd5b359c5dbac` | `sha256:15d0ab81bb1cc01cbdb4c2e157814c3c90493a66e1defd8ae3bf0fceaaf83087` |
+| `backend` | `sha256:e07bf6b87db08f28608d5fd71db8edba53dc6cea44b8345e7a11eaa25f885cc0` | `sha256:3c61c0ea12606e3d9e711752d662d23e562a18f54af0f66ccbc864bdaeb11609` |
+| `frontend` | `sha256:7911df66b5393c649138f6d232f939d22a65b18697cf75b289f8913aed8fcdd7` | `sha256:66422c85ed2e0d740776dcce9692992a273400cd206178d2c8a6e672524233b5` |
+
+来源、四附件摘要、实际全级扫描、真实生成与最终回放边界见[本版证据](../evidence/release-v0.1.5-20261112/README.md)。对应源码ZIP6712文件，2743来源记录及128个项目文件核对；OpenSSL回补在`project/backend/security/openssl-backport/`，前端的实际安全运行层复用配方和证明在`runtime-provenance/frontend/duration-overlay/`。原生回补和第三方源码由各自脚本构建，不承诺不同时间重建逐字节相同。
+
+本版干净源码CI实际构建全部核心服务；本机首次配置/拒绝覆盖、两条Compose配置及历史输入复制检查另行实跑。以下v0.1.4章节是保留的历史身份与当时失败，不用于冒充本版新验收。
+
+## v0.1.4 的不可变身份
+
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.4) 的源码 Tag 解引用为 `272c64b016115e357377b107daefd9bd934a361a`。下表来自实际推广回执和后续匿名拉取，平台均为 `linux/amd64`、可见性均为 public。地址中的标签为 `:v0.1.4`；已有部署可使用相应 `@sha256:...` 固定内容。
+
+| 应用仓库 | Registry digest | Config digest |
+| --- | --- | --- |
+| `ghcr.io/w205614/langchain-trip-planner-agent` | `sha256:5785bdc6d48633638066799b1653eeb6bb827b70daa206e118c1e21bd945ea34` | `sha256:23cc0bafb8bb0d0dd3e19fd3f3afac33065982b83bafec8acb8056b7c9535f5c` |
+| `ghcr.io/w205614/langchain-trip-planner-backend` | `sha256:65058254ba29c7f67124725208645269a9d8d4d4168d5ba1ae9247ad5f384693` | `sha256:9ab0b4a35d028596f7dfda5af8c9a0333dee29d292929b54a30cadb158dfa38f` |
+| `ghcr.io/w205614/langchain-trip-planner-frontend` | `sha256:16b10ea4b4be3c32e89a8df3c950346b712b868818377500eaaa244c7d91e24d` | `sha256:5a887b9b5f0241d820098f1dee3a4f592d4c3a27f0939064de1461bbf95bb110` |
+
+`container-manifest.json` 另存有序解压层及运行配置。Docker 本地 `inspect.Id` 不自动等于 OCI config digest；本版三项 registry digest 的实际值由 Registry 查询与匿名拉取取得，而非从本地ID推断。
+
+Agent 原应用源码为 `e81765b257a2b88b1d463a02c6263e754d5cce00`，Java 为 `881817b01cf778da6b546197d85af0534922428f`，前端为 `843d242ff3ac5e4fe18ef6dbf3b2c6d3b51a59ce`。Agent 本机发行候选保留已验收原生运行层，仅覆盖五个已审 Python 模块；实际配方、源字节与独立运行层证明在对应源码包的运行来源材料中，不宣称它是一次新的原生冷编译。
+
+| 正式附件 | 字节数 | SHA-256 |
+| --- | ---: | --- |
+| `application-images-v0.1.4.tar.gz` | 421535377 | `be69d2a7f204da40f53c24cb1d61716594e0b1e4c7be6dbf628f4b99a621d3f9` |
+| `container-sources-v0.1.4.zip` | 1392212211 | `6434f9d7129766e23d8480b0af8a225b699799c926eb6396936e8bbaa72fa8c5` |
+| `container-manifest.json` | 15633 | `b194f9451cb2d184e157e8b9cfb750a33b85cec715932f8d7469504e60023517` |
+| `SHA256SUMS` | 284 | `fb5596cbc8b1b33e9b69c80fdacbcf75690a31ab816afe6f92a920b82f9f3466` |
+
+源码包6678成员的CRC、原始内部摘要及2743来源下载记录均核对；111个项目重建文件中102原始字节等同Tag、9个UTF8无NUL文本仅CRLF/LF不同。外层及内部SHA始终按原始字节核对；文本等价比较不会改写附件或降低二进制检查。重建应用以公开Tag的规范源码及该包内精确第三方材料为输入。
+
+## 源码构建与历史输入
+
+普通源码 Docker 路线见 [README](../../README.md)。当前7cceca8的干净CI已实际构建；本机同源新安装命令实跑配置生成、拒绝覆盖及两条Compose配置检查，配置检查不称作本地冷构建。历史272构建结果在v0.1.4记录内保留。
+
+完整Git历史用于安全源绑定工具；配置生成器本身不需要Git。`tools/restore_historical_build_inputs.py` 默认只读验证12个已公开冻结的历史原件及现有目标，不会复制缺失目标。安全CI在真实Actions环境使用其CI专用开关；本地不要伪造 `GITHUB_ACTIONS`，也不存在 `--restore-local` 参数。
+
+需要忠实保留发行物中的历史评估输入时，在独立的完整源码检出中执行下面的PowerShell块。它只复制不存在的目标，已有不同内容由第一轮校验明确拒绝；最后再次校验，不重新生成或改写旧评估。这些历史文件不是本次新的真实模型结果。
+
+```powershell
+$ErrorActionPreference = 'Stop'
+python tools/restore_historical_build_inputs.py
+if ($LASTEXITCODE -ne 0) { throw 'Historical sources failed verification' }
+$manifest = Get-Content -LiteralPath 'docs/evidence/optimization-20261026/historical-build-inputs/manifest.json' -Raw | ConvertFrom-Json
+foreach ($entry in $manifest.files) {
+    if (-not (Test-Path -LiteralPath $entry.destination)) {
+        New-Item -ItemType Directory -Path (Split-Path -Parent $entry.destination) -Force | Out-Null
+        Copy-Item -LiteralPath $entry.source -Destination $entry.destination -ErrorAction Stop
+    }
+}
+python tools/restore_historical_build_inputs.py
+if ($LASTEXITCODE -ne 0) { throw 'Copied historical inputs failed verification' }
+```
+
+该块已在隔离的首次复制及重复执行场景实际通过。完整应用冷构建复用同272的[CI](https://github.com/W205614/langchain-trip-planner/actions/runs/42962698002)及[Security gates](https://github.com/W205614/langchain-trip-planner/actions/runs/42962697955)，不把本机缓存构建说成新冷编译，也不保证重建制品逐字节相同。
+
+## 配套服务与已有环境
+
+核心首次安装只有四服务。本地支持配方在 `deploy/images/`：
+
+| 配方 | 构建上下文 | 实际边界 |
+| --- | --- | --- |
+| `postgres.Dockerfile` | `deploy/images` | PostgreSQL17.11；核心Compose已接线，先 `build postgres` |
+| `prometheus.Dockerfile` | `deploy/images` | Prometheus3.16.0，本地监控镜像 |
+| `alertmanager.Dockerfile` | `deploy/images` | Alertmanager0.34.1，本地监控镜像 |
+| `alert-receiver.Dockerfile` | 仓库根目录 `.` | 独立stdlib接收器，UID1000、`/inbox/alerts.jsonl`、9088 |
+
+例如前三者使用 `docker build --platform linux/amd64 --build-arg VCS_REF=<实际源码SHA> -f deploy/images/<配方> -t <本地名称> deploy/images`；receiver的context必须是仓库根。可选Caddy也有本地配方，不是第四个公开应用包，更不代表公网TLS已验收。
+
+Tag272的生产模板receiver仍使用完整Agent配方和旧命令／挂载，并未自动切换到独立stdlib配方。不能只换image就认为兼容；若选用独立配方，须同时核对入口、UID、inbox路径及挂载，并独立验收。本轮既有七服务沿用自己的原编排，实际完成了这组契约检查；不把该本机结果扩为生产模板或任意新环境验收。
+
+现有七服务不运行首次生成器、不替换根目录四服务模板、不删卷。升级前保留业务库、上传、私有配置和监控/inbox恢复资料；使用已验收的同一不可变应用摘要。`start`／`restart`不会加载新env，配置确需变化时只重建受影响服务。恢复与原启停状态见[单机运行手册](single-host.md)。
+
+## 单独复核已发布版本
+
+[Anonymous published container consumer](../../.github/workflows/consume-published-containers.yml) 是只读手动工作流：在main选择它并提供既有版本（例如v0.1.4）。它检出该次工作流的精确工具SHA，另从版本Tag解引用应用源码；匿名下载四附件、核原始SHA/CRC和源码、拉取三个不可变镜像并做断网运行探测。没有包写权限、没有重新推送或部署步骤。
+
+本版第一次组合推广工作流的publisher已成功，但旧consumer按原始字节拒绝上述9项文本行尾，故整个[旧run42978056488](https://github.com/W205614/langchain-trip-planner/actions/runs/42978056488)不是成功状态，失败保持。修正工具ab15后，[独立run42979536910](https://github.com/W205614/langchain-trip-planner/actions/runs/42979536910)实际成功。不要重跑已有版本的publisher来验证；它本来就拒绝覆盖已存在的公开版本。
+
+匿名获取与三项断网命令不等于整栈通过。v0.1.4另完成实际本机匿名拉取、隔离数据库恢复、四服务与浏览器检查，以及约定日常七服务升级；模型／高德正向验收仍未通过，按明确授权采用离线夹具，具体见[版本证据](../evidence/release-v0.1.4-20261111/README.md)。后续工具和文档提交不移动Tag、不修改这些附件或镜像。

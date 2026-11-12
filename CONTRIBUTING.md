@@ -4,7 +4,7 @@
 
 ## 开发环境
 
-仓库使用 Java 21、Python 3.11 和 Node.js 22；Docker Compose 用于 PostgreSQL、Mailpit、S3Mock 及完整浏览器集成测试。CI 的准确版本与执行顺序见 [ci.yml](.github/workflows/ci.yml)。
+仓库使用 Java 21 和 Node.js 22；Agent 镜像及 CI 使用 Python 3.13.18，宿主开发建议使用同一 Python 3.13 系列。仅运行首次部署配置生成器时支持 Python 3.11+。Docker Compose 用于 PostgreSQL、Mailpit、S3Mock 及完整浏览器集成测试。CI 的准确版本与执行顺序见 [ci.yml](.github/workflows/ci.yml)。
 
 以下命令在仓库根目录使用 PowerShell 执行，Python 指向你自己的虚拟环境。先安装需要修改部分的依赖：
 
@@ -52,6 +52,8 @@ try { npm run build } finally { Pop-Location }
 浏览器回归需要运行中的离线验证栈；按 [CI 的 Browser recovery and isolation 步骤](.github/workflows/ci.yml)准备镜像、测试管理员和 Playwright Chromium，再在 `frontend` 执行 `npx playwright test --config playwright.config.ts`。公开邮箱流程使用独立栈，命令和端口见[公开部署手册](docs/operations/public-deployment.md#本地隔离验证)。
 
 真实模型、高德、SMTP 或云存储联调单独安排凭据、目标与调用预算。常规测试和文档检查使用离线夹具。
+
+已发布镜像与源码构建入口见 [README](README.md) 和[镜像分发手册](docs/operations/container-distribution.md)。维护者复核已有版本时可运行只读的 [Anonymous published container consumer](.github/workflows/consume-published-containers.yml)：验证工具绑定该次工作流提交，应用源码另从版本 Tag 解引用；不会重新发布镜像。
 
 ## 提交改动
 
