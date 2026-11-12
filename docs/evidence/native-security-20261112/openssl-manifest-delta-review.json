@@ -1,0 +1,12 @@
+{
+  "image": "sha256:76750366117058343202a5603189d2b639705b484cf3ee1fae66d3bbc6e17980",
+  "manifest_delta_only": "package_database_sha256",
+  "dpkg_changed_only": [
+    "Package: libssl3t64",
+    "Package: openssl-provider-legacy",
+    "Package: openssl"
+  ],
+  "old_manifest_sha256": "5c58fa89eaeea402a361e6307bdb1cc28299687d4a6db9d64c4429eaa077f26f",
+  "new_manifest_sha256": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+  "all_removed_entries_and_retained_libraries_equal": true
+}

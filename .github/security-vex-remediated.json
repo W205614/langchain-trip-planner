@@ -65,7 +65,7 @@
     "backend/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
     "backend/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
     "backend/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
-    "backend/Dockerfile": "9c5d735d451f8dcde5d98832005eb003e4622010aa4614306c33b0c6af8e4790",
+    "backend/Dockerfile": "369a284736bbcc0ad40e4a9067764b6b63fad2b0251675f20d379503aa4854c3",
     "backend/scripts/restrict_runtime_tools.py": "81a7c044062c51dafe3bf5862df253d395f54a39692c8d43387e91f340290858",
     "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
     "backend/requirements.lock": "e1eca729fe661c72c5d9703272eb820d5f8170164b75a78ab457577c13a40c10",

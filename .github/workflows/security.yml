@@ -266,7 +266,7 @@ jobs:
           PY
       - name: Verify the changed Agent native library ABI without provider calls
         if: matrix.service == 'agent'
-        run: docker run --rm --network none --read-only --memory 1g --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests,target=/fixture,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py /fixture/test_runtime_security_backports.py /fixture/test_cpython_security_backports.py
+        run: docker run --rm --network none --read-only --memory 1g --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=256m --entrypoint python -e TRIP_RUNTIME_ABI_CHECK=1 --mount "type=bind,source=$PWD/backend/tests,target=/fixture,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_runtime_security_abi.py /fixture/test_runtime_security_backports.py /fixture/test_cpython_security_backports.py /fixture/test_openssl_security_backport.py
       - name: Verify installed PAM module with real isolated Berkeley DB authentication
         if: matrix.service == 'agent'
         run: docker run --rm --network none --read-only --memory 512m --cpus 1.0 --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:rw,noexec,nosuid,size=128m --entrypoint python -e TRIP_RUNTIME_PAM_CHECK=1 --mount "type=bind,source=$PWD/backend/tests/test_pam_security_backport.py,target=/fixture/test_pam_security_backport.py,readonly" "$SECURITY_IMAGE" -m pytest -q -p no:cacheprovider /fixture/test_pam_security_backport.py

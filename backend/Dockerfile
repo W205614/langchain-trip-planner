@@ -30,6 +30,28 @@ COPY security/native-backports/build-libstdcxx.sh security/native-backports/libs
 COPY security/native-backports/patches/gcc-*.patch /patches/patches/
 RUN bash /patches/build-libstdcxx.sh
 
+FROM native-build-inputs AS openssl-source-inputs
+COPY security/openssl-backport/build-inputs.sh security/openssl-backport/sources.sha256 /openssl-patches/
+RUN bash /openssl-patches/build-inputs.sh
+
+FROM openssl-source-inputs AS openssl-package-build
+COPY security/openssl-backport/build.sh security/openssl-backport/adapt_aad_regression.py security/openssl-backport/patches.sha256 /openssl-patches/
+COPY security/openssl-backport/patches/ /openssl-patches/patches/
+RUN bash /openssl-patches/build.sh
+
+FROM openssl-package-build AS openssl-backport-build
+COPY security/openssl-backport/test-dgram-detect-peer.c /openssl-patches/
+RUN cc -O2 -Wall -Wextra -Werror /openssl-patches/test-dgram-detect-peer.c -o /out/provenance/test-dgram-detect-peer -lcrypto
+
+FROM ${PYTHON_BASE} AS openssl-backport
+RUN apt-get update && apt-get install -y --no-install-recommends binutils \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=openssl-package-build /out/packages/ /out/packages/
+COPY --from=openssl-package-build /out/provenance/ /out/provenance/
+COPY --from=openssl-backport-build /out/provenance/test-dgram-detect-peer /build/test-dgram-detect-peer
+COPY security/openssl-backport/check-backport.sh /openssl-patches/
+RUN bash /openssl-patches/check-backport.sh
+
 FROM native-build-inputs AS util-linux-backport
 COPY security/native-backports/build-util-linux.sh security/native-backports/util-linux-patches.txt security/native-backports/util-linux-patches.sha256 security/native-backports/openat2-regression.c security/native-backports/login-pam-rhost-regression.c security/native-backports/check-login-pam-rhost.py /patches/
 COPY security/native-backports/patches/util-*.patch /patches/patches/
@@ -95,10 +117,12 @@ COPY --from=libstdcxx-backport /out/ /tmp/native-backports/
 COPY --from=util-linux-backport /out/ /tmp/native-backports/
 COPY --from=pam-backport /out/packages/ /tmp/native-backports/
 COPY --from=dash-backport /out/packages/ /tmp/native-backports/
+COPY --from=openssl-backport /out/packages/ /tmp/native-backports/
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-remove /tmp/native-backports/*.deb \
     && rm -rf /tmp/native-backports
 COPY --from=pam-backport /out/provenance/ /usr/local/share/tripplanner/pam-backport/
 COPY --from=dash-backport /out/provenance/ /usr/local/share/tripplanner/dash-backport/
+COPY --from=openssl-backport /out/provenance/ /usr/local/share/tripplanner/openssl-backport/
 COPY --from=glibc-backport /hardening-proof/ /usr/local/share/tripplanner/glibc-hardening/
 # 2. 复制应用代码
 COPY app ./app
