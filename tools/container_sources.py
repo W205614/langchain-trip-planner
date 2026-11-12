@@ -45,7 +45,7 @@ NGINX_PACKAGES = {'nginx', 'nginx-module-acme', 'nginx-module-geoip',
                   'nginx-module-image-filter', 'nginx-module-njs', 'nginx-module-xslt'}
 
 PROJECT_SOURCE_PATHS = (
-    'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/licenses', 'backend/security/native-backports',
+    '.gitattributes', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/licenses', 'backend/security/native-backports',
     'backend/security/glibc-hardening', 'backend/security/cpython-backports',
     'backend/security/pam-backport', 'backend/security/dash-backport', 'backend/security/openssl-backport',
     'deploy/images/busybox-backport', 'tools/sync_busybox_inputs.py',

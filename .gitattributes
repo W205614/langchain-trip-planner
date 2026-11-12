@@ -17,6 +17,12 @@ backend/security/native-backports/test-patches/*.patch -text -whitespace
 backend/security/native-backports/*.c text eol=lf
 backend/security/native-backports/*.py text eol=lf
 backend/security/native-backports/README.md text eol=lf
+backend/security/openssl-backport/*.sh text eol=lf
+backend/security/openssl-backport/*.sha256 text eol=lf
+backend/security/openssl-backport/*.c text eol=lf
+backend/security/openssl-backport/*.py text eol=lf
+backend/security/openssl-backport/README.md text eol=lf
+backend/security/openssl-backport/patches/*.patch -text -whitespace
 backend/security/cpython-backports/*.sh text eol=lf
 backend/security/cpython-backports/*.sha256 text eol=lf
 backend/security/cpython-backports/*.patch -text -whitespace
