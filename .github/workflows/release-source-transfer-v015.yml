@@ -1,0 +1,26 @@
+name: Transfer exact reviewed v0.1.5 source bytes
+on:
+  push:
+    branches: [codex/release-source-transfer-v015]
+permissions:
+  contents: read
+jobs:
+  transfer:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Reassemble verified source spans and upload the exact ZIP
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .release-transfer-v015/assemble.py
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: source-span-transfer-receipt
+          path: source-span-transfer-receipt.json
+          retention-days: 14
