@@ -10,7 +10,7 @@
   "analysis_origin": "Fresh GitHub Actions official CodeQL 2.27.4 security-extended",
   "flow_hash_algorithm": "sarif-semantic-flow-v1",
   "review_record": "docs/evidence/maintenance-v0.1.7-20261115/codeql-final/source-review.json",
-  "review_record_sha256": "9483c1769d5d1379fcd612a09d169feca40afadfa5a796daa778353584696ca2",
+  "review_record_sha256": "ab4f925c2a25e93af1dc82870913d24eb246bbd264fd4f8eea6cf5806a541167",
   "business_tree_bindings": {
     "backend": "2ceeada517130bff402b7c96c4f2e30d2530ffcb",
     "business-backend": "f33c36f09ae3b5eb94adfc4680ffb90b9ca6d58e",

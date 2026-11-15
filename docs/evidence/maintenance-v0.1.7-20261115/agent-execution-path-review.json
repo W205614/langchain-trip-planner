@@ -1,0 +1,1011 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-11-15",
+  "business_source_revision": "e5db8d4e6dfdb726429a6b74856193c67a467bfa",
+  "image_id": "sha256:b971661aa2385486b6da0b7068a7e2ab0ee8ba14fc6c9b6f40bce09492afae44",
+  "previous_vendor_policy_lf_sha256": "82d93d1adc274558d7aedc1ce16a9c342de49c347172e05c87af0988343217e4",
+  "raw_scan_sha256": "d8405454f3009da738f29d4a9f83643e5ff0deef6e1ed25e8c22c7f536e3991f",
+  "inventory_sha256": "c50fec0b05e21f846e8c3ed96c68e1f4e1ebd905cee7bec422fd43053b57bbe5",
+  "purpose": "Re-review exactly nineteen existing vulnerability/package execution-path cases after seven application source changes; this does not fix upstream vulnerable libraries or waive a finding.",
+  "changed_sources": [
+    {
+      "path": "/app/app/agents/candidates.py",
+      "old": "781ad9948ee57ee648b834a66a97bdbe3db83424259af5a3b5e33b19f3fe3cde",
+      "actual": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+      "review": "Pass the already validated trip-day count into the bounded count parser and change generation policy key; candidate grouping remains typed POI operations with no native loader or process boundary."
+    },
+    {
+      "path": "/app/app/agents/trip_planner_agent.py",
+      "old": "c2af0754e5b75c201f6ae9286309b59aa7fbd8da6893b5b206ce9b3b59cfb786",
+      "actual": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+      "review": "Pass travel_days into quantity extraction in normal/revision prompts. Existing model and fixed route/RAG calls are unchanged; no arbitrary symbol, file import or command execution is introduced."
+    },
+    {
+      "path": "/app/app/services/assistant_intent.py",
+      "old": "43d2bc7fd56a43b827f91e3dce741383ccfbc9ee4e00c31799c1e9f910b94552",
+      "actual": "0382419e22d156c826dbb3244853af606195b73c3f3c6822723a43267380ee1a",
+      "review": "Extend bounded Python re patterns to single-day explicit quantity wording and adjectives. User text remains matched data, not regex source; the Python re engine is not libc POSIX regcomp/regexec."
+    },
+    {
+      "path": "/app/app/services/durable_execution.py",
+      "old": "d93c94a9510279c01aceab3321142f1f065c96cbdc77ba4a58858737ca7e3355",
+      "actual": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+      "review": "Invalidate old generated candidate/draft checkpoints after the quantity-prompt policy change, retaining only unchanged raw provider facts. JSON comparisons and fixed business HTTP checkpoint calls, not database paths, raw SQL or dynamic loading."
+    },
+    {
+      "path": "/app/app/services/planning_constraints.py",
+      "old": "8941fd58c405ce12370ff078eebb6bf5838fa04b0cacdb397228d5a99bf158c8",
+      "actual": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+      "review": "Supply travel_days to the same daily quantity parser while validating final counts. No native API, loader, subprocess, sqlite import or journal path is added."
+    },
+    {
+      "path": "/app/app/services/research_answer.py",
+      "old": "d011865f2303c7c2546b87c8268803d0c69335cd9ab4221a527c33819815e1d0",
+      "actual": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
+      "review": "Preserve source-line boundaries, truncate whole units and instruct per-sentence quotes. Regex patterns remain application constants and the model is the existing bounded HTTP client; no native or shell dispatch."
+    },
+    {
+      "path": "/app/app/services/research_evidence.py",
+      "old": "e25365a9f34a15ae88d0aaf0cb834106f32e67bfc2bec838c38bb6d121712f04",
+      "actual": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
+      "review": "Strip only Markdown markers followed by whitespace consistently from original and response sentences; retain signed amounts, decimals, negation and full sentence equality. Uses Python re, not libc POSIX regex."
+    }
+  ],
+  "artifact_proof": {
+    "image_id": "sha256:b971661aa2385486b6da0b7068a7e2ab0ee8ba14fc6c9b6f40bce09492afae44",
+    "actual_native_file_sha256": {
+      "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
+      "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "225ceb839db2c1dd484cfcaa5ef9fbdd429eb1d5f1e0c39fbd50150bca5fc7bc",
+      "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+      "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+    },
+    "actual_bound_source_lf_sha256": {
+      "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
+      "/app/app/agent_api/__init__.py": "20a67725888e796306f2f6558e2f65e83c4f8ed63e5c2f29358c7049f4861064",
+      "/app/app/agent_api/business_client.py": "fad3370460e95191ca4d2e957ddb73958eca82c4d8b84c5184aa1dcbc9e2a8e9",
+      "/app/app/agent_api/contracts.py": "61a3e87e2529c9da585d477204ed370604cdd1caebfeda01fd0562cf1812e7a3",
+      "/app/app/agent_api/extraction.py": "f62ff5d35ffa546b5a0ad4eac120756041c75274521d1dffe11b69414480c61d",
+      "/app/app/agent_api/index_versions.py": "18830d400a35be133ab475a0b400b08da2d14786a8c9818c52438dc0326fd50a",
+      "/app/app/agent_api/indexing.py": "3ba50918edf7538f5b4eca3e89b87e5851b89cdd5592632d1de3e41897a6d23e",
+      "/app/app/agent_api/main.py": "490b2fd43f7a5d3d8cc27cdeadd5c755100b8c887d004cdce5c7d084868f75b0",
+      "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
+      "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
+      "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
+      "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+      "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
+      "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
+      "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
+      "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+      "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
+      "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
+      "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
+      "/app/app/core/logging.py": "b679108282b1db84f699f0da5980f8f414eb0a4168543ce642e6d96b23ee26dc",
+      "/app/app/core/rag_metrics.py": "a171f227b13689a58195fce32d7ffe36a2fd69ac8f9dfaf8c1f33254075d86d8",
+      "/app/app/core/trip_metrics.py": "d0de78eded33f5fb7461f9097920b4e99ad704c8a4daf29da2325122cf390215",
+      "/app/app/evals/__init__.py": "30c94bf8a1a3fd7a9e85838dae1938690cb17b42a06eb39593f0c146c01a49ff",
+      "/app/app/evals/constraint_benchmark.py": "9388c7544c719a58a46d127193ec6459f7a60cb5c808abb14027567d07b20543",
+      "/app/app/evals/planning_benchmark.py": "4bc61adc36de4b86da17fd07936b610db00239c5ec7e4fb875f517af5ed3fdec",
+      "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
+      "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
+      "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
+      "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
+      "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+      "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
+      "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
+      "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
+      "/app/app/services/amap_mcp_service.py": "a693ab8b47719163faeac2b1f6ba794326b5ae2b1cdaf99c9ca1fd43f7ca6601",
+      "/app/app/services/amap_service.py": "abd45369ebe655c436521f3df0b6fc949f3088b6657259fae640b57a662acb72",
+      "/app/app/services/assistant_intent.py": "0382419e22d156c826dbb3244853af606195b73c3f3c6822723a43267380ee1a",
+      "/app/app/services/attraction_names.py": "4b8adbb18abeababc3976374c638e97e5dc6722a7eb4fd454908db454f01a973",
+      "/app/app/services/call_budget.py": "a6183191b32bac7b7df032c15a13005d33351c29e1622aca632e0b891fd575b2",
+      "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
+      "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
+      "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
+      "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+      "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
+      "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
+      "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
+      "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
+      "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
+      "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+      "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+      "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
+      "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
+      "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
+      "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
+      "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
+      "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
+      "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+      "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
+      "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+      "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
+      "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
+      "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
+      "/usr/local/lib/python3.13/pkgutil.py": "44300bc77f6f52ef2ad74d26e5053309c04f49eaa91c099356eb61426cde504f",
+      "/usr/local/lib/python3.13/re/__init__.py": "dbe158a677c6aaacf717ea2abc23c56233453d38024aef75b7c3d93612cabb93",
+      "/usr/local/lib/python3.13/site-packages/cryptography/fernet.py": "dac2c23ce99e8e13956ee75c4b742c3353c8b876f109e45c46d5a49dc437982a",
+      "/usr/local/lib/python3.13/site-packages/dateutil/zoneinfo/__init__.py": "298834a6d842323729e4c5d21220499f79cc8d978d65abfbae5270e7eb73d52e",
+      "/usr/local/lib/python3.13/site-packages/google/protobuf/json_format.py": "7b386cc56f648154f744b2d1b38f44e94dba27c8c33980002e158c235443c7a7",
+      "/usr/local/lib/python3.13/site-packages/jwt/utils.py": "b9d89ca2f37984f3779d6a85029b9acd535fa2a776444ffc32d2211b83853aaf",
+      "/usr/local/lib/python3.13/site-packages/kubernetes/config/kube_config.py": "d3d764a18c70338bc9364db6664d9960ece21e76d4dd1b5dfe2e138034dc025c",
+      "/usr/local/lib/python3.13/site-packages/kubernetes/stream/ws_client.py": "e1ac25931b2d61e84a853b8e8b70d9772abe3be9e9e82d39292d245e04a1b3fe",
+      "/usr/local/lib/python3.13/site-packages/langchain_openai/chatgpt_oauth.py": "f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da",
+      "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
+      "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
+      "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
+    },
+    "unchanged_sensitive_native_callers": [
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libsmartcols.so.1.1.0",
+        "sha256": "819dce849a08e6211a0683f52c5c6951ed40b7f88062a18fe6991ae10fd0df1f",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libapt-private.so.0.0.0",
+        "sha256": "437380a0336b0f5e5338c290162bf3c698f215bcc8b3e0a49cee5971e5352bd7",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libsemanage.so.2",
+        "sha256": "1f0723499bf719b57845b67679f95e79f7a0c799d69601e40e166dcc11fff376",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libapt-pkg.so.7.0.0",
+        "sha256": "f23b1758d6c64c778776f6916ddb4a8fa2855df4c5d31ebacb174e9b30f5487b",
+        "imports": [
+          "glob",
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/libformw.so.6.5",
+        "sha256": "10b2e85c3e0ebb8ebc6ef72892260bbede80bfaa4a89ecee6019513d879a25de",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_namespace.so",
+        "sha256": "61dffca1a9b82380cac07537ee5b7a221658af515d4e487b8d31c9345f584404",
+        "imports": [
+          "glob"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_access.so",
+        "sha256": "a9a1778c331a53a47668c66f0e89310c9354635eed39597d09614ae6dfe28900",
+        "imports": [
+          "glob"
+        ]
+      },
+      {
+        "file": "/usr/lib/x86_64-linux-gnu/security/pam_limits.so",
+        "sha256": "18ea49fdde7f1f6bf3cbc2c0b1da677b51eeb3f4096c78217838bdbeadd4d3d6",
+        "imports": [
+          "glob"
+        ]
+      },
+      {
+        "file": "/usr/bin/logger",
+        "sha256": "354d9247e9eb051744bcc2edbd9bb428ff35da5df9df5120233807fc820c79d2",
+        "imports": [
+          "sd_journal_sendv"
+        ]
+      },
+      {
+        "file": "/usr/bin/ptx",
+        "sha256": "4ad329af0c827f032df7c57dc32f5852fa1eb4f81460da2abfbcc4c1198197e8",
+        "imports": [
+          "re_compile_pattern",
+          "re_match",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/more",
+        "sha256": "4468b94bea0c7d66de54fa12bddd0471575f77746fd5cd4a8d4928d54701f770",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/tac",
+        "sha256": "995cb01180b93a1222cf4d42cdbcec004ec1a2401f87af409f78970bf12dba53",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/bash",
+        "sha256": "223fe8564b60636bc738b6178d3ba9a50ef7d791266b0efae6363bb716e4c47f",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/hardlink",
+        "sha256": "a66494a52d30678b4f9221f05b8ad48cda6e98b3a27466372870823eb1e7f2c9",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/du",
+        "sha256": "3c0b05db84b02f20521c548adbe76fe05012a24effa6116e0752a81dd0faa9ba",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/localedef",
+        "sha256": "375d046bfd35d5bc7cfdf24e8352e2171c42f0bf0cf1ef0384fa7df1a1df648f",
+        "imports": [
+          "regcomp"
+        ]
+      },
+      {
+        "file": "/usr/bin/grep",
+        "sha256": "bd6686bf7a650a9717fd7e73fdb07dc63b70547a1da41bce093c56df937a66eb",
+        "imports": [
+          "re_compile_pattern",
+          "re_match",
+          "re_search",
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/sed",
+        "sha256": "69ff7292c0d081bdf5866bc84dde96d5a14f4a7deafeb9483739be68c48ac2b3",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/nl",
+        "sha256": "65b5cf1b0e28c06585b03d00db8d2732d0ec86bd42a59c0da6dfc7180817d20d",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/run-parts",
+        "sha256": "5470f76b78b478b3ef0c8cb72247fbb63700e4df32f2fd323c7bc286c6b6cace",
+        "imports": [
+          "regcomp",
+          "regexec"
+        ]
+      },
+      {
+        "file": "/usr/bin/expr",
+        "sha256": "b3a702318c52f2b29984e289cac19c4966e0dca953d7107aa73e3593feae739f",
+        "imports": [
+          "re_compile_pattern",
+          "re_match"
+        ]
+      },
+      {
+        "file": "/usr/bin/lslogins",
+        "sha256": "a56a51fac2249b82dd10de5d9c95cbd317dc193899900b9dd69330e8c290e9e4",
+        "imports": [
+          "sd_journal_add_match",
+          "sd_journal_close",
+          "sd_journal_flush_matches",
+          "sd_journal_get_data",
+          "sd_journal_get_realtime_usec",
+          "sd_journal_next",
+          "sd_journal_open",
+          "sd_journal_open_directory",
+          "sd_journal_previous_skip",
+          "sd_journal_seek_tail"
+        ]
+      },
+      {
+        "file": "/usr/bin/csplit",
+        "sha256": "6b492d1b227657b17c9f6fadf7eb75dac5fe804d9aadbc5e8e775c25f06ae8b7",
+        "imports": [
+          "re_compile_pattern",
+          "re_search"
+        ]
+      },
+      {
+        "file": "/usr/bin/find",
+        "sha256": "91b75e72c495e68dd6aab198c2fd6c458fd51a2dc361045ee31f8e657417de26",
+        "imports": [
+          "re_compile_pattern",
+          "re_match"
+        ]
+      },
+      {
+        "file": "/usr/bin/diff",
+        "sha256": "ae8ef59bc4039e56ce184b6cd55e87526aceb72940e2c16a88113b2ae745613b",
+        "imports": [
+          "re_compile_pattern",
+          "re_search",
+          "regcomp",
+          "regexec"
+        ]
+      }
+    ],
+    "old_elf_probe": "docs/evidence/normal-use-20261112/native-regex-wide-scanf-probe.json",
+    "new_otel_wheels_have_no_elf": [
+      {
+        "file": "opentelemetry_api-1.45.2-py3-none-any.whl",
+        "elf_members": []
+      },
+      {
+        "file": "opentelemetry_exporter_otlp_common-0.66b2-py3-none-any.whl",
+        "elf_members": []
+      },
+      {
+        "file": "opentelemetry_exporter_otlp_proto_common-1.45.2-py3-none-any.whl",
+        "elf_members": []
+      },
+      {
+        "file": "opentelemetry_exporter_otlp_proto_grpc-1.45.2-py3-none-any.whl",
+        "elf_members": []
+      },
+      {
+        "file": "opentelemetry_proto-1.45.2-py3-none-any.whl",
+        "elf_members": []
+      },
+      {
+        "file": "opentelemetry_sdk-1.45.2-py3-none-any.whl",
+        "elf_members": []
+      },
+      {
+        "file": "opentelemetry_semantic_conventions-0.66b2-py3-none-any.whl",
+        "elf_members": []
+      }
+    ],
+    "dpkg": {
+      "version": "1.22.22",
+      "absent_packages": [
+        "dpkg-dev",
+        "libdpkg-perl"
+      ],
+      "absent_paths": [
+        "/usr/bin/dpkg-source",
+        "/usr/share/perl5/Dpkg/Source/Package/V2.pm",
+        "/usr/share/perl5/Dpkg/Source/Package/V3/Quilt.pm",
+        "/usr/share/perl5/Dpkg/Source/Quilt.pm"
+      ],
+      "installed_package_list_sha256": "bb1d031aa9c4ba763b063e761ff08beec9a4c269c5294e12cd323cf5324dfef2"
+    },
+    "image_layer_identity": {
+      "current": "sha256:b971661aa2385486b6da0b7068a7e2ab0ee8ba14fc6c9b6f40bce09492afae44",
+      "base": "sha256:1667ee0245448902cab188ee64d82cd4ecd35acec8a078bcf4436fa581872907",
+      "all_base_layers_retained_identically": true,
+      "base_layer_count": 34,
+      "current_layer_count": 45,
+      "overlay_scope": "Seven reviewed app modules and offline provider fixture; seven pure-Python OpenTelemetry wheels; lock/config/labels. No native binaries added by these overlays."
+    }
+  },
+  "cases": [
+    {
+      "policy_index_before": 10,
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2018-20796"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 11,
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2018-20796"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 74,
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Loader/ldd remains. App has no user DSO/plugin/ldd entry. Uploaded bytes are magic-restricted PDF/images with UUID storage and numeric internal identifiers, not executable ELF input.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 75,
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Loader/ldd remains. App has no user DSO/plugin/ldd entry. Uploaded bytes are magic-restricted PDF/images with UUID storage and numeric internal identifiers, not executable ELF input.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 98,
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Application glob is a fixed *.md pattern under its configured knowledge directory through Python pathlib. No HTTP pattern reaches libc glob or shell. Arbitrary administrator glob use is excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2010-4756"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 99,
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Application glob is a fixed *.md pattern under its configured knowledge directory through Python pathlib. No HTTP pattern reaches libc glob or shell. Arbitrary administrator glob use is excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2010-4756"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 105,
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-9192"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 106,
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "glibc POSIX regex remains. Application re/regex and actual Python ELF imports do not route HTTP patterns to libc regex. Remaining system CLI callers are not invoked by the application; arbitrary administrator use is excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-9192"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 131,
+      "ids": [
+        "CVE-2021-45346"
+      ],
+      "artifact_versions": {
+        "libsqlite3-0": "3.54.1-2"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "SQLite remains and is not called fixed for this disputed record. DB files come from administrator-selected fixed index/database paths; request inputs are bound SQL values or text/metadata, not arbitrary corrupted .db imports or raw SQL. Filesystem replacement/manual imports excluded.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2021-45346"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "225ceb839db2c1dd484cfcaa5ef9fbdd429eb1d5f1e0c39fbd50150bca5fc7bc"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 177,
+      "ids": [
+        "CVE-2023-31439"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31439"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 179,
+      "ids": [
+        "CVE-2023-31439"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31439"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 181,
+      "ids": [
+        "CVE-2023-31437"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31437"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 183,
+      "ids": [
+        "CVE-2023-31437"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31437"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 184,
+      "ids": [
+        "CVE-2023-31438"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31438"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 186,
+      "ids": [
+        "CVE-2023-31438"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "libsystemd reader functions really remain. lslogins imports readers, logger only sendv; no installed Python wheel/extension or app source routes attacker journal bytes into them. Text logs and PDF/image uploads do not form that path. Source alias includes libsystemd, so not component absence.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31438"
+      ],
+      "previous_review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "previous_review_lf_sha256": "d43002f6b3e030cdba20bdeda3d83ec44089b0b2329107a574992b1fa599cd1a",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 198,
+      "ids": [
+        "CVE-2026-100290"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Current968ELF undefined-import probe has no Python runtime/extension /usr/local callers. Application uses Python re/regex, not libc POSIX regex, and has no subprocess/ctypes/dlsym bridge to these APIs. Remaining system CLI/PAM regex callers are not entered by HTTP/Agent application flows.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-100290",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0028"
+      ],
+      "previous_review_record": "docs/evidence/normal-use-20261112/agent-source-native-review.json",
+      "previous_review_lf_sha256": "d66ef90ee587c22fd392142c30d1adfbd938a94a13a6889b80233a3a5dc1dc40",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 199,
+      "ids": [
+        "CVE-2026-100290"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Current968ELF undefined-import probe has no Python runtime/extension /usr/local callers. Application uses Python re/regex, not libc POSIX regex, and has no subprocess/ctypes/dlsym bridge to these APIs. Remaining system CLI/PAM regex callers are not entered by HTTP/Agent application flows.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-100290",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0028"
+      ],
+      "previous_review_record": "docs/evidence/normal-use-20261112/agent-source-native-review.json",
+      "previous_review_lf_sha256": "d66ef90ee587c22fd392142c30d1adfbd938a94a13a6889b80233a3a5dc1dc40",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 200,
+      "ids": [
+        "CVE-2026-115819"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Current968ELF undefined-import probe finds no wide scanf callers. No application wide scanf/ctypes/native symbol invocation or user-supplied format strings. PDF/image native entrypoints and embedding/Chroma bindings are fixed library APIs, not arbitrary symbol loaders.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-115819",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0027"
+      ],
+      "previous_review_record": "docs/evidence/normal-use-20261112/agent-source-native-review.json",
+      "previous_review_lf_sha256": "d66ef90ee587c22fd392142c30d1adfbd938a94a13a6889b80233a3a5dc1dc40",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    },
+    {
+      "policy_index_before": 201,
+      "ids": [
+        "CVE-2026-115819"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u4+trip4"
+      },
+      "classification": "not_affected_execution_path",
+      "reason": "Current968ELF undefined-import probe finds no wide scanf callers. No application wide scanf/ctypes/native symbol invocation or user-supplied format strings. PDF/image native entrypoints and embedding/Chroma bindings are fixed library APIs, not arbitrary symbol loaders.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-115819",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0027"
+      ],
+      "previous_review_record": "docs/evidence/normal-use-20261112/agent-source-native-review.json",
+      "previous_review_lf_sha256": "d66ef90ee587c22fd392142c30d1adfbd938a94a13a6889b80233a3a5dc1dc40",
+      "native_file_predicates_unchanged": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+      },
+      "re_review": "The seven deltas above do not expose this original execution path. Native file predicates and all remaining bound Python/third-party sources match the actual candidate; original exclusion boundary and classification remain required.",
+      "changed_source_paths": [
+        "/app/app/agents/candidates.py",
+        "/app/app/agents/trip_planner_agent.py",
+        "/app/app/services/assistant_intent.py",
+        "/app/app/services/durable_execution.py",
+        "/app/app/services/planning_constraints.py",
+        "/app/app/services/research_answer.py",
+        "/app/app/services/research_evidence.py"
+      ],
+      "unchanged_source_predicates": 66
+    }
+  ],
+  "tests": {
+    "command": "Actual trip-v017-agent:source image with only current tests/contracts mounted; network none; read-only root; isolated /tmp",
+    "files": [
+      "test_agent_internal.py",
+      "test_agent_extraction.py",
+      "test_research_answer.py",
+      "test_research_evidence_contract.py",
+      "test_chroma_boundary.py"
+    ],
+    "passed": 37,
+    "failed": 0,
+    "provider_calls": 0,
+    "log_sha256": "d8f3672dc3a9072e484045ed53e98a3232ebd2f82cdac53fc16cd770a197f4a6"
+  },
+  "unchanged_trust_boundaries": [
+    "PDF/image upload decoder and fixed numeric internal original-file endpoint unchanged",
+    "Embedded RustBindingsAPI settings and bounded embedding adapter unchanged",
+    "Index-command and budget SQLite paths are configured fixed files with SQL bind parameters; no database uploads or extension loading",
+    "Python logging remains text/file output; no systemd journal reader or CLI dispatch introduced",
+    "Fixed *.md knowledge glob unchanged; request input is not a shell/glob pattern"
+  ],
+  "limitations": [
+    "Vulnerable native implementation remains installed; only exact current application execution paths are assessed.",
+    "Arbitrary administrator commands, replacement libraries/configuration, new plugins and dynamic symbol dispatch invalidate this review.",
+    "Actual final image full scan remains mandatory. Dpkg CVE-2026-91094 is reviewed separately as an absent source-package extraction component."
+  ]
+}

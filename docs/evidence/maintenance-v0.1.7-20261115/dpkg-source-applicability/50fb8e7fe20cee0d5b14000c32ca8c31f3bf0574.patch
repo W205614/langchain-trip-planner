@@ -1,0 +1,42 @@
+From 50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574 Mon Sep 17 00:00:00 2001
+From: Guillem Jover <guillem@debian.org>
+Date: Mon, 7 Sep 2026 01:03:12 +0200
+Subject: [PATCH] Dpkg::Source::Package::V3::Quilt: Remove database dir on
+ unpack
+
+Before applying the patches, after having unpacked a source archive,
+we should make sure we have no quilt db around, as that is coming
+from a potentially untrusted origin, and might contain hostile contents
+to cause directory traversal issues.
+
+We are already filtering the quilt db directory during extraction, so
+this code should not trigger, but we add it for defense in depth and out
+of robustness.
+
+Reported-by: Thai Duong <thai@calif.io>
+Detected-by: Anthropic LLM, verified by humans at Calif.io
+Fixes: CVE-2026-91094
+Stable-Candidate: 1.20.x 1.21.x 1.22.x
+---
+ scripts/Dpkg/Source/Package/V3/Quilt.pm | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/scripts/Dpkg/Source/Package/V3/Quilt.pm b/scripts/Dpkg/Source/Package/V3/Quilt.pm
+index 5c7e40810..60e5c08dd 100644
+--- a/scripts/Dpkg/Source/Package/V3/Quilt.pm
++++ b/scripts/Dpkg/Source/Package/V3/Quilt.pm
+@@ -133,6 +133,14 @@ sub apply_patches {
+         $opts{verbose} = 0;
+     }
+ 
++    if ($opts{usage} eq 'unpack') {
++        # When unpacking, make sure we have no quilt db, which would be coming
++        # from a potentially untrusted origin.
++        # FIXME: Do not hardcode ".pc" pathname, refactor Dpkg::Source::Quilt
++        # to abstract it, to avoid needing to construct the object that loads
++        # data from the untrusted db.
++        erasedir("$dir/.pc");
++    }
+     my $quilt = $self->_build_quilt_object($dir);
+     # Trigger warnings.
+     $quilt->load_series(%opts) if $opts{warn_options};

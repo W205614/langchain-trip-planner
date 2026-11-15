@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-11-15",
+  "image_id": "sha256:b971661aa2385486b6da0b7068a7e2ab0ee8ba14fc6c9b6f40bce09492afae44",
+  "id": "CVE-2026-91094",
+  "artifact": {
+    "name": "dpkg",
+    "version": "1.22.22"
+  },
+  "classification": "not_affected_component_absent",
+  "reason": "The issue is in dpkg-source unpacking 3.0 (quilt) source packages, implemented by Dpkg::Source::Package::V2 and V3::Quilt in libdpkg-perl and the dpkg-source executable in dpkg-dev. Both binary packages and all four entry/implementation paths are absent in the actual stopped-image rootfs. Installed dpkg is the runtime binary package, not the affected Perl source extractor. No claim that dpkg 1.22.22 itself has an upstream security fix.",
+  "observed": {
+    "version": "1.22.22",
+    "absent_packages": [
+      "dpkg-dev",
+      "libdpkg-perl"
+    ],
+    "absent_paths": [
+      "/usr/bin/dpkg-source",
+      "/usr/share/perl5/Dpkg/Source/Package/V2.pm",
+      "/usr/share/perl5/Dpkg/Source/Package/V3/Quilt.pm",
+      "/usr/share/perl5/Dpkg/Source/Quilt.pm"
+    ],
+    "installed_package_list_sha256": "bb1d031aa9c4ba763b063e761ff08beec9a4c269c5294e12cd323cf5324dfef2"
+  },
+  "references": [
+    "https://security-tracker.debian.org/tracker/CVE-2026-91094",
+    "https://packages.debian.org/trixie/all/dpkg-dev/filelist",
+    "https://packages.debian.org/trixie/all/libdpkg-perl/filelist",
+    "https://github.com/guillemj/dpkg/commit/2a31760bc2a968878700476c1de5b8ea7809e460",
+    "https://github.com/guillemj/dpkg/commit/50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574"
+  ],
+  "upstream_fix": "Only source extraction Perl modules changed. Trixie source package remains vulnerable/no-dsa; sid 1.23.12 fixed. No sid runtime-package upgrade is needed for an already absent component.",
+  "original_patch_sha256": {
+    "2a31760bc2a968878700476c1de5b8ea7809e460.patch": "9de9aec729b5861768f158a7a385ee10dbe6ca0c9e9ddae7f8f39c32f30fcd69",
+    "50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574.patch": "3dbb4cd7d668dd4b455999f7c88c35ff00209936b11a5797bfa1053229be2812"
+  },
+  "installed_dpkg_list_sha256": "bb1d031aa9c4ba763b063e761ff08beec9a4c269c5294e12cd323cf5324dfef2",
+  "rootfs_archive": "Stopped actual image inventory export; no image command or supplier was executed for the absence check.",
+  "boundary": "Installing dpkg-dev/libdpkg-perl or adding any of the absent source-extractor paths invalidates this assessment; retain raw scanner finding."
+}

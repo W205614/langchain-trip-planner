@@ -9,3 +9,5 @@
 在当前业务工作区干净且 HEAD 为上述来源的根目录，实际 `codeql_context.load` 与四语言本地门禁通过：Java 保留 raw 11、逐条 `not_affected_context` 11、阻断 0，其他三语言阻断 0。`final-load.json` 保存实测结果；工具测试为 12 tests 和 26 subtests 全部通过，日志保留于本轮本地 `.cache/release-v017/codeql-final-tests.log`。
 
 原工作流各语言的官方分析及 SARIF 发布步骤成功，但后续原门禁因旧源码绑定失败；这些失败保留，不能把本次本地复核写成原 CI 成功。新增 policy/evidence 元数据提交仍需取得自己的实际 CI 终态。没有关闭查询、调整严重等级、接受风险或新增范围级豁免。前一批 `codeql/` 和更早证据均原样保留。
+
+后续 `62daab9` 元数据 CI 暴露了独立的跨平台行尾缺陷：最后补充 artifact 来源记录时，Windows `write_text` 产生 CRLF，policy 存储了 CRLF 工作区的 review SHA，而 Git 提交的文本 blob 被规范为 LF。嵌套 artifact-provenance SHA 存在同样问题。本次改为 UTF-8 LF 的 `write_bytes`，只修正这两个引用哈希，并为本批字节绑定证据添加显式 `-text`；原始 SARIF、旧 review 和原始 flow 指纹未改。通过临时独立 Git index 构造真实待提交 tree 后执行 `git archive`，对归档解出的规范字节实际运行未经修改的 load 和四语言 gate，全部通过；8 份直接引用的文件 SHA 全部匹配。详见 `line-ending-validation.json`。这比仅在 Windows 工作区加载通过多验证了真实提交 blob 的字节边界，仍不冒充后续远端 CI 终态。

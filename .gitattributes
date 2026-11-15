@@ -110,3 +110,16 @@ docs/evidence/normal-use-20261112/** -text whitespace=trailing-space,space-befor
 docs/evidence/normal-use-20261112/**/*.sarif -text -whitespace
 docs/evidence/normal-use-20261112/*.patch -text -whitespace
 docs/evidence/normal-use-20261112/**/*.patch -text -whitespace
+
+# Keep this batch's raw SARIF and hash-bound review bytes identical on every OS.
+docs/evidence/maintenance-v0.1.7-20261115/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/maintenance-v0.1.7-20261115/codeql/**/*.sarif -text -whitespace
+docs/evidence/maintenance-v0.1.7-20261115/codeql-final/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/maintenance-v0.1.7-20261115/codeql-final/**/*.sarif -text -whitespace
+
+# Preserve byte-bound maintenance assessment receipts and upstream patches.
+docs/evidence/maintenance-v0.1.7-20261115/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+
+# Original upstream diff context is hash-bound; retain its whitespace.
+docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/*.patch -text -whitespace

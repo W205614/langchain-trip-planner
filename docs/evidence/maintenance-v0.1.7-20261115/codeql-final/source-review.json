@@ -6022,5 +6022,5 @@
   "raw_result_difference_sha256": "52b9f311c207c0106d46247346ce226e4a8c480e5b181c3971660533955635d0",
   "configuration_delta_boundary": "Go module manifest/buildinfo assertion changes were reviewed as deployment configuration. Four-language CodeQL results do not replace Go dependency or packaged-image vulnerability scans; those remain separately required.",
   "artifact_provenance_record": "artifact-provenance.json",
-  "artifact_provenance_sha256": "c42fe8b6cabec7708b71ae769e61c8c815b8869df9e8917dcaa67e8479d4cc28"
+  "artifact_provenance_sha256": "5255a5b6d3e83ade72daa50aa7f32f3f4f2327972124d5bfd62dbe8f13619e9d"
 }

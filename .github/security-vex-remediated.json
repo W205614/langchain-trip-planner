@@ -300,7 +300,7 @@
   },
   "maintenance_v017_source_review": {
     "path": "docs/evidence/maintenance-v0.1.7-20261115/source-delta-review.json",
-    "sha256": "abec66dc9223506b626d7314473ef238349df558501aec75c3dce48b790157e9",
+    "sha256": "2e8d470f79047d8c1d61b2f5e48be42232d1f289522608b8d77660d20044a5ec",
     "changed_bound_files": [
       "backend/app/agents/candidates.py",
       "backend/app/agents/trip_planner_agent.py",
@@ -314,7 +314,7 @@
   },
   "maintenance_v017_dependency_review": {
     "path": "docs/evidence/maintenance-v0.1.7-20261115/otel-dependency-review.json",
-    "sha256": "6a3cd4a4692a1ab40c5bfdff5d7b2e33d053adf355adaca8860a18038c75e096",
+    "sha256": "90017d52518523a8154b13ac9dd0beb942b90ca5ed038f80e899a7c4f4618f45",
     "changed_bound_files": [
       "backend/requirements.lock"
     ],

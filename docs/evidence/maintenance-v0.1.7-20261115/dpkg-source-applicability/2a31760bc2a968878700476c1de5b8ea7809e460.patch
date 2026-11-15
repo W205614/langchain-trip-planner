@@ -1,0 +1,41 @@
+From 2a31760bc2a968878700476c1de5b8ea7809e460 Mon Sep 17 00:00:00 2001
+From: Guillem Jover <guillem@debian.org>
+Date: Sat, 5 Sep 2026 23:42:20 +0200
+Subject: [PATCH] Dpkg::Source::Package::V2: Pass the same tar exclusion
+ options for debian.tar
+
+This fixes a directory traversal bug, where the debian.tar part of the
+source package can contain a hostile .pc/ directory with symlink files
+pointing outside the current source tree root.
+
+Reported-by: Thai Duong <thai@calif.io>
+Analysis-by: Anthropic LLM, verified by humans at Calif.io
+Fixes: CVE-2026-91094
+Stable-Candidate: 1.20.x 1.21.x 1.22.x
+---
+ scripts/Dpkg/Source/Package/V2.pm | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Dpkg/Source/Package/V2.pm b/scripts/Dpkg/Source/Package/V2.pm
+index 63a7adb80..681e96b3e 100644
+--- a/scripts/Dpkg/Source/Package/V2.pm
++++ b/scripts/Dpkg/Source/Package/V2.pm
+@@ -238,8 +238,8 @@ sub do_extract {
+         filename => File::Spec->catfile($self->{basedir}, $tarfile),
+     );
+     # The ".pc" exclusion is only needed for 3.0 (quilt) and to avoid having
+-    # an upstream tarball provide a directory with symlinks that would be
+-    # blindly followed when applying the patches.
++    # an upstream or debian tarball provide a directory with symlinks that
++    # would be blindly followed when applying the patches.
+     my @tar_options = (
+         '--anchored',
+         '--no-wildcards-match-slash',
+@@ -282,6 +282,7 @@ sub do_extract {
+     );
+     $tar->extract($newdirectory,
+         in_place => 1,
++        options => \@tar_options,
+     );
+ 
+     # Apply patches (in a separate method as it might be overridden).
