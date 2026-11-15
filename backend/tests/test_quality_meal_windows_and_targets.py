@@ -124,3 +124,11 @@ def test_endpoint_gaps_are_explained_without_renaming_saved_markers(gap, phrase)
     assert phrase in issue["reason"] and gap not in issue["reason"]
     assert issue["action"] and not issue["blocking"]
     assert quality["data_gaps"] == [gap]
+
+
+def test_single_day_natural_count_mismatch_is_reported_on_the_real_finalizer():
+    request, plan = scenario()
+    request.free_text_input = "只安排一个适合散步的公园景点，14:30到17:30，不安排午餐或晚餐。"
+    quality = finalize_plan(plan, request, Routes(), enhanced=True)
+    assert quality["attraction_targets"] == [{"day_index": 0, "target_count": 1, "actual_count": 2, "met": False}]
+    assert any(i["code"] == "ATTRACTION_TARGET_UNMET" for i in quality["issues"])

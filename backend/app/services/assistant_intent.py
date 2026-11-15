@@ -21,22 +21,27 @@ def _number(raw: str) -> int | None:
     return _CN.get(raw)
 
 
-def daily_attraction_target(content: str | None) -> int | None:
+def daily_attraction_target(content: str | None, travel_days: int | None = None) -> int | None:
     """Extract only an explicit exact daily count within the 20-activity bound."""
     text = re.sub(r"\s+", "", content or "")
-    if re.search(r"第[0-9一二两三四五六七八九十]+天[^，,。；;！？!?]*[0-9一二两三四五六七八九十]+(?:个|处)(?:独立)?景点", text):
+    if re.search(r"第[0-9一二两三四五六七八九十]+天[^，,。；;！？!?]*[0-9一二两三四五六七八九十]+(?:个|处)[^0-9一二两三四五六七八九十或及和与，,。；;！？!?]{0,20}?景点", text):
         return None
     clauses = re.split(r"[，,。；;！？!?]", text)
     values = []
     number = r"(?:[0-9]{1,2}|[一二三四五六七八九]?十[一二三四五六七八九]?|[一二两三四五六七八九])"
+    # A count without a day qualifier is unambiguous only for a one-day trip.
+    scope = r"(?:每天|每日|当天|当日)"
+    if travel_days == 1:
+        scope = r"(?:(?:每天|每日|当天|当日)|(?:只|仅)(?:安排|游览|参观|去))"
+    counted = number + r"(?:个|处)[^0-9一二两三四五六七八九十或及和与，,。；;！？!?]{0,20}?景点"
     for clause in clauses:
-        if not re.search(r"每天|每日|当天|当日", clause) or "景点" not in clause:
+        if not re.search(scope, clause) or "景点" not in clause:
             continue
         if re.search(r"不要|不必|不用|不能|不想|不需要|不要求|不一定|无需|无须|别|最多|至少|不超过|不少于|以上|以下|以内|左右|大约|约|[到至~～-]", clause):
             return None
-        if len(re.findall(number + r"(?:个|处)(?:独立)?景点", clause)) != 1:
+        if len(re.findall(counted, clause)) != 1:
             return None
-        matches = list(re.finditer(r"(?:每天|每日|当天|当日)(?:恰好|正好|安排|游览|参观|去|只|各|要|有)*?(" + number + r")(?:个|处)(?:独立)?景点", clause))
+        matches = list(re.finditer(scope + r"(?:恰好|正好|安排|游览|参观|去|只|各|要|有)*?(" + number + r")(?:个|处)[^0-9一二两三四五六七八九十或及和与，,。；;！？!?]{0,20}?景点", clause))
         if len(matches) != 1:
             return None
         value = _number(matches[0].group(1))

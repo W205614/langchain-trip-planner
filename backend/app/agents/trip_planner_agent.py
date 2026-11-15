@@ -148,7 +148,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 low, high, _, _ = day_time_bounds(request, i, current_date)
                 window_text = (f"{low // 60:02d}:{low % 60:02d}-{high // 60:02d}:{high % 60:02d}"
                                if low < high else "无可用时间（约束冲突）")
-                target = daily_attraction_target(request.free_text_input)
+                target = daily_attraction_target(request.free_text_input, request.travel_days)
                 count_text = (f"本日明确数量目标为{target}个独立景点。" if target is not None
                               else "从本日候选中选择时间允许的独立景点，不将同一景区内部点重复计数。")
                 sub = subsets[i]
@@ -984,7 +984,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
         from ..services.time_planner import day_time_bounds
         from ..services.plan_quality import expected_meal_types
         reduction = attraction_reduction(instruction)
-        target = daily_attraction_target(instruction) or daily_attraction_target(request.free_text_input)
+        target = daily_attraction_target(instruction, request.travel_days) or daily_attraction_target(request.free_text_input, request.travel_days)
         count_instruction = (f"本天最多安排{max(0, len(day.attractions) - reduction)}个景点。" if reduction is not None
             else f"本天明确目标为{target}个独立景点。" if target is not None
             else "根据本日时间选择独立景点，不将景区内部点重复计数。")

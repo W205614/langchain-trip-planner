@@ -55,6 +55,24 @@ def test_daily_target_only_accepts_clear_bounded_exact_counts(content, expected)
     assert daily_attraction_target(content) == expected
 
 
+
+@pytest.mark.parametrize(("content", "days", "expected"), [
+    ("只安排一个适合散步的公园景点，14:30到17:30，不安排午餐或晚餐。", 1, 1),
+    ("当天只安排一个适合散步的公园景点", 1, 1),
+    ("仅参观两处历史文化景点", 1, 2),
+    ("只安排一个适合散步的公园景点", 3, None),
+    ("只安排一个适合散步的公园景点", None, None),
+    ("不要只安排一个公园景点", 1, None),
+    ("只安排最多两个公园景点", 1, None),
+    ("只安排一到两个公园景点", 1, None),
+    ("只安排一个公园景点或两个博物馆景点", 1, None),
+    ("每天两个景点，第1天三个景点", 1, None),
+    ("每天两个景点，第1天三个公园景点", 3, None),
+])
+def test_single_day_exact_count_accepts_natural_modifiers_without_multi_day_inference(content, days, expected):
+    assert daily_attraction_target(content, days) == expected
+
+
 def test_independent_counts_and_optional_selection_do_not_count_child_as_another_visit():
     req = request()
     assert independent_candidate_count(pool(), req) == 5

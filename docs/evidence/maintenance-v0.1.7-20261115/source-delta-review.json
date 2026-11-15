@@ -1,0 +1,35 @@
+{
+  "base": "cc3a09e62d5c6eb7dbbbf9c19318fe0fd0a6e796",
+  "reviewed_delta": [
+    {
+      "path": "backend/app/agents/candidates.py",
+      "sha256_lf": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364"
+    },
+    {
+      "path": "backend/app/agents/trip_planner_agent.py",
+      "sha256_lf": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287"
+    },
+    {
+      "path": "backend/app/services/assistant_intent.py",
+      "sha256_lf": "0382419e22d156c826dbb3244853af606195b73c3f3c6822723a43267380ee1a"
+    },
+    {
+      "path": "backend/app/services/durable_execution.py",
+      "sha256_lf": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d"
+    },
+    {
+      "path": "backend/app/services/planning_constraints.py",
+      "sha256_lf": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d"
+    },
+    {
+      "path": "backend/app/services/research_answer.py",
+      "sha256_lf": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b"
+    },
+    {
+      "path": "backend/app/services/research_evidence.py",
+      "sha256_lf": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4"
+    }
+  ],
+  "review": "Single-day attraction-count parsing and direct request.travel_days propagation; research prompt preserves excerpt sentence/line boundaries and exact support checking ignores only whitespace-delimited Markdown markers. No changes to Chroma construction, collection ownership, SQL/HTTP trust boundaries, dynamic imports, remote embedding loading, tenant APIs, native libraries, package versions or execution privileges. Existing four embedded-Chroma assessments and native/package-specific classifications retain original full payloads. No additional exemption or risk acceptance. Final current-image scanning is separately required. Generation-policy identity changes to v3; old generated selections/drafts/schedules are invalidated while unchanged raw facts retain original TTLs. No existing runtime data or checkpoints are rewritten.",
+  "validation": "228 targeted count/candidate/quality/checkpoint tests and 23 targeted research/provider-contract tests passed with current source in an isolated Python application runtime without network."
+}

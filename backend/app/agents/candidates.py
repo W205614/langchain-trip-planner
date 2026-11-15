@@ -6,11 +6,11 @@ from ..services.assistant_intent import daily_attraction_target
 from ..services.travel_facts import suspected_same_visit
 
 DAILY_CANDIDATES = 4
-GENERATION_POLICY_VERSION = "day-candidates-v2-independent-window"
+GENERATION_POLICY_VERSION = "day-candidates-v3-single-day-count"
 
 
 def day_candidate_limit(request: TripRequest) -> int:
-    return min(20, max(DAILY_CANDIDATES, (daily_attraction_target(request.free_text_input) or 2) + 2))
+    return min(20, max(DAILY_CANDIDATES, (daily_attraction_target(request.free_text_input, request.travel_days) or 2) + 2))
 
 
 def independent_candidate_groups(pois: list[POIInfo], request: TripRequest) -> list[list[POIInfo]]:
@@ -141,7 +141,7 @@ def _allocate_for_windows(pois, days, request, hotels):
         optional.remove(poi)
         subsets[index].append(poi)
 
-    target = daily_attraction_target(request.free_text_input) or 2
+    target = daily_attraction_target(request.free_text_input, request.travel_days) or 2
     # Give every day independent choices before spending the remaining pool on spares.
     for _ in range(target):
         for index in short_first:

@@ -23,6 +23,15 @@ def test_support_check_cannot_drop_negation_or_rewrite_number_punctuation():
     assert check_answer_support("景区周一不开放。[1]", evidence)["passed"]
 
 
+def test_markdown_list_format_does_not_change_complete_fact_support():
+    evidence, _ = evidence_contract([{"source": "规则", "content": "## 费用说明\n- 票价1.0元，周一不开放。\n-10元为退款。"}])
+    assert check_answer_support("- 票价1.0元，周一不开放。[1]", evidence)["passed"]
+    assert check_answer_support("* 票价1.0元，周一不开放！[1]", evidence)["passed"]
+    assert check_answer_support("-10元为退款。[1]", evidence)["passed"]
+    for answer in ("10元为退款。[1]", "票价10元，周一不开放。[1]", "票价1.0元，周一开放。[1]", "周一不开放。[1]"):
+        assert not check_answer_support(answer, evidence)["passed"]
+
+
 def test_source_page_tier_and_time_legality():
     accepted, rejected = evidence_contract([
         {"source": "规则", "content": "开放", "page": 0},

@@ -47,7 +47,7 @@ def test_offline_answer_is_an_actual_supported_excerpt_not_an_unchecked_fixture_
 
 
 @pytest.mark.parametrize("heading",["#","###"])
-def test_offline_provider_handles_real_prompt_collapsed_matching_markdown_title(monkeypatch,heading):
+def test_offline_provider_handles_real_prompt_preserved_markdown_title(monkeypatch,heading):
     from app.services.research_answer import _messages,build_research_answer
     from app.services import research_answer
     module=load(monkeypatch)
@@ -56,7 +56,7 @@ def test_offline_provider_handles_real_prompt_collapsed_matching_markdown_title(
     evidence=[{"content":content,"source":title,"source_tier":"reviewed","page":1}]
     accepted,_=evidence_contract(evidence)
     messages=_messages("出发前注意事项","北京",accepted,"")
-    assert f"{heading} {title} 出发前请核对景区官方公告。" in messages[-1].content
+    assert f"{heading} {title}\n\n出发前请核对景区官方公告。" in messages[-1].content
     answer=module.answer_from_public_excerpt(messages)
     assert answer=="出发前请核对景区官方公告。[1]"
     assert check_answer_support(answer,accepted)["passed"]
@@ -76,7 +76,7 @@ def test_real_prompt_supports_single_token_section_distinct_from_reviewed_title(
                "source":"复核资料核验标记mvp123","source_tier":"reviewed","page":1}]
     accepted,_=evidence_contract(evidence)
     messages=research_answer._messages("出发前","北京",accepted,"")
-    assert "### 核验标记mvp123 出发前请核对景区官方公告。" in messages[-1].content
+    assert "### 核验标记mvp123\n出发前请核对景区官方公告。" in messages[-1].content
     answer=module.answer_from_public_excerpt(messages)
     assert answer=="出发前请核对景区官方公告。[1]"
     assert check_answer_support(answer,accepted)["passed"]
@@ -89,7 +89,7 @@ def test_real_prompt_supports_single_token_section_distinct_from_reviewed_title(
     assert result["answer"]==answer
 
 
-def test_real_answer_path_falls_back_for_an_ambiguous_multiword_heading(monkeypatch):
+def test_real_answer_path_preserves_multiword_heading_separately_from_facts(monkeypatch):
     from app.services import research_answer
     module=load(monkeypatch)
     evidence=[{"content":"# unknown multiword heading\n\n出发前请核对景区官方公告。",
@@ -97,15 +97,14 @@ def test_real_answer_path_falls_back_for_an_ambiguous_multiword_heading(monkeypa
     accepted,_=evidence_contract(evidence)
     messages=research_answer._messages("注意事项","北京",accepted,"")
     candidate=module.answer_from_public_excerpt(messages)
-    assert not check_answer_support(candidate,accepted)["passed"]
+    assert check_answer_support(candidate,accepted)["passed"]
     monkeypatch.setattr(research_answer,"get_llm",lambda **_:SimpleNamespace(
         invoke=lambda prompt:SimpleNamespace(content=module.answer_from_public_excerpt(prompt))))
     result=research_answer.build_research_answer("注意事项","北京",evidence)
-    assert result["answer_status"]=="extractive_fallback"
-    assert not result["support_check"]["passed"]
-    assert "UNSUPPORTED_CLAIM" in result["support_check"]["issues"]
+    assert result["answer_status"]=="supported_excerpt_answer"
+    assert result["support_check"]["passed"]
     assert result["generation_calls"]==1
-    assert "尚未独立核验" in result["answer"]
+    assert result["answer"]=="出发前请核对景区官方公告。[1]"
 
 
 def test_offline_provider_never_extracts_from_second_source_with_first_citation(monkeypatch):

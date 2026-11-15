@@ -146,12 +146,17 @@ def checkpoint_compatible(stage, saved, current):
         return True
     if not isinstance(saved,dict) or not isinstance(current,dict):
         return False
-    if current.get("rules") == "time-windows-v11-independent-visits" and current.get("generation") == "day-candidates-v2-independent-window" and saved.get("rules") in {
-        "time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure",
-        "time-windows-v6-conflict-classification", "time-windows-v7-whole-day-budget", "time-windows-v8-fact-completion",
-        "time-windows-v9-route-evidence", "time-windows-v10-adjustment-resume"} and "generation" not in saved:
-        # v11 changes POI grouping and the generation prompt. Rebuild choices
-        # and schedules; unchanged raw provider facts keep their original TTLs.
+    if current.get("rules") == "time-windows-v11-independent-visits" and current.get("generation") in {
+        "day-candidates-v2-independent-window", "day-candidates-v3-single-day-count"} and (
+        (saved.get("rules") in {
+            "time-windows-v3-hotel-nights", "time-windows-v4-meal-candidates", "time-windows-v5-hotel-departure",
+            "time-windows-v6-conflict-classification", "time-windows-v7-whole-day-budget", "time-windows-v8-fact-completion",
+            "time-windows-v9-route-evidence", "time-windows-v10-adjustment-resume"} and "generation" not in saved)
+        or (saved.get("rules") == current.get("rules")
+            and saved.get("generation") == "day-candidates-v2-independent-window"
+            and current.get("generation") == "day-candidates-v3-single-day-count")):
+        # Changed grouping or quantity prompts invalidate choices and drafts;
+        # unchanged raw provider facts keep their original TTLs.
         raw_facts = stage == "routes" or stage.startswith(("hotels:", "restaurants:", "weather:"))
         changed = {"rules", "generation", "prompt"}
         return raw_facts and {key:value for key,value in saved.items() if key not in changed} == {key:value for key,value in current.items() if key not in changed}

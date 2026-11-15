@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "network": "trip-nginx-dns-7b648ad3f5-net",
+  "subnet": "10.252.201.0/24",
+  "checks": [
+    "initial health proxy",
+    "backend IP .2 to .3 without frontend reload",
+    "URI/body/request-id preserved: /api/echo",
+    "URI/body/request-id preserved: /api/shared-trips/token-fixture",
+    "SSE response preserved",
+    "private routes remain 404"
+  ],
+  "dns_recovery_seconds": 4.4,
+  "frontend_not_restarted": true,
+  "containers": [
+    "trip-nginx-dns-7b648ad3f5-before",
+    "trip-nginx-dns-7b648ad3f5-frontend",
+    "trip-nginx-dns-7b648ad3f5-after"
+  ],
+  "containers_stopped": true
+}

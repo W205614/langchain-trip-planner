@@ -99,3 +99,13 @@ def test_answer_citation_numbers_match_visible_eligible_evidence(monkeypatch):
     assert result["sources"][0]["source"] == result["evidence"][0]["source"] == "当前资料"
     assert result["evidence"][0]["citation_index"] == 1
     assert result["evidence"][1]["citation_index"] is None
+
+
+def test_prompt_preserves_quotable_line_boundaries_and_never_offers_clipped_facts():
+    content = "## 散步安排\n- 预留90分钟。\n- 票价1.0元，不能省略预约。"
+    messages = research_answer._messages("安排", "南京", [{"source": "旅行笔记", "content": content}], "")
+    assert content in messages[-1].content
+    assert "一行一句" in messages[0].content
+    excerpt = research_answer._clean_excerpt("完整原句。\n" + "不可引用的长句" * 20, 30, preserve_lines=True)
+    assert excerpt == "完整原句。"
+    assert research_answer._clean_excerpt("没有完整边界" * 20, 30, preserve_lines=True) == ""

@@ -58,16 +58,7 @@ def answer_from_public_excerpt(messages):
     block=text.partition("公开资料：")[2]
     match=re.match(r"\s*\[1\] 来源：([^\n]+)\n(.*?)(?=\n\n\[\d+\] 来源：|\Z)",block,re.S)
     if not match:raise ValueError("Offline answer provider requires a numbered public source")
-    title,excerpt=match.group(1).strip(),match.group(2).strip()
-    # Production _messages collapses whitespace inside each excerpt, so a
-    # Markdown title and its first sentence can arrive on the same line.
-    # Prefer an exact repetition of the declared source title. A reviewed
-    # document can also contain a different, single-token section heading.
-    # Removing that token produces only a candidate: the production support
-    # check still rejects a remaining multiword heading joined to the body.
-    repeated_title=re.match(r"^#{1,6}\s+"+re.escape(title)+r"(?:\s+|$)",excerpt)
-    if repeated_title:excerpt=excerpt[repeated_title.end():].strip()
-    else:excerpt=re.sub(r"^#{1,6}\s+\S+\s+","",excerpt,count=1)
+    excerpt=match.group(2).strip()
     lines=[re.sub(r"^[-*+]\s+","",line.strip()) for line in excerpt.splitlines()]
     candidates=[line for line in lines if line and not line.startswith(("[","#","来源页"))]
     if not candidates:raise ValueError("Offline answer provider requires a public source excerpt")

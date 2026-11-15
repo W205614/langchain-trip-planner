@@ -392,7 +392,7 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
             report["attraction_adjustments"] = adjustments
     if initial_generation:
         from .assistant_intent import daily_attraction_target
-        target = daily_attraction_target(request.free_text_input or "")
+        target = daily_attraction_target(request.free_text_input or "", request.travel_days)
         if target is not None:
             report["attraction_targets"] = [{"day_index": day.day_index, "target_count": target,
                 "actual_count": len(day.attractions), "met": len(day.attractions) == target} for day in plan.days]

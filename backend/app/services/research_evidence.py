@@ -62,8 +62,13 @@ def _normalized(value):
 
 
 def _complete_units(content):
-    return {_normalized(re.sub(r"^[ #*+\-]+", "", unit))
+    return {_normalized(_without_list_marker(unit.strip()))
             for unit in re.split(r"[。！？\n]+", content) if unit.strip()}
+
+
+def _without_list_marker(text):
+    # A Markdown marker needs following whitespace; '-10' is a signed amount.
+    return re.sub(r"^(?:#{1,6}\s+|[-*+]\s+)", "", text)
 
 
 def check_answer_support(answer: str, evidence: list[dict]) -> dict:
@@ -77,7 +82,7 @@ def check_answer_support(answer: str, evidence: list[dict]) -> dict:
     claims = [part.strip() for part in re.split(r"(?<=[。！？])|\n+", attached) if part.strip()]
     for claim in claims:
         citations = [int(value) for value in re.findall(r"\[(\d+)\]", claim)]
-        text = _normalized(re.sub(r"\[\d+\]", "", claim))
+        text = _normalized(_without_list_marker(re.sub(r"\[\d+\]", "", claim)))
         if not text:
             continue
         if not citations:
