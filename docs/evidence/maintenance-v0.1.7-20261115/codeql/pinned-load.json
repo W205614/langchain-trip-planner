@@ -1,0 +1,35 @@
+{
+  "validated_source_revision": "bb9fa614873fd1779dc13f0c1c9698645999137a",
+  "pinned_worktree": true,
+  "policy_load_passed": true,
+  "languages": [
+    {
+      "file": "actions.sarif",
+      "status": "pass",
+      "raw_high_critical_findings": 0,
+      "not_affected_context_findings": 0,
+      "blocking_findings": 0
+    },
+    {
+      "file": "java.sarif",
+      "status": "pass_codeql_context",
+      "raw_high_critical_findings": 11,
+      "not_affected_context_findings": 11,
+      "blocking_findings": 0
+    },
+    {
+      "file": "javascript.sarif",
+      "status": "pass",
+      "raw_high_critical_findings": 0,
+      "not_affected_context_findings": 0,
+      "blocking_findings": 0
+    },
+    {
+      "file": "python.sarif",
+      "status": "pass",
+      "raw_high_critical_findings": 0,
+      "not_affected_context_findings": 0,
+      "blocking_findings": 0
+    }
+  ]
+}

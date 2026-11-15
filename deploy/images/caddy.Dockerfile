@@ -26,7 +26,8 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
     && go version -m /out/caddy > /out/buildinfo.txt \
     && ! grep -q 'github.com/go-jose/go-jose/v3' /out/buildinfo.txt \
     && grep -q 'golang.org/x/net[[:space:]]v0.62.0' /out/buildinfo.txt \
-    && grep -q 'go.step.sm/crypto[[:space:]]v0.92.0' /out/buildinfo.txt
+    && grep -q 'go.step.sm/crypto[[:space:]]v0.92.0' /out/buildinfo.txt \
+    && grep -q 'go.opentelemetry.io/otel/sdk/log[[:space:]]v1.47.0' /out/buildinfo.txt
 # Preserve upstream entrypoint, ACME support, trust roots and persistent directories.
 FROM caddy:2.11.9-alpine
 RUN apk upgrade --no-cache

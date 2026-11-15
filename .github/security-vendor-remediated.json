@@ -66,7 +66,7 @@
     "backend/Dockerfile": "369a284736bbcc0ad40e4a9067764b6b63fad2b0251675f20d379503aa4854c3",
     "backend/scripts/restrict_runtime_tools.py": "81a7c044062c51dafe3bf5862df253d395f54a39692c8d43387e91f340290858",
     "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
-    "backend/requirements.lock": "e1eca729fe661c72c5d9703272eb820d5f8170164b75a78ab457577c13a40c10",
+    "backend/requirements.lock": "87c07df62858d5deaa4f2d0330e8c3e35bbe66b3c3aec1d71145f8f4eb8136a3",
     "docker-compose.yml": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
     "docker-compose.production.yml": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
     "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java": "adef1c4dcabf75c49bf079bef80c4e22286379b4cae3425242450c5f9e03c38c",
@@ -6780,5 +6780,13 @@
       "backend/app/services/research_evidence.py"
     ],
     "boundary": "Reviewed local source delta only; final current-image scan remains mandatory."
+  },
+  "maintenance_v017_dependency_review": {
+    "path": "docs/evidence/maintenance-v0.1.7-20261115/otel-dependency-review.json",
+    "sha256": "6a3cd4a4692a1ab40c5bfdff5d7b2e33d053adf355adaca8860a18038c75e096",
+    "changed_bound_files": [
+      "backend/requirements.lock"
+    ],
+    "review": "Seven related pure-Python OpenTelemetry packages upgraded to official patched compatible releases. Chroma embedded client construction, native package/ELF versions and four existing exact execution-path assessment payloads remain unchanged. The new traceparent vulnerability is fixed by upgrade and receives no exception. Actual new image scan mandatory."
   }
 }

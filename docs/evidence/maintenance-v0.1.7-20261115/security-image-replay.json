@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "image": "trip-v017-agent:security-candidate",
+  "same_saved_plan": true,
+  "ready": true,
+  "public_retrieval_sources": 5,
+  "before": {
+    "text": 70,
+    "embedding": 44,
+    "vision": 2,
+    "amap": 1848
+  },
+  "after": {
+    "text": 70,
+    "embedding": 44,
+    "vision": 2,
+    "amap": 1848
+  },
+  "new_provider_calls": 0
+}

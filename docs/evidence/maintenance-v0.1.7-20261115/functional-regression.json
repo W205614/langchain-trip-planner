@@ -1,0 +1,46 @@
+{
+  "mode": "real_provider_http",
+  "image_source": "bb9fa614873fd1779dc13f0c1c9698645999137a",
+  "count_regression": {
+    "input": "只安排一个适合散步的公园景点，14:30到17:30，不安排午餐或晚餐。",
+    "travel_days": 1,
+    "expected": 1,
+    "actual": 1,
+    "generation_mode": "llm",
+    "persisted_refresh_equal": true
+  },
+  "research": {
+    "query": "请根据当前行程和知识来源，简要说明散步安排，并标明不确定的信息。",
+    "answer_status": "supported_excerpt_answer",
+    "support_check": {
+      "passed": true,
+      "method": "conservative_exact_excerpt_match",
+      "issues": [],
+      "independent_semantic_evaluation": false,
+      "boundary": "Checks citation range and textual support only; does not prove factual truth, relevance or current validity."
+    },
+    "generation_calls": 1,
+    "evidence_count": 5
+  },
+  "calls": {
+    "before": {
+      "text": 68,
+      "embedding": 38,
+      "vision": 2,
+      "amap": 1814
+    },
+    "after": {
+      "text": 70,
+      "embedding": 44,
+      "vision": 2,
+      "amap": 1848
+    },
+    "delta": {
+      "text": 2,
+      "embedding": 6,
+      "vision": 0,
+      "amap": 34
+    }
+  },
+  "boundary": "Real configured providers with synthetic account and isolated database; excerpt matching does not establish semantic truth. Existing test document and real map index reused. Subsequent dependency patch changes are separately validated."
+}

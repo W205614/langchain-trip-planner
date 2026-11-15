@@ -27,7 +27,8 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
     && go build -p 2 -mod=readonly -trimpath -ldflags="-s -w -X github.com/prometheus/common/version.Version=0.34.1 -X github.com/prometheus/common/version.Revision=73c6bfe7393929211294c1954f30d8ed78e4d0ad-security1" -o /out/amtool ./cmd/amtool
 RUN for binary in alertmanager amtool; do \
       go version -m /out/$binary > /out/$binary.buildinfo \
-      && grep -q 'go.opentelemetry.io/otel/sdk[[:space:]]v1.45.0' /out/$binary.buildinfo \
+      && grep -q 'go.opentelemetry.io/otel/sdk[[:space:]]v1.47.0' /out/$binary.buildinfo \
+      && grep -q 'go.opentelemetry.io/otel/trace[[:space:]]v1.47.0' /out/$binary.buildinfo \
       && grep -q 'go.opentelemetry.io/otel/exporters/otlp/otlptrace[[:space:]]v1.45.0' /out/$binary.buildinfo || exit 1; \
     done
 FROM alpine:3.24

@@ -33,7 +33,8 @@ class Handler(BaseHTTPRequestHandler):
     def respond(self):
         body=self.rfile.read(int(self.headers.get('Content-Length',0))).decode()
         value={'identity':os.environ['IDENTITY'],'method':self.command,
-               'path':self.path,'body':body,'request_id':self.headers.get('X-Request-ID')}
+               'path':self.path,'body':body,'request_id':self.headers.get('X-Request-ID'),
+               'host':self.headers.get('Host')}
         content=(b'data: proxy-stream-ok\\n\\n' if self.path.startswith('/api/stream')
                  else json.dumps(value).encode())
         self.send_response(200)
@@ -85,20 +86,23 @@ def exercise(frontend_image, python_image, output, packaged_config=False):
             while time.monotonic() < deadline:
                 try:
                     body, _ = request("/readyz")
-                    if json.loads(body)["identity"] == value:
+                    health = json.loads(body)
+                    assert health["host"] == "127.0.0.1:" + port, health
+                    if health["identity"] == value:
                         return
                 except (urllib.error.URLError, TimeoutError):
                     pass
                 time.sleep(.3)
             raise AssertionError("Proxy did not resolve backend " + value)
         wait_identity("before")
-        report["checks"].append("initial health proxy")
+        report["checks"].append("initial health proxy preserves caller Host")
         docker("network", "disconnect", network, before)
         server(after, str(subnet.network_address + 3), "after")
         changed = time.monotonic()
         wait_identity("after")
         report["dns_recovery_seconds"] = round(time.monotonic() - changed, 2)
         report["checks"].append("backend IP .2 to .3 without frontend reload")
+        report["checks"].append("health Host preserved after DNS change")
         for path in ("/api/echo?value=a%2Fb&second=x+y", "/api/shared-trips/token-fixture?value=a%2Fb"):
             body, headers = request(path, b"request-body")
             value = json.loads(body)
