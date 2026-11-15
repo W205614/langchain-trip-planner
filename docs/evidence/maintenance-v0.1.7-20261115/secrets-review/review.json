@@ -1,0 +1,151 @@
+{
+  "source_revision": "e61976bd036ad75609d9e2df3947b381906db170",
+  "workflow_run": 43682302592,
+  "artifact_id": 14148926165,
+  "artifact_zip_sha256": "5879e4738dcbee29e03acbe08e113f336f5f0a620c20216182a9217329965829",
+  "artifact_digest_verified": true,
+  "before": {
+    "history": 5,
+    "tracked": 5
+  },
+  "classification": "Five false positives: public source-file checksums, not secrets, not raw SARIF fixture credentials",
+  "source_field_reviews": [
+    {
+      "File": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "RuleID": "generic-api-key",
+      "StartLine": 132,
+      "source_fields": [
+        {
+          "field": "/usr/local/lib/python3.13/site-packages/langchain_openai/chatgpt_oauth.py",
+          "value_length": 64,
+          "hex_sha256": true,
+          "git_source_digest_verified": null,
+          "matches_previously_allowed_public_digest": true,
+          "verification_source": "exact candidate image file digest, see installed_public_source_verification"
+        }
+      ]
+    },
+    {
+      "File": "docs/evidence/maintenance-v0.1.7-20261115/codeql-final/source-review.json",
+      "RuleID": "generic-api-key",
+      "StartLine": 135,
+      "source_fields": [
+        {
+          "field": "frontend/src/services/api.ts",
+          "value_length": 64,
+          "hex_sha256": true,
+          "git_source_digest_verified": true,
+          "matches_previously_allowed_public_digest": true
+        }
+      ]
+    },
+    {
+      "File": "docs/evidence/maintenance-v0.1.7-20261115/codeql-final/source-review.json",
+      "RuleID": "generic-api-key",
+      "StartLine": 136,
+      "source_fields": [
+        {
+          "field": "frontend/src/services/auth.ts",
+          "value_length": 64,
+          "hex_sha256": true,
+          "git_source_digest_verified": true,
+          "matches_previously_allowed_public_digest": true
+        }
+      ]
+    },
+    {
+      "File": "docs/evidence/maintenance-v0.1.7-20261115/codeql/source-review.json",
+      "RuleID": "generic-api-key",
+      "StartLine": 127,
+      "source_fields": [
+        {
+          "field": "frontend/src/services/api.ts",
+          "value_length": 64,
+          "hex_sha256": true,
+          "git_source_digest_verified": true,
+          "matches_previously_allowed_public_digest": true
+        }
+      ]
+    },
+    {
+      "File": "docs/evidence/maintenance-v0.1.7-20261115/codeql/source-review.json",
+      "RuleID": "generic-api-key",
+      "StartLine": 128,
+      "source_fields": [
+        {
+          "field": "frontend/src/services/auth.ts",
+          "value_length": 64,
+          "hex_sha256": true,
+          "git_source_digest_verified": true,
+          "matches_previously_allowed_public_digest": true
+        }
+      ]
+    }
+  ],
+  "installed_public_source_verification": {
+    "image_id": "sha256:b971661aa2385486b6da0b7068a7e2ab0ee8ba14fc6c9b6f40bce09492afae44",
+    "source_file": "/usr/local/lib/python3.13/site-packages/langchain_openai/chatgpt_oauth.py",
+    "image_source_digest_recomputed": true,
+    "matches_reviewed_digest": true,
+    "matches_existing_exact_allowlist": true,
+    "provider_calls": 0
+  },
+  "change": "Added three exact receipt file paths to two existing AND(path+previously verified literal digest+generic-api-key) allowlists; no new literal, rule, directory exclusion or scanner change.",
+  "original_reports": "Original redacted artifact reports copied byte-for-byte as gitleaks-*-before.json; raw ZIP retained locally. Original SARIF and source-review files unchanged.",
+  "after": [
+    {
+      "scanner": "gitleaks-history",
+      "status": "pass",
+      "findings": 0,
+      "exit_code": 0
+    },
+    {
+      "scanner": "gitleaks-tracked",
+      "status": "pass",
+      "findings": 0,
+      "exit_code": 0
+    }
+  ],
+  "negative_boundaries": [
+    {
+      "case": "approved_public_source_digest",
+      "expected_exit": 0,
+      "exit_code": 0,
+      "findings": 0,
+      "rules": [],
+      "boundary_verified": true
+    },
+    {
+      "case": "different_digest_same_receipt",
+      "expected_exit": 1,
+      "exit_code": 1,
+      "findings": 1,
+      "rules": [
+        "generic-api-key"
+      ],
+      "boundary_verified": true
+    },
+    {
+      "case": "api_key_format_same_receipt",
+      "expected_exit": 1,
+      "exit_code": 1,
+      "findings": 1,
+      "rules": [
+        "github-pat"
+      ],
+      "boundary_verified": true
+    },
+    {
+      "case": "approved_digest_wrong_path",
+      "expected_exit": 1,
+      "exit_code": 1,
+      "findings": 1,
+      "rules": [
+        "generic-api-key"
+      ],
+      "boundary_verified": true
+    }
+  ],
+  "after_scan_includes_untracked_release_evidence": true,
+  "after_scan_command": "python tools/security_gate.py secrets --include-untracked --reports .cache/release-v017/secrets-review/final-with-evidence"
+}

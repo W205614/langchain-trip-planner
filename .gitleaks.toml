@@ -9,6 +9,7 @@ targetRules = ["generic-api-key"]
 paths = [
   '''(^|/)docs/evidence/native-security-20261110/agent-trip4-(artifact-inventory|review)\.json$''',
   '''(^|/)docs/evidence/normal-use-20261112/agent-source-native-review\.json$''',
+  '''(^|/)docs/evidence/maintenance-v0\.1\.7-20261115/agent-execution-path-review\.json$''',
   '''(^|/)\.github/security-vendor-remediated\.json$'''
 ]
 regexTarget = "secret"
@@ -25,6 +26,7 @@ paths = [
   '''(^|/)docs/evidence/normal-use-20261112/codeql/source-review\.json$''',
   '''(^|/)docs/evidence/normal-use-20261112/codeql-go1274/source-review\.json$''',
   '''(^|/)docs/evidence/normal-use-20261112/codeql-ui-contract-tests/source-review\.json$''',
+  '''(^|/)docs/evidence/maintenance-v0\.1\.7-20261115/(codeql|codeql-final)/source-review\.json$''',
   '''(^|/)\.github/codeql-context-remediated\.json$'''
 ]
 regexTarget = "secret"

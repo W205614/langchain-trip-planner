@@ -1,6 +1,6 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 和告警接收器按本仓配方在本地构建／运行；它们不是这三个 GHCR 应用包。当前v0.1.6升级三个应用及Go工具链配套镜像，告警接收器保持原已验收镜像。范围见[当前版本证据](../evidence/release-v0.1.6-20261112/README.md)。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 和告警接收器按本仓配方在本地构建／运行；它们不是这三个 GHCR 应用包。当前正式公开版本仍为 v0.1.6；该版当时升级三个应用及 Go 工具链配套镜像，告警接收器保持原已验收镜像，范围见[版本证据](../evidence/release-v0.1.6-20261112/README.md)。v0.1.7 修复候选待发布，当前验证进度见[维护证据](../evidence/maintenance-v0.1.7-20261115/README.md)，不将候选本地镜像ID当作 Registry digest。
 
 ## 首次使用镜像
 
@@ -46,6 +46,12 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 5. 按公开发布范围设置新建 GHCR 包可见性，匿名拉取并核对 registry 摘要和许可入口；完成实际使用者验收后更新本机日常环境。
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
+
+## v0.1.7 候选（待发布）
+
+当前候选包含单日景点数量约束、Nginx 后端地址重解析、攻略原句引用与 OpenTelemetry 安全修复。功能测试与镜像、发布、日常升级分别验收；已有 v0.1.6 镜像和历史附件保留。
+
+本节尚无正式 v0.1.7 Registry 摘要或附件校验值。发布完成后以实际 `container-manifest.json`、Registry 查询及匿名获取回执补入不可变身份；在此之前，上面的首次安装命令与镜像配置继续指向 v0.1.6，不使用尚未发布的标签。
 
 ## v0.1.6 的不可变身份
 
@@ -98,7 +104,7 @@ Agent 原应用源码为 `e81765b257a2b88b1d463a02c6263e754d5cce00`，Java 为 `
 
 ## 源码构建与历史输入
 
-普通源码 Docker 路线见 [README](../../README.md)。当前7cceca8的干净CI已实际构建；本机同源新安装命令实跑配置生成、拒绝覆盖及两条Compose配置检查，配置检查不称作本地冷构建。历史272构建结果在v0.1.4记录内保留。
+普通源码 Docker 路线见 [README](../../README.md)。历史 v0.1.5 来源 7cceca8 的干净CI已实际构建；本机同源新安装命令实跑配置生成、拒绝覆盖及两条Compose配置检查，配置检查不称作本地冷构建。历史272构建结果在v0.1.4记录内保留。
 
 完整Git历史用于安全源绑定工具；配置生成器本身不需要Git。`tools/restore_historical_build_inputs.py` 默认只读验证12个已公开冻结的历史原件及现有目标，不会复制缺失目标。安全CI在真实Actions环境使用其CI专用开关；本地不要伪造 `GITHUB_ACTIONS`，也不存在 `--restore-local` 参数。
 

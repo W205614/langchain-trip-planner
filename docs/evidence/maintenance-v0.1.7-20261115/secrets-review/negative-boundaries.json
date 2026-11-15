@@ -1,0 +1,45 @@
+{
+  "scanner_version": "8.30.1",
+  "actual_scanner": true,
+  "credentials_used": "Locally generated synthetic GitHub API-key format only; no issued/live key or supplier call",
+  "cases": [
+    {
+      "case": "approved_public_source_digest",
+      "expected_exit": 0,
+      "exit_code": 0,
+      "findings": 0,
+      "rules": [],
+      "boundary_verified": true
+    },
+    {
+      "case": "different_digest_same_receipt",
+      "expected_exit": 1,
+      "exit_code": 1,
+      "findings": 1,
+      "rules": [
+        "generic-api-key"
+      ],
+      "boundary_verified": true
+    },
+    {
+      "case": "api_key_format_same_receipt",
+      "expected_exit": 1,
+      "exit_code": 1,
+      "findings": 1,
+      "rules": [
+        "github-pat"
+      ],
+      "boundary_verified": true
+    },
+    {
+      "case": "approved_digest_wrong_path",
+      "expected_exit": 1,
+      "exit_code": 1,
+      "findings": 1,
+      "rules": [
+        "generic-api-key"
+      ],
+      "boundary_verified": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "tool_pins_verified_date": "2026-10-26",
+  "results": [
+    {
+      "scanner": "gitleaks-history",
+      "status": "pass",
+      "findings": 0,
+      "exit_code": 0
+    },
+    {
+      "scanner": "gitleaks-tracked",
+      "status": "pass",
+      "findings": 0,
+      "exit_code": 0
+    }
+  ]
+}

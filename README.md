@@ -4,7 +4,7 @@
 
 模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-当前版本：[**v0.1.6 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/evidence/release-v0.1.6-20261112/README.md)
+当前正式版本：[**v0.1.6 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner)。**v0.1.7 修复候选待发布**，当前验证状态见[维护证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。
 
 ## 可以做什么
 
@@ -16,30 +16,35 @@
 | 使用旅行资料 | 上传资料、审核事实、攻略问答和可选 RAG；Chroma/关键词召回在本地，向量与图文解析依赖外部模型 |
 | 管理个人数据 | 账号与权限、配额、反馈、数据导出及注销；邮件、S3、公网 HTTPS 需另配相应外部服务 |
 
-各项是否经过本轮验收，与源码中是否已实现分开记录。本轮真实验证覆盖 RAG、浏览器高德底图和景点图片；SMTP、S3 和视觉没有新增真实联调结论。
+功能与验收范围分开记录：本轮真实验证了单景点生成、攻略引用回答、RAG、高德底图与照片；账号、邮件、S3、协作、导出和故障处理使用隔离测试数据及本地服务验收。外部 SMTP/S3 账号与公网部署不在本轮验收范围。
 
-## 维护修复
+## v0.1.7 候选修复（待发布）
 
-当前源码修复了单日景点数量要求的识别、后端容器地址变化后的 Nginx 自动解析，以及攻略引用材料换行与完整原句校验的一致性。对多日模糊数量不作推断；攻略回答仍需通过引用支持检查，否则明确降级为摘录。修复与已发布版本分别记录，验证范围见[本轮维护记录](docs/evidence/maintenance-v0.1.7-20261115/README.md)。
+- 单日行程支持“只安排一个适合散步的公园景点”等表述；数量不满足时明确报告，多日模糊要求不自动推断。
+- Nginx 随后端地址变化重新解析 Docker DNS，健康探针保留正确 Host；已实际验证换 IP 后前端无需重启。
+- 攻略保留证据原句与换行，格式性列表标记不再误触发支持校验；无依据、改写否定或数字的回答仍会被拒绝并明确降级。
+- 更新 Python 和 Go OpenTelemetry 的官方安全修复；原始告警、逐项适用性复核与失败记录保留。
+
+[修复、验证与版本证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。
 
 ## 真实运行画面
 
-下面使用**正常联网配置与合成账号**，展示真实模型和高德生成、保存并刷新后的南京行程。最终成功样本生成使用1次文本模型、34次高德MCP和5次Embedding；整轮还包含保留的先前草稿及排障调用，不能将样本计数当作总费用。
+以下使用真实模型和高德、合成账号与隔离数据库。原始单日要求生成 **1 个景点**，保存后刷新保持，地图与照片均实际加载。攻略回答返回 `supported_excerpt_answer`，逐句引用支持检查通过；这不等于独立核验了资料真实性。
 
-地图底图、景点照片和资料检索均实际可用；时间轴为14:30–17:30，共180分钟。营业、预约和未知接驳如实保留待核验说明：
+![修复后真实单景点行程、地图照片与待核验时间轴](docs/screenshots/release-v0.1.7/01-fixed-plan.png)
 
-![南京行程：真实底图、景点照片、180分钟时间轴及待核验事实](docs/screenshots/release-v0.1.6/01-normal-plan.png)
+本次针对性功能联调用量为2次文本模型、34次高德MCP和6次Embedding；随后截图加载另产生1次高德MCP调用。这些调用与先前全面功能测试分开计数，不作为固定生成成本。营业、预约和远期天气仍按真实证据保留待核验说明。[实拍来源及边界](docs/screenshots/release-v0.1.7/README.md)。
 
 <details>
-<summary>查看地图实拍与资料检索来源</summary>
+<summary>保留的 v0.1.6 历史画面</summary>
 
-![高德道路、景点标记与完整版权审图信息](docs/screenshots/release-v0.1.6/02-normal-map.png)
+下面属于 v0.1.6 当时的验收，不作为 v0.1.7 的新测试。
 
-![正常资料检索返回五条来源，纯检索不调用生成模型](docs/screenshots/release-v0.1.6/03-normal-retrieval.png)
+![v0.1.6 南京行程历史实拍](docs/screenshots/release-v0.1.6/01-normal-plan.png)
+
+[历史截图来源及调用边界](docs/screenshots/release-v0.1.6/README.md)。
 
 </details>
-
-[实拍来源、摘要与调用边界](docs/screenshots/release-v0.1.6/README.md)。没有拦截响应、注入行程或隐藏错误。旧截图属于限制外部请求的历史回放，不能用来判断正常配置下高德MCP整体不可用；历史失败记录保留。正式使用仍需自己的有效凭据、网络与额度。
 
 ## 架构与目录
 
@@ -168,9 +173,9 @@ docker compose @imageCompose stop
 
 ## 验证、开发与运维
 
-本轮修复并真实验证了资料检索、地图、图片与完整时间轴；最终封装镜像恢复同一真实记录、登录和刷新通过，封装恢复检查没有新增供应商调用。过期按实际参与规划的已核实事实计算，不再给所有估算统一套用30分钟过期；输入、事实或真实有效期变化仍要求重新核验。
+本轮候选修复已真实验证单景点生成、带引用的攻略回答、资料检索、地图、图片与180分钟时间轴。已完成的镜像复验读取同一记录与资料来源，没有新增供应商调用；这不等同于尚待完成的公开镜像获取或日常环境升级验收。输入、事实或真实有效期变化仍要求重新核验。
 
-发布、公开镜像验收、CI与日常环境的最终状态见[v0.1.6证据](docs/evidence/release-v0.1.6-20261112/README.md)。原始安全匹配、逐项适用性结论和历史失败分列保留；未知营业、预约、票价和路线条件不会被改成已确认。正常历史版本保留。
+v0.1.7 的发布、公开镜像验收、CI与日常环境升级尚不能视为完成；进度和最终状态见[维护证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。原始安全匹配、逐项适用性结论和历史失败分列保留；未知营业、预约、票价和路线条件不会被改成已确认。正常历史版本保留。
 
 - [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
 - [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)
