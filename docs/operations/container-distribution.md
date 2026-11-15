@@ -1,13 +1,13 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，支持 `linux/amd64`。正式版本使用 `vX.Y.Z` 标签，部署时以 Release 的 `container-manifest.json` 和实际 registry 摘要核对身份；不使用可变 `latest`。PostgreSQL、Prometheus、Alertmanager 和告警接收器按本仓配方在本地构建／运行；它们不是这三个 GHCR 应用包。当前正式公开版本仍为 v0.1.6；该版当时升级三个应用及 Go 工具链配套镜像，告警接收器保持原已验收镜像，范围见[版本证据](../evidence/release-v0.1.6-20261112/README.md)。v0.1.7 修复候选待发布，当前验证进度见[维护证据](../evidence/maintenance-v0.1.7-20261115/README.md)，不将候选本地镜像ID当作 Registry digest。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前正式版本 v0.1.7 已公开，三应用按不可变 Registry 摘要推广和匿名验收；本机日常环境同时更新修复后的 Alertmanager。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 仍是本地配套组件，不是额外公开应用包。见[本版证据](../evidence/maintenance-v0.1.7-20261115/README.md)。
 
 ## 首次使用镜像
 
 获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
 
 ```dotenv
-TRIP_VERSION=v0.1.6
+TRIP_VERSION=v0.1.7
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 
@@ -47,11 +47,24 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
 
-## v0.1.7 候选（待发布）
+## v0.1.7 的不可变身份
 
-当前候选包含单日景点数量约束、Nginx 后端地址重解析、攻略原句引用与 OpenTelemetry 安全修复。功能测试与镜像、发布、日常升级分别验收；已有 v0.1.6 镜像和历史附件保留。
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.7)来源为 `ea0f37be5e6b384dfa75859eb2d1f8c75a47e138`，Linux/amd64。三个应用的标签均为 `:v0.1.7`；Registry摘要和config摘要来自实际推广与匿名获取，不从本地Docker ID推算。
 
-本节尚无正式 v0.1.7 Registry 摘要或附件校验值。发布完成后以实际 `container-manifest.json`、Registry 查询及匿名获取回执补入不可变身份；在此之前，上面的首次安装命令与镜像配置继续指向 v0.1.6，不使用尚未发布的标签。
+| 应用 | Registry digest | Config digest |
+| --- | --- | --- |
+| `agent` | `sha256:3a7018149304f63f0f167279b2b9cd118a199c451a917dbf7451d9758ed38806` | `sha256:34b89073ee2f5d3a84a62b88f137159f60f2cdd72dcc588fc06c90855f2b45c8` |
+| `backend` | `sha256:4f7329016e6dab491dec26989d07bffa316477fe0062da46f408a0b1186d559c` | `sha256:5f60cb621fa907a567f7046b42ddb6070823bfd5b74f955f5e9907a0f3009025` |
+| `frontend` | `sha256:5418be1c9863f2fa421f092cb781f8cb61c1aa1777ec077440659ce64b82264c` | `sha256:5c90bca98ac164854be7c3541d6fc621cb3c6937af4d088fa8a8158201b7deac` |
+
+| 正式附件 | 字节数 | SHA-256 |
+| --- | ---: | --- |
+| `application-images-v0.1.7.tar.gz` | 481307080 | `3430ec1f94d59da79c78db8d61acdb707c2276d4cfb870ccd492c1d261d5fe9b` |
+| `container-sources-v0.1.7.zip` | 1398843351 | `3d4234017391d022ebf31e5de0805d7b14388ef6ac5433e579c59d7a091885bf` |
+| `container-manifest.json` | 19833 | `fae6be7eac9b23eaf1bcd8611eca5226713fcd83467660fa5e1ba3d5bfc7e6b1` |
+| `SHA256SUMS` | 284 | `8405e96d0ce8fdc036f46033778cf9cf7f8ffaf0d1fbc9cc9d75a2fa374c8e46` |
+
+来源包6916成员的CRC/摘要及131个项目文件与正式源码的LF等价核验通过；原始第三方材料、许可与历史身份保留。匿名拉取的配置和有序层与封装候选一致，并在隔离栈读取同一真实记录、登录刷新通过，0新增供应商调用。日常环境升级后的46表/4上传、配置与停止状态另见[公开交付摘要](../evidence/maintenance-v0.1.7-20261115/final-verification.json)。下面的历史版本表保持原身份。
 
 ## v0.1.6 的不可变身份
 

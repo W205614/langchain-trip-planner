@@ -1,0 +1,275 @@
+{
+  "passed": true,
+  "version": "v0.1.7",
+  "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+  "platform": "linux/amd64",
+  "release": {
+    "id": 445863522,
+    "url": "https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.7",
+    "published_at": "2026-11-15T08:13:43Z",
+    "draft": false
+  },
+  "workflows": {
+    "ci": {
+      "id": 43683770095,
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43683770095",
+      "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "name": "Java business PostgreSQL tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Python Agent tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Docker Compose config and build",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Frontend build (vue-tsc + vite)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "security": {
+      "id": 43683770047,
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43683770047",
+      "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "name": "Images / frontend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Runtime images / caddy",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Runtime images / postgres",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Images / agent",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Runtime images / alertmanager",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL / javascript-typescript",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL / python",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL / actions",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Images / backend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Runtime images / prometheus",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "CodeQL / java-kotlin",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Dependencies / Python Node and resolved Maven SBOM",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Runtime images / alert-receiver",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Secrets / full history and tracked source",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "promotion": {
+      "id": 43693635750,
+      "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43693635750",
+      "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "name": "publish",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Anonymous public release and image consumer",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  },
+  "images": {
+    "agent": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-agent:v0.1.7",
+      "digest": "sha256:3a7018149304f63f0f167279b2b9cd118a199c451a917dbf7451d9758ed38806",
+      "config_digest": "sha256:34b89073ee2f5d3a84a62b88f137159f60f2cdd72dcc588fc06c90855f2b45c8"
+    },
+    "backend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-backend:v0.1.7",
+      "digest": "sha256:4f7329016e6dab491dec26989d07bffa316477fe0062da46f408a0b1186d559c",
+      "config_digest": "sha256:5f60cb621fa907a567f7046b42ddb6070823bfd5b74f955f5e9907a0f3009025"
+    },
+    "frontend": {
+      "tag": "ghcr.io/w205614/langchain-trip-planner-frontend:v0.1.7",
+      "digest": "sha256:5418be1c9863f2fa421f092cb781f8cb61c1aa1777ec077440659ce64b82264c",
+      "config_digest": "sha256:5c90bca98ac164854be7c3541d6fc621cb3c6937af4d088fa8a8158201b7deac"
+    }
+  },
+  "assets": {
+    "application-images-v0.1.7.tar.gz": {
+      "bytes": 481307080,
+      "sha256": "3430ec1f94d59da79c78db8d61acdb707c2276d4cfb870ccd492c1d261d5fe9b"
+    },
+    "container-sources-v0.1.7.zip": {
+      "bytes": 1398843351,
+      "sha256": "3d4234017391d022ebf31e5de0805d7b14388ef6ac5433e579c59d7a091885bf"
+    },
+    "container-manifest.json": {
+      "bytes": 19833,
+      "sha256": "fae6be7eac9b23eaf1bcd8611eca5226713fcd83467660fa5e1ba3d5bfc7e6b1"
+    },
+    "SHA256SUMS": {
+      "bytes": 284,
+      "sha256": "8405e96d0ce8fdc036f46033778cf9cf7f8ffaf0d1fbc9cc9d75a2fa374c8e46"
+    }
+  },
+  "source_archive": {
+    "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+    "version": "v0.1.7",
+    "bundle": "container-sources-v0.1.7.zip",
+    "bytes": 1398843351,
+    "sha256": "3d4234017391d022ebf31e5de0805d7b14388ef6ac5433e579c59d7a091885bf",
+    "all_members_crc_verified": true,
+    "members_sha256_verified": 6916,
+    "project_files_lf_equal_git_source": 131,
+    "inherited_external_files_unchanged": 6647,
+    "original_materials_modified": false
+  },
+  "anonymous_local": {
+    "passed": true,
+    "three_anonymous_pulls": true,
+    "ordered_layers_and_configuration_equal": true,
+    "same_record_login_refresh": true,
+    "attraction_count": 1,
+    "new_provider_calls": 0
+  },
+  "daily": {
+    "passed": true,
+    "table_count": 46,
+    "all_table_rows_and_digests_preserved": true,
+    "uploads_sha256_preserved": 4,
+    "configuration_mounts_ports_and_runtime_policy_preserved": true,
+    "old_images_and_backup_preserved": true,
+    "all_services_stopped": true,
+    "monitoring_targets_up": 2,
+    "flyway_validated": 20,
+    "new_provider_calls": 0,
+    "chroma_boundary": "Startup may change Chroma locks or index metadata; not a claim of all-file byte equality.",
+    "chroma": {
+      "non_lock_tables_preserved": 20,
+      "other_index_files_byte_equal": 189,
+      "startup_lock_rows_added": 1,
+      "empty_unused_length_buffers_changed": 2,
+      "review": "chroma-startup-review.json"
+    }
+  },
+  "sealed_runtime": {
+    "passed": true,
+    "same_persisted_plan": true,
+    "new_provider_calls": 0
+  },
+  "image_scans": {
+    "agent": {
+      "status": "pass_vendor_policy",
+      "all_findings": 227,
+      "raw_high_critical_findings": 69,
+      "blocking_findings": 0,
+      "unfixed_risk_accepted_findings": 0
+    },
+    "backend": {
+      "status": "pass",
+      "all_findings": 0,
+      "raw_high_critical_findings": 0,
+      "blocking_findings": 0,
+      "unfixed_risk_accepted_findings": 0
+    },
+    "frontend": {
+      "status": "pass",
+      "all_findings": 0,
+      "raw_high_critical_findings": 0,
+      "blocking_findings": 0,
+      "unfixed_risk_accepted_findings": 0
+    }
+  },
+  "global_provider_counters": {
+    "text": 70,
+    "embedding": 44,
+    "vision": 2,
+    "amap": 1849
+  },
+  "provider_counter_baseline": {
+    "text": 66,
+    "amap": 1768,
+    "embedding": 30,
+    "vision": 1
+  },
+  "whole_session_delta": {
+    "text": 4,
+    "amap": 81,
+    "embedding": 14,
+    "vision": 1
+  },
+  "approved_additional_budget": {
+    "text": 5,
+    "amap": 100,
+    "embedding": 20,
+    "vision": 1
+  },
+  "absolute_provider_limits": {
+    "text": 71,
+    "amap": 1868,
+    "embedding": 50,
+    "vision": 2
+  },
+  "boundary": "Final source CI uses isolated data and provider substitutes; real supplier regression is separately recorded. No public SMTP/S3 account, production TLS, complete seven-service cloned restore or capacity claim."
+}

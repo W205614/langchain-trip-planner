@@ -4,7 +4,7 @@
 
 模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-当前正式版本：[**v0.1.6 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner)。**v0.1.7 修复候选待发布**，当前验证状态见[维护证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。
+当前正式版本：[**v0.1.7 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.7) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/evidence/maintenance-v0.1.7-20261115/README.md)
 
 ## 可以做什么
 
@@ -18,7 +18,7 @@
 
 功能与验收范围分开记录：本轮真实验证了单景点生成、攻略引用回答、RAG、高德底图与照片；账号、邮件、S3、协作、导出和故障处理使用隔离测试数据及本地服务验收。外部 SMTP/S3 账号与公网部署不在本轮验收范围。
 
-## v0.1.7 候选修复（待发布）
+## v0.1.7 修复
 
 - 单日行程支持“只安排一个适合散步的公园景点”等表述；数量不满足时明确报告，多日模糊要求不自动推断。
 - Nginx 随后端地址变化重新解析 Docker DNS，健康探针保留正确 Host；已实际验证换 IP 后前端无需重启。
@@ -87,7 +87,7 @@ Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、
 ### 1. 获取固定版本并准备配置
 
 ```powershell
-git clone --branch v0.1.6 https://github.com/W205614/langchain-trip-planner.git
+git clone --branch v0.1.7 https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
@@ -122,7 +122,7 @@ $env:BUILD_REVISION = (git rev-parse HEAD).Trim()
 在项目根新建 `.env`；已有文件只补充所需项，不覆盖其他配置：
 
 ```dotenv
-TRIP_VERSION=v0.1.6
+TRIP_VERSION=v0.1.7
 APP_PORT=8380
 AMAP_WEB_JS_KEY=
 ```
@@ -173,9 +173,9 @@ docker compose @imageCompose stop
 
 ## 验证、开发与运维
 
-本轮候选修复已真实验证单景点生成、带引用的攻略回答、资料检索、地图、图片与180分钟时间轴。已完成的镜像复验读取同一记录与资料来源，没有新增供应商调用；这不等同于尚待完成的公开镜像获取或日常环境升级验收。输入、事实或真实有效期变化仍要求重新核验。
+本轮修复已真实验证单景点生成、带引用的攻略回答、资料检索、地图、图片与180分钟时间轴。已完成的镜像复验读取同一记录与资料来源，没有新增供应商调用；最终公开镜像的匿名获取、同记录刷新及日常环境升级也已分别完成。输入、事实或真实有效期变化仍要求重新核验。
 
-v0.1.7 的发布、公开镜像验收、CI与日常环境升级尚不能视为完成；进度和最终状态见[维护证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。原始安全匹配、逐项适用性结论和历史失败分列保留；未知营业、预约、票价和路线条件不会被改成已确认。正常历史版本保留。
+v0.1.7 的发布、匿名镜像验收、同源CI与日常升级已完成，完整边界见[维护证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。原始安全匹配、逐项适用性结论和历史失败分列保留；未知营业、预约、票价和路线条件不会被改成已确认。正常历史版本保留。
 
 - [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
 - [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)

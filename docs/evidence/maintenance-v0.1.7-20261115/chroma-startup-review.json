@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+  "published_agent_digest": "sha256:3a7018149304f63f0f167279b2b9cd118a199c451a917dbf7451d9758ed38806",
+  "installed": {
+    "chromadb_version": "1.5.9",
+    "rust_bindings": [
+      {
+        "path": "/usr/local/lib/python3.13/site-packages/chromadb_rust_bindings/chromadb_rust_bindings.abi3.so",
+        "bytes": 58975840,
+        "sha256": "a9794735847c3a78c15931d869cee8368fddbb10048c3d098bc09a14130075ad",
+        "record_sha256_matches": true
+      }
+    ]
+  },
+  "upstream_archives": [
+    {
+      "path": "python/chromadb-1.5.9.tar.gz",
+      "bytes": 2595635,
+      "sha256": "5c20e62a455c28bacac927f26116a73fd8e1799e0d908be8e8a4f02197a54731",
+      "url": "https://files.pythonhosted.org/packages/92/d1/5e33b26985f0c7046a0be1cee2158ada1748ee700d2545057fde1468d74d/chromadb-1.5.9.tar.gz"
+    },
+    {
+      "path": "wheel-rust/git/chroma-core-hnswlib-6868102bde454dc761136e1994490133a6a026bb.tar.gz",
+      "bytes": 81122,
+      "sha256": "37263a287882e9ef2650ea22ee91c043abc76a7aad2b319f250a460b803651af",
+      "url": "https://codeload.github.com/chroma-core/hnswlib/tar.gz/6868102bde454dc761136e1994490133a6a026bb"
+    }
+  ],
+  "precise_source_files": [
+    {
+      "path": "db.rs",
+      "bytes": 20710,
+      "sha256": "d7c5495bd3da83de2e7203ee6bcc8e33d07aa22bccef27fd55cc3c8813362e3c",
+      "review": "Lines 46-49 apply_all_migration initialization invokes initialize_migrations_table; lines168-193 create acquire_write(id INTEGER PRIMARY KEY,lock_status INTEGER NOT NULL) and insert one TRUE row; lines197-202 implement begin_immediate write lock using row1."
+    },
+    {
+      "path": "hnswalg.h",
+      "bytes": 88205,
+      "sha256": "cb8e9566505b8fac6f6d157a1d613c15ee71663c95f421055ca94693c63e4d66",
+      "review": "Lines20-24/1227-1236 header order yields version@0,capacity@12,count@20 on installed64bit; lines314-322 malloc length buffer and count0,1000-1031 initialize persistence writes capacity-sized unused buffer; lines1353-1370 load only count entries;2048-2049 empty search returns before accessing vectors."
+    }
+  ],
+  "comparison": {
+    "all_non_lock_table_schemas_and_rows_equal": true,
+    "non_lock_tables": 20,
+    "acquire_write_existing_rows_preserved": true,
+    "startup_lock_rows_added": 1,
+    "other_index_files_byte_equal": 189,
+    "empty_index_length_buffers_changed": 2,
+    "each_changed_buffer_bytes": 400,
+    "each_changed_buffer_valid_elements": 0
+  },
+  "original_snapshot_and_failure_preserved": true,
+  "diagnostic_correction": "The initial diagnostic named a nonexistent write_lock table. It was corrected using the actual acquire_write schema and exact installed upstream source; no data or original snapshot was changed.",
+  "boundary": "Only the startup lock and unused capacity buffers of two zero-element indexes changed. No claim that all Chroma file bytes remain identical. Read-only data/source review, no live Chroma client initialized."
+}

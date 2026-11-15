@@ -1,7 +1,7 @@
 {
   "passed": true,
-  "network": "trip-nginx-dns-3478597d4d-net",
-  "subnet": "10.252.204.0/24",
+  "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+  "config_source": "packaged_image",
   "checks": [
     "initial health proxy preserves caller Host",
     "backend IP .2 to .3 without frontend reload",
@@ -11,13 +11,8 @@
     "SSE response preserved",
     "private routes remain 404"
   ],
-  "config_source": "packaged_image",
-  "dns_recovery_seconds": 8.62,
+  "dns_recovery_seconds": 8.63,
   "frontend_not_restarted": true,
-  "containers": [
-    "trip-nginx-dns-3478597d4d-before",
-    "trip-nginx-dns-3478597d4d-frontend",
-    "trip-nginx-dns-3478597d4d-after"
-  ],
-  "containers_stopped": true
+  "containers_stopped": true,
+  "boundary": "One isolated measurement, not an SLA."
 }

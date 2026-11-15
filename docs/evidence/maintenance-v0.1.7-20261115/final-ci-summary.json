@@ -1,0 +1,256 @@
+{
+  "source": "ea0f37be5e6b384dfa75859eb2d1f8c75a47e138",
+  "version": "v0.1.7",
+  "workflow_run": {
+    "id": 43683770095,
+    "url": "https://github.com/W205614/langchain-trip-planner/actions/runs/43683770095",
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs_success": 4,
+    "jobs_total": 4
+  },
+  "python": {
+    "passed": 812,
+    "skipped": 112,
+    "failed": 0,
+    "boundary": "Actual same-source CI run; conditional skipped tests are not counted as passed."
+  },
+  "java": {
+    "tests": 213,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "suites": [
+      {
+        "suite": "main_browser",
+        "selected": 82,
+        "passed": 80,
+        "skipped": 2,
+        "failed": 0,
+        "flaky_reported": 0,
+        "elapsed_reported": "5.0m"
+      },
+      {
+        "suite": "dedicated_public_mode_browser",
+        "selected": 2,
+        "passed": 2,
+        "skipped": 0,
+        "failed": 0,
+        "flaky_reported": 0,
+        "elapsed_reported": "23.4s"
+      }
+    ],
+    "unique_passed_across_main_and_public_suites": 82,
+    "main_two_skips": "Dedicated public-mode cases are skipped in the main suite and executed in the separate public/Mailpit stack.",
+    "retry_or_flaky_markers_found": [],
+    "no_flaky_or_test_retry_reported": true,
+    "retry_boundary": "No Playwright flaky/retry summary or retry markers observed; workflow run_attempt retained separately. Build/download retries and intended webhook/SMTP recovery exercises are not test reruns."
+  },
+  "isolated_http": {
+    "nginx_smoke": "Health/private metrics/admin permissions and four upload boundaries passed in job stdout",
+    "business": {
+      "passed": 22,
+      "total": 22,
+      "cases": [
+        {
+          "id": "one-day",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "three-days",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "seven-days",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "thirty-days",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "sparse-city",
+          "actual": "failed",
+          "expected": "failed",
+          "contract_passed": true
+        },
+        {
+          "id": "no-candidates",
+          "actual": "failed",
+          "expected": "failed",
+          "contract_passed": true
+        },
+        {
+          "id": "agent-cross-city-candidates",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "agent-partial-candidates",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "weather-unavailable",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "route-unavailable",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "invalid-json",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "unknown-poi",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "family",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "museums",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "food",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "walking",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "driving",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "conflicting-preferences",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "injection",
+          "actual": "succeeded",
+          "expected": "succeeded",
+          "contract_passed": true
+        },
+        {
+          "id": "date-mismatch",
+          "actual": "validation_error",
+          "expected": "validation_error",
+          "contract_passed": true
+        },
+        {
+          "id": "invalid-date",
+          "actual": "validation_error",
+          "expected": "validation_error",
+          "contract_passed": true
+        },
+        {
+          "id": "long-input",
+          "actual": "validation_error",
+          "expected": "validation_error",
+          "contract_passed": true
+        }
+      ]
+    },
+    "assistant_proposal": {
+      "passed": true,
+      "quality_outcome": "degraded",
+      "rules_passed": true,
+      "user_confirmation": "fixture_confirmed"
+    },
+    "roles": {
+      "passed": true,
+      "checks_passed": 42
+    },
+    "core_scenarios": {
+      "passed": true,
+      "checks_passed": 66
+    },
+    "public_api": {
+      "passed": 20,
+      "external_provider_calls": 0
+    },
+    "knowledge": {
+      "mode": "java_http_offline_parser_index_fixtures",
+      "admin_required": true,
+      "original_file_equal": true,
+      "parser_waited_for_human_review": true,
+      "stale_publish_rejected": true,
+      "published_current_version": true,
+      "deleted_preview_hidden": true,
+      "paid_calls": 0
+    },
+    "lifecycle": {
+      "mode": "isolated_fixture_real_container_restart",
+      "disconnect_kept_running": true,
+      "restart_error": "PROCESS_INTERRUPTED",
+      "same_key_did_not_regenerate": true,
+      "history_count": 0
+    },
+    "cross_service_faults": {
+      "mode": "isolated_java_agent_faults",
+      "agent_disconnect_error": "AGENT_CONNECTION_LOST",
+      "same_key_did_not_regenerate": true,
+      "cancelled_late_result_rejected": true,
+      "history_count": 0,
+      "paid_calls": 0
+    },
+    "final_faults": {
+      "passed": true,
+      "checks_passed": 21,
+      "fully_executed": true,
+      "not_executed": [],
+      "provider_calls": 0,
+      "scope_limits": [
+        "Does not inject live-provider 429s or assess real travel fact accuracy."
+      ]
+    }
+  },
+  "restore": {
+    "mode": "isolated_java_postgres_restore",
+    "tables_verified": 7,
+    "uploads_verified": 4,
+    "restored_java_ready": true,
+    "source_data_touched": false,
+    "external_provider_calls": 0,
+    "source_services_healthy": true
+  },
+  "boundary": "Actual final-source cold CI build and isolated real Java/Python/PostgreSQL/browser flows; model/map/parser/index provider substitutes, local Mailpit/S3Mock and explicit local CAs. This is not a new real supplier run, public SMTP/S3 account/TLS deployment, daily data verification or complete seven-service cloned restore. Native package/compiler test logs retain their own skipped/failure semantics."
+}
