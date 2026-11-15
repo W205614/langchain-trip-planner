@@ -1,0 +1,193 @@
+{
+  "source_revision": "e5db8d4e6dfdb726429a6b74856193c67a467bfa",
+  "workflow_run": 43680770075,
+  "deltas": [
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "capabilities",
+      "region": {
+        "startLine": 128,
+        "startColumn": 17,
+        "endColumn": 29
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "a6dc0265ed48a2c9612077a25dadca821e67cad7c1fc6140d86748dd11c1a8a5",
+      "current_raw_trace_sha256": "12846b19f9b027c3e3a083df4198ebde25d539685c373b3458b811f4046bb3d4",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "tripHealth",
+      "region": {
+        "startLine": 123,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "28d03d18a69bddbe6d2348450f053af73f78eef8914d3a05063d582fa52d37c9",
+      "current_raw_trace_sha256": "d146d9f70283ef2120879d531cbdfc8fe1f63b244da44bcfe8cb47121b09e768",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "mapHealth",
+      "region": {
+        "startLine": 115,
+        "startColumn": 17,
+        "endColumn": 26
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "ed796cfd7f8b0537adcbd0df5c0a5f6756e02b9ad2234b301a44bff752a4d83c",
+      "current_raw_trace_sha256": "a5c7c4dc29b261fb803403a25011aade7e48ff00a1cdf5c809a637241387eed5",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "rag",
+      "region": {
+        "startLine": 110,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "2f12f8de3a3b4ecea2e4484369b4176c96f064385128ea27f6a3053fc83173e3",
+      "current_raw_trace_sha256": "2d1a04470e915c90c8c951d89f4e04d0ea295e723b75b410c1f9474bc1d077e9",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "weather",
+      "region": {
+        "startLine": 86,
+        "startColumn": 17,
+        "endColumn": 24
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "6172fabf4143d6914d4ccaa7a9d316ae60c4991fd527e5303fa7e15c3b0007a0",
+      "current_raw_trace_sha256": "9b4423f9294e6ad2f51713357243e843035c98d3966f83646200dce34aa14c03",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "detail",
+      "region": {
+        "startLine": 81,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "d585fbdc49cbdbe062ff6369079fadfc623ca474192c1990750ed6858d629e4d",
+      "current_raw_trace_sha256": "057b487919697a840024e3bd3063d743554ec16d28306aef43ace7061ed5ea71",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "search",
+      "region": {
+        "startLine": 75,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "2ac52961acb2ea2fe9b5f3b58467624d2f32e822751bc6cb10803d72f50bfcb7",
+      "current_raw_trace_sha256": "1150c58189c1ea7b2672f67a2689ef4724bea8119f2601716d7fbc42d820a777",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "poi",
+      "region": {
+        "startLine": 66,
+        "startColumn": 17,
+        "endColumn": 20
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "2a0e1680abefcfd833eec9ac3735a85b8ff45419c41235f3d0379a1ee0126339",
+      "current_raw_trace_sha256": "57063d8b7667b0746bf3b8f5b30f9f21197c819fb4a5c5cd1bf4b0e29fbb395f",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "evalPolicy",
+      "region": {
+        "startLine": 61,
+        "startColumn": 17,
+        "endColumn": 27
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "a684e131eff4bdf39cde05c09d914414c11945647dcdb17e99a3fc1667679f2d",
+      "current_raw_trace_sha256": "47e788e362608b29305f7777458ad25d351ea959c01815bfaf6c9ce86a2151ef",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/CapabilitiesController.java",
+      "method": "photoImage",
+      "region": {
+        "startLine": 35,
+        "startColumn": 58,
+        "endColumn": 68
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "6e82c780e3eb37bf949b602a5350451e8392d89da2f864981f876a139c00f221",
+      "current_raw_trace_sha256": "23b4871e2ab148bf35a3ec52a6fd21304678fd4632785b5bc0687c08281adfb7",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    },
+    {
+      "path": "business-backend/src/main/java/com/tripplanner/api/ValidationController.java",
+      "method": "marker",
+      "region": {
+        "startLine": 18,
+        "startColumn": 17,
+        "endColumn": 23
+      },
+      "changed_json_pointer": "/rule/index",
+      "previous": 83,
+      "current": 102,
+      "previous_raw_trace_sha256": "c3f7ebe83a7d6043bbfb444330d1f470380cf3e477e998c767c64a19627692ed",
+      "current_raw_trace_sha256": "76501b0080e088deb6f12cddee455011edbb532a4277fe278a2d929a7ad5d671",
+      "resolved_rule_identical": true,
+      "complete_codeflows_identical": true,
+      "semantic_identity_identical": true
+    }
+  ]
+}
