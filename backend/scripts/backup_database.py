@@ -17,7 +17,7 @@ from uuid import uuid4
 
 from deployment_assets import docker, inspect, sql
 
-CLIENT_IMAGE = "trip-planner-postgres:17.11-security1"
+CLIENT_IMAGE = "trip-planner-postgres:17.12-security1"
 OPTIONS = {"sslmode", "sslrootcert", "sslcert", "sslkey", "connectTimeout", "ApplicationName"}
 
 

@@ -25,11 +25,9 @@ path = Path('debian/changelog')
 hardening = ('  * Add reviewed downstream x86-64 TLS guards, independently randomized\n'
              '    thread stacks without cache reuse, and randomized thread arenas.\n\n'
              if sys.argv[1] == 'trip4' else '')
-path.write_text(f'glibc (2.41-12+deb13u4+{sys.argv[1]}) trixie; urgency=high\n\n'
-                '  * Retain CVE-2026-19499 and CVE-2026-5435 fixes.\n'
-                '  * Backport reviewed upstream LANGUAGE traversal patch for CVE-2026-84243.\n\n'
-                '  * Backport bounded DNS printing, wordexp, fopen, tdelete, iconv,\n'
-                '    resolver search-list and trusted ORIGIN path fixes.\n\n'
+path.write_text(f'glibc (2.41-12+deb13u5+{sys.argv[1]}) trixie; urgency=high\n\n'
+                '  * Rebase on Debian security update 2.41-12+deb13u5.\n'
+                '  * Retain the upstream LANGUAGE traversal backport for CVE-2026-84243.\n\n'
                 + hardening
                 + ' -- Trip Planner downstream build <build@tripplanner.invalid>  Tue, 10 Nov 2026 00:00:00 +0000\n\n'
                 + path.read_text())
@@ -47,5 +45,5 @@ for library in libc.so.6 libresolv.so.2 ld-linux-x86-64.so.2; do
   comm -23 /build/glibc-before.symbols /build/glibc-after.symbols > /build/glibc-missing.symbols
   test ! -s /build/glibc-missing.symbols
 done
-cp "/build/libc6_2.41-12+deb13u4+${package_revision}_amd64.deb" /out/
-cp "/build/libc-bin_2.41-12+deb13u4+${package_revision}_amd64.deb" /out/
+cp "/build/libc6_2.41-12+deb13u5+${package_revision}_amd64.deb" /out/
+cp "/build/libc-bin_2.41-12+deb13u5+${package_revision}_amd64.deb" /out/

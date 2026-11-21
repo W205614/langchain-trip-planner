@@ -50,7 +50,7 @@ if [ "$source_cache" != /build ]; then
     done < /patches/sources.sha256
 fi
 cd /build
-dpkg-source -x glibc_2.41-12+deb13u4.dsc
+dpkg-source -x glibc_2.41-12+deb13u5.dsc
 dpkg-source -x gcc-14_14.2.0-19.dsc
 dpkg-source -x util-linux_2.41.5-0+deb13u1.dsc
 cd /build/gcc-14-14.2.0

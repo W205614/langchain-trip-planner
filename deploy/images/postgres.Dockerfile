@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
     && go version -m /out/gosu > /out/gosu.buildinfo \
     && grep -q 'github.com/moby/sys/user[[:space:]]v0.4.1' /out/gosu.buildinfo
 
-FROM postgres:17.11-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
+FROM postgres:17.12-alpine@sha256:526f86d93c6ea08fd3f1fe5605650cacc781b2c6013169a0ad8f42c7d3d84f32
 RUN apk upgrade --no-cache && apk add --no-cache 'zlib>=1.4-r0'
 COPY --from=busybox-security /out/ /tmp/trip-busybox/
 RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox

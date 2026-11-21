@@ -2,7 +2,7 @@
 name: ${TRIP_PRODUCTION_PROJECT:-trip-production}
 services:
   postgres:
-    image: trip-planner-postgres:17.11-security1
+    image: trip-planner-postgres:17.12-security1
     build:
       context: ./deploy/images
       dockerfile: postgres.Dockerfile

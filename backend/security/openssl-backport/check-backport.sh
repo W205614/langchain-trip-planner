@@ -2,7 +2,7 @@
 set -euo pipefail
 baseline_version=$(dpkg-query -W -f='${Version}' libssl3t64)
 printf 'fixed runtime base libssl3t64 version: %s\n' "$baseline_version"
-test "$baseline_version" = '3.5.7-1~deb13u3'
+test "$baseline_version" = '3.5.9-1~deb13u1'
 openssl version -a
 test "$(dpkg-query -W -f='${Version}' libssl3t64)" = "$baseline_version"
 old_crypto=$(ldconfig -p | awk '/libcrypto\.so\.3 \(libc6,x86-64\)/ { print $NF; exit }')
@@ -25,9 +25,9 @@ fi
 cat /out/provenance/dgram-peer-baseline.log
 printf 'unpatched IPv4/IPv6 BIO datagram peer regression failed as expected (exit %s)\n' "$baseline_status" > /out/provenance/dgram-peer-baseline-result.txt
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-remove /out/packages/*.deb
-test "$(dpkg-query -W -f='${Version}' libssl3t64)" = '3.5.7-1~deb13u3+trip1'
-test "$(dpkg-query -W -f='${Version}' openssl)" = '3.5.7-1~deb13u3+trip1'
-test "$(dpkg-query -W -f='${Version}' openssl-provider-legacy)" = '3.5.7-1~deb13u3+trip1'
+test "$(dpkg-query -W -f='${Version}' libssl3t64)" = '3.5.9-1~deb13u1+trip1'
+test "$(dpkg-query -W -f='${Version}' openssl)" = '3.5.9-1~deb13u1+trip1'
+test "$(dpkg-query -W -f='${Version}' openssl-provider-legacy)" = '3.5.9-1~deb13u1+trip1'
 new_crypto=$(ldconfig -p | awk '/libcrypto\.so\.3 \(libc6,x86-64\)/ { print $NF; exit }')
 new_ssl=$(ldconfig -p | awk '/libssl\.so\.3 \(libc6,x86-64\)/ { print $NF; exit }')
 test -n "$new_crypto" && test -n "$new_ssl"

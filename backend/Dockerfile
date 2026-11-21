@@ -35,7 +35,7 @@ COPY security/openssl-backport/build-inputs.sh security/openssl-backport/sources
 RUN bash /openssl-patches/build-inputs.sh
 
 FROM openssl-source-inputs AS openssl-package-build
-COPY security/openssl-backport/build.sh security/openssl-backport/adapt_aad_regression.py security/openssl-backport/patches.sha256 /openssl-patches/
+COPY security/openssl-backport/build.sh security/openssl-backport/patches.sha256 /openssl-patches/
 COPY security/openssl-backport/patches/ /openssl-patches/patches/
 RUN bash /openssl-patches/build.sh
 
@@ -45,6 +45,7 @@ RUN cc -O2 -Wall -Wextra -Werror /openssl-patches/test-dgram-detect-peer.c -o /o
 
 FROM ${PYTHON_BASE} AS openssl-backport
 RUN apt-get update && apt-get install -y --no-install-recommends binutils \
+    libssl3t64=3.5.9-1~deb13u1 openssl=3.5.9-1~deb13u1 openssl-provider-legacy=3.5.9-1~deb13u1 \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=openssl-package-build /out/packages/ /out/packages/
 COPY --from=openssl-package-build /out/provenance/ /out/provenance/
