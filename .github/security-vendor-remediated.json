@@ -6,11 +6,11 @@
   "source_bindings": {
     "backend/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
     "backend/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
-    "backend/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+    "backend/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
     "backend/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
     "backend/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
     "backend/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-    "backend/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+    "backend/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
     "backend/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
     "backend/app/agent_api/business_client.py": "fad3370460e95191ca4d2e957ddb73958eca82c4d8b84c5184aa1dcbc9e2a8e9",
     "backend/app/agent_api/contracts.py": "61a3e87e2529c9da585d477204ed370604cdd1caebfeda01fd0562cf1812e7a3",
@@ -31,8 +31,8 @@
     "backend/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
     "backend/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
     "backend/app/evals/__init__.py": "30c94bf8a1a3fd7a9e85838dae1938690cb17b42a06eb39593f0c146c01a49ff",
-    "backend/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-    "backend/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+    "backend/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+    "backend/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
     "backend/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
     "backend/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
     "backend/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -44,51 +44,51 @@
     "backend/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
     "backend/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
     "backend/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-    "backend/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+    "backend/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
     "backend/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
     "backend/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
     "backend/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
     "backend/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
     "backend/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-    "backend/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+    "backend/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
     "backend/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
-    "backend/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+    "backend/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
     "backend/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
     "backend/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
     "backend/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
     "backend/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
     "backend/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-    "backend/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+    "backend/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
     "backend/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-    "backend/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+    "backend/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
     "backend/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
     "backend/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
-    "backend/Dockerfile": "369a284736bbcc0ad40e4a9067764b6b63fad2b0251675f20d379503aa4854c3",
+    "backend/Dockerfile": "e0d0a03b8bc101f3696e2c1cc2f2a1ab5e175d032c38b2f24674083ca18cb755",
     "backend/scripts/restrict_runtime_tools.py": "81a7c044062c51dafe3bf5862df253d395f54a39692c8d43387e91f340290858",
-    "backend/runtime-security-packages.json": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
+    "backend/runtime-security-packages.json": "efabd087454f8a68e3ffdfa6dd7d73617b57cebcae66bdee52fab076c83778f8",
     "backend/requirements.lock": "87c07df62858d5deaa4f2d0330e8c3e35bbe66b3c3aec1d71145f8f4eb8136a3",
-    "docker-compose.yml": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
-    "docker-compose.production.yml": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
+    "docker-compose.yml": "01d11ab050ad3ceba8ac1d45d51a0e38465eb82c069d80ba15ac1718b5c061e4",
+    "docker-compose.production.yml": "ea35fb4cf8c54a86bb7f24519955f1c30ae2dbd3b07897b11bcb1ebefbbaa8cf",
     "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java": "adef1c4dcabf75c49bf079bef80c4e22286379b4cae3425242450c5f9e03c38c",
     "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc",
     "tools/image_policy.py": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240",
     "tools/security_gate.py": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea",
-    "backend/security/native-backports/build-glibc.sh": "0ecd4eab6eee3ceaaeca43f06b0bef1793652d0d3051ffa6ccfb85904590daeb",
-    "backend/security/native-backports/build-inputs.sh": "b84ba4e746da5abd74316c0b72c3ba45616aaf1411c7e9f3795259d64c746d3b",
+    "backend/security/native-backports/build-glibc.sh": "ca5aa2c0c951d5f54506be2ad72ed78c3d3e9eb2a3aa0a505b3cbb3c60d5efb0",
+    "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
     "backend/security/native-backports/build-libstdcxx.sh": "c6e00212b7ea7db93b2820ebdd8c7d6fa18c37e3526a1144958fac53c3bf4407",
     "backend/security/native-backports/build-util-linux.sh": "f5c695b3053b705694121ead80c4b0ad6eb92dc3ba17358ed3cbbfd3068b628a",
     "backend/security/native-backports/check-glibc.sh": "1a22c1cb819563126e26585e21aab83bb87208a2e5a8a12a6a5c030ddc38a3c7",
     "backend/security/native-backports/check-login-pam-rhost.py": "7503fc0040b75a06bd1b01ab4670d74addfc67443d1d64eb28eb030949e946c9",
     "backend/security/native-backports/glibc-boundary-regression.c": "a2d74cb8b94e4ce226db14d1861a17859ba3b3ef6e3760d411f0630f75227e67",
-    "backend/security/native-backports/glibc-build.sha256": "fc40d9388801de47865d30105b78a7390162408bcd4d12b64f023237da19ac19",
-    "backend/security/native-backports/glibc-patches.txt": "4eccaa628aa7bb6b0ca42dd8ea92adbdc76a967ec78d9c1ba855950a80a34cf5",
-    "backend/security/native-backports/glibc-tests.sha256": "99202990051b5bdadb45741838a186d974aef673b1af3379c1325149f5321261",
+    "backend/security/native-backports/glibc-build.sha256": "f5041578a38f8f056d8444df6211ae83c093edc6c43498448906d34a894894c8",
+    "backend/security/native-backports/glibc-patches.txt": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
+    "backend/security/native-backports/glibc-tests.sha256": "0fd5de51afea085f96b43efd2f52a19a5aa75d0773f1a6f37577f0ff7d835804",
     "backend/security/native-backports/libstdcxx-patches.sha256": "c69ff9ccf9335ce2d9caf75e65e2aa9a5411d2896bbe76a081a99de5ee00139e",
     "backend/security/native-backports/login-pam-rhost-regression.c": "feca29f1a8cdc47b57c6539ee7d8b2228bc82294992187071a44f9d1cfcca603",
     "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
     "backend/security/native-backports/patches.sha256": "3295cbd006ba6f01ca386a25e857593f5cde9acac7ebd73e916e5d846433197d",
     "backend/security/native-backports/README.md": "2fe9958b7a440e4c4bb974bbae9a2e514a720a16dc6fd2dbb8323e7e92d2a02e",
-    "backend/security/native-backports/sources.sha256": "e4819d443564d0fa97ec64dcb9536e325ff450e676a9560164b4edaca9def822",
+    "backend/security/native-backports/sources.sha256": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31",
     "backend/security/native-backports/util-linux-patches.sha256": "4b3f70cb42f5495ecdcea144c1ec68d3cb08defac5080c4309bb87bf0bd29da6",
     "backend/security/native-backports/util-linux-patches.txt": "adae2b22b165cac74ae9292d21b0cfc8105d6f7a591da728fc052e0eafe487b6",
     "backend/security/native-backports/patches/gcc-102010.patch": "6bd11207cafce8e595a83726936f5ecc29906fa2e8426076b91a46813997327c",
@@ -120,7 +120,7 @@
     "backend/security/native-backports/patches/util-9fcb98bf08d9119d07ba3a3c709b1a85e4a1bbcb.patch": "86dc6819c9465d829849734605cfe586404607fd7612f3f05ad5c829a33d0bb6",
     "backend/security/native-backports/patches/util-a15c00a9e545aa8b9cf6ec0f888ff6c7b3eaeedc.patch": "874e91ef452c086c94192eec0bf94b324a4e6c4b8f23bcc2e26fafe828edad91",
     "backend/security/native-backports/patches/util-ba905a1874959c70fd706aa7d49df61076864e0a.patch": "6203e5d3dc92f6113e8e37bb7f60b6f6c8ed47cb2e79d1a3b5134df964464497",
-    "backend/security/native-backports/test-patches/glibc-tests-trixie.patch": "9651ce65233b3ff0cac01f56e60cabffb25d5ef1964ef362a5e40aecc58f81f7",
+    "backend/security/native-backports/test-patches/glibc-tests-trixie.patch": "5110453bff186630fc3cd30676404fbba8d3ac2758c2fa9aaefe5e921afb51e4",
     "backend/security/cpython-backports/build.sh": "45ea9fa4089e7f5ff9fd142399d1cdb956775b4bed106d9f44b1c86503be6419",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
     "backend/security/cpython-backports/CVE-2026-103995.patch": "cd937a80f6abef62507997a0cf1012450348857a245e86fc13bff27caf127476",
@@ -191,9 +191,9 @@
     "tools/container_sources.py": "ec97c112beb2ee1a78aa6953e768c332782d4678a3176b69e45e224286155ccd",
     "backend/tests/test_openssl_security_backport.py": "88021594218ea0e3fb9a8637336133645c2023b259e481b14cb7e8feab057b05",
     "backend/security/openssl-backport/adapt_aad_regression.py": "8a3659bead4b7bb6bc0e4a1b1859eee052e4b7f21bae3a7742b01705f2c6f427",
-    "backend/security/openssl-backport/build-inputs.sh": "86c133f200ace2d6d5b4af89e13e4959ff5ccced421be459251032cd30154722",
-    "backend/security/openssl-backport/build.sh": "d819a1fc19045c794878eaf02f6c79adc25d41f2b8acc055c641c5fc80b9ded1",
-    "backend/security/openssl-backport/check-backport.sh": "282e2fb2f374bcba7c406c0a6fa4866eb571cfbad6a458179d5e9453375ab2f0",
+    "backend/security/openssl-backport/build-inputs.sh": "cc78312a1964b49ea4274fe2860021c0861b78f512231df277daf07a8ba16c92",
+    "backend/security/openssl-backport/build.sh": "208cc542cd0a92cdfad2dd6f2a6322b6c94bd083b49d4382500c77c99ad35f90",
+    "backend/security/openssl-backport/check-backport.sh": "1acbed57b5abe426f37f78b310873eb9535c642bbcce2d7be1827a93c44030b9",
     "backend/security/openssl-backport/patches/0001-CVE-2026-107496.patch": "b17c218785e0988d1f000ef365e9b9124143c460b2be2593d7cc616f6c2d4763",
     "backend/security/openssl-backport/patches/0002-CVE-2026-88822.patch": "669866cd57343c0249b4f5297d53a228c6f9f9d5490443cdfdd39be6e4cc9998",
     "backend/security/openssl-backport/patches/0003-CVE-2026-88823.patch": "d75b8abfde7d47732b685464080d1af556932cf3baa9501fbabda56317448b51",
@@ -203,8 +203,8 @@
     "backend/security/openssl-backport/patches/0007-CVE-2026-95691-test.patch": "eeef48c844d158505ff2421855559e87b9bedb9cc32ef1eab77ac5ff605bf0c2",
     "backend/security/openssl-backport/patches/0008-CVE-2026-95692-test.patch": "1e83b853591f7a815bf918a1a4d1fc8f2b7f7253f4bf45766304020bd29e1c70",
     "backend/security/openssl-backport/patches.sha256": "8549d19d4d4b2749f8c8191d10f5bcd84312ae0cdc7eeb3a856e0f3a81fb8914",
-    "backend/security/openssl-backport/README.md": "d0e8fe5a7f170c22d1e81b475623b4abe71cfbcc159b42396f5a8db8cfd98149",
-    "backend/security/openssl-backport/sources.sha256": "60d6dc5cbfdcc14d2cd6c186179657b608a445db5596c0a5ec6956d75d95baa9",
+    "backend/security/openssl-backport/README.md": "fd41d27f4f234a38b74a90ced633c7f7fec70182702d01815b1b6e5f5afd7730",
+    "backend/security/openssl-backport/sources.sha256": "a8a5622989a0d38ccd109f0fe0dfb6bc45d80e245e2240cf3fd5c72b84a2c798",
     "backend/security/openssl-backport/test-dgram-detect-peer.c": "3d3b2a276a5308235b22a44a425af88bdfadaba760cf3e55e8efc3391d3b874c",
     "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json": "eedcdc9031b7ffee22ab928b505c60f1d455bff9e6bcf80fdfeda87a3ed401ab",
     "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021",
@@ -6838,5 +6838,112 @@
     "changed_source_fingerprints_per_case": 7,
     "new_component_absence_case": "docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/review.json",
     "actual_final_scan_required": true
+  },
+  "source_binding_review_20261121": {
+    "source_revision": "a7f0a1606d7e6f07970242dcad79ed77843f2a8f",
+    "changes": {
+      "backend/app/agents/candidates.py": {
+        "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "current": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3"
+      },
+      "backend/app/agents/trip_planner_agent.py": {
+        "previous": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "current": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972"
+      },
+      "backend/app/models/planning.py": {
+        "previous": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
+        "current": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486"
+      },
+      "backend/app/models/schemas.py": {
+        "previous": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "current": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac"
+      },
+      "backend/app/services/durable_execution.py": {
+        "previous": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "current": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c"
+      },
+      "backend/app/services/planning_constraints.py": {
+        "previous": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "current": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d"
+      },
+      "backend/app/services/plan_quality.py": {
+        "previous": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+        "current": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5"
+      },
+      "backend/app/services/result_policy.py": {
+        "previous": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "current": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e"
+      },
+      "backend/app/services/time_planner.py": {
+        "previous": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "current": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f"
+      },
+      "backend/Dockerfile": {
+        "previous": "369a284736bbcc0ad40e4a9067764b6b63fad2b0251675f20d379503aa4854c3",
+        "current": "e0d0a03b8bc101f3696e2c1cc2f2a1ab5e175d032c38b2f24674083ca18cb755"
+      },
+      "backend/runtime-security-packages.json": {
+        "previous": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
+        "current": "efabd087454f8a68e3ffdfa6dd7d73617b57cebcae66bdee52fab076c83778f8"
+      },
+      "docker-compose.yml": {
+        "previous": "02671b2164b70886ee1a1506c7185bb0f84a0945cb83d57c660d6a52131254cb",
+        "current": "01d11ab050ad3ceba8ac1d45d51a0e38465eb82c069d80ba15ac1718b5c061e4"
+      },
+      "docker-compose.production.yml": {
+        "previous": "bd345e0a93f97f43f1b1e624b8db84954f0463960fa7e87a7067094910612c1c",
+        "current": "ea35fb4cf8c54a86bb7f24519955f1c30ae2dbd3b07897b11bcb1ebefbbaa8cf"
+      },
+      "backend/security/native-backports/build-glibc.sh": {
+        "previous": "0ecd4eab6eee3ceaaeca43f06b0bef1793652d0d3051ffa6ccfb85904590daeb",
+        "current": "ca5aa2c0c951d5f54506be2ad72ed78c3d3e9eb2a3aa0a505b3cbb3c60d5efb0"
+      },
+      "backend/security/native-backports/build-inputs.sh": {
+        "previous": "b84ba4e746da5abd74316c0b72c3ba45616aaf1411c7e9f3795259d64c746d3b",
+        "current": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898"
+      },
+      "backend/security/native-backports/glibc-build.sha256": {
+        "previous": "fc40d9388801de47865d30105b78a7390162408bcd4d12b64f023237da19ac19",
+        "current": "f5041578a38f8f056d8444df6211ae83c093edc6c43498448906d34a894894c8"
+      },
+      "backend/security/native-backports/glibc-patches.txt": {
+        "previous": "4eccaa628aa7bb6b0ca42dd8ea92adbdc76a967ec78d9c1ba855950a80a34cf5",
+        "current": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5"
+      },
+      "backend/security/native-backports/glibc-tests.sha256": {
+        "previous": "99202990051b5bdadb45741838a186d974aef673b1af3379c1325149f5321261",
+        "current": "0fd5de51afea085f96b43efd2f52a19a5aa75d0773f1a6f37577f0ff7d835804"
+      },
+      "backend/security/native-backports/sources.sha256": {
+        "previous": "e4819d443564d0fa97ec64dcb9536e325ff450e676a9560164b4edaca9def822",
+        "current": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31"
+      },
+      "backend/security/native-backports/test-patches/glibc-tests-trixie.patch": {
+        "previous": "9651ce65233b3ff0cac01f56e60cabffb25d5ef1964ef362a5e40aecc58f81f7",
+        "current": "5110453bff186630fc3cd30676404fbba8d3ac2758c2fa9aaefe5e921afb51e4"
+      },
+      "backend/security/openssl-backport/build-inputs.sh": {
+        "previous": "86c133f200ace2d6d5b4af89e13e4959ff5ccced421be459251032cd30154722",
+        "current": "cc78312a1964b49ea4274fe2860021c0861b78f512231df277daf07a8ba16c92"
+      },
+      "backend/security/openssl-backport/build.sh": {
+        "previous": "d819a1fc19045c794878eaf02f6c79adc25d41f2b8acc055c641c5fc80b9ded1",
+        "current": "208cc542cd0a92cdfad2dd6f2a6322b6c94bd083b49d4382500c77c99ad35f90"
+      },
+      "backend/security/openssl-backport/check-backport.sh": {
+        "previous": "282e2fb2f374bcba7c406c0a6fa4866eb571cfbad6a458179d5e9453375ab2f0",
+        "current": "1acbed57b5abe426f37f78b310873eb9535c642bbcce2d7be1827a93c44030b9"
+      },
+      "backend/security/openssl-backport/README.md": {
+        "previous": "d0e8fe5a7f170c22d1e81b475623b4abe71cfbcc159b42396f5a8db8cfd98149",
+        "current": "fd41d27f4f234a38b74a90ced633c7f7fec70182702d01815b1b6e5f5afd7730"
+      },
+      "backend/security/openssl-backport/sources.sha256": {
+        "previous": "60d6dc5cbfdcc14d2cd6c186179657b608a445db5596c0a5ec6956d75d95baa9",
+        "current": "a8a5622989a0d38ccd109f0fe0dfb6bc45d80e245e2240cf3fd5c72b84a2c798"
+      }
+    },
+    "review": "Planning changes preserve the embedded Chroma entrypoint and client path. Debian build materials and PostgreSQL identity changed. Exact advisory, package and ELF predicates remain in force. Rebuilt binaries require independent matching artifact evidence.",
+    "new_exemptions": 0
   }
 }

@@ -4,7 +4,9 @@
 
 当前构建使用的四份安全复核配置均按组件或代码变化复核，不再使用固定日历截止日：
 
-2026-11-07 的当前绑定使用源码 `dc1e461` 的四语言新 SARIF。26项原始高危告警的完整结果、规则描述、主告警源码、47份支持源码及语义数据流与已复核的 `909fbc4` 相同；本批仅补齐任务去重测试夹具的质量字段，见[最新复核记录](../evidence/itinerary-facts-20261107/codeql/dc1e461/README.md)。Agent 局部数量约束的前一批源码复核见[行程修复记录](../evidence/itinerary-facts-20261107/codeql/909fbc4/README.md)。原始告警保留，当前提交的 CI 结果在对应工作流查看。
+2026-11-21 当前 CodeQL 绑定使用源码 `a7f0a16` 的四份新 SARIF。逐项复核了 11 条 Java 结果及 44 条数据流。原始告警、镜像扫描的剩余阻断及构建修正见[本次复核](../evidence/security-20261121/README.md)。
+
+2026-11-07 的历史绑定使用源码 `dc1e461` 的四语言新 SARIF。26项原始高危告警的完整结果、规则描述、主告警源码、47份支持源码及语义数据流与已复核的 `909fbc4` 相同；本批仅补齐任务去重测试夹具的质量字段，见[最新复核记录](../evidence/itinerary-facts-20261107/codeql/dc1e461/README.md)。Agent 局部数量约束的前一批源码复核见[行程修复记录](../evidence/itinerary-facts-20261107/codeql/909fbc4/README.md)。原始告警保留，当前提交的 CI 结果在对应工作流查看。
 
 2026-10-31 源码 `2368aaf` 的22项告警及当时的依赖复核保留在[历史记录](../evidence/single-host-20261031/codeql-source-review.json)。
 

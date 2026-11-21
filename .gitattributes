@@ -123,3 +123,7 @@ docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/** -text whi
 
 # Original upstream diff context is hash-bound; retain its whitespace.
 docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/*.patch -text -whitespace
+
+# Preserve the current scanner corpus and its byte-bound source review.
+docs/evidence/security-20261121/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+docs/evidence/security-20261121/codeql/*.sarif -text -whitespace
