@@ -24,4 +24,6 @@ Nginx 升至官方 1.30.7 后，前端扫描从 23 条阻断匹配降至 14 条�
 
 Debian Agent 的 OpenSSL 候选 `3.5.9-1~deb13u1+trip2` 进一步回补 4 项已合入 OpenSSL 3.5 维护分支的修复。实际 Debian 打包、包安装、SONAME 和导出符号对照通过。完整本机候选 Agent 镜像的 104 项原生包与运行回归均通过。其受限工具清单仍记录相同的 114 项移除，额外复核了 `perl`、`tar`、ncurses 工具等既有评估的精确文件缺失条件。Alpine 镜像及其独立告警继续由全严重度门禁检查。[OpenSSL 补丁与来源](../../../backend/security/openssl-backport/README.md)
 
+本机 `23efed4` Agent 的实际检查确认无 subordinate UID/GID 分配，四个账号分配与映射命令均缺失。CVE-2024-56433 的两条既有配置评估重新绑定完整候选的受限工具清单。新一轮 CodeQL 原始报告继续记录 11 条 Java 匹配，逐一核对 44 条语义数据流，应用原有适用性结论。[CodeQL 原始检查](https://github.com/W205614/langchain-trip-planner/actions/runs/44913023176)
+
 GitHub 的 Docker 构建已通过，四个浏览器失败的 trace 显示未模拟的每日核验请求携带测试令牌到真实后端，触发 401。`d229ff7` 补齐核验响应，并为需要重新安排的历史行程增加真实契约的规划输入夹具。本机对生产前端构建执行五项定向浏览器用例全部通过。[原始构建与浏览器结果](https://github.com/W205614/langchain-trip-planner/actions/runs/44902054043) · [测试夹具修复](https://github.com/W205614/langchain-trip-planner/commit/d229ff78ff96ae775a0b73f581397e9bea161242)

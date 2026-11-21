@@ -217,7 +217,7 @@
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
     "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
-    "docs/evidence/security-20261121/README.md": "85726766ffd9fb1f50211feeb36360147a9578964b6e83b6084891985d6b3bb2",
+    "docs/evidence/security-20261121/README.md": "e90383059879ba82bcd2d5041275bea595cf267c9b25e6cf00080499f0922313",
     "backend/security/openssl-backport/patches/0009-CVE-2026-124709.patch": "d52a6af23bc966daaa9eded816a392d429a67bb76faafd922f4c4cf35a9349f4",
     "backend/security/openssl-backport/patches/0010-CVE-2026-121482.patch": "6bdbb111a7ce640e42c558aaf912fe19b3770aa9afc7c8c5a0d36d20dcb2d5e9",
     "backend/security/openssl-backport/patches/0011-CVE-2026-121482-regression.patch": "a9897de897e3cf34206ba9a4ccb461927bd04c310e9354682ceca317c1537502",
@@ -2685,11 +2685,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2024-56433"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2718,11 +2718,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2024-56433"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -6895,7 +6895,7 @@
     "actual_final_scan_required": true
   },
   "source_binding_review_20261121": {
-    "source_revision": "d229ff78ff96ae775a0b73f581397e9bea161242",
+    "source_revision": "23efed43e72c30528e478d00a1d21bdffe07a0ee",
     "changes": {
       "backend/app/agents/candidates.py": {
         "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
@@ -7004,7 +7004,7 @@
       },
       "backend/tests/test_openssl_security_backport.py": {
         "previous": "88021594218ea0e3fb9a8637336133645c2023b259e481b14cb7e8feab057b05",
-        "current": "4d0eaf15758644994e8abbb108f94abc530fb9bc3a2e39a4448a60cfdca370cc"
+        "current": "ea31c60e720cc0d558f2b5f62a8862e87c003ec2179904ac677daf5bef67b8c3"
       },
       "backend/security/openssl-backport/build-inputs.sh": {
         "previous": "86c133f200ace2d6d5b4af89e13e4959ff5ccced421be459251032cd30154722",
@@ -7012,15 +7012,19 @@
       },
       "backend/security/openssl-backport/build.sh": {
         "previous": "d819a1fc19045c794878eaf02f6c79adc25d41f2b8acc055c641c5fc80b9ded1",
-        "current": "208cc542cd0a92cdfad2dd6f2a6322b6c94bd083b49d4382500c77c99ad35f90"
+        "current": "bff1bb14588ecbba91933caecef2eef133b515b849ac6fa8b34c1b3911293d04"
       },
       "backend/security/openssl-backport/check-backport.sh": {
         "previous": "282e2fb2f374bcba7c406c0a6fa4866eb571cfbad6a458179d5e9453375ab2f0",
-        "current": "1acbed57b5abe426f37f78b310873eb9535c642bbcce2d7be1827a93c44030b9"
+        "current": "feb88e25256c5b60a003c340fe82d546f367dff909cca8dbac02d84839c62115"
+      },
+      "backend/security/openssl-backport/patches.sha256": {
+        "previous": "8549d19d4d4b2749f8c8191d10f5bcd84312ae0cdc7eeb3a856e0f3a81fb8914",
+        "current": "0dcd8c9acfc360a0f98818dfb5a085493baa362166853b4254f22bf3aba32924"
       },
       "backend/security/openssl-backport/README.md": {
         "previous": "d0e8fe5a7f170c22d1e81b475623b4abe71cfbcc159b42396f5a8db8cfd98149",
-        "current": "fd41d27f4f234a38b74a90ced633c7f7fec70182702d01815b1b6e5f5afd7730"
+        "current": "b95b212916b9dea1be1035b15246272ef2cb8ffdb976100aa2183af1e468737c"
       },
       "backend/security/openssl-backport/sources.sha256": {
         "previous": "60d6dc5cbfdcc14d2cd6c186179657b608a445db5596c0a5ec6956d75d95baa9",

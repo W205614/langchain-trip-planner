@@ -328,7 +328,7 @@
     "review": "Seven related pure-Python OpenTelemetry packages upgraded to official patched compatible releases. Chroma embedded client construction, native package/ELF versions and four existing exact execution-path assessment payloads remain unchanged. The new traceparent vulnerability is fixed by upgrade and receives no exception. Actual new image scan mandatory."
   },
   "source_binding_review_20261121": {
-    "source_revision": "d229ff78ff96ae775a0b73f581397e9bea161242",
+    "source_revision": "23efed43e72c30528e478d00a1d21bdffe07a0ee",
     "changes": {
       "backend/app/agents/candidates.py": {
         "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",

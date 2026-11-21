@@ -16,6 +16,14 @@ regexTarget = "secret"
 regexes = ['''^f7ccbe5fe7ab1070977c81305ee20aff84b024e21fdf3466f0fd93eec94c56da$''']
 
 [[allowlists]]
+description = "Exact chunk-boundary match of the same public source hash in the vendor receipt"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|[\\/])\.github[\\/]security-vendor-remediated\.json$''']
+regexTarget = "match"
+regexes = ['''^chatgpt_oauth\.py": "f7ccbe5fe7ab1070977c81305ee20aff84b024e21f$''']
+
+[[allowlists]]
 description = "Two Git-verified public frontend source SHA256 values in the exact historical and 028e3be CodeQL reviews, not credentials"
 condition = "AND"
 targetRules = ["generic-api-key"]
