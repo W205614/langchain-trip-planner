@@ -63,7 +63,7 @@
     "backend/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
     "backend/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
     "backend/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
-    "backend/Dockerfile": "e0d0a03b8bc101f3696e2c1cc2f2a1ab5e175d032c38b2f24674083ca18cb755",
+    "backend/Dockerfile": "bfbe2af73627f8992a59d2324747959a686479a05d36e0f07eaa5fb091dba9b8",
     "backend/scripts/restrict_runtime_tools.py": "81a7c044062c51dafe3bf5862df253d395f54a39692c8d43387e91f340290858",
     "backend/runtime-security-packages.json": "efabd087454f8a68e3ffdfa6dd7d73617b57cebcae66bdee52fab076c83778f8",
     "backend/requirements.lock": "87c07df62858d5deaa4f2d0330e8c3e35bbe66b3c3aec1d71145f8f4eb8136a3",
@@ -77,17 +77,17 @@
     "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
     "backend/security/native-backports/build-libstdcxx.sh": "c6e00212b7ea7db93b2820ebdd8c7d6fa18c37e3526a1144958fac53c3bf4407",
     "backend/security/native-backports/build-util-linux.sh": "f5c695b3053b705694121ead80c4b0ad6eb92dc3ba17358ed3cbbfd3068b628a",
-    "backend/security/native-backports/check-glibc.sh": "1a22c1cb819563126e26585e21aab83bb87208a2e5a8a12a6a5c030ddc38a3c7",
+    "backend/security/native-backports/check-glibc.sh": "26e0e6f35eb9ad432bb1685477a35d807f05728d26bfc060d9ffec69de480ed3",
     "backend/security/native-backports/check-login-pam-rhost.py": "7503fc0040b75a06bd1b01ab4670d74addfc67443d1d64eb28eb030949e946c9",
     "backend/security/native-backports/glibc-boundary-regression.c": "a2d74cb8b94e4ce226db14d1861a17859ba3b3ef6e3760d411f0630f75227e67",
     "backend/security/native-backports/glibc-build.sha256": "f5041578a38f8f056d8444df6211ae83c093edc6c43498448906d34a894894c8",
     "backend/security/native-backports/glibc-patches.txt": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
-    "backend/security/native-backports/glibc-tests.sha256": "0fd5de51afea085f96b43efd2f52a19a5aa75d0773f1a6f37577f0ff7d835804",
+    "backend/security/native-backports/glibc-tests.sha256": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab",
     "backend/security/native-backports/libstdcxx-patches.sha256": "c69ff9ccf9335ce2d9caf75e65e2aa9a5411d2896bbe76a081a99de5ee00139e",
     "backend/security/native-backports/login-pam-rhost-regression.c": "feca29f1a8cdc47b57c6539ee7d8b2228bc82294992187071a44f9d1cfcca603",
     "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
-    "backend/security/native-backports/patches.sha256": "3295cbd006ba6f01ca386a25e857593f5cde9acac7ebd73e916e5d846433197d",
-    "backend/security/native-backports/README.md": "2fe9958b7a440e4c4bb974bbae9a2e514a720a16dc6fd2dbb8323e7e92d2a02e",
+    "backend/security/native-backports/patches.sha256": "66b589722d4e97f307999f84e51a21732d6b907aa217c9fd080aa0f5b5a00bfb",
+    "backend/security/native-backports/README.md": "db9e55db63b9093b04018b2d3c89129d4f233313dac0e252ebf062965831ffc6",
     "backend/security/native-backports/sources.sha256": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31",
     "backend/security/native-backports/util-linux-patches.sha256": "4b3f70cb42f5495ecdcea144c1ec68d3cb08defac5080c4309bb87bf0bd29da6",
     "backend/security/native-backports/util-linux-patches.txt": "adae2b22b165cac74ae9292d21b0cfc8105d6f7a591da728fc052e0eafe487b6",
@@ -120,7 +120,6 @@
     "backend/security/native-backports/patches/util-9fcb98bf08d9119d07ba3a3c709b1a85e4a1bbcb.patch": "86dc6819c9465d829849734605cfe586404607fd7612f3f05ad5c829a33d0bb6",
     "backend/security/native-backports/patches/util-a15c00a9e545aa8b9cf6ec0f888ff6c7b3eaeedc.patch": "874e91ef452c086c94192eec0bf94b324a4e6c4b8f23bcc2e26fafe828edad91",
     "backend/security/native-backports/patches/util-ba905a1874959c70fd706aa7d49df61076864e0a.patch": "6203e5d3dc92f6113e8e37bb7f60b6f6c8ed47cb2e79d1a3b5134df964464497",
-    "backend/security/native-backports/test-patches/glibc-tests-trixie.patch": "5110453bff186630fc3cd30676404fbba8d3ac2758c2fa9aaefe5e921afb51e4",
     "backend/security/cpython-backports/build.sh": "45ea9fa4089e7f5ff9fd142399d1cdb956775b4bed106d9f44b1c86503be6419",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
     "backend/security/cpython-backports/CVE-2026-103995.patch": "cd937a80f6abef62507997a0cf1012450348857a245e86fc13bff27caf127476",
@@ -189,7 +188,7 @@
     "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
     "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
     "tools/container_sources.py": "ec97c112beb2ee1a78aa6953e768c332782d4678a3176b69e45e224286155ccd",
-    "backend/tests/test_openssl_security_backport.py": "88021594218ea0e3fb9a8637336133645c2023b259e481b14cb7e8feab057b05",
+    "backend/tests/test_openssl_security_backport.py": "4d0eaf15758644994e8abbb108f94abc530fb9bc3a2e39a4448a60cfdca370cc",
     "backend/security/openssl-backport/adapt_aad_regression.py": "8a3659bead4b7bb6bc0e4a1b1859eee052e4b7f21bae3a7742b01705f2c6f427",
     "backend/security/openssl-backport/build-inputs.sh": "cc78312a1964b49ea4274fe2860021c0861b78f512231df277daf07a8ba16c92",
     "backend/security/openssl-backport/build.sh": "208cc542cd0a92cdfad2dd6f2a6322b6c94bd083b49d4382500c77c99ad35f90",
@@ -6840,7 +6839,7 @@
     "actual_final_scan_required": true
   },
   "source_binding_review_20261121": {
-    "source_revision": "a7f0a1606d7e6f07970242dcad79ed77843f2a8f",
+    "source_revision": "8b495555dbd4cc05828f3a00fcedc8ec57ce3b9e",
     "changes": {
       "backend/app/agents/candidates.py": {
         "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
@@ -6880,7 +6879,7 @@
       },
       "backend/Dockerfile": {
         "previous": "369a284736bbcc0ad40e4a9067764b6b63fad2b0251675f20d379503aa4854c3",
-        "current": "e0d0a03b8bc101f3696e2c1cc2f2a1ab5e175d032c38b2f24674083ca18cb755"
+        "current": "bfbe2af73627f8992a59d2324747959a686479a05d36e0f07eaa5fb091dba9b8"
       },
       "backend/runtime-security-packages.json": {
         "previous": "f05e45702e5db6a610c657424d33437eaa53a8c3f6773b8f8b4f10d4e9b17467",
@@ -6902,6 +6901,10 @@
         "previous": "b84ba4e746da5abd74316c0b72c3ba45616aaf1411c7e9f3795259d64c746d3b",
         "current": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898"
       },
+      "backend/security/native-backports/check-glibc.sh": {
+        "previous": "1a22c1cb819563126e26585e21aab83bb87208a2e5a8a12a6a5c030ddc38a3c7",
+        "current": "26e0e6f35eb9ad432bb1685477a35d807f05728d26bfc060d9ffec69de480ed3"
+      },
       "backend/security/native-backports/glibc-build.sha256": {
         "previous": "fc40d9388801de47865d30105b78a7390162408bcd4d12b64f023237da19ac19",
         "current": "f5041578a38f8f056d8444df6211ae83c093edc6c43498448906d34a894894c8"
@@ -6912,7 +6915,15 @@
       },
       "backend/security/native-backports/glibc-tests.sha256": {
         "previous": "99202990051b5bdadb45741838a186d974aef673b1af3379c1325149f5321261",
-        "current": "0fd5de51afea085f96b43efd2f52a19a5aa75d0773f1a6f37577f0ff7d835804"
+        "current": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab"
+      },
+      "backend/security/native-backports/patches.sha256": {
+        "previous": "3295cbd006ba6f01ca386a25e857593f5cde9acac7ebd73e916e5d846433197d",
+        "current": "66b589722d4e97f307999f84e51a21732d6b907aa217c9fd080aa0f5b5a00bfb"
+      },
+      "backend/security/native-backports/README.md": {
+        "previous": "2fe9958b7a440e4c4bb974bbae9a2e514a720a16dc6fd2dbb8323e7e92d2a02e",
+        "current": "db9e55db63b9093b04018b2d3c89129d4f233313dac0e252ebf062965831ffc6"
       },
       "backend/security/native-backports/sources.sha256": {
         "previous": "e4819d443564d0fa97ec64dcb9536e325ff450e676a9560164b4edaca9def822",
@@ -6920,7 +6931,12 @@
       },
       "backend/security/native-backports/test-patches/glibc-tests-trixie.patch": {
         "previous": "9651ce65233b3ff0cac01f56e60cabffb25d5ef1964ef362a5e40aecc58f81f7",
-        "current": "5110453bff186630fc3cd30676404fbba8d3ac2758c2fa9aaefe5e921afb51e4"
+        "current": null,
+        "reason": "Debian u5 provides the guarded allocator"
+      },
+      "backend/tests/test_openssl_security_backport.py": {
+        "previous": "88021594218ea0e3fb9a8637336133645c2023b259e481b14cb7e8feab057b05",
+        "current": "4d0eaf15758644994e8abbb108f94abc530fb9bc3a2e39a4448a60cfdca370cc"
       },
       "backend/security/openssl-backport/build-inputs.sh": {
         "previous": "86c133f200ace2d6d5b4af89e13e4959ff5ccced421be459251032cd30154722",
