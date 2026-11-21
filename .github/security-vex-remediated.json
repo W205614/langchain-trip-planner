@@ -195,7 +195,12 @@
     "docs/evidence/normal-use-20261112/agent-source-delta.patch": "9ad36f11de8a2ead47cbf6b9b36c9767da27f388ca40f1b3b665b564e6aa93dd",
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
-    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78"
+    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
+    "backend/security/openssl-backport/patches/0009-CVE-2026-124709.patch": "d52a6af23bc966daaa9eded816a392d429a67bb76faafd922f4c4cf35a9349f4",
+    "backend/security/openssl-backport/patches/0010-CVE-2026-121482.patch": "6bdbb111a7ce640e42c558aaf912fe19b3770aa9afc7c8c5a0d36d20dcb2d5e9",
+    "backend/security/openssl-backport/patches/0011-CVE-2026-121482-regression.patch": "a9897de897e3cf34206ba9a4ccb461927bd04c310e9354682ceca317c1537502",
+    "backend/security/openssl-backport/patches/0012-CVE-2026-107493.patch": "6176d694ac38251bfa4e11198d002d8720f9efb05deffb35703adb93be6173e1",
+    "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",

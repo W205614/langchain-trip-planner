@@ -25,9 +25,9 @@ fi
 cat /out/provenance/dgram-peer-baseline.log
 printf 'unpatched IPv4/IPv6 BIO datagram peer regression failed as expected (exit %s)\n' "$baseline_status" > /out/provenance/dgram-peer-baseline-result.txt
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-remove /out/packages/*.deb
-test "$(dpkg-query -W -f='${Version}' libssl3t64)" = '3.5.9-1~deb13u1+trip1'
-test "$(dpkg-query -W -f='${Version}' openssl)" = '3.5.9-1~deb13u1+trip1'
-test "$(dpkg-query -W -f='${Version}' openssl-provider-legacy)" = '3.5.9-1~deb13u1+trip1'
+test "$(dpkg-query -W -f='${Version}' libssl3t64)" = '3.5.9-1~deb13u1+trip2'
+test "$(dpkg-query -W -f='${Version}' openssl)" = '3.5.9-1~deb13u1+trip2'
+test "$(dpkg-query -W -f='${Version}' openssl-provider-legacy)" = '3.5.9-1~deb13u1+trip2'
 new_crypto=$(ldconfig -p | awk '/libcrypto\.so\.3 \(libc6,x86-64\)/ { print $NF; exit }')
 new_ssl=$(ldconfig -p | awk '/libssl\.so\.3 \(libc6,x86-64\)/ { print $NF; exit }')
 test -n "$new_crypto" && test -n "$new_ssl"

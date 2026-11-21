@@ -22,4 +22,6 @@ Nginx 升至官方 1.30.7 后，前端扫描从 23 条阻断匹配降至 14 条�
 
 复核 `9d2b970` 的 GitHub Agent 原始扫描和镜像证据后，按实际文件重新绑定 7 个已评估 CVE。其中 5 个绑定最终镜像的受限工具清单，另外 2 个分别要求 `nscd` 包及二进制缺失、确切的 amd64 glibc 架构身份。正式 v0.1.7 与本机候选的移除记录均为同样的 114 项，零残留。对照已存档的 GitHub 扫描和镜像证据，43 条匹配符合重新绑定后的原有条件。扫描阈值及原始匹配保留。[GitHub 镜像扫描](https://github.com/W205614/langchain-trip-planner/actions/runs/44906951817) · [Debian nscd 审查](https://security-tracker.debian.org/tracker/CVE-2026-89092) · [Debian Power8 审查](https://security-tracker.debian.org/tracker/CVE-2026-97399)
 
+Debian Agent 的 OpenSSL 候选 `3.5.9-1~deb13u1+trip2` 进一步回补 4 项已合入 OpenSSL 3.5 维护分支的修复。实际 Debian 打包、包安装、SONAME 和导出符号对照通过。完整本机候选 Agent 镜像的 104 项原生包与运行回归均通过。其受限工具清单仍记录相同的 114 项移除，额外复核了 `perl`、`tar`、ncurses 工具等既有评估的精确文件缺失条件。Alpine 镜像及其独立告警继续由全严重度门禁检查。[OpenSSL 补丁与来源](../../../backend/security/openssl-backport/README.md)
+
 GitHub 的 Docker 构建已通过，四个浏览器失败的 trace 显示未模拟的每日核验请求携带测试令牌到真实后端，触发 401。`d229ff7` 补齐核验响应，并为需要重新安排的历史行程增加真实契约的规划输入夹具。本机对生产前端构建执行五项定向浏览器用例全部通过。[原始构建与浏览器结果](https://github.com/W205614/langchain-trip-planner/actions/runs/44902054043) · [测试夹具修复](https://github.com/W205614/langchain-trip-planner/commit/d229ff78ff96ae775a0b73f581397e9bea161242)

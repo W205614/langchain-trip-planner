@@ -188,11 +188,11 @@
     "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
     "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
     "tools/container_sources.py": "ec97c112beb2ee1a78aa6953e768c332782d4678a3176b69e45e224286155ccd",
-    "backend/tests/test_openssl_security_backport.py": "4d0eaf15758644994e8abbb108f94abc530fb9bc3a2e39a4448a60cfdca370cc",
+    "backend/tests/test_openssl_security_backport.py": "ea31c60e720cc0d558f2b5f62a8862e87c003ec2179904ac677daf5bef67b8c3",
     "backend/security/openssl-backport/adapt_aad_regression.py": "8a3659bead4b7bb6bc0e4a1b1859eee052e4b7f21bae3a7742b01705f2c6f427",
     "backend/security/openssl-backport/build-inputs.sh": "cc78312a1964b49ea4274fe2860021c0861b78f512231df277daf07a8ba16c92",
-    "backend/security/openssl-backport/build.sh": "208cc542cd0a92cdfad2dd6f2a6322b6c94bd083b49d4382500c77c99ad35f90",
-    "backend/security/openssl-backport/check-backport.sh": "1acbed57b5abe426f37f78b310873eb9535c642bbcce2d7be1827a93c44030b9",
+    "backend/security/openssl-backport/build.sh": "bff1bb14588ecbba91933caecef2eef133b515b849ac6fa8b34c1b3911293d04",
+    "backend/security/openssl-backport/check-backport.sh": "feb88e25256c5b60a003c340fe82d546f367dff909cca8dbac02d84839c62115",
     "backend/security/openssl-backport/patches/0001-CVE-2026-107496.patch": "b17c218785e0988d1f000ef365e9b9124143c460b2be2593d7cc616f6c2d4763",
     "backend/security/openssl-backport/patches/0002-CVE-2026-88822.patch": "669866cd57343c0249b4f5297d53a228c6f9f9d5490443cdfdd39be6e4cc9998",
     "backend/security/openssl-backport/patches/0003-CVE-2026-88823.patch": "d75b8abfde7d47732b685464080d1af556932cf3baa9501fbabda56317448b51",
@@ -201,8 +201,8 @@
     "backend/security/openssl-backport/patches/0006-CVE-2026-88823-test.patch": "b02374041ba40333c3a7537486e193c9a70de4beedff5056ff3958a8abe074d4",
     "backend/security/openssl-backport/patches/0007-CVE-2026-95691-test.patch": "eeef48c844d158505ff2421855559e87b9bedb9cc32ef1eab77ac5ff605bf0c2",
     "backend/security/openssl-backport/patches/0008-CVE-2026-95692-test.patch": "1e83b853591f7a815bf918a1a4d1fc8f2b7f7253f4bf45766304020bd29e1c70",
-    "backend/security/openssl-backport/patches.sha256": "8549d19d4d4b2749f8c8191d10f5bcd84312ae0cdc7eeb3a856e0f3a81fb8914",
-    "backend/security/openssl-backport/README.md": "fd41d27f4f234a38b74a90ced633c7f7fec70182702d01815b1b6e5f5afd7730",
+    "backend/security/openssl-backport/patches.sha256": "0dcd8c9acfc360a0f98818dfb5a085493baa362166853b4254f22bf3aba32924",
+    "backend/security/openssl-backport/README.md": "b95b212916b9dea1be1035b15246272ef2cb8ffdb976100aa2183af1e468737c",
     "backend/security/openssl-backport/sources.sha256": "a8a5622989a0d38ccd109f0fe0dfb6bc45d80e245e2240cf3fd5c72b84a2c798",
     "backend/security/openssl-backport/test-dgram-detect-peer.c": "3d3b2a276a5308235b22a44a425af88bdfadaba760cf3e55e8efc3391d3b874c",
     "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json": "eedcdc9031b7ffee22ab928b505c60f1d455bff9e6bcf80fdfeda87a3ed401ab",
@@ -217,7 +217,12 @@
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
     "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
-    "docs/evidence/security-20261121/README.md": "bca6d007238286d18cb38e244373786729e32b865867ad0baa82050eb6152ff9"
+    "docs/evidence/security-20261121/README.md": "85726766ffd9fb1f50211feeb36360147a9578964b6e83b6084891985d6b3bb2",
+    "backend/security/openssl-backport/patches/0009-CVE-2026-124709.patch": "d52a6af23bc966daaa9eded816a392d429a67bb76faafd922f4c4cf35a9349f4",
+    "backend/security/openssl-backport/patches/0010-CVE-2026-121482.patch": "6bdbb111a7ce640e42c558aaf912fe19b3770aa9afc7c8c5a0d36d20dcb2d5e9",
+    "backend/security/openssl-backport/patches/0011-CVE-2026-121482-regression.patch": "a9897de897e3cf34206ba9a4ccb461927bd04c310e9354682ceca317c1537502",
+    "backend/security/openssl-backport/patches/0012-CVE-2026-107493.patch": "6176d694ac38251bfa4e11198d002d8720f9efb05deffb35703adb93be6173e1",
+    "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1"
   },
   "assessments": [
     {
@@ -238,9 +243,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-82560"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -266,9 +271,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-9538"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -294,9 +299,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -323,9 +328,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -352,9 +357,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -381,9 +386,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-69720"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -796,9 +801,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-5704"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -825,7 +830,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -852,7 +857,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -879,7 +884,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -906,7 +911,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -933,7 +938,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -960,7 +965,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -987,7 +992,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1014,7 +1019,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1041,7 +1046,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1364,9 +1369,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2005-2541"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -1609,7 +1614,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1634,7 +1639,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1659,7 +1664,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1707,7 +1712,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1732,7 +1737,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1757,7 +1762,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1782,7 +1787,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1880,7 +1885,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1905,7 +1910,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1930,7 +1935,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1978,7 +1983,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2003,7 +2008,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2028,7 +2033,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2053,7 +2058,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2439,7 +2444,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2464,7 +2469,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2489,7 +2494,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2537,7 +2542,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2562,7 +2567,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2587,7 +2592,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2612,7 +2617,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -3715,9 +3720,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3747,9 +3752,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3779,9 +3784,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3811,9 +3816,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-6141"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3919,9 +3924,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-15534"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -4362,9 +4367,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-18508"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -4536,9 +4541,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2011-3374"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
@@ -4563,9 +4568,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2011-3374"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
@@ -4719,9 +4724,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-18477"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -5010,9 +5015,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2011-4116"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -5142,7 +5147,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5170,7 +5175,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5198,7 +5203,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5226,7 +5231,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5254,7 +5259,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5282,7 +5287,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5310,7 +5315,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5338,7 +5343,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5366,7 +5371,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5614,9 +5619,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2017-18018"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/chown",
@@ -6184,9 +6189,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2025-5278"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/sort"
@@ -6211,9 +6216,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-53910"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/diff3"
@@ -6238,9 +6243,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-56392"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/unexpand"
@@ -6265,9 +6270,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-56391"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
       },
       "absent_paths": [
         "/usr/bin/uniq"
@@ -6325,19 +6330,19 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libssl3t64": "3.5.9-1~deb13u1+trip1",
-        "openssl": "3.5.9-1~deb13u1+trip1",
-        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip1"
+        "libssl3t64": "3.5.9-1~deb13u1+trip2",
+        "openssl": "3.5.9-1~deb13u1+trip2",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip2"
       },
       "requires_dpkg": {
-        "libssl3t64": "3.5.9-1~deb13u1+trip1",
-        "openssl": "3.5.9-1~deb13u1+trip1",
-        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip1"
+        "libssl3t64": "3.5.9-1~deb13u1+trip2",
+        "openssl": "3.5.9-1~deb13u1+trip2",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip2"
       },
       "requires_architecture": "amd64",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "c928bf2c7df135a6c06f6c49257c601bea1067349d5baa8df0ec2ae41eab4940",
-        "/usr/lib/x86_64-linux-gnu/libssl.so.3": "a39fbf82fe12061ca70adee6b9da843549298a56bf34f72a0e027ee2fc96bb64",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "25ee58e8f2ead0e386a29819601b31dca4516d14423ef845be9844b3c7a4060f",
+        "/usr/lib/x86_64-linux-gnu/libssl.so.3": "94600a458ffd81d391d277e36219ee6af6c31a7b7057eed27203c03cc5a452c6",
         "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45"
       },
       "ids": [
@@ -6345,18 +6350,26 @@
         "CVE-2026-88822",
         "CVE-2026-88823",
         "CVE-2026-95691",
-        "CVE-2026-95692"
+        "CVE-2026-95692",
+        "CVE-2026-124709",
+        "CVE-2026-121482",
+        "CVE-2026-107493",
+        "CVE-2026-35190"
       ],
       "classification": "fixed_by_distribution_backport",
       "vendor_status": "fixed_in_exact_tripplanner_source_backport",
-      "reason": "The exact Debian trixie 3.5.7-1~deb13u3 source and quilt series were retained; all five official OpenSSL production patches and companion regressions are pinned and applied without fuzz. The complete Debian binary test suite, dh_makeshlibs ABI check, failing vulnerable-base IPv6 peer-detection control, passing patched control, exact installed package revisions, SONAMEs, exported symbol sets and default/legacy providers were verified. Match only these exact three dpkg revisions and three retained runtime library hashes and absence of the unused CLI after the existing restricted-runtime-tools build step; no version-range, blanket CVE, severity or risk-acceptance exemption.",
+      "reason": "The installed Debian-based OpenSSL runtime contains the nine exact upstream backports in this source tree. Requires all three package versions and the measured runtime library bytes.",
       "references": [
         "https://github.com/openssl/openssl/commit/a0051cfe699bf5a047bc1c4faef65f80f7987366",
         "https://github.com/openssl/openssl/commit/1a73dc590cbad62d6f0329ea4779eadaa8d8fd75",
         "https://github.com/openssl/openssl/commit/159e1de0c448d7b9f09ad768c8e141def4aa1eb4",
         "https://github.com/openssl/openssl/commit/f6244675833e097c2429a40d1b206d95385bd42f",
         "https://github.com/openssl/openssl/commit/257a3427aa0ef8d9dd2ef5b3e2d1c021a221b116",
-        "https://security-tracker.debian.org/tracker/source-package/openssl/3.5.7-1~deb13u3"
+        "https://security-tracker.debian.org/tracker/source-package/openssl/3.5.7-1~deb13u3",
+        "https://github.com/openssl/openssl/commit/f3acb0a3328046741479482c51cec815839e1b05",
+        "https://github.com/openssl/openssl/commit/468c287cf451a834b370b69ab321b8ffdfac23aa",
+        "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
+        "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43"
       ],
       "absent_paths": [
         "/usr/bin/openssl"
@@ -7049,5 +7062,22 @@
     "existing_assessment_rows_rebound": 43,
     "related_raw_matches_reverified": 43,
     "review_record": "docs/evidence/security-20261121/README.md"
+  },
+  "openssl_trip2_review_20261121": {
+    "review_record": "docs/evidence/security-20261121/README.md",
+    "verified_package_version": "3.5.9-1~deb13u1+trip2",
+    "targeted_agent_runtime_tests": 104,
+    "added_confirmed_fixes": [
+      "CVE-2026-124709",
+      "CVE-2026-121482",
+      "CVE-2026-107493",
+      "CVE-2026-35190"
+    ],
+    "tested_image_id": "sha256:1813cdc2369cfd123042dcb6d05c9ac6470b5dca84aef4a9a79597caa2b00ea1",
+    "restricted_runtime_manifest_sha256": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+    "restricted_runtime_manifest_binding_rows": {
+      "additional": 23,
+      "carried_forward": 39
+    }
   }
 }
