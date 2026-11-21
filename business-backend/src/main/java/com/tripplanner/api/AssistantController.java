@@ -184,8 +184,9 @@ public class AssistantController {
       if(((Number)base.get("version")).intValue()!=parent.path("version").asInt())reasons.add("VERSION_CONFLICT");
       if(parent.has("planning_revision")&&((Number)base.get("planning_revision")).intValue()!=parent.path("planning_revision").asInt())reasons.add("PLANNING_INPUT_CONFLICT");
     }
-    try{planning.validateDependencies(quality);}catch(ApiException ex){reasons.add(ex.code);}
-    var diff=base==null?json.createObjectNode():planning.differences(PlanningInputService.stableIds((ObjectNode)json.readTree(base.get("plan_json").toString())),PlanningInputService.stableIds((ObjectNode)json.readTree(proposal.get("plan_json").toString())));
+    var proposedPlan=PlanningInputService.stableIds((ObjectNode)json.readTree(proposal.get("plan_json").toString()));
+    try{planning.validateProposalValidity(proposedPlan,quality);}catch(ApiException ex){reasons.add(ex.code);}
+    var diff=base==null?json.createObjectNode():planning.differences(PlanningInputService.stableIds((ObjectNode)json.readTree(base.get("plan_json").toString())),proposedPlan);
     return Map.of("success",true,"data",Map.of("diff",diff,"dependencies",parent,"stale",!reasons.isEmpty(),"invalidation_reason",String.join(",",reasons),"quality",quality,"revision_scope",quality.path("revision_scope")));
   }
 

@@ -306,17 +306,42 @@
     <div class="home-footer">
       <span>Powered by Spring Boot · Python Agent · LangGraph · 高德地图</span>
     </div>
+    <a-modal v-model:open="reviewOpen" title="确认旅行需求" ok-text="确认并生成" cancel-text="返回修改"
+      :ok-button-props="{ disabled: !!countError }" @ok="confirmGeneration">
+      <template v-if="reviewRequest">
+        <p><strong>{{ reviewRequest.city }}</strong> · {{ reviewRequest.start_date }} 至 {{ reviewRequest.end_date }}</p>
+        <p>交通偏好 {{ reviewRequest.transportation }} · {{ reviewRequest.traveler_count }} 人</p>
+        <p v-if="reviewRequest.constraints?.must_visit?.length">必去 {{ reviewRequest.constraints.must_visit.join('、') }}</p>
+        <p v-if="reviewRequest.planning_input?.arrival_at">抵达 {{ reviewTime(reviewRequest.planning_input.arrival_at) }}</p>
+        <p v-if="reviewRequest.planning_input?.departure_at">离开 {{ reviewTime(reviewRequest.planning_input.departure_at) }}</p>
+        <ul v-if="reviewRequest.planning_input?.commitments.length">
+          <li v-for="item in reviewRequest.planning_input.commitments" :key="item.id">
+            第 {{ item.day_index + 1 }} 天 · {{ item.title }} · {{ item.start_at ? reviewTime(item.start_at) : '未填写固定时间' }}
+          </li>
+        </ul>
+        <p v-if="countNeedsScope">「只去 {{ countValue }} 个景点」是指每天还是全程？</p>
+        <div class="count-fields">
+          <label>景点数量<input v-model.number="countValue" type="number" min="1" step="1" placeholder="不限制" /></label>
+          <template v-if="countValue !== '' && countValue !== null">
+            <label>数量范围<select v-model="countScope"><option value="" disabled>请选择范围</option><option value="daily">每天</option><option value="trip">全程</option></select></label>
+            <label>数量规则<select v-model="countMode"><option value="exact">指定数量</option><option value="maximum">最多数量</option></select></label>
+          </template>
+        </div>
+        <a-alert v-if="countError" type="warning" :message="countError" />
+        <p v-if="reviewRequest.free_text_input">文字偏好 {{ reviewRequest.free_text_input }}</p>
+      </template>
+    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Alert as AAlert, Button as AButton, Card as ACard, Checkbox as ACheckbox, CheckboxGroup as ACheckboxGroup, Col as ACol, DatePicker as ADatePicker, Form as AForm, FormItem as AFormItem, Input as AInput, InputNumber as AInputNumber, Progress as AProgress, Row as ARow, Select as ASelect, SelectOption as ASelectOption, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
+import { Alert as AAlert, Button as AButton, Card as ACard, Checkbox as ACheckbox, CheckboxGroup as ACheckboxGroup, Col as ACol, DatePicker as ADatePicker, Form as AForm, FormItem as AFormItem, Input as AInput, InputNumber as AInputNumber, Modal as AModal, Progress as AProgress, Row as ARow, Select as ASelect, SelectOption as ASelectOption, Tag as ATag, Textarea as ATextarea, message } from 'ant-design-vue'
 
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { fetchCapabilities, fetchTravelPreferences, generateTripPlanStream, storeTripResult, saveTravelPreferences, logout } from '@/services/api'
 import { isAuthenticated, getUsername, isAdmin } from '@/services/auth'
-import type { TripFormData, PlanningInput } from '@/types'
+import type { AttractionCount, TripFormData, PlanningInput } from '@/types'
 import PlanningInputEditor from '@/components/trip/PlanningInputEditor.vue'
 import type { Dayjs } from 'dayjs'
 
@@ -354,6 +379,25 @@ const planningConstraints = reactive({ must_visit: [] as string[], avoid: [] as 
   max_inter_stop_walking_km: null as number | null })
 const planningInput = ref<PlanningInput>()
 const planningEditor = ref<InstanceType<typeof PlanningInputEditor>>()
+const reviewOpen = ref(false)
+const reviewRequest = ref<TripFormData>()
+const countValue = ref<number | '' | null>(null)
+const countScope = ref<AttractionCount['scope'] | ''>('')
+const countMode = ref<AttractionCount['mode']>('exact')
+const countNeedsScope = ref(false)
+const countError = computed(() => {
+  if (countValue.value === null || countValue.value === '') return ''
+  if (!countScope.value) return '请选择景点数量的范围。'
+  const limit = 20 * (countScope.value === 'trip' ? reviewRequest.value!.travel_days : 1)
+  return Number.isInteger(countValue.value) && countValue.value >= 1 && countValue.value <= limit
+    ? '' : `景点数量请输入 1 至 ${limit} 的整数。`
+})
+function reviewTime(value: string) {
+  return new Intl.DateTimeFormat('zh-CN', {
+    timeZone: reviewRequest.value?.planning_input?.timezone || 'Asia/Shanghai',
+    dateStyle: 'medium', timeStyle: 'short'
+  }).format(new Date(value))
+}
 const formData = reactive<FormDataType>({
   city: '',
   departure_city: '',
@@ -444,7 +488,8 @@ watch(() => formData.traveler_count, count => {
   if (formData.room_count > count) formData.room_count = count
 })
 
-const handleSubmit = async () => {
+const handleSubmit = () => {
+  if (loading.value) return
   const planningError = planningEditor.value?.validate()
   if (planningError) { message.warning(planningError); return }
   if (!formData.start_date || !formData.end_date) {
@@ -452,28 +497,53 @@ const handleSubmit = async () => {
     return
   }
 
+  const requestData: TripFormData = {
+    city: formData.city,
+    departure_city: formData.departure_city,
+    start_date: formData.start_date.format('YYYY-MM-DD'),
+    end_date: formData.end_date.format('YYYY-MM-DD'),
+    travel_days: formData.travel_days,
+    transportation: formData.transportation,
+    accommodation: formData.accommodation,
+    traveler_count: formData.traveler_count,
+    room_count: formData.room_count,
+    budget_total: planningInput.value?.budget_cents == null ? formData.budget_total : Math.floor(planningInput.value.budget_cents / 100),
+    preferences: formData.preferences,
+    free_text_input: formData.free_text_input,
+    constraints: { ...planningConstraints },
+    planning_input: planningInput.value ? { ...planningInput.value, budget_cents: planningInput.value.budget_cents ?? (formData.budget_total == null ? null : Math.round(formData.budget_total * 100)) } : undefined
+  }
+
+  reviewRequest.value = JSON.parse(JSON.stringify(requestData))
+  const words = formData.free_text_input || ''
+  const counts = [...words.matchAll(/(?:^|[，。；！？,;!?\s])(?:(每天|每日|全程|一共)\s*)?(?:(只|仅|恰好|最多|不超过)\s*)?(?:安排|游览|参观|去)?\s*([0-9]{1,3}|[一二两三四五六七八九十]{1,3})\s*[个处][^0-9一二两三四五六七八九十到至或及和与，。；！？,;!?]{0,20}?景点/g)]
+    .filter(match => match[1] || match[2])
+  const match = counts.length === 1 ? counts[0] : undefined
+  const digits = '零一二三四五六七八九'
+  const numeral = match?.[3].replace('两', '二') || ''
+  const [tens, units] = numeral.split('十')
+  const parsed = /^\d+$/.test(numeral) ? Number(numeral) : units !== undefined
+    ? (tens ? digits.indexOf(tens) : 1) * 10 + (units ? digits.indexOf(units) : 0)
+    : digits.indexOf(numeral)
+  countValue.value = match && parsed > 0 ? parsed : null
+  countNeedsScope.value = !!match && !match[1] && requestData.travel_days > 1
+  countScope.value = countNeedsScope.value ? '' : match && ['全程', '一共'].includes(match[1]) ? 'trip' : 'daily'
+  countMode.value = match && ['最多', '不超过'].includes(match[2]) ? 'maximum' : 'exact'
+  reviewOpen.value = true
+}
+
+async function confirmGeneration() {
+  const requestData = reviewRequest.value
+  if (!requestData || countError.value || loading.value) return
+  if (requestData.planning_input && typeof countValue.value === 'number' && countScope.value) {
+    requestData.planning_input.attraction_count = { scope: countScope.value, mode: countMode.value, count: countValue.value }
+  }
+  reviewOpen.value = false
   loading.value = true
   loadingProgress.value = 0
   loadingStatus.value = '正在初始化...'
 
   try {
-    const requestData: TripFormData = {
-      city: formData.city,
-      departure_city: formData.departure_city,
-      start_date: formData.start_date.format('YYYY-MM-DD'),
-      end_date: formData.end_date.format('YYYY-MM-DD'),
-      travel_days: formData.travel_days,
-      transportation: formData.transportation,
-      accommodation: formData.accommodation,
-      traveler_count: formData.traveler_count,
-      room_count: formData.room_count,
-      budget_total: planningInput.value?.budget_cents == null ? formData.budget_total : planningInput.value.budget_cents / 100,
-      preferences: formData.preferences,
-      free_text_input: formData.free_text_input,
-      constraints: { ...planningConstraints },
-      planning_input: planningInput.value ? { ...planningInput.value, budget_cents: planningInput.value.budget_cents ?? (formData.budget_total == null ? null : Math.round(formData.budget_total * 100)) } : undefined
-    }
-
     const response = await generateTripPlanStream(requestData, (progress) => {
       // 数据节点已并行，事件到达顺序不固定；进度条不应因较早节点晚到而倒退。
       loadingProgress.value = Math.max(loadingProgress.value, progress.percent)
@@ -520,6 +590,9 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
+.count-fields { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.count-fields label { display: grid; gap: 4px; min-width: 110px; }
+.count-fields input, .count-fields select { padding: 6px; border: 1px solid #aebbd0; border-radius: 4px; max-width: 130px; }
 .home-container {
   min-height: 100vh;
   background: transparent;

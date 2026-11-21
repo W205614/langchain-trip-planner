@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
   await page.route('https://*.amap.com/**', route => route.abort())
+  await page.route('**/api/trips/*/checks/latest?all_days=true', route => route.fulfill({ json: { data: [] } }))
 })
 
 const plan = {
@@ -47,6 +48,14 @@ test('pending assistant revision is previewed and confirmed with its proposal ve
   await expect.poll(() => confirmed).toBeTruthy()
   await expect(page.getByRole('button', { name: '确认应用到原行程' })).toHaveCount(0)
   await expect.poll(() => page.evaluate(() => sessionStorage.getItem('tripPlanId'))).toBe('41')
+  await page.route('**/api/history/41', route => route.fulfill({ status: 503, json: { message: '暂时无法读取行程' } }))
+  let downloaded = false
+  page.on('download', () => { downloaded = true })
+  const reexport = page.getByRole('button', { name: '重新导出离线网页' })
+  await reexport.click()
+  await expect(page.getByText(/暂时无法核对最新行程版本/)).toBeVisible()
+  await expect(reexport).toBeEnabled()
+  expect(downloaded).toBe(false)
 })
 
 test('pending assistant revision can be discarded and returns to refreshed history', async ({ page }) => {

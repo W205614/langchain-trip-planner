@@ -20,6 +20,7 @@ public class TripOperationsService {
   public Object checks(long actor,long id){return checks.checks(actor,id);}
   public Object checks(long actor,long id,Integer onlyDay){return checks.checks(actor,id,onlyDay);}
   public Object acknowledge(long actor,long id,long riskId,int expected){return checks.acknowledge(actor,id,riskId,expected);}
+  public Object dailyChecks(long actor,long id){return checks.dailyChecks(actor,id);}
   public Object workspace(long actor,long id){return collaboration.workspace(actor,id);}
   public Object reorder(long actor,long id,int expected,ObjectNode input,String requestId){return collaboration.reorder(actor,id,expected,input,requestId);}
   public Object invite(long actor,long id,ObjectNode body,String requestId){return collaboration.invite(actor,id,body,requestId);}

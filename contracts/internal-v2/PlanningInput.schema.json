@@ -1,6 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "AttractionCount": {
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "enum": [
+            "daily",
+            "trip"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "exact",
+            "maximum"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "count": {
+          "maximum": 600,
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scope",
+        "mode",
+        "count"
+      ],
+      "title": "AttractionCount",
+      "type": "object"
+    },
     "CitySegment": {
       "additionalProperties": false,
       "properties": {
@@ -106,6 +140,86 @@
         }
       },
       "title": "RevisionScope",
+      "type": "object"
+    },
+    "VisitEntrance": {
+      "additionalProperties": false,
+      "properties": {
+        "day_index": {
+          "maximum": 29,
+          "minimum": 0,
+          "title": "Day Index",
+          "type": "integer"
+        },
+        "poi_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Poi Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "address": {
+          "default": "",
+          "maxLength": 300,
+          "title": "Address",
+          "type": "string"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        },
+        "source": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "confirmed": {
+          "const": true,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "authority": {
+          "const": "user_declared",
+          "default": "user_declared",
+          "title": "Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "day_index",
+        "poi_id",
+        "name",
+        "source",
+        "observed_at",
+        "expires_at",
+        "confirmed"
+      ],
+      "title": "VisitEntrance",
       "type": "object"
     }
   },
@@ -281,6 +395,25 @@
       ],
       "default": null,
       "title": "Budget Cents"
+    },
+    "attraction_count": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AttractionCount"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "visit_entrances": {
+      "items": {
+        "$ref": "#/$defs/VisitEntrance"
+      },
+      "maxItems": 300,
+      "title": "Visit Entrances",
+      "type": "array"
     },
     "revision_scope": {
       "anyOf": [

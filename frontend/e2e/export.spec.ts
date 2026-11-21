@@ -39,9 +39,12 @@ test('PNG and PDF download all days and offline HTML toggles without a network',
       expect(bytes.subarray(0,5).toString()).toBe('%PDF-')
       expect(bytes.toString('latin1').match(/\/Type \/Page\b/g)!.length).toBeGreaterThan(1)
     }else{
+      expect(download.suggestedFilename()).toContain('本地草稿')
       const offline=await context.newPage()
       await context.setOffline(true)
       await offline.goto(pathToFileURL(path).href)
+      await expect(offline.locator('header.offline-note')).toContainText('本地草稿')
+      await expect(offline.locator('header.offline-note time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}T/)
       await expect(offline.locator('details')).toHaveCount(4)
       const last=offline.locator('details').nth(3)
       await expect(last).not.toHaveAttribute('open','')

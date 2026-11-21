@@ -20,7 +20,10 @@ public class TripOperationsController {
   }
   @GetMapping("/api/trips/{id}/checks/latest")
   public Object checks(HttpServletRequest req,@PathVariable long id,
-      @RequestParam(value="day_index",required=false) Integer dayIndex) {
+      @RequestParam(value="day_index",required=false) Integer dayIndex,
+      @RequestParam(value="all_days",defaultValue="false") boolean allDays) {
+    if(allDays && dayIndex!=null) throw new ApiException(422,"不能同时选择单日和所有日期");
+    if(allDays) return operations.dailyChecks(user(req),id);
     return operations.checks(user(req),id,dayIndex);
   }
   @PostMapping("/api/trips/{id}/risks/{riskId}/acknowledge")

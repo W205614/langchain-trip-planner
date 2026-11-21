@@ -12,6 +12,8 @@ export function proposalChanges(diff: AssistantProposal['diff']): string[] {
     if (before.start_at !== after.start_at) details.push(`开始时间 ${before.start_at || '待定'} → ${after.start_at || '待定'}`)
     values.push(`调整：${describe(after)}${details.length ? `（${details.join('；')}）` : '（内容或顺序变化）'}`)
   }
-  for (const day of diff.days || []) values.push(`第 ${day.day_index + 1} 天：${day.summary || '安排已调整'}`)
+  for (const day of diff.days || []) {
+    if (!day.after) values.push(`第 ${day.day_index + 1} 天：${day.summary || '安排已调整'}`)
+  }
   return values
 }

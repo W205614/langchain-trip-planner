@@ -13,15 +13,23 @@ import { Alert as AAlert, Button as AButton, Select as ASelect, SelectOption as 
 
 import { computed, ref, watch } from 'vue'
 import type { TripPlan, RevisionScope } from '@/types'
-const props = defineProps<{ plan: TripPlan; dayIndex: number }>()
+import { tripLocalTime, zonedTimestamp } from '@/utils/tripDay'
+const props = defineProps<{ plan: TripPlan; dayIndex: number; initial?: RevisionScope; zone: string }>()
 const emit = defineEmits<{ change: [value: RevisionScope] }>()
 const mode = ref('day'), selectedDays = ref<number[]>([props.dayIndex]), selectedActivities = ref<string[]>([]), start = ref(''), end = ref('')
 const activities = computed(() => { const day = props.plan.days.find(d => d.day_index === props.dayIndex); const items = [...(day?.attractions || []), ...(day?.meals || []), ...(day?.timeline || []).filter(a => ['attraction', 'meal'].includes(a.kind)).map(a => ({ activity_id: a.activity_id, name: a.title }))]; return [...new Map(items.filter(a => a.activity_id).map(a => [a.activity_id, a])).values()] })
-const stamp = (value: string) => value ? `${value}:00+08:00` : null
+const stamp = (value: string) => value ? zonedTimestamp(value, props.zone) : null
 function update() { emit('change', { day_indices: mode.value === 'multiple' ? [...selectedDays.value] : [props.dayIndex], activity_ids: mode.value === 'activity' ? [...selectedActivities.value] : [], start_at: mode.value === 'window' ? stamp(start.value) : null, end_at: mode.value === 'window' ? stamp(end.value) : null }) }
-function remaining() { const parts = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); start.value = parts.replace(' ', 'T'); update() }
-const validationMessage = computed(() => mode.value === 'multiple' && !selectedDays.value.length ? '至少选择一个允许调整的日期。' : mode.value === 'activity' && !selectedActivities.value.length ? '至少选择一个允许调整的活动。' : mode.value === 'window' && (!start.value || !end.value || start.value >= end.value) ? '请设置完整且有效的时间范围。' : '')
-watch(() => props.dayIndex, value => { mode.value = 'day'; selectedDays.value = [value]; selectedActivities.value = []; start.value = ''; end.value = ''; update() })
+function remaining() { start.value = tripLocalTime(Math.ceil(Date.now() / 60000) * 60000, props.zone); update() }
+const validationMessage = computed(() => mode.value === 'multiple' && !selectedDays.value.length ? '至少选择一个允许调整的日期。' : mode.value === 'activity' && !selectedActivities.value.length ? '至少选择一个允许调整的活动。' : mode.value === 'window' && (!stamp(start.value) || !stamp(end.value) || start.value >= end.value) ? '请设置完整且有效的时间范围。' : '')
+watch(() => [props.dayIndex, props.initial] as const, ([day, initial]) => {
+  selectedDays.value = initial?.day_indices || [day]
+  selectedActivities.value = initial?.activity_ids || []
+  start.value = initial?.start_at ? tripLocalTime(Date.parse(initial.start_at), props.zone) : ''
+  end.value = initial?.end_at ? tripLocalTime(Date.parse(initial.end_at), props.zone) : ''
+  mode.value = start.value && end.value ? 'window' : selectedActivities.value.length ? 'activity' : selectedDays.value.length > 1 ? 'multiple' : 'day'
+  update()
+}, { immediate: true })
 defineExpose({ validate: () => validationMessage.value })
 </script>
 <style scoped>

@@ -15,8 +15,8 @@
       <a-button v-if="finding.status === 'not_found'" @click="emit('replace', finding.poi_id)">选择替代景点并确认</a-button>
     </article>
     <div class="fields">
-      <label>补充类型<select v-model="kind"><option value="opening">营业与最后入场</option><option value="reservation">预约要求与结果</option><option value="hotel">住宿接驳地点</option><option value="boarding">提前到站要求</option><option value="meal">自理用餐地点</option><option value="relation">父子景点与重复游览</option></select></label>
-      <label v-if="['opening', 'reservation', 'relation'].includes(kind)">{{ kind === 'relation' ? '父景点' : '地点' }}<select v-model="poiId"><option value="">请选择地点</option><option v-for="poi in places" :key="poi.poi_id" :value="poi.poi_id">{{ poi.name }}</option></select></label>
+      <label>补充类型<select v-model="kind"><option value="opening">营业与最后入场</option><option value="reservation">预约要求与结果</option><option value="hotel">住宿接驳地点</option><option value="boarding">提前到站要求</option><option value="meal">自理用餐地点</option><option value="relation">父子景点与重复游览</option><option value="entrance">景点入口</option></select></label>
+      <label v-if="['opening', 'reservation', 'relation', 'entrance'].includes(kind)">{{ kind === 'relation' ? '父景点' : '地点' }}<select v-model="poiId"><option value="">请选择地点</option><option v-for="poi in places" :key="poi.poi_id" :value="poi.poi_id">{{ poi.name }}</option></select></label>
       <label v-if="kind === 'relation'">子景点<select v-model="childPoiId"><option value="">请选择子地点</option><option v-for="poi in places.filter(p => p.poi_id !== poiId)" :key="poi.poi_id" :value="poi.poi_id">{{ poi.name }}</option></select></label>
       <label v-if="kind === 'relation'">游览关系<select v-model="relation"><option value="included">子景点已包含在父景点游览内，避免重复安排</option><option value="separate">已核对为独立游览，允许分别安排</option></select></label>
       <template v-if="kind === 'opening'"><label>开放<input v-model="openingStart" type="time" /></label><label>结束<input v-model="openingEnd" type="time" /></label><label>最后入场<input v-model="lastEntry" type="time" /></label><label><input v-model="closed" type="checkbox" />该日闭馆</label></template>
@@ -25,13 +25,18 @@
       <label v-if="kind === 'hotel'">住宿名称<input v-model="hotelName" placeholder="我确认的酒店或住宿" /></label>
       <template v-if="kind === 'boarding'"><label>交通事项<select v-model="commitmentId"><option value="">请选择已确认交通</option><option v-for="trip in transports" :key="trip.id" :value="String(trip.id)">{{ trip.title }}</option></select></label><label>提前到站（分钟）<input v-model.number="minutes" type="number" min="0" max="360" /></label></template>
       <label v-if="kind === 'meal'">餐别<select v-model="mealType"><option value="breakfast">早餐</option><option value="lunch">午餐</option><option value="dinner">晚餐</option></select></label>
-      <template v-if="kind === 'hotel' || kind === 'meal'"><label>经度<input v-model.number="longitude" type="number" step="any" min="-180" max="180" /></label><label>纬度<input v-model.number="latitude" type="number" step="any" min="-90" max="90" /></label></template>
+      <template v-if="kind === 'entrance'"><label>入口名称<input v-model="entranceName" maxlength="120" /></label><label>入口地址<input v-model="entranceAddress" maxlength="300" /></label></template>
+      <template v-if="['hotel', 'meal', 'entrance'].includes(kind)"><label>经度<input v-model.number="longitude" type="number" step="any" min="-180" max="180" /></label><label>纬度<input v-model.number="latitude" type="number" step="any" min="-90" max="90" /></label></template>
+      <p v-if="kind === 'entrance'">可留空坐标。若填写，请使用高德地图上的入口经纬度。</p>
       <label>来源名称或链接<input v-model="source" maxlength="1000" placeholder="例如景区公告、承运方通知、自己的住宿确认" /></label>
       <label>获取时间<input v-model="observed" type="datetime-local" /></label><label>有效至<input v-model="expiry" type="datetime-local" /></label>
     </div>
     <label class="confirm"><input v-model="confirmed" type="checkbox" />我已核对以上信息，了解这是我的声明，系统不会代订票或确认官方真实性</label>
     <p v-if="error" role="alert" class="error">{{ error }}</p>
-    <a-space wrap class="fact-actions"><a-button :disabled="busy" @click="addFact">加入待保存事实</a-button><a-button type="primary" :loading="busy" @click="emit('recheck', dayIndex)">保存已补充事实并局部重验求解</a-button></a-space>
+    <a-space wrap class="fact-actions"><a-button v-if="kind !== 'entrance'" :disabled="busy" @click="addFact">加入待保存事实</a-button>
+      <a-button v-if="kind === 'entrance'" type="primary" :loading="busy" @click="saveEntrance">保存入口</a-button>
+      <a-button v-else type="primary" :loading="busy" @click="emit('recheck', dayIndex)">保存已补充事实并局部重验求解</a-button>
+    </a-space>
     <p>已补充 {{ factCount }} 项。重验会生成待确认方案；先查看差异再应用，锁定和已完成安排继续受保护。</p>
     <details v-if="savedFacts.length"><summary>检查已加入的补充事实、来源与有效期</summary><ul><li v-for="entry in savedFacts" :key="`${entry.group}:${entry.index}`"><strong>{{ entry.label }}</strong> · {{ entry.source }} · 有效至 {{ entry.expiry }} · 用户声明 <button type="button" :disabled="busy" @click="removeFact(entry.group, entry.index)">移除待保存事实</button></li></ul></details>
   </section>
@@ -42,12 +47,13 @@ import { Button as AButton, Space as ASpace } from 'ant-design-vue'
 import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import type { PlanningInput, TripPlan, TravelFact } from '@/types'
 import { factChecklist, factTimeError, type FactGap } from '@/utils/factChecklist'
-const props = defineProps<{ modelValue: PlanningInput; plan: TripPlan; quality?: any; busy?: boolean }>()
-const emit = defineEmits<{ 'update:modelValue': [value: PlanningInput]; recheck: [day: number]; retry: []; replace: [poiId: string] }>()
+const props = defineProps<{ modelValue: PlanningInput; plan: TripPlan; quality?: any; busy?: boolean; focus?: { day: number; kind: FactGap['kind']; poiId?: string; commitmentId?: string } }>()
+const emit = defineEmits<{ 'update:modelValue': [value: PlanningInput]; recheck: [day: number]; retry: []; replace: [poiId: string]; save: [] }>()
 const dayIndex = ref(0), kind = ref('opening'), poiId = ref(''), childPoiId = ref(''), relation = ref<'included' | 'separate'>('included')
 const openingStart = ref('09:00'), openingEnd = ref('17:00'), lastEntry = ref(''), closed = ref(false)
 const reservationStatus = ref<'confirmed' | 'not_required' | 'unavailable'>('not_required'), hotelName = ref(''), commitmentId = ref(''), minutes = ref(30), mealType = ref('lunch')
 const longitude = ref<number | undefined>(), latitude = ref<number | undefined>(), source = ref(''), confirmed = ref(false), error = ref('')
+const entranceName = ref(''), entranceAddress = ref('')
 const localDateTime = (value: Date) => new Intl.DateTimeFormat('sv-SE', { timeZone: props.modelValue.timezone || 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(value).replace(' ', 'T')
 const observed = ref(localDateTime(new Date())), expiry = ref(localDateTime(new Date(Date.now() + 6 * 3600000)))
 const now = ref(Date.now())
@@ -59,9 +65,9 @@ const date = computed(() => props.plan.days.find(d => d.day_index === dayIndex.v
 const places = computed(() => { const day = props.plan.days.find(d => d.day_index === dayIndex.value); return [...(day?.attractions || []), ...(day?.meals || [])].filter(p => p.poi_id) })
 const transports = computed(() => props.modelValue.commitments.filter(c => ['transport', 'train', 'flight'].includes(c.category) && c.status === 'confirmed'))
 const findings = computed(() => (props.quality?.poi_verification || []).filter((f: any) => f.day_index === dayIndex.value && f.status !== 'verified'))
-const factCount = computed(() => ['reservation_facts', 'transport_buffers', 'poi_relations', 'meal_resolutions', 'opening_windows', 'hotel_stays'].reduce((n, key) => n + ((props.modelValue as any)[key]?.length || 0), 0))
+const factCount = computed(() => ['reservation_facts', 'transport_buffers', 'poi_relations', 'meal_resolutions', 'opening_windows', 'hotel_stays', 'visit_entrances'].reduce((n, key) => n + ((props.modelValue as any)[key]?.length || 0), 0))
 const savedFacts = computed(() => {
-  const labels: Record<string, string> = { opening_windows: '营业核对', hotel_stays: '住宿地点', reservation_facts: '预约核对', transport_buffers: '提前到站', poi_relations: '父子景点', meal_resolutions: '自理用餐' }
+  const labels: Record<string, string> = { opening_windows: '营业核对', hotel_stays: '住宿地点', reservation_facts: '预约核对', transport_buffers: '提前到站', poi_relations: '父子景点', meal_resolutions: '自理用餐', visit_entrances: '景点入口' }
   return Object.entries(labels).flatMap(([group, label]) => ((props.modelValue as any)[group] || []).map((item: any, index: number) => ({ group, index, label: `${label} · ${item.name || item.poi_id || item.commitment_id || item.parent_poi_id || `第${item.day_index + 1}天`}${item.date ? ` · ${item.date}` : ''}`, source: item.source || '未填写来源', expiry: item.expires_at || '未填写' })))
 })
 const gaps = computed(() => {
@@ -75,7 +81,12 @@ const gaps = computed(() => {
   if (unknown.some(x => x.includes('relationship'))) result.push('父子景点：核对是否属于同一景区、是否已包含游览；不同地图编号不代表可以重复安排。')
   return result
 })
-watch(dayIndex, () => { poiId.value = ''; childPoiId.value = ''; commitmentId.value = ''; confirmed.value = false; error.value = '' })
+watch(dayIndex, () => { poiId.value = ''; childPoiId.value = ''; commitmentId.value = ''; confirmed.value = false; error.value = '' }, { flush: 'sync' })
+watch(() => props.focus, value => {
+  if (!value || !props.plan.days.some(day => day.day_index === value.day)) return
+  dayIndex.value = value.day
+  editGap({ ...value, key: '', label: '', status: '待确认' })
+}, { immediate: true })
 function editGap(gap: FactGap) {
   kind.value = gap.kind; poiId.value = gap.poiId || ''; commitmentId.value = gap.commitmentId || ''
   const input = props.modelValue
@@ -102,7 +113,7 @@ function addFact() {
   error.value = factTimeError(stamp(observed.value), stamp(expiry.value), Date.now())
   if (error.value) return
   const next: PlanningInput = JSON.parse(JSON.stringify(props.modelValue)), fact: TravelFact = { source: source.value.trim(), confirmed: true, observed_at: stamp(observed.value), expires_at: stamp(expiry.value), authority: 'user_declared' }
-  if (['opening', 'reservation', 'relation'].includes(kind.value) && !poiId.value) { error.value = '请选择要补充的地点。'; return }
+  if (['opening', 'reservation', 'relation', 'entrance'].includes(kind.value) && !poiId.value) { error.value = '请选择要补充的地点。'; return }
   const upsert = (key: string, match: (entry: any) => boolean, value: any) => { const list = (next as any)[key] || []; (next as any)[key] = [...list.filter((entry: any) => !match(entry)), value] }
   if (kind.value === 'opening') {
     if (!closed.value && (!openingStart.value || !openingEnd.value || openingStart.value >= openingEnd.value)) { error.value = '请填写有效营业时间，结束须晚于开始。'; return }
@@ -114,6 +125,18 @@ function addFact() {
   } else if (kind.value === 'relation') {
     if (!childPoiId.value || childPoiId.value === poiId.value) { error.value = '请选择不同的父子地点。'; return }
     upsert('poi_relations', x => [x.parent_poi_id, x.child_poi_id].sort().join(':') === [poiId.value, childPoiId.value].sort().join(':'), { ...fact, parent_poi_id: poiId.value, child_poi_id: childPoiId.value, relation: relation.value })
+  } else if (kind.value === 'entrance') {
+    if (!entranceName.value.trim()) { error.value = '请填写入口名称。'; return }
+    let location
+    if (String(longitude.value ?? '') || String(latitude.value ?? '')) {
+      if (!Number.isFinite(longitude.value) || !Number.isFinite(latitude.value) || Math.abs(longitude.value!) > 180 || Math.abs(latitude.value!) > 90) {
+        error.value = '请填写有效的入口经纬度，或同时留空。'; return
+      }
+      location = { longitude: longitude.value!, latitude: latitude.value! }
+    }
+    upsert('visit_entrances', x => x.poi_id === poiId.value && x.day_index === dayIndex.value, {
+      ...fact, day_index: dayIndex.value, poi_id: poiId.value, name: entranceName.value.trim(), address: entranceAddress.value.trim(), location
+    })
   } else {
     if (longitude.value == null || latitude.value == null || !Number.isFinite(longitude.value) || !Number.isFinite(latitude.value) || Math.abs(longitude.value) > 180 || Math.abs(latitude.value) > 90) { error.value = '请填写实际地点的有效经纬度。'; return }
     const location = { longitude: longitude.value, latitude: latitude.value }
@@ -122,7 +145,9 @@ function addFact() {
   }
   emit('update:modelValue', next)
   confirmed.value = false
+  return true
 }
+function saveEntrance() { if (addFact()) emit('save') }
 </script>
 <style scoped>
 .fact-actions{display:flex;margin:12px 0}

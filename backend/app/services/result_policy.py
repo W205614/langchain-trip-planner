@@ -20,6 +20,16 @@ def classify(plan, request, report):
             add("ATTRACTION_TARGET_UNMET", f"day:{target['day_index']}",
                 f"第{target['day_index'] + 1}天要求{target['target_count']}个景点，实际安排{target['actual_count']}个，数量目标尚未满足",
                 "请补充可用景点或调整每日时间后重新规划；当前行程仍可查看和编辑", False)
+    for target in report.get("attraction_count_checks", []):
+        if not target["met"]:
+            scope = target["scope"]
+            label = "全程" if scope == "trip" else f"第{int(scope.split(':')[1]) + 1}天"
+            mode = "指定" if target["mode"] == "exact" else "最多"
+            excess = target["actual_count"] > target["target_count"]
+            action = ("请检查必去景点、固定预约或时间冲突，再调整数量或行程。"
+                      if excess else "当前可信候选和可用时间内尚未排足，请调整要求或补充景点。")
+            add("ATTRACTION_COUNT_CONFLICT", scope,
+                f"{label}{mode}{target['target_count']}个景点，方案包含{target['actual_count']}个。", action)
     for day in plan.days:
         for attraction in day.attractions:
             if not valid_attraction(attraction):

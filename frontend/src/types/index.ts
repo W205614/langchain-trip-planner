@@ -166,6 +166,21 @@ export interface PlanningCommitment {
   amount_cents?: number | null
 }
 
+export interface AttractionCount {
+  scope: 'daily' | 'trip'
+  mode: 'exact' | 'maximum'
+  count: number
+}
+
+export interface VisitEntrance extends TravelFact {
+  day_index: number
+  poi_id: string
+  name: string
+  address?: string
+  location?: Location
+  source: string
+}
+
 export interface PlanningInput {
   timezone: string
   day_start: string
@@ -186,6 +201,8 @@ export interface PlanningInput {
   departure_at?: string | null
   budget_mode: 'estimate' | 'confirmed'
   budget_cents?: number | null
+  attraction_count?: AttractionCount | null
+  visit_entrances?: VisitEntrance[]
   revision_scope?: RevisionScope
 }
 
@@ -208,6 +225,15 @@ export interface TimelineItem {
   evidence_refs?: (string | { source?: string; id?: string })[]
   notes?: string[]
   location?: Location
+}
+
+export interface DailyTripCheck {
+  day_index: number
+  status: string
+  stale?: boolean
+  checked_at?: string
+  expires_at?: string
+  risks: { id: number; poi_id: string; code: string; message: string; source: string; observed_at?: string; acknowledged_at?: string }[]
 }
 
 export interface TripPlanResponse {
@@ -243,7 +269,7 @@ export interface AssistantProposal {
     changed?: ProposalActivity[]
     preserved?: ProposalActivity[]
     modified?: { activity_id: string; before: ProposalActivity; after: ProposalActivity }[]
-    days?: { day_index: number; summary?: string }[]
+    days?: { day_index: number; summary?: string; before?: DayPlan; after?: DayPlan }[]
     unresolved?: string[]
   }
 }

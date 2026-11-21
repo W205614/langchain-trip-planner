@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
@@ -105,23 +107,43 @@ public class TripBookingExpenseService {
     db.update("UPDATE trip_commitments SET activity_id=?,poi_id=?,location_json=?::jsonb,start_at=?,end_at=?,details_json=?::jsonb WHERE id=? AND trip_id=?",merged.path("activity_id").asText(""),merged.path("poi_id").asText(""),merged.hasNonNull("location")?json.writeValueAsString(merged.path("location")):null,start,end,json.writeValueAsString(details),id,trip);
   }
 
+  @Transactional(readOnly=true,isolation=Isolation.REPEATABLE_READ)
   public Object expenses(long actor,long id) {
     var found=ctx.access(actor,id,false);
     var entries=db.queryForList("SELECT id,commitment_id,day_index,category,amount_cents,note,created_by,created_at," +
         "voided_at,void_reason FROM trip_expenses WHERE trip_id=? ORDER BY day_index,id",id);
-    long actual=entries.stream().filter(e->e.get("voided_at")==null)
-        .mapToLong(e->((Number)e.get("amount_cents")).longValue()).sum();
-    Long confirmed=db.queryForObject("SELECT COALESCE(sum(amount_cents),0) FROM trip_commitments " +
-        "WHERE trip_id=? AND status='confirmed' AND amount_cents IS NOT NULL",Long.class,id);
-    Long unknown=db.queryForObject("SELECT count(*) FROM trip_commitments WHERE trip_id=? " +
-        "AND status='confirmed' AND amount_cents IS NULL",Long.class,id);
+    long actual=0;
+    var paidByCommitment=new HashMap<Long,Long>();
+    for(var entry:entries) {
+      if(entry.get("voided_at")!=null) continue;
+      long amount=((Number)entry.get("amount_cents")).longValue();
+      actual+=amount;
+      if(entry.get("commitment_id") instanceof Number commitment)
+        paidByCommitment.merge(commitment.longValue(),amount,Long::sum);
+    }
+    long confirmed=0,pending=0,unknown=0;
+    for(var commitment:db.queryForList(
+        "SELECT id,amount_cents FROM trip_commitments WHERE trip_id=? AND status='confirmed'",id)) {
+      if(commitment.get("amount_cents") instanceof Number amount) {
+        long cents=amount.longValue();
+        confirmed+=cents;
+        long commitmentId=((Number)commitment.get("id")).longValue();
+        pending+=Math.max(0,cents-paidByCommitment.getOrDefault(commitmentId,0L));
+      } else unknown++;
+    }
     var plan=json.readTree(found.get("plan_json").toString());
     var summary=new LinkedHashMap<String,Object>();
-    summary.put("budget_limit_cents",found.get("budget_total")==null?null:
-        ((Number)found.get("budget_total")).longValue()*100);
+    var budget=json.readTree(found.get("planning_input").toString()).path("budget_cents");
+    Long limit;
+    if(budget.isMissingNode())
+      limit=found.get("budget_total")==null?null:((Number)found.get("budget_total")).longValue()*100;
+    else limit=budget.isNull()?null:budget.asLong();
+    summary.put("budget_limit_cents",limit);
     summary.put("plan_estimate_cents",plan.path("budget").path("total").asLong(0)*100);
     summary.put("confirmed_cents",confirmed);
     summary.put("actual_cents",actual);
+    summary.put("pending_cents",pending);
+    summary.put("remaining_budget_cents",limit==null?null:limit-actual-pending);
     summary.put("confirmed_unknown_count",unknown);
     summary.put("currency","CNY");
     return Map.of("success",true,"data",entries,"summary",summary);

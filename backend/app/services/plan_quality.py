@@ -156,7 +156,7 @@ def evaluate_plan(plan: TripPlan, expected_days: int, request: TripRequest | Non
     total_distance = 0.0
     for index, day in enumerate(plan.days, start=1):
         attraction_count += len(day.attractions)
-        if not day.attractions:
+        if not day.attractions and (request is None or request.planning_input.attraction_count is None):
             warnings.append(f"第 {index} 天没有可验证的景点")
         if request is None:
             meal_types = {meal.type for meal in day.meals}

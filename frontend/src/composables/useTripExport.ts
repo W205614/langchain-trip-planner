@@ -1,11 +1,14 @@
-import { ref, type Ref } from 'vue'
+import { nextTick, ref, type Ref } from 'vue'
 import { message } from 'ant-design-vue'
 import type { TripPlan } from '@/types'
 import { refreshScheduleValidity } from '@/utils/scheduleValidity'
+import { tripZone } from '@/utils/tripDay'
 const svgToDataUrl = (svg: string) => `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`
 const handleImageError = (event: Event) => { (event.target as HTMLImageElement).src = svgToDataUrl('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#eee"/></svg>') }
 
-export function useTripExport(tripPlan: Ref<TripPlan | null>, beforeExport: () => Promise<void>) {
+type OfflineRevision = number | 'draft' | 'proposal' | 'unverified'
+
+export function useTripExport(tripPlan: Ref<TripPlan | null>, beforeExport: (requireSavedVersion?: boolean) => Promise<OfflineRevision>) {
 const exportBusy = ref(false)
 const escapeSvgText = (value: string): string => value
   .replace(/&/g, '&amp;')
@@ -91,6 +94,7 @@ const prepareExportContainer = (element: HTMLElement): HTMLElement => {
   exportContainer.style.backgroundColor = '#f5f7fa'
   exportContainer.style.padding = '20px'
   exportContainer.innerHTML = element.innerHTML
+  exportContainer.querySelector('.trip-action-summary')?.remove()
   const status = document.createElement('p')
   status.setAttribute('role', 'note')
   status.style.cssText = 'padding:16px;background:#fff3cd;color:#563f00;border:1px solid #d6bb65;'
@@ -198,14 +202,25 @@ const createExportCanvas = async (): Promise<HTMLCanvasElement> => {
 }
 
 // Native details/summary provides portable offline interaction without executable scripts.
-const exportAsHTML = async () => {
-  if (exportBusy.value || !tripPlan.value) return
+const exportAsHTML = async (requireSavedVersion = false) => {
+  if (exportBusy.value || !tripPlan.value) return false
   exportBusy.value = true
   let container: HTMLElement | null = null
   try {
-    await beforeExport()
+    const revision = await beforeExport(requireSavedVersion)
+    if (requireSavedVersion && typeof revision !== 'number') throw new Error('暂时无法核对最新行程版本，请稍后重新导出')
+    await nextTick()
+    const plan = tripPlan.value
+    const source = document.querySelector<HTMLElement>('.main-content')
+    if (!plan || !source) throw new Error('未找到可导出的行程')
+    const saved = typeof revision === 'number'
+    const versionLabel = saved ? '行程版本 ' + revision : {
+      draft: '本地草稿', proposal: '改排提案', unverified: '行程版本待核对'
+    }[revision]
+    const versionSuffix = saved ? 'v' + revision : versionLabel
+    const exportedAt = new Date()
+    const zone = tripZone(plan.planning_input)
     message.loading({ content: '正在打包离线网页...', key: 'export', duration: 0 })
-    const source = document.querySelector('.main-content') as HTMLElement
     container = prepareExportContainer(source)
     document.body.appendChild(container)
     const images = Array.from(container.querySelectorAll('img'))
@@ -241,11 +256,15 @@ const exportAsHTML = async () => {
     const css = Array.from(document.styleSheets).map(sheet => {
       try { return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n') } catch { return '' }
     }).join('\n')
-    const offline = document.implementation.createHTMLDocument(`${tripPlan.value.city}旅行计划`)
+    const offline = document.implementation.createHTMLDocument(plan.city + '旅行计划 · ' + versionLabel)
     offline.documentElement.lang = 'zh-CN'
     const charset = offline.createElement('meta')
     charset.setAttribute('charset', 'utf-8')
     offline.head.prepend(charset)
+    const viewport = offline.createElement('meta')
+    viewport.name = 'viewport'
+    viewport.content = 'width=device-width, initial-scale=1'
+    offline.head.appendChild(viewport)
     const policy = offline.createElement('meta')
     policy.httpEquiv = 'Content-Security-Policy'
     policy.content = "default-src 'none'; img-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
@@ -253,9 +272,20 @@ const exportAsHTML = async () => {
     const styles = offline.createElement('style')
     styles.textContent = css + '\nbody{margin:0;background:#f5f7fa;font-family:Arial,sans-serif} .offline-day{margin:16px 0;border:1px solid #dbe2ed;border-radius:10px;overflow:hidden} .offline-day>summary{cursor:pointer;padding:18px;background:#667eea;color:white;font-size:18px;font-weight:bold} .offline-day .ant-collapse-content{display:block!important} .offline-note{padding:16px;background:#eef2ff;color:#334155}'
     offline.head.appendChild(styles)
-    const note = offline.createElement('p')
+    const note = offline.createElement('header')
     note.className = 'offline-note'
-    note.textContent = '离线旅行计划：点击每天的标题可展开或收起。图片和正文已打包，无需登录；PNG/PDF 为完整静态版本。'
+    const heading = offline.createElement('strong')
+    heading.style.cssText = 'display:block;font-size:1.25rem;margin-bottom:6px;color:#243047'
+    heading.textContent = plan.city + '离线旅行计划 · ' + versionLabel
+    const time = offline.createElement('time')
+    time.dateTime = exportedAt.toISOString()
+    time.textContent = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: zone, dateStyle: 'medium', timeStyle: 'medium'
+    }).format(exportedAt)
+    const hint = offline.createElement('p')
+    hint.style.margin = '8px 0 0'
+    hint.textContent = '点击日期展开行程。使用前请核对可能变化的营业与交通信息。'
+    note.append(heading, '导出于 ', time, '（' + (zone === 'Asia/Shanghai' ? '北京时间' : zone) + '）', hint)
     offline.body.appendChild(note)
     const copy = container.cloneNode(true) as HTMLElement
     copy.removeAttribute('data-trip-export')
@@ -268,15 +298,17 @@ const exportAsHTML = async () => {
     const blob = new Blob(['<!DOCTYPE html>\n', offline.documentElement.outerHTML], { type: 'text/html;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
-    link.download = `旅行计划_${tripPlan.value.city}_可交互.html`
+    link.download = '旅行计划_' + plan.city + '_' + versionSuffix + '.html'
     link.href = url
     document.body.appendChild(link)
     link.click()
     link.remove()
     window.setTimeout(() => URL.revokeObjectURL(url), 60000)
     message.success({ content: '离线网页已导出，用浏览器打开即可展开/收起每天行程', key: 'export' })
+    return true
   } catch (error: any) {
     message.error({ content: `离线网页导出失败: ${error.message}`, key: 'export' })
+    return false
   } finally {
     container?.remove()
     exportBusy.value = false

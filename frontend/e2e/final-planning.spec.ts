@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/trips/*/checks/latest?all_days=true', route => route.fulfill({ json: { data: [] } }))
+})
+
 const planning = { timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate' }
 const plan = { city: '北京', start_date: '2026-11-01', end_date: '2026-11-01', weather_info: [], overall_suggestions: '核对预约', days: [{ day_index: 0, date: '2026-11-01', attractions: [{ activity_id: 'activity-1', poi_id: 'P1', name: '故宫', address: '北京', description: '游览', visit_duration: 120, location: { longitude: 116.4, latitude: 39.9 } }], meals: [], transportation: '公共交通', accommodation: '酒店', description: '按预约游览', timeline: [{ activity_id: 'activity-1', title: '故宫', kind: 'attraction', status: 'estimated', start_at: '2026-11-01T09:00:00+08:00', end_at: '2026-11-01T11:00:00+08:00', notes: ['营业信息待核实'] }], feasibility: { status: 'unverified', unknown: ['opening_unknown_or_stale:activity-1'] } }] }
 
@@ -169,7 +173,8 @@ test('owner timeline state action sends concurrency guards and scope keeps one a
   await page.getByTestId('revision-scope').getByRole('combobox').nth(1).press('Enter')
   await page.getByPlaceholder('例如：下雨，改为室内博物馆并减少步行').fill('替换为室内景点')
   let scopeSubmitted = false
-  await page.route('**/api/history/42/revise-task', route => { expect(route.request().postDataJSON()).toMatchObject({ planning_revision: 5, revision_scope: { day_indices: [0], activity_ids: ['activity-1'] } }); scopeSubmitted = true; return route.fulfill({ status: 202, json: { data: { id: 'revision-1' } } }) })
+  await page.route('**/api/assistant/conversations', route => route.fulfill({ json: { id: 'conversation-1' } }))
+  await page.route('**/api/assistant/conversations/conversation-1/messages', route => { expect(route.request().postDataJSON()).toMatchObject({ mode: 'revise', record_id: 42, planning_revision: 5, revision_scope: { day_indices: [0], activity_ids: ['activity-1'] } }); scopeSubmitted = true; return route.fulfill({ status: 202, json: { task_id: 'revision-1' } }) })
   await page.route('**/api/trip/tasks/revision-1', route => route.fulfill({ json: { data: { status: 'succeeded', result: { success: true, id: 43, version: 1, data: plan, quality: {} } } } }))
   await expect(page.getByText('范围外、已完成和锁定的安排会保留。', { exact: false })).toBeVisible()
   await page.getByRole('button', { name: '生成差异提案' }).click()

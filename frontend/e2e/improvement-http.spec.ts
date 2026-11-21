@@ -79,6 +79,7 @@ test('real browser reviews proposals and restores ordinary drafts without mixing
     await page.getByPlaceholder('请输入您的额外要求,例如:想去看升旗、需要无障碍设施、对海鲜过敏等...').fill('北京两日游，每天保留休息时间，未知的营业、餐饮和路线条件请明确提示。')
     const submitted = page.waitForResponse(response => new URL(response.url()).pathname === '/api/trip/tasks' && response.request().method() === 'POST')
     await page.getByRole('button', { name: '开始规划我的旅行' }).click()
+    await page.getByRole('button', { name: '确认并生成' }).click()
     const response = await submitted
     expect(response.status()).toBe(202)
     submittedTaskId = (await response.json()).data.id

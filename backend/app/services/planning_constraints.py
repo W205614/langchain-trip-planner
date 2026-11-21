@@ -388,9 +388,18 @@ def finalize_plan(plan: TripPlan, request: TripRequest, route_planner=None, *, r
                     "after_count": len(after), "reason": "schedule_or_constraint_adjustment",
                     "removed_attractions": [{"poi_id": identity, "name": name}
                         for identity, name in before if identity not in selected]})
-        if adjustments:
+        if adjustments and request.planning_input.attraction_count is None:
             report["attraction_adjustments"] = adjustments
-    if initial_generation:
+    quantity = request.planning_input.attraction_count
+    if quantity:
+        scopes = ([("trip", sum(len(day.attractions) for day in plan.days))] if quantity.scope == "trip"
+                  else [(f"day:{day.day_index}", len(day.attractions)) for day in plan.days])
+        report["attraction_count_checks"] = [
+            {"scope": scope, "mode": quantity.mode, "target_count": quantity.count, "actual_count": actual,
+             "met": actual == quantity.count if quantity.mode == "exact" else actual <= quantity.count}
+            for scope, actual in scopes
+        ]
+    elif initial_generation:
         from .assistant_intent import daily_attraction_target
         target = daily_attraction_target(request.free_text_input or "", request.travel_days)
         if target is not None:

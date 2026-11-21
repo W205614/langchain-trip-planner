@@ -507,7 +507,7 @@ public class TaskService {
       quality.set("revision_scope",revision.path("revision_scope"));
     }
     boolean draft = quality.path("outcome").asText("").equals("draft");
-    if (plan.path("days").valueStream().anyMatch(d -> d.path("attractions").isEmpty() && (!body.has("planning_input")||d.path("timeline").valueStream().noneMatch(e->Set.of("attraction","meal","commitment").contains(e.path("kind").asText())))))
+    if (!body.path("planning_input").hasNonNull("attraction_count") && plan.path("days").valueStream().anyMatch(d -> d.path("attractions").isEmpty() && (!body.has("planning_input")||d.path("timeline").valueStream().noneMatch(e->Set.of("attraction","meal","commitment").contains(e.path("kind").asText())))))
       throw new ApiException(503, "至少一天没有可验证景点，已拒绝保存", "TRUSTED_POI_UNAVAILABLE");
     task.put(
         "status",

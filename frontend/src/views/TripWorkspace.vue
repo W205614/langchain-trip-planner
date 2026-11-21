@@ -13,7 +13,7 @@
       </div>
     </header>
     <a-alert v-if="error" class="error-alert" type="error" :message="error" show-icon closable @close="error = ''" />
-    <a-spin :spinning="loading" class="workspace-spin">
+    <a-spin :spinning="loading && !trip" class="workspace-spin">
       <a-tabs v-if="trip" v-model:activeKey="tab" class="workspace-panel">
         <a-tab-pane v-if="trip.role === 'owner'" key="planning" tab="时间与约束">
           <div class="section-intro"><h2>时间与固定安排</h2><p>修改规划输入会使旧提案需要重新校验；保存不会自动改动当前行程。</p></div>
@@ -27,7 +27,8 @@
             <p>选择出行日期，查看天气和景点营业信息的待确认事项。</p>
           </div>
           <a-alert class="context-alert" type="info" show-icon message="地图信息仅供参考。具体日期的开放、预约及天气请以官方信息为准；核验不会自动更改行程。" />
-          <FactCompletionEditor v-if="trip.role === 'owner' && planningInput" v-model="planningInput" :plan="trip.plan" :quality="trip.quality" :busy="busy" @recheck="completeAndRecheck" @retry="retryPlaceVerification" @replace="openReplacement" />
+          <FactCompletionEditor v-if="trip.role === 'owner' && planningInput" v-model="planningInput" :plan="trip.plan" :quality="trip.quality" :busy="busy" :focus="factFocus"
+            @save="savePlanning" @recheck="completeAndRecheck" @retry="retryPlaceVerification" @replace="openReplacement" />
           <a-alert v-if="factTaskId" type="success" :message="`局部重验任务已创建：${factTaskId}，请到我的行程查看方案并确认。`" />
           <section class="check-controls" aria-label="核验操作">
             <div class="day-field">
@@ -73,15 +74,19 @@
         <a-tab-pane key="money" tab="预订与费用">
           <div class="section-intro">
             <h2>预订与费用</h2>
-            <p>分别查看计划估算、已确认事项和你们记录的实际支出；这里不会完成真实订票或付款。</p>
+            <p>查看已花金额、确认待付和剩余预算。已有预订的付款可以关联对应事项。</p>
           </div>
-          <a-row :gutter="[14, 14]" class="summary-grid">
-            <a-col :xs="24" :sm="12" :lg="6"><div class="stat-tile"><a-statistic title="原计划估算" :value="yuan(expenseResult?.summary?.plan_estimate_cents)" prefix="¥" /></div></a-col>
-            <a-col :xs="24" :sm="12" :lg="6"><div class="stat-tile"><a-statistic title="预算上限" :value="expenseResult?.summary?.budget_limit_cents == null ? '未设置' : yuan(expenseResult.summary.budget_limit_cents)" :prefix="expenseResult?.summary?.budget_limit_cents == null ? '' : '¥'" /></div></a-col>
-            <a-col :xs="24" :sm="12" :lg="6"><div class="stat-tile"><a-statistic title="已确认预订" :value="yuan(expenseResult?.summary?.confirmed_cents)" prefix="¥" /></div></a-col>
-            <a-col :xs="24" :sm="12" :lg="6"><div class="stat-tile"><a-statistic title="已记录实际支出" :value="yuan(expenseResult?.summary?.actual_cents)" prefix="¥" /></div></a-col>
+          <a-row v-if="expenseResult?.summary" :gutter="[14, 14]" class="summary-grid">
+            <a-col :xs="12" :lg="6"><div class="stat-tile"><a-statistic title="原计划估算" :value="yuan(expenseResult.summary.plan_estimate_cents)" prefix="¥" /></div></a-col>
+            <a-col :xs="12" :lg="6"><div class="stat-tile"><a-statistic title="预算上限" :value="expenseResult.summary.budget_limit_cents == null ? '未设置' : yuan(expenseResult.summary.budget_limit_cents)" :prefix="expenseResult.summary.budget_limit_cents == null ? '' : '¥'" /></div></a-col>
+            <a-col class="budget-spending" :xs="12" :lg="6"><div class="stat-tile"><a-statistic title="已确认待付" :value="yuan(expenseResult.summary.pending_cents)" prefix="¥" /></div></a-col>
+            <a-col class="budget-spending" :xs="12" :lg="6"><div class="stat-tile"><a-statistic title="已花" :value="yuan(expenseResult.summary.actual_cents)" prefix="¥" /></div></a-col>
+            <a-col v-if="expenseResult.summary.remaining_budget_cents != null" class="budget-remaining" :xs="24" :sm="12" :lg="8">
+              <div class="stat-tile" data-testid="remaining-budget"><a-statistic
+                :title="expenseResult.summary.confirmed_unknown_count ? '扣除已知支出后的余额' : '剩余预算'"
+                :value="yuan(expenseResult.summary.remaining_budget_cents)" prefix="¥" /></div></a-col>
           </a-row>
-          <a-alert v-if="expenseResult?.summary?.budget_limit_cents != null && expenseResult.summary.actual_cents > expenseResult.summary.budget_limit_cents" type="warning" message="已记录实际支出超过预算上限" />
+          <a-alert v-if="expenseResult?.summary?.remaining_budget_cents < 0" type="warning" message="已花和已确认待付金额超过预算上限" />
           <a-alert v-if="expenseResult?.summary?.confirmed_unknown_count" type="warning" :message="`${expenseResult.summary.confirmed_unknown_count} 项已确认预订未填写金额`" />
           <a-card title="预订事项" class="section">
             <a-space v-if="canEdit" wrap class="toolbar">
@@ -110,7 +115,10 @@
               <a-select v-model:value="expenseForm.day_index" style="width: 110px"><a-select-option v-for="d in trip.travel_days" :key="d" :value="d - 1">第{{ d }}天</a-select-option></a-select>
               <a-select v-model:value="expenseForm.category" style="width: 110px"><a-select-option v-for="c in categories" :key="c.value" :value="c.value">{{ c.label }}</a-select-option></a-select>
               <a-input-number v-model:value="expenseForm.amount" :min="0.01" :max="10000000" :precision="2" placeholder="实际金额" />
-              <a-select v-model:value="expenseForm.commitment_id" allow-clear placeholder="关联预订（可选）" style="width: 190px"><a-select-option v-for="item in commitments.filter((c: any) => c.status === 'confirmed')" :key="item.id" :value="item.id">{{ item.title }}</a-select-option></a-select>
+              <select v-model="expenseForm.commitment_id" class="expense-commitment" aria-label="关联预订">
+                <option :value="null">关联预订（可选）</option>
+                <option v-for="item in commitments.filter((c: any) => c.status === 'confirmed')" :key="item.id" :value="item.id">{{ item.title }}</option>
+              </select>
               <a-input v-model:value="expenseForm.note" placeholder="支出说明" style="width: 180px" />
               <a-button :loading="busy" @click="addExpense">记一笔</a-button>
             </a-space>
@@ -176,6 +184,7 @@ import FactCompletionEditor from '@/components/trip/FactCompletionEditor.vue'
 import { createAssistantConversation, sendAssistantMessage, reverifyTrip } from '@/services/api'
 import CommitmentDetailsEditor from '@/components/trip/CommitmentDetailsEditor.vue'
 import type { PlanningInput } from '@/types'
+import type { FactGap } from '@/utils/factChecklist'
 
 const route = useRoute()
 const router = useRouter()
@@ -192,7 +201,14 @@ const planningError = ref('')
 const planningEditor = ref<InstanceType<typeof PlanningInputEditor>>()
 const planningActivities = computed(() => (trip.value?.plan?.days || []).flatMap((d: any) => (d.attractions || []).filter((a: any) => a.activity_id).map((a: any) => ({ id: a.activity_id, name: `第 ${d.day_index + 1} 天 · ${a.name}` }))))
 const check = ref<any>(null)
-const checkDay = ref(0)
+const requestedDay = typeof route.query.day === 'string' && /^\d{1,2}$/.test(route.query.day) ? Number(route.query.day) : 0
+const checkDay = ref(requestedDay)
+const factFocus = computed(() => {
+  const kind = route.query.fact
+  if (kind !== 'opening' && kind !== 'reservation' && kind !== 'boarding') return undefined
+  return { day: requestedDay, kind: kind as FactGap['kind'], poiId: typeof route.query.poi === 'string' ? route.query.poi : undefined,
+    commitmentId: typeof route.query.commitment === 'string' ? route.query.commitment : undefined }
+})
 const commitments = ref<any[]>([])
 const expenseResult = ref<any>(null)
 const members = ref<any[]>([])
@@ -230,6 +246,7 @@ async function load() {
   loading.value = true
   try {
     trip.value = await tripOperations.workspace(id)
+    if (checkDay.value >= trip.value.travel_days) checkDay.value = 0
     await Promise.all([loadCheck(), loadMoney(), loadMembers(), loadPlanning()])
     resetOrder()
   } catch (e) { explain(e) } finally { loading.value = false }
@@ -329,7 +346,7 @@ function openPlan() {
   sessionStorage.setItem('tripPlanVersion', String(trip.value.version))
   sessionStorage.setItem('tripQuality', JSON.stringify(trip.value.quality || {}))
   sessionStorage.removeItem('tripUnsaved')
-  router.push({ path: '/result', query: { from: 'history' } })
+  router.push({ path: '/result', query: { from: 'history', day: checkDay.value } })
 }
 function move(index: number, direction: number) { const next = [...orderItems.value]; [next[index], next[index + direction]] = [next[index + direction], next[index]]; orderItems.value = next }
 async function saveOrder() {
@@ -385,6 +402,7 @@ onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); docu
 .check-empty { padding: 25px 0; }
 .footnote { margin: 15px 2px 0; color: #5f6b7e; font-size: 13px; line-height: 1.65; }
 .summary-grid { margin-bottom: 22px; }
+.expense-commitment { width: 190px; height: 32px; padding: 0 8px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; color: #243047; }
 .stat-tile { min-height: 102px; padding: 18px; border: 1px solid #e1e7f0; border-radius: 12px; background: #f7f9ff; }
 .stat-tile :deep(.ant-statistic-title) { color: #596579; }
 .stat-tile :deep(.ant-statistic-content) { color: #243047; font-size: 23px; }
@@ -401,6 +419,14 @@ onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); docu
   .page-heading { align-items: flex-start; flex-direction: column; gap: 12px; padding: 20px; }
   .heading-meta { justify-content: flex-start; }
   .workspace-panel { padding: 4px 16px 22px; }
+  .workspace-panel :deep(.ant-tabs-tab) { padding: 12px 0; font-size: 13px; }
+  .workspace-panel :deep(.ant-tabs-tab + .ant-tabs-tab) { margin-left: 8px; }
+  .budget-remaining { order: -2; }
+  .budget-spending { order: -1; }
+  .stat-tile { min-height: 0; padding: 12px; }
+  .workspace-panel :deep(.ant-list-item) { flex-wrap: wrap; }
+  .workspace-panel :deep(.ant-list-item-meta) { flex: 1 0 100%; }
+  .workspace-panel :deep(.ant-list-item-action) { margin: 8px 0 0; }
   .check-controls { padding: 16px; }
   .check-actions { width: 100%; }
   .check-actions :deep(.ant-btn) { white-space: normal; height: auto; min-height: 34px; }

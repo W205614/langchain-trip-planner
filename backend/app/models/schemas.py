@@ -97,6 +97,11 @@ class TripRequest(BaseModel):
             raise ValueError("room_count 不能大于 traveler_count")
         if any(s.end_day >= self.travel_days for s in self.planning_input.city_segments):
             raise ValueError("City segment exceeds travel dates")
+        count = self.planning_input.attraction_count
+        if count and count.count > 20 * (self.travel_days if count.scope == "trip" else 1):
+            raise ValueError("景点数量超出行程范围")
+        if any(entrance.day_index >= self.travel_days for entrance in self.planning_input.visit_entrances):
+            raise ValueError("入口日期超出行程范围")
         if any(w.day_index >= self.travel_days for w in self.planning_input.day_windows):
             raise ValueError("Daily window exceeds travel dates")
         return self

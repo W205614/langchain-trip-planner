@@ -5,15 +5,19 @@
     <a-alert v-if="!current" type="warning" :message="day.timeline?.length ? '此时间轴的条件或事实已变化或过期，仅供对照；请补充事实并重新规划后再锁定时段或标记完成。' : '尚未生成可用时间轴，请先处理下列约束或缺失条件后重新排程。'" />
     <a-alert v-for="issue in [...(day.feasibility?.conflicts || []), ...(day.feasibility?.unknown || [])]" :key="issue" type="warning" :message="issueText(issue)" class="issue" />
     <ol>
-      <li v-for="(item, index) in day.timeline || []" :key="`${item.activity_id || index}-${item.kind}`" :data-testid="item.activity_id ? `activity-${item.activity_id}` : undefined" :class="{ selected: selected === item.activity_id }">
+      <li v-for="(item, index) in timeline" :key="`${item.activity_id || index}-${item.kind}`" :data-testid="item.activity_id ? `activity-${item.activity_id}` : undefined" :class="{ selected: selected === item.activity_id }">
         <div class="time">{{ time(item.start_at) }}<span>{{ time(item.end_at) }}</span></div>
         <div class="activity-copy">
           <button v-if="item.location" class="title locate" type="button" @click="emit('locate', item); selected = item.activity_id">{{ item.title }} ↗</button><strong v-else class="title">{{ item.title }}</strong>
           <div class="tags"><a-tag>{{ kindLabel(item.kind) }}</a-tag><a-tag :color="current && item.status === 'confirmed' ? 'green' : 'gold'">{{ !current ? '待核实' : item.status === 'confirmed' ? '已确认安排' : item.status === 'estimated' ? '时间估算' : '待核实' }}</a-tag><a-tag v-if="locked(item.activity_id)" color="blue">已锁定</a-tag><a-tag v-if="completed(item.activity_id)">已完成</a-tag></div>
+          <p v-if="places[index].address">地址 {{ places[index].address }}</p>
+          <p v-if="places[index].entrance">已确认入口 {{ places[index].entrance?.name }} · {{ places[index].entrance?.source }}</p>
           <p v-for="note in item.notes || []" :key="note">{{ issueText(note) }}</p>
           <details v-if="item.source || item.evidence_refs?.length"><summary>查看依据</summary><p v-if="item.source">{{ item.source }}</p><p v-for="(evidence, i) in item.evidence_refs || []" :key="i">{{ typeof evidence === 'string' ? evidence : evidence.source || evidence.id }}</p></details>
         </div>
         <div v-if="editable && item.activity_id && ['attraction', 'meal', 'commitment'].includes(item.kind)" class="actions">
+          <a-button v-if="['attraction', 'meal'].includes(item.kind) && !locked(item.activity_id) && !completed(item.activity_id)"
+            size="small" @click="emit('revise', item.activity_id)">调整这项安排</a-button>
           <a-button size="small" :disabled="busy || completed(item.activity_id)" @click="emit('state', item.activity_id, { locked: !locked(item.activity_id), lock_mode: 'content' })">{{ locked(item.activity_id) ? '解除锁定' : '锁定安排' }}</a-button>
           <a-button v-if="!locked(item.activity_id) && item.start_at && item.end_at" size="small" :disabled="busy || completed(item.activity_id) || !current" @click="emit('state', item.activity_id, { locked: true, lock_mode: 'time' })">锁定时段</a-button>
           <a-button size="small" :disabled="busy || !current && !completed(item.activity_id)" @click="emit('state', item.activity_id, { completed: !completed(item.activity_id) })">{{ completed(item.activity_id) ? '撤销完成' : '标记完成' }}</a-button>
@@ -27,15 +31,18 @@ import { Alert as AAlert, Button as AButton, Tag as ATag } from 'ant-design-vue'
 
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { scheduleCurrent } from '@/utils/scheduleValidity'
+import { activityPlace, orderedTimeline } from '@/utils/tripDay'
 import type { DayPlan, PlanningInput, TimelineItem } from '@/types'
 const props = defineProps<{ day: DayPlan; planning?: PlanningInput; editable?: boolean; busy?: boolean }>()
-const emit = defineEmits<{ locate: [item: TimelineItem]; state: [id: string, state: { locked?: boolean; completed?: boolean; lock_mode?: string }] }>()
+const emit = defineEmits<{ locate: [item: TimelineItem]; state: [id: string, state: { locked?: boolean; completed?: boolean; lock_mode?: string }]; revise: [id: string] }>()
 const selected = ref<string>()
 const now = ref(Date.now())
 let validityTimer: ReturnType<typeof setInterval> | undefined
 onMounted(() => { validityTimer = setInterval(() => { now.value = Date.now() }, 15000) })
 onBeforeUnmount(() => clearInterval(validityTimer))
 const current = computed(() => scheduleCurrent(props.day, now.value))
+const timeline = computed(() => orderedTimeline(props.day))
+const places = computed(() => timeline.value.map(item => activityPlace(props.day, item, props.planning, now.value)))
 const time = (value?: string | null) => value && Number.isFinite(Date.parse(value)) ? new Intl.DateTimeFormat('zh-CN', { timeZone: props.planning?.timezone || 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(value)) : '待计算'
 const kindLabel = (kind: string) => ({ attraction: '游览', meal: '用餐', commitment: '固定安排', hotel: '住宿', travel: '交通', waiting: '等待' } as Record<string, string>)[kind] || kind
 const locked = (id?: string) => props.planning?.locks?.some(lock => lock.activity_id === id) || false

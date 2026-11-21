@@ -136,6 +136,40 @@ public class PlanningInputService {
     for(var lock:p.path("locks"))if(lock.path("activity_id").asText("").isBlank()||!Set.of("content","time").contains(lock.path("mode").asText("content")))throw new ApiException(422,"锁定事项无效");
     if(!p.has("budget_mode"))p.put("budget_mode","estimate");if(!Set.of("estimate","confirmed").contains(p.path("budget_mode").asText()))throw new ApiException(422,"预算模式无效");
     if(p.hasNonNull("budget_cents")&&(!p.path("budget_cents").isIntegralNumber()||p.path("budget_cents").asLong(-1)<0))throw new ApiException(422,"预算必须为非负整数分");
+    if(p.hasNonNull("attraction_count")){
+      var count=p.path("attraction_count");
+      var scope=count.path("scope").asText("");
+      int limit="trip".equals(scope)?20*days:20;
+      var quantity=count.path("count");
+      if(!count.isObject()||count.size()!=3||!Set.of("daily","trip").contains(scope)
+          ||!Set.of("exact","maximum").contains(count.path("mode").asText(""))
+          ||!quantity.isIntegralNumber()||quantity.asLong(0)<1||quantity.asLong(0)>limit)
+        throw new ApiException(422,"景点数量约束无效");
+    }
+    var entrances=p.path("visit_entrances");
+    if(!entrances.isMissingNode()){
+      if(!entrances.isArray()||entrances.size()>300)throw new ApiException(422,"入口列表无效");
+      var seen=new HashSet<String>();
+      for(var rawEntrance:entrances){
+        if(!(rawEntrance instanceof ObjectNode entrance))throw new ApiException(422,"入口必须为对象");
+        int day=entrance.path("day_index").asInt(-1);
+        String poi=entrance.path("poi_id").asText("");
+        if(!entrance.path("day_index").isIntegralNumber()||day<0||day>=days||poi.isBlank()
+            ||poi.length()>160||!seen.add(day+":"+poi)||!entrance.path("confirmed").isBoolean()
+            ||!entrance.path("confirmed").asBoolean())throw new ApiException(422,"入口日期、地点或确认状态无效");
+        TripRequests.text(entrance,"name",1,120);
+        TripRequests.text(entrance,"source",1,1000);
+        if(entrance.has("address"))TripRequests.text(entrance,"address",0,300);
+        if(!awareDate(entrance.path("expires_at").asText()).isAfter(awareDate(entrance.path("observed_at").asText())))
+          throw new ApiException(422,"入口确认有效期无效");
+        if(entrance.hasNonNull("location")){
+          var location=entrance.path("location");
+          if(!location.path("longitude").isNumber()||!location.path("latitude").isNumber()
+              ||Math.abs(location.path("longitude").asDouble())>180||Math.abs(location.path("latitude").asDouble())>90)
+            throw new ApiException(422,"入口经纬度无效");
+        }
+      }
+    }
     FactInputPolicy.validate(p,days);
     return p;
   }
@@ -269,13 +303,19 @@ public class PlanningInputService {
   }
   public void validateProposalValidity(JsonNode plan,JsonNode quality){
     validateDependencies(quality);
+    if(quality.path("issues").valueStream().anyMatch(issue->"ATTRACTION_COUNT_CONFLICT".equals(issue.path("code").asText())))
+      throw new ApiException(409,"改排未满足已确认的景点数量，请调整条件后重新预览","PROPOSAL_CONSTRAINT_CONFLICT");
     var scope=quality.has("revision_scope")?quality.path("revision_scope"):quality.path("revision_parent").path("revision_scope");
     Set<Integer> days=new HashSet<>();scope.path("day_indices").forEach(d->days.add(d.asInt()));
     for(var day:plan.path("days")){
       if(!days.isEmpty()&&!days.contains(day.path("day_index").asInt()))continue;
+      if("infeasible".equals(day.path("feasibility").path("status").asText())
+          || "not_found".equals(day.path("feasibility").path("status").asText()))
+        throw new ApiException(409,"改排尚未找到满足时间与固定安排的方案，请调整条件后重新预览","PROPOSAL_CONSTRAINT_CONFLICT");
       if(day.path("timeline").isEmpty())continue;
       var binding=day.path("schedule_dependencies");
-      if(day.path("schedule_stale").asBoolean(false)||binding.path("input_hash").asText("").isBlank())throw new ApiException(409,"提案时间轴缺少当前依赖绑定，请重新规划","SCHEDULE_STALE");
+      if(day.path("schedule_stale").asBoolean(false)||binding.path("input_hash").asText("").isBlank()||binding.path("fact_hash").asText("").isBlank())throw new ApiException(409,"提案时间轴缺少当前依赖绑定，请重新规划","SCHEDULE_STALE");
+      if(binding.path("expires_at").isNull())continue;
       try{if(!Instant.parse(binding.path("expires_at").asText("")).isAfter(Instant.now()))throw new ApiException(409,"提案路线或事实有效期已过，请重新核验","FACTS_EXPIRED");}
       catch(ApiException ex){throw ex;}catch(Exception ex){throw new ApiException(409,"提案事实有效期未知，请重新核验","FACTS_EXPIRED");}
     }

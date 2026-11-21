@@ -8,7 +8,7 @@
       <a-button class="back-button" size="large" @click="goBack">
         ← {{ returnLabel }}
       </a-button>
-      <a-space v-if="tripPlan && !planLoading" size="middle">
+      <a-space v-if="tripPlan && !planLoading" class="result-actions" size="middle" wrap>
         <a-button v-if="!readOnlyPlan && !editMode && !quality.assistant_proposal_status" @click="toggleEditMode" type="default">
           ✏️ 编辑行程
         </a-button>
@@ -31,7 +31,7 @@
               <a-menu-item key="pdf" @click="exportAsPDF">
                 📄 导出为PDF
               </a-menu-item>
-              <a-menu-item key="html" @click="exportAsHTML">
+              <a-menu-item key="html" @click="downloadOfflinePlan">
                 🌐 导出离线网页（可展开/收起）
               </a-menu-item>
             </a-menu>
@@ -42,6 +42,14 @@
         </a-dropdown>
       </a-space>
     </div>
+
+    <a-alert v-if="tripPlan && !planLoading && !editMode && offlineReminderTrip === historyRecordId"
+      class="offline-export-reminder" type="info" show-icon message="行程已更新"
+      description="如果已下载旧版离线网页，请重新导出，出行时使用新文件。">
+      <template #action>
+        <a-button type="primary" size="small" :loading="exportBusy" :disabled="proposalBusy" @click="downloadOfflinePlan">重新导出离线网页</a-button>
+      </template>
+    </a-alert>
 
     <div v-if="tripPlan && !planLoading" class="content-wrapper">
       <!-- 侧边导航 -->
@@ -71,6 +79,13 @@
 
       <!-- 主内容区 -->
       <div class="main-content">
+        <div v-if="!quality.assistant_proposal_status && !editMode" class="trip-action-summary">
+          <TripToday :plan="tripPlan" :planning="planningInput" :now="now" :selected="activeDays[0]" :editable="canRevise"
+            @day="selectTripDay" @full="openFullTrip" @remaining="openRemainingRevision" />
+          <TripAttention :plan="tripPlan" :planning="planningInput" :checks="dailyChecks" :unavailable="checksUnavailable"
+            :now="now" :editable="canRevise" @locate="locateAttention" @fact="openAttentionFact"
+            @revise="item => openRevision(item.day, item.activityId)" />
+        </div>
         <div class="result-notices">
           <a-alert v-if="editMode || editNotice || unsaved" type="info" show-icon message="编辑期间预算为上次保存值；保存到服务器后重新计算预算和规则，路线信息仍需确认。" />
           <a-alert v-if="quality.assistant_proposal_status === 'pending'" type="info" show-icon
@@ -79,14 +94,19 @@
           <a-alert v-else-if="quality.assistant_proposal_status === 'confirmed'" type="success" show-icon
             :message="`方案已确认，原行程 #${quality.applied_to} 已更新。`" />
           <a-alert v-else-if="quality.assistant_proposal_status === 'discarded'" type="info" show-icon message="方案已放弃，原行程未改变。" />
-          <ProposalReviewPanel v-if="quality.assistant_proposal_status === 'pending'" :details="proposalDetails" :details-error="proposalDetailsError" :confirm-error="proposalConfirmError" :changes="proposalChanges" :busy="proposalBusy" @refresh="loadProposalDetails" />
+          <ProposalReviewPanel v-if="quality.assistant_proposal_status === 'pending'" :details="proposalDetails" :details-error="proposalDetailsError" :confirm-error="proposalConfirmError" :changes="proposalChanges" :busy="proposalBusy" :zone="zone" @refresh="loadProposalDetails" />
           <a-alert v-else-if="quality.outcome === 'draft'" type="warning" show-icon message="未完成草稿：以下要求尚未满足，不能视为完整可执行行程。" />
+          <p v-for="check in countChecks" :key="check.scope" class="count-summary" data-testid="attraction-count-check">
+            {{ check.label }}{{ check.mode === 'exact' ? '指定' : '最多' }} {{ check.target_count }} 个景点，实际 {{ check.actual_count }} 个。
+            <strong v-if="!check.met">要求未满足，请检查冲突后调整。</strong>
+          </p>
           <a-alert v-for="notice in tripPlan.enrichment_notices || []" :key="notice" type="info" :message="notice" />
           <a-alert v-if="quality.completion_policy === 'unassessed'" type="info" message="历史结果尚未按新的完成标准评估。" />
           <a-alert v-for="(issue, index) in (quality.issues || []).filter((i: any) => i.blocking)" :key="`issue-${index}`"
             type="error" show-icon :message="issue.reason" :description="issue.action" />
           <a-space v-if="!readOnlyPlan && quality.assistant_confirmation_required">
-            <a-button type="primary" :loading="proposalBusy" :disabled="proposalDetails?.stale || !!proposalDetailsError" @click="confirmAssistant">确认应用到原行程</a-button>
+            <a-button type="primary" :loading="proposalBusy" :disabled="!proposalDetails || proposalDetails.stale || !!proposalDetailsError" @click="confirmAssistant">确认应用到原行程</a-button>
+            <a-button v-if="proposalDetails?.stale" @click="openOriginalTrip">返回原行程重新预览</a-button>
             <a-button :disabled="proposalBusy" @click="discardAssistant">放弃方案</a-button>
           </a-space>
           <a-button v-else-if="!readOnlyPlan && quality.revision_parent?.record_id" @click="applyRevisionDraft">确认将此草稿应用到原行程（原行程将更新）</a-button>
@@ -193,7 +213,7 @@
 
         <!-- 每日行程:可折叠 -->
         <a-card title="📅 每日行程" :bordered="false" class="days-card">
-          <a-collapse v-model:activeKey="activeDays" accordion>
+          <a-collapse v-model:activeKey="activeDays" :accordion="!showAllDays">
             <a-collapse-panel
               v-for="(day, index) in tripPlan.days"
               :key="index"
@@ -235,7 +255,8 @@
                 </div>
               </div>
               <a-space v-if="day.activities?.length" wrap class="activity-tags"><a-tag v-for="activity in day.activities" :key="activity" color="purple">{{ activity }}</a-tag></a-space>
-              <ActivityTimeline :day="day" :planning="planningInput || tripPlan.planning_input" :editable="!readOnlyPlan && !!planningInput && !editMode && !quality.assistant_proposal_status" :busy="activityBusy" @locate="locateActivity" @state="changeActivityState" />
+              <ActivityTimeline :day="day" :planning="planningInput || tripPlan.planning_input" :editable="canRevise" :busy="activityBusy"
+                @locate="locateActivity" @state="changeActivityState" @revise="activity => openRevision(day.day_index, activity)" />
 
               <a-card v-if="quality.day_checks?.find((c: any) => c.day_index === day.day_index)?.routes?.length" size="small" class="route-card" title="景点间交通（高德路线参考）">
                 <p v-for="leg in quality.day_checks.find((c: any) => c.day_index === day.day_index).routes" :key="leg.from + leg.to">
@@ -414,6 +435,7 @@
       title="生成受限改排提案"
       :confirm-loading="revisionLoading"
       ok-text="生成差异提案"
+      cancel-text="返回行程"
       @ok="submitRevision"
     >
       <a-alert
@@ -422,7 +444,8 @@
         message="在明确的范围内调整，保留锁定与已完成安排。确认提案后才会更新原行程。"
         style="margin-bottom: 16px"
       />
-      <RevisionScopeEditor v-if="tripPlan && revisionDayIndex !== null" ref="scopeEditor" :plan="tripPlan" :day-index="revisionDayIndex" @change="revisionScope = $event" />
+      <RevisionScopeEditor v-if="revisionOpen && tripPlan && revisionDayIndex !== null" ref="scopeEditor" :plan="tripPlan"
+        :day-index="revisionDayIndex" :initial="revisionInitialScope" :zone="zone" @change="revisionScope = $event" />
       <a-textarea
         v-model:value="revisionInstruction"
         :rows="4"
@@ -456,10 +479,14 @@ import AttractionReplacementReview from '@/components/trip/AttractionReplacement
 import ProposalReviewPanel from '@/components/trip/ProposalReviewPanel.vue'
 import ActivityTimeline from '@/components/trip/ActivityTimeline.vue'
 import RevisionScopeEditor from '@/components/trip/RevisionScopeEditor.vue'
+import TripAttention from '@/components/trip/TripAttention.vue'
+import TripToday from '@/components/trip/TripToday.vue'
 import { useTripExport } from '@/composables/useTripExport'
 import { refreshScheduleValidity } from '@/utils/scheduleValidity'
-import type { TripPlan, POIInfo, PlanningInput, RevisionScope, TimelineItem, Attraction } from '@/types'
-import { reviseHistoryDay, updateHistory, fetchHistoryDetail, createTripShare, tripOperations, tripPlanning, clearTripCache } from '@/services/api'
+import { tripDate, tripZone, zonedTimestamp } from '@/utils/tripDay'
+import type { FactGap } from '@/utils/factChecklist'
+import type { TripPlan, POIInfo, PlanningInput, RevisionScope, TimelineItem, Attraction, DailyTripCheck, AssistantConfirmation } from '@/types'
+import { previewRevision, updateHistory, fetchHistoryDetail, createTripShare, tripOperations, tripPlanning, clearTripCache } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
@@ -469,8 +496,28 @@ const tripPlan = ref<TripPlan | null>(null)
 const planLoading = ref(true)
 const planError = ref('')
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
+const offlineReminderTrip = ref<number>()
 const unsaved = ref(sessionStorage.getItem('tripUnsaved') === 'true')
 const planningInput = ref<PlanningInput>()
+const zone = computed(() => tripZone(planningInput.value || tripPlan.value?.planning_input))
+const now = ref(Date.now())
+let tripClock: ReturnType<typeof setInterval>
+onMounted(() => { tripClock = setInterval(() => { now.value = Date.now() }, 15_000) })
+onBeforeUnmount(() => clearInterval(tripClock))
+const dailyChecks = ref<DailyTripCheck[]>([])
+const checksUnavailable = ref(false)
+async function loadDailyChecks() {
+  const id = historyRecordId.value
+  dailyChecks.value = []
+  checksUnavailable.value = false
+  if (!id || !isAuthenticated() || quality.value.assistant_proposal_status) return
+  try {
+    const checks = await tripOperations.dailyChecks(id)
+    if (id === historyRecordId.value && Array.isArray(checks)) dailyChecks.value = checks
+  } catch (error) {
+    if (id === historyRecordId.value) checksUnavailable.value = true
+  }
+}
 const planningRevision = ref(0)
 const activityBusy = ref(false)
 const scopeEditor = ref<InstanceType<typeof RevisionScopeEditor>>()
@@ -493,20 +540,35 @@ async function refreshAccess() {
   if (document.visibilityState !== 'visible' || !historyRecordId.value) return
   try {
     if (readOnlyPlan.value) { const workspace = await tripOperations.workspace(historyRecordId.value); tripPlan.value = workspace.plan; quality.value = workspace.quality || {}; recordVersion.value = workspace.version }
-    else { await fetchHistoryDetail(historyRecordId.value); await Promise.all([loadPlanningInput(), loadProposalDetails()]) }
+    else {
+      const detail = await fetchHistoryDetail(historyRecordId.value)
+      if (detail.success && detail.data && !editMode.value && !unsaved.value) {
+        tripPlan.value = detail.data.plan
+        acceptVersion(detail.data)
+        sessionStorage.setItem('tripPlan', JSON.stringify(tripPlan.value))
+      }
+      await Promise.all([loadPlanningInput(), loadProposalDetails()])
+    }
+    await loadDailyChecks()
   } catch (e: any) { revokeAccess(e) }
 }
 onMounted(() => { window.addEventListener('focus', refreshAccess); document.addEventListener('visibilitychange', refreshAccess) })
 onBeforeUnmount(() => { window.removeEventListener('focus', refreshAccess); document.removeEventListener('visibilitychange', refreshAccess) })
 async function applyRevisionDraft() {
+  const draft = tripPlan.value, parent = quality.value.revision_parent
+  if (!draft || !parent) return
   try {
     const { default: api } = await import('@/services/api')
-    await api.post(`/api/history/${historyRecordId.value}/apply-draft`, {}, { headers: { 'If-Match': String(recordVersion.value) } })
-    message.success('已应用，未满足要求仍保留为草稿提示')
-    delete quality.value.revision_parent
+    const { data } = await api.post(`/api/history/${historyRecordId.value}/apply-draft`, {}, { headers: { 'If-Match': String(recordVersion.value) } })
+    const appliedQuality = { ...quality.value }
+    delete appliedQuality.revision_parent
+    await acceptConfirmedRevision({ id: data.id, version: parent.version + 1, data: draft, quality: appliedQuality, message: data.message })
   } catch (e: any) { message.error(e.response?.data?.message || e.response?.data?.detail || '应用失败，请重新打开原行程确认版本') }
 }
 const quality = ref(JSON.parse(sessionStorage.getItem('tripQuality') || '{}'))
+const countChecks = computed(() => (quality.value.attraction_count_checks || []).map((check: {
+  scope: string; mode: string; target_count: number; actual_count: number; met: boolean
+}) => ({ ...check, label: check.scope === 'trip' ? '全程' : '第 ' + (Number(check.scope.split(':')[1]) + 1) + ' 天' })))
 const unmetAttractionTargets = computed(() => (quality.value.attraction_targets || []).filter((target: any) => target.met === false))
 const visibleAttractionAdjustments = computed(() => (quality.value.attraction_adjustments || []).filter((change: any) =>
   !unmetAttractionTargets.value.some((target: any) => target.day_index === change.day_index)))
@@ -562,6 +624,7 @@ const acceptVersion = (response: any) => {
   sessionStorage.setItem('tripQuality', JSON.stringify(quality.value))
 }
 const editMode = ref(false)
+const canRevise = computed(() => !readOnlyPlan.value && !!historyRecordId.value && !!planningInput.value && !editMode.value && !quality.value.assistant_proposal_status)
 const pickerDay = ref<number | null>(null)
 const replacementTarget = ref<{ day: number; index: number }>()
 const replacementCandidate = ref<POIInfo>()
@@ -613,28 +676,85 @@ const invalidateChecks = () => {
   quality.value = { data_gaps: ['user_edited_plan_not_externally_verified'] }
 }
 watch(tripPlan, () => { if (editMode.value) invalidateChecks() }, { deep: true, flush: 'sync' })
-const { exportBusy, exportAsHTML, exportAsImage, exportAsPDF } = useTripExport(tripPlan, async () => {
-  if (!tripPlan.value) return
+const { exportBusy, exportAsHTML, exportAsImage, exportAsPDF } = useTripExport(tripPlan, async requireSavedVersion => {
+  if (!tripPlan.value) return 'draft'
   if (historyRecordId.value && !isAuthenticated()) throw new Error('请重新登录并核对行程权限后导出')
+  let verifiedVersion: number | undefined
   if (historyRecordId.value && isAuthenticated()) {
     try {
       const data = readOnlyPlan.value ? await tripOperations.workspace(historyRecordId.value) : (await fetchHistoryDetail(historyRecordId.value)).data
       // A local draft still needs a fresh authorization check; preserve its edits.
-      if (!unsaved.value) { tripPlan.value = data.plan; acceptVersion(data) }
+      if (!unsaved.value) {
+        tripPlan.value = data.plan
+        acceptVersion(data)
+        if (Number.isSafeInteger(data.version) && data.version > 0) verifiedVersion = data.version
+      }
       else if (tripPlan.value) refreshScheduleValidity(tripPlan.value, true)
     } catch (e: any) {
       if ([401, 403, 404].includes(e?.response?.status)) { revokeAccess(e); throw new Error('行程权限已变化，无法导出') }
       if (tripPlan.value) refreshScheduleValidity(tripPlan.value, true)
-      message.warning('暂时无法复核当前版本，导出将标记为待重新核验')
+      if (!requireSavedVersion) message.warning('暂时无法复核当前版本，导出将标记为待重新核验')
     }
   }
   if (tripPlan.value) refreshScheduleValidity(tripPlan.value)
+  if (!historyRecordId.value || unsaved.value) return 'draft'
+  if (quality.value.assistant_proposal_status || quality.value.revision_parent?.record_id) return 'proposal'
+  return verifiedVersion ?? 'unverified'
 })
+async function downloadOfflinePlan() {
+  const tripId = historyRecordId.value
+  const isReplacement = offlineReminderTrip.value === tripId
+  if (await exportAsHTML(isReplacement) && isReplacement && offlineReminderTrip.value === tripId) {
+    offlineReminderTrip.value = undefined
+  }
+}
 const originalPlan = ref<TripPlan | null>(null)
 const { loadAttractionPhotos, getAttractionImage, handleImageError } = useAttractionPhotos(tripPlan)
 const activeSection = ref('overview')
-const activeDays = ref<number[]>([0]) // 默认展开第一天
+const activeDays = ref<number[]>([0])
+const showAllDays = ref(false)
+function selectTripDay(day: number) {
+  showAllDays.value = false
+  activeDays.value = [day]
+}
+function openFullTrip() {
+  showAllDays.value = true
+  activeDays.value = tripPlan.value?.days.map(day => day.day_index) || []
+  nextTick(() => document.getElementById('day-0')?.scrollIntoView({ behavior: 'smooth' }))
+}
+function locateAttention(item: { day: number; activityId?: string }) {
+  selectTripDay(item.day)
+  const panel = document.getElementById('day-' + item.day)
+  nextTick(() => {
+    const activity = item.activityId && panel?.querySelector('[data-testid="activity-' + CSS.escape(item.activityId) + '"]')
+    ;(activity || panel)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+}
+function openAttentionFact(item: { day: number; fact?: FactGap }) {
+  if (!item.fact) return
+  void router.push({ path: '/trips/' + historyRecordId.value + '/operations',
+    query: { day: item.day, fact: item.fact.kind, poi: item.fact.poiId, commitment: item.fact.commitmentId } })
+}
+function openInitialTripDay() {
+  const requested = typeof route.query.day === 'string' ? Number(route.query.day) : -1
+  const today = tripDate(now.value, zone.value)
+  const found = tripPlan.value?.days.find(day => day.day_index === requested) ||
+    tripPlan.value?.days.find(day => day.date === today)
+  if (found) selectTripDay(found.day_index)
+  if (found && route.query.revise === '1')
+    openRevision(found.day_index, typeof route.query.activity === 'string' ? route.query.activity : undefined)
+}
 const historyRecordId = ref<number>(0) // 从历史打开时的记录 id (0=新规划)
+async function acceptConfirmedRevision(response: AssistantConfirmation) {
+  historyRecordId.value = response.id
+  tripPlan.value = response.data
+  acceptVersion(response)
+  sessionStorage.setItem('tripPlanId', String(response.id))
+  sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
+  offlineReminderTrip.value = response.id
+  message.success(response.message)
+  await Promise.all([loadPlanningInput(), loadDailyChecks()])
+}
 const {
   details: proposalDetails, detailsError: proposalDetailsError, confirmError: proposalConfirmError,
   busy: proposalBusy, changes: proposalChanges, load: loadProposalDetails,
@@ -642,14 +762,7 @@ const {
 } = useAssistantProposal({
   recordId: historyRecordId, version: recordVersion, quality, accessError: revokeAccess,
   reopen: () => router.push('/history'),
-  confirmed: async response => {
-    historyRecordId.value = response.id; recordVersion.value = response.version
-    quality.value = response.quality; tripPlan.value = response.data
-    sessionStorage.setItem('tripPlanId', String(response.id)); sessionStorage.setItem('tripPlanVersion', String(response.version))
-    sessionStorage.setItem('tripQuality', JSON.stringify(response.quality)); sessionStorage.setItem('tripPlan', JSON.stringify(response.data))
-    message.success(response.message)
-    await loadPlanningInput()
-  },
+  confirmed: acceptConfirmedRevision,
   discarded: async response => {
     recordVersion.value = response.version; quality.value = response.quality
     sessionStorage.setItem('tripPlanVersion', String(response.version)); sessionStorage.setItem('tripQuality', JSON.stringify(response.quality))
@@ -721,6 +834,8 @@ onMounted(async () => {
       quality.value = workspace.quality || {}
       recordVersion.value = workspace.version
       historyRecordId.value = id
+      openInitialTripDay()
+      void loadDailyChecks()
       planLoading.value = false
       loadAttractionPhotos()
       await nextTick()
@@ -753,6 +868,8 @@ onMounted(async () => {
     }
     await Promise.all([loadPlanningInput(), loadProposalDetails()])
     refreshScheduleValidity(tripPlan.value!)
+    openInitialTripDay()
+    void loadDailyChecks()
     planLoading.value = false
     // 加载景点图片
     loadAttractionPhotos()
@@ -775,7 +892,7 @@ const scrollToSection = ({ key: selectedKey }: { key: string | number }) => {
   // 每日行程: 先展开对应面板再滚动定位
   if (key.startsWith('day-')) {
     const dayIndex = Number(key.replace('day-', ''))
-    activeDays.value = [dayIndex]
+    selectTripDay(dayIndex)
     nextTick(() => {
       document.getElementById(key)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
@@ -844,11 +961,54 @@ const cancelEdit = () => {
   message.info('已取消编辑')
 }
 
-const openRevision = (dayIndex: number) => {
+const revisionInitialScope = ref<RevisionScope>()
+function openRevision(dayIndex: number, activityId?: string, window?: { start_at: string; end_at: string }) {
+  if (!canRevise.value) return
+  const day = tripPlan.value?.days[dayIndex]
+  const selected = activityId && [...(day?.attractions || []), ...(day?.meals || [])].some(item => item.activity_id === activityId)
   revisionDayIndex.value = dayIndex
   revisionInstruction.value = ''
-  revisionScope.value = { day_indices: [dayIndex], activity_ids: [] }
+  revisionInitialScope.value = { day_indices: [dayIndex], activity_ids: selected ? [activityId] : [], ...window }
+  revisionScope.value = revisionInitialScope.value
   revisionOpen.value = true
+}
+
+function openRemainingRevision(dayIndex: number) {
+  const day = tripPlan.value?.days[dayIndex], input = planningInput.value
+  if (!day || !input) return
+  const finish = input.day_windows.find(window => window.day_index === dayIndex)?.end || input.day_end
+  const windowEnd = zonedTimestamp(day.date + 'T' + finish, zone.value)
+  const scheduledEnd = Math.max(0, ...(day.timeline || []).map(item => Date.parse(item.end_at || '') || 0))
+  const end = windowEnd && scheduledEnd ? new Date(Math.min(scheduledEnd, Date.parse(windowEnd))).toISOString() : windowEnd
+  const start = new Date(Math.ceil(Date.now() / 60000) * 60000).toISOString()
+  if (end && Date.parse(end) > Date.parse(start)) openRevision(dayIndex, undefined, { start_at: start, end_at: end })
+  else message.info('当天的计划时间已结束，请选择需要调整的具体活动。')
+}
+
+async function openOriginalTrip() {
+  const id = Number(quality.value.revision_parent?.record_id)
+  const scope = proposalDetails.value?.revision_scope
+  if (!id) return
+  try {
+    const response = await fetchHistoryDetail(id)
+    tripPlan.value = response.data.plan
+    historyRecordId.value = id
+    acceptVersion(response.data)
+    sessionStorage.setItem('tripPlanId', String(id))
+    sessionStorage.setItem('tripPlan', JSON.stringify(tripPlan.value))
+    await Promise.all([loadPlanningInput(), loadDailyChecks(), loadProposalDetails()])
+    const day = scope?.day_indices[0]
+    if (day !== undefined) {
+      selectTripDay(day)
+      openRevision(day, scope?.activity_ids[0])
+    }
+    loadAttractionPhotos()
+    await nextTick()
+    initMap()
+  } catch (error) {
+    revokeAccess(error)
+    message.error('无法打开原行程，请从我的行程重新进入。')
+  }
 }
 
 const submitRevision = async () => {
@@ -862,7 +1022,7 @@ const submitRevision = async () => {
   }
   revisionLoading.value = true
   try {
-    const response = await reviseHistoryDay(historyRecordId.value, revisionDayIndex.value, instruction, recordVersion.value, revisionScope.value, planningRevision.value)
+    const response = await previewRevision(historyRecordId.value, revisionDayIndex.value, instruction, recordVersion.value, revisionScope.value, planningRevision.value)
     if (response.id) { historyRecordId.value = response.id; sessionStorage.setItem("tripPlanId", String(response.id)) }
     if (!response.success || !response.data) throw new Error(response.message || '改排失败')
     acceptVersion(response)
@@ -949,6 +1109,11 @@ const getMealLabel = (type: string): string => {
 }
 
 /* 内容布局 */
+.offline-export-reminder {
+  max-width: 1400px;
+  margin: 0 auto 16px;
+}
+
 .content-wrapper {
   max-width: 1400px;
   margin: 0 auto;
@@ -1499,9 +1664,19 @@ const getMealLabel = (type: string): string => {
     gap: 16px;
   }
 
+  .result-actions {
+    max-width: 100%;
+    justify-content: center;
+  }
+  .offline-export-reminder { flex-wrap: wrap; gap: 8px; }
+  .offline-export-reminder :deep(.ant-alert-action) { margin-inline-start: auto; }
+
   .content-wrapper {
     flex-direction: column;
   }
+
+  .main-content { display: contents; }
+  .trip-action-summary { order: -1; }
 
   .side-nav {
     width: 100%;

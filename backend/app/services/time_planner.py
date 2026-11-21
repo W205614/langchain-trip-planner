@@ -512,7 +512,21 @@ def day_time_bounds(request, day_index, day_date):
     return low, high, hard_start, hard_end
 
 
-def solve_day(day, request, route_planner=None, cache=None, seconds=None, previous_day=None):
+def mandatory_attractions(day, request):
+    inputs = request.planning_input
+    required_names = {name.casefold() for name in request.constraints.must_visit}
+    required_ids = set(inputs.completed_activity_ids) | {lock.get("activity_id") for lock in effective_locks(inputs)}
+    reservations = [item for item in inputs.commitments if confirmed(item)]
+    required_ids.update(item.get("activity_id") for item in reservations)
+    required_pois = {item.get("poi_id") for item in reservations}
+    return {
+        visit.activity_id for visit in day.attractions
+        if not visit.optional or visit.activity_id in required_ids or visit.poi_id in required_pois
+        or {visit.name.casefold(), *(name.casefold() for name in visit.requested_names)} & required_names
+    }
+
+
+def solve_day(day, request, route_planner=None, cache=None, seconds=None, previous_day=None, *, attraction_limit=None):
     from ortools.sat.python import cp_model
     from .plan_quality import transport_to_route_type
     from .execution import remaining
@@ -645,7 +659,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     conflicts = [c for c in conflicts if not any(c == f"no_time_window:{identity}" for identity in forced_omissions)]
     nodes = [n for n in nodes if n["activity_id"] not in forced_omissions]
     report = {"status": "unverified", "solver_status": "NOT_RUN", "unknown": [], "conflicts": conflicts, "omitted_activity_ids": [], "contract_version": CONTRACT["version"]}
-    if conflicts or low >= high or not nodes:
+    if conflicts or low >= high or (not nodes and attraction_limit is None):
         model_unknown=any(not gap.startswith("transport_predeparture_buffer_unverified:") for gap in unknown)
         proven = proven_connection_conflicts or proven_window_conflicts.intersection(conflicts) or low >= proof_high
         report.update(status="infeasible" if proven or not model_unknown else "unverified", solver_status="INVALID_WINDOWS", unknown=sorted(unknown))
@@ -685,7 +699,11 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         indices=[i for i,n in enumerate(nodes) if n["activity_id"] in {left_id,right_id}]
         if len(indices)==2:
             model.add(sum(presence[i] for i in indices)<=1)
-    if attraction_presence:
+    if attraction_limit is not None:
+        # Mandatory visits win over the requested cap. The final report exposes the conflict.
+        mandatory = sum(n["kind"] == "attraction" and not n["optional"] for n in nodes)
+        model.add(sum(attraction_presence) <= max(mandatory, attraction_limit))
+    elif attraction_presence:
         model.add(sum(attraction_presence) >= 1)
     # Verify both directions of the essential connections before spending the
     # shared lookup/time budget on discretionary pairs.
@@ -712,6 +730,19 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             model.add(starts[right-1] >= low + travel).only_enforce_if(literal)
         else:
             model.add(starts[left-1] + nodes[left-1]["duration"] + travel <= high).only_enforce_if(literal)
+    if attraction_limit is not None:
+        # A day using no sightseeing slots can still have a station transfer or fixed train.
+        direct = model.new_bool_var("no_local_activities")
+        arc = (0, 0)
+        arcs.append((0, 0, direct))
+        for item in presence:
+            model.add(item == 0).only_enforce_if(direct)
+        edge_unknown[arc] = set()
+        edge_keys[arc] = _route_key(start_anchor, end_anchor, city, route_type) if needs_end_connection else None
+        travel, known = _route(start_anchor, end_anchor, route_planner, city, route_type, cache, edge_unknown[arc]) if needs_end_connection else (0, True)
+        if travel > high - low:
+            model.add(direct == 0)
+        literals[arc], travels[arc] = direct, (travel, known)
     model.add_circuit(arcs)
     # Preserve relative order of immutable content. Explicit time locks above
     # additionally preserve arrival and finish times when a prior timeline exists.
@@ -734,7 +765,8 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
             model.add_abs_equality(deviation,starts[index]-previous)
             changed.append(moved)
             drift.append(deviation)
-    model.minimize(sum((1-presence[i]) * n.get("priority",50) * 100_000_000_000_000 for i,n in enumerate(nodes) if n["optional"])
+    exact = attraction_limit is not None and inputs.attraction_count.mode == "exact"
+    model.minimize(sum((1-presence[i]) * (n.get("priority",50) + (300 if exact and n["kind"] == "attraction" else 0)) * 100_000_000_000_000 for i,n in enumerate(nodes) if n["optional"])
         + sum(changed)*10_000_000_000 + sum(drift)*10000
         + sum(literals[key] for key, (_, known) in travels.items() if not known) * 10_000_000
         + sum(travels[key][0] * literal for key, literal in literals.items()) * 100 + sum(starts))
@@ -803,7 +835,7 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
         timeline.append(dict(activity_id="hotel:return", title=title, kind="travel", start_at=instant(cursor), end_at=instant(cursor+travel), status="confirmed" if known else "estimated", source="map" if known else "conservative_allowance", evidence_refs=[], notes=_route_notes(travel, known, edge_unknown[previous, 0])))
     timeline.extend(connections)
     timeline.extend(bridges)
-    timeline.sort(key=lambda item:item["start_at"])
+    timeline.sort(key=lambda item: datetime.fromisoformat(item["start_at"]))
     unknown.update(_transport_buffer_gaps(timeline,inputs))
     report["unknown"]=sorted(unknown)
     expiry = min((fact["expires_at"] for fact in selected_facts), key=route_instant) if selected_facts else None
@@ -813,6 +845,25 @@ def solve_day(day, request, route_planner=None, cache=None, seconds=None, previo
     if "route_lookup_deferred" in unknown:
         report.update(status="not_found", conflicts=["Resume to continue scheduling deferred routes"])
     return timeline, report, order
+
+
+def attraction_limits(plan, request, allowed_days):
+    target = request.planning_input.attraction_count
+    if target is None:
+        return {}
+    days = [day for day in plan.days if day.day_index in allowed_days]
+    if target.scope == "daily":
+        return {day.day_index: target.count for day in days}
+    limits = {day.day_index: len(mandatory_attractions(day, request)) for day in days}
+    occupied = sum(len(day.attractions) for day in plan.days if day.day_index not in allowed_days)
+    available = target.count - occupied - sum(limits.values())
+    for _ in range(max(0, available)):
+        day = min((day for day in days if limits[day.day_index] < len(day.attractions)),
+                  key=lambda day: (limits[day.day_index], day.day_index), default=None)
+        if day is None:
+            break
+        limits[day.day_index] += 1
+    return limits
 
 
 def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, allowed_days=None, route_evidence=None):
@@ -836,9 +887,19 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                 cache.setdefault("_restored_unverified",set()).add(key)
     allowed_days = set(range(len(plan.days))) if allowed_days is None else allowed_days
     hotel_options=_fit_recommended_hotels(plan,request,route_planner,cache,allowed_days)
+    target = request.planning_input.attraction_count
+    if target:
+        for day in plan.days:
+            if day.day_index in allowed_days:
+                for visit in day.attractions:
+                    if not visit.activity_id:
+                        visit.activity_id = f"poi:{day.day_index}:{visit.poi_id}"
+    limits = attraction_limits(plan, request, allowed_days)
+    carry = 0
     for day in plan.days:
         if day.day_index not in allowed_days:
             continue
+        attraction_limit = limits[day.day_index] + carry if target else None
         checkpoint_stage=f"schedule_day:{day.day_index}:{digest[:16]}"
         cached_day=read_checkpoint(checkpoint_stage,digest)
         dated_facts=[fact for fact in request.planning_input.opening_windows if fact.get("date")==day.date and fact.get("confirmed")]
@@ -854,6 +915,8 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
                     restored.feasibility["unknown"]=sorted(set(restored.feasibility.get("unknown",[]))|buffer_gaps)
                     restored.feasibility["status"]="unverified"
                 plan.days[plan.days.index(day)]=restored
+                if target and target.scope == "trip":
+                    carry = max(0, attraction_limit - len(restored.attractions))
                 continue
         day.city = city_for_day(request, day.day_index)
         # Identity creation is scoped; untouched days are not serialized differently.
@@ -867,18 +930,20 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
             day.feasibility = {"status":"not_found", "solver_status":"TOTAL_BUDGET_EXHAUSTED", "unknown":[], "conflicts":["Resume to continue scheduling remaining days"], "omitted_activity_ids":[]}
         else:
             previous_day=next((d for d in plan.days if d.day_index==day.day_index-1),None)
-            timeline, report, order = solve_day(day, request, route_planner, cache, min(2, limit-(time.monotonic()-started)),previous_day)
+            timeline, report, order = solve_day(day, request, route_planner, cache, min(2, limit-(time.monotonic()-started)),previous_day, attraction_limit=attraction_limit)
             day.timeline, day.feasibility = timeline, report
             if day.day_index in hotel_options:
                 day.feasibility["resolution_options"]=hotel_options[day.day_index]
             if timeline and report["status"] in {"feasible","unverified"}:
                 day.__pydantic_extra__["schedule_stale"] = False
-            if order:
+            if order is not None and (order or target):
                 priority = {identity:i for i,identity in enumerate(order)}
                 day.attractions[:] = [a for a in day.attractions if a.activity_id in priority]
                 day.attractions.sort(key=lambda a:priority[a.activity_id])
                 day.meals[:] = [m for m in day.meals if m.activity_id in priority]
                 day.meals.sort(key=lambda a:priority[a.activity_id])
+        if target and target.scope == "trip":
+            carry = max(0, attraction_limit - len(day.attractions))
         bind_route_day(day)
         reports.append({"day_index":day.day_index, **day.feasibility})
         if day.timeline and day.feasibility.get("status") in {"feasible","unverified"}:
@@ -899,7 +964,7 @@ def plan_time_windows(plan: TripPlan, request: TripRequest, route_planner=None, 
     # A resumed route stage reuses the paid matrix for the already selected
     # days. Optional cross-day exchanges would ask for new matrix edges; leave
     # that improvement to a fresh planning request rather than repeat spending.
-    if not saved_routes and request.planning_input.revision_scope is None and len(allowed_days) == len(plan.days):
+    if not target and not saved_routes and request.planning_input.revision_scope is None and len(allowed_days) == len(plan.days):
         for _ in range(2):
             improved = False
             for index in range(len(plan.days)-1):

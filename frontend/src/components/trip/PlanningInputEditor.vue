@@ -10,6 +10,13 @@
         <label>预算口径<select v-model="draft.budget_mode"><option value="estimate">允许估算，未知单列</option><option value="confirmed">按确认费用校验</option></select></label>
         <label>总预算（元，可留空）<input :value="draft.budget_cents == null ? '' : draft.budget_cents / 100" type="number" min="0" step="0.01" @input="setBudget" /></label>
       </div>
+      <div v-if="commitmentsReadOnly" class="field-grid">
+        <label>景点数量<input :value="draft.attraction_count?.count ?? ''" type="number" min="1" step="1" placeholder="不限制" @input="setAttractionCount" /></label>
+        <template v-if="draft.attraction_count">
+          <label>数量范围<select v-model="draft.attraction_count.scope"><option value="daily">每天</option><option value="trip">全程</option></select></label>
+          <label>数量规则<select v-model="draft.attraction_count.mode"><option value="exact">指定数量</option><option value="maximum">最多数量</option></select></label>
+        </template>
+      </div>
       <p class="hint">时间使用 {{ draft.timezone }}。抵达／离开时间不代表已预订交通。</p>
       <a-collapse ghost>
         <a-collapse-panel key="days" header="每日特殊时间与城市分段">
@@ -119,6 +126,12 @@ const localTime = (value?: string | null) => value && Number.isFinite(Date.parse
 const timestamp = (event: Event) => { const value = (event.target as HTMLInputElement).value; return value ? `${value}:00+08:00` : null }
 const money = (event: Event) => { const value = (event.target as HTMLInputElement).value; return value === '' ? null : Math.round(Number(value) * 100) }
 const setBudget = (event: Event) => { draft.value.budget_cents = money(event) }
+function setAttractionCount(event: Event) {
+  const value = (event.target as HTMLInputElement).value
+  draft.value.attraction_count = value === '' ? null : {
+    scope: draft.value.attraction_count?.scope || 'daily', mode: draft.value.attraction_count?.mode || 'exact', count: Number(value)
+  }
+}
 function coordinate(item: { location?: Location | null }, key: keyof Location, event: Event) {
   const raw = (event.target as HTMLInputElement).value
   const next = { ...(item.location || {}), [key]: raw === '' ? undefined : Number(raw) }
@@ -129,6 +142,9 @@ function setTimeMode(item: PlanningCommitment, event: Event) { item.time_mode = 
 function addCommitment() { draft.value.commitments.push({ id: crypto.randomUUID(), version: 1, activity_id: '', day_index: 0, category: 'ticket', status: 'confirmed', title: '', amount_cents: null, time_mode: 'fixed' }) }
 const validationMessage = computed(() => {
   const value = draft.value
+  const quantity = value.attraction_count
+  if (quantity && (!Number.isInteger(quantity.count) || quantity.count < 1 || quantity.count > 20 * (quantity.scope === 'trip' ? props.days : 1)))
+    return '景点数量超出所选日期范围。'
   if (value.day_start >= value.day_end) return '每日结束时间须晚于出发时间。'
   if (value.arrival_at && value.departure_at && Date.parse(value.arrival_at) >= Date.parse(value.departure_at)) return '离开时间须晚于抵达时间。'
   if (value.budget_cents != null && (!Number.isSafeInteger(value.budget_cents) || value.budget_cents < 0)) return '预算须为非负金额。'

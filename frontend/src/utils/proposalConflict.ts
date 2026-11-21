@@ -1,4 +1,6 @@
 const reasons: Record<string, string> = {
+  PROPOSAL_CONSTRAINT_CONFLICT: '改排尚未找到满足时间与固定安排的方案。请返回原行程调整条件后重新预览。',
+  SCHEDULE_STALE: '提案缺少有效时间轴，请返回原行程重新核验或改排。',
   FACTS_EXPIRED: '方案依赖的事实已过期，请返回原行程重新核验，再生成提案。',
   PLANNING_INPUT_CONFLICT: '规划约束或预订事项已变化，请重新加载原行程并生成提案。',
   VERSION_CONFLICT: '方案或原行程版本已变化，请重新加载后检查差异并生成提案。',

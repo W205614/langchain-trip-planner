@@ -51,6 +51,25 @@ class RevisionScope(PlanningValue):
         return self
 
 
+class AttractionCount(PlanningValue):
+    scope: Literal["daily", "trip"]
+    mode: Literal["exact", "maximum"]
+    count: int = Field(strict=True, ge=1, le=600)
+
+
+class VisitEntrance(PlanningValue):
+    day_index: int = Field(ge=0, le=29)
+    poi_id: str = Field(min_length=1, max_length=160)
+    name: str = Field(min_length=1, max_length=120)
+    address: str = Field(default="", max_length=300)
+    location: dict | None = None
+    source: str = Field(min_length=1, max_length=1000)
+    observed_at: datetime
+    expires_at: datetime
+    confirmed: Literal[True]
+    authority: Literal["user_declared"] = "user_declared"
+
+
 class PlanningInput(PlanningValue):
     _execution_locks: list[dict] = PrivateAttr(default_factory=list)
     _baseline_times: dict[str, str] = PrivateAttr(default_factory=dict)
@@ -76,6 +95,8 @@ class PlanningInput(PlanningValue):
     departure_at: datetime | None = None
     budget_mode: Literal["estimate", "confirmed"] = "estimate"
     budget_cents: int | None = Field(default=None, ge=0, le=1_000_000_000)
+    attraction_count: AttractionCount | None = None
+    visit_entrances: list[VisitEntrance] = Field(default_factory=list, max_length=300)
     revision_scope: RevisionScope | None = None
 
     @model_validator(mode="after")
@@ -141,7 +162,7 @@ class PlanningInput(PlanningValue):
                         raise ValueError()
                 except (KeyError,ValueError,TypeError):
                     raise ValueError("Time lock requires ordered timezone-aware times") from None
-        for item in [*self.hotel_stays,*self.commitments]:
+        for item in [*self.hotel_stays,*self.commitments,*(entry.model_dump() for entry in self.visit_entrances)]:
             for key in ("location","origin_location","destination_location"):
                 if item.get(key) is not None:
                     location=item[key]
@@ -151,4 +172,7 @@ class PlanningInput(PlanningValue):
                             raise ValueError()
                     except (KeyError,ValueError,TypeError):
                         raise ValueError("Planning location requires valid longitude/latitude") from None
+        for entry in self.visit_entrances:
+            if not entry.observed_at.tzinfo or not entry.expires_at.tzinfo or entry.expires_at <= entry.observed_at:
+                raise ValueError("Entrance observation and expiry must be ordered and timezone-aware")
         return self

@@ -138,6 +138,7 @@ test('owner UI planning, durable clarification and proposal review preserve the 
   await expect(dateInputs.nth(1)).toHaveValue(end)
   const submitted = page.waitForResponse(response => new URL(response.url()).pathname === '/api/trip/tasks' && response.request().method() === 'POST')
   await page.getByRole('button', { name: '开始规划我的旅行' }).click()
+  await page.getByRole('button', { name: '确认并生成' }).click()
   const planned = await submitted
   expect(planned.status()).toBe(202)
   const firstTask = (await planned.json()).data.id

@@ -148,8 +148,12 @@ class MultiAgentTripPlanner(TravelDataNodes):
                 low, high, _, _ = day_time_bounds(request, i, current_date)
                 window_text = (f"{low // 60:02d}:{low % 60:02d}-{high // 60:02d}:{high % 60:02d}"
                                if low < high else "无可用时间（约束冲突）")
-                target = daily_attraction_target(request.free_text_input, request.travel_days)
-                count_text = (f"本日明确数量目标为{target}个独立景点。" if target is not None
+                quantity = request.planning_input.attraction_count
+                target = None if quantity else daily_attraction_target(request.free_text_input, request.travel_days)
+                count_text = (f"用户已在表单确认{'每日' if quantity.scope == 'daily' else '全程'}"
+                              f"{'安排' if quantity.mode == 'exact' else '最多'}{quantity.count}个独立景点。"
+                              "以表单为准，忽略补充文字中的数量；提供可信可选景点供排程筛选。" if quantity else
+                              f"本日明确数量目标为{target}个独立景点。" if target is not None
                               else "从本日候选中选择时间允许的独立景点，不将同一景区内部点重复计数。")
                 sub = subsets[i]
                 sub_text = "\n".join(
@@ -830,7 +834,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
 
         # 每一天都必须至少包含一个由 Agent 高德能力取得的可信景点。
         # Java 只核对返回景点是否属于本次可信候选，不再二次规划或替换。
-        if any(not day.attractions for day in trip_plan.days):
+        if request.planning_input.attraction_count is None and any(not day.attractions for day in trip_plan.days):
             raise BizException(
                 "至少一天无法获取可验证的真实景点，请调整要求后重试",
                 status_code=503,
@@ -1011,7 +1015,7 @@ class MultiAgentTripPlanner(TravelDataNodes):
             request,
             {"attraction_pois": candidates, "restaurant_pois": restaurant_pois},
         )
-        if not revised_day.attractions:
+        if not revised_day.attractions and request.planning_input.attraction_count is None:
             raise BizException(
                 "改排结果没有可验证景点，已拒绝保存",
                 status_code=503,

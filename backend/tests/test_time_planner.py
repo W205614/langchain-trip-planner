@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from app.evals.constraint_benchmark import fixture
-from app.models.planning import PlanningInput, RevisionScope
+from app.models.planning import AttractionCount, PlanningInput, RevisionScope
 from app.services.time_planner import (ensure_activity_ids, fact_current, solve_day,
     plan_time_windows, protect_revision)
 from app.services.planning_constraints import finalize_plan
@@ -45,6 +45,57 @@ def test_known_time_windows_have_a_verifiable_timeline():
     activities=[r for r in timeline if r["kind"]=="attraction"]
     assert all(datetime.fromisoformat(r["end_at"])-datetime.fromisoformat(r["start_at"])==timedelta(hours=1) for r in activities)
     assert report["route_minutes"]==30
+
+
+@pytest.mark.parametrize(("scope", "mode", "count", "expected"), [
+    ("daily", "exact", 1, [1, 1]),
+    ("daily", "maximum", 1, [1, 1]),
+    ("trip", "exact", 2, [1, 1]),
+    ("trip", "maximum", 1, [1, 0]),
+])
+def test_confirmed_attraction_count_controls_the_actual_schedule(scope, mode, count, expected):
+    request, plan = scenario([["A", "B"], ["C", "D"]])
+    request.planning_input.attraction_count = AttractionCount(scope=scope, mode=mode, count=count)
+    for day in plan.days:
+        for visit in day.attractions:
+            visit.optional = True
+    report = finalize_plan(plan, request, Routes(), enhanced=True)
+    assert [len(day.attractions) for day in plan.days] == expected
+    assert [sum(row["kind"] == "attraction" for row in day.timeline) for day in plan.days] == expected
+    assert all(check["met"] for check in report["attraction_count_checks"])
+
+
+def test_whole_trip_carries_unused_slots_and_preserves_mandatory_conflicts():
+    request, plan = scenario([["A"], ["B", "C"]])
+    request.planning_input.attraction_count = AttractionCount(scope="trip", mode="exact", count=2)
+    request.planning_input.opening_windows[0]["closed"] = True
+    plan.days[0].attractions[0].optional = True
+    report = finalize_plan(plan, request, Routes(), enhanced=True)
+    assert [len(day.attractions) for day in plan.days] == [0, 2]
+    assert report["attraction_count_checks"][0]["met"]
+    request.planning_input.attraction_count = AttractionCount(scope="trip", mode="maximum", count=1)
+    report = finalize_plan(plan, request, Routes(), enhanced=True)
+    assert [item.name for item in plan.days[1].attractions] == ["B", "C"]
+    assert report["outcome"] == "draft"
+    assert any(issue["code"] == "ATTRACTION_COUNT_CONFLICT" for issue in report["issues"])
+
+
+def test_trip_cap_can_leave_a_day_for_fixed_transport_only():
+    request, plan = scenario([["A"], ["B"]])
+    request.planning_input.attraction_count = AttractionCount(scope="trip", mode="maximum", count=1)
+    plan.days[1].attractions[0].optional = True
+    date = plan.days[1].date
+    request.planning_input.commitments = [{
+        "id": "fixed-train", "day_index": 1, "category": "transport", "status": "confirmed",
+        "title": "G123", "origin_city": request.city, "destination_city": "天津",
+        "start_at": f"{date}T07:00:00Z", "end_at": f"{date}T08:00:00Z",
+        "origin_location": {"longitude": 116.4, "latitude": 39.9},
+        "destination_location": {"longitude": 117.2, "latitude": 39.1},
+    }]
+    report = finalize_plan(plan, request, Routes(), enhanced=True)
+    assert not plan.days[1].attractions
+    assert any(row["kind"] == "commitment" and row["title"] == "G123" for row in plan.days[1].timeline), plan.days[1].feasibility
+    assert report["attraction_count_checks"][0]["met"]
 
 
 def test_unknown_or_stale_openings_cannot_be_feasible():
@@ -91,7 +142,7 @@ def test_confirmed_transport_is_fixed_bridge_not_a_map_edge():
     request.planning_input=PlanningInput.model_validate({**request.planning_input.model_dump(),"city_segments":[{"city":"北京","start_day":0,"end_day":0},{"city":"上海","start_day":1,"end_day":1}]})
     request.planning_input.day_windows=[type(request.planning_input).model_validate({"day_windows":[{"day_index":1,"start":"07:00","end":"20:00"}]}).day_windows[0]]
     request.planning_input.commitments=[{"id":"train","day_index":1,"category":"transport","status":"confirmed","title":"G fixture","origin_city":"北京","destination_city":"上海",
-        "start_at":f"{plan.days[1].date}T08:00:00+08:00","end_at":f"{plan.days[1].date}T12:00:00+08:00",
+        "start_at":f"{plan.days[1].date}T00:00:00Z","end_at":f"{plan.days[1].date}T04:00:00Z",
         "origin_location":{"longitude":116,"latitude":39},"destination_location":{"longitude":121,"latitude":31}}]
     timeline,report,_=solve_day(plan.days[1],request,Routes())
     assert report["status"]=="unverified"
@@ -100,6 +151,8 @@ def test_confirmed_transport_is_fixed_bridge_not_a_map_edge():
     assert any(r["activity_id"]=="commitment:train" for r in timeline)
     visit=next(r for r in timeline if r["kind"]=="attraction")
     assert datetime.fromisoformat(visit["start_at"]).hour>=12
+    starts = [datetime.fromisoformat(row["start_at"]) for row in timeline]
+    assert starts == sorted(starts)
 
 
 def test_actual_finalize_pipeline_cannot_modify_another_day():

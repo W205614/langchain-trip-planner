@@ -144,8 +144,61 @@ public class TripCheckService {
         "FROM trip_risks WHERE check_id=? ORDER BY day_index,id",latest.get("id")));
     int current=((Number)ctx.trip(id).get("version")).intValue();
     result.put("stale",current!=((Number)latest.get("trip_version")).intValue() ||
-        ((Timestamp)latest.get("expires_at")).toInstant().isBefore(Instant.now()));
+        !storedUtc((Timestamp)latest.get("expires_at")).isAfter(Instant.now()));
     return Map.of("success",true,"data",result);
+  }
+
+  public Object dailyChecks(long actor,long id) {
+    var trip=ctx.access(actor,id,false);
+    int days=((Number)trip.get("travel_days")).intValue();
+    int version=((Number)trip.get("version")).intValue();
+    var rows=db.queryForList("""
+        SELECT day.day_index AS day_index,c.id AS check_id,c.trip_version,c.status,c.checked_at,c.expires_at,
+               r.id AS risk_id,r.poi_id,r.code,r.message,r.source,r.observed_at,r.acknowledged_at
+        FROM generate_series(0, ? - 1) AS day(day_index)
+        LEFT JOIN LATERAL (
+          SELECT id,trip_version,status,checked_at,expires_at FROM trip_checks
+          WHERE trip_id=? AND (day_index=day.day_index OR day_index IS NULL)
+          ORDER BY checked_at DESC,id DESC LIMIT 1
+        ) c ON true
+        LEFT JOIN trip_risks r ON r.check_id=c.id AND r.day_index=day.day_index
+        ORDER BY day.day_index,r.id
+        """,days,id);
+    var checks=new LinkedHashMap<Integer,Map<String,Object>>();
+    var risksByDay=new HashMap<Integer,List<Map<String,Object>>>();
+    var now=Instant.now();
+    for(var row:rows) {
+      int day=((Number)row.get("day_index")).intValue();
+      var risks=risksByDay.computeIfAbsent(day,ignored->new ArrayList<>());
+      if(!checks.containsKey(day)) {
+        var check=new LinkedHashMap<String,Object>();
+        check.put("day_index",day);
+        check.put("risks",risks);
+        if(row.get("check_id")==null) check.put("status","never_checked");
+        else {
+          var expiry=storedUtc((Timestamp)row.get("expires_at"));
+          check.put("status",row.get("status"));
+          check.put("checked_at",storedUtc((Timestamp)row.get("checked_at")).toString());
+          check.put("expires_at",expiry.toString());
+          check.put("stale",version!=((Number)row.get("trip_version")).intValue() || !expiry.isAfter(now));
+        }
+        checks.put(day,check);
+      }
+      if(row.get("risk_id")!=null) {
+        var risk=new LinkedHashMap<String,Object>();
+        risk.put("id",row.get("risk_id"));
+        for(String field:List.of("day_index","poi_id","code","message","source")) risk.put(field,row.get(field));
+        for(String field:List.of("observed_at","acknowledged_at")) {
+          if(row.get(field) instanceof Timestamp time) risk.put(field,storedUtc(time).toString());
+        }
+        risks.add(risk);
+      }
+    }
+    return Map.of("success",true,"data",checks.values());
+  }
+
+  private static Instant storedUtc(Timestamp timestamp) {
+    return timestamp.toLocalDateTime().toInstant(ZoneOffset.UTC);
   }
 
   public Object acknowledge(long actor,long id,long riskId,int expected) {

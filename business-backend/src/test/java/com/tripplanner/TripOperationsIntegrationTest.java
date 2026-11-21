@@ -82,6 +82,15 @@ class TripOperationsIntegrationTest {
     assertNotNull(((Map<?,?>)operations.checks(owner,id)).get("data"));
     assertTrue(json.writeValueAsString(result).contains("hours_changed"));
     assertTrue(json.writeValueAsString(operations.checks(owner,id)).contains("hours_changed"));
+    var aggregate=json.readTree(json.writeValueAsString(operations.dailyChecks(owner,id))).path("data").get(0);
+    assertEquals(0,aggregate.path("day_index").asInt());
+    assertFalse(aggregate.path("stale").asBoolean());
+    assertEquals(2,aggregate.path("risks").size());
+    db.update("UPDATE trip_records SET version=version+1 WHERE id=?",id);
+    var stale=json.readTree(json.writeValueAsString(operations.dailyChecks(owner,id))).path("data").get(0);
+    assertTrue(stale.path("stale").asBoolean());
+    assertTrue(stale.hasNonNull("checked_at"));
+    assertEquals(404,assertThrows(ApiException.class,()->operations.dailyChecks(stranger,id)).status);
   }
 
   @Test void invitedEditorMustAcceptAndReorderUsesTripVersion() {
@@ -153,11 +162,28 @@ class TripOperationsIntegrationTest {
     var expense=json.createObjectNode().put("day_index",0).put("category","ticket")
         .put("amount",120.50).put("note","实际付款").put("commitment_id",commitmentId);
     operations.addExpense(owner,id,expense,"expense-"+UUID.randomUUID(),"test");
-    assertEquals(12050L,((Map<?,?>)((Map<?,?>)operations.expenses(owner,id)).get("summary")).get("actual_cents"));
+    var paid=expenseSummary(owner,id);
+    assertEquals(12050L,paid.path("actual_cents").asLong());
+    assertEquals(0L,paid.path("pending_cents").asLong());
+    assertEquals(87950L,paid.path("remaining_budget_cents").asLong());
     long expenseId=db.queryForObject("SELECT id FROM trip_expenses WHERE trip_id=?",Long.class,id);
     operations.voidExpense(owner,id,expenseId,json.createObjectNode().put("reason","录入错误"),"test");
     assertEquals(0L,((Map<?,?>)((Map<?,?>)operations.expenses(owner,id)).get("summary")).get("actual_cents"));
     assertNotNull(db.queryForObject("SELECT voided_at FROM trip_expenses WHERE id=?",java.sql.Timestamp.class,expenseId));
+    assertEquals(12050L,expenseSummary(owner,id).path("pending_cents").asLong());
+    operations.addExpense(owner,id,expense.deepCopy().put("amount",40),"partial-"+UUID.randomUUID(),"test");
+    assertEquals(8050L,expenseSummary(owner,id).path("pending_cents").asLong());
+    operations.updateCommitment(owner,id,commitmentId,2,json.createObjectNode().put("status","cancelled"),"test");
+    var cancelled=expenseSummary(owner,id);
+    assertEquals(0L,cancelled.path("pending_cents").asLong());
+    assertEquals(4000L,cancelled.path("actual_cents").asLong());
+    assertEquals(96000L,cancelled.path("remaining_budget_cents").asLong());
+    db.update("UPDATE trip_records SET budget_total=NULL WHERE id=?",id);
+    assertTrue(expenseSummary(owner,id).path("remaining_budget_cents").isNull());
+  }
+
+  private tools.jackson.databind.JsonNode expenseSummary(long owner,long id) {
+    return json.readTree(json.writeValueAsString(operations.expenses(owner,id))).path("summary");
   }
 
   @Test void usagePolicyAndNotificationsAreUserScoped() {

@@ -100,7 +100,9 @@ def input_hash(request, original=None, instruction="", day_index=None):
     # in saved v1 inputs. Nonempty declarations always change the stage digest.
     for item in (value["request"],value["original"]):
         if isinstance(item,dict) and isinstance(item.get("planning_input"),dict):
-            for field in ("reservation_facts","transport_buffers","poi_relations","meal_resolutions"):
+            if item["planning_input"].get("attraction_count") is None:
+                item["planning_input"].pop("attraction_count", None)
+            for field in ("reservation_facts","transport_buffers","poi_relations","meal_resolutions","visit_entrances"):
                 if item["planning_input"].get(field)==[]:
                     item["planning_input"].pop(field)
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()

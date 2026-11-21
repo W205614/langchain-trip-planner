@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { TripFormData, TripPlanResponse, PlanningInput, RevisionScope, AssistantProposal, AssistantConfirmation, AssistantDecision } from '@/types'
+import type { TripFormData, TripPlanResponse, PlanningInput, RevisionScope, AssistantProposal, AssistantConfirmation, AssistantDecision, DailyTripCheck } from '@/types'
 import { getToken, clearAuth, csrfToken } from './auth'
 
 // 正式构建始终使用同源 Nginx 代理，避免开发 .env 中的 localhost:9000 混入镜像。
@@ -266,24 +266,10 @@ export async function answerTravelQuestion(city: string, query: string): Promise
   return (await apiClient.post('/api/research/answer', { city, query })).data
 }
 
-/** 仅重新安排历史行程中的一个日期，不重新生成整份计划。 */
-export async function reviseHistoryDay(id: number, dayIndex: number, instruction: string, version: number, scope?: RevisionScope, planningRevision?: number): Promise<any> {
-  const fingerprint = JSON.stringify({ id, dayIndex, instruction, version, scope, planningRevision })
-  let pending = JSON.parse(sessionStorage.getItem('pendingRevision') || 'null')
-  if (!pending || pending.fingerprint !== fingerprint) {
-    pending = { fingerprint, key: crypto.randomUUID(), id: null }
-    sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
-  }
-  if (!pending.id) {
-    const created = await apiClient.post(`/api/history/${id}/revise-task`, {
-      day_index: dayIndex, instruction, revision_scope: scope, planning_revision: planningRevision
-    }, { headers: { 'If-Match': String(version), 'Idempotency-Key': pending.key } })
-    pending.id = created.data.data.id
-    sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
-  }
+async function waitForRevision(id: string) {
   const deadline = Date.now() + 310000
   while (Date.now() < deadline) {
-    const state = await fetchTask(pending.id)
+    const state = await fetchTask(id)
     if (['succeeded', 'needs_attention'].includes(state.status)) {
       sessionStorage.removeItem('pendingRevision')
       return state.result
@@ -295,6 +281,25 @@ export async function reviseHistoryDay(id: number, dayIndex: number, instruction
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
   throw new Error('等待超时，请在“我的行程”的任务状态中查看改排结果')
+}
+
+export async function previewRevision(id: number, dayIndex: number, instruction: string, version: number, scope: RevisionScope, planningRevision: number) {
+  const fingerprint = JSON.stringify({ preview: true, id, dayIndex, instruction, version, scope, planningRevision })
+  let pending = JSON.parse(sessionStorage.getItem('pendingRevision') || 'null')
+  if (!pending || pending.fingerprint !== fingerprint) {
+    const conversation = await createAssistantConversation({ active_trip_id: id, title: '行程局部改排' })
+    pending = { fingerprint, key: crypto.randomUUID(), conversation: conversation.id, id: null }
+    sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
+  }
+  if (!pending.id) {
+    const created = await sendAssistantMessage(pending.conversation, {
+      mode: 'revise', record_id: id, day_index: dayIndex, content: instruction, version,
+      planning_revision: planningRevision, revision_scope: scope
+    }, pending.key)
+    pending.id = created.task_id
+    sessionStorage.setItem('pendingRevision', JSON.stringify(pending))
+  }
+  return await waitForRevision(pending.id)
 }
 
 export async function fetchMyKnowledge(): Promise<any> {
@@ -464,6 +469,7 @@ export const tripOperations = {
   workspace: async (id: number) => (await apiClient.get(`/api/trips/${id}/workspace`)).data.data,
   check: async (id: number, version: number, dayIndex: number) => (await apiClient.post(`/api/trips/${id}/checks`, {}, { params: { day_index: dayIndex }, headers: { 'If-Match': version } })).data,
   latestCheck: async (id: number, dayIndex: number) => (await apiClient.get(`/api/trips/${id}/checks/latest`, { params: { day_index: dayIndex } })).data.data,
+  dailyChecks: async (id: number) => (await apiClient.get<{ data: DailyTripCheck[] }>(`/api/trips/${id}/checks/latest`, { params: { all_days: true } })).data.data,
   acknowledge: async (id: number, riskId: number, version: number) => (await apiClient.post(`/api/trips/${id}/risks/${riskId}/acknowledge`, {}, { headers: { 'If-Match': version } })).data,
   reorder: async (id: number, version: number, dayIndex: number, poiIds: string[], description: string) =>
     (await apiClient.put(`/api/trips/${id}/workspace/day-order`, { day_index: dayIndex, poi_ids: poiIds, description }, { headers: { 'If-Match': version } })).data,
