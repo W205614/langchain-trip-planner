@@ -33,6 +33,17 @@ regexTarget = "secret"
 regexes = ['''^(f133a97a179955497243ef2a55dfad06f83cef66b5a80282a924f5b5e70736c3|f0fda988393a3704b49ad25638e48aa6212bb0b053b4a0f7bf9e6add95b1c95a)$''']
 
 [[allowlists]]
+description = "Recomputed SHA256 of public api.ts and auth.ts at a7f0a16 in the current CodeQL review"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = [
+  '''(^|/)docs/evidence/security-20261121/codeql/source-review\.json$''',
+  '''(^|/)\.github/codeql-context-remediated\.json$'''
+]
+regexTarget = "secret"
+regexes = ['''^(f3157f04798390dcd273f8052710295721aa35bcdf2c46cf8f30bce2d2db41bc|f0fda988393a3704b49ad25638e48aa6212bb0b053b4a0f7bf9e6add95b1c95a)$''']
+
+[[allowlists]]
 description = "Recomputed SHA512 of the official installed NGINX public signing key, never a private key or arbitrary digest"
 condition = "AND"
 targetRules = ["generic-api-key"]
