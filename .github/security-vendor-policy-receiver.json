@@ -26,7 +26,8 @@
     "docs/evidence/runtime-support-security-20261110/gate-review/debian-and-agent-regression.json": "4907c885a3d12750cc28fa88dce7b13f91f9e8f9dda20c55383c486816ed4c4d",
     "docs/evidence/runtime-support-security-20261110/gate-review/direct-tests.log": "28dc6b0ee0517956392fc0bfb6fce3d1aa4e2635e0f0bfb1a7886408983ffd2e",
     "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc",
-    "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021"
+    "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021",
+    "docs/evidence/security-20261121/README.md": "8f50e149beebab690381da117c44a9254ae8a0696c246c6903a8f456b4f4b73d"
   },
   "assessments": [
     {
@@ -49,11 +50,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r0",
+        "libcrypto3": "3.5.9-r1",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r0",
+        "libssl3": "3.5.9-r1",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -93,10 +94,10 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "ed8d30405217b3904a8df9ac311002d0ae43df516e60c5b3a8a998eda68ee340",
-        "/usr/lib/libcrypto.so.3": "bb2d86be6845456696f90f0948b6de6369f66612b7cf3ffa755e664436fdbc88"
+        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
+        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0"
       },
-      "review_record": "docs/evidence/runtime-support-security-20261110/receiver-review.md",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "requires_apk_architectures": {
         "alpine-baselayout": "x86_64",
         "alpine-baselayout-data": "x86_64",
@@ -159,11 +160,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r0",
+        "libcrypto3": "3.5.9-r1",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r0",
+        "libssl3": "3.5.9-r1",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -203,10 +204,10 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "ed8d30405217b3904a8df9ac311002d0ae43df516e60c5b3a8a998eda68ee340",
-        "/usr/lib/libcrypto.so.3": "bb2d86be6845456696f90f0948b6de6369f66612b7cf3ffa755e664436fdbc88"
+        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
+        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0"
       },
-      "review_record": "docs/evidence/runtime-support-security-20261110/receiver-review.md",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "requires_apk_architectures": {
         "alpine-baselayout": "x86_64",
         "alpine-baselayout-data": "x86_64",
@@ -268,11 +269,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r0",
+        "libcrypto3": "3.5.9-r1",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r0",
+        "libssl3": "3.5.9-r1",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -312,10 +313,10 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "ed8d30405217b3904a8df9ac311002d0ae43df516e60c5b3a8a998eda68ee340",
-        "/usr/lib/libcrypto.so.3": "bb2d86be6845456696f90f0948b6de6369f66612b7cf3ffa755e664436fdbc88"
+        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
+        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0"
       },
-      "review_record": "docs/evidence/runtime-support-security-20261110/receiver-review.md",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "requires_apk_architectures": {
         "alpine-baselayout": "x86_64",
         "alpine-baselayout-data": "x86_64",

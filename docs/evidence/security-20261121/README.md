@@ -10,4 +10,6 @@ Nginx 升至官方 1.30.7 后，前端扫描从 23 条阻断匹配降至 14 条�
 
 最新构建直接执行 Debian u5 的解析器和加载器测试。Debian 已提供前置保护页的测试分配器，移除重复定义后仍执行前置、后置保护页和实际边界检查。OpenSSL 3.5.9 本机重建通过 SONAME、导出符号及运行回归，Agent 镜像回归改用重建所得的三个库文件摘要。完整镜像仍以 GitHub 构建和最终镜像检查为准。
 
-已确认 Alpine `3.5.9-r1` 的 7 个 OpenSSL 漏洞 ID 仍触发镜像阻断。OpenSSL 3.5 分支已合入 CVE-2026-124709、CVE-2026-121482、CVE-2026-107493 和 CVE-2026-35190 的修复，当前 Alpine 稳定包尚未包含这些提交。CVE-2026-107494、CVE-2026-95690 和 CVE-2026-84786 仍待可核验的稳定分支修复。预警接收器还有 8 条 CPython 版本匹配，其中 3 条已有本仓库回补，门禁仍需按实际安装文件独立验证。[镜像扫描](https://github.com/W205614/langchain-trip-planner/actions/runs/44900375311) · [OpenSSL 上游版本](https://github.com/openssl/openssl/releases)
+已确认 Alpine `3.5.9-r1` 的 7 个 OpenSSL 漏洞 ID 仍触发镜像阻断。OpenSSL 3.5 分支已合入 CVE-2026-124709、CVE-2026-121482、CVE-2026-107493 和 CVE-2026-35190 的修复，当前 Alpine 稳定包尚未包含这些提交。CVE-2026-107494、CVE-2026-95690 和 CVE-2026-84786 仍待可核验的稳定分支修复。[镜像扫描](https://github.com/W205614/langchain-trip-planner/actions/runs/44900375311) · [OpenSSL 上游版本](https://github.com/openssl/openssl/releases)
+
+预警接收器的精确匹配因两个已签名 Alpine OpenSSL 包从 `3.5.9-r0` 升至 `3.5.9-r1` 而失效。复核从 GitHub 产物读取实际 rootfs 字节，并用签名验证后的官方 APK 离线安装独立确认两个库的 SHA-256。入口、用户、架构、其余 APK 及三个 CPython 回补文件保持旧审查的精确身份。安装回补及隔离 HTTP 回归步骤通过。仅将既有三项实际回补重新绑定当前 APK 和库字节，剩余 5 条 CPython 匹配和 14 条 OpenSSL 包匹配继续阻断。[接收器构建和回归](https://github.com/W205614/langchain-trip-planner/actions/runs/44900375311/job/136834881013) · [原回补依据](../runtime-support-security-20261110/receiver-review.md)
