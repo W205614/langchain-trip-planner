@@ -27,7 +27,7 @@
     "docs/evidence/runtime-support-security-20261110/gate-review/direct-tests.log": "28dc6b0ee0517956392fc0bfb6fce3d1aa4e2635e0f0bfb1a7886408983ffd2e",
     "docs/evidence/runtime-support-security-20261110/gate-review/public-signing-fingerprint-review.json": "15c5a34a518a51ae1998c5f11e58ddcdabf4e62e164168f0a40ffdcd6b115edc",
     "docs/evidence/native-security-20261112/workflow-test-binding-review.json": "59a83a5f64a2ca3408cd8d017eae3e5d56aaa735d01f12ff76032b7bb8feb021",
-    "docs/evidence/security-20261121/README.md": "b190278806438ea0914892e63ed306aba987dfc281a0a74e2986eb88cc2bbecc",
+    "docs/evidence/security-20261121/README.md": "bca6d007238286d18cb38e244373786729e32b865867ad0baa82050eb6152ff9",
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
     "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78"

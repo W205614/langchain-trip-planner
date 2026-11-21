@@ -217,7 +217,7 @@
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
     "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
-    "docs/evidence/security-20261121/README.md": "b190278806438ea0914892e63ed306aba987dfc281a0a74e2986eb88cc2bbecc"
+    "docs/evidence/security-20261121/README.md": "bca6d007238286d18cb38e244373786729e32b865867ad0baa82050eb6152ff9"
   },
   "assessments": [
     {
@@ -823,9 +823,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -850,9 +850,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -877,9 +877,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -904,9 +904,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -931,9 +931,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -958,9 +958,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -985,9 +985,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1012,9 +1012,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1039,9 +1039,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-3184"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1606,10 +1606,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1631,10 +1631,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1656,10 +1656,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1704,10 +1704,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1729,10 +1729,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1754,10 +1754,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1779,10 +1779,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78408"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1877,10 +1877,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1902,10 +1902,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1927,10 +1927,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1975,10 +1975,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2000,10 +2000,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2025,10 +2025,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2050,10 +2050,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-76642"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2436,10 +2436,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2461,10 +2461,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2486,10 +2486,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2534,10 +2534,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2559,10 +2559,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2584,10 +2584,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2609,10 +2609,10 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-78410"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -3598,10 +3598,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-89092"
@@ -3611,12 +3611,15 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-89092"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "absent_paths": [
         "/usr/sbin/nscd"
+      ],
+      "requires_packages_absent": [
+        "nscd"
       ]
     },
     {
@@ -3624,10 +3627,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-89092"
@@ -3637,12 +3640,15 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-89092"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "absent_paths": [
         "/usr/sbin/nscd"
+      ],
+      "requires_packages_absent": [
+        "nscd"
       ]
     },
     {
@@ -3824,10 +3830,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-97399"
@@ -3837,9 +3843,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-97399"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_architecture": "amd64"
     },
@@ -3848,10 +3854,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-97399"
@@ -3861,9 +3867,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-97399"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_architecture": "amd64"
     },
@@ -5134,9 +5140,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5162,9 +5168,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5190,9 +5196,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5218,9 +5224,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5246,9 +5252,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5274,9 +5280,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5302,9 +5308,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5330,9 +5336,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5358,9 +5364,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2022-0563"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "45c843d22b6b263f5c651ad2fe234de3e7a9acfc3247b245ba083d5017744bec"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "f0bc0240300baeea36996de219e390229c4011f34905c028227ce80221593ecc"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -7035,6 +7041,13 @@
       "CVE-2026-16052",
       "CVE-2026-19552"
     ],
+    "review_record": "docs/evidence/security-20261121/README.md"
+  },
+  "restricted_runtime_review_20261121": {
+    "source_revision": "9d2b9704e5e81b10768d06804cc37977a265fbc3",
+    "github_security_run": 44906951817,
+    "existing_assessment_rows_rebound": 43,
+    "related_raw_matches_reverified": 43,
     "review_record": "docs/evidence/security-20261121/README.md"
   }
 }
