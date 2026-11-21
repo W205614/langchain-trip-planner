@@ -1,0 +1,526 @@
+{
+  "inspected_revision": "f5f33c339a4fa3432b3b01995fbf9bac76aae526",
+  "candidate_image_id": "sha256:4067eb9beb6f8ab6c61bc9c37caf5ed2ec44fc78159c60cde12c8ad39ec3fd8e",
+  "predecessor_review": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+  "application_source_delta": {
+    "backend/app/agents/candidates.py": {
+      "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+      "current": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3"
+    },
+    "backend/app/agents/trip_planner_agent.py": {
+      "previous": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+      "current": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972"
+    },
+    "backend/app/models/planning.py": {
+      "previous": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
+      "current": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486"
+    },
+    "backend/app/models/schemas.py": {
+      "previous": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+      "current": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac"
+    },
+    "backend/app/services/durable_execution.py": {
+      "previous": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+      "current": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c"
+    },
+    "backend/app/services/plan_quality.py": {
+      "previous": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
+      "current": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5"
+    },
+    "backend/app/services/planning_constraints.py": {
+      "previous": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+      "current": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d"
+    },
+    "backend/app/services/result_policy.py": {
+      "previous": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+      "current": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e"
+    },
+    "backend/app/services/time_planner.py": {
+      "previous": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+      "current": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f"
+    }
+  },
+  "inspected_elf_files": 968,
+  "undefined_imports": {
+    "posix_regex": {
+      "usr/bin/bash": [
+        "regcomp",
+        "regexec",
+        "regfree"
+      ],
+      "usr/bin/csplit": [
+        "re_compile_pattern",
+        "re_search"
+      ],
+      "usr/bin/diff": [
+        "re_compile_pattern",
+        "re_search",
+        "regcomp",
+        "regexec",
+        "regfree"
+      ],
+      "usr/bin/du": [
+        "regcomp",
+        "regexec",
+        "regfree"
+      ],
+      "usr/bin/expr": [
+        "re_compile_pattern",
+        "re_match",
+        "regfree"
+      ],
+      "usr/bin/find": [
+        "re_compile_pattern",
+        "re_match"
+      ],
+      "usr/bin/grep": [
+        "re_compile_pattern",
+        "re_match",
+        "re_search",
+        "regcomp",
+        "regexec",
+        "regfree"
+      ],
+      "usr/bin/hardlink": [
+        "regcomp",
+        "regerror",
+        "regexec"
+      ],
+      "usr/bin/localedef": [
+        "regcomp",
+        "regerror",
+        "regfree"
+      ],
+      "usr/bin/more": [
+        "regcomp",
+        "regerror",
+        "regexec",
+        "regfree"
+      ],
+      "usr/bin/nl": [
+        "re_compile_pattern",
+        "re_search"
+      ],
+      "usr/bin/ptx": [
+        "re_compile_pattern",
+        "re_match",
+        "re_search"
+      ],
+      "usr/bin/run-parts": [
+        "regcomp",
+        "regerror",
+        "regexec",
+        "regfree"
+      ],
+      "usr/bin/sed": [
+        "re_compile_pattern",
+        "re_search",
+        "regfree"
+      ],
+      "usr/bin/tac": [
+        "re_compile_pattern",
+        "re_search"
+      ],
+      "usr/lib/x86_64-linux-gnu/libapt-pkg.so.7.0.0": [
+        "regcomp",
+        "regerror",
+        "regexec",
+        "regfree"
+      ],
+      "usr/lib/x86_64-linux-gnu/libapt-private.so.0.0.0": [
+        "regcomp",
+        "regerror",
+        "regexec",
+        "regfree"
+      ],
+      "usr/lib/x86_64-linux-gnu/libformw.so.6.5": [
+        "regcomp",
+        "regexec",
+        "regfree"
+      ],
+      "usr/lib/x86_64-linux-gnu/libsemanage.so.2": [
+        "regcomp",
+        "regexec",
+        "regfree"
+      ],
+      "usr/lib/x86_64-linux-gnu/libsmartcols.so.1.1.0": [
+        "regcomp",
+        "regerror",
+        "regexec",
+        "regfree"
+      ]
+    },
+    "glob": {
+      "usr/lib/x86_64-linux-gnu/libapt-pkg.so.7.0.0": [
+        "glob"
+      ],
+      "usr/lib/x86_64-linux-gnu/security/pam_access.so": [
+        "glob"
+      ],
+      "usr/lib/x86_64-linux-gnu/security/pam_limits.so": [
+        "glob"
+      ],
+      "usr/lib/x86_64-linux-gnu/security/pam_namespace.so": [
+        "glob"
+      ]
+    },
+    "wide_scanf": {},
+    "journal_reader": {
+      "usr/bin/lslogins": [
+        "sd_journal_get_data",
+        "sd_journal_get_realtime_usec",
+        "sd_journal_next",
+        "sd_journal_open",
+        "sd_journal_open_directory",
+        "sd_journal_previous_skip",
+        "sd_journal_seek_tail"
+      ]
+    }
+  },
+  "reviewed_rows": [
+    {
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2018-20796"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2018-20796"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2010-4756"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2010-4756"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-9192"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2019-9192"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2021-45346"
+      ],
+      "artifact_versions": {
+        "libsqlite3-0": "3.54.1-2"
+      },
+      "requires_dpkg": {
+        "libsqlite3-0": "3.54.1-2"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "225ceb839db2c1dd484cfcaa5ef9fbdd429eb1d5f1e0c39fbd50150bca5fc7bc"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2021-45346"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2023-31439"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "requires_dpkg": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31439"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2023-31439"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "requires_dpkg": {
+        "libsystemd0": "257.13-1~deb13u1",
+        "libudev1": "257.13-1~deb13u1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31439"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2023-31437"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "requires_dpkg": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31437"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2023-31437"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "requires_dpkg": {
+        "libsystemd0": "257.13-1~deb13u1",
+        "libudev1": "257.13-1~deb13u1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31437"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2023-31438"
+      ],
+      "artifact_versions": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "requires_dpkg": {
+        "libsystemd0": "257.13-1~deb13u1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31438"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2023-31438"
+      ],
+      "artifact_versions": {
+        "systemd": "257.13-1~deb13u1"
+      },
+      "requires_dpkg": {
+        "libsystemd0": "257.13-1~deb13u1",
+        "libudev1": "257.13-1~deb13u1"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
+        "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2023-31438"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2026-100290"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-100290",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0028"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2026-100290"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-100290",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0028"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2026-115819"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc-bin": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-115819",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0027"
+      ]
+    },
+    {
+      "ids": [
+        "CVE-2026-115819"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+      },
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-115819",
+        "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0027"
+      ]
+    }
+  ],
+  "review_facts": [
+    "The nine changed Python sources were reviewed as a unit. They implement attraction-count constraints and reported conflicts, entrance metadata, and deterministic request fingerprints. They add no native loading, process launch, database import, filesystem pattern, or binary journal path.",
+    "The installed ELF import audit found no libc regex or glob imports in the Python runtime and extensions. The remaining command-line, package manager and PAM callers remain outside the Uvicorn service entry point. The Python application uses a fixed pathlib pattern on the configured knowledge directory.",
+    "No inspected ELF imports wide scanf. The application has no user-supplied native format strings, executable inputs, ldd entry point, or extension installation route.",
+    "The libsystemd and libudev binaries and package revisions match the prior assessment. lslogins is the only observed dynamic journal reader. Its process and binary journal files are outside the execution flow.",
+    "SQLite package and shared library bytes match the prior assessment. Database paths still come from service configuration and fixed filenames. Uploads and SQL parameters do not supply a database file or raw SQL.",
+    "The finding identities and prior exact predicates are carried forward. No additional advisories are classified by this review. All raw Grype results remain available and the release gate still checks every severity."
+  ]
+}

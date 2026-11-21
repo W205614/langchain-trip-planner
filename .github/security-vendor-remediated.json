@@ -222,7 +222,8 @@
     "backend/security/openssl-backport/patches/0010-CVE-2026-121482.patch": "6bdbb111a7ce640e42c558aaf912fe19b3770aa9afc7c8c5a0d36d20dcb2d5e9",
     "backend/security/openssl-backport/patches/0011-CVE-2026-121482-regression.patch": "a9897de897e3cf34206ba9a4ccb461927bd04c310e9354682ceca317c1537502",
     "backend/security/openssl-backport/patches/0012-CVE-2026-107493.patch": "6176d694ac38251bfa4e11198d002d8720f9efb05deffb35703adb93be6173e1",
-    "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1"
+    "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1",
+    "docs/evidence/security-20261121/agent-execution-paths.json": "afecbfa6d1ed9037dc988a1976157077ab428fb098cc098ce827dcad3c90f480"
   },
   "assessments": [
     {
@@ -494,10 +495,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2018-20796"
@@ -507,9 +508,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2018-20796"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -523,11 +524,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -540,8 +541,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -553,23 +554,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -585,17 +586,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2018-20796"
@@ -605,9 +607,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2018-20796"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -621,11 +623,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -638,8 +640,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -651,23 +653,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -683,7 +685,8 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
@@ -2232,10 +2235,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010023"
@@ -2245,9 +2248,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -2261,11 +2264,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -2278,8 +2281,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -2291,23 +2294,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -2323,17 +2326,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010023"
@@ -2343,9 +2347,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010023"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -2359,11 +2363,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -2376,8 +2380,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -2389,23 +2393,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -2421,7 +2425,8 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
@@ -2973,10 +2978,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2010-4756"
@@ -2986,9 +2991,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2010-4756"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3002,11 +3007,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -3019,8 +3024,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -3032,23 +3037,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -3064,17 +3069,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2010-4756"
@@ -3084,9 +3090,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2010-4756"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3100,11 +3106,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -3117,8 +3123,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -3130,23 +3136,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -3162,7 +3168,8 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
@@ -3288,10 +3295,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-9192"
@@ -3301,9 +3308,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-9192"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3317,11 +3324,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -3334,8 +3341,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -3347,23 +3354,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -3379,17 +3386,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-9192"
@@ -3399,9 +3407,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-9192"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3415,11 +3423,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -3432,8 +3440,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -3445,23 +3453,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -3477,7 +3485,8 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
@@ -4127,7 +4136,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2021-45346"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsqlite3.so.3.54.1": "225ceb839db2c1dd484cfcaa5ef9fbdd429eb1d5f1e0c39fbd50150bca5fc7bc"
       },
@@ -4143,11 +4152,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -4160,8 +4169,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -4173,23 +4182,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -5397,7 +5406,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2023-31439"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
         "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
@@ -5414,11 +5423,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -5431,8 +5440,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -5444,23 +5453,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -5520,7 +5529,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2023-31439"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
         "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
@@ -5537,11 +5546,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -5554,8 +5563,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -5567,23 +5576,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -5647,7 +5656,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2023-31437"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
         "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
@@ -5664,11 +5673,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -5681,8 +5690,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -5694,23 +5703,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -5770,7 +5779,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2023-31437"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
         "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
@@ -5787,11 +5796,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -5804,8 +5813,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -5817,23 +5826,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -5869,7 +5878,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2023-31438"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
         "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
@@ -5886,11 +5895,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -5903,8 +5912,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -5916,23 +5925,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -5992,7 +6001,7 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2023-31438"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.40.0": "c59f9015342de9c2dcb2decccb3d83218849fe3e4388c723a6528254fd7606f0",
         "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.10": "902fd5e300dacfd8f8292ce18fb8aca4775d67218cb44414a2a6fd89e09cc9a9"
@@ -6009,11 +6018,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -6026,8 +6035,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -6039,23 +6048,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -6381,10 +6390,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-100290"
@@ -6395,9 +6404,9 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-100290",
         "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0028"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6411,11 +6420,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -6428,8 +6437,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -6441,23 +6450,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -6473,17 +6482,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-100290"
@@ -6494,9 +6504,9 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-100290",
         "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0028"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6510,11 +6520,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -6527,8 +6537,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -6540,23 +6550,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -6572,17 +6582,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-115819"
@@ -6593,9 +6604,9 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-115819",
         "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0027"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6609,11 +6620,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -6626,8 +6637,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -6639,23 +6650,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -6671,17 +6682,18 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-115819"
@@ -6692,9 +6704,9 @@
         "https://security-tracker.debian.org/tracker/CVE-2026-115819",
         "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=advisories/GLIBC-SA-2026-0027"
       ],
-      "review_record": "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json",
+      "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6708,11 +6720,11 @@
         "/app/app/agent_api/rebuild.py": "b5321cc9489ff2b39cda352e90f806589488e8fda712b40b78ed7b83d90fe747",
         "/app/app/agent_api/research.py": "c2e08da65f36a58e7fd693a7e454e89e7792472700733cce2884a3fc93f6c9cd",
         "/app/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
-        "/app/app/agents/candidates.py": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
+        "/app/app/agents/candidates.py": "2e8b3e62cd4f68c6cd3cd43ff4b4dae15406c915b148d5d7f2cc98c6882d21e3",
         "/app/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
         "/app/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
         "/app/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-        "/app/app/agents/trip_planner_agent.py": "5d0855b4c1d07a72e6f5b1e00fc8ca463d828504513909905ac9436b9a6eb287",
+        "/app/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
         "/app/app/config.py": "b9b67109a6d153bb618433a2876050ff2adee12df94500b8ca621d6b93ca140e",
         "/app/app/core/__init__.py": "afe288c0e7deedb671953a885bfc6fc20c47dbb13ee81c5b1fc91fe9287cd7f1",
         "/app/app/core/exceptions.py": "40d123f025ba99a76b6e6cf91fbc10738208d6351f1674aabf7f591c0b3f180d",
@@ -6725,8 +6737,8 @@
         "/app/app/evals/rag_benchmark.py": "69c9e55a4b21389a16fd36aebfea3b834392a6e7a27a7cb9b56b878ce8373407",
         "/app/app/evals/scenario_contracts.py": "4e2b84803fbeb9318f5ae73ff4ecb93e3346da5ff1a11014ef473bdfc5ddeaaa",
         "/app/app/models/__init__.py": "e30fad7b184746685738a20fae62c71c7be233ec162cefb1b6299c93f33aca80",
-        "/app/app/models/planning.py": "ced67732cc3bf920f39c43b6e218d828b69e3f09fd6026f1a685f4e3e3d98581",
-        "/app/app/models/schemas.py": "55f15e70dd025b02214e0b6034144ff63389bbf7afc626f70860029aa252eef9",
+        "/app/app/models/planning.py": "14c105ef175dd3cccf5901320b23d4b804d34a785fb4d45eb2c4981a5f98f486",
+        "/app/app/models/schemas.py": "c375ca3d782deb0677a2edd45aa534ba1e4c949e55316c57f89f243775fc7eac",
         "/app/app/services/__init__.py": "94339787272cfe40a2821c9839506698136d95861fc221d9213ff73e96963e3b",
         "/app/app/services/agent_paths.py": "0e525ac6ddb2c830636b2b7b4d64414f0261131b84602116931213d342d26118",
         "/app/app/services/amap_mcp_client.py": "e6023f97ff2fad0f5ccf5e183fd5788a3cf45c55a128fb66cb6526ced98c0a94",
@@ -6738,23 +6750,23 @@
         "/app/app/services/chroma_boundary.py": "374af0ee1f40694840ce7a2c15502e5c5b97d241f7f587cc8185bbf91c6ed576",
         "/app/app/services/coordination.py": "faee6a9f7c03a11d779ba7e5c137a30145ae47e60c7ee46494d23cb1bb3fc7c8",
         "/app/app/services/dataset_identity.py": "bad821524427a1c9f1a742c09dbf12f412b0cbfb1be27efe84bbfe48be056e6b",
-        "/app/app/services/durable_execution.py": "64067953328e0eacc2edaca1ccca3c4fb1848cab25d003571124f990ee2d8a6d",
+        "/app/app/services/durable_execution.py": "a0acf9d701786a6e9c1be29abcc79520db0a32220d0db61d9975a3025610c34c",
         "/app/app/services/embedding_identity.py": "b259f862fbdbe10ad6bc28c55e267332d16e0d808a1e6227b07327c11f0853e3",
         "/app/app/services/eval_budget.py": "98d815c2494252ff266cdc62ef6f41df1a37a86096f8963cabfc874c74bfec39",
         "/app/app/services/execution.py": "6bd95a79c6e4c3a973f3664d1c857dbb094d4f18b1d60e7f96c74ba8d677e0e9",
         "/app/app/services/knowledge_chunks.py": "23c2ab61b08ec3da0bfc2a123e8081cb8dcb9d9a6073a38304e03e880cc272c0",
         "/app/app/services/llm_service.py": "82929d6d78266663ae9341221c925063f21b21e75de0f9635040d238203990d4",
-        "/app/app/services/plan_quality.py": "930e6a607a5760143d2ec9b362d198b8ffbce7fcfc16f3db3b44c21111d7a1be",
-        "/app/app/services/planning_constraints.py": "c2dcafafbf1de7e4aef2e26da5fbb31d39ef3c49d305a4e0f80833d0a33e8c3d",
+        "/app/app/services/plan_quality.py": "0da5d5f2a0637f00f33266fa532e25755b3368a6cebf53fe15cea756a27fe7c5",
+        "/app/app/services/planning_constraints.py": "00890dd2c1a08047bf55308d6f4d0a091dcd5ee1e72c65fa067a54addc28a83d",
         "/app/app/services/planning_semantics.py": "21b402db60d21b69bd6a5c916faad2010acb58fb08e78b4da8dd71acbcf3752e",
         "/app/app/services/poi_photos.py": "48beac5ba80bd0eeba8b156a4b14213f2e86c58cbc2e7b3f3a12043fd6cb3073",
         "/app/app/services/rag_runtime.py": "832fb73f3cab97ce3e7333b66778756e1251f2d601fa26c62371047095981435",
         "/app/app/services/rag_service.py": "4a2ea8d08c6be175780b35c79bece3012c3cb4025383931ac455f53476148228",
         "/app/app/services/research_answer.py": "824defb83324724b05efff30228f2a74039311fea5847e47946d8cc52344447b",
         "/app/app/services/research_evidence.py": "7a0ae3139a253d074a6d51f22c61e938d0543cc44503409b1e5b38cffe65b6f4",
-        "/app/app/services/result_policy.py": "8fbca97242f22a035ab8184fa01dbeef21b4aab1da1b0a2f648dd7929480488f",
+        "/app/app/services/result_policy.py": "eda1d63a965351c0f73077e5a3989f954a39ad32ac6538d0339e8fbdafb8965e",
         "/app/app/services/route_facts.py": "0fd3e3b1af875bfa707732f293255670172c59b80872a6e35bcbc4c012c9e1a1",
-        "/app/app/services/time_planner.py": "e74ed443761c9a1c54edd67276e3baa1990a4eef8daf635dcf4e3bc77f336870",
+        "/app/app/services/time_planner.py": "118a506e4bf5ee426ec551788a582827cb9964cedad92a59791640449a52429f",
         "/app/app/services/travel_facts.py": "3737af75556438efd900dac9d859f794adb58fd0b66ccea1a6f6e76ca5678b4f",
         "/usr/local/lib/python3.13/base64.py": "a80fc2454f7a0ad644f02259184de5b52084392ddb8b41c1ce372e50a09f3993",
         "/usr/local/lib/python3.13/glob.py": "e6693972d5999ae0be42f49f6192e1c3d24f3f1e6eeca1f95dfa0b5dae74fe07",
@@ -6770,7 +6782,8 @@
         "/usr/local/lib/python3.13/site-packages/pybase64/_fallback.py": "208ff052906c37bc71039fadf63eacfb60402bef677f379c85f37b4728f5144d",
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
-      }
+      },
+      "requires_architecture": "amd64"
     },
     {
       "distribution": "debian",
