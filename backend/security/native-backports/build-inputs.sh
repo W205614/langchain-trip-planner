@@ -7,34 +7,47 @@ case "$mode" in
   *) printf 'Usage: build-inputs.sh [--all|--dependencies-only|--sources-only] [source-cache]\n' >&2; exit 2 ;;
 esac
 test "$(dpkg --print-architecture)" = amd64
-test "$(dpkg-query -W -f='${Version}' libc6)" = '2.41-12+deb13u4'
 if [ "$mode" != --sources-only ]; then
-sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get build-dep -y --no-install-recommends \
-  -P nobiarch,nocheck,nodoc glibc util-linux
-DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-  gcc-14 g++-14 libgmp-dev libmpfr-dev libmpc-dev libisl-dev flex texinfo \
-  autoconf automake libtool pkg-config gettext libcap-ng-dev libpam0g-dev \
-  libselinux1-dev libncurses-dev libreadline-dev zlib1g-dev libsqlite3-dev
-test "$(dpkg-query -W -f='${Version}' g++-14)" = '14.2.0-19'
+    # Check the pinned base before installing current Debian build dependencies.
+    base_libc=$(dpkg-query -W -f='${Version}' libc6)
+    if [ "$base_libc" != '2.41-12+deb13u4' ]; then
+        printf 'Unexpected libc6 in pinned build base: %s\n' "$base_libc" >&2
+        exit 1
+    fi
+    sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get build-dep -y --no-install-recommends \
+        -P nobiarch,nocheck,nodoc glibc util-linux
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        gcc-14 g++-14 libgmp-dev libmpfr-dev libmpc-dev libisl-dev flex texinfo \
+        autoconf automake libtool pkg-config gettext libcap-ng-dev libpam0g-dev \
+        libselinux1-dev libncurses-dev libreadline-dev zlib1g-dev libsqlite3-dev curl
+    test "$(dpkg-query -W -f='${Version}' g++-14)" = '14.2.0-19'
 fi
 if [ "$mode" = --dependencies-only ]; then
-  exit 0
+    exit 0
 fi
-mkdir -p /build /out
-mkdir -p "$source_cache"
-# apt's unprivileged downloader must own its private source-cache directory.
-chown _apt:root "$source_cache"
-chmod 0700 "$source_cache"
+mkdir -p /build /out "$source_cache"
 cd "$source_cache"
-apt-get source --download-only --only-source \
-  glibc=2.41-12+deb13u4 gcc-14=14.2.0-19 util-linux=2.41.5-0+deb13u1
+# APT indexes can drop a superseded source version while the pool still has its
+# original files. The checked-in digest remains the source identity.
+while read -r digest name; do
+    case "$name" in
+        glibc_*) component=g/glibc ;;
+        gcc-14_*) component=g/gcc-14 ;;
+        util-linux_*) component=u/util-linux ;;
+        *) printf 'Unrecognized native build source: %s\n' "$name" >&2; exit 2 ;;
+    esac
+    if ! printf '%s  %s\n' "$digest" "$name" | sha256sum -c --status; then
+        curl --fail --silent --show-error --retry 3 --connect-timeout 15 \
+            --output "$name" "https://deb.debian.org/debian/pool/main/$component/$name"
+    fi
+done < /patches/sources.sha256
 sha256sum -c /patches/sources.sha256
 if [ "$source_cache" != /build ]; then
-  while read -r digest name; do
-    install -m 0644 "$source_cache/$name" "/build/$name"
-  done < /patches/sources.sha256
+    while read -r digest name; do
+        install -m 0644 "$source_cache/$name" "/build/$name"
+    done < /patches/sources.sha256
 fi
 cd /build
 dpkg-source -x glibc_2.41-12+deb13u4.dsc
