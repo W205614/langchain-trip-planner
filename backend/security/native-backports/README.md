@@ -38,15 +38,12 @@ from the 2.41.6 release are already present in Debian's stable source package an
 are not applied twice. The cgroup-FD closure and correct symlink flag are later
 official stable-branch fixes; 2.41.6 alone is insufficient for this build.
 
-The ORIGIN fix is rebased only around the older loader normalizer and Makefile
-positions. Its new normalization helper and predicate are the upstream code.
-`test-patches/glibc-tests-trixie.patch` keeps Debian's existing unknown-RR diagnostic in
-the resolver expectations and supplies the leading-guard allocator missing
-from 2.41's test helpers. All upstream boundary checks remain active. The
-global raw patch hashes remain in `patches.sha256`. Each native stage checks its
-component manifest (`glibc-build.sha256`, `libstdcxx-patches.sha256` or
-`util-linux-patches.sha256`); the later glibc check stage verifies its independent
-`glibc-tests.sha256`. These manifests partition the same reviewed patch inputs.
+Debian `deb13u5` supplies the ORIGIN normalization fix, the resolver
+assertions, and the leading-guard allocator used by its loader tests. The
+build runs those tests directly and verifies the separate boundary fixture
+against `glibc-tests.sha256`. Each native build verifies its corresponding
+patch manifest (`glibc-build.sha256`, `libstdcxx-patches.sha256`, or
+`util-linux-patches.sha256`).
 
 The ordinary backport build finishes in `glibc-compiled`. The application uses
 `glibc-hardened-compiled`, which applies the separately reviewed TLS, thread-stack

@@ -3,7 +3,6 @@ set -euo pipefail
 cd /patches
 sha256sum -c glibc-tests.sha256
 cd /build/glibc-2.41
-patch --batch --fuzz=0 -p1 < /patches/test-patches/glibc-tests-trixie.patch
 build=$PWD/build-tree/amd64-libc
 current_test=
 report_failure() {

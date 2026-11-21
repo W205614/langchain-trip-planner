@@ -20,7 +20,6 @@ RUN bash /patches/build-glibc.sh --hardening
 
 FROM glibc-hardened-compiled AS glibc-backport
 COPY security/native-backports/check-glibc.sh security/native-backports/glibc-tests.sha256 security/native-backports/glibc-boundary-regression.c /patches/
-COPY security/native-backports/test-patches/ /patches/test-patches/
 RUN bash /patches/check-glibc.sh
 COPY security/glibc-hardening/ /hardening/
 RUN bash /hardening/check-hardening.sh
