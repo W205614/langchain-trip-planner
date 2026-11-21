@@ -120,12 +120,12 @@
     "backend/security/native-backports/patches/util-9fcb98bf08d9119d07ba3a3c709b1a85e4a1bbcb.patch": "86dc6819c9465d829849734605cfe586404607fd7612f3f05ad5c829a33d0bb6",
     "backend/security/native-backports/patches/util-a15c00a9e545aa8b9cf6ec0f888ff6c7b3eaeedc.patch": "874e91ef452c086c94192eec0bf94b324a4e6c4b8f23bcc2e26fafe828edad91",
     "backend/security/native-backports/patches/util-ba905a1874959c70fd706aa7d49df61076864e0a.patch": "6203e5d3dc92f6113e8e37bb7f60b6f6c8ed47cb2e79d1a3b5134df964464497",
-    "backend/security/cpython-backports/build.sh": "45ea9fa4089e7f5ff9fd142399d1cdb956775b4bed106d9f44b1c86503be6419",
+    "backend/security/cpython-backports/build.sh": "5db51691bd8c0a83691b891dfd1fb15b42ee6d46973ef4c5369bfb5dca37e12a",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
     "backend/security/cpython-backports/CVE-2026-103995.patch": "cd937a80f6abef62507997a0cf1012450348857a245e86fc13bff27caf127476",
     "backend/security/cpython-backports/CVE-2026-116566.patch": "d8cb1998e30dc71474c5f9d3a9093e7de6af4dceffdb42ec93a52347ab8ec1f1",
-    "backend/security/cpython-backports/patches.sha256": "d7d25fe12f22b04d92716be7677ccf1599f486864f44cacde95237f850f64f78",
-    "backend/security/cpython-backports/README.md": "4e58a54659239a6102ef387546b3a94b3460db8452b506ed14e079924e4bd333",
+    "backend/security/cpython-backports/patches.sha256": "815dffca78bac6e4e6e75093ff945d38190e93295c2e54dbc054a78cff971cd4",
+    "backend/security/cpython-backports/README.md": "0d3a17dcfcc08727032c72bb0f121b5c4f88a51bf5d6d71562ac259425ee8eeb",
     "backend/security/cpython-backports/upstream-poplib-b234a2b.patch": "606aa1bd8124cb0d777744dfe1a89d1ba983638115372cc508f4ed4a154f3abf",
     "backend/security/pam-backport/build-inputs.sh": "9a95cb08e020a958c6c40f1e096ead7b4d211571dcfb8129a0661805a90da5a2",
     "backend/security/pam-backport/build.sh": "6f98770c85d0fb722505f6b6fe7af373ed10b5b68a9a4cde839e6ceaaa92457a",
@@ -213,7 +213,10 @@
     "docs/evidence/maintenance-v0.1.7-20261115/agent-execution-path-review.json": "8f138812479e930c9d08b4e5968ca454414b45e1a69b5c1e44b26af0fd48b377",
     "docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/review.json": "99f91ffa2ced024e3cbfb77c178cab6f06712a1042c63e387851d816bb4dbc98",
     "docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/2a31760bc2a968878700476c1de5b8ea7809e460.patch": "9de9aec729b5861768f158a7a385ee10dbe6ca0c9e9ddae7f8f39c32f30fcd69",
-    "docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574.patch": "3dbb4cd7d668dd4b455999f7c88c35ff00209936b11a5797bfa1053229be2812"
+    "docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574.patch": "3dbb4cd7d668dd4b455999f7c88c35ff00209936b11a5797bfa1053229be2812",
+    "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
+    "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
+    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78"
   },
   "assessments": [
     {
@@ -6839,7 +6842,7 @@
     "actual_final_scan_required": true
   },
   "source_binding_review_20261121": {
-    "source_revision": "8b495555dbd4cc05828f3a00fcedc8ec57ce3b9e",
+    "source_revision": "c824d0551023c9ba67d7f2871e2398947807bb89",
     "changes": {
       "backend/app/agents/candidates.py": {
         "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
@@ -6934,6 +6937,18 @@
         "current": null,
         "reason": "Debian u5 provides the guarded allocator"
       },
+      "backend/security/cpython-backports/build.sh": {
+        "previous": "45ea9fa4089e7f5ff9fd142399d1cdb956775b4bed106d9f44b1c86503be6419",
+        "current": "5db51691bd8c0a83691b891dfd1fb15b42ee6d46973ef4c5369bfb5dca37e12a"
+      },
+      "backend/security/cpython-backports/patches.sha256": {
+        "previous": "d7d25fe12f22b04d92716be7677ccf1599f486864f44cacde95237f850f64f78",
+        "current": "815dffca78bac6e4e6e75093ff945d38190e93295c2e54dbc054a78cff971cd4"
+      },
+      "backend/security/cpython-backports/README.md": {
+        "previous": "4e58a54659239a6102ef387546b3a94b3460db8452b506ed14e079924e4bd333",
+        "current": "0d3a17dcfcc08727032c72bb0f121b5c4f88a51bf5d6d71562ac259425ee8eeb"
+      },
       "backend/tests/test_openssl_security_backport.py": {
         "previous": "88021594218ea0e3fb9a8637336133645c2023b259e481b14cb7e8feab057b05",
         "current": "4d0eaf15758644994e8abbb108f94abc530fb9bc3a2e39a4448a60cfdca370cc"
@@ -6957,6 +6972,21 @@
       "backend/security/openssl-backport/sources.sha256": {
         "previous": "60d6dc5cbfdcc14d2cd6c186179657b608a445db5596c0a5ec6956d75d95baa9",
         "current": "a8a5622989a0d38ccd109f0fe0dfb6bc45d80e245e2240cf3fd5c72b84a2c798"
+      },
+      "backend/security/cpython-backports/CVE-2026-124249.patch": {
+        "previous": null,
+        "current": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
+        "reason": "Pinned upstream CPython stdlib fix"
+      },
+      "backend/security/cpython-backports/CVE-2026-16052.patch": {
+        "previous": null,
+        "current": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
+        "reason": "Pinned upstream CPython stdlib fix"
+      },
+      "backend/security/cpython-backports/CVE-2026-19552.patch": {
+        "previous": null,
+        "current": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
+        "reason": "Pinned upstream CPython stdlib fix"
       }
     },
     "review": "Planning changes preserve the embedded Chroma entrypoint and client path. Debian build materials and PostgreSQL identity changed. Exact advisory, package and ELF predicates remain in force. Rebuilt binaries require independent matching artifact evidence.",
