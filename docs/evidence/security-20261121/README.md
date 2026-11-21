@@ -15,3 +15,9 @@ Nginx 升至官方 1.30.7 后，前端扫描从 23 条阻断匹配降至 14 条�
 预警接收器的精确匹配因两个已签名 Alpine OpenSSL 包从 `3.5.9-r0` 升至 `3.5.9-r1` 而失效。复核从 GitHub 产物读取实际 rootfs 字节，并用签名验证后的官方 APK 离线安装独立确认两个库的 SHA-256。入口、用户、架构、其余 APK 及三个 CPython 回补文件保持旧审查的精确身份。安装回补及隔离 HTTP 回归步骤通过。仅将既有三项实际回补重新绑定当前 APK 和库字节，剩余 5 条 CPython 匹配和 14 条 OpenSSL 包匹配继续阻断。[接收器构建和回归](https://github.com/W205614/langchain-trip-planner/actions/runs/44900375311/job/136834881013) · [原回补依据](../runtime-support-security-20261110/receiver-review.md)
 
 源码 `c824d05` 进一步回补 CVE-2026-124249、CVE-2026-16052 和 CVE-2026-19552。使用固定的 Python 3.13.18 源包进行本机容器构建，六组上游测试实际通过 1,287 项，另有 103 项按上游条件跳过。三个新增模块随 Agent 和预警接收器镜像安装。接收器的门禁逐项要求这些文件的实际 SHA-256，且继续要求原有 APK、架构、运行入口、用户和 ELF 证据。剩余的 OpenSSL、IMAP 和归档命令行告警仍按完整扫描判定。[上游补丁与回归入口](../../../backend/security/cpython-backports/README.md) · [本轮 CodeQL 原始产物](https://github.com/W205614/langchain-trip-planner/actions/runs/44904164558)
+
+在无外部网络的容器中，本机完整 Agent 镜像 `sha256:fc8d496329aba9d5a6d5fd1f7820912f457de2870435a254051473768c654965` 通过 104 项原生包与运行回归。重新绑定了经过这些验证的既有回补和三项新 CPython 修复所需的实际文件字节及精确包版本。
+
+`d229ff7` 的预警接收器通过最终镜像回归。Grype 保留 22 条原始匹配，依据实际文件和签名 APK 身份验证 6 条已回补，余下 16 条阻断，其中 OpenSSL 14 条、CPython 2 条。风险接受为 0。[接收器全严重度扫描](https://github.com/W205614/langchain-trip-planner/actions/runs/44906209325)
+
+GitHub 的 Docker 构建已通过，四个浏览器失败的 trace 显示未模拟的每日核验请求携带测试令牌到真实后端，触发 401。`d229ff7` 补齐核验响应，并为需要重新安排的历史行程增加真实契约的规划输入夹具。本机对生产前端构建执行五项定向浏览器用例全部通过。[原始构建与浏览器结果](https://github.com/W205614/langchain-trip-planner/actions/runs/44902054043) · [测试夹具修复](https://github.com/W205614/langchain-trip-planner/commit/d229ff78ff96ae775a0b73f581397e9bea161242)

@@ -216,7 +216,8 @@
     "docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/50fb8e7fe20cee0d5b14000c32ca8c31f3bf0574.patch": "3dbb4cd7d668dd4b455999f7c88c35ff00209936b11a5797bfa1053229be2812",
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
-    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78"
+    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
+    "docs/evidence/security-20261121/README.md": "b190278806438ea0914892e63ed306aba987dfc281a0a74e2986eb88cc2bbecc"
   },
   "assessments": [
     {
@@ -1052,10 +1053,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-19499"
@@ -1065,11 +1066,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-19499"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1077,10 +1078,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-19499"
@@ -1090,11 +1091,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-19499"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1125,10 +1126,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-84243"
@@ -1138,11 +1139,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-84243"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1150,10 +1151,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-84243"
@@ -1163,11 +1164,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-84243"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1273,10 +1274,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-6238"
@@ -1286,11 +1287,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-6238"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1298,10 +1299,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-6238"
@@ -1311,11 +1312,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-6238"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1326,7 +1327,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2025-15367"
@@ -1339,10 +1340,10 @@
         "https://github.com/python/cpython/pull/143924",
         "https://mail.python.org/archives/list/security-announce@python.org/thread/CBFBOWVGGUJFSGITQCCBZS4GEYYZ7ZNE/"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370"
       }
     },
     {
@@ -1377,10 +1378,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-77117"
@@ -1390,11 +1391,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-77117"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1402,10 +1403,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-80489"
@@ -1415,11 +1416,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-80489"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1427,10 +1428,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-77117"
@@ -1440,11 +1441,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-77117"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1452,10 +1453,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-80489"
@@ -1465,11 +1466,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-80489"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1813,10 +1814,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-5435"
@@ -1826,11 +1827,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-5435"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -1838,10 +1839,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-5435"
@@ -1851,11 +1852,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-5435"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -2084,10 +2085,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010022"
@@ -2097,9 +2098,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010022"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       }
     },
     {
@@ -2107,10 +2108,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010022"
@@ -2120,9 +2121,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010022"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       }
     },
     {
@@ -2130,10 +2131,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-8674"
@@ -2143,11 +2144,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-8674"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -2155,10 +2156,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-8674"
@@ -2168,11 +2169,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-8674"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -2180,10 +2181,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010024"
@@ -2193,9 +2194,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010024"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       }
     },
     {
@@ -2203,10 +2204,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010024"
@@ -2216,9 +2217,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010024"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       }
     },
     {
@@ -2942,7 +2943,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-116566"
@@ -2955,11 +2956,11 @@
         "https://github.com/python/cpython/pull/160899",
         "https://mail.python.org/archives/list/security-announce@python.org/thread/HCHE62VYTPYI6WOPJQDWUBR4CINBPSM7/"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370"
       }
     },
     {
@@ -3186,10 +3187,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-6791"
@@ -3199,11 +3200,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-6791"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -3211,10 +3212,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-6791"
@@ -3224,11 +3225,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-6791"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -3236,10 +3237,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010025"
@@ -3249,9 +3250,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010025"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       }
     },
     {
@@ -3259,10 +3260,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2019-1010025"
@@ -3272,9 +3273,9 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2019-1010025"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
       }
     },
     {
@@ -3478,10 +3479,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-19542"
@@ -3491,11 +3492,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-19542"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -3503,10 +3504,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-19542"
@@ -3516,11 +3517,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-19542"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -3874,7 +3875,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-103995"
@@ -3887,11 +3888,11 @@
         "https://github.com/python/cpython/issues/150751",
         "https://github.com/python/cpython/pull/150752"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "34e5cea011e49b09efae921a8535adbcedb0e0f8196b82b3530c77a281be292e"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370"
       }
     },
     {
@@ -4292,10 +4293,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-18374"
@@ -4305,11 +4306,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-18374"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4317,10 +4318,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-18374"
@@ -4330,11 +4331,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-18374"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4649,10 +4650,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-86805"
@@ -4662,11 +4663,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-86805"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4674,10 +4675,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-86805"
@@ -4687,11 +4688,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-86805"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4811,10 +4812,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-95818"
@@ -4824,11 +4825,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-95818"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4836,10 +4837,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-95818"
@@ -4849,11 +4850,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-95818"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4940,10 +4941,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u4+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-6368"
@@ -4953,11 +4954,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-6368"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -4965,10 +4966,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u4+trip4"
+        "libc6": "2.41-12+deb13u5+trip4"
       },
       "ids": [
         "CVE-2026-6368"
@@ -4978,11 +4979,11 @@
       "references": [
         "https://security-tracker.debian.org/tracker/CVE-2026-6368"
       ],
-      "review_record": "docs/evidence/native-security-20261110/agent-trip4-review.json",
+      "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "fc59911ba7ac3e676224df1f97ee2fed431402f5811e56e3e2b3ad5b6427c358",
-        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "a8188893222453fd1117688bf1ec44714199afd87c4125fa3d6e544cc97e23c7",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "ff4647cb7299fd6a3bb4a2459a24672464cf80c6989babc826bff33e03951ff8"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
       }
     },
     {
@@ -6318,20 +6319,20 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libssl3t64": "3.5.7-1~deb13u3+trip1",
-        "openssl": "3.5.7-1~deb13u3+trip1",
-        "openssl-provider-legacy": "3.5.7-1~deb13u3+trip1"
+        "libssl3t64": "3.5.9-1~deb13u1+trip1",
+        "openssl": "3.5.9-1~deb13u1+trip1",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip1"
       },
       "requires_dpkg": {
-        "libssl3t64": "3.5.7-1~deb13u3+trip1",
-        "openssl": "3.5.7-1~deb13u3+trip1",
-        "openssl-provider-legacy": "3.5.7-1~deb13u3+trip1"
+        "libssl3t64": "3.5.9-1~deb13u1+trip1",
+        "openssl": "3.5.9-1~deb13u1+trip1",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip1"
       },
       "requires_architecture": "amd64",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "4aedf95a89a43326965f37122fd99b60c78ee65a07630af8e70fba3d5ac02e38",
-        "/usr/lib/x86_64-linux-gnu/libssl.so.3": "6fc8c11e78f81c01ad0fd72760ce262c403ba3d97cf6c203f01bfe91c5645f74",
-        "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "533bb6758a00a87a2d7835bcd3ebca58e0def2c1096ec582dea180adceeb7404"
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "c928bf2c7df135a6c06f6c49257c601bea1067349d5baa8df0ec2ae41eab4940",
+        "/usr/lib/x86_64-linux-gnu/libssl.so.3": "a39fbf82fe12061ca70adee6b9da843549298a56bf34f72a0e027ee2fc96bb64",
+        "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45"
       },
       "ids": [
         "CVE-2026-107496",
@@ -6353,7 +6354,8 @@
       ],
       "absent_paths": [
         "/usr/bin/openssl"
-      ]
+      ],
+      "review_record": "docs/evidence/security-20261121/README.md"
     },
     {
       "distribution": "debian",
@@ -6787,6 +6789,38 @@
       "file_sha256": {
         "/var/lib/dpkg/info/dpkg.list": "bb1d031aa9c4ba763b063e761ff08beec9a4c269c5294e12cd323cf5324dfef2"
       }
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip4"
+      },
+      "ids": [
+        "CVE-2026-124249",
+        "CVE-2026-16052",
+        "CVE-2026-19552"
+      ],
+      "classification": "fixed_by_pinned_security_upgrade",
+      "reason": "The exact final Agent image carries the pinned CPython cookiejar, cookies and ssl backports. All added files and the combined installed backport manifest must match.",
+      "references": [
+        "https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494",
+        "https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987",
+        "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e"
+      ],
+      "review_record": "docs/evidence/security-20261121/README.md",
+      "file_sha256": {
+        "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370",
+        "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
+        "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+      }
     }
   ],
   "documentation_binding_delta": {
@@ -6842,7 +6876,7 @@
     "actual_final_scan_required": true
   },
   "source_binding_review_20261121": {
-    "source_revision": "c824d0551023c9ba67d7f2871e2398947807bb89",
+    "source_revision": "d229ff78ff96ae775a0b73f581397e9bea161242",
     "changes": {
       "backend/app/agents/candidates.py": {
         "previous": "3f2704a4eef019c86fa236b3f54c0604dff79008cfe68022e4c83e404a3b5364",
@@ -6991,5 +7025,16 @@
     },
     "review": "Planning changes preserve the embedded Chroma entrypoint and client path. Debian build materials and PostgreSQL identity changed. Exact advisory, package and ELF predicates remain in force. Rebuilt binaries require independent matching artifact evidence.",
     "new_exemptions": 0
+  },
+  "current_native_artifact_review_20261121": {
+    "source_revision": "d229ff78ff96ae775a0b73f581397e9bea161242",
+    "inspected_image_id": "sha256:fc8d496329aba9d5a6d5fd1f7820912f457de2870435a254051473768c654965",
+    "confirmed_existing_rows": 36,
+    "new_installed_cpython_fixes": [
+      "CVE-2026-124249",
+      "CVE-2026-16052",
+      "CVE-2026-19552"
+    ],
+    "review_record": "docs/evidence/security-20261121/README.md"
   }
 }
