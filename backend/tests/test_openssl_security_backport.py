@@ -12,7 +12,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 PROVENANCE = Path('/usr/local/share/tripplanner/openssl-backport')
-EXPECTED_VERSION = '3.5.7-1~deb13u3+trip1'
+EXPECTED_VERSION = '3.5.9-1~deb13u1+trip1'
 
 
 def test_openssl_source_backport_runtime_and_abi_proof():
@@ -36,13 +36,13 @@ def test_openssl_source_backport_runtime_and_abi_proof():
 
     assert not Path('/usr/bin/openssl').exists()
     expected = {
-        'libcrypto.so.3': '4aedf95a89a43326965f37122fd99b60c78ee65a07630af8e70fba3d5ac02e38',
-        'libssl.so.3': '6fc8c11e78f81c01ad0fd72760ce262c403ba3d97cf6c203f01bfe91c5645f74',
-        'ossl-modules/legacy.so': '533bb6758a00a87a2d7835bcd3ebca58e0def2c1096ec582dea180adceeb7404',
+        'libcrypto.so.3': 'c928bf2c7df135a6c06f6c49257c601bea1067349d5baa8df0ec2ae41eab4940',
+        'libssl.so.3': 'a39fbf82fe12061ca70adee6b9da843549298a56bf34f72a0e027ee2fc96bb64',
+        'ossl-modules/legacy.so': '47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45',
     }
     for name, digest in expected.items():
         assert hashlib.sha256((Path('/usr/lib/x86_64-linux-gnu') / name).read_bytes()).hexdigest() == digest
-    assert ssl.OPENSSL_VERSION.startswith('OpenSSL 3.5.7 ')
+    assert ssl.OPENSSL_VERSION.startswith('OpenSSL 3.5.9 ')
     crypto = ctypes.CDLL('libcrypto.so.3')
     crypto.OSSL_PROVIDER_load.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
     crypto.OSSL_PROVIDER_load.restype = ctypes.c_void_p
