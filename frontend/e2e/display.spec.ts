@@ -126,6 +126,7 @@ for (const unsaved of [false, true]) {
       return route.fulfill({ json: { success: true, data: { id:99,version:1,plan:updated,quality: {
         policy_version:'constraints-v2',rules_passed:true,warnings:[],day_checks:[{day_index:0,planned_minutes:300,walking_status:'not_applicable',inter_stop_walking_km:null}] } } } })
     })
+    await page.route('**/api/trips/99/checks/latest?all_days=true', route => route.fulfill({ json: { data: [] } }))
     await page.route('**/api/poi/photo/image*', route => route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"/>'}))
     await page.addInitScript(({plan,unsaved})=>{
       sessionStorage.setItem('tripPlan',JSON.stringify(plan))

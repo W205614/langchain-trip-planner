@@ -63,6 +63,7 @@ test('accepted invitation opens the full itinerary directly', async ({ page }) =
   await page.route('**/api/notifications', route => route.fulfill({ json: { success: true, data: [] } }))
   await page.route('**/api/usage/summary', route => route.fulfill({ json: { success: true, data: { warning_limit: 100000 } } }))
   await page.route('**/api/trips/42/workspace', route => route.fulfill({ json: { success: true, data: { id: 42, version: 3, role: 'viewer', city: '北京', travel_days: 2, plan, quality: {} } } }))
+  await page.route('**/api/trips/42/checks/latest?all_days=true', route => route.fulfill({ json: { data: [] } }))
   await page.route('**/api/poi/photo/image*', route => route.fulfill({ status: 404 }))
   await page.goto('/inbox')
   await page.getByRole('button', { name: '查看完整行程' }).click()

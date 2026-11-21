@@ -27,6 +27,7 @@ test('an old lazy chunk recovers to the requested page after a frontend rebuild'
     ? { success: true, data: { id: 61, version: 1, plan, quality: { outcome: 'complete', issues: [] } } }
     : { success: true, data: [{ id: 61, version: 1, city: '北京', start_date: '2026-10-01',
       end_date: '2026-10-01', travel_days: 1, attraction_count: 1 }], total: 1 } }))
+  await page.route('**/api/trips/61/checks/latest?all_days=true', route => route.fulfill({ json: { data: [] } }))
   await page.route('**/api/poi/photo/image**', route => route.fulfill({ status: 404 }))
   let failedOnce = false
   await page.route('**/assets/Result-*.js', async route => {

@@ -137,6 +137,14 @@ test('result opened from history returns to history for another selection', asyn
     }
     return route.fulfill({ json: { success: true, data: [{ id: 61, version: 1, city: '北京', start_date: '2026-10-01', end_date: '2026-10-01', travel_days: 1, attraction_count: 1 }], total: 1 } })
   })
+  await page.route('**/api/trips/61/planning-input', route => route.fulfill({ json: { data: {
+    trip_version: 1, planning_revision: 1, planning_input: {
+      timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [],
+      commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [],
+      completed_activity_ids: [], budget_mode: 'estimate'
+    }
+  } } }))
+  await page.route('**/api/trips/61/checks/latest?all_days=true', route => route.fulfill({ json: { data: [] } }))
   await page.route('**/api/poi/photo/image**', route => route.fulfill({ status: 404 }))
 
   await page.goto('/history')
