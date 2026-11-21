@@ -3,8 +3,8 @@
 The interpreter remains the official Docker Python 3.13.18 build. Its release
 source archive is pinned to SHA-256
 `abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68`.
-Only `http.client`, `poplib` and the `_socket` extension are replaced with builds from
-that exact source plus these upstream changes:
+The build replaces `_socket`, `http.client`, `http.cookiejar`, `http.cookies`,
+`poplib` and `ssl` from that exact source plus these upstream changes:
 
 * CVE-2026-103995: [2eb2af8](https://github.com/python/cpython/commit/2eb2af805c156ca52b316bb4ced5e0ab3971d0ae)
   and the optional-whitespace correction
@@ -19,9 +19,16 @@ that exact source plus these upstream changes:
   existing `ExtraAssertions` import; runtime changes, regression statements and
   the upstream NEWS fragment remain unchanged. Both patch hashes are checked,
   and only the rebased patch is applied.
+* CVE-2026-124249: [8eb3d2c](https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494)
+  applies cookie expiry after the acceptance policy decision.
+* CVE-2026-19552: [8dde46e](https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e)
+  verifies the host identity when `get_server_certificate` receives a CA file.
+* CVE-2026-16052: [2702684](https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987)
+  quotes cookie attributes that contain separators. The build retains the
+  entire upstream patch and applies its runtime, test and NEWS hunks.
 
 The patches contain PSF-licensed upstream code. The complete original source,
 patches and build instructions must remain in the corresponding-source bundle.
-The build runs the upstream socket, HTTP client and POP3 tests before exporting
-the three replacements. Runtime provenance records the patched files' hashes; the
-official version string is not changed to imply an upstream release fix.
+The build runs the upstream socket, HTTP, cookie, POP3 and TLS test suites.
+Runtime provenance records the patched file hashes and the interpreter retains
+its upstream version string.
