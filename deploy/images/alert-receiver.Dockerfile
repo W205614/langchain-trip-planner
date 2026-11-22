@@ -1,6 +1,12 @@
 # Build from the repository root; the receiver uses only Python's standard library.
 ARG PYTHON_BASE=python:3.13.18-alpine3.24@sha256:1e1f6334529d1fb26a2ef619d7cffb30a7c7d7cc1cc7338ebee283a58d1aeaca
 FROM ${PYTHON_BASE} AS python-upstream
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS openssl-security
+RUN apk upgrade --no-cache && apk add --no-cache alpine-sdk linux-headers perl
+COPY deploy/images/openssl-backport /trip-openssl
+RUN --mount=type=cache,id=trip-alpine-openssl-source,target=/sources,sharing=locked \
+    sh /trip-openssl/build.sh
+
 FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS busybox-security
 RUN apk upgrade --no-cache \
     && apk add --no-cache alpine-sdk linux-headers openssl-dev utmps-dev utmps-static perl zip
@@ -27,6 +33,8 @@ RUN apk upgrade --no-cache && apk add --no-cache 'zlib>=1.4-r0' \
     && mkdir -p /inbox && chown 1000:1000 /inbox
 COPY --from=busybox-security /out/ /tmp/trip-busybox/
 RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
+RUN --mount=type=bind,from=openssl-security,source=/out,target=/tmp/trip-openssl \
+    sh /tmp/trip-openssl/install.sh
 COPY --from=cpython-security /out/lib-dynload/ /usr/local/lib/python3.13/lib-dynload/
 COPY --from=cpython-security /out/http/ /usr/local/lib/python3.13/http/
 COPY --from=cpython-security /out/stdlib/ /usr/local/lib/python3.13/

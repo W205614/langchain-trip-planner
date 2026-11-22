@@ -48,7 +48,7 @@ PROJECT_SOURCE_PATHS = (
     '.gitattributes', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/licenses', 'backend/security/native-backports',
     'backend/security/glibc-hardening', 'backend/security/cpython-backports',
     'backend/security/pam-backport', 'backend/security/dash-backport', 'backend/security/openssl-backport',
-    'deploy/images/busybox-backport', 'tools/sync_busybox_inputs.py',
+    'deploy/images/busybox-backport', 'deploy/images/openssl-backport', 'tools/sync_busybox_inputs.py',
     'backend/Dockerfile', 'business-backend/Dockerfile', 'frontend/Dockerfile',
     'tools/container_sources.py', 'tools/container_license_supplements.py',
     'tools/container_release.py', 'tools/container-wheel-sources.json',
@@ -286,6 +286,36 @@ def busybox_provenance(collector, image, service, packages):
     return lock, provenance
 
 
+def alpine_openssl_provenance(collector, image, service, packages):
+    canonical = Path(__file__).resolve().parents[1] / 'deploy/images/openssl-backport'
+    lock = dict(line.split('=', 1) for line in (canonical / 'source.lock').read_text().splitlines())
+    names = {'libcrypto3', 'libssl3', 'openssl'}
+    installed = {row['P']: row for row in packages if row['P'] in names}
+    if all(row['V'] != lock['PACKAGE_VERSION'] for row in installed.values()):
+        return set()
+    if (not {'libcrypto3', 'libssl3'}.issubset(installed)
+            or any(row['V'] != lock['PACKAGE_VERSION'] or row['o'] != 'openssl' or row['A'] != 'x86_64'
+                   for row in installed.values())):
+        raise RuntimeError('Unexpected downstream Alpine OpenSSL package set')
+    prefix = '/usr/local/share/tripplanner/openssl-backport/'
+    destination = collector.root / 'runtime-provenance' / service / 'openssl'
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in ('source.lock', 'recipe.tar.gz', 'libraries.sha256', 'cli.sha256'):
+        content = docker(image, 'cat', prefix + name)
+        if content != (canonical / name).read_bytes():
+            raise RuntimeError('Installed Alpine OpenSSL provenance differs from the project: ' + name)
+        (destination / name).write_bytes(content)
+    if checksum(destination / 'recipe.tar.gz') != lock['RECIPE_SHA256']:
+        raise RuntimeError('Alpine OpenSSL package recipe digest mismatch')
+    docker(image, 'sha256sum', '-c', prefix + 'libraries.sha256')
+    if 'openssl' in installed:
+        docker(image, 'sha256sum', '-c', prefix + 'cli.sha256')
+    version = lock['UPSTREAM_VERSION']
+    collector.fetch(f'https://deb.debian.org/debian/pool/main/o/openssl/openssl_{version}.orig.tar.gz',
+                    f'alpine/distfiles/openssl-{version}.tar.gz', lock['UPSTREAM_SHA256'], immutable=True)
+    return set(installed)
+
+
 def validate_official_nginx_packages(packages, environment):
     release = NGINX_RELEASE
     expected_env = {'NGINX_VERSION': release['version'], 'PKG_RELEASE': release['release'],
@@ -460,14 +490,16 @@ def alpine_sources(collector, image, service):
     packages = list(paragraphs(docker(image, 'cat', '/lib/apk/db/installed').decode()))
     packages = [{k: row.get(k) for k in ('P', 'V', 'L', 'o', 'c', 'm', 'U', 'A', 'C')} for row in packages]
     lock, provenance = busybox_provenance(collector, image, service, packages)
-    missing = [row for row in packages if not row['c'] and row['o'] != 'busybox']
+    downstream = alpine_openssl_provenance(collector, image, service, packages)
+    upstream = [row for row in packages if row['P'] not in downstream and row['o'] != 'busybox']
+    missing = [row for row in upstream if not row['c']]
     unknown = [row for row in missing if row['P'] not in NGINX_PACKAGES]
     if unknown:
         raise RuntimeError('Alpine package lacks an immutable source recipe: '
                            + ', '.join(f'{p["P"]}={p["V"]} (origin={p["o"]}, maintainer={p["m"]})' for p in unknown))
     if missing:
         official_nginx_sources(collector, image, service, missing)
-    origins = {(row['o'], row['c']) for row in packages if row['o'] != 'busybox' and row['c']}
+    origins = {(row['o'], row['c']) for row in upstream if row['c']}
     origins.add(('busybox', lock['APKBUILD_COMMIT']))
     for origin, commit in sorted(origins):
         files = alpine_recipe_sources(collector, origin, commit,
@@ -572,8 +604,9 @@ def historical_alpine_sources(collector, archive_path, images):
     """Read APK identities from every actual base layer, including later whiteouts."""
     result = image_layer_databases(collector, archive_path, images, 'lib/apk/db/installed', 'apk-installed')
     origins = set()
-    busybox_lock = dict(line.split('=', 1) for line in
-                        (Path(__file__).resolve().parents[1] / 'deploy/images/busybox-backport/source.lock').read_text().splitlines())
+    source_root = Path(__file__).resolve().parents[1] / 'deploy/images'
+    busybox_lock = dict(line.split('=', 1) for line in (source_root / 'busybox-backport/source.lock').read_text().splitlines())
+    openssl_lock = dict(line.split('=', 1) for line in (source_root / 'openssl-backport/source.lock').read_text().splitlines())
     for service, row in result.items():
         versions = {}
         for database in row['databases']:
@@ -586,7 +619,10 @@ def historical_alpine_sources(collector, archive_path, images):
         packages = list(versions.values())
         missing = []
         for package in packages:
-            if package['c']:
+            if package['P'] in {'libcrypto3', 'libssl3', 'openssl'} and package['V'] == openssl_lock['PACKAGE_VERSION']:
+                if package['o'] != 'openssl' or package['A'] != 'x86_64':
+                    raise RuntimeError('Unexpected source identity for historical downstream OpenSSL APK')
+            elif package['c']:
                 origins.add((package['o'], package['c']))
             elif package['o'] == 'busybox' and package['P'] in {'busybox', 'busybox-binsh', 'ssl_client'}:
                 if package['V'] != busybox_lock['PACKAGE_VERSION'] + '-r0':

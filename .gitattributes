@@ -127,3 +127,9 @@ docs/evidence/maintenance-v0.1.7-20261115/dpkg-source-applicability/*.patch -tex
 # Preserve the current scanner corpus and its byte-bound source review.
 docs/evidence/security-20261121/codeql/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 docs/evidence/security-20261121/codeql/*.sarif -text -whitespace
+
+# Alpine native OpenSSL inputs are mirrored into the independent build contexts.
+**/openssl-backport/source.lock text eol=lf
+**/openssl-backport/*.sha256 text eol=lf
+**/openssl-backport/*.sh text eol=lf
+**/openssl-backport/recipe.tar.gz -text

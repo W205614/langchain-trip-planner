@@ -14,3 +14,5 @@
 !monitoring-source.lock.json
 !busybox-backport/
 !busybox-backport/**
+!openssl-backport/
+!openssl-backport/**

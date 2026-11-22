@@ -11,3 +11,5 @@
 !deploy/images/alert-receiver.Dockerfile.dockerignore
 !deploy/images/busybox-backport/
 !deploy/images/busybox-backport/**
+!deploy/images/openssl-backport/
+!deploy/images/openssl-backport/**

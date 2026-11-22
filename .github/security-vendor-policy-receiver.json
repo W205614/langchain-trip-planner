@@ -1,10 +1,10 @@
 {
   "schema_version": 2,
   "review_policy": "source_and_artifact_bound",
-  "scope": "Measured Alpine 3.24.4 amd64 alert receiver with Python 3.13.18. Six installed upstream CPython backports require exact APK, file, ELF, source, entrypoint and user evidence.",
+  "scope": "Exact Alpine 3.24.4 amd64 alert receiver Python backports and independently verified OpenSSL APK backports.",
   "source_bindings": {
-    "deploy/images/alert-receiver.Dockerfile": "9c58a9f45fad347c9f695991dc940d60fefe7de320ec0e3007c6a5765d014e12",
-    "deploy/images/alert-receiver.Dockerfile.dockerignore": "6760b1115e822ef38191274340b27c6c1f7a822f5bb5928f3bb3b9a6d368277a",
+    "deploy/images/alert-receiver.Dockerfile": "ddb10ae37298b362413825935ccd038caa79d9fdf6b6d5803bcf1b9b28228874",
+    "deploy/images/alert-receiver.Dockerfile.dockerignore": "d028e11e9df300c026001c51ab88348e006de25de829ec15adb6d5697b073500",
     "deploy/images/tests/receiver_security_check.py": "d2f6d11a8a969c83eb89c9ededd486d384be10562bd9c2d14e2b9bf0ae2dee2c",
     "backend/scripts/operational_alert_receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
     "backend/security/cpython-backports/build.sh": "5db51691bd8c0a83691b891dfd1fb15b42ee6d46973ef4c5369bfb5dca37e12a",
@@ -18,9 +18,9 @@
     "backend/security/cpython-backports/upstream-poplib-b234a2b.patch": "606aa1bd8124cb0d777744dfe1a89d1ba983638115372cc508f4ed4a154f3abf",
     "docs/evidence/runtime-support-security-20261110/receiver-before-sqlite-removal-grype.json": "cf7469bc2e2d1b407f0cf7864c3a0c717a958b3da2dd02dfaa84d6d55700ed13",
     "docs/evidence/runtime-support-security-20261110/receiver-after-sqlite-removal-grype.json": "0b49e56f25430cae0eb81c678e127956438fd448bfe72452fc1dac531c6861b4",
-    "tools/image_policy.py": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240",
-    "tools/security_gate.py": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea",
-    ".github/workflows/security.yml": "c224fd4cf08962232f0d34e074022354290c7fb0e57b865b521b8afdd338f463",
+    "tools/image_policy.py": "ee70c7e9febd56d1032f9469078cbb913f1264156126c803459e23d4f94a6f9d",
+    "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
+    ".github/workflows/security.yml": "fc80f12a4c7b9c880a3ea0c51eb329c05e2bddfb0798e3d721728f1537c687e4",
     "docs/evidence/runtime-support-security-20261110/gate-review/activation-review.json": "a8fa28a70b61872b9e0ca436c7f8537817fc062a216522e6fd172b42116b588a",
     "docs/evidence/runtime-support-security-20261110/gate-review/actual-receiver-contract.json": "03e28292eba59f7de2c9cee12f01bf62977cff877339f97d2603384744dd03d2",
     "docs/evidence/runtime-support-security-20261110/gate-review/debian-and-agent-regression.json": "4907c885a3d12750cc28fa88dce7b13f91f9e8f9dda20c55383c486816ed4c4d",
@@ -30,7 +30,34 @@
     "docs/evidence/security-20261121/README.md": "e90383059879ba82bcd2d5041275bea595cf267c9b25e6cf00080499f0922313",
     "backend/security/cpython-backports/CVE-2026-124249.patch": "5c7bb0ca68079f3f440cacf88564d680f63cb65af510f243af5abedc22e3a76a",
     "backend/security/cpython-backports/CVE-2026-16052.patch": "aee651efa981ca23141f9914858d56b4e9a8dea0a655824a0c30aa92593aabb3",
-    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78"
+    "backend/security/cpython-backports/CVE-2026-19552.patch": "6d1dc9e573dee42b88cba82d5185264572c5e228c034332c8233d2a2cb83db78",
+    "business-backend/Dockerfile": "51b399b2f42d36d4e4a5169d18ca655173de1bd4ce90d15a1c6aeeb3119032c5",
+    "business-backend/security/openssl-backport/build.sh": "780a4b4680a3fc78c624737b55365b0c15be5fa7619a3495b24adcc98a42b529",
+    "business-backend/security/openssl-backport/cli.sha256": "728b59bb4ba187b383caa5db4370978a416c44a75507461511f55438049d1a13",
+    "business-backend/security/openssl-backport/install.sh": "f5cf366ef73cb3f39d25716271ea7f50bebeaf2ca44538c5bb4c3d619199ed27",
+    "business-backend/security/openssl-backport/libraries.sha256": "c9017163eb4fe718cd65c3308afedb2c96839e46115ddeff5c9333e6d24aec5a",
+    "business-backend/security/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
+    "business-backend/security/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+    "deploy/images/.dockerignore": "79579feb0b7b34a40a456fa9ee4b129843595eae85a00dc99321ec1579833a56",
+    "deploy/images/alertmanager.Dockerfile": "5dbaefe676dc8660aa9e81d86b7ff4cfc1f75e0d8a1bac1830ee5b8125303e09",
+    "deploy/images/caddy.Dockerfile": "a5df89ff9626653317ee9078c4a42dfa1e724b6b0e47b3370add11a86b021722",
+    "deploy/images/openssl-backport/build.sh": "780a4b4680a3fc78c624737b55365b0c15be5fa7619a3495b24adcc98a42b529",
+    "deploy/images/openssl-backport/cli.sha256": "728b59bb4ba187b383caa5db4370978a416c44a75507461511f55438049d1a13",
+    "deploy/images/openssl-backport/install.sh": "f5cf366ef73cb3f39d25716271ea7f50bebeaf2ca44538c5bb4c3d619199ed27",
+    "deploy/images/openssl-backport/libraries.sha256": "c9017163eb4fe718cd65c3308afedb2c96839e46115ddeff5c9333e6d24aec5a",
+    "deploy/images/openssl-backport/README.md": "e66b4a87ab6fc7187fbf54bd2399410e29b2c8a249fb014aa67572becec48d1c",
+    "deploy/images/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
+    "deploy/images/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+    "deploy/images/postgres.Dockerfile": "8f7463136585f7dce6aef857dbf55a798c60df7726b632efde243cff9c7c9e1e",
+    "deploy/images/prometheus.Dockerfile": "5bb89fd7c37fe78c9531a69919d13965ff3c6db17d051f507296d130e4edb2c9",
+    "frontend/Dockerfile": "7a4ec831a6f595cbffca39baf84fdd1f3d55603ee1029c2b839bd2f9e8bdcf8e",
+    "frontend/security/openssl-backport/build.sh": "780a4b4680a3fc78c624737b55365b0c15be5fa7619a3495b24adcc98a42b529",
+    "frontend/security/openssl-backport/cli.sha256": "728b59bb4ba187b383caa5db4370978a416c44a75507461511f55438049d1a13",
+    "frontend/security/openssl-backport/install.sh": "f5cf366ef73cb3f39d25716271ea7f50bebeaf2ca44538c5bb4c3d619199ed27",
+    "frontend/security/openssl-backport/libraries.sha256": "c9017163eb4fe718cd65c3308afedb2c96839e46115ddeff5c9333e6d24aec5a",
+    "frontend/security/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
+    "frontend/security/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+    "tools/sync_busybox_inputs.py": "9ddbd50e04fbf779458a039b940ab714d2c4f077ec7c9fa2e10ba5aab1adf523"
   },
   "assessments": [
     {
@@ -53,11 +80,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r1",
+        "libcrypto3": "3.5.9_p20261121-r0",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r1",
+        "libssl3": "3.5.9_p20261121-r0",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -97,8 +124,8 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
-        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
         "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
@@ -166,11 +193,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r1",
+        "libcrypto3": "3.5.9_p20261121-r0",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r1",
+        "libssl3": "3.5.9_p20261121-r0",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -210,8 +237,8 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
-        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
         "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
@@ -278,11 +305,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r1",
+        "libcrypto3": "3.5.9_p20261121-r0",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r1",
+        "libssl3": "3.5.9_p20261121-r0",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -322,8 +349,8 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
-        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
         "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
@@ -390,11 +417,11 @@
         "gdbm": "1.26-r0",
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
-        "libcrypto3": "3.5.9-r1",
+        "libcrypto3": "3.5.9_p20261121-r0",
         "libffi": "3.5.2-r1",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
-        "libssl3": "3.5.9-r1",
+        "libssl3": "3.5.9_p20261121-r0",
         "libuuid": "2.42.3-r1",
         "musl": "1.2.6-r3",
         "musl-utils": "1.2.6-r3",
@@ -434,8 +461,8 @@
         "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
         "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
         "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
-        "/usr/lib/libssl.so.3": "6f35d9d1edb0f75228af331a88d740a891753a4fed32a1fccdbf8bf9183cd3cd",
-        "/usr/lib/libcrypto.so.3": "d3170451aed163f70460726a08bfadd8c899d0ca43ea9b6105eaa45d3d1aa5c0",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
         "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
@@ -484,6 +511,142 @@
         "https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494",
         "https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987",
         "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e"
+      ]
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "apk",
+      "artifact_versions": {
+        "libcrypto3": "3.5.9_p20261121-r0"
+      },
+      "ids": [
+        "CVE-2026-107493",
+        "CVE-2026-121482",
+        "CVE-2026-124709",
+        "CVE-2026-35190"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "requires_architecture": "amd64",
+      "requires_apk": {
+        "libcrypto3": "3.5.9_p20261121-r0",
+        "libssl3": "3.5.9_p20261121-r0"
+      },
+      "requires_apk_architectures": {
+        "libcrypto3": "x86_64",
+        "libssl3": "x86_64"
+      },
+      "requires_elf_paths": [
+        "/usr/lib/libcrypto.so.3",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/ossl-modules/legacy.so"
+      ],
+      "file_sha256": {
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/ossl-modules/legacy.so": "f82d2d3f31903546c8814a7e572fd47477336ea878da407c636bc518ec120568",
+        "/usr/local/share/tripplanner/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+        "/usr/local/share/tripplanner/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82"
+      },
+      "review_record": "deploy/images/openssl-backport/README.md",
+      "reason": "Locally signed Alpine APKs carry the four merged OpenSSL 3.5 fixes. The gate requires exact APK identifiers, the installed ELF files and source receipt for this scanned revision.",
+      "references": [
+        "https://github.com/openssl/openssl/commit/f3acb0a3328046741479482c51cec815839e1b05",
+        "https://github.com/openssl/openssl/commit/468c287cf451a834b370b69ab321b8ffdfac23aa",
+        "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
+        "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43"
+      ]
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "apk",
+      "artifact_versions": {
+        "libssl3": "3.5.9_p20261121-r0"
+      },
+      "ids": [
+        "CVE-2026-107493",
+        "CVE-2026-121482",
+        "CVE-2026-124709",
+        "CVE-2026-35190"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "requires_architecture": "amd64",
+      "requires_apk": {
+        "libcrypto3": "3.5.9_p20261121-r0",
+        "libssl3": "3.5.9_p20261121-r0"
+      },
+      "requires_apk_architectures": {
+        "libcrypto3": "x86_64",
+        "libssl3": "x86_64"
+      },
+      "requires_elf_paths": [
+        "/usr/lib/libcrypto.so.3",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/ossl-modules/legacy.so"
+      ],
+      "file_sha256": {
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/ossl-modules/legacy.so": "f82d2d3f31903546c8814a7e572fd47477336ea878da407c636bc518ec120568",
+        "/usr/local/share/tripplanner/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+        "/usr/local/share/tripplanner/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82"
+      },
+      "review_record": "deploy/images/openssl-backport/README.md",
+      "reason": "Locally signed Alpine APKs carry the four merged OpenSSL 3.5 fixes. The gate requires exact APK identifiers, the installed ELF files and source receipt for this scanned revision.",
+      "references": [
+        "https://github.com/openssl/openssl/commit/f3acb0a3328046741479482c51cec815839e1b05",
+        "https://github.com/openssl/openssl/commit/468c287cf451a834b370b69ab321b8ffdfac23aa",
+        "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
+        "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43"
+      ]
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "apk",
+      "artifact_versions": {
+        "openssl": "3.5.9_p20261121-r0"
+      },
+      "ids": [
+        "CVE-2026-107493",
+        "CVE-2026-121482",
+        "CVE-2026-124709",
+        "CVE-2026-35190"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "requires_architecture": "amd64",
+      "requires_apk": {
+        "libcrypto3": "3.5.9_p20261121-r0",
+        "libssl3": "3.5.9_p20261121-r0",
+        "openssl": "3.5.9_p20261121-r0"
+      },
+      "requires_apk_architectures": {
+        "libcrypto3": "x86_64",
+        "libssl3": "x86_64",
+        "openssl": "x86_64"
+      },
+      "requires_elf_paths": [
+        "/usr/bin/openssl",
+        "/usr/lib/libcrypto.so.3",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/ossl-modules/legacy.so"
+      ],
+      "file_sha256": {
+        "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
+        "/usr/lib/libssl.so.3": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+        "/usr/lib/ossl-modules/legacy.so": "f82d2d3f31903546c8814a7e572fd47477336ea878da407c636bc518ec120568",
+        "/usr/bin/openssl": "08ab66a8766a4ebfc167d7f0b0f33211474a7e3d22a97a88c3752944aa19869c",
+        "/usr/local/share/tripplanner/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+        "/usr/local/share/tripplanner/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82"
+      },
+      "review_record": "deploy/images/openssl-backport/README.md",
+      "reason": "Locally signed Alpine APKs carry the four merged OpenSSL 3.5 fixes. The gate requires exact APK identifiers, the installed ELF files and source receipt for this scanned revision.",
+      "references": [
+        "https://github.com/openssl/openssl/commit/f3acb0a3328046741479482c51cec815839e1b05",
+        "https://github.com/openssl/openssl/commit/468c287cf451a834b370b69ab321b8ffdfac23aa",
+        "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
+        "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43"
       ]
     }
   ]

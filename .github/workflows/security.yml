@@ -44,7 +44,7 @@ jobs:
   runtime-image-scan:
     name: Runtime images / ${{ matrix.service }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix:
@@ -115,9 +115,9 @@ jobs:
           RUNTIME_SERVICE: ${{ matrix.service }}
         run: |
           if [ "$RUNTIME_SERVICE" = 'alert-receiver' ]; then
-            python tools/security_gate.py image --image "$RUNTIME_IMAGE" --all-severities --vendor-policy .github/security-vendor-policy-receiver.json --reports security-reports/runtime-image
+            python tools/security_gate.py image --image "$RUNTIME_IMAGE" --all-severities --vendor-policy .github/security-vendor-policy-receiver.json --cleanup-owned-resources --reports security-reports/runtime-image
           else
-            python tools/security_gate.py image --image "$RUNTIME_IMAGE" --all-severities --reports security-reports/runtime-image
+            python tools/security_gate.py image --image "$RUNTIME_IMAGE" --all-severities --vendor-policy .github/security-vendor-policy-alpine-openssl.json --cleanup-owned-resources --reports security-reports/runtime-image
           fi
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
@@ -285,7 +285,7 @@ jobs:
           if [ "$MATRIX_SERVICE" = agent ]; then
             python tools/security_gate.py image --image "$SECURITY_IMAGE" --all-severities --vex .github/security-vex-remediated.json --vendor-policy .github/security-vendor-remediated.json --cleanup-owned-resources --reports security-reports/image
           else
-            python tools/security_gate.py image --image "$SECURITY_IMAGE" --all-severities --reports security-reports/image
+            python tools/security_gate.py image --image "$SECURITY_IMAGE" --all-severities --vendor-policy .github/security-vendor-policy-alpine-openssl.json --cleanup-owned-resources --reports security-reports/image
           fi
       - name: Clean only this CI job's recorded runtime-proof resources
         if: always() && matrix.service == 'agent'

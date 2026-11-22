@@ -89,7 +89,8 @@ class GateFailureTests(unittest.TestCase):
         self.assertIn('--vendor-policy .github/security-vendor-policy-receiver.json', receiver)
         self.assertNotIn('--vex', receiver)
         self.assertNotIn('--risk-acceptance', receiver)
-        self.assertNotIn('--vendor-policy', other)
+        self.assertIn('--vendor-policy .github/security-vendor-policy-alpine-openssl.json', other)
+        self.assertNotIn('--risk-acceptance', other)
         self.assertIn('--all-severities', other)
 
     def test_all_release_workflow_scanner_call_sites_declare_all_severities(self):

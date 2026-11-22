@@ -30,6 +30,11 @@ APK_RECEIVER_ARTIFACT_PATHS = {'primary': '/usr/local/bin/python3.13',
 APK_RECEIVER_SOCKET = '/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so'
 APK_RECEIVER_PATCH_FILES = {APK_RECEIVER_SOCKET, '/usr/local/lib/python3.13/http/client.py',
                             '/usr/local/lib/python3.13/poplib.py'}
+APK_DATABASE = '/lib/apk/db/installed'
+APK_OPENSSL_LIBRARIES = {'/usr/lib/libcrypto.so.3', '/usr/lib/libssl.so.3', '/usr/lib/ossl-modules/legacy.so'}
+APK_OPENSSL_PACKAGE_VERSION = '3.5.9_p20261121-r0'
+APK_OPENSSL_PROVENANCE = '/usr/local/share/tripplanner/openssl-backport/'
+APK_OPENSSL_FIXED_IDS = {'CVE-2026-124709', 'CVE-2026-121482', 'CVE-2026-107493', 'CVE-2026-35190'}
 
 
 def assessment_package_manager(entry):
@@ -45,7 +50,9 @@ def assessment_package_manager(entry):
 
 
 def apk_assessment_error(policy, entry):
-    """Only the receiver's reviewed Alpine binary backport, never an APK waiver."""
+    """Only reviewed Alpine backports with exact installed file evidence."""
+    if entry.get('artifact_type') == 'apk':
+        return apk_openssl_assessment_error(policy, entry)
     if 'requires_apk' not in entry:
         return 'Alpine assessment requires explicit APK requirements' if entry.get('distribution') == 'alpine' else None
     if (assessment_package_manager(entry) != 'apk' or policy.get('schema_version') != 2
@@ -85,6 +92,46 @@ def apk_assessment_error(policy, entry):
     if entry.get('requires_image_configuration') != APK_RECEIVER_CONFIGURATION:
         return 'APK security upgrade is limited to the fixed receiver Entrypoint/Cmd/User contract'
     return None
+
+
+def apk_openssl_assessment_error(policy, entry):
+    versions = entry.get('artifact_versions', {})
+    base_packages = {'libcrypto3', 'libssl3'}
+    if (not isinstance(versions, dict) or len(versions) != 1
+            or not versions.keys() <= base_packages | {'openssl'}):
+        return 'OpenSSL APK backport must name one exact reviewed package'
+    packages = base_packages | versions.keys()
+    runtime = APK_OPENSSL_LIBRARIES | ({'/usr/bin/openssl'} if 'openssl' in packages else set())
+    paths = runtime | {APK_OPENSSL_PROVENANCE + name for name in ('source.lock', 'recipe.tar.gz')}
+    hashes = entry.get('file_sha256')
+    ids, elf = entry.get('ids'), entry.get('requires_elf_paths')
+    review = entry.get('review_record')
+    if (policy.get('schema_version') != 2 or policy.get('review_policy') != 'source_and_artifact_bound'
+            or entry.get('classification') != 'fixed_by_distribution_backport'
+            or entry.get('distribution') != 'alpine' or entry.get('release') != '3.24.4'
+            or entry.get('requires_architecture') != 'amd64'
+            or not isinstance(ids, list) or not all(isinstance(value, str) for value in ids)
+            or set(ids) != APK_OPENSSL_FIXED_IDS or len(ids) != len(APK_OPENSSL_FIXED_IDS)
+            or any(version != APK_OPENSSL_PACKAGE_VERSION for version in versions.values())
+            or entry.get('requires_apk') != dict.fromkeys(packages, APK_OPENSSL_PACKAGE_VERSION)
+            or entry.get('requires_apk_architectures') != dict.fromkeys(packages, 'x86_64')
+            or not isinstance(hashes, dict) or set(hashes) != paths
+            or any(not isinstance(value, str) or not re.fullmatch(r'[0-9a-f]{64}', value) for value in hashes.values())
+            or not isinstance(elf, list) or not all(isinstance(value, str) for value in elf) or set(elf) != runtime
+            or not isinstance(review, str) or review not in policy.get('source_bindings', {})):
+        return 'OpenSSL APK backport requires the four fixed advisory IDs and exact signed package, ELF and source evidence'
+    return None
+
+
+def apk_openssl_artifact_matches(artifact, entry):
+    name, version = artifact['name'], artifact['version']
+    purl = f"pkg:apk/alpine/{name}@{version}?arch=x86_64&distro=alpine-{entry['release']}&upstream=openssl"
+    locations = artifact.get('locations')
+    if artifact.get('purl') != purl or not isinstance(locations, list) or len(locations) != 1:
+        return False
+    location = locations[0]
+    return (isinstance(location, dict) and location.get('path') == APK_DATABASE
+            and location.get('accessPath') == APK_DATABASE and location.get('annotations') == {'evidence': 'primary'})
 
 
 def apk_artifact_paths_match(artifact):
@@ -176,7 +223,7 @@ def load_policy(path, root, today=None):
             raise RuntimeError('Distribution entry lacks exact versions, evidence or an honest classification')
         if entry['classification'] == 'still_vulnerable_vendor_minor' and entry.get('vendor_status') != 'vulnerable':
             raise RuntimeError('Vendor severity calibration must retain vulnerable status')
-        if entry.get('artifact_type') not in ('deb', 'binary'):
+        if entry.get('artifact_type') not in ('deb', 'binary', 'apk'):
             raise RuntimeError('Distribution assessment cannot suppress language dependencies')
         if entry['classification'] == 'still_vulnerable_vendor_minor' and entry.get('artifact_type') != 'deb':
             raise RuntimeError('Vendor severity calibration requires a distribution package')
@@ -545,13 +592,19 @@ def assess(policy, match, evidence, acceptance=None):
         manager = assessment_package_manager(entry)
         if manager is None or evidence.get('package_manager', 'dpkg') != manager:
             continue
-        if manager == 'apk' and (evidence.get('apk_architecture') != 'x86_64'
-                or evidence.get('image_configuration') != entry['requires_image_configuration']
-                or not apk_artifact_paths_match(artifact)
-                or evidence.get('packages') != entry['requires_apk']
-                or evidence.get('apk_package_architectures') != entry['requires_apk_architectures']
-                or not set(entry['requires_elf_paths']).issubset(evidence.get('elf_paths', []))):
-            continue
+        if manager == 'apk':
+            if (evidence.get('apk_architecture') != 'x86_64'
+                    or not set(entry['requires_elf_paths']).issubset(evidence.get('elf_paths', []))):
+                continue
+            architectures = evidence.get('apk_package_architectures', {})
+            if entry['artifact_type'] == 'apk':
+                if (not apk_openssl_artifact_matches(artifact, entry)
+                        or any(architectures.get(name) != arch for name, arch in entry['requires_apk_architectures'].items())):
+                    continue
+            elif (evidence.get('image_configuration') != entry['requires_image_configuration']
+                    or not apk_artifact_paths_match(artifact) or evidence.get('packages') != entry['requires_apk']
+                    or architectures != entry['requires_apk_architectures']):
+                continue
         requirements = entry['requires_apk'] if manager == 'apk' else entry['requires_dpkg']
         if any(evidence.get('packages', {}).get(name) != version for name, version in requirements.items()):
             continue

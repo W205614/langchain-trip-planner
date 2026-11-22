@@ -1,4 +1,10 @@
 # Same official Alertmanager source; only reviewed dependency/toolchain security patches.
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS openssl-security
+RUN apk upgrade --no-cache && apk add --no-cache alpine-sdk linux-headers perl
+COPY openssl-backport /trip-openssl
+RUN --mount=type=cache,id=trip-alpine-openssl-source,target=/sources,sharing=locked \
+    sh /trip-openssl/build.sh
+
 FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS busybox-security
 RUN apk upgrade --no-cache \
     && apk add --no-cache alpine-sdk linux-headers openssl-dev utmps-dev utmps-static perl zip
@@ -37,6 +43,8 @@ RUN apk upgrade --no-cache && apk add --no-cache ca-certificates tzdata \
     && chown -R 65534:65534 /alertmanager /etc/alertmanager && chmod -R g+w /alertmanager
 COPY --from=busybox-security /out/ /tmp/trip-busybox/
 RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
+RUN --mount=type=bind,from=openssl-security,source=/out,target=/tmp/trip-openssl \
+    sh /tmp/trip-openssl/install.sh
 COPY --from=build /out/alertmanager /bin/alertmanager
 COPY --from=build /out/amtool /bin/amtool
 COPY --from=build /src/examples/ha/alertmanager.yml /etc/alertmanager/alertmanager.yml

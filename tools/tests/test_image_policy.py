@@ -286,6 +286,36 @@ class DistributionPolicyTests(unittest.TestCase):
                 image_policy.exported_requested_files(path, ['/loop/file'])
 
 
+class AlpineOpenSslTests(unittest.TestCase):
+    def test_only_reviewed_openssl_matches_with_exact_installed_bytes_apply(self):
+        root = Path(__file__).resolve().parents[2]
+        policy = image_policy.load_policy(root / '.github/security-vendor-policy-alpine-openssl.json', root)
+        for entry in policy['assessments']:
+            name, = entry['artifact_versions']
+            version = entry['artifact_versions'][name]
+            match = {'artifact': {'name': name, 'version': version, 'type': 'apk',
+                                  'purl': f'pkg:apk/alpine/{name}@{version}?arch=x86_64&distro=alpine-3.24.4&upstream=openssl',
+                                  'locations': [{'path': '/lib/apk/db/installed', 'accessPath': '/lib/apk/db/installed',
+                                                 'annotations': {'evidence': 'primary'}}]},
+                     'vulnerability': {'id': 'CVE-2026-124709'}}
+            evidence = {'distribution': 'alpine', 'release': '3.24.4', 'architecture': 'amd64',
+                        'package_manager': 'apk', 'apk_architecture': 'x86_64',
+                        'packages': {**entry['requires_apk'], 'unrelated': '1.0-r0'},
+                        'apk_package_architectures': {**entry['requires_apk_architectures'], 'unrelated': 'noarch'},
+                        'elf_paths': entry['requires_elf_paths'], 'file_sha256': entry['file_sha256']}
+            with self.subTest(package=name):
+                self.assertEqual('fixed_by_distribution_backport', image_policy.assess(policy, match, evidence))
+                for pending in ('CVE-2026-107494', 'CVE-2026-84786', 'CVE-2026-95690'):
+                    self.assertIsNone(image_policy.assess(policy, {**match, 'vulnerability': {'id': pending}}, evidence))
+                self.assertIsNone(image_policy.assess(policy, match, {**evidence, 'packages': {}}))
+                self.assertIsNone(image_policy.assess(policy, match, {**evidence, 'apk_architecture': 'aarch64'}))
+                for path in entry['file_sha256']:
+                    corrupted = {**evidence, 'file_sha256': {**evidence['file_sha256'], path: '0' * 64}}
+                    self.assertIsNone(image_policy.assess(policy, match, corrupted))
+                spoofed = {**match, 'artifact': {**match['artifact'], 'locations': []}}
+                self.assertIsNone(image_policy.assess(policy, spoofed, evidence))
+
+
 class AlpineBackportTests(unittest.TestCase):
     APK = ('C:Q1example\nP:musl\nV:1.2.6-r3\nA:x86_64\nT:libc\n'
            'F:lib\nR:libc.musl-x86_64.so.1\na:0:0:755\nR:ld-musl-x86_64.so.1\n\n'

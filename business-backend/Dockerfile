@@ -1,3 +1,9 @@
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS openssl-security
+RUN apk upgrade --no-cache && apk add --no-cache alpine-sdk linux-headers perl
+COPY security/openssl-backport /trip-openssl
+RUN --mount=type=cache,id=trip-alpine-openssl-source,target=/sources,sharing=locked \
+    sh /trip-openssl/build.sh
+
 FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS busybox-security
 RUN apk upgrade --no-cache \
     && apk add --no-cache alpine-sdk linux-headers openssl-dev utmps-dev utmps-static perl zip
@@ -16,6 +22,8 @@ FROM eclipse-temurin:21-jre-alpine@sha256:ac05c3c42b7c2f1a52c9bd52f01041fa195823
 RUN apk upgrade --no-cache && apk add --no-cache curl
 COPY --from=busybox-security /out/ /tmp/trip-busybox/
 RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
+RUN --mount=type=bind,from=openssl-security,source=/out,target=/tmp/trip-openssl \
+    sh /tmp/trip-openssl/install.sh
 # The application uses PostgreSQL and Java's TLS stack. Temurin's download-time
 # GPG tooling (including its SQLite keybox) and GNU CLI bundle are not runtime
 # dependencies; retain BusyBox utilities and the curl health check.

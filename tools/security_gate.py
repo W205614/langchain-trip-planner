@@ -256,15 +256,16 @@ def scan_repository(destination: Path, include_untracked=False):
 
 def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup_owned_resources=False,
           approval=None, runtime_proof=None, retained_inventory=None, source_mode=None, all_severities=False):
-    receiver_vendor = bool(vendor_policy and any('requires_apk' in row for row in vendor_policy.get('assessments', [])))
-    if receiver_vendor:
+    rows = vendor_policy.get('assessments', []) if vendor_policy else []
+    apk_vendor = any('requires_apk' in row for row in rows)
+    receiver_vendor = any('requires_apk' in row and row.get('artifact_type') != 'apk' for row in rows)
+    openssl_vendor = any(row.get('artifact_type') == 'apk' for row in rows)
+    if apk_vendor:
         if policy is not None or approval is not None:
-            raise RuntimeError('Receiver backport verification forbids Python VEX and risk acceptance')
-        if (not vendor_policy.get('assessments')
-                or any(image_policy.assessment_package_manager(row) != 'apk'
-                       or image_policy.apk_assessment_error(vendor_policy, row)
-                       for row in vendor_policy['assessments'])):
-            raise RuntimeError('Receiver vendor policy lacks the exact fixed APK backport contract')
+            raise RuntimeError('Alpine backport verification forbids Python VEX and risk acceptance')
+        if any(image_policy.assessment_package_manager(row) != 'apk'
+               or image_policy.apk_assessment_error(vendor_policy, row) for row in rows):
+            raise RuntimeError('Alpine vendor policy lacks the exact fixed APK backport contract')
     if all_severities and approval:
         raise RuntimeError('All-severity release verification does not accept residual vulnerable findings')
     if source_mode is not None:
@@ -295,12 +296,15 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
     contextual = 0
     context_verified = False
     receiver_context_verified = False
+    openssl_context_verified = False
     if policy or vendor_policy:
         command_info = subprocess.run(['docker', 'image', 'inspect', '--format', '{{json .Config.Cmd}}', identity], capture_output=True, text=True, timeout=30)
         embedded_entrypoint = command_info.returncode == 0 and json.loads(command_info.stdout) == ['uvicorn', 'app.agent_api.main:app', '--host', '0.0.0.0', '--port', '9000', '--workers', '1']
         revision_info = subprocess.run(['docker', 'image', 'inspect', '--format', '{{index .Config.Labels "org.opencontainers.image.revision"}}', identity], capture_output=True, text=True, timeout=30)
         source_revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-        context_verified = embedded_entrypoint and revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision
+        same_revision = revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision
+        context_verified = embedded_entrypoint and same_revision
+        openssl_context_verified = openssl_vendor and same_revision
         if embedded_entrypoint and revision_info.returncode == 0 and approval:
             # Default requires complete tree equality. The explicit delta mode
             # requires its separate pinned activation and real clean HEAD proof.
@@ -315,7 +319,7 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
             receiver_context_verified = (configuration_info.returncode == 0
                 and json.loads(configuration_info.stdout) == image_policy.APK_RECEIVER_CONFIGURATION
                 and command_info.returncode == 0 and json.loads(command_info.stdout) is None
-                and revision_info.returncode == 0 and revision_info.stdout.strip() == source_revision)
+                and same_revision)
         if context_verified and policy:
             for match in matches:
                 vulnerability = match.get('vulnerability', {})
@@ -330,7 +334,8 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
                        'not_affected_execution_path': 0, 'not_affected_build_configuration': 0}
     assessed = []
     acceptance_metadata = None
-    if vendor_policy and (receiver_context_verified if receiver_vendor else context_verified):
+    vendor_context = (receiver_context_verified or openssl_context_verified) if apk_vendor else context_verified
+    if vendor_policy and vendor_context:
         scan_receipt = risk_acceptance.validate_scan_receipt(data, identity, scan_started) if approval else None
         evidence = image_policy.inventory(identity, vendor_policy, destination, cleanup_owned_resources,
                                           include_native_elf=approval is not None, retained_container=retained_inventory)
@@ -341,6 +346,8 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
         for match in matches:
             vulnerability, artifact = match.get('vulnerability', {}), match.get('artifact', {})
             if not all_severities and vulnerability.get('severity', '').lower() not in ('high', 'critical'):
+                continue
+            if receiver_vendor and not receiver_context_verified and artifact.get('type') == 'binary':
                 continue
             classification = image_policy.assess(vendor_policy, match, evidence, acceptance_metadata)
             if classification:
@@ -368,8 +375,9 @@ def image(destination: Path, name: str, policy=None, vendor_policy=None, cleanup
              'vendor_policy_review_policy': vendor_policy.get('review_policy', 'time_limited') if vendor_policy else None,
              'unfixed_risk_accepted_findings': classifications['still_vulnerable_vendor_minor'],
              'risk_acceptance': acceptance_metadata,
-             'image_revision_context_verified': receiver_context_verified if receiver_vendor else context_verified,
-             'receiver_vendor_context_verified': receiver_context_verified}]
+             'image_revision_context_verified': vendor_context if apk_vendor else context_verified,
+             'receiver_vendor_context_verified': receiver_context_verified,
+             'openssl_vendor_context_verified': openssl_context_verified}]
 
 
 def sarif(directory: Path, context=None, source_mode=None, language=None, all_severities=False):

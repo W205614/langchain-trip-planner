@@ -1,4 +1,10 @@
 # Preserve the official PostgreSQL17 server and entrypoint, refreshing signed OS fixes.
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS openssl-security
+RUN apk upgrade --no-cache && apk add --no-cache alpine-sdk linux-headers perl
+COPY openssl-backport /trip-openssl
+RUN --mount=type=cache,id=trip-alpine-openssl-source,target=/sources,sharing=locked \
+    sh /trip-openssl/build.sh
+
 FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS busybox-security
 RUN apk upgrade --no-cache \
     && apk add --no-cache alpine-sdk linux-headers openssl-dev utmps-dev utmps-static perl zip
@@ -20,6 +26,8 @@ FROM postgres:17.12-alpine@sha256:526f86d93c6ea08fd3f1fe5605650cacc781b2c6013169
 RUN apk upgrade --no-cache && apk add --no-cache 'zlib>=1.4-r0'
 COPY --from=busybox-security /out/ /tmp/trip-busybox/
 RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
+RUN --mount=type=bind,from=openssl-security,source=/out,target=/tmp/trip-openssl \
+    sh /tmp/trip-openssl/install.sh
 COPY --from=gosu-security /out/gosu /usr/local/bin/gosu
 COPY --from=gosu-security /out/gosu.buildinfo /usr/local/share/tripplanner/gosu/gosu.buildinfo
 COPY --from=gosu-security /src/LICENSE /usr/local/share/tripplanner/gosu/LICENSE
