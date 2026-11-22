@@ -33,13 +33,23 @@ PYTHON_SOURCE_RELEASES = {
 
 # Reviewed against the official Dockerfiles and signed nginx.org APK index.
 # A new upstream package release needs a matching packaging/source review.
-NGINX_RELEASE = {
-    'version': '1.30.6', 'release': '1', 'njs': '1.0.2', 'acme': '0.4.1',
-    'quickjs': '2025.09.13', 'quickjs_commit': 'fa628f8c523ecac8ce560c081411e91fcaba2d20',
-    'pkg_oss_commit': '3e9e3b9f85308c0bb7b1cf849c87d1f7df98dfc3',
-    'pkg_oss_sha512': 'c16280934a44f7358992d39bb1d876a58e978c58371b96fd212de3f58c7ba40c31a683c54ee46c85d0844ca18fd7addeafbb29a8e06a9d1e164a8628a4739eee',
-    'docker_commit': 'd99174e2cecfc7e5db51c05aff54c2c9dee45803',
-    'key_sha512': 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655',
+NGINX_RELEASES = {
+    '1.30.6': {
+        'version': '1.30.6', 'release': '1', 'njs': '1.0.2', 'acme': '0.4.1',
+        'quickjs': '2025.09.13', 'quickjs_commit': 'fa628f8c523ecac8ce560c081411e91fcaba2d20',
+        'pkg_oss_commit': '3e9e3b9f85308c0bb7b1cf849c87d1f7df98dfc3',
+        'pkg_oss_sha512': 'c16280934a44f7358992d39bb1d876a58e978c58371b96fd212de3f58c7ba40c31a683c54ee46c85d0844ca18fd7addeafbb29a8e06a9d1e164a8628a4739eee',
+        'docker_commit': 'd99174e2cecfc7e5db51c05aff54c2c9dee45803',
+        'key_sha512': 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655',
+    },
+    '1.30.7': {
+        'version': '1.30.7', 'release': '1', 'njs': '1.0.2', 'acme': '0.4.2',
+        'quickjs': '2025.09.13', 'quickjs_commit': 'fa628f8c523ecac8ce560c081411e91fcaba2d20',
+        'pkg_oss_commit': '57e124e48fcbce09568f9896dd28b7d571caaa79',
+        'pkg_oss_sha512': 'ea7a8c2bac050f3def3dcab7c2c3078898288788c08ea48cc2009c001ff9ab45bf675cacbaed208f3234c8336421708ed3dec9d132ab6e27de9a74093237bb4e',
+        'docker_commit': 'a2a986d19aac4a79a330e6e0b5171aae4e521926',
+        'key_sha512': 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655',
+    },
 }
 NGINX_PACKAGES = {'nginx', 'nginx-module-acme', 'nginx-module-geoip',
                   'nginx-module-image-filter', 'nginx-module-njs', 'nginx-module-xslt'}
@@ -317,7 +327,10 @@ def alpine_openssl_provenance(collector, image, service, packages):
 
 
 def validate_official_nginx_packages(packages, environment):
-    release = NGINX_RELEASE
+    release = NGINX_RELEASES.get(environment.get('NGINX_VERSION'))
+    if release is None:
+        raise RuntimeError('Official NGINX package source review requires the exact reviewed release: '
+                           + str(environment.get('NGINX_VERSION')))
     expected_env = {'NGINX_VERSION': release['version'], 'PKG_RELEASE': release['release'],
                     'DYNPKG_RELEASE': '1', 'NJS_VERSION': release['njs'],
                     'NJS_RELEASE': '1', 'ACME_VERSION': release['acme']}
@@ -326,14 +339,16 @@ def validate_official_nginx_packages(packages, environment):
                            + json.dumps({name: environment.get(name) for name in expected_env}))
     if {p['P'] for p in packages} != NGINX_PACKAGES or len(packages) != len(NGINX_PACKAGES):
         raise RuntimeError('Unreviewed NGINX package group: ' + ', '.join(p['P'] + '=' + p['V'] for p in packages))
-    versions = {name: release['version'] + '-r1' for name in NGINX_PACKAGES}
-    versions['nginx-module-njs'] = release['version'] + '.' + release['njs'] + '-r1'
-    versions['nginx-module-acme'] = release['version'] + '.' + release['acme'] + '-r1'
+    package_release = '-r' + release['release']
+    versions = {name: release['version'] + package_release for name in NGINX_PACKAGES}
+    versions['nginx-module-njs'] = release['version'] + '.' + release['njs'] + package_release
+    versions['nginx-module-acme'] = release['version'] + '.' + release['acme'] + package_release
     for row in packages:
         if (row['V'] != versions[row['P']] or row.get('m') != 'NGINX Packaging <nginx-packaging@f5.com>'
                 or row.get('U') != 'https://nginx.org/' or row.get('o') != row['P']
                 or row.get('A') != 'x86_64' or row.get('c')):
             raise RuntimeError('Unreviewed NGINX package identity: ' + json.dumps(row))
+    return release
 
 
 def nginx_acme_crate_sources(collector, source):
@@ -403,8 +418,7 @@ def verify_nginx_index(collector, image):
 
 def official_nginx_sources(collector, image, service, packages):
     environment = dict(value.split('=', 1) for value in json.loads(run('docker', 'image', 'inspect', image))[0]['Config']['Env'])
-    validate_official_nginx_packages(packages, environment)
-    release = NGINX_RELEASE
+    release = validate_official_nginx_packages(packages, environment)
     key_path = collector.fetch('https://nginx.org/keys/nginx_signing.rsa.pub',
                                'licenses/nginx/signing-key/nginx_signing.rsa.pub', release['key_sha512'], 'sha512')
     if docker(image, 'cat', '/etc/apk/keys/nginx_signing.rsa.pub') != key_path.read_bytes():
@@ -426,17 +440,18 @@ def official_nginx_sources(collector, image, service, packages):
         if len(matches) != 1 or any(matches[0].get(field) != row.get(field) for field in ('C', 'm', 'o', 'U', 'A', 'L')):
             raise RuntimeError('Installed NGINX package differs from signed official index: ' + row['P'] + '=' + row['V'])
 
-    recipe = collector.fetch('https://github.com/nginx/pkg-oss/archive/1.30.6-1.tar.gz',
-                             'nginx/pkg-oss-1.30.6-1.tar.gz', release['pkg_oss_sha512'], 'sha512', immutable=True)
+    recipe_tag = f'{release["version"]}-{release["release"]}'
+    recipe = collector.fetch(f'https://github.com/nginx/pkg-oss/archive/{recipe_tag}.tar.gz',
+                             f'nginx/pkg-oss-{recipe_tag}.tar.gz', release['pkg_oss_sha512'], 'sha512', immutable=True)
     docker_source = collector.fetch(f'https://codeload.github.com/nginx/docker-nginx/tar.gz/{release["docker_commit"]}',
                                     f'nginx/docker-nginx-{release["docker_commit"]}.tar.gz', immutable=True)
     archive_notices(collector, recipe, 'nginx-pkg-oss')
     archive_notices(collector, docker_source, 'nginx-docker')
     with tarfile.open(recipe) as archive:
         files = {m.name.split('/', 1)[1]: archive.extractfile(m).read() for m in archive.getmembers() if m.isfile()}
-    filenames = {'nginx': 'nginx-1.30.6.tar.gz', 'njs': 'njs-1.0.2.tar.gz',
-                 'nginx-acme': 'nginx-acme-0.4.1.tar.gz',
-                 'quickjs': 'quickjs-2025.09.13-fa628f8c523ecac8ce560c081411e91fcaba2d20.tar.gz'}
+    filenames = {'nginx': f'nginx-{release["version"]}.tar.gz', 'njs': f'njs-{release["njs"]}.tar.gz',
+                 'nginx-acme': f'nginx-acme-{release["acme"]}.tar.gz',
+                 'quickjs': f'quickjs-{release["quickjs"]}-{release["quickjs_commit"]}.tar.gz'}
     sources = {}
     for component, filename in filenames.items():
         sums = dict((name, digest) for digest, name in
@@ -462,7 +477,7 @@ def official_nginx_sources(collector, image, service, packages):
         'Official NGINX packages have no Alpine aports commit field. They are not assigned a synthetic one.\n'
         'Installed package names, versions, vendor/origin/architecture and C identifiers match the signed nginx.org APK index.\n'
         'The isolated apk verifier trusts only the official NGINX key pinned by the preserved Dockerfiles.\n'
-        'nginx/pkg-oss 1.30.6-1 (commit ' + release['pkg_oss_commit'] + ') provides original Alpine recipes, patches and per-module notices.\n'
+        f'nginx/pkg-oss {recipe_tag} (commit {release["pkg_oss_commit"]}) provides original Alpine recipes, patches and per-module notices.\n'
         'Its full archive and the pinned official docker-nginx archive are under nginx/.\n'
         'nginx/sources/ contains checksum-bound nginx, njs, QuickJS and nginx-acme sources.\n'
         'GeoIP, image-filter and XSLT module implementations are part of the nginx core source.\n'
@@ -478,7 +493,7 @@ def official_nginx_sources(collector, image, service, packages):
     destination = collector.root / 'runtime-provenance' / service / 'nginx'
     destination.mkdir(parents=True, exist_ok=True)
     record = {'packages': packages, 'source_provider': 'NGINX official packages, not Alpine aports',
-              'recipe': NGINX_RELEASE, 'index_signature_verification': verified,
+              'recipe': release, 'index_signature_verification': verified,
               'installed_copyright_sha256': copyrights, 'acme_cargo': cargo,
               'core_modules': 'geoip, image-filter and xslt are built from the collected nginx core source; their Alpine shared-library dependencies retain their own sources/notices.',
               'license_boundary': 'The APK label is not the full license inventory. ACME includes Apache-2.0 and separately licensed Rust crates; QuickJS has its own MIT notice.'}

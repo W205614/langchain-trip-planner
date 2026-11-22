@@ -16,3 +16,7 @@ Alpine 的初次工具链安装遇到下载 I/O 错误。本机以同一 Alpine 
 - Agent 在断网容器中运行 110 项原生包、ABI 和运行时回归，全部通过。构建阶段另通过 9 项 libc 定向回归、56 项强化回归及新增的正常转换和 glob 检查，并验证了 OpenSSL 的包安装、SONAME、导出符号和 IPv4/IPv6 datagram 行为。[Agent 包和文件比较](agent-native-rebuild.json)
 - GitHub 首轮候选的 Agent ABI 测试读取了新库，夹具仍要求旧摘要。新摘要已由实际 Debian 包核对，并用升级后的完整镜像重新运行该测试。初次失败留在对应作业记录里。[首次候选安全门禁](https://github.com/W205614/langchain-trip-planner/actions/runs/45019327247)
 - 接收器原有 CPython 修复文件保持相同字节。新镜像只改变两个 OpenSSL APK 版本及对应的库文件和来源收据。用已更新的完整指纹重放 GitHub 实际报告的 22 条匹配，8 条对应原有 CPython 修复，14 条对应 OpenSSL 回补，未解决项 0。该重放仍需最终源码的同源 CI 确认。[接收器证据](receiver-openssl-rebind.json)
+
+## 分发源码收集
+
+候选前端镜像使用 NGINX 1.30.7 和 ACME 0.4.2。原收集器只接受 1.30.6 和 ACME 0.4.1，导致分发源码归档停止。收集器现按镜像选择对应的固定上游提交和签名材料。用实际候选前端镜像验证了 6 个签名 APK 的来源和 ACME 对应的 76 个 Rust crate，版本或构建号偏离已评审清单时仍会拒绝。[NGINX pkg-oss 1.30.7-1](https://github.com/nginx/pkg-oss/tree/57e124e48fcbce09568f9896dd28b7d571caaa79)

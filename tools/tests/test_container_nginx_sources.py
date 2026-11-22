@@ -20,12 +20,12 @@ class OfficialNginxSourceTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, '(?s)signature verification failed.*UNTRUSTED'):
                     verify_nginx_index(collector, 'image')
 
-    def fixture(self):
-        environment = {'NGINX_VERSION': '1.30.6', 'PKG_RELEASE': '1', 'DYNPKG_RELEASE': '1',
-                       'NJS_VERSION': '1.0.2', 'NJS_RELEASE': '1', 'ACME_VERSION': '0.4.1'}
-        versions = [('nginx', '1.30.6-r1'), ('nginx-module-geoip', '1.30.6-r1'),
-                    ('nginx-module-image-filter', '1.30.6-r1'), ('nginx-module-xslt', '1.30.6-r1'),
-                    ('nginx-module-njs', '1.30.6.1.0.2-r1'), ('nginx-module-acme', '1.30.6.0.4.1-r1')]
+    def fixture(self, nginx='1.30.6', acme='0.4.1'):
+        environment = {'NGINX_VERSION': nginx, 'PKG_RELEASE': '1', 'DYNPKG_RELEASE': '1',
+                       'NJS_VERSION': '1.0.2', 'NJS_RELEASE': '1', 'ACME_VERSION': acme}
+        versions = [('nginx', f'{nginx}-r1'), ('nginx-module-geoip', f'{nginx}-r1'),
+                    ('nginx-module-image-filter', f'{nginx}-r1'), ('nginx-module-xslt', f'{nginx}-r1'),
+                    ('nginx-module-njs', f'{nginx}.1.0.2-r1'), ('nginx-module-acme', f'{nginx}.{acme}-r1')]
         packages = [{'P': name, 'V': version, 'o': name, 'c': None, 'A': 'x86_64',
                      'm': 'NGINX Packaging <nginx-packaging@f5.com>', 'U': 'https://nginx.org/'}
                     for name, version in versions]
@@ -44,6 +44,15 @@ class OfficialNginxSourceTests(unittest.TestCase):
         environment['NJS_VERSION'] = 'unreviewed'
         with self.assertRaisesRegex(RuntimeError, 'exact reviewed release'):
             validate_official_nginx_packages(packages, environment)
+
+    def test_current_nginx_requires_its_corresponding_acme_release(self):
+        packages, environment = self.fixture('1.30.7', '0.4.2')
+        reviewed = validate_official_nginx_packages(packages, environment)
+        self.assertEqual(reviewed['pkg_oss_commit'], '57e124e48fcbce09568f9896dd28b7d571caaa79')
+        with self.assertRaisesRegex(RuntimeError, 'exact reviewed release'):
+            validate_official_nginx_packages(packages, {**environment, 'ACME_VERSION': '0.4.1'})
+        with self.assertRaisesRegex(RuntimeError, 'exact reviewed release'):
+            validate_official_nginx_packages(packages, {**environment, 'NGINX_VERSION': '1.30.8'})
 
     def test_missing_or_additional_nginx_modules_are_not_silently_approved(self):
         packages, environment = self.fixture()
