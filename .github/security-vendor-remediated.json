@@ -229,7 +229,8 @@
     "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1",
     "backend/security/cpython-backports/CVE-2026-115791.patch": "2008437c586077ec7c368a499c418bd95c6955520dcfb02899665ad8f4906c58",
     "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df",
-    "backend/security/openssl-backport/patches/0014-CVE-2026-121481.patch": "ed0fa7446a2304e5cee5ca7d0ba469d51fc6582f6557c9994ef8c6ffdf544cff"
+    "backend/security/openssl-backport/patches/0014-CVE-2026-121481.patch": "ed0fa7446a2304e5cee5ca7d0ba469d51fc6582f6557c9994ef8c6ffdf544cff",
+    "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json": "ad2705fa012e9a4a5a63425b3b6e30fd4d0cd4cfaa0993b13295c436802c054f"
   },
   "assessments": [
     {
@@ -252,13 +253,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -280,13 +281,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -308,14 +309,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -337,14 +338,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -366,14 +367,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -395,14 +396,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -812,12 +813,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -839,12 +840,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -866,12 +867,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -893,12 +894,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -920,12 +921,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -947,12 +948,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -974,12 +975,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1001,12 +1002,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1028,12 +1029,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1055,12 +1056,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1380,12 +1381,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1623,9 +1624,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1648,9 +1649,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1673,9 +1674,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1721,9 +1722,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1746,9 +1747,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1771,9 +1772,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1796,9 +1797,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1894,9 +1895,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1919,9 +1920,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1944,9 +1945,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -1992,9 +1993,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2017,9 +2018,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2042,9 +2043,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2067,9 +2068,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2455,9 +2456,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2480,9 +2481,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2505,9 +2506,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2553,9 +2554,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2578,9 +2579,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2603,9 +2604,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2628,9 +2629,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2700,7 +2701,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2709,7 +2710,7 @@
         "/usr/bin/newgidmap"
       ],
       "requires_architecture": "amd64",
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -2733,7 +2734,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2742,7 +2743,7 @@
         "/usr/bin/newgidmap"
       ],
       "requires_architecture": "amd64",
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -3737,7 +3738,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3747,7 +3748,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -3769,7 +3770,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3779,7 +3780,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -3801,7 +3802,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3811,7 +3812,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -3833,7 +3834,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3843,7 +3844,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -3941,13 +3942,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -4384,12 +4385,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -4558,12 +4559,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -4585,12 +4586,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -4741,12 +4742,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5032,13 +5033,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5162,13 +5163,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5190,13 +5191,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5218,13 +5219,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5246,13 +5247,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5274,13 +5275,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5302,13 +5303,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5330,13 +5331,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5358,13 +5359,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5386,13 +5387,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -5636,13 +5637,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/chown",
         "/usr/bin/chgrp"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -6206,12 +6207,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/sort"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -6233,12 +6234,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/diff3"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -6260,12 +6261,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/unexpand"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
@@ -6287,12 +6288,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c"
       },
       "absent_paths": [
         "/usr/bin/uniq"
       ],
-      "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
+      "manifest_delta_review": "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json"
     },
     {
       "distribution": "debian",
