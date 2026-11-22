@@ -20,6 +20,7 @@
 | `backend/security/glibc-hardening/stack-randomization.h`、`stack-randomization-regression.c` | 新增代码明确采用 LGPL-2.1-or-later，保留 `Copyright (C) 2026 W205614`；头文件以相同字节嵌入 stack 补丁，不受仓库默认 MIT 覆盖 |
 | `backend/security/glibc-hardening/tls-guard-regression.c`、`arena-regression.c` | TLS 回归保留其上游衍生代码的 Free Software Foundation 版权及 LGPL-2.1-or-later；arena 回归文件明确使用 LGPL-2.1-or-later。各文件声明分别保留 |
 | `backend/security/cpython-backports/` | CPython 3.13.18 及所列 Python 官方提交；保留官方 `LICENSE` 中完整许可链、PSF 及历史贡献者声明。对应源码材料包含固定的原始发行源码、三项安全回补、保留的 POP3 上游原补丁及构建说明 |
+| `backend/security/openssl-backport/`、`deploy/images/openssl-backport/` 及镜像构建上下文中的配方副本 | OpenSSL 3.5.9 使用 Apache-2.0。Debian 与 Alpine 构建保留各自配方、版权和固定的上游源码。新增补丁保留来源和提案提交，对应源码材料同时提供补丁、配方及许可。见 [Debian 回补](backend/security/openssl-backport/README.md) 和 [Alpine 回补](deploy/images/openssl-backport/README.md) |
 | `backend/security/pam-backport/` | Linux-PAM 完整上游安全提交及 Debian 原配方。`pam_userdb.c` 保留 Cristian Gafton 的原 BSD 风格条款及 GPL 替代许可；其他文件按各自原声明处理，实际 Debian copyright 随包保留，不把整个 PAM 概括为单一许可 |
 | `backend/security/dash-backport/` | 保留 dash 原始源码、Debian 全部补丁及逐文件版权/许可；本项目只修改已有 `fnmatch` 构建选项并记录下游版本，原 Debian copyright 随实际包保留 |
 | `deploy/images/busybox-backport/` 及两份生成的镜像构建输入 | BusyBox 1.37.0、原 Alpine 配方及其补丁、Radoslav Kolev 的上游 wget 修复；BusyBox 和配方中的 `bbsuid.c` 使用 GPL-2.0-only，其他材料保留各自原声明、作者和条款。仓库携带的 `aports-busybox.tar.gz` 是既定摘要的完整 80 文件原配方归档；原字节、配置、补丁与构建/安装脚本一起保留在对应源码材料中。下游包不代表新的 BusyBox 上游发行版 |

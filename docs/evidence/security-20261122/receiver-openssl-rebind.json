@@ -1,0 +1,63 @@
+{
+  "source": "dd073ecfa5b187f02d51fbb81504835e69489f84",
+  "run": 45019327247,
+  "job": 137198506276,
+  "artifact": 14754030522,
+  "baseline_image": "sha256:f76c57164b0ba3677eb813142664c9e1a3dadafa31515eb4ede46f346a55fe34",
+  "checked_image": "sha256:65f7b744539565c964f950587b9511d99c6eb021a315f27234001be331e8bfd9",
+  "package_changes": {
+    "libcrypto3": [
+      "3.5.9_p20261121-r0",
+      "3.5.9_p20261122-r0"
+    ],
+    "libssl3": [
+      "3.5.9_p20261121-r0",
+      "3.5.9_p20261122-r0"
+    ]
+  },
+  "file_changes": {
+    "/lib/apk/db/installed": {
+      "before": "1a2f6ef3906a8cf71990ce40ccc9026842ee92de66943e685212f61bbea7fd42",
+      "after": "5aa79789217f6d41cbc0523fc5dceb07d16e00c37f5972bf89c46f75c13ac35a"
+    },
+    "/usr/lib/libcrypto.so.3": {
+      "before": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
+      "after": "2cf8f4862ee5d90a187f4dff3ee8b4a79a4fc101b9e468b72aaec314680e58cc"
+    },
+    "/usr/lib/libssl.so.3": {
+      "before": "2ed4171ff6c4df21cbce62c14e55759ad8074767c2ffc86f11cfb000034849af",
+      "after": "d73268019d9e4008d56ceb88817cb598d81b8dfc736e97a93520b28777216fc7"
+    },
+    "/usr/local/share/tripplanner/openssl-backport/recipe.tar.gz": {
+      "before": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
+      "after": "7eff065afa6bb9739de575c3798ac0cb7640f9d23d45406c38578382534276e9"
+    },
+    "/usr/local/share/tripplanner/openssl-backport/source.lock": {
+      "before": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
+      "after": "2c2df79813a230a18afb33dc8b70770327bafc87ceb8be958e535af00c8528a9"
+    }
+  },
+  "unchanged_python_evidence": {
+    "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
+    "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
+    "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
+    "/usr/local/lib/python3.13/gzip.py": "ac5b777fff2f2e20d0443d17ce2e3459705fe867dbeb12471616be2063585080",
+    "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+    "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
+    "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
+    "/usr/local/lib/python3.13/imaplib.py": "b88fed864f221c0d2fb571bfaa35c550e81f6b83cda4b31335dd8919c9c143e0",
+    "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
+    "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+    "/usr/local/lib/python3.13/runpy.py": "d6427ee5e18638122f7f0409a38b27867034b5fe1768b35c03ab53c79b275ba6",
+    "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9",
+    "/usr/local/lib/python3.13/tarfile.py": "1d45900b8bac76641c9d93772c00237c0647cc1887906599f8cb15e7658cfdb7",
+    "/usr/local/lib/python3.13/zipfile/__init__.py": "80b0ec4c7b17b895d15eea638c133f505ac33a6cfd28685e805665ffd4880631"
+  },
+  "verified_matches": {
+    "fixed_by_distribution_backport": 14,
+    "fixed_by_pinned_security_upgrade": 8
+  },
+  "blocking_matches": 0,
+  "raw_matches": 22,
+  "risk_acceptance": 0
+}
