@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
-package_revision=trip3
+package_revision=trip4
 case "${1:-}" in
   '') test "$#" -eq 0 ;;
-  --hardening) test "$#" -eq 1; package_revision=trip5 ;;
+  --hardening) test "$#" -eq 1; package_revision=trip6 ;;
   *) printf 'Usage: build-glibc.sh [--hardening]\n' >&2; exit 2 ;;
 esac
 cd /patches
@@ -12,7 +12,7 @@ cd /build/glibc-2.41
 while read -r patch_file; do
   patch --batch --fuzz=0 -p1 < "/patches/$patch_file"
 done < /patches/glibc-patches.txt
-if [ "$package_revision" = trip5 ]; then
+if [ "$package_revision" = trip6 ]; then
   patch --batch --fuzz=0 -p1 < /patches/patches/glibc-121758.patch
   (cd /hardening && sha256sum -c hardening-patches.sha256)
   for patch_file in tls-guard.patch stack-randomization.patch arena-randomization.patch; do
@@ -26,10 +26,12 @@ path = Path('debian/changelog')
 hardening = ('  * Backport the upstream ISO-2022-CN-EXT decoder fix for CVE-2026-121758.\n'
              '  * Add reviewed downstream x86-64 TLS guards, independently randomized\n'
              '    thread stacks without cache reuse, and randomized thread arenas.\n\n'
-             if sys.argv[1] == 'trip5' else '')
+             if sys.argv[1] == 'trip6' else '')
 path.write_text(f'glibc (2.41-12+deb13u5+{sys.argv[1]}) trixie; urgency=high\n\n'
                 '  * Rebase on Debian security update 2.41-12+deb13u5.\n'
-                '  * Retain the upstream LANGUAGE traversal backport for CVE-2026-84243.\n\n'
+                '  * Retain the upstream LANGUAGE traversal backport for CVE-2026-84243.\n'
+                '  * Fix IBM1390/IBM1399 and CP949 conversion bounds and glob cleanup\n'
+                '    for CVE-2026-124024, CVE-2026-121757 and CVE-2026-126765.\n\n'
                 + hardening
                 + ' -- Trip Planner downstream build <build@tripplanner.invalid>  Tue, 10 Nov 2026 00:00:00 +0000\n\n'
                 + path.read_text())

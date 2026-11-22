@@ -6,7 +6,7 @@ Base64 length check documented below. The source descriptor, signature,
 and both source archives are SHA-256 pinned in `sources.sha256`. Each patch is
 pinned in `patches.sha256`.
 
-The downstream binary package revision is `3.5.9-1~deb13u1+trip3`. The build installs the matching three
+The downstream binary package revision is `3.5.9-1~deb13u1+trip4`. The build installs the matching three
 runtime packages together: `libssl3t64`, `openssl`, and
 `openssl-provider-legacy`. Their SONAMEs and installed runtime tests must be
 checked against the pre-backport Debian binaries before this package is used
@@ -27,3 +27,14 @@ The package also carries four repairs merged into the OpenSSL 3.5 branch.
 fits the API's `int` result before the scalar encoder writes output. Valid
 inputs retain the existing behavior. Debian tracks the 3.5 package as affected,
 and the upstream proposal is tracked separately. [Debian advisory](https://security-tracker.debian.org/tracker/CVE-2026-121481) · [OpenSSL proposal](https://github.com/openssl/openssl/pull/33652)
+
+`+trip4` adds the production changes from three pinned OpenSSL proposals.
+The QUIC backport omits the test-only counter. The DANE change retains
+verification of a self-signed leaf when the trust store supplies its
+certificate. The DTLS change stores received bytes during reassembly
+before allocating the complete message. These are downstream backports
+of changes under upstream review.
+
+- [CVE-2026-107494 and upstream proposal](https://github.com/openssl/openssl/pull/33544)
+- [CVE-2026-84786 and upstream proposal](https://github.com/openssl/openssl/pull/33634)
+- [CVE-2026-95690 and upstream stable-branch proposal](https://github.com/openssl/openssl/pull/33729)

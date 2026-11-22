@@ -1,1 +1,4 @@
 patches/glibc-84243-trixie.patch
+patches/glibc-124024.patch
+patches/glibc-121757.patch
+patches/glibc-126765.patch

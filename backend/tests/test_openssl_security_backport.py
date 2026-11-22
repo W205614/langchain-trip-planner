@@ -12,7 +12,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 PROVENANCE = Path('/usr/local/share/tripplanner/openssl-backport')
-EXPECTED_VERSION = '3.5.9-1~deb13u1+trip3'
+EXPECTED_VERSION = '3.5.9-1~deb13u1+trip4'
 
 
 def test_openssl_source_backport_runtime_and_abi_proof():

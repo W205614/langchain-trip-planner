@@ -48,7 +48,7 @@ patch manifest (`glibc-build.sha256`, `libstdcxx-patches.sha256`, or
 
 The ordinary backport build finishes in `glibc-compiled`. The application uses
 `glibc-hardened-compiled`, which applies the separately reviewed TLS, thread-stack
-and thread-arena changes from `../glibc-hardening/` and builds `+trip5`
+and thread-arena changes from `../glibc-hardening/` and builds `+trip6`
 packages from a fresh source tree. Compilation, packaging and exported ABI
 comparison precede the check stage. The application copies packages only from the later
 `glibc-backport` stage, after its required tests pass. Test-fixture changes do
@@ -85,7 +85,16 @@ ISO-2022-CN-EXT decoder fix. The source patch is pinned and applied with zero
 fuzz. The runtime check round-trips valid text through the installed
 converter. [CVE-2026-121758 upstream commit](https://sourceware.org/git/?p=glibc.git;a=commit;h=170ee485fa89b95c3bb7d5606c9812c6c100c9be)
 
-The current custom glibc `+trip5`, libstdc++ `+trip3` and util-linux `+trip2`
+The glibc build checks the remaining input length before an IBM1390/IBM1399
+combining-character lookup and advances the CP949 decoder only after a
+successful conversion. A failed glob prefix allocation leaves the array owned
+by its caller so it can free the whole result safely.
+[IBM1390/IBM1399 patch](https://sourceware.org/pipermail/libc-alpha/2026-November/182107.html) ·
+[Pointer arithmetic correction](https://sourceware.org/pipermail/libc-alpha/2026-November/182116.html) ·
+[CP949 advisory](https://security-tracker.debian.org/tracker/CVE-2026-121757) ·
+[Glob patch](https://sourceware.org/pipermail/libc-alpha/2026-November/182067.html)
+
+The current custom glibc `+trip6`, libstdc++ `+trip3` and util-linux `+trip2`
 revisions preserve package-manager ownership and
 dependency ordering. Future Debian security releases should replace these
 backports after the patches, ABI, regressions and fresh image scan are reviewed.

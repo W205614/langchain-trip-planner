@@ -306,8 +306,11 @@ class AlpineOpenSslTests(unittest.TestCase):
                         'elf_paths': entry['requires_elf_paths'], 'file_sha256': entry['file_sha256']}
             with self.subTest(package=name):
                 self.assertEqual('fixed_by_distribution_backport', image_policy.assess(policy, match, evidence))
-                for pending in ('CVE-2026-107494', 'CVE-2026-84786', 'CVE-2026-95690'):
-                    self.assertIsNone(image_policy.assess(policy, {**match, 'vulnerability': {'id': pending}}, evidence))
+                for repaired in ('CVE-2026-107494', 'CVE-2026-84786', 'CVE-2026-95690'):
+                    self.assertEqual('fixed_by_distribution_backport', image_policy.assess(
+                        policy, {**match, 'vulnerability': {'id': repaired}}, evidence))
+                unseen = {**match, 'vulnerability': {'id': 'CVE-unreviewed'}}
+                self.assertIsNone(image_policy.assess(policy, unseen, evidence))
                 self.assertIsNone(image_policy.assess(policy, match, {**evidence, 'packages': {}}))
                 self.assertIsNone(image_policy.assess(policy, match, {**evidence, 'apk_architecture': 'aarch64'}))
                 for path in entry['file_sha256']:

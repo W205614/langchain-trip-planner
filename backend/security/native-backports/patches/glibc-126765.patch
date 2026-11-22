@@ -1,0 +1,32 @@
+Downstream import of the production change posted to libc-alpha.
+Source: https://sourceware.org/pipermail/libc-alpha/2026-November/182067.html
+
+diff --git a/posix/glob.c b/posix/glob.c
+index 2e484cabd1a..ad846c74a74 100644
+--- a/posix/glob.c
++++ b/posix/glob.c
+@@ -1625,7 +1625,10 @@ collated_compare (const void *a, const void *b)
+ /* Prepend DIRNAME to each of N members of ARRAY, replacing ARRAY's
+    elements in place.  Return nonzero if out of memory, zero if successful.
+    A slash is inserted between DIRNAME and each elt of ARRAY,
+-   unless DIRNAME is just "/".  Each old element of ARRAY is freed.  */
++   unless DIRNAME is just "/".  Each old element of ARRAY is freed.
++   If out of memory, ARRAY keeps the elements already replaced and the
++   original ones after them, so the caller can free all of them with
++   globfree.  */
+ static int
+ prefix_array (const char *dirname, char **array, size_t n)
+ {
+@@ -1658,11 +1661,7 @@ prefix_array (const char *dirname, char **array, size_t n)
+       size_t eltlen = strlen (array[i]) + 1;
+       char *new = malloc (dirlen + 1 + eltlen);
+       if (new == NULL)
+-        {
+-          while (i > 0)
+-            free (array[--i]);
+-          return 1;
+-        }
++        return 1;
+ 
+       {
+         char *endp = mempcpy (new, dirname, dirlen);

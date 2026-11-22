@@ -9,7 +9,9 @@ done
 python - <<'PY'
 from pathlib import Path
 path = Path('debian/changelog')
-path.write_text('openssl (3.5.9-1~deb13u1+trip3) trixie-security; urgency=high\n\n'
+path.write_text('openssl (3.5.9-1~deb13u1+trip4) trixie-security; urgency=high\n\n'
+                '  * Apply downstream backports for CVE-2026-107494, CVE-2026-84786\n'
+                '    and CVE-2026-95690.\n'
                 '  * Bound the Base64 block encoder return length for CVE-2026-121481.\n'
                 '  * Backport OpenSSL upstream fixes for CVE-2026-107496, CVE-2026-88822,\n'
                 '    CVE-2026-88823, CVE-2026-95691 and CVE-2026-95692, retaining\n'
@@ -24,7 +26,7 @@ export SOURCE_DATE_EPOCH=1794268800
 # Keep the complete Debian source build and tests; only documentation is omitted.
 dpkg-buildpackage -b -uc -us -d
 for package in libssl3t64 openssl openssl-provider-legacy; do
-  file="/build/${package}_3.5.9-1~deb13u1+trip3_amd64.deb"
+  file="/build/${package}_3.5.9-1~deb13u1+trip4_amd64.deb"
   test -s "$file"
   cp "$file" /out/packages/
 done

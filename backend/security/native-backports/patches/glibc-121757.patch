@@ -1,0 +1,27 @@
+CVE-2026-121757: Commit the CP949 decoder position only on success.
+The conversion helper can advance its pointer before returning a value
+that the caller rejects. Keep the original position for the error
+handler, which already consumes the rejected character when ignoring it.
+Source: https://security-tracker.debian.org/tracker/CVE-2026-121757
+
+diff --git a/iconvdata/uhc.c b/iconvdata/uhc.c
+--- a/iconvdata/uhc.c
++++ b/iconvdata/uhc.c
+@@ -3133,13 +3133,16 @@
+ 	  }								      \
+ 	else								      \
+ 	  {								      \
+-	    ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);			      \
++	    const unsigned char *next = inptr;                                \
++	    ch = ksc5601_to_ucs4 (&next, 2, 0x80);			      \
+ 	    if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0)	      \
+ 		|| __builtin_expect (ch == 0x327e, 0))			      \
+ 	      {								      \
+ 		/* Illegal.  */						      \
+ 		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
+ 	      }								      \
++	    else                                                              \
++	      inptr = next;                                                   \
+ 	  }								      \
+       }									      \
+ 									      \

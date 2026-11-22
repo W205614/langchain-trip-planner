@@ -73,23 +73,23 @@
     "docker-compose.production.yml": "ea35fb4cf8c54a86bb7f24519955f1c30ae2dbd3b07897b11bcb1ebefbbaa8cf",
     "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java": "adef1c4dcabf75c49bf079bef80c4e22286379b4cae3425242450c5f9e03c38c",
     "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc",
-    "tools/image_policy.py": "344cc641b66ac6b216a3010115f18bc3893814dd6333b93f11a5ccb257b2efda",
+    "tools/image_policy.py": "a839fc5ed3ff07265fa854a6ca6ca31e28e60981aee3f0826f0a8ce78c506b2e",
     "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
-    "backend/security/native-backports/build-glibc.sh": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
+    "backend/security/native-backports/build-glibc.sh": "4df02e4e43eef6ce215e98a3d5af75a9664f5e7bbf981635acacf4c5f51858fe",
     "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
     "backend/security/native-backports/build-libstdcxx.sh": "91a56c9b9c4ec3bf8ecb3d7c10c859f74d3b1aa42c4422753807a07e808fc54d",
     "backend/security/native-backports/build-util-linux.sh": "f5c695b3053b705694121ead80c4b0ad6eb92dc3ba17358ed3cbbfd3068b628a",
     "backend/security/native-backports/check-glibc.sh": "26e0e6f35eb9ad432bb1685477a35d807f05728d26bfc060d9ffec69de480ed3",
     "backend/security/native-backports/check-login-pam-rhost.py": "7503fc0040b75a06bd1b01ab4670d74addfc67443d1d64eb28eb030949e946c9",
-    "backend/security/native-backports/glibc-boundary-regression.c": "a2d74cb8b94e4ce226db14d1861a17859ba3b3ef6e3760d411f0630f75227e67",
-    "backend/security/native-backports/glibc-build.sha256": "55a328303a103e53e7e5cb2bd9125117b08d7cda37c29dc92813c51454a98ee9",
-    "backend/security/native-backports/glibc-patches.txt": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
-    "backend/security/native-backports/glibc-tests.sha256": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab",
+    "backend/security/native-backports/glibc-boundary-regression.c": "19ed83637dc0a7d919d71dfb319965d66a33fbec402723bfbfead76bc59aa26a",
+    "backend/security/native-backports/glibc-build.sha256": "12f93754d9649d2454ec6f638cd5cdc2faa70b3b3c2d70a54b77a0c5e5613f48",
+    "backend/security/native-backports/glibc-patches.txt": "68d2cd0b058d68379898e5c9a267b4486eb4870c5b37181ca5664663e0ae7e89",
+    "backend/security/native-backports/glibc-tests.sha256": "4d9d859f0f34af99ddfb1eac9d92181fda0e23bdc4f85994f0f9d43e9b3f3171",
     "backend/security/native-backports/libstdcxx-patches.sha256": "ee05f06867fd49ddfaf319bff09e2be3fe88657ca9fa4bb947415cdd92e7d975",
     "backend/security/native-backports/login-pam-rhost-regression.c": "feca29f1a8cdc47b57c6539ee7d8b2228bc82294992187071a44f9d1cfcca603",
     "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
     "backend/security/native-backports/patches.sha256": "66b589722d4e97f307999f84e51a21732d6b907aa217c9fd080aa0f5b5a00bfb",
-    "backend/security/native-backports/README.md": "51656c16adfed6e7af3da6b7e498b914c3d36cd9536d27fd5fea6aac0bfa40a8",
+    "backend/security/native-backports/README.md": "bf02997e0b254d5c51e57fce578d812e9e37ef4e1d7099872ed6c38f48d53fd3",
     "backend/security/native-backports/sources.sha256": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31",
     "backend/security/native-backports/util-linux-patches.sha256": "4b3f70cb42f5495ecdcea144c1ec68d3cb08defac5080c4309bb87bf0bd29da6",
     "backend/security/native-backports/util-linux-patches.txt": "adae2b22b165cac74ae9292d21b0cfc8105d6f7a591da728fc052e0eafe487b6",
@@ -456,6 +456,40 @@
       }
     },
     "review": "Planning changes preserve the embedded Chroma entrypoint and client path. Debian build materials and PostgreSQL identity changed. Exact advisory, package and ELF predicates remain in force. Rebuilt binaries require independent matching artifact evidence.",
+    "new_exemptions": 0
+  },
+  "native_backport_binding_delta_20261122": {
+    "changes": {
+      "tools/image_policy.py": {
+        "previous": "344cc641b66ac6b216a3010115f18bc3893814dd6333b93f11a5ccb257b2efda",
+        "current": "a839fc5ed3ff07265fa854a6ca6ca31e28e60981aee3f0826f0a8ce78c506b2e"
+      },
+      "backend/security/native-backports/build-glibc.sh": {
+        "previous": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
+        "current": "4df02e4e43eef6ce215e98a3d5af75a9664f5e7bbf981635acacf4c5f51858fe"
+      },
+      "backend/security/native-backports/glibc-boundary-regression.c": {
+        "previous": "a2d74cb8b94e4ce226db14d1861a17859ba3b3ef6e3760d411f0630f75227e67",
+        "current": "19ed83637dc0a7d919d71dfb319965d66a33fbec402723bfbfead76bc59aa26a"
+      },
+      "backend/security/native-backports/glibc-build.sha256": {
+        "previous": "55a328303a103e53e7e5cb2bd9125117b08d7cda37c29dc92813c51454a98ee9",
+        "current": "12f93754d9649d2454ec6f638cd5cdc2faa70b3b3c2d70a54b77a0c5e5613f48"
+      },
+      "backend/security/native-backports/glibc-patches.txt": {
+        "previous": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
+        "current": "68d2cd0b058d68379898e5c9a267b4486eb4870c5b37181ca5664663e0ae7e89"
+      },
+      "backend/security/native-backports/glibc-tests.sha256": {
+        "previous": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab",
+        "current": "4d9d859f0f34af99ddfb1eac9d92181fda0e23bdc4f85994f0f9d43e9b3f3171"
+      },
+      "backend/security/native-backports/README.md": {
+        "previous": "51656c16adfed6e7af3da6b7e498b914c3d36cd9536d27fd5fea6aac0bfa40a8",
+        "current": "bf02997e0b254d5c51e57fce578d812e9e37ef4e1d7099872ed6c38f48d53fd3"
+      }
+    },
+    "review": "Native tooling and tests changed. The embedded Chroma client, indexing routes and four existing evaluation entries are byte-identical.",
     "new_exemptions": 0
   }
 }

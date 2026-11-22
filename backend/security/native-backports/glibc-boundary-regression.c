@@ -1,6 +1,7 @@
 /* Runtime boundary regressions for the exact glibc backport artifacts. */
 #include <assert.h>
 #include <errno.h>
+#include <glob.h>
 #include <iconv.h>
 #include <stdint.h>
 #include <resolv.h>
@@ -77,6 +78,22 @@ static void check_conversion(const char *encoding, const unsigned char input[3])
     assert(iconv_close(converter) == 0);
 }
 
+static void check_encoding(const char *to, const char *from, char *input,
+                           size_t input_length, const char *expected,
+                           size_t expected_length)
+{
+    iconv_t converter = iconv_open(to, from);
+    assert(converter != (iconv_t)-1);
+    char buffer[32];
+    char *output = buffer;
+    size_t available = sizeof(buffer);
+    assert(iconv(converter, &input, &input_length, &output, &available) == 0);
+    assert(input_length == 0);
+    assert(sizeof(buffer) - available == expected_length);
+    assert(memcmp(buffer, expected, expected_length) == 0);
+    assert(iconv_close(converter) == 0);
+}
+
 int main(void)
 {
     check_resolver_search_truncation();
@@ -84,6 +101,18 @@ int main(void)
     const unsigned char euc_jis[] = {0xa4, 0xf7, 0x41};
     check_conversion("SHIFT_JISX0213", shift_jis);
     check_conversion("EUC-JISX0213", euc_jis);
+    char hangul[] = "\xc7\xd1\xb1\xdb";
+    check_encoding("UTF-8", "CP949", hangul, sizeof(hangul) - 1,
+                   "\xed\x95\x9c\xea\xb8\x80", 6);
+    uint32_t combined[] = {0x00e6, 0x0300};
+    check_encoding("IBM1390", "WCHAR_T", (char *)combined, sizeof(combined),
+                   "\x0e\xec\xc3", 3);
+    check_encoding("IBM1399", "WCHAR_T", (char *)combined, sizeof(combined),
+                   "\x0e\xec\xc3", 3);
+    glob_t paths;
+    assert(glob("/dev/nu[l]l", 0, NULL, &paths) == 0);
+    assert(paths.gl_pathc == 1 && strcmp(paths.gl_pathv[0], "/dev/null") == 0);
+    globfree(&paths);
     const char *modes[] = {"r,ccs=", "r,ccs= ", "r,ccs=  "};
     for (size_t i = 0; i < sizeof(modes) / sizeof(modes[0]); i++) {
         errno = 0;
@@ -93,6 +122,6 @@ int main(void)
     FILE *valid = fopen("/dev/null", "r,ccs=UTF-8");
     assert(valid != NULL);
     assert(fclose(valid) == 0);
-    puts("Resolver truncation, JIS pending state and empty fopen charset regressions passed");
+    puts("Resolver, character conversion, glob and fopen charset contract checks passed");
     return 0;
 }

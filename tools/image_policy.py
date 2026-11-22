@@ -32,9 +32,10 @@ APK_RECEIVER_PATCH_FILES = {APK_RECEIVER_SOCKET, '/usr/local/lib/python3.13/http
                             '/usr/local/lib/python3.13/poplib.py'}
 APK_DATABASE = '/lib/apk/db/installed'
 APK_OPENSSL_LIBRARIES = {'/usr/lib/libcrypto.so.3', '/usr/lib/libssl.so.3', '/usr/lib/ossl-modules/legacy.so'}
-APK_OPENSSL_PACKAGE_VERSION = '3.5.9_p20261121-r0'
+APK_OPENSSL_PACKAGE_VERSION = '3.5.9_p20261122-r0'
 APK_OPENSSL_PROVENANCE = '/usr/local/share/tripplanner/openssl-backport/'
-APK_OPENSSL_FIXED_IDS = {'CVE-2026-124709', 'CVE-2026-121482', 'CVE-2026-107493', 'CVE-2026-35190'}
+APK_OPENSSL_FIXED_IDS = {'CVE-2026-124709', 'CVE-2026-121482', 'CVE-2026-107493', 'CVE-2026-35190',
+                         'CVE-2026-107494', 'CVE-2026-84786', 'CVE-2026-95690'}
 
 
 def assessment_package_manager(entry):
@@ -119,7 +120,7 @@ def apk_openssl_assessment_error(policy, entry):
             or any(not isinstance(value, str) or not re.fullmatch(r'[0-9a-f]{64}', value) for value in hashes.values())
             or not isinstance(elf, list) or not all(isinstance(value, str) for value in elf) or set(elf) != runtime
             or not isinstance(review, str) or review not in policy.get('source_bindings', {})):
-        return 'OpenSSL APK backport requires the four fixed advisory IDs and exact signed package, ELF and source evidence'
+        return 'OpenSSL APK backport requires the reviewed advisory IDs and exact signed package, ELF and source evidence'
     return None
 
 
