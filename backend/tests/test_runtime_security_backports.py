@@ -21,14 +21,22 @@ def test_runtime_uses_stable_backports_and_fixed_python():
         ['dpkg-query', '-W', '-f=${Package}\t${Version}\n',
          'libc6', 'libc-bin', 'libstdc++6', 'libmount1', 'util-linux'], text=True)
     assert dict(line.split('\t') for line in revisions.splitlines()) == {
-        'libc6': '2.41-12+deb13u5+trip4',
-        'libc-bin': '2.41-12+deb13u5+trip4',
+        'libc6': '2.41-12+deb13u5+trip5',
+        'libc-bin': '2.41-12+deb13u5+trip5',
         'libstdc++6': '14.2.0-19+trip2',
         'libmount1': '2.41.5-0+deb13u1+trip2',
         'util-linux': '2.41.5-0+deb13u1+trip2',
     }
     assert not Path('/usr/include/c++').exists()
     assert all(not Path('/usr/bin', name).exists() for name in ['mount', 'umount', 'nsenter', 'unshare'])
+
+
+def test_iso_2022_cn_ext_converter_round_trips_text():
+    original = '中文字符与 ASCII'.encode()
+    encoded = subprocess.check_output(
+        ['iconv', '-f', 'UTF-8', '-t', 'ISO-2022-CN-EXT'], input=original)
+    assert subprocess.check_output(
+        ['iconv', '-f', 'ISO-2022-CN-EXT', '-t', 'UTF-8'], input=encoded) == original
 
 
 def test_strfmon_right_padding_stays_within_the_output_buffer():

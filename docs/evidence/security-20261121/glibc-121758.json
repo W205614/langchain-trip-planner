@@ -1,0 +1,516 @@
+{
+  "previous_build": "7629979f9390e82d91832548dc02256eebc2e3ae",
+  "previous_build_agent_scan": 44916187877,
+  "inspected_image_id": "sha256:5b3ebe687645c9683f9d8539bdd56374986e4a124fa008ea7f6755877db25053",
+  "upstream_fix": "https://sourceware.org/git/?p=glibc.git;a=commit;h=170ee485fa89b95c3bb7d5606c9812c6c100c9be",
+  "debian_status": "https://security-tracker.debian.org/tracker/CVE-2026-121758",
+  "build_source_delta": {
+    "backend/security/native-backports/README.md": "562f6cb7c6b17433af473f7e3dc8e5fc0a84a773b1cc1062020571543a9b1ed4",
+    "backend/security/native-backports/build-glibc.sh": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
+    "backend/security/native-backports/glibc-build.sha256": "55a328303a103e53e7e5cb2bd9125117b08d7cda37c29dc92813c51454a98ee9",
+    "backend/security/native-backports/patches/glibc-121758.patch": "d46c048f366d5938cd0b2e3f65929895dd540e9517de3a3d925ebaf6d5e44614",
+    "backend/tests/test_runtime_security_backports.py": "9c46c93c78f564977770f20a056e036a58ed52358d85a3b33d89fc970e0036b1"
+  },
+  "installed_package_revisions": {
+    "libc6": "2.41-12+deb13u5+trip5",
+    "libc-bin": "2.41-12+deb13u5+trip5"
+  },
+  "installed_converter_file_sha256": {
+    "/usr/lib/x86_64-linux-gnu/gconv/ISO-2022-CN-EXT.so": "401650261913ff9e2e5b719c3c69c1bdf5ab8c7abf57cecacbab736c64bf24d4"
+  },
+  "changed_previous_native_files": {
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+      "previous": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+      "current": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+    },
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": {
+      "previous": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c",
+      "current": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
+    }
+  },
+  "reverified_rows": [
+    {
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2018-20796"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-19499"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-19499"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-84243"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-84243"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-6238"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-6238"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2025-15367"
+      ],
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-77117"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-80489"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-77117"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-80489"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-5435"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-5435"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010022"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010022"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-8674"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-8674"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010024"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010024"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010023"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-116566"
+      ],
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2010-4756"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-6791"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-6791"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010025"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-1010025"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2019-9192"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-19542"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-19542"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-89092"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_component_absent"
+    },
+    {
+      "ids": [
+        "CVE-2026-89092"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_component_absent"
+    },
+    {
+      "ids": [
+        "CVE-2026-97399"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_build_configuration"
+    },
+    {
+      "ids": [
+        "CVE-2026-97399"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_build_configuration"
+    },
+    {
+      "ids": [
+        "CVE-2026-103995"
+      ],
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-18374"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-18374"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-86805"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-86805"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-95818"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-95818"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-6368"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-6368"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    },
+    {
+      "ids": [
+        "CVE-2026-100290"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-100290"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-115819"
+      ],
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-115819"
+      ],
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "classification": "not_affected_execution_path"
+    },
+    {
+      "ids": [
+        "CVE-2026-124249",
+        "CVE-2026-16052",
+        "CVE-2026-19552"
+      ],
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "classification": "fixed_by_pinned_security_upgrade"
+    }
+  ],
+  "scope": "Retains prior glibc patches and hardening. The native build compares exported symbols and runs pre-existing source and hardening checks. The installed runtime suite exercises valid ISO-2022-CN-EXT conversion and the verified package identities. The other CVEs continue to be evaluated by the all-severity gate.",
+  "restricted_runtime_tools": {
+    "old_manifest_sha256": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+    "new_manifest_sha256": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
+    "identical_removal_receipts": 114,
+    "residual_tools": 0,
+    "changed_fields": [
+      "unchanged_library_sha256 for libc.so.6",
+      "package_database_sha256 for the updated glibc package receipts"
+    ],
+    "existing_rows_reverified": 64
+  },
+  "installed_runtime_tests": 113
+}

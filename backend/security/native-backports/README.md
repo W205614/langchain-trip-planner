@@ -47,7 +47,7 @@ patch manifest (`glibc-build.sha256`, `libstdcxx-patches.sha256`, or
 
 The ordinary backport build finishes in `glibc-compiled`. The application uses
 `glibc-hardened-compiled`, which applies the separately reviewed TLS, thread-stack
-and thread-arena changes from `../glibc-hardening/` and builds real `+trip4`
+and thread-arena changes from `../glibc-hardening/` and builds `+trip5`
 packages from a fresh source tree. Compilation, packaging and exported ABI
 comparison precede the check stage. The application copies packages only from the later
 `glibc-backport` stage, after its required tests pass. Test-fixture changes do
@@ -79,7 +79,12 @@ and valid-entry fallback. Its exact installed ELF bytes and reviewed glibc packa
 revision are required by the security assessment; the older unpatched image remains blocked
 for this advisory. The raw High findings remain in scanner output.
 
-The current custom glibc `+trip4`, libstdc++ `+trip2` and util-linux `+trip2`
+The hardened glibc build adds the production hunk from the upstream
+ISO-2022-CN-EXT decoder fix. The source patch is pinned and applied with zero
+fuzz. The runtime check round-trips valid text through the installed
+converter. [CVE-2026-121758 upstream commit](https://sourceware.org/git/?p=glibc.git;a=commit;h=170ee485fa89b95c3bb7d5606c9812c6c100c9be)
+
+The current custom glibc `+trip5`, libstdc++ `+trip2` and util-linux `+trip2`
 revisions preserve package-manager ownership and
 dependency ordering. Future Debian security releases should replace these
 backports after the patches, ABI, regressions and fresh image scan are reviewed.

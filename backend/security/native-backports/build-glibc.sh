@@ -3,7 +3,7 @@ set -euo pipefail
 package_revision=trip3
 case "${1:-}" in
   '') test "$#" -eq 0 ;;
-  --hardening) test "$#" -eq 1; package_revision=trip4 ;;
+  --hardening) test "$#" -eq 1; package_revision=trip5 ;;
   *) printf 'Usage: build-glibc.sh [--hardening]\n' >&2; exit 2 ;;
 esac
 cd /patches
@@ -12,7 +12,8 @@ cd /build/glibc-2.41
 while read -r patch_file; do
   patch --batch --fuzz=0 -p1 < "/patches/$patch_file"
 done < /patches/glibc-patches.txt
-if [ "$package_revision" = trip4 ]; then
+if [ "$package_revision" = trip5 ]; then
+  patch --batch --fuzz=0 -p1 < /patches/patches/glibc-121758.patch
   (cd /hardening && sha256sum -c hardening-patches.sha256)
   for patch_file in tls-guard.patch stack-randomization.patch arena-randomization.patch; do
     patch --batch --fuzz=0 -p1 < "/hardening/$patch_file"
@@ -22,9 +23,10 @@ python - "$package_revision" <<'PY'
 from pathlib import Path
 import sys
 path = Path('debian/changelog')
-hardening = ('  * Add reviewed downstream x86-64 TLS guards, independently randomized\n'
+hardening = ('  * Backport the upstream ISO-2022-CN-EXT decoder fix for CVE-2026-121758.\n'
+             '  * Add reviewed downstream x86-64 TLS guards, independently randomized\n'
              '    thread stacks without cache reuse, and randomized thread arenas.\n\n'
-             if sys.argv[1] == 'trip4' else '')
+             if sys.argv[1] == 'trip5' else '')
 path.write_text(f'glibc (2.41-12+deb13u5+{sys.argv[1]}) trixie; urgency=high\n\n'
                 '  * Rebase on Debian security update 2.41-12+deb13u5.\n'
                 '  * Retain the upstream LANGUAGE traversal backport for CVE-2026-84243.\n\n'

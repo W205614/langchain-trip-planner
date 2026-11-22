@@ -73,21 +73,21 @@
     "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc",
     "tools/image_policy.py": "33ea44beab7b91b8e85e1d4b6cec16f28d334092508f689642199319d9c97240",
     "tools/security_gate.py": "81a7a266805cabf4f926392ee0f519c487b49e7d1d380a1b1072921917f7dfea",
-    "backend/security/native-backports/build-glibc.sh": "ca5aa2c0c951d5f54506be2ad72ed78c3d3e9eb2a3aa0a505b3cbb3c60d5efb0",
+    "backend/security/native-backports/build-glibc.sh": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
     "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
     "backend/security/native-backports/build-libstdcxx.sh": "c6e00212b7ea7db93b2820ebdd8c7d6fa18c37e3526a1144958fac53c3bf4407",
     "backend/security/native-backports/build-util-linux.sh": "f5c695b3053b705694121ead80c4b0ad6eb92dc3ba17358ed3cbbfd3068b628a",
     "backend/security/native-backports/check-glibc.sh": "26e0e6f35eb9ad432bb1685477a35d807f05728d26bfc060d9ffec69de480ed3",
     "backend/security/native-backports/check-login-pam-rhost.py": "7503fc0040b75a06bd1b01ab4670d74addfc67443d1d64eb28eb030949e946c9",
     "backend/security/native-backports/glibc-boundary-regression.c": "a2d74cb8b94e4ce226db14d1861a17859ba3b3ef6e3760d411f0630f75227e67",
-    "backend/security/native-backports/glibc-build.sha256": "f5041578a38f8f056d8444df6211ae83c093edc6c43498448906d34a894894c8",
+    "backend/security/native-backports/glibc-build.sha256": "55a328303a103e53e7e5cb2bd9125117b08d7cda37c29dc92813c51454a98ee9",
     "backend/security/native-backports/glibc-patches.txt": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
     "backend/security/native-backports/glibc-tests.sha256": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab",
     "backend/security/native-backports/libstdcxx-patches.sha256": "c69ff9ccf9335ce2d9caf75e65e2aa9a5411d2896bbe76a081a99de5ee00139e",
     "backend/security/native-backports/login-pam-rhost-regression.c": "feca29f1a8cdc47b57c6539ee7d8b2228bc82294992187071a44f9d1cfcca603",
     "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
     "backend/security/native-backports/patches.sha256": "66b589722d4e97f307999f84e51a21732d6b907aa217c9fd080aa0f5b5a00bfb",
-    "backend/security/native-backports/README.md": "db9e55db63b9093b04018b2d3c89129d4f233313dac0e252ebf062965831ffc6",
+    "backend/security/native-backports/README.md": "562f6cb7c6b17433af473f7e3dc8e5fc0a84a773b1cc1062020571543a9b1ed4",
     "backend/security/native-backports/sources.sha256": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31",
     "backend/security/native-backports/util-linux-patches.sha256": "4b3f70cb42f5495ecdcea144c1ec68d3cb08defac5080c4309bb87bf0bd29da6",
     "backend/security/native-backports/util-linux-patches.txt": "adae2b22b165cac74ae9292d21b0cfc8105d6f7a591da728fc052e0eafe487b6",
@@ -223,7 +223,9 @@
     "backend/security/openssl-backport/patches/0011-CVE-2026-121482-regression.patch": "a9897de897e3cf34206ba9a4ccb461927bd04c310e9354682ceca317c1537502",
     "backend/security/openssl-backport/patches/0012-CVE-2026-107493.patch": "6176d694ac38251bfa4e11198d002d8720f9efb05deffb35703adb93be6173e1",
     "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1",
-    "docs/evidence/security-20261121/agent-execution-paths.json": "afecbfa6d1ed9037dc988a1976157077ab428fb098cc098ce827dcad3c90f480"
+    "docs/evidence/security-20261121/agent-execution-paths.json": "afecbfa6d1ed9037dc988a1976157077ab428fb098cc098ce827dcad3c90f480",
+    "docs/evidence/security-20261121/glibc-121758.json": "5cf77d3bc71d19961fe96ab4fadd8d5b03978215fa5ccdb74d3fc9a0260f82d2",
+    "backend/security/native-backports/patches/glibc-121758.patch": "d46c048f366d5938cd0b2e3f65929895dd540e9517de3a3d925ebaf6d5e44614"
   },
   "assessments": [
     {
@@ -246,7 +248,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -274,7 +276,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -302,7 +304,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -331,7 +333,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -360,7 +362,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -389,7 +391,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -495,10 +497,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2018-20796"
@@ -510,7 +512,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -594,10 +596,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2018-20796"
@@ -609,7 +611,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -806,7 +808,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -833,7 +835,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -860,7 +862,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -887,7 +889,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -914,7 +916,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -941,7 +943,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -968,7 +970,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -995,7 +997,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1022,7 +1024,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1049,7 +1051,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/login"
@@ -1061,10 +1063,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-19499"
@@ -1076,9 +1078,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1086,10 +1088,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-19499"
@@ -1101,9 +1103,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1134,10 +1136,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-84243"
@@ -1149,9 +1151,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1159,10 +1161,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-84243"
@@ -1174,9 +1176,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1282,10 +1284,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-6238"
@@ -1297,9 +1299,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1307,10 +1309,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-6238"
@@ -1322,9 +1324,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1335,7 +1337,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2025-15367"
@@ -1374,7 +1376,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -1386,10 +1388,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-77117"
@@ -1401,9 +1403,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1411,10 +1413,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-80489"
@@ -1426,9 +1428,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1436,10 +1438,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-77117"
@@ -1451,9 +1453,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1461,10 +1463,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-80489"
@@ -1476,9 +1478,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1617,7 +1619,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1642,7 +1644,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1667,7 +1669,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1715,7 +1717,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1740,7 +1742,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1765,7 +1767,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1790,7 +1792,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1822,10 +1824,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-5435"
@@ -1837,9 +1839,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1847,10 +1849,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-5435"
@@ -1862,9 +1864,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -1888,7 +1890,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1913,7 +1915,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1938,7 +1940,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -1986,7 +1988,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2011,7 +2013,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2036,7 +2038,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2061,7 +2063,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2093,10 +2095,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010022"
@@ -2108,7 +2110,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       }
     },
     {
@@ -2116,10 +2118,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010022"
@@ -2131,7 +2133,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       }
     },
     {
@@ -2139,10 +2141,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-8674"
@@ -2154,9 +2156,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -2164,10 +2166,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-8674"
@@ -2179,9 +2181,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -2189,10 +2191,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010024"
@@ -2204,7 +2206,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       }
     },
     {
@@ -2212,10 +2214,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010024"
@@ -2227,7 +2229,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       }
     },
     {
@@ -2235,10 +2237,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010023"
@@ -2250,7 +2252,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -2334,10 +2336,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010023"
@@ -2349,7 +2351,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -2449,7 +2451,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2474,7 +2476,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2499,7 +2501,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2547,7 +2549,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2572,7 +2574,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2597,7 +2599,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2622,7 +2624,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "manifest_delta_review": "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json"
     },
@@ -2694,7 +2696,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2727,7 +2729,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2953,7 +2955,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-116566"
@@ -2978,10 +2980,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2010-4756"
@@ -2993,7 +2995,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3077,10 +3079,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2010-4756"
@@ -3092,7 +3094,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3199,10 +3201,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-6791"
@@ -3214,9 +3216,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -3224,10 +3226,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-6791"
@@ -3239,9 +3241,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -3249,10 +3251,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010025"
@@ -3264,7 +3266,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       }
     },
     {
@@ -3272,10 +3274,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-1010025"
@@ -3287,7 +3289,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       }
     },
     {
@@ -3295,10 +3297,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-9192"
@@ -3310,7 +3312,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3394,10 +3396,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2019-9192"
@@ -3409,7 +3411,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3493,10 +3495,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-19542"
@@ -3508,9 +3510,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -3518,10 +3520,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-19542"
@@ -3533,9 +3535,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -3612,10 +3614,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-89092"
@@ -3627,7 +3629,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "absent_paths": [
         "/usr/sbin/nscd"
@@ -3641,10 +3643,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-89092"
@@ -3656,7 +3658,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "absent_paths": [
         "/usr/sbin/nscd"
@@ -3731,7 +3733,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3763,7 +3765,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3795,7 +3797,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3827,7 +3829,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3844,10 +3846,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-97399"
@@ -3859,7 +3861,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_architecture": "amd64"
     },
@@ -3868,10 +3870,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-97399"
@@ -3883,7 +3885,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_architecture": "amd64"
     },
@@ -3895,7 +3897,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-103995"
@@ -3935,7 +3937,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -4313,10 +4315,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-18374"
@@ -4328,9 +4330,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4338,10 +4340,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-18374"
@@ -4353,9 +4355,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4378,7 +4380,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -4552,7 +4554,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
@@ -4579,7 +4581,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
@@ -4670,10 +4672,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-86805"
@@ -4685,9 +4687,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4695,10 +4697,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-86805"
@@ -4710,9 +4712,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4735,7 +4737,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/tar"
@@ -4832,10 +4834,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-95818"
@@ -4847,9 +4849,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4857,10 +4859,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-95818"
@@ -4872,9 +4874,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4961,10 +4963,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-6368"
@@ -4976,9 +4978,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -4986,10 +4988,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-6368"
@@ -5001,9 +5003,9 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "2edb0e417483dd4b29cf8dd047f070015455faa896eff7fca496472a9ba4006c"
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
       }
     },
     {
@@ -5026,7 +5028,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/perl",
@@ -5156,7 +5158,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5184,7 +5186,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5212,7 +5214,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5240,7 +5242,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5268,7 +5270,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5296,7 +5298,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5324,7 +5326,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5352,7 +5354,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5380,7 +5382,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chfn",
@@ -5630,7 +5632,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/chown",
@@ -6200,7 +6202,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/sort"
@@ -6227,7 +6229,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/diff3"
@@ -6254,7 +6256,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/unexpand"
@@ -6281,7 +6283,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "9d032628df1a8cb8432a4efb0b04b4631d484ee20964c25e5e9a518a65ab125f"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e05905c4550b5221308e9c7b570a93af37e88eb18b3d8984ba01ed1d765ca19e"
       },
       "absent_paths": [
         "/usr/bin/uniq"
@@ -6390,10 +6392,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-100290"
@@ -6406,7 +6408,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6490,10 +6492,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-100290"
@@ -6506,7 +6508,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6590,10 +6592,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip4"
+        "libc-bin": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-115819"
@@ -6606,7 +6608,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6690,10 +6692,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-115819"
@@ -6706,7 +6708,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "db77691622fba5e40a2e621174919f4fe19a0cb252bf6d099920c69e4c5c50e5"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6830,7 +6832,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip4"
+        "libc6": "2.41-12+deb13u5+trip5"
       },
       "ids": [
         "CVE-2026-124249",
@@ -6852,6 +6854,58 @@
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
         "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+      }
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip5"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip5",
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "ids": [
+        "CVE-2026-121758"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "reason": "The production decoder hunk is taken from the merged GNU libc repair, checksum-verified and installed from the rebuilt Debian package. The exact installed ISO-2022-CN-EXT module identifies the repair.",
+      "references": [
+        "https://sourceware.org/git/?p=glibc.git;a=commit;h=170ee485fa89b95c3bb7d5606c9812c6c100c9be",
+        "https://security-tracker.debian.org/tracker/CVE-2026-121758"
+      ],
+      "review_record": "docs/evidence/security-20261121/glibc-121758.json",
+      "requires_architecture": "amd64",
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/gconv/ISO-2022-CN-EXT.so": "401650261913ff9e2e5b719c3c69c1bdf5ab8c7abf57cecacbab736c64bf24d4"
+      }
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip5",
+        "libc-bin": "2.41-12+deb13u5+trip5"
+      },
+      "ids": [
+        "CVE-2026-121758"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "reason": "The production decoder hunk is taken from the merged GNU libc repair, checksum-verified and installed from the rebuilt Debian package. The exact installed ISO-2022-CN-EXT module identifies the repair.",
+      "references": [
+        "https://sourceware.org/git/?p=glibc.git;a=commit;h=170ee485fa89b95c3bb7d5606c9812c6c100c9be",
+        "https://security-tracker.debian.org/tracker/CVE-2026-121758"
+      ],
+      "review_record": "docs/evidence/security-20261121/glibc-121758.json",
+      "requires_architecture": "amd64",
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/gconv/ISO-2022-CN-EXT.so": "401650261913ff9e2e5b719c3c69c1bdf5ab8c7abf57cecacbab736c64bf24d4"
       }
     }
   ],
