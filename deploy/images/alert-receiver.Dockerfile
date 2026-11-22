@@ -14,13 +14,18 @@ COPY deploy/images/busybox-backport /trip-busybox
 RUN sh /trip-busybox/build.sh
 
 FROM busybox-security AS cpython-security
-# Use the same Alpine SDK already needed for BusyBox. Copy the exact official
-# interpreter, headers and configuration, then compile only its patched extension.
+# Use the existing Alpine SDK and the official Python headers and configuration
+# to rebuild the patched shared library and socket extension.
 COPY --from=python-upstream /usr/local/ /usr/local/
 RUN apk add --no-cache bluez-dev gdbm libbz2 libffi libncursesw libpanelw libuuid readline sqlite-libs xz
 ADD --checksum=sha256:abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68 https://www.python.org/ftp/python/3.13.18/Python-3.13.18.tar.xz /tmp/Python-3.13.18.tar.xz
-COPY backend/security/cpython-backports /patches
-RUN sh /patches/build.sh
+COPY backend/security/cpython-backports/*.patch \
+    backend/security/cpython-backports/patches.sha256 \
+    backend/security/cpython-backports/README.md \
+    backend/security/cpython-backports/build.sh /patches/
+RUN sh /patches/build.sh alpine
+COPY backend/security/cpython-backports/test.sh /patches/
+RUN sh /patches/test.sh
 
 FROM ${PYTHON_BASE}
 RUN apk upgrade --no-cache && apk add --no-cache 'zlib>=1.4-r0' \
@@ -35,6 +40,7 @@ COPY --from=busybox-security /out/ /tmp/trip-busybox/
 RUN sh /tmp/trip-busybox/install.sh && rm -rf /tmp/trip-busybox
 RUN --mount=type=bind,from=openssl-security,source=/out,target=/tmp/trip-openssl \
     sh /tmp/trip-openssl/install.sh
+COPY --from=cpython-security /out/libpython3.13.so.1.0 /usr/local/lib/libpython3.13.so.1.0
 COPY --from=cpython-security /out/lib-dynload/ /usr/local/lib/python3.13/lib-dynload/
 COPY --from=cpython-security /out/http/ /usr/local/lib/python3.13/http/
 COPY --from=cpython-security /out/stdlib/ /usr/local/lib/python3.13/

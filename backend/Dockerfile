@@ -70,7 +70,7 @@ COPY security/dash-backport /dash-patches
 RUN bash /dash-patches/build.sh
 
 FROM ${PYTHON_BASE} AS cpython-backport
-RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev patch xz-utils curl \
+RUN apt-get update && apt-get install -y --no-install-recommends dpkg-dev gcc libc6-dev make patch xz-utils curl \
     && rm -rf /var/lib/apt/lists/*
 # Resume the observed truncated source transfer; curl validates range offsets,
 # and the release checksum is mandatory before any source is used.
@@ -82,10 +82,16 @@ RUN for attempt in 1 2 3; do \
     && echo 'abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68  /tmp/Python-3.13.18.tar.xz' | sha256sum -c -
 RUN apt-get update && apt-get install -y --no-install-recommends libbluetooth-dev \
     && rm -rf /var/lib/apt/lists/*
-COPY security/cpython-backports /patches
-RUN sh /patches/build.sh
+COPY security/cpython-backports/*.patch \
+    security/cpython-backports/patches.sha256 \
+    security/cpython-backports/README.md \
+    security/cpython-backports/build.sh /patches/
+RUN sh /patches/build.sh debian
+COPY security/cpython-backports/test.sh /patches/
+RUN sh /patches/test.sh
 
 FROM ${PYTHON_BASE} AS python-dependencies
+COPY --from=cpython-backport /out/libpython3.13.so.1.0 /usr/local/lib/libpython3.13.so.1.0
 COPY --from=cpython-backport /out/lib-dynload/ /usr/local/lib/python3.13/lib-dynload/
 COPY --from=cpython-backport /out/http/ /usr/local/lib/python3.13/http/
 COPY --from=cpython-backport /out/stdlib/ /usr/local/lib/python3.13/

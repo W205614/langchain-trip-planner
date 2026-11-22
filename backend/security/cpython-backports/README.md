@@ -1,7 +1,7 @@
 # CPython 3.13.18 downstream security backports
 
-The interpreter remains the official Docker Python 3.13.18 build. Its release
-source archive is pinned to SHA-256
+The runtime uses the official Docker Python 3.13.18 executable and rebuilds
+its shared library from the same release. The source archive is pinned to SHA-256
 `abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68`.
 The build replaces `_socket`, `http.client`, `http.cookiejar`, `http.cookies`,
 `imaplib`, `poplib` and `ssl` from that exact source plus these upstream changes:
@@ -31,9 +31,19 @@ The build replaces `_socket`, `http.client`, `http.cookiejar`, `http.cookies`,
   implementation replaces its buffered file at this transition, so the local
   patch applies the merged cache reset at that point. The official 3.13
   backport is tracked in [#161759](https://github.com/python/cpython/pull/161759).
+* CVE-2026-115791: [8aa5d65](https://github.com/python/cpython/commit/8aa5d657e4d3f1a4cca5ff6c976e2e868e0a9056)
+  records the interpreter's startup path and removes it from the archive CLIs.
+  The patch keeps the merged 3.14 runtime changes and adjusts the three CLI
+  hunks to match 3.13.18. The runtime uses the rebuilt `libpython`, which
+  contains frozen `runpy`, and the patched on-disk standard library modules.
 
 The patches contain PSF-licensed upstream code. The complete original source,
 patches and build instructions must remain in the corresponding-source bundle.
-The build runs the upstream socket, HTTP, cookie, IMAP, POP3 and TLS test suites.
-Runtime provenance records the patched file hashes and the interpreter retains
-its upstream version string.
+The shared-library target uses the official build's configure options, LTO,
+[Debian compiler and linker flags](https://github.com/docker-library/python/blob/master/3.13/slim-trixie/Dockerfile),
+and [Alpine thread stack size](https://github.com/docker-library/python/blob/master/3.13/alpine3.24/Dockerfile).
+The Debian profiling run is outside that target. The build compares exported
+Python symbols, SONAME, needed libraries and ELF protections with the official
+library before installation. It runs upstream archive and interpreter tests
+alongside the socket, HTTP, cookie, IMAP, POP3 and TLS tests. Runtime provenance records the
+installed file hashes and Python retains its upstream version string.

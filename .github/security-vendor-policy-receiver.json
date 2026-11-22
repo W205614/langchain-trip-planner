@@ -3,13 +3,13 @@
   "review_policy": "source_and_artifact_bound",
   "scope": "Exact Alpine 3.24.4 amd64 alert receiver Python backports and independently verified OpenSSL APK backports.",
   "source_bindings": {
-    "deploy/images/alert-receiver.Dockerfile": "ddb10ae37298b362413825935ccd038caa79d9fdf6b6d5803bcf1b9b28228874",
+    "deploy/images/alert-receiver.Dockerfile": "5730f8763dbc21e5484397cc8b4cf278c9162dce9b01f0bbe38becc2e1a9f86a",
     "deploy/images/alert-receiver.Dockerfile.dockerignore": "d028e11e9df300c026001c51ab88348e006de25de829ec15adb6d5697b073500",
     "deploy/images/tests/receiver_security_check.py": "d2f6d11a8a969c83eb89c9ededd486d384be10562bd9c2d14e2b9bf0ae2dee2c",
     "backend/scripts/operational_alert_receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
-    "backend/security/cpython-backports/build.sh": "e7445cb1b3c6819d3883500e16d4a4252878e8307c81df3153e3daa6a2505d68",
-    "backend/security/cpython-backports/patches.sha256": "f02831ddc38abff5d46d4961aa938fb288d7702f2cbb8a6d47b27094b16e46e6",
-    "backend/security/cpython-backports/README.md": "ab95ce969915ceeac49f48f72c13de2c3ebdd7aa786e4af5eb428e7e0fbae796",
+    "backend/security/cpython-backports/build.sh": "704482d02447b33bf8b1545a793e1add1890870a8f7fe18d8e093679dae81528",
+    "backend/security/cpython-backports/patches.sha256": "4e3853daff89bf2bdbe26bf74b81a7c3c950ca3212a44e3e33efca6a59a7edbf",
+    "backend/security/cpython-backports/README.md": "111f000b94f9495d4c27192d8ab22739930c9099f49afda2ca2b8360ef97fe47",
     "docs/evidence/runtime-support-security-20261110/receiver-review.md": "a23bbb2c384b9bb1c7f2937d2ae2749f5cabc51311086839c2e48c76084f73d6",
     "docs/evidence/runtime-support-security-20261110/receiver-artifacts.json": "fc456380d90afb39dd46ea6927cbf6bf6f89fa0ff6d5e19715d48fc2c29491a3",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
@@ -58,7 +58,9 @@
     "frontend/security/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
     "frontend/security/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
     "tools/sync_busybox_inputs.py": "9ddbd50e04fbf779458a039b940ab714d2c4f077ec7c9fa2e10ba5aab1adf523",
-    "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1"
+    "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1",
+    "backend/security/cpython-backports/CVE-2026-115791.patch": "2008437c586077ec7c368a499c418bd95c6955520dcfb02899665ad8f4906c58",
+    "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df"
   },
   "assessments": [
     {
@@ -118,7 +120,7 @@
       ],
       "file_sha256": {
         "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
-        "/usr/local/lib/libpython3.13.so.1.0": "0c69ec5decdc66a03da6cdbfd13ae4a284ef0ebafbc084aba54660df14354ceb",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
@@ -231,7 +233,7 @@
       ],
       "file_sha256": {
         "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
-        "/usr/local/lib/libpython3.13.so.1.0": "0c69ec5decdc66a03da6cdbfd13ae4a284ef0ebafbc084aba54660df14354ceb",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
@@ -343,7 +345,7 @@
       ],
       "file_sha256": {
         "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
-        "/usr/local/lib/libpython3.13.so.1.0": "0c69ec5decdc66a03da6cdbfd13ae4a284ef0ebafbc084aba54660df14354ceb",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
@@ -455,7 +457,7 @@
       ],
       "file_sha256": {
         "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
-        "/usr/local/lib/libpython3.13.so.1.0": "0c69ec5decdc66a03da6cdbfd13ae4a284ef0ebafbc084aba54660df14354ceb",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
@@ -468,9 +470,13 @@
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
         "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9",
         "/usr/local/lib/python3.13/imaplib.py": "b88fed864f221c0d2fb571bfaa35c550e81f6b83cda4b31335dd8919c9c143e0",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "7a7d58253636935ee4fa2f8789009905af9d5a73d8ab1fa79f7ff32e8758f80e"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "d58a532e6599f453285fad819f57697a3d416552081b3dd8c1560f99a8de85dd",
+        "/usr/local/lib/python3.13/gzip.py": "ac5b777fff2f2e20d0443d17ce2e3459705fe867dbeb12471616be2063585080",
+        "/usr/local/lib/python3.13/runpy.py": "d6427ee5e18638122f7f0409a38b27867034b5fe1768b35c03ab53c79b275ba6",
+        "/usr/local/lib/python3.13/tarfile.py": "1d45900b8bac76641c9d93772c00237c0647cc1887906599f8cb15e7658cfdb7",
+        "/usr/local/lib/python3.13/zipfile/__init__.py": "80b0ec4c7b17b895d15eea638c133f505ac33a6cfd28685e805665ffd4880631"
       },
-      "review_record": "docs/evidence/security-20261121/README.md",
+      "review_record": "backend/security/cpython-backports/README.md",
       "requires_apk_architectures": {
         "alpine-baselayout": "x86_64",
         "alpine-baselayout-data": "x86_64",
@@ -508,14 +514,16 @@
         "CVE-2026-124249",
         "CVE-2026-16052",
         "CVE-2026-19552",
-        "CVE-2026-115559"
+        "CVE-2026-115559",
+        "CVE-2026-115791"
       ],
-      "reason": "The installed cookiejar, cookies, ssl and imaplib modules contain the reviewed CPython 3.13.18 backports. The unchanged interpreter and patched files must match the installed manifest.",
+      "reason": "The installed CPython 3.13.18 modules contain the reviewed cookie, TLS, IMAP and archive CLI backports. The official executable, rebuilt shared library containing frozen runpy, patched archive modules and installed manifest must match.",
       "references": [
         "https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494",
         "https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987",
         "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e",
-        "https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df"
+        "https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df",
+        "https://github.com/python/cpython/commit/8aa5d657e4d3f1a4cca5ff6c976e2e868e0a9056"
       ]
     },
     {

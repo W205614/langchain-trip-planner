@@ -12,7 +12,7 @@
     "business-backend/security/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
     "business-backend/security/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
     "deploy/images/.dockerignore": "79579feb0b7b34a40a456fa9ee4b129843595eae85a00dc99321ec1579833a56",
-    "deploy/images/alert-receiver.Dockerfile": "ddb10ae37298b362413825935ccd038caa79d9fdf6b6d5803bcf1b9b28228874",
+    "deploy/images/alert-receiver.Dockerfile": "5730f8763dbc21e5484397cc8b4cf278c9162dce9b01f0bbe38becc2e1a9f86a",
     "deploy/images/alert-receiver.Dockerfile.dockerignore": "d028e11e9df300c026001c51ab88348e006de25de829ec15adb6d5697b073500",
     "deploy/images/alertmanager.Dockerfile": "5dbaefe676dc8660aa9e81d86b7ff4cfc1f75e0d8a1bac1830ee5b8125303e09",
     "deploy/images/caddy.Dockerfile": "a5df89ff9626653317ee9078c4a42dfa1e724b6b0e47b3370add11a86b021722",

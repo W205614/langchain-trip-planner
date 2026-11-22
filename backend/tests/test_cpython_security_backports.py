@@ -5,6 +5,8 @@ import io
 import os
 import poplib
 import socket
+import subprocess
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -14,6 +16,26 @@ pytestmark = pytest.mark.skipif(
     os.environ.get('TRIP_RUNTIME_ABI_CHECK') != '1',
     reason='Explicit rebuilt CPython image checks only',
 )
+
+
+@pytest.mark.parametrize('module', ['gzip', 'tarfile', 'zipfile'])
+def test_archive_cli_removes_only_the_startup_path(module, tmp_path):
+    script = '''
+import importlib
+import sys
+
+cli = importlib.import_module(sys.argv[1])
+assert sys._path0 == ''
+sys.path.append(sys._path0)
+sys.argv = [cli.__name__, '--help']
+try:
+    cli.main()
+except SystemExit as result:
+    assert result.code == 0
+assert '' not in sys.path
+assert sys._stdlib_dir in sys.path
+'''
+    subprocess.run([sys.executable, '-c', script, module], cwd=tmp_path, check=True)
 
 
 def test_imap_starttls_clears_the_previous_session_cache(monkeypatch):
