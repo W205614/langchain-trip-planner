@@ -1,9 +1,11 @@
 """Exercise the installed CPython backports, without external DNS or HTTP."""
 import http.client
+import imaplib
 import io
 import os
 import poplib
 import socket
+from types import SimpleNamespace
 
 import pytest
 
@@ -12,6 +14,29 @@ pytestmark = pytest.mark.skipif(
     os.environ.get('TRIP_RUNTIME_ABI_CHECK') != '1',
     reason='Explicit rebuilt CPython image checks only',
 )
+
+
+def test_imap_starttls_clears_the_previous_session_cache(monkeypatch):
+    client = imaplib.IMAP4.__new__(imaplib.IMAP4)
+    client.host = 'localhost'
+    client.sock = object()
+    client.capabilities = ('STARTTLS',)
+    client._tls_established = False
+    client.untagged_responses = {'EXISTS': [b'3']}
+    encrypted_file = io.BytesIO()
+    encrypted_socket = SimpleNamespace(makefile=lambda mode: encrypted_file)
+
+    def refresh_capabilities():
+        assert client.untagged_responses == {}
+        assert client.file is encrypted_file
+        client.capabilities = ('IMAP4REV1',)
+
+    monkeypatch.setattr(client, '_simple_command', lambda name: ('OK', [b'TLS ready']))
+    monkeypatch.setattr(client, '_get_capabilities', refresh_capabilities)
+    context = SimpleNamespace(wrap_socket=lambda sock, server_hostname: encrypted_socket)
+
+    assert client.starttls(context) == ('OK', [b'TLS ready'])
+    assert client.capabilities == ('IMAP4REV1',)
 
 
 @pytest.mark.parametrize('host', ['127.0.0.1\0.example.test', b'127.0.0.1\0.example.test'])

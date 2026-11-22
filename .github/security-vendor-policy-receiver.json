@@ -7,9 +7,9 @@
     "deploy/images/alert-receiver.Dockerfile.dockerignore": "d028e11e9df300c026001c51ab88348e006de25de829ec15adb6d5697b073500",
     "deploy/images/tests/receiver_security_check.py": "d2f6d11a8a969c83eb89c9ededd486d384be10562bd9c2d14e2b9bf0ae2dee2c",
     "backend/scripts/operational_alert_receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
-    "backend/security/cpython-backports/build.sh": "5db51691bd8c0a83691b891dfd1fb15b42ee6d46973ef4c5369bfb5dca37e12a",
-    "backend/security/cpython-backports/patches.sha256": "815dffca78bac6e4e6e75093ff945d38190e93295c2e54dbc054a78cff971cd4",
-    "backend/security/cpython-backports/README.md": "0d3a17dcfcc08727032c72bb0f121b5c4f88a51bf5d6d71562ac259425ee8eeb",
+    "backend/security/cpython-backports/build.sh": "e7445cb1b3c6819d3883500e16d4a4252878e8307c81df3153e3daa6a2505d68",
+    "backend/security/cpython-backports/patches.sha256": "f02831ddc38abff5d46d4961aa938fb288d7702f2cbb8a6d47b27094b16e46e6",
+    "backend/security/cpython-backports/README.md": "ab95ce969915ceeac49f48f72c13de2c3ebdd7aa786e4af5eb428e7e0fbae796",
     "docs/evidence/runtime-support-security-20261110/receiver-review.md": "a23bbb2c384b9bb1c7f2937d2ae2749f5cabc51311086839c2e48c76084f73d6",
     "docs/evidence/runtime-support-security-20261110/receiver-artifacts.json": "fc456380d90afb39dd46ea6927cbf6bf6f89fa0ff6d5e19715d48fc2c29491a3",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
@@ -57,7 +57,8 @@
     "frontend/security/openssl-backport/libraries.sha256": "c9017163eb4fe718cd65c3308afedb2c96839e46115ddeff5c9333e6d24aec5a",
     "frontend/security/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
     "frontend/security/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
-    "tools/sync_busybox_inputs.py": "9ddbd50e04fbf779458a039b940ab714d2c4f077ec7c9fa2e10ba5aab1adf523"
+    "tools/sync_busybox_inputs.py": "9ddbd50e04fbf779458a039b940ab714d2c4f077ec7c9fa2e10ba5aab1adf523",
+    "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1"
   },
   "assessments": [
     {
@@ -465,7 +466,9 @@
         "/usr/lib/libcrypto.so.3": "571b3f9c26a90f7abf116d371d424201471959db6d1c9157d8a3359706919c43",
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
-        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9",
+        "/usr/local/lib/python3.13/imaplib.py": "b88fed864f221c0d2fb571bfaa35c550e81f6b83cda4b31335dd8919c9c143e0",
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "7a7d58253636935ee4fa2f8789009905af9d5a73d8ab1fa79f7ff32e8758f80e"
       },
       "review_record": "docs/evidence/security-20261121/README.md",
       "requires_apk_architectures": {
@@ -504,13 +507,15 @@
       "ids": [
         "CVE-2026-124249",
         "CVE-2026-16052",
-        "CVE-2026-19552"
+        "CVE-2026-19552",
+        "CVE-2026-115559"
       ],
-      "reason": "The installed cookiejar, cookies and ssl modules carry the reviewed upstream fixes and exact tested file hashes.",
+      "reason": "The installed cookiejar, cookies, ssl and imaplib modules contain the reviewed CPython 3.13.18 backports. The unchanged interpreter and patched files must match the installed manifest.",
       "references": [
         "https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494",
         "https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987",
-        "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e"
+        "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e",
+        "https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df"
       ]
     },
     {

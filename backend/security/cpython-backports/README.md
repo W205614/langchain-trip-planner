@@ -4,7 +4,7 @@ The interpreter remains the official Docker Python 3.13.18 build. Its release
 source archive is pinned to SHA-256
 `abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68`.
 The build replaces `_socket`, `http.client`, `http.cookiejar`, `http.cookies`,
-`poplib` and `ssl` from that exact source plus these upstream changes:
+`imaplib`, `poplib` and `ssl` from that exact source plus these upstream changes:
 
 * CVE-2026-103995: [2eb2af8](https://github.com/python/cpython/commit/2eb2af805c156ca52b316bb4ced5e0ab3971d0ae)
   and the optional-whitespace correction
@@ -26,9 +26,14 @@ The build replaces `_socket`, `http.client`, `http.cookiejar`, `http.cookies`,
 * CVE-2026-16052: [2702684](https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987)
   quotes cookie attributes that contain separators. The build retains the
   entire upstream patch and applies its runtime, test and NEWS hunks.
+* CVE-2026-115559: [2f0e294](https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df)
+  clears cached untagged responses when STARTTLS succeeds. The 3.13.18
+  implementation replaces its buffered file at this transition, so the local
+  patch applies the merged cache reset at that point. The official 3.13
+  backport is tracked in [#161759](https://github.com/python/cpython/pull/161759).
 
 The patches contain PSF-licensed upstream code. The complete original source,
 patches and build instructions must remain in the corresponding-source bundle.
-The build runs the upstream socket, HTTP, cookie, POP3 and TLS test suites.
+The build runs the upstream socket, HTTP, cookie, IMAP, POP3 and TLS test suites.
 Runtime provenance records the patched file hashes and the interpreter retains
 its upstream version string.

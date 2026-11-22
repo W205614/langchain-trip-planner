@@ -120,12 +120,12 @@
     "backend/security/native-backports/patches/util-9fcb98bf08d9119d07ba3a3c709b1a85e4a1bbcb.patch": "86dc6819c9465d829849734605cfe586404607fd7612f3f05ad5c829a33d0bb6",
     "backend/security/native-backports/patches/util-a15c00a9e545aa8b9cf6ec0f888ff6c7b3eaeedc.patch": "874e91ef452c086c94192eec0bf94b324a4e6c4b8f23bcc2e26fafe828edad91",
     "backend/security/native-backports/patches/util-ba905a1874959c70fd706aa7d49df61076864e0a.patch": "6203e5d3dc92f6113e8e37bb7f60b6f6c8ed47cb2e79d1a3b5134df964464497",
-    "backend/security/cpython-backports/build.sh": "5db51691bd8c0a83691b891dfd1fb15b42ee6d46973ef4c5369bfb5dca37e12a",
+    "backend/security/cpython-backports/build.sh": "e7445cb1b3c6819d3883500e16d4a4252878e8307c81df3153e3daa6a2505d68",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
     "backend/security/cpython-backports/CVE-2026-103995.patch": "cd937a80f6abef62507997a0cf1012450348857a245e86fc13bff27caf127476",
     "backend/security/cpython-backports/CVE-2026-116566.patch": "d8cb1998e30dc71474c5f9d3a9093e7de6af4dceffdb42ec93a52347ab8ec1f1",
-    "backend/security/cpython-backports/patches.sha256": "815dffca78bac6e4e6e75093ff945d38190e93295c2e54dbc054a78cff971cd4",
-    "backend/security/cpython-backports/README.md": "0d3a17dcfcc08727032c72bb0f121b5c4f88a51bf5d6d71562ac259425ee8eeb",
+    "backend/security/cpython-backports/patches.sha256": "f02831ddc38abff5d46d4961aa938fb288d7702f2cbb8a6d47b27094b16e46e6",
+    "backend/security/cpython-backports/README.md": "ab95ce969915ceeac49f48f72c13de2c3ebdd7aa786e4af5eb428e7e0fbae796",
     "backend/security/cpython-backports/upstream-poplib-b234a2b.patch": "606aa1bd8124cb0d777744dfe1a89d1ba983638115372cc508f4ed4a154f3abf",
     "backend/security/pam-backport/build-inputs.sh": "9a95cb08e020a958c6c40f1e096ead7b4d211571dcfb8129a0661805a90da5a2",
     "backend/security/pam-backport/build.sh": "6f98770c85d0fb722505f6b6fe7af373ed10b5b68a9a4cde839e6ceaaa92457a",
@@ -225,7 +225,8 @@
     "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1",
     "docs/evidence/security-20261121/agent-execution-paths.json": "afecbfa6d1ed9037dc988a1976157077ab428fb098cc098ce827dcad3c90f480",
     "docs/evidence/security-20261121/glibc-121758.json": "5cf77d3bc71d19961fe96ab4fadd8d5b03978215fa5ccdb74d3fc9a0260f82d2",
-    "backend/security/native-backports/patches/glibc-121758.patch": "d46c048f366d5938cd0b2e3f65929895dd540e9517de3a3d925ebaf6d5e44614"
+    "backend/security/native-backports/patches/glibc-121758.patch": "d46c048f366d5938cd0b2e3f65929895dd540e9517de3a3d925ebaf6d5e44614",
+    "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1"
   },
   "assessments": [
     {
@@ -1353,7 +1354,7 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "1461b791160f86c778326614c46268b814795f17b2e720f503ca993a0f651295"
       }
     },
     {
@@ -2972,7 +2973,7 @@
       "file_sha256": {
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "1461b791160f86c778326614c46268b814795f17b2e720f503ca993a0f651295"
       }
     },
     {
@@ -3914,7 +3915,7 @@
       "file_sha256": {
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370"
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "1461b791160f86c778326614c46268b814795f17b2e720f503ca993a0f651295"
       }
     },
     {
@@ -6837,23 +6838,28 @@
       "ids": [
         "CVE-2026-124249",
         "CVE-2026-16052",
-        "CVE-2026-19552"
+        "CVE-2026-19552",
+        "CVE-2026-115559"
       ],
       "classification": "fixed_by_pinned_security_upgrade",
-      "reason": "The exact final Agent image carries the pinned CPython cookiejar, cookies and ssl backports. All added files and the combined installed backport manifest must match.",
+      "reason": "The installed cookiejar, cookies, ssl and imaplib modules contain the reviewed CPython 3.13.18 backports. The unchanged interpreter and patched files must match the installed manifest.",
       "references": [
         "https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494",
         "https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987",
-        "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e"
+        "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e",
+        "https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df"
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
         "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "ab8788f2fedc1b88b281aec51a7cc8fa63a70f11312561d46a64568e0d7d8c06",
-        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "f824126ee3339be9655f4cceba46baa64c65e3b902284a30d2560e0fe8fce370",
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "1461b791160f86c778326614c46268b814795f17b2e720f503ca993a0f651295",
         "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
         "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
-        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9",
+        "/usr/local/lib/python3.13/imaplib.py": "b88fed864f221c0d2fb571bfaa35c550e81f6b83cda4b31335dd8919c9c143e0",
+        "/usr/local/bin/python3.13": "73efccb6aa17a74869ef6f11e0a0118b0f27693ea85f36c7a3758c307fd8914f",
+        "/usr/local/lib/libpython3.13.so.1.0": "0ac8cea8da81f9cf63f7059439b1c3be107de0b39b34a96510af5f2a9b2d6235"
       }
     },
     {

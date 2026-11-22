@@ -122,12 +122,12 @@
     "backend/security/native-backports/patches/util-9fcb98bf08d9119d07ba3a3c709b1a85e4a1bbcb.patch": "86dc6819c9465d829849734605cfe586404607fd7612f3f05ad5c829a33d0bb6",
     "backend/security/native-backports/patches/util-a15c00a9e545aa8b9cf6ec0f888ff6c7b3eaeedc.patch": "874e91ef452c086c94192eec0bf94b324a4e6c4b8f23bcc2e26fafe828edad91",
     "backend/security/native-backports/patches/util-ba905a1874959c70fd706aa7d49df61076864e0a.patch": "6203e5d3dc92f6113e8e37bb7f60b6f6c8ed47cb2e79d1a3b5134df964464497",
-    "backend/security/cpython-backports/build.sh": "5db51691bd8c0a83691b891dfd1fb15b42ee6d46973ef4c5369bfb5dca37e12a",
+    "backend/security/cpython-backports/build.sh": "e7445cb1b3c6819d3883500e16d4a4252878e8307c81df3153e3daa6a2505d68",
     "backend/security/cpython-backports/CVE-2025-15367.patch": "91b3e851cf4e6cf85d1abab8bd384ab79069346a341e3441d8cd89e411fd967a",
     "backend/security/cpython-backports/CVE-2026-103995.patch": "cd937a80f6abef62507997a0cf1012450348857a245e86fc13bff27caf127476",
     "backend/security/cpython-backports/CVE-2026-116566.patch": "d8cb1998e30dc71474c5f9d3a9093e7de6af4dceffdb42ec93a52347ab8ec1f1",
-    "backend/security/cpython-backports/patches.sha256": "815dffca78bac6e4e6e75093ff945d38190e93295c2e54dbc054a78cff971cd4",
-    "backend/security/cpython-backports/README.md": "0d3a17dcfcc08727032c72bb0f121b5c4f88a51bf5d6d71562ac259425ee8eeb",
+    "backend/security/cpython-backports/patches.sha256": "f02831ddc38abff5d46d4961aa938fb288d7702f2cbb8a6d47b27094b16e46e6",
+    "backend/security/cpython-backports/README.md": "ab95ce969915ceeac49f48f72c13de2c3ebdd7aa786e4af5eb428e7e0fbae796",
     "backend/security/cpython-backports/upstream-poplib-b234a2b.patch": "606aa1bd8124cb0d777744dfe1a89d1ba983638115372cc508f4ed4a154f3abf",
     "backend/security/pam-backport/build-inputs.sh": "9a95cb08e020a958c6c40f1e096ead7b4d211571dcfb8129a0661805a90da5a2",
     "backend/security/pam-backport/build.sh": "6f98770c85d0fb722505f6b6fe7af373ed10b5b68a9a4cde839e6ceaaa92457a",
@@ -200,7 +200,8 @@
     "backend/security/openssl-backport/patches/0010-CVE-2026-121482.patch": "6bdbb111a7ce640e42c558aaf912fe19b3770aa9afc7c8c5a0d36d20dcb2d5e9",
     "backend/security/openssl-backport/patches/0011-CVE-2026-121482-regression.patch": "a9897de897e3cf34206ba9a4ccb461927bd04c310e9354682ceca317c1537502",
     "backend/security/openssl-backport/patches/0012-CVE-2026-107493.patch": "6176d694ac38251bfa4e11198d002d8720f9efb05deffb35703adb93be6173e1",
-    "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1"
+    "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1",
+    "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
