@@ -23,7 +23,7 @@ def test_runtime_uses_stable_backports_and_fixed_python():
     assert dict(line.split('\t') for line in revisions.splitlines()) == {
         'libc6': '2.41-12+deb13u5+trip5',
         'libc-bin': '2.41-12+deb13u5+trip5',
-        'libstdc++6': '14.2.0-19+trip2',
+        'libstdc++6': '14.2.0-19+trip3',
         'libmount1': '2.41.5-0+deb13u1+trip2',
         'util-linux': '2.41.5-0+deb13u1+trip2',
     }

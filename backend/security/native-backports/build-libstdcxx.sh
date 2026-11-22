@@ -6,6 +6,7 @@ cd /build/gcc-14-14.2.0/src
 patch --batch --fuzz=0 -p1 < /patches/patches/gcc-95619.patch
 patch --batch --fuzz=0 -p1 < /patches/patches/gcc-102010.patch
 patch --batch --fuzz=0 -p1 < /patches/patches/gcc-115456.patch
+patch --batch --fuzz=0 -p1 < /patches/patches/gcc-125709.patch
 mkdir -p /build/libstdcxx-build /build/libgcc
 ln -s /build/gcc-14-14.2.0/src/libgcc/gthr-posix.h /build/libgcc/gthr-default.h
 cd /build/libstdcxx-build
@@ -53,8 +54,8 @@ cd /build
 apt-get download libstdc++6=14.2.0-19
 dpkg-deb --raw-extract libstdc++6_14.2.0-19_amd64.deb /build/stdcpp-package
 install -m 0644 "$new_library" /build/stdcpp-package/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
-sed -i 's/^Version: 14.2.0-19$/Version: 14.2.0-19+trip2/' /build/stdcpp-package/DEBIAN/control
+sed -i 's/^Version: 14.2.0-19$/Version: 14.2.0-19+trip3/' /build/stdcpp-package/DEBIAN/control
 cd /build/stdcpp-package
 find usr -type f -print0 | sort -z | xargs -0 md5sum > DEBIAN/md5sums
-SOURCE_DATE_EPOCH=1794268800 dpkg-deb --root-owner-group --build . /out/libstdc++6_14.2.0-19+trip2_amd64.deb
+SOURCE_DATE_EPOCH=1794268800 dpkg-deb --root-owner-group --build . /out/libstdc++6_14.2.0-19+trip3_amd64.deb
 printf 'libstdc++ upstream regressions and complete exported ABI comparison passed\n'

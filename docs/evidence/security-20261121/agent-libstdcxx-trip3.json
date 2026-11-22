@@ -1,0 +1,78 @@
+{
+  "cve": "CVE-2026-125709",
+  "upstream_fix_commit": "68b1b9056c70acb31f2964963b51c480ff820602",
+  "upstream_gcc_issue": "libstdc++/118099",
+  "upstream_evidence": [
+    "https://github.com/gcc-mirror/gcc/commit/68b1b9056c70acb31f2964963b51c480ff820602",
+    "https://patchwork.yoctoproject.org/project/oe-core/patch/20261118060645.1117433-1-Harish.Sadineni%40windriver.com/",
+    "https://security-tracker.debian.org/tracker/CVE-2026-125709"
+  ],
+  "baseline_revision": "bbb8921120fb5ce000430e526866a8ffadce697b",
+  "baseline_run": 45005014246,
+  "local_candidate_image_id": "sha256:9780d22896ab2bf23bdc05c86a5ed23563fb14e0be2ad0a0e5dc5f72731a1d84",
+  "package_revision": {
+    "name": "libstdc++6",
+    "previous": "14.2.0-19+trip2",
+    "current": "14.2.0-19+trip3"
+  },
+  "inspected_file_hashes_sha256": {
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": {
+      "previous": "591a424c0f5c8b5c8f034c37e5c97a43c4435f5f452cc5f2c78fc44a8609137c",
+      "current": "9a97eeae362372ef6cb7a0d3a829dd29859e14efa5117cd4ef0c9d8e86ef80cc"
+    },
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+      "previous": "30c61ab012a4241bed033725a09b61f5fdd3bb7df95ee852d0b096520524c7af",
+      "current": "30c61ab012a4241bed033725a09b61f5fdd3bb7df95ee852d0b096520524c7af"
+    },
+    "/var/lib/dpkg/info/gcc-14-base:amd64.md5sums": {
+      "previous": "c5e0ca9bd308598e3cd36a9f8993c2e81f1771a00af7a9e914fdde7d306d53ba",
+      "current": "c5e0ca9bd308598e3cd36a9f8993c2e81f1771a00af7a9e914fdde7d306d53ba"
+    },
+    "/var/lib/dpkg/info/libgcc-s1:amd64.md5sums": {
+      "previous": "fb30b61e483f6708ac4dcde252199d6def7a5a51424fa7696ec58bc3bc0e6f50",
+      "current": "fb30b61e483f6708ac4dcde252199d6def7a5a51424fa7696ec58bc3bc0e6f50"
+    },
+    "/var/lib/dpkg/status": {
+      "previous": "faf4a6ddb997f71cdfd87d19080983938188ec838f88cbbbb787e1ee6f6d8c4d",
+      "current": "384b7020a844b6dcb0579c814b09158244b9182d4128a75e5e70fd4a02304994"
+    },
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": {
+      "previous": "99a325eaa22109171c1e024302d87a8354c90d51e9f099df2872225830342e9c",
+      "current": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+    }
+  },
+  "native_payloads_by_package": {
+    "libstdc++6": [
+      "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33"
+    ],
+    "libgcc-s1": [
+      "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1"
+    ],
+    "gcc-14-base": []
+  },
+  "runtime_cxx_development_headers_present": false,
+  "libgcc_has_basic_filebuf_symbol": false,
+  "manifest_changed_fields": [
+    "package_database_sha256",
+    "unchanged_library_sha256"
+  ],
+  "restored_prior_manifest_bindings": 64,
+  "updated_libstdcxx_bindings": 6,
+  "prior_match_identities_reviewed_against_candidate": [
+    {
+      "package": "gcc-14-base",
+      "version": "14.2.0-19",
+      "classification": "not_affected_component_absent"
+    },
+    {
+      "package": "libgcc-s1",
+      "version": "14.2.0-19",
+      "classification": "not_affected_component_absent"
+    },
+    {
+      "package": "libstdc++6",
+      "version": "14.2.0-19+trip3",
+      "classification": "fixed_by_distribution_backport"
+    }
+  ]
+}

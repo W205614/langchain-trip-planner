@@ -18,6 +18,7 @@ regression or ABI comparison fails the build.
 | CVE-2026-84243 | [Reviewed upstream v7 submission](https://inbox.sourceware.org/libc-alpha/20261012112453.47383-1-avinal.xlvii@gmail.com/): reject path separators and bare `..` in each LANGUAGE entry; retain the upstream guard and regression bytes, rebase only the stable Makefile context and omit newer-version NEWS |
 | CVE-2026-95619 | [GCC 14 branch 200183d](https://github.com/gcc-mirror/gcc/commit/200183d4ab5d57575f3dfebc6af3baf649910b9e), upstream aligned-new regression and comparison of every existing public export |
 | CVE-2026-102010 | [GCC aaa8351](https://github.com/gcc-mirror/gcc/commit/aaa8351f4d2e636f9680a1f0a8ebc2f0a60611e6), upstream PBDS regression compiled with patched headers under AddressSanitizer; see the runtime scope below |
+| CVE-2026-125709 | [GCC stable-branch fix for PR118099](https://github.com/gcc-mirror/gcc/commit/68b1b9056c70acb31f2964963b51c480ff820602), backported to the Debian GCC 14.2 libstdc++ source with the existing exported ABI comparison |
 | CVE-2026-76642, CVE-2026-78408, CVE-2026-78410 | [util-linux stable 2.41.6 fixes](https://www.kernel.org/pub/linux/utils/util-linux/v2.41/v2.41.6-ReleaseNotes), with the stable branch's missing-include, complete cgroup-FD closure, idmap feature guard and correct `RESOLVE_NO_SYMLINKS` follow-ups |
 | CVE-2026-78409 | [Upstream applicability](https://github.com/util-linux/util-linux/security/advisories/GHSA-8f2p-47x3-43mv): the affected detached-subdirectory path starts in 2.42; the maintained 2.41 branch does not include that path |
 | CVE-2026-115557 | The application now uses pinned CPython 3.13.18, retaining the upstream security fix; see the separate `cpython-backports` inputs for its additional socket and HTTP fixes. The native build SDK's Python version is not the application interpreter. |
@@ -84,7 +85,7 @@ ISO-2022-CN-EXT decoder fix. The source patch is pinned and applied with zero
 fuzz. The runtime check round-trips valid text through the installed
 converter. [CVE-2026-121758 upstream commit](https://sourceware.org/git/?p=glibc.git;a=commit;h=170ee485fa89b95c3bb7d5606c9812c6c100c9be)
 
-The current custom glibc `+trip5`, libstdc++ `+trip2` and util-linux `+trip2`
+The current custom glibc `+trip5`, libstdc++ `+trip3` and util-linux `+trip2`
 revisions preserve package-manager ownership and
 dependency ordering. Future Debian security releases should replace these
 backports after the patches, ABI, regressions and fresh image scan are reviewed.

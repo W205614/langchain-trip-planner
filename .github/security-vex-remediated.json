@@ -77,7 +77,7 @@
     "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
     "backend/security/native-backports/build-glibc.sh": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
     "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
-    "backend/security/native-backports/build-libstdcxx.sh": "c6e00212b7ea7db93b2820ebdd8c7d6fa18c37e3526a1144958fac53c3bf4407",
+    "backend/security/native-backports/build-libstdcxx.sh": "91a56c9b9c4ec3bf8ecb3d7c10c859f74d3b1aa42c4422753807a07e808fc54d",
     "backend/security/native-backports/build-util-linux.sh": "f5c695b3053b705694121ead80c4b0ad6eb92dc3ba17358ed3cbbfd3068b628a",
     "backend/security/native-backports/check-glibc.sh": "26e0e6f35eb9ad432bb1685477a35d807f05728d26bfc060d9ffec69de480ed3",
     "backend/security/native-backports/check-login-pam-rhost.py": "7503fc0040b75a06bd1b01ab4670d74addfc67443d1d64eb28eb030949e946c9",
@@ -85,11 +85,11 @@
     "backend/security/native-backports/glibc-build.sha256": "55a328303a103e53e7e5cb2bd9125117b08d7cda37c29dc92813c51454a98ee9",
     "backend/security/native-backports/glibc-patches.txt": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
     "backend/security/native-backports/glibc-tests.sha256": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab",
-    "backend/security/native-backports/libstdcxx-patches.sha256": "c69ff9ccf9335ce2d9caf75e65e2aa9a5411d2896bbe76a081a99de5ee00139e",
+    "backend/security/native-backports/libstdcxx-patches.sha256": "ee05f06867fd49ddfaf319bff09e2be3fe88657ca9fa4bb947415cdd92e7d975",
     "backend/security/native-backports/login-pam-rhost-regression.c": "feca29f1a8cdc47b57c6539ee7d8b2228bc82294992187071a44f9d1cfcca603",
     "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
     "backend/security/native-backports/patches.sha256": "66b589722d4e97f307999f84e51a21732d6b907aa217c9fd080aa0f5b5a00bfb",
-    "backend/security/native-backports/README.md": "562f6cb7c6b17433af473f7e3dc8e5fc0a84a773b1cc1062020571543a9b1ed4",
+    "backend/security/native-backports/README.md": "51656c16adfed6e7af3da6b7e498b914c3d36cd9536d27fd5fea6aac0bfa40a8",
     "backend/security/native-backports/sources.sha256": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31",
     "backend/security/native-backports/util-linux-patches.sha256": "4b3f70cb42f5495ecdcea144c1ec68d3cb08defac5080c4309bb87bf0bd29da6",
     "backend/security/native-backports/util-linux-patches.txt": "adae2b22b165cac74ae9292d21b0cfc8105d6f7a591da728fc052e0eafe487b6",
@@ -203,7 +203,8 @@
     "backend/security/openssl-backport/patches/0013-CVE-2026-35190.patch": "e1b45282a8876fdda6b930273e28bad1cdb1c6915ccd25fe0b61789281489ed1",
     "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1",
     "backend/security/cpython-backports/CVE-2026-115791.patch": "2008437c586077ec7c368a499c418bd95c6955520dcfb02899665ad8f4906c58",
-    "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df"
+    "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df",
+    "backend/security/native-backports/patches/gcc-125709.patch": "d10dbb37240c47ef5e6d413d622c216608bc18b233392b431e3a77bec9229a21"
   },
   "assumptions_tests": [
     "backend/tests/test_chroma_boundary.py::test_embedded_client_overrides_remote_api_and_authorization_environment",
