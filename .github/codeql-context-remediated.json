@@ -3,16 +3,16 @@
   "review_policy": "source_and_trace_bound",
   "expected_entry_count": 11,
   "classification": "not_affected_context",
-  "scope": "Four fresh CodeQL reports for 8f693cb. Exact review of 11 Java results and 44 flows. No new exemptions.",
-  "reviewed_business_revision": "8f693cb88b3f4a25ef8c2321a938df30a4f420d6",
-  "original_sarif_revision": "8f693cb88b3f4a25ef8c2321a938df30a4f420d6",
-  "original_workflow_run": 44994806918,
+  "scope": "Four fresh CodeQL reports for 58931c1. Exact review of 11 Java results and 44 flows. No new exemptions.",
+  "reviewed_business_revision": "58931c1033cedb9e3c4cd1dd1ea52ab806deb014",
+  "original_sarif_revision": "58931c1033cedb9e3c4cd1dd1ea52ab806deb014",
+  "original_workflow_run": 45002620633,
   "analysis_origin": "GitHub CodeQL 2.27.5 security-extended",
   "flow_hash_algorithm": "sarif-semantic-flow-v1",
   "review_record": "docs/evidence/security-20261121/codeql/source-review.json",
-  "review_record_sha256": "22225aa26b64080befbde39828ef170adde46896d8a2a590a9aec392b8ec548b",
+  "review_record_sha256": "f3bfb71bfe321b019437da4459dd1200ba558092935cfcbca6ec8b9d2f91d579",
   "business_tree_bindings": {
-    "backend": "182dd19a14f4ea39f2cdfa9a39b72ff982cc8338",
+    "backend": "ef1c1adbab9b2516ab0863e63ad5617f50dfed56",
     "business-backend": "974d0a3b8753ad8b867bacfb244c0fbd26473304",
     "frontend": "d04d89c71430285f5f4e72165ba7c94e5e93797e",
     "deploy": "272f64b615d64f1604bfceeb14de5db63fbbc88e",
@@ -154,7 +154,7 @@
       "semantic_flow_sha256": "7f77fe999deb7279de0271ce5d60241305fd66c2d7ff6ee89b9192dd8371df91",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "a6dc0265ed48a2c9612077a25dadca821e67cad7c1fc6140d86748dd11c1a8a5",
+      "reviewed_raw_trace_sha256": "c579d2f904065994925fbff0f8d11c40533c7901e2885cde1a6757f186f1bef1",
       "reason": "Only readiness GET and /capabilities/status. forAgent returns before SQL for this exact path. The two task-progress flows dispatch an unrelated streaming lambda and cannot execute here.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -174,7 +174,7 @@
       "semantic_flow_sha256": "3f749266c0d68d4b4e65535f108b8a9c69a2bbe9190c510225d5873ecb73edca",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "28d03d18a69bddbe6d2348450f053af73f78eef8914d3a05063d582fa52d37c9",
+      "reviewed_raw_trace_sha256": "ed07b94ff0bf34e373dda7f9951ff7ca8af92c330a02279fcedb7d1763e4abb1",
       "reason": "Only Agent readiness GET /readyz; its concrete lambda sends HTTP and returns a boolean. Amap reservation and streaming task-progress lambdas are different Operation instances.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -194,7 +194,7 @@
       "semantic_flow_sha256": "fccfcb2da73c09b016ff734c81864a2afe705d4e86405517fe733a7cca2187f9",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "ed796cfd7f8b0537adcbd0df5c0a5f6756e02b9ad2234b301a44bff752a4d83c",
+      "reviewed_raw_trace_sha256": "936b378fd7c6926ce8d5e98e4c3ea0621b9878576d8655147c1442305b35abf3",
       "reason": "Only readiness and status GET. The exact status path is excluded before operation registration. Streaming callbacks in the supplied flows are unrelated.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -214,7 +214,7 @@
       "semantic_flow_sha256": "99100d6829e5fd58f92b25cdd2b513bd3477ec64680c5ad2e236f45711fd719a",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "2f12f8de3a3b4ecea2e4484369b4176c96f064385128ea27f6a3053fc83173e3",
+      "reviewed_raw_trace_sha256": "507cb662e5db5214e3223e0df3545edd0975502cc4537c6b67ef3aa004288a8f",
       "reason": "Reads RAG status. The exact rag-status path returns before SQL registration. Its HTTP response lambda cannot dispatch the separate streaming progress callback.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -234,7 +234,7 @@
       "semantic_flow_sha256": "c19a80311938ebcb9c94a8f618d0d058d31fa696cc1f91fe2ee154d4c68288c5",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "6172fabf4143d6914d4ccaa7a9d316ae60c4991fd527e5303fa7e15c3b0007a0",
+      "reviewed_raw_trace_sha256": "214e6472efa6163cbf80f409ab2a356e0619854e69cde8a1fec4909cf727fe15",
       "reason": "Fetches weather through AmapGateway. Actual map quota/operation accounting is incidental to retrieval; user identity comes from the authenticated request. No trip/account mutation. Streaming task-progress paths are unrelated callbacks.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -254,7 +254,7 @@
       "semantic_flow_sha256": "c2e00a9eb087ac95ef2cfff84d07a6b16c425cb15c0e58ee1c9217c0e143b049",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "d585fbdc49cbdbe062ff6369079fadfc623ca474192c1990750ed6858d629e4d",
+      "reviewed_raw_trace_sha256": "5baefa565feda83a7190fef9595de4579daa86ce3744122630d2a27cd1879866",
       "reason": "Retrieves one validated POI ID. Actual map operation/quota records are incidental retrieval accounting, not a trip/account action. Streaming task-progress paths are unrelated callbacks.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -274,7 +274,7 @@
       "semantic_flow_sha256": "9e41f5ea784822baa83c47b695ef980ad43b4e22680bb5bd29f8124ef82252a9",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "2ac52961acb2ea2fe9b5f3b58467624d2f32e822751bc6cb10803d72f50bfcb7",
+      "reviewed_raw_trace_sha256": "05b0c637f2eddcbf4b678b14ef69f1dfe86ce27ba9b58004d7c392b400402338",
       "reason": "Delegates to the same read-only POI search as poi. Real map accounting is retained. Query parameters cannot select a trip/account mutation or choose the authenticated actor. Streaming callbacks are unrelated.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -294,7 +294,7 @@
       "semantic_flow_sha256": "91288248c7823077a3fa7d568ea339a4794aa885fc98be4eae6023ed0d8d99ed",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "2a0e1680abefcfd833eec9ac3735a85b8ff45419c41235f3d0379a1ee0126339",
+      "reviewed_raw_trace_sha256": "5772fa08aeede701cbd6fb93f56f43be4601dd219f80654447823345862a97c7",
       "reason": "Queries POIs using bounded validated query fields; retains real operation/quota accounting. No user business state is changed. The HTTP response lambda does not invoke streaming task progress.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -314,7 +314,7 @@
       "semantic_flow_sha256": "02f58899d8e0c7ddc13d2ebf4c20d1c187b1d16105a7e94da2df3caeb70a0d0d",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "a684e131eff4bdf39cde05c09d914414c11945647dcdb17e99a3fc1667679f2d",
+      "reviewed_raw_trace_sha256": "97f3a2f24631e6b6937ed326396aa07161a58e001dafb466c08e5e014c8f58ec",
       "reason": "Reads evaluation policy. Exact eval-policy path returns before SQL registration. Agent GET dispatches only the policy response, never execution/streaming callbacks.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -334,7 +334,7 @@
       "semantic_flow_sha256": "663e638b92ac3ddcc452ee717c1d8efc74bd0c14c6ab5a2082d4c9988a35ff44",
       "classification": "not_affected_context",
       "source_sha256": "22d984a536705a16a94de25b365d20747f47913091cc06f6d06d22bac0d1c58f",
-      "reviewed_raw_trace_sha256": "6e82c780e3eb37bf949b602a5350451e8392d89da2f864981f876a139c00f221",
+      "reviewed_raw_trace_sha256": "a57e4fcb9c6f55cedd5d35628500ba52202452dc4a69fc618b89eeacd521ca6c",
       "reason": "Retrieves POI detail and a constrained image URL, or an explicit placeholder. Actual map accounting can occur and is retained. Neither operation dispatches the separate stream/progress callback or modifies a saved trip.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
@@ -354,7 +354,7 @@
       "semantic_flow_sha256": "42426583c52e1c727542babaf4a4d55c9d88fec5423cdab4af7e039a025ebe4f",
       "classification": "not_affected_context",
       "source_sha256": "43694f4886de5f046ad3ae917ecb64a7af8acdc994cac517e8c8dc8b6c19fdde",
-      "reviewed_raw_trace_sha256": "c3f7ebe83a7d6043bbfb444330d1f470380cf3e477e998c767c64a19627692ed",
+      "reviewed_raw_trace_sha256": "1faa6804975aede254b56fb26eff069fa9775f5093438d2f6a39f1fe7b3307cc",
       "reason": "Reads the validation fixture marker under the existing validation-only boundary. An operation ledger entry can be created; no user business mutation. Its GET response lambda is distinct from execution streaming.",
       "limitations": [
         "Exact source and four ordered flows only; source/trace changes require reassessment.",
