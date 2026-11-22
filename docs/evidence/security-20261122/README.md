@@ -10,3 +10,9 @@
 - Debian 与 Alpine 的 OpenSSL 下游构建使用三个固定的上游变更快照。QUIC 采用生产路径的判断，DANE 保留可信库替换后的证书验证，DTLS 按已接收数据逐步分配。三个上游提案在本轮取证时均处于评审阶段。[QUIC](https://github.com/openssl/openssl/pull/33544) · [DANE](https://github.com/openssl/openssl/pull/33634) · [DTLS](https://github.com/openssl/openssl/pull/33729)
 
 Alpine 的初次工具链安装遇到下载 I/O 错误。本机以同一 Alpine 构建基座中已安装的工具链，在断网环境对固定源码和 APKBUILD 执行 abuild。主测试矩阵的汇总为 `Files=346, Tests=4291, Result: PASS`，其中 QUIC、DANE 和 DTLS 测试通过。发布候选仍需通过正常 Docker 构建、签名与最终镜像扫描。
+
+## 候选镜像回归
+
+- Agent 在断网容器中运行 110 项原生包、ABI 和运行时回归，全部通过。构建阶段另通过 9 项 libc 定向回归、56 项强化回归及新增的正常转换和 glob 检查，并验证了 OpenSSL 的包安装、SONAME、导出符号和 IPv4/IPv6 datagram 行为。[Agent 包和文件比较](agent-native-rebuild.json)
+- GitHub 首轮候选的 Agent ABI 测试读取了新库，夹具仍要求旧摘要。新摘要已由实际 Debian 包核对，并用升级后的完整镜像重新运行该测试。初次失败留在对应作业记录里。[首次候选安全门禁](https://github.com/W205614/langchain-trip-planner/actions/runs/45019327247)
+- 接收器原有 CPython 修复文件保持相同字节。新镜像只改变两个 OpenSSL APK 版本及对应的库文件和来源收据。用已更新的完整指纹重放 GitHub 实际报告的 22 条匹配，8 条对应原有 CPython 修复，14 条对应 OpenSSL 回补，未解决项 0。该重放仍需最终源码的同源 CI 确认。[接收器证据](receiver-openssl-rebind.json)

@@ -71,23 +71,23 @@
     "docker-compose.production.yml": "ea35fb4cf8c54a86bb7f24519955f1c30ae2dbd3b07897b11bcb1ebefbbaa8cf",
     "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java": "adef1c4dcabf75c49bf079bef80c4e22286379b4cae3425242450c5f9e03c38c",
     "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc",
-    "tools/image_policy.py": "344cc641b66ac6b216a3010115f18bc3893814dd6333b93f11a5ccb257b2efda",
+    "tools/image_policy.py": "a839fc5ed3ff07265fa854a6ca6ca31e28e60981aee3f0826f0a8ce78c506b2e",
     "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
-    "backend/security/native-backports/build-glibc.sh": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
+    "backend/security/native-backports/build-glibc.sh": "4df02e4e43eef6ce215e98a3d5af75a9664f5e7bbf981635acacf4c5f51858fe",
     "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
     "backend/security/native-backports/build-libstdcxx.sh": "91a56c9b9c4ec3bf8ecb3d7c10c859f74d3b1aa42c4422753807a07e808fc54d",
     "backend/security/native-backports/build-util-linux.sh": "f5c695b3053b705694121ead80c4b0ad6eb92dc3ba17358ed3cbbfd3068b628a",
     "backend/security/native-backports/check-glibc.sh": "26e0e6f35eb9ad432bb1685477a35d807f05728d26bfc060d9ffec69de480ed3",
     "backend/security/native-backports/check-login-pam-rhost.py": "7503fc0040b75a06bd1b01ab4670d74addfc67443d1d64eb28eb030949e946c9",
-    "backend/security/native-backports/glibc-boundary-regression.c": "a2d74cb8b94e4ce226db14d1861a17859ba3b3ef6e3760d411f0630f75227e67",
-    "backend/security/native-backports/glibc-build.sha256": "55a328303a103e53e7e5cb2bd9125117b08d7cda37c29dc92813c51454a98ee9",
-    "backend/security/native-backports/glibc-patches.txt": "6a6bed7cb68fcd7f3a525d44f7ff75936df0215ec5bb83175778256dfef589e5",
-    "backend/security/native-backports/glibc-tests.sha256": "7decdecadffb539cce0eecb5ed408622006413bde0d07456d7817ed50f9528ab",
+    "backend/security/native-backports/glibc-boundary-regression.c": "19ed83637dc0a7d919d71dfb319965d66a33fbec402723bfbfead76bc59aa26a",
+    "backend/security/native-backports/glibc-build.sha256": "12f93754d9649d2454ec6f638cd5cdc2faa70b3b3c2d70a54b77a0c5e5613f48",
+    "backend/security/native-backports/glibc-patches.txt": "68d2cd0b058d68379898e5c9a267b4486eb4870c5b37181ca5664663e0ae7e89",
+    "backend/security/native-backports/glibc-tests.sha256": "4d9d859f0f34af99ddfb1eac9d92181fda0e23bdc4f85994f0f9d43e9b3f3171",
     "backend/security/native-backports/libstdcxx-patches.sha256": "ee05f06867fd49ddfaf319bff09e2be3fe88657ca9fa4bb947415cdd92e7d975",
     "backend/security/native-backports/login-pam-rhost-regression.c": "feca29f1a8cdc47b57c6539ee7d8b2228bc82294992187071a44f9d1cfcca603",
     "backend/security/native-backports/openat2-regression.c": "6608bb633528a28231797b6dac171cceaa6df08e3e58f7f4d689bae955a337d7",
     "backend/security/native-backports/patches.sha256": "66b589722d4e97f307999f84e51a21732d6b907aa217c9fd080aa0f5b5a00bfb",
-    "backend/security/native-backports/README.md": "51656c16adfed6e7af3da6b7e498b914c3d36cd9536d27fd5fea6aac0bfa40a8",
+    "backend/security/native-backports/README.md": "bf02997e0b254d5c51e57fce578d812e9e37ef4e1d7099872ed6c38f48d53fd3",
     "backend/security/native-backports/sources.sha256": "f5caf636a21c42f9a82a4c24eeef27f549758ffa5917246f794731a2b3296e31",
     "backend/security/native-backports/util-linux-patches.sha256": "4b3f70cb42f5495ecdcea144c1ec68d3cb08defac5080c4309bb87bf0bd29da6",
     "backend/security/native-backports/util-linux-patches.txt": "adae2b22b165cac74ae9292d21b0cfc8105d6f7a591da728fc052e0eafe487b6",
@@ -188,11 +188,11 @@
     "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
     "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
     "tools/container_sources.py": "bdc359cd41985f3f9b20ffcc590bf79509f7a671a0f24a162193cfaff380607b",
-    "backend/tests/test_openssl_security_backport.py": "6ff413feab444d253b4f33870d52fd2d59a2f00ef146bcaa4daf47f368271688",
+    "backend/tests/test_openssl_security_backport.py": "e0d6a7aed9d2d9187c368ea32be8d4f2a5a5a9b11f61d69132c41027469bae49",
     "backend/security/openssl-backport/adapt_aad_regression.py": "8a3659bead4b7bb6bc0e4a1b1859eee052e4b7f21bae3a7742b01705f2c6f427",
     "backend/security/openssl-backport/build-inputs.sh": "cc78312a1964b49ea4274fe2860021c0861b78f512231df277daf07a8ba16c92",
-    "backend/security/openssl-backport/build.sh": "6b5bb697052bc0cb2abe4b4b7629a7b52d2e2a6ba6ef5fed376eb10dd5a43a74",
-    "backend/security/openssl-backport/check-backport.sh": "b1a2f9307f7e0db47936c69d49cb666c4fc70f9fbc28e23273ab275c729313fd",
+    "backend/security/openssl-backport/build.sh": "05bb7c59f8949b2f59923ff18cdfc920363885e9f25ae9592f5b744bbef3179b",
+    "backend/security/openssl-backport/check-backport.sh": "e65007b4263e30bbf5ba50b84cee0fb6b0b5b074dc15c9325a9c1e84b3a350a6",
     "backend/security/openssl-backport/patches/0001-CVE-2026-107496.patch": "b17c218785e0988d1f000ef365e9b9124143c460b2be2593d7cc616f6c2d4763",
     "backend/security/openssl-backport/patches/0002-CVE-2026-88822.patch": "669866cd57343c0249b4f5297d53a228c6f9f9d5490443cdfdd39be6e4cc9998",
     "backend/security/openssl-backport/patches/0003-CVE-2026-88823.patch": "d75b8abfde7d47732b685464080d1af556932cf3baa9501fbabda56317448b51",
@@ -201,8 +201,8 @@
     "backend/security/openssl-backport/patches/0006-CVE-2026-88823-test.patch": "b02374041ba40333c3a7537486e193c9a70de4beedff5056ff3958a8abe074d4",
     "backend/security/openssl-backport/patches/0007-CVE-2026-95691-test.patch": "eeef48c844d158505ff2421855559e87b9bedb9cc32ef1eab77ac5ff605bf0c2",
     "backend/security/openssl-backport/patches/0008-CVE-2026-95692-test.patch": "1e83b853591f7a815bf918a1a4d1fc8f2b7f7253f4bf45766304020bd29e1c70",
-    "backend/security/openssl-backport/patches.sha256": "63e21b750d3750e1cda55ff192fcac376bace94ae5c16ee44078f3ed46984cc1",
-    "backend/security/openssl-backport/README.md": "2f4a79a9293ec7c02281ebeda2deacb913f2ad20d69f2ed4efb5fd2cecb4f1c6",
+    "backend/security/openssl-backport/patches.sha256": "0b3c491bb93c7c766898ca86d58fcee9b4647c0e0cafb19a5a94480cd67e2538",
+    "backend/security/openssl-backport/README.md": "ba4fb26b860f40b03e1ebb77b56dbd8b4d595ceca8fa0a6db7648c1eecdb4878",
     "backend/security/openssl-backport/sources.sha256": "a8a5622989a0d38ccd109f0fe0dfb6bc45d80e245e2240cf3fd5c72b84a2c798",
     "backend/security/openssl-backport/test-dgram-detect-peer.c": "3d3b2a276a5308235b22a44a425af88bdfadaba760cf3e55e8efc3391d3b874c",
     "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json": "eedcdc9031b7ffee22ab928b505c60f1d455bff9e6bcf80fdfeda87a3ed401ab",
@@ -232,8 +232,15 @@
     "backend/security/openssl-backport/patches/0014-CVE-2026-121481.patch": "ed0fa7446a2304e5cee5ca7d0ba469d51fc6582f6557c9994ef8c6ffdf544cff",
     "docs/evidence/security-20261121/agent-openssl-trip3-manifest.json": "ad2705fa012e9a4a5a63425b3b6e30fd4d0cd4cfaa0993b13295c436802c054f",
     "backend/security/native-backports/patches/gcc-125709.patch": "d10dbb37240c47ef5e6d413d622c216608bc18b233392b431e3a77bec9229a21",
-    "backend/tests/test_runtime_security_backports.py": "4caaab645445cbe9593881fdf5ddc1d1dca96d50ea60a4316f2b1d2d8fab4c0f",
-    "docs/evidence/security-20261121/agent-libstdcxx-trip3.json": "3155962212913806ac22ddb8966af1648963ca1021c77b13fab19871cb54b927"
+    "backend/tests/test_runtime_security_backports.py": "05f206fbe2fc4f15aa12d608916bb6d258148fed82ae81a5d0dfa3ec6d807006",
+    "docs/evidence/security-20261121/agent-libstdcxx-trip3.json": "3155962212913806ac22ddb8966af1648963ca1021c77b13fab19871cb54b927",
+    "docs/evidence/security-20261122/agent-native-rebuild.json": "efb5b366d80b2c509d697bcfc6ce3d141bcf2da9c9fcecae893ce2acab8606f1",
+    "backend/security/openssl-backport/patches/0015-CVE-2026-107494.patch": "a05fc5e9ce9745344c5d39af0e121ee67c627114ca631d5c92e467c13317bd30",
+    "backend/security/native-backports/patches/glibc-121757.patch": "bc3c40ee833bbbfb6d3ac3e7fa96b633fed0e47611508808ae2840609b15ec60",
+    "backend/security/native-backports/patches/glibc-124024.patch": "2823a391341f373a4c7e62ce26a35f45e53ab44dadb205a8c159139b625f7640",
+    "backend/security/openssl-backport/patches/0017-CVE-2026-95690.patch": "9bf69d078e7311c794d6ca9bcba9b4107e9bbca3fbdd6eee93e22fa9cc581fba",
+    "backend/security/native-backports/patches/glibc-126765.patch": "7568626d62accf42f09d1ed07c082524e5e03ff0ca534a834c1bcf51fa647e3e",
+    "backend/security/openssl-backport/patches/0016-CVE-2026-84786.patch": "835e2969b94dbdc69d5ae87a8ebf58ce129b007d68fe513b09e1119b03f83f03"
   },
   "assessments": [
     {
@@ -256,13 +263,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -284,13 +291,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -312,14 +319,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -341,14 +348,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -370,14 +377,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -399,14 +406,14 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
       "absent_paths": [
         "/usr/bin/infocmp"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -506,10 +513,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2018-20796"
@@ -521,7 +528,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -598,17 +605,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2018-20796"
@@ -620,7 +628,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -697,7 +705,8 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -818,12 +827,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -845,12 +854,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -872,12 +881,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -899,12 +908,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -926,12 +935,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -953,12 +962,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -980,12 +989,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1007,12 +1016,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1034,12 +1043,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1061,22 +1070,22 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/login"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-19499"
@@ -1088,20 +1097,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-19499"
@@ -1113,10 +1123,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1146,10 +1157,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-84243"
@@ -1161,20 +1172,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-84243"
@@ -1186,10 +1198,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1295,10 +1308,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-6238"
@@ -1310,20 +1323,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-6238"
@@ -1335,10 +1349,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1348,7 +1363,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2025-15367"
@@ -1387,22 +1402,22 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-77117"
@@ -1414,20 +1429,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-80489"
@@ -1439,20 +1455,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-77117"
@@ -1464,20 +1481,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-80489"
@@ -1489,10 +1507,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1630,9 +1649,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1655,9 +1674,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1680,9 +1699,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1728,9 +1747,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1753,9 +1772,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1778,9 +1797,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1803,9 +1822,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1835,10 +1854,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-5435"
@@ -1850,20 +1869,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-5435"
@@ -1875,10 +1895,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1901,9 +1922,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1926,9 +1947,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1951,9 +1972,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -1999,9 +2020,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2024,9 +2045,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2049,9 +2070,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2074,9 +2095,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2106,10 +2127,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010022"
@@ -2121,18 +2142,19 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
-      }
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010022"
@@ -2144,18 +2166,19 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
-      }
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-8674"
@@ -2167,20 +2190,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-8674"
@@ -2192,20 +2216,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010024"
@@ -2217,18 +2242,19 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
-      }
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010024"
@@ -2240,18 +2266,19 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
-      }
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010023"
@@ -2263,7 +2290,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -2340,17 +2367,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010023"
@@ -2362,7 +2390,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -2439,7 +2467,8 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2462,9 +2491,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2487,9 +2516,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2512,9 +2541,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2560,9 +2589,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2585,9 +2614,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2610,9 +2639,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2635,9 +2664,9 @@
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
         "/usr/lib/x86_64-linux-gnu/libmount.so.1.1.0": "b5eafad43fc4813c82a904590a4988d41c533c747631cadceb62b74daf1e2f99",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2707,7 +2736,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2716,7 +2745,7 @@
         "/usr/bin/newgidmap"
       ],
       "requires_architecture": "amd64",
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2740,7 +2769,7 @@
       "file_sha256": {
         "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/sbin/useradd",
@@ -2749,7 +2778,7 @@
         "/usr/bin/newgidmap"
       ],
       "requires_architecture": "amd64",
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -2966,7 +2995,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-116566"
@@ -2991,10 +3020,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2010-4756"
@@ -3006,7 +3035,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3083,17 +3112,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2010-4756"
@@ -3105,7 +3135,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3182,7 +3212,8 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3212,10 +3243,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-6791"
@@ -3227,20 +3258,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-6791"
@@ -3252,20 +3284,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010025"
@@ -3277,18 +3310,19 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
-      }
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-1010025"
@@ -3300,18 +3334,19 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
-      }
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-9192"
@@ -3323,7 +3358,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3400,17 +3435,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2019-9192"
@@ -3422,7 +3458,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -3499,17 +3535,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-19542"
@@ -3521,20 +3558,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-19542"
@@ -3546,10 +3584,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3625,10 +3664,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-89092"
@@ -3640,24 +3679,25 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "absent_paths": [
         "/usr/sbin/nscd"
       ],
       "requires_packages_absent": [
         "nscd"
-      ]
+      ],
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-89092"
@@ -3669,14 +3709,15 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "absent_paths": [
         "/usr/sbin/nscd"
       ],
       "requires_packages_absent": [
         "nscd"
-      ]
+      ],
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3744,7 +3785,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3754,7 +3795,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3776,7 +3817,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3786,7 +3827,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3808,7 +3849,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3818,7 +3859,7 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3840,7 +3881,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961",
         "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.5": "4013e7651ac68f547d8333517def25b2366c97eec7de7f06e105dbf3444ffebf",
         "/usr/lib/x86_64-linux-gnu/libncursesw.so.6.5": "ea1e3fea29b3d3f35e240f626e5e783885d1d17f7915e7840f2a1542058c154c"
       },
@@ -3850,17 +3891,17 @@
         "/usr/lib/x86_64-linux-gnu/libtic.so.6.5",
         "/usr/lib/x86_64-linux-gnu/libtic.so.6"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-97399"
@@ -3872,19 +3913,20 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-97399"
@@ -3896,9 +3938,10 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -3908,7 +3951,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-103995"
@@ -3948,13 +3991,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4327,10 +4370,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-18374"
@@ -4342,20 +4385,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-18374"
@@ -4367,10 +4411,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4392,12 +4437,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4567,12 +4612,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4594,12 +4639,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/apt-key"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4685,10 +4730,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-86805"
@@ -4700,20 +4745,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-86805"
@@ -4725,10 +4771,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4750,12 +4797,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/tar"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4847,10 +4894,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-95818"
@@ -4862,20 +4909,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-95818"
@@ -4887,10 +4935,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -4976,10 +5025,10 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-6368"
@@ -4991,20 +5040,21 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-6368"
@@ -5016,10 +5066,11 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
         "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
-        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd"
-      }
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+      },
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5041,13 +5092,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/perl",
         "/usr/bin/perl5.40.1"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5171,13 +5222,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5199,13 +5250,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5227,13 +5278,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5255,13 +5306,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5283,13 +5334,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5311,13 +5362,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5339,13 +5390,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5367,13 +5418,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5395,13 +5446,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chfn",
         "/usr/bin/chsh"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -5645,13 +5696,13 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/chown",
         "/usr/bin/chgrp"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -6216,12 +6267,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/sort"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -6243,12 +6294,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/diff3"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -6270,12 +6321,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/unexpand"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -6297,12 +6348,12 @@
       ],
       "review_record": "docs/evidence/security-20261121/README.md",
       "file_sha256": {
-        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28"
+        "/usr/local/share/tripplanner/restricted-runtime-tools.json": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
       },
       "absent_paths": [
         "/usr/bin/uniq"
       ],
-      "manifest_delta_review": "docs/evidence/security-20261121/agent-libstdcxx-trip3.json"
+      "manifest_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -6355,21 +6406,21 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libssl3t64": "3.5.9-1~deb13u1+trip3",
-        "openssl": "3.5.9-1~deb13u1+trip3",
-        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip3"
+        "libssl3t64": "3.5.9-1~deb13u1+trip4",
+        "openssl": "3.5.9-1~deb13u1+trip4",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip4"
       },
       "requires_dpkg": {
-        "libssl3t64": "3.5.9-1~deb13u1+trip3",
-        "openssl": "3.5.9-1~deb13u1+trip3",
-        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip3"
+        "libssl3t64": "3.5.9-1~deb13u1+trip4",
+        "openssl": "3.5.9-1~deb13u1+trip4",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip4"
       },
       "requires_architecture": "amd64",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "44cff9d650ca56cf2864f4b71096f7fc728af150e22eb7e3faee7cc2946bec23",
-        "/usr/lib/x86_64-linux-gnu/libssl.so.3": "94600a458ffd81d391d277e36219ee6af6c31a7b7057eed27203c03cc5a452c6",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "ab3eeb4f433446fed97889edd96bc6e07dbc439904d252cbc518dac6f536aa0e",
+        "/usr/lib/x86_64-linux-gnu/libssl.so.3": "11edf51965cd95b32d3ace97ff3598037a90eff5de99c388503825a55ed11cb6",
         "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45",
-        "/usr/local/share/tripplanner/openssl-backport/patches.sha256": "63e21b750d3750e1cda55ff192fcac376bace94ae5c16ee44078f3ed46984cc1"
+        "/usr/local/share/tripplanner/openssl-backport/patches.sha256": "0b3c491bb93c7c766898ca86d58fcee9b4647c0e0cafb19a5a94480cd67e2538"
       },
       "ids": [
         "CVE-2026-107496",
@@ -6381,11 +6432,14 @@
         "CVE-2026-121482",
         "CVE-2026-107493",
         "CVE-2026-35190",
-        "CVE-2026-121481"
+        "CVE-2026-121481",
+        "CVE-2026-107494",
+        "CVE-2026-84786",
+        "CVE-2026-95690"
       ],
       "classification": "fixed_by_distribution_backport",
       "vendor_status": "fixed_in_exact_tripplanner_source_backport",
-      "reason": "The exact Debian-based OpenSSL runtime contains nine upstream backports and a downstream Base64 output-length check. All three installed package versions, the library bytes, and the installed source manifest are verified.",
+      "reason": "The installed Debian OpenSSL packages carry the reviewed upstream and downstream bounds fixes. Package versions and ELF/source proof are exact.",
       "references": [
         "https://github.com/openssl/openssl/commit/a0051cfe699bf5a047bc1c4faef65f80f7987366",
         "https://github.com/openssl/openssl/commit/1a73dc590cbad62d6f0329ea4779eadaa8d8fd75",
@@ -6398,22 +6452,26 @@
         "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
         "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43",
         "https://security-tracker.debian.org/tracker/CVE-2026-121481",
-        "https://github.com/openssl/openssl/pull/33652"
+        "https://github.com/openssl/openssl/pull/33652",
+        "https://github.com/openssl/openssl/pull/33544",
+        "https://github.com/openssl/openssl/pull/33634",
+        "https://github.com/openssl/openssl/pull/33729"
       ],
       "absent_paths": [
         "/usr/bin/openssl"
       ],
-      "review_record": "backend/security/openssl-backport/README.md"
+      "review_record": "docs/evidence/security-20261122/agent-native-rebuild.json",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-100290"
@@ -6426,7 +6484,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6503,17 +6561,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-100290"
@@ -6526,7 +6585,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6603,17 +6662,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-115819"
@@ -6626,7 +6686,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6703,17 +6763,18 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-115819"
@@ -6726,7 +6787,7 @@
       ],
       "review_record": "docs/evidence/security-20261121/agent-execution-paths.json",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libc.so.6": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12"
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
       },
       "requires_source_lf_sha256": {
         "/app/app/__init__.py": "69609b3057e1fe0a6d4984ad8f2f75236e8fc3195f6f81c03455019743bcf1d8",
@@ -6803,7 +6864,8 @@
         "/usr/local/lib/python3.13/site-packages/pydantic/types.py": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
         "/usr/local/lib/python3.13/site-packages/setuptools/_vendor/wheel/wheelfile.py": "9bf83fed336c129fa3fb19ef4abe720cb1056f59e1c8e6ee7aaf50e7fd7f9410"
       },
-      "requires_architecture": "amd64"
+      "requires_architecture": "amd64",
+      "artifact_delta_review": "docs/evidence/security-20261122/agent-native-rebuild.json"
     },
     {
       "distribution": "debian",
@@ -6850,7 +6912,7 @@
         "python": "3.13.18"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-124249",
@@ -6890,11 +6952,11 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc6": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5",
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-121758"
@@ -6916,11 +6978,11 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "requires_dpkg": {
-        "libc6": "2.41-12+deb13u5+trip5",
-        "libc-bin": "2.41-12+deb13u5+trip5"
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
       },
       "ids": [
         "CVE-2026-121758"
@@ -7032,6 +7094,85 @@
       "classification": "not_affected_component_absent",
       "vendor_status": "affected_libstdcxx_component_absent_from_matched_package",
       "reason": "The GCC source-package match refers to documentation or the C unwinder. The matched payload contains no C++ filebuf implementation."
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
+      },
+      "requires_architecture": "amd64",
+      "ids": [
+        "CVE-2026-124024"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "reason": "The rebuilt IBM1390 and IBM1399 modules check the remaining input before reading the next code point.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-124024"
+      ],
+      "review_record": "docs/evidence/security-20261122/agent-native-rebuild.json",
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/gconv/IBM1390.so": "712e72f3c3e2a0eee872f6b6670e0e99e9d7eb204750eae44c111ecf97332183",
+        "/usr/lib/x86_64-linux-gnu/gconv/IBM1399.so": "158c535c8c0f9f323889e98f088057cd92845134709822805c2614734e45737c"
+      }
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
+      },
+      "requires_architecture": "amd64",
+      "ids": [
+        "CVE-2026-121757"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "reason": "The rebuilt CP949 converter commits the input offset after successful conversion.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-121757"
+      ],
+      "review_record": "docs/evidence/security-20261122/agent-native-rebuild.json",
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/gconv/UHC.so": "edb50d7e66e58fb2710c82a231fb16d442e2a28e621d48d4c487c96ac0451114"
+      }
+    },
+    {
+      "distribution": "debian",
+      "release": "13",
+      "artifact_type": "deb",
+      "artifact_versions": {
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
+      },
+      "requires_dpkg": {
+        "libc6": "2.41-12+deb13u5+trip6",
+        "libc-bin": "2.41-12+deb13u5+trip6"
+      },
+      "requires_architecture": "amd64",
+      "ids": [
+        "CVE-2026-126765"
+      ],
+      "classification": "fixed_by_distribution_backport",
+      "reason": "The rebuilt libc keeps ownership of the glob results with the caller during a partial allocation failure.",
+      "references": [
+        "https://security-tracker.debian.org/tracker/CVE-2026-126765"
+      ],
+      "review_record": "docs/evidence/security-20261122/agent-native-rebuild.json",
+      "file_sha256": {
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+      }
     }
   ],
   "documentation_binding_delta": {
@@ -7275,5 +7416,6 @@
       "additional": 23,
       "carried_forward": 39
     }
-  }
+  },
+  "native_rebuild_review_20261122": "docs/evidence/security-20261122/agent-native-rebuild.json"
 }

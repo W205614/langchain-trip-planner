@@ -1,0 +1,156 @@
+{
+  "baseline_image": "sha256:b0253920c51d944b81af9b711251d4a6f97d988636fd5801c0614d19cf7c2116",
+  "candidate_image": "sha256:e212f2f325bddbda5318c0ab8bf719ab609f63b3b76be45a48f652c661226cce",
+  "before_packages": {
+    "libc6": "2.41-12+deb13u5+trip5",
+    "libc-bin": "2.41-12+deb13u5+trip5",
+    "libssl3t64": "3.5.9-1~deb13u1+trip3",
+    "openssl": "3.5.9-1~deb13u1+trip3",
+    "openssl-provider-legacy": "3.5.9-1~deb13u1+trip3"
+  },
+  "after_packages": {
+    "libc6": "2.41-12+deb13u5+trip6",
+    "libc-bin": "2.41-12+deb13u5+trip6",
+    "libssl3t64": "3.5.9-1~deb13u1+trip4",
+    "openssl": "3.5.9-1~deb13u1+trip4",
+    "openssl-provider-legacy": "3.5.9-1~deb13u1+trip4"
+  },
+  "file_fingerprints": {
+    "/usr/lib/x86_64-linux-gnu/gconv/IBM1390.so": {
+      "previous": "f351a6491163142536db032d61de465c1d780571f6e0add6df6b2f11b2c02950",
+      "current": "712e72f3c3e2a0eee872f6b6670e0e99e9d7eb204750eae44c111ecf97332183"
+    },
+    "/usr/lib/x86_64-linux-gnu/gconv/IBM1399.so": {
+      "previous": "eb156a2296ff5d9305a84df9d48708a0a24df9af3ea433d67e22ed7bfa5a4f15",
+      "current": "158c535c8c0f9f323889e98f088057cd92845134709822805c2614734e45737c"
+    },
+    "/usr/lib/x86_64-linux-gnu/gconv/UHC.so": {
+      "previous": "ffddebb6d64d0b55094b248a6074b06b071e5c04ec0b36049f8d93b1021b9cf7",
+      "current": "edb50d7e66e58fb2710c82a231fb16d442e2a28e621d48d4c487c96ac0451114"
+    },
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": {
+      "previous": "082687a859700009e4e0f817cd7d61b3d17ad847ebbd0912f66b055a698949fd",
+      "current": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce"
+    },
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+      "previous": "e15ae2f3cae66df841f483ad611520f46f6fb96e19973cc7623ac9d9027f2e12",
+      "current": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3"
+    },
+    "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": {
+      "previous": "44cff9d650ca56cf2864f4b71096f7fc728af150e22eb7e3faee7cc2946bec23",
+      "current": "ab3eeb4f433446fed97889edd96bc6e07dbc439904d252cbc518dac6f536aa0e"
+    },
+    "/usr/lib/x86_64-linux-gnu/libssl.so.3": {
+      "previous": "94600a458ffd81d391d277e36219ee6af6c31a7b7057eed27203c03cc5a452c6",
+      "current": "11edf51965cd95b32d3ace97ff3598037a90eff5de99c388503825a55ed11cb6"
+    },
+    "/usr/local/share/tripplanner/openssl-backport/patches.sha256": {
+      "previous": "63e21b750d3750e1cda55ff192fcac376bace94ae5c16ee44078f3ed46984cc1",
+      "current": "0b3c491bb93c7c766898ca86d58fcee9b4647c0e0cafb19a5a94480cd67e2538"
+    },
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": {
+      "previous": "c3ea3d4dea0c57bb1736205040c6c1095913fa866de534b5779fb1b00a7bce28",
+      "current": "e3ddedc0df7f0dc089829322c10cc1415ca00422bc74496b8693cb9f8945d961"
+    },
+    "/var/lib/dpkg/status": {
+      "previous": "384b7020a844b6dcb0579c814b09158244b9182d4128a75e5e70fd4a02304994",
+      "current": "ca72548151961a4f9af65b6e9bba8986a5299e82ab229d2e567037f740f5b68a"
+    }
+  },
+  "patched_payloads": {
+    "/usr/lib/x86_64-linux-gnu/gconv/IBM1390.so": "712e72f3c3e2a0eee872f6b6670e0e99e9d7eb204750eae44c111ecf97332183",
+    "/usr/lib/x86_64-linux-gnu/gconv/IBM1399.so": "158c535c8c0f9f323889e98f088057cd92845134709822805c2614734e45737c",
+    "/usr/lib/x86_64-linux-gnu/gconv/ISO-2022-CN-EXT.so": "401650261913ff9e2e5b719c3c69c1bdf5ab8c7abf57cecacbab736c64bf24d4",
+    "/usr/lib/x86_64-linux-gnu/gconv/UHC.so": "edb50d7e66e58fb2710c82a231fb16d442e2a28e621d48d4c487c96ac0451114",
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "23138c7d367b84b0f5052d3db4e488d68cdd394af7197ce67b8eacf7f109a8ce",
+    "/usr/lib/x86_64-linux-gnu/libc.so.6": "4551026b3d4a10e1a5de4f0727a71dfc05333b0338642d73bf7c645b5d5b1dc3",
+    "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "ab3eeb4f433446fed97889edd96bc6e07dbc439904d252cbc518dac6f536aa0e",
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "4e4dacbfc4a346b8ec1ac2a5ebed3899a00352824a3b6a703ff695053c7c1078",
+    "/usr/lib/x86_64-linux-gnu/libssl.so.3": "11edf51965cd95b32d3ace97ff3598037a90eff5de99c388503825a55ed11cb6",
+    "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45",
+    "/usr/local/share/tripplanner/openssl-backport/patches.sha256": "0b3c491bb93c7c766898ca86d58fcee9b4647c0e0cafb19a5a94480cd67e2538"
+  },
+  "source_inputs": {
+    "backend/security/native-backports/patches/glibc-121757.patch": "bc3c40ee833bbbfb6d3ac3e7fa96b633fed0e47611508808ae2840609b15ec60",
+    "backend/security/native-backports/patches/glibc-121758.patch": "d46c048f366d5938cd0b2e3f65929895dd540e9517de3a3d925ebaf6d5e44614",
+    "backend/security/native-backports/patches/glibc-124024.patch": "2823a391341f373a4c7e62ce26a35f45e53ab44dadb205a8c159139b625f7640",
+    "backend/security/native-backports/patches/glibc-126765.patch": "7568626d62accf42f09d1ed07c082524e5e03ff0ca534a834c1bcf51fa647e3e",
+    "backend/security/openssl-backport/patches/0015-CVE-2026-107494.patch": "a05fc5e9ce9745344c5d39af0e121ee67c627114ca631d5c92e467c13317bd30",
+    "backend/security/openssl-backport/patches/0016-CVE-2026-84786.patch": "835e2969b94dbdc69d5ae87a8ebf58ce129b007d68fe513b09e1119b03f83f03",
+    "backend/security/openssl-backport/patches/0017-CVE-2026-95690.patch": "9bf69d078e7311c794d6ca9bcba9b4107e9bbca3fbdd6eee93e22fa9cc581fba"
+  },
+  "glibc_upstream_tests": [
+    "PASS: nptl/tst-attr2",
+    "PASS: nptl/tst-attr3",
+    "PASS: nptl/tst-attr4",
+    "PASS: nptl/tst-default-attr",
+    "PASS: nptl/tst-stack2",
+    "PASS: nptl/tst-stack3",
+    "PASS: nptl/tst-stack4",
+    "PASS: nptl/tst-tls-guard",
+    "PASS: nptl/tst-stackguard1",
+    "PASS: nptl/tst-stackguard1-static",
+    "PASS: nptl/tst-pthread-getattr",
+    "PASS: check-installed-headers-c",
+    "PASS: check-local-headers",
+    "PASS: check-wrapper-headers",
+    "PASS: link-static-libc",
+    "PASS: lint-makefiles",
+    "PASS: malloc/check-abi-libc_malloc_debug",
+    "PASS: malloc/check-installed-headers-c",
+    "PASS: malloc/check-obsolete-constructs",
+    "PASS: malloc/check-wrapper-headers",
+    "PASS: malloc/tst-aligned-alloc-random-thread-cross",
+    "PASS: malloc/tst-aligned-alloc-random-thread-cross-malloc-check",
+    "PASS: malloc/tst-aligned-alloc-random-thread-cross-malloc-hugetlb1",
+    "PASS: malloc/tst-aligned-alloc-random-thread-cross-malloc-hugetlb2",
+    "PASS: malloc/tst-dynarray",
+    "PASS: malloc/tst-dynarray-at-fail",
+    "PASS: malloc/tst-dynarray-fail",
+    "PASS: malloc/tst-dynarray-fail-mem",
+    "PASS: malloc/tst-dynarray-mem",
+    "PASS: malloc/tst-malloc-random",
+    "PASS: malloc/tst-malloc-random-malloc-check",
+    "PASS: malloc/tst-malloc-random-malloc-hugetlb1",
+    "PASS: malloc/tst-malloc-random-malloc-hugetlb2",
+    "PASS: malloc/tst-malloc-random-mcheck",
+    "PASS: malloc/tst-malloc-thread-exit",
+    "PASS: malloc/tst-malloc-thread-exit-malloc-check",
+    "PASS: malloc/tst-malloc-thread-exit-malloc-hugetlb1",
+    "PASS: malloc/tst-malloc-thread-exit-malloc-hugetlb2",
+    "PASS: malloc/tst-malloc_info",
+    "PASS: malloc/tst-malloc_info-malloc-check",
+    "PASS: malloc/tst-malloc_info-malloc-hugetlb1",
+    "PASS: malloc/tst-malloc_info-malloc-hugetlb2",
+    "PASS: malloc/tst-mallocfork2",
+    "PASS: malloc/tst-mallocfork3",
+    "PASS: malloc/tst-mtrace",
+    "PASS: malloc/tst-realloc",
+    "PASS: malloc/tst-realloc-malloc-check",
+    "PASS: malloc/tst-realloc-malloc-hugetlb1",
+    "PASS: malloc/tst-realloc-malloc-hugetlb2",
+    "PASS: malloc/tst-realloc-mcheck",
+    "PASS: malloc/tst-scratch_buffer",
+    "PASS: malloc/tst-trim1",
+    "PASS: malloc/tst-trim1-malloc-check",
+    "PASS: malloc/tst-trim1-malloc-hugetlb1",
+    "PASS: malloc/tst-trim1-malloc-hugetlb2",
+    "PASS: malloc/tst-trim1-mcheck"
+  ],
+  "restricted_manifest_changes": [
+    "package_database_sha256",
+    "unchanged_library_sha256"
+  ],
+  "rebound_review_rows": 119,
+  "glibc_advisory_ids": [
+    "CVE-2026-121757",
+    "CVE-2026-124024",
+    "CVE-2026-126765"
+  ],
+  "openssl_advisory_ids": [
+    "CVE-2026-107494",
+    "CVE-2026-84786",
+    "CVE-2026-95690"
+  ],
+  "risk_acceptance": 0
+}
