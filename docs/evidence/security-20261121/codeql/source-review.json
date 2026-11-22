@@ -2,13 +2,13 @@
   "schema_version": 3,
   "review_policy": "source_and_trace_bound",
   "reviewer": "Codex current-source and trace review",
-  "sarif_source_revision": "8a81680bd614fbf42546d307c7ac3474de1a667b",
-  "workflow_run": 44970395226,
+  "sarif_source_revision": "f8aa42d8d19d2f03cd6d6586ab9cf54acedf7de6",
+  "workflow_run": 44977591700,
   "business_tree_bindings": {
     "backend": "1bcee8ff229b45a0db632255fee81b003391bc2c",
-    "business-backend": "96451d19bb0e2223b1b9276d4df45a1a986fd0cd",
-    "frontend": "461fa426459b2e64b761e3a8f890760a0f5fe16f",
-    "deploy": "20f03db7aa4bdea59c105c6ca3c58212859445c4",
+    "business-backend": "974d0a3b8753ad8b867bacfb244c0fbd26473304",
+    "frontend": "d04d89c71430285f5f4e72165ba7c94e5e93797e",
+    "deploy": "a55605a59393c82ee737844c4af5adda03a9073d",
     "contracts": "a6263dc96e3966a8776dda22c37ee46194b1ce3b"
   },
   "predecessor_review": "docs/evidence/maintenance-v0.1.7-20261115/codeql-final/source-review.json",
@@ -108,15 +108,15 @@
     "business-backend/src/test/java/com/tripplanner/domain/TripRequestsTest.java": "bd6c9e6e4426cd2fe977d11cb4ea47e886a6fdc3261ef0c058ebdf21dd9e5c61",
     "business-backend/src/test/java/com/tripplanner/security/BrowserSessionTest.java": "7c872dc07f336736e4d65f8b7a90328b69d4f7193f67761513c9efa4fa3238e4",
     "contracts/README.md": "eec8145dafe2bc1f721ba31dc81f9429a4e3dd80c11aacbbc766b1ff3aee5ab4",
-    "deploy/images/alertmanager.Dockerfile": "12a6978a668b932a3a1557f5ec5d95bade5cfda617bc01f6171828b69f806aaa",
+    "deploy/images/alertmanager.Dockerfile": "5dbaefe676dc8660aa9e81d86b7ff4cfc1f75e0d8a1bac1830ee5b8125303e09",
     "deploy/images/alertmanager.go.mod": "5e2faa72a693b6811d0bf9eb7f27dc91510339fad0f80c2e90890bc8487562ae",
     "deploy/images/alertmanager.go.sum": "d4dfc7cdef6fc15e70036bc2b2745666ef4d5376a983a962f0d82e6834e99570",
-    "deploy/images/caddy.Dockerfile": "d43ab1f9a4a3c6ca84f53ddf043c8127a866ccb8c4d21ff5ab383f4ceac7014a",
+    "deploy/images/caddy.Dockerfile": "a5df89ff9626653317ee9078c4a42dfa1e724b6b0e47b3370add11a86b021722",
     "deploy/images/caddy.go.mod": "a9da8f115941d48c16e1913aed231ed56e0b8ec98abb1d091c7139fce06980c4",
     "deploy/images/caddy.go.sum": "dd851beef4ed236b32c1438cc4bb3456b4a3dfde7af718710d278a72d49a70b1",
     "frontend/.dockerignore": "4997a954b3e22bea38a927114bfe2c9df6cb246ee541955fde8ec020649eb034",
     "frontend/40-trip-runtime-config.sh": "29c4aff1903120ea49a6b37b371b4a88602d28a4ee0037771be41870e9f7f0e5",
-    "frontend/Dockerfile": "3260c1f8ca3c538dddff261312bfc817a42e7eef8cef2f09bfa2231d889354c3",
+    "frontend/Dockerfile": "7a4ec831a6f595cbffca39baf84fdd1f3d55603ee1029c2b839bd2f9e8bdcf8e",
     "frontend/e2e/final-planning.spec.ts": "190fac3ecf56e1e744081b10285b618e4df2d4f714f895635bd20294a79d6ce1",
     "frontend/e2e/offline-provider-boundary.ts": "47970c484a76d89febab81a461619c90f3b10af82cbbe32c845cc095ae3b8966",
     "frontend/e2e/operations.spec.ts": "fe713df6f81c16489049e5aef9243255164054fe943c7fb5fd841dc5b3011b5d",
@@ -206,9 +206,17 @@
       "previous": "f2d5e5799b6a61cdbe2acbde395c6b0a349252a5612d760f65bcb6a13397d9ae",
       "current": "5d2f03b8ede2b977acf81059323e2518b19429564dc255b351d21cd63fb3d055"
     },
+    "deploy/images/alertmanager.Dockerfile": {
+      "previous": "12a6978a668b932a3a1557f5ec5d95bade5cfda617bc01f6171828b69f806aaa",
+      "current": "5dbaefe676dc8660aa9e81d86b7ff4cfc1f75e0d8a1bac1830ee5b8125303e09"
+    },
+    "deploy/images/caddy.Dockerfile": {
+      "previous": "d43ab1f9a4a3c6ca84f53ddf043c8127a866ccb8c4d21ff5ab383f4ceac7014a",
+      "current": "a5df89ff9626653317ee9078c4a42dfa1e724b6b0e47b3370add11a86b021722"
+    },
     "frontend/Dockerfile": {
       "previous": "5e0d8ff46801ef929bd4bf58b60fb7a0e4eafcebf99475af29a1693566d2ce5b",
-      "current": "3260c1f8ca3c538dddff261312bfc817a42e7eef8cef2f09bfa2231d889354c3"
+      "current": "7a4ec831a6f595cbffca39baf84fdd1f3d55603ee1029c2b839bd2f9e8bdcf8e"
     },
     "frontend/e2e/final-planning.spec.ts": {
       "previous": "679cbec650acf9f4a95ed1035d3404e760149d3c40bd7f8647c08494779db036",
@@ -233,18 +241,19 @@
     "The new planning, itinerary, booking and assistant handlers preserve distinct write routes. Map GET calls still only record outbound usage. Readiness and map callbacks do not dispatch the task stream progress callback.",
     "Native source retrieval and Alpine build fixture changes affect the build stages. Nginx version changes with request rules retained. No new finding, exception or risk acceptance is introduced.",
     "PostgreSQL minor, native base, build-input and runtime test identity changes do not modify the eleven reviewed Java routes or their data flow.",
-    "The GNU libc decoder backport and its installed native runtime check do not change the eleven reviewed Java routes or their data flow."
+    "The GNU libc decoder backport and its installed native runtime check do not change the eleven reviewed Java routes or their data flow.",
+    "The Alpine OpenSSL build and verification changes do not change the eleven reviewed Java routes or their data flow."
   ],
   "analyses": [
     {
-      "language": "actions",
-      "file": "actions.sarif",
-      "sha256": "6ebfa6e6bf822b19216ec3a6f1289c2b04a110af9474422c668a362d3490b693",
+      "language": "python",
+      "file": "python.sarif",
+      "sha256": "5f8596893830292a79f181bab48add3100df7b3001588bee6c7b28b21f88f632",
       "result_count": 0,
-      "artifact_id": 14733466880,
-      "artifact_zip_sha256": "0289d359153a044360df46380ef7414324a58d76b46e173e0856a095d7aadb7a",
-      "job_id": 137048690304,
-      "source_revision": "8a81680bd614fbf42546d307c7ac3474de1a667b",
+      "artifact_id": 14736805212,
+      "artifact_zip_sha256": "f6a8777f14709569c66422d80a2f173957e87fa9a76f05120615dd0080aa7556",
+      "job_id": 137070842843,
+      "source_revision": "f8aa42d8d19d2f03cd6d6586ab9cf54acedf7de6",
       "raw_analysis_step_conclusion": "success",
       "original_gate_step_conclusion": "failure",
       "original_gate_status": "business_tree_changed"
@@ -252,12 +261,25 @@
     {
       "language": "javascript",
       "file": "javascript.sarif",
-      "sha256": "00569319d3bf48232326e06cb0fabfff9b691c48181b11b6e9ca12c748119d1e",
+      "sha256": "a3d00c8d20c8cf855e68fde40c4ff1ad93c9de7761dd9c2a7fa2f3379d16bd69",
       "result_count": 0,
-      "artifact_id": 14733262947,
-      "artifact_zip_sha256": "11d06517c8c1b6ea26ed43d427fa1af1fc40056c1d6f1bb97862777ebe34595b",
-      "job_id": 137048690266,
-      "source_revision": "8a81680bd614fbf42546d307c7ac3474de1a667b",
+      "artifact_id": 14736680051,
+      "artifact_zip_sha256": "fd8ad068b7b26f9be237a936001e1e2e91184f30bafcb71ea9678448d87dff8f",
+      "job_id": 137070842688,
+      "source_revision": "f8aa42d8d19d2f03cd6d6586ab9cf54acedf7de6",
+      "raw_analysis_step_conclusion": "success",
+      "original_gate_step_conclusion": "failure",
+      "original_gate_status": "business_tree_changed"
+    },
+    {
+      "language": "actions",
+      "file": "actions.sarif",
+      "sha256": "11dfd328eff851d59483a6e30ce43d58fedced874a1e9ad3d0bda6fe1778a7ca",
+      "result_count": 0,
+      "artifact_id": 14736356936,
+      "artifact_zip_sha256": "ca33da770979e84f618693a4678d210068cb50c315892e7aba85d3cd355dd7d5",
+      "job_id": 137070842667,
+      "source_revision": "f8aa42d8d19d2f03cd6d6586ab9cf54acedf7de6",
       "raw_analysis_step_conclusion": "success",
       "original_gate_step_conclusion": "failure",
       "original_gate_status": "business_tree_changed"
@@ -265,25 +287,12 @@
     {
       "language": "java",
       "file": "java.sarif",
-      "sha256": "732baa3ed5d9e5f4b33dcfab0f4cd08e063764dd01ff8cfddfe9e92a97ea4c73",
+      "sha256": "6a85071e755d0954bb8a4a32960417ef3835a1c1d2991f8f16ba49d3d2c6fa85",
       "result_count": 11,
-      "artifact_id": 14732903734,
-      "artifact_zip_sha256": "8b31e002361730da36db32bd6f1dc28f31f3df2265cdb1967c217ff6113dc0d7",
-      "job_id": 137048690273,
-      "source_revision": "8a81680bd614fbf42546d307c7ac3474de1a667b",
-      "raw_analysis_step_conclusion": "success",
-      "original_gate_step_conclusion": "failure",
-      "original_gate_status": "business_tree_changed"
-    },
-    {
-      "language": "python",
-      "file": "python.sarif",
-      "sha256": "48ae31688f84d4cb9eb88370a7a7ed7daba8c529e225b70e04940394d7bc7861",
-      "result_count": 0,
-      "artifact_id": 14732789076,
-      "artifact_zip_sha256": "135888c27ab3f2e2072c0840049a3d34f6cdf8c247b3c1643593eca12398a993",
-      "job_id": 137048690332,
-      "source_revision": "8a81680bd614fbf42546d307c7ac3474de1a667b",
+      "artifact_id": 14736093077,
+      "artifact_zip_sha256": "762227f25d23c4125503a0cc0d42038c038c89f8703c59da8921f96849cbcbd1",
+      "job_id": 137070842855,
+      "source_revision": "f8aa42d8d19d2f03cd6d6586ab9cf54acedf7de6",
       "raw_analysis_step_conclusion": "success",
       "original_gate_step_conclusion": "failure",
       "original_gate_status": "business_tree_changed"
