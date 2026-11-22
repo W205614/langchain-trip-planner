@@ -4,7 +4,7 @@
 
 模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-当前正式版本：[**v0.1.7 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.7) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/evidence/maintenance-v0.1.7-20261115/README.md)
+当前正式版本：[**v0.1.8 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.8) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/operations/container-distribution.md#v018-的不可变身份)
 
 ## 可以做什么
 
@@ -16,29 +16,28 @@
 | 使用旅行资料 | 上传资料、审核事实、攻略问答和可选 RAG；Chroma/关键词召回在本地，向量与图文解析依赖外部模型 |
 | 管理个人数据 | 账号与权限、配额、反馈、数据导出及注销；邮件、S3、公网 HTTPS 需另配相应外部服务 |
 
-v0.1.7 发布时实际联调了单景点生成、攻略引用回答、RAG、高德底图与照片。账号、邮件、S3、协作、导出和故障处理使用隔离测试数据及本地服务验收。[发布验收记录](docs/evidence/maintenance-v0.1.7-20261115/README.md)。
+## v0.1.8 更新
 
-## v0.1.7 修复
+- 创建行程时可先确认规划范围，并设置按天或全程的景点数量规则。
+- 行程工作台集中显示待核验风险。局部改排支持预览和确认，保留已固定的安排。
+- 今日视图支持按天查看。离线 HTML 标注版本，改排后可重新导出。
+- 预订和预算视图能核对实付费用及差额。
+- 回补 Debian libc 与 Debian、Alpine OpenSSL 的安全修复，并更新新版 NGINX 的对应源码收集。[安全门禁复核](docs/evidence/security-20261122/README.md)
 
-- 单日行程支持“只安排一个适合散步的公园景点”等表述；数量不满足时明确报告，多日模糊要求不自动推断。
-- Nginx 随后端地址变化重新解析 Docker DNS，健康探针保留正确 Host；已实际验证换 IP 后前端无需重启。
-- 攻略保留证据原句与换行，格式性列表标记不再误触发支持校验；无依据、改写否定或数字的回答仍会被拒绝并明确降级。
-- 更新 Python 和 Go OpenTelemetry 的官方安全修复；原始告警、逐项适用性复核与失败记录保留。
+本版用真实模型和高德生成杭州一日行程，保留恰好一个景点。保存后重新登录可读到同一记录。另用真实 Embedding 验证了 3072 维向量。局部改排、离线查看和实付核对使用隔离数据及供应商夹具验收。[本版制品与验证范围](docs/operations/container-distribution.md#v018-的不可变身份)
 
-[修复、验证与版本证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。
-
-## 真实运行画面
+## v0.1.7 历史实拍
 
 以下使用真实模型和高德、合成账号与隔离数据库。原始单日要求生成 **1 个景点**，保存后刷新保持，地图与照片均实际加载。攻略回答返回 `supported_excerpt_answer`，逐句引用支持检查通过；这不等于独立核验了资料真实性。
 
 ![修复后真实单景点行程、地图照片与待核验时间轴](docs/screenshots/release-v0.1.7/01-fixed-plan.png)
 
-本次针对性功能联调用量为2次文本模型、34次高德MCP和6次Embedding；随后截图加载另产生1次高德MCP调用。这些调用与先前全面功能测试分开计数，不作为固定生成成本。营业、预约和远期天气仍按真实证据保留待核验说明。[实拍来源及边界](docs/screenshots/release-v0.1.7/README.md)。
+v0.1.7 当时的针对性联调用量为2次文本模型、34次高德MCP和6次Embedding；随后截图加载另产生1次高德MCP调用。这些调用与先前全面功能测试分开计数，不作为固定生成成本。营业、预约和远期天气仍按真实证据保留待核验说明。[实拍来源及边界](docs/screenshots/release-v0.1.7/README.md)。
 
 <details>
 <summary>保留的 v0.1.6 历史画面</summary>
 
-下面属于 v0.1.6 当时的验收，不作为 v0.1.7 的新测试。
+以下画面来自 v0.1.6 的验收。
 
 ![v0.1.6 南京行程历史实拍](docs/screenshots/release-v0.1.6/01-normal-plan.png)
 
@@ -89,7 +88,7 @@ Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、
 预构建镜像请使用同版本的源码和部署配置。基于其他提交构建时，请在该提交的检出目录中执行源码路线，并用该提交的 SHA 设置 `BUILD_REVISION`。
 
 ```powershell
-git clone --branch v0.1.7 https://github.com/W205614/langchain-trip-planner.git
+git clone --branch v0.1.8 https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
@@ -124,7 +123,7 @@ $env:BUILD_REVISION = (git rev-parse HEAD).Trim()
 在项目根新建 `.env`；已有文件只补充所需项，不覆盖其他配置：
 
 ```dotenv
-TRIP_VERSION=v0.1.7
+TRIP_VERSION=v0.1.8
 APP_PORT=8380
 AMAP_WEB_JS_KEY=
 ```
@@ -175,9 +174,9 @@ docker compose @imageCompose stop
 
 ## 验证、开发与运维
 
-修改源码后，可按贡献指南启动独立的数据库和离线验证栈，检查创建、调整和刷新行程等流程。真实模型和高德联调需要单独配置。v0.1.7 的镜像复验读取了联调期间保存的行程与资料，同一记录刷新保持。输入、事实或有效期变化后需要重新核验。
+修改源码后，可按贡献指南启动独立的数据库和离线验证栈，检查创建、调整和刷新行程等流程。真实模型和高德联调需要单独配置。v0.1.8 已核对三张公开镜像的不可变摘要、层和运行配置。输入、事实或有效期变化后需要重新核验。
 
-v0.1.7 的发布、匿名镜像验收、同源CI与日常升级已完成，完整边界见[维护证据](docs/evidence/maintenance-v0.1.7-20261115/README.md)。原始安全匹配、逐项适用性结论和历史失败分列保留；未知营业、预约、票价和路线条件不会被改成已确认。正常历史版本保留。
+v0.1.8 的同源 CI、安全门禁和匿名获取均已通过。本机日常七个服务完成启动、监控、数据与迁移验证。[本版验证记录](docs/operations/container-distribution.md#v018-的不可变身份)。
 
 - [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
 - [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)

@@ -1,13 +1,13 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前正式版本 v0.1.7 已公开，三应用按不可变 Registry 摘要推广和匿名验收；本机日常环境同时更新修复后的 Alertmanager。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 仍是本地配套组件，不是额外公开应用包。见[本版证据](../evidence/maintenance-v0.1.7-20261115/README.md)。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前正式版本 [v0.1.8](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.8) 的三张应用镜像已按不可变摘要推广和匿名验收。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 作为配套组件单独构建。
 
 ## 首次使用镜像
 
 获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
 
 ```dotenv
-TRIP_VERSION=v0.1.7
+TRIP_VERSION=v0.1.8
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 
@@ -46,6 +46,30 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 5. 按公开发布范围设置新建 GHCR 包可见性，匿名拉取并核对 registry 摘要和许可入口；完成实际使用者验收后更新本机日常环境。
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
+
+## v0.1.8 的不可变身份
+
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.8) 绑定源码提交 `88dbcd717edbf44a1f1e6ff00cfa54eda18b9d71`。三个应用均为 Linux/amd64，公开标签为 `:v0.1.8`。
+
+| 组件 | Registry 摘要 | 配置摘要 |
+| --- | --- | --- |
+| Agent | `sha256:78d86d1d729d5c6370ca8a1f4b9785935aff9c3797622db327ab3758400d9f40` | `sha256:26cc96f8af6341ab095dd50d83343cc632ee8e4289a5bf0923561e1a3468cdf3` |
+| Java 业务服务 | `sha256:9e957fd26c3e52c33140ec404d41d541b1755f2c88566dfb278b8d4e43888eef` | `sha256:58559df0a5d9b4d22cba471a9490727434be31d82ec21c0a299a34c639c0eb2b` |
+| Web 前端 | `sha256:e6081d11e8b4628a25f134a4bfcf3afb937017a1b7babb150db6057dc13c4a67` | `sha256:d9ccf1220f7895e53c799d84f51df0611df67e167d1983e8032d18cf64684030` |
+
+四个 Release 附件均经匿名下载校验。
+
+| 附件 | 字节 | SHA-256 |
+| --- | ---: | --- |
+| `application-images-v0.1.8.tar.gz` | 451779733 | `e64528d3f0ecf05b0da4a8163859c8339d0dd47e775494198ad45497f3f0a7c4` |
+| `container-sources-v0.1.8.zip` | 1453903477 | `d5d4859884cf84727214d2ed85e6cd71925a16ff0ca92e1f611346a3a08db766` |
+| `container-manifest.json` | 16305 | `d6e8b0269513411105f85b10c85d0fbf13d21b9e4a5fae48271eef9c8f767ea0` |
+| `SHA256SUMS` | 287 | `f67078a9e7425edcd30eb9d539e4ba9a198940ec973b70c4e2e6e9d38985c71e` |
+
+- GitHub 常规 CI 4 项和安全门禁 14 项通过。镜像推广和匿名消费者两项均成功，公开归档和标签源码通过摘要校验。本机另按不可变摘要匿名拉取并比对三个镜像的层与运行配置。[CI](https://github.com/W205614/langchain-trip-planner/actions/runs/45024423312) · [安全门禁](https://github.com/W205614/langchain-trip-planner/actions/runs/45024423239) · [公开验收](https://github.com/W205614/langchain-trip-planner/actions/runs/45033552606)
+- 隔离环境用一次文本模型和 36 次高德 MCP 工具请求生成杭州一日行程，模型结果保存并重新登录读取，恰好一个景点。另用一次 Embedding 验证 3072 维返回。营业、预约等待核验事项仍按结果提示保留，未新增浏览器地图 SDK 或视觉测试。
+- 候选镜像通过 66 项隔离业务检查与两条浏览器流程。日常七服务切换后，46 张业务表和上传文件摘要一致，Flyway 20 个迁移及两个监控目标通过，验收后恢复停止。
+- 上一版本的原始镜像扫描、本轮产生的阻断、回补和适用性证据均保留。[安全门禁复核](../evidence/security-20261122/README.md)
 
 ## v0.1.7 的不可变身份
 
@@ -146,7 +170,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Copied historical inputs failed verification' 
 
 | 配方 | 构建上下文 | 实际边界 |
 | --- | --- | --- |
-| `postgres.Dockerfile` | `deploy/images` | PostgreSQL17.11；核心Compose已接线，先 `build postgres` |
+| `postgres.Dockerfile` | `deploy/images` | PostgreSQL 17.12；核心Compose已接线，先 `build postgres` |
 | `prometheus.Dockerfile` | `deploy/images` | Prometheus3.16.0，本地监控镜像 |
 | `alertmanager.Dockerfile` | `deploy/images` | Alertmanager0.34.1，本地监控镜像 |
 | `alert-receiver.Dockerfile` | 仓库根目录 `.` | 独立stdlib接收器，UID1000、`/inbox/alerts.jsonl`、9088 |
