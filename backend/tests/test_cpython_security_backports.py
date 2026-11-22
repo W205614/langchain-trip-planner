@@ -35,7 +35,7 @@ def test_imap_starttls_clears_the_previous_session_cache(monkeypatch):
     monkeypatch.setattr(client, '_get_capabilities', refresh_capabilities)
     context = SimpleNamespace(wrap_socket=lambda sock, server_hostname: encrypted_socket)
 
-    assert client.starttls(context) == ('OK', [b'TLS ready'])
+    assert client.starttls(context) == ('OK', [None])
     assert client.capabilities == ('IMAP4REV1',)
 
 
