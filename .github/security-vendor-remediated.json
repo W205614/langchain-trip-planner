@@ -188,11 +188,11 @@
     "docs/evidence/native-security-20261110/budget-source-e81765b/source-delta-review.json": "45cf4b1500069701ef5c8102b49aae45557770e1176b4c11c72bde3d62d3f079",
     "docs/evidence/native-security-20261110/budget-source-e81765b/budget-source.patch": "55e96861556f19e57097ed7552e1996c2a556cd29542416b018972c7f618783f",
     "tools/container_sources.py": "bdc359cd41985f3f9b20ffcc590bf79509f7a671a0f24a162193cfaff380607b",
-    "backend/tests/test_openssl_security_backport.py": "ea31c60e720cc0d558f2b5f62a8862e87c003ec2179904ac677daf5bef67b8c3",
+    "backend/tests/test_openssl_security_backport.py": "6ff413feab444d253b4f33870d52fd2d59a2f00ef146bcaa4daf47f368271688",
     "backend/security/openssl-backport/adapt_aad_regression.py": "8a3659bead4b7bb6bc0e4a1b1859eee052e4b7f21bae3a7742b01705f2c6f427",
     "backend/security/openssl-backport/build-inputs.sh": "cc78312a1964b49ea4274fe2860021c0861b78f512231df277daf07a8ba16c92",
-    "backend/security/openssl-backport/build.sh": "bff1bb14588ecbba91933caecef2eef133b515b849ac6fa8b34c1b3911293d04",
-    "backend/security/openssl-backport/check-backport.sh": "feb88e25256c5b60a003c340fe82d546f367dff909cca8dbac02d84839c62115",
+    "backend/security/openssl-backport/build.sh": "6b5bb697052bc0cb2abe4b4b7629a7b52d2e2a6ba6ef5fed376eb10dd5a43a74",
+    "backend/security/openssl-backport/check-backport.sh": "b1a2f9307f7e0db47936c69d49cb666c4fc70f9fbc28e23273ab275c729313fd",
     "backend/security/openssl-backport/patches/0001-CVE-2026-107496.patch": "b17c218785e0988d1f000ef365e9b9124143c460b2be2593d7cc616f6c2d4763",
     "backend/security/openssl-backport/patches/0002-CVE-2026-88822.patch": "669866cd57343c0249b4f5297d53a228c6f9f9d5490443cdfdd39be6e4cc9998",
     "backend/security/openssl-backport/patches/0003-CVE-2026-88823.patch": "d75b8abfde7d47732b685464080d1af556932cf3baa9501fbabda56317448b51",
@@ -201,8 +201,8 @@
     "backend/security/openssl-backport/patches/0006-CVE-2026-88823-test.patch": "b02374041ba40333c3a7537486e193c9a70de4beedff5056ff3958a8abe074d4",
     "backend/security/openssl-backport/patches/0007-CVE-2026-95691-test.patch": "eeef48c844d158505ff2421855559e87b9bedb9cc32ef1eab77ac5ff605bf0c2",
     "backend/security/openssl-backport/patches/0008-CVE-2026-95692-test.patch": "1e83b853591f7a815bf918a1a4d1fc8f2b7f7253f4bf45766304020bd29e1c70",
-    "backend/security/openssl-backport/patches.sha256": "0dcd8c9acfc360a0f98818dfb5a085493baa362166853b4254f22bf3aba32924",
-    "backend/security/openssl-backport/README.md": "b95b212916b9dea1be1035b15246272ef2cb8ffdb976100aa2183af1e468737c",
+    "backend/security/openssl-backport/patches.sha256": "63e21b750d3750e1cda55ff192fcac376bace94ae5c16ee44078f3ed46984cc1",
+    "backend/security/openssl-backport/README.md": "2f4a79a9293ec7c02281ebeda2deacb913f2ad20d69f2ed4efb5fd2cecb4f1c6",
     "backend/security/openssl-backport/sources.sha256": "a8a5622989a0d38ccd109f0fe0dfb6bc45d80e245e2240cf3fd5c72b84a2c798",
     "backend/security/openssl-backport/test-dgram-detect-peer.c": "3d3b2a276a5308235b22a44a425af88bdfadaba760cf3e55e8efc3391d3b874c",
     "docs/evidence/native-security-20261112/openssl-manifest-delta-review.json": "eedcdc9031b7ffee22ab928b505c60f1d455bff9e6bcf80fdfeda87a3ed401ab",
@@ -228,7 +228,8 @@
     "backend/security/native-backports/patches/glibc-121758.patch": "d46c048f366d5938cd0b2e3f65929895dd540e9517de3a3d925ebaf6d5e44614",
     "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1",
     "backend/security/cpython-backports/CVE-2026-115791.patch": "2008437c586077ec7c368a499c418bd95c6955520dcfb02899665ad8f4906c58",
-    "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df"
+    "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df",
+    "backend/security/openssl-backport/patches/0014-CVE-2026-121481.patch": "ed0fa7446a2304e5cee5ca7d0ba469d51fc6582f6557c9994ef8c6ffdf544cff"
   },
   "assessments": [
     {
@@ -6344,20 +6345,21 @@
       "release": "13",
       "artifact_type": "deb",
       "artifact_versions": {
-        "libssl3t64": "3.5.9-1~deb13u1+trip2",
-        "openssl": "3.5.9-1~deb13u1+trip2",
-        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip2"
+        "libssl3t64": "3.5.9-1~deb13u1+trip3",
+        "openssl": "3.5.9-1~deb13u1+trip3",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip3"
       },
       "requires_dpkg": {
-        "libssl3t64": "3.5.9-1~deb13u1+trip2",
-        "openssl": "3.5.9-1~deb13u1+trip2",
-        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip2"
+        "libssl3t64": "3.5.9-1~deb13u1+trip3",
+        "openssl": "3.5.9-1~deb13u1+trip3",
+        "openssl-provider-legacy": "3.5.9-1~deb13u1+trip3"
       },
       "requires_architecture": "amd64",
       "file_sha256": {
-        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "25ee58e8f2ead0e386a29819601b31dca4516d14423ef845be9844b3c7a4060f",
+        "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "44cff9d650ca56cf2864f4b71096f7fc728af150e22eb7e3faee7cc2946bec23",
         "/usr/lib/x86_64-linux-gnu/libssl.so.3": "94600a458ffd81d391d277e36219ee6af6c31a7b7057eed27203c03cc5a452c6",
-        "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45"
+        "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45",
+        "/usr/local/share/tripplanner/openssl-backport/patches.sha256": "63e21b750d3750e1cda55ff192fcac376bace94ae5c16ee44078f3ed46984cc1"
       },
       "ids": [
         "CVE-2026-107496",
@@ -6368,11 +6370,12 @@
         "CVE-2026-124709",
         "CVE-2026-121482",
         "CVE-2026-107493",
-        "CVE-2026-35190"
+        "CVE-2026-35190",
+        "CVE-2026-121481"
       ],
       "classification": "fixed_by_distribution_backport",
       "vendor_status": "fixed_in_exact_tripplanner_source_backport",
-      "reason": "The installed Debian-based OpenSSL runtime contains the nine exact upstream backports in this source tree. Requires all three package versions and the measured runtime library bytes.",
+      "reason": "The exact Debian-based OpenSSL runtime contains nine upstream backports and a downstream Base64 output-length check. All three installed package versions, the library bytes, and the installed source manifest are verified.",
       "references": [
         "https://github.com/openssl/openssl/commit/a0051cfe699bf5a047bc1c4faef65f80f7987366",
         "https://github.com/openssl/openssl/commit/1a73dc590cbad62d6f0329ea4779eadaa8d8fd75",
@@ -6383,12 +6386,14 @@
         "https://github.com/openssl/openssl/commit/f3acb0a3328046741479482c51cec815839e1b05",
         "https://github.com/openssl/openssl/commit/468c287cf451a834b370b69ab321b8ffdfac23aa",
         "https://github.com/openssl/openssl/commit/c8f6d04f8e6d40b1bf83334e4a2ec9daf5943a3d",
-        "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43"
+        "https://github.com/openssl/openssl/commit/9491b0d9cc7950af1f3dc89499bd5433b9cd4f43",
+        "https://security-tracker.debian.org/tracker/CVE-2026-121481",
+        "https://github.com/openssl/openssl/pull/33652"
       ],
       "absent_paths": [
         "/usr/bin/openssl"
       ],
-      "review_record": "docs/evidence/security-20261121/README.md"
+      "review_record": "backend/security/openssl-backport/README.md"
     },
     {
       "distribution": "debian",

@@ -12,7 +12,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 PROVENANCE = Path('/usr/local/share/tripplanner/openssl-backport')
-EXPECTED_VERSION = '3.5.9-1~deb13u1+trip2'
+EXPECTED_VERSION = '3.5.9-1~deb13u1+trip3'
 
 
 def test_openssl_source_backport_runtime_and_abi_proof():
@@ -36,7 +36,7 @@ def test_openssl_source_backport_runtime_and_abi_proof():
 
     assert not Path('/usr/bin/openssl').exists()
     expected = {
-        'libcrypto.so.3': '25ee58e8f2ead0e386a29819601b31dca4516d14423ef845be9844b3c7a4060f',
+        'libcrypto.so.3': '44cff9d650ca56cf2864f4b71096f7fc728af150e22eb7e3faee7cc2946bec23',
         'libssl.so.3': '94600a458ffd81d391d277e36219ee6af6c31a7b7057eed27203c03cc5a452c6',
         'ossl-modules/legacy.so': '47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45',
     }
@@ -52,3 +52,21 @@ def test_openssl_source_backport_runtime_and_abi_proof():
         provider = crypto.OSSL_PROVIDER_load(None, name)
         assert provider, name
         assert crypto.OSSL_PROVIDER_unload(provider) == 1
+
+
+def test_openssl_block_encoder_keeps_valid_output_and_validates_length():
+    crypto = ctypes.CDLL('libcrypto.so.3')
+    crypto.EVP_EncodeBlock.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_int]
+    crypto.EVP_EncodeBlock.restype = ctypes.c_int
+    crypto.ERR_clear_error.argtypes = []
+    crypto.ERR_clear_error.restype = None
+    crypto.ERR_get_error.argtypes = []
+    crypto.ERR_get_error.restype = ctypes.c_ulong
+
+    output = ctypes.create_string_buffer(5)
+    assert crypto.EVP_EncodeBlock(output, b'abc', 3) == 4
+    assert output.value == b'YWJj'
+    crypto.ERR_clear_error()
+    assert crypto.EVP_EncodeBlock(output, b'abc', -1) == 0
+    assert output.value == b'YWJj'
+    assert crypto.ERR_get_error()
