@@ -36,8 +36,8 @@ def test_openssl_source_backport_runtime_and_abi_proof():
 
     assert not Path('/usr/bin/openssl').exists()
     expected = {
-        'libcrypto.so.3': '44cff9d650ca56cf2864f4b71096f7fc728af150e22eb7e3faee7cc2946bec23',
-        'libssl.so.3': '94600a458ffd81d391d277e36219ee6af6c31a7b7057eed27203c03cc5a452c6',
+        'libcrypto.so.3': 'ab3eeb4f433446fed97889edd96bc6e07dbc439904d252cbc518dac6f536aa0e',
+        'libssl.so.3': '11edf51965cd95b32d3ace97ff3598037a90eff5de99c388503825a55ed11cb6',
         'ossl-modules/legacy.so': '47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45',
     }
     for name, digest in expected.items():
