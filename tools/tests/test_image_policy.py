@@ -293,8 +293,9 @@ class AlpineOpenSslTests(unittest.TestCase):
         for entry in policy['assessments']:
             name, = entry['artifact_versions']
             version = entry['artifact_versions'][name]
+            upstream = '' if name == 'openssl' else '&upstream=openssl'
             match = {'artifact': {'name': name, 'version': version, 'type': 'apk',
-                                  'purl': f'pkg:apk/alpine/{name}@{version}?arch=x86_64&distro=alpine-3.24.4&upstream=openssl',
+                                  'purl': f'pkg:apk/alpine/{name}@{version}?arch=x86_64&distro=alpine-3.24.4{upstream}',
                                   'locations': [{'path': '/lib/apk/db/installed', 'accessPath': '/lib/apk/db/installed',
                                                  'annotations': {'evidence': 'primary'}}]},
                      'vulnerability': {'id': 'CVE-2026-124709'}}

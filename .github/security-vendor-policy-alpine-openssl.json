@@ -32,7 +32,7 @@
     "frontend/security/openssl-backport/libraries.sha256": "c9017163eb4fe718cd65c3308afedb2c96839e46115ddeff5c9333e6d24aec5a",
     "frontend/security/openssl-backport/recipe.tar.gz": "c4d2ba1d69c6ca34d7bbb817ddf8cd6fced82e51de4b148d36d2643e295f7b82",
     "frontend/security/openssl-backport/source.lock": "9aae7666b76c662f8b2d6b40252c612c50170867e2c02bded6e33faf9a3a7dd1",
-    "tools/image_policy.py": "ee70c7e9febd56d1032f9469078cbb913f1264156126c803459e23d4f94a6f9d",
+    "tools/image_policy.py": "344cc641b66ac6b216a3010115f18bc3893814dd6333b93f11a5ccb257b2efda",
     "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
     "tools/sync_busybox_inputs.py": "9ddbd50e04fbf779458a039b940ab714d2c4f077ec7c9fa2e10ba5aab1adf523"
   },

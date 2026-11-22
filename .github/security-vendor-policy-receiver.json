@@ -18,7 +18,7 @@
     "backend/security/cpython-backports/upstream-poplib-b234a2b.patch": "606aa1bd8124cb0d777744dfe1a89d1ba983638115372cc508f4ed4a154f3abf",
     "docs/evidence/runtime-support-security-20261110/receiver-before-sqlite-removal-grype.json": "cf7469bc2e2d1b407f0cf7864c3a0c717a958b3da2dd02dfaa84d6d55700ed13",
     "docs/evidence/runtime-support-security-20261110/receiver-after-sqlite-removal-grype.json": "0b49e56f25430cae0eb81c678e127956438fd448bfe72452fc1dac531c6861b4",
-    "tools/image_policy.py": "ee70c7e9febd56d1032f9469078cbb913f1264156126c803459e23d4f94a6f9d",
+    "tools/image_policy.py": "344cc641b66ac6b216a3010115f18bc3893814dd6333b93f11a5ccb257b2efda",
     "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
     ".github/workflows/security.yml": "fc80f12a4c7b9c880a3ea0c51eb329c05e2bddfb0798e3d721728f1537c687e4",
     "docs/evidence/runtime-support-security-20261110/gate-review/activation-review.json": "a8fa28a70b61872b9e0ca436c7f8537817fc062a216522e6fd172b42116b588a",

@@ -125,7 +125,9 @@ def apk_openssl_assessment_error(policy, entry):
 
 def apk_openssl_artifact_matches(artifact, entry):
     name, version = artifact['name'], artifact['version']
-    purl = f"pkg:apk/alpine/{name}@{version}?arch=x86_64&distro=alpine-{entry['release']}&upstream=openssl"
+    purl = f"pkg:apk/alpine/{name}@{version}?arch=x86_64&distro=alpine-{entry['release']}"
+    if name != 'openssl':
+        purl += '&upstream=openssl'
     locations = artifact.get('locations')
     if artifact.get('purl') != purl or not isinstance(locations, list) or len(locations) != 1:
         return False

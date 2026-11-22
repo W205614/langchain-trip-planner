@@ -71,7 +71,7 @@
     "docker-compose.production.yml": "ea35fb4cf8c54a86bb7f24519955f1c30ae2dbd3b07897b11bcb1ebefbbaa8cf",
     "business-backend/src/main/java/com/tripplanner/domain/KnowledgeService.java": "adef1c4dcabf75c49bf079bef80c4e22286379b4cae3425242450c5f9e03c38c",
     "business-backend/src/main/java/com/tripplanner/domain/UploadStorage.java": "cb2fd92ae5537d7d6e41250abd79bbe1f3475a9377959b4d518eb515dac355dc",
-    "tools/image_policy.py": "ee70c7e9febd56d1032f9469078cbb913f1264156126c803459e23d4f94a6f9d",
+    "tools/image_policy.py": "344cc641b66ac6b216a3010115f18bc3893814dd6333b93f11a5ccb257b2efda",
     "tools/security_gate.py": "f1371df349536ecb32e973556e45197141ccfe2096f9dd8c2a58e710da5253df",
     "backend/security/native-backports/build-glibc.sh": "5ad20677b9b981e8773378b898937180aa78edb2b55a9ededcdbaf485a9192f6",
     "backend/security/native-backports/build-inputs.sh": "a7ca43030e68c824ca948a5a2f70ba2392beaf802229cb29b12f9fa68b07b898",
