@@ -4,7 +4,7 @@
 
 模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-当前正式版本：[**v0.1.8 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.8) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/operations/container-distribution.md#v018-的不可变身份)
+当前正式版本：[**v0.1.9 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/operations/container-distribution.md#v019-的不可变身份)
 
 ## 可以做什么
 
@@ -16,15 +16,14 @@
 | 使用旅行资料 | 上传资料、审核事实、攻略问答和可选 RAG；Chroma/关键词召回在本地，向量与图文解析依赖外部模型 |
 | 管理个人数据 | 账号与权限、配额、反馈、数据导出及注销；邮件、S3、公网 HTTPS 需另配相应外部服务 |
 
-## v0.1.8 更新
+## v0.1.9 更新
 
-- 创建行程时可先确认规划范围，并设置按天或全程的景点数量规则。
-- 行程工作台集中显示待核验风险。局部改排支持预览和确认，保留已固定的安排。
-- 今日视图支持按天查看。离线 HTML 标注版本，改排后可重新导出。
-- 预订和预算视图能核对实付费用及差额。
-- 回补 Debian libc 与 Debian、Alpine OpenSSL 的安全修复，并更新新版 NGINX 的对应源码收集。[安全门禁复核](docs/evidence/security-20261122/README.md)
+- 预订事项和实付记录遇到断线时，可在当前表单重试原提交，避免重复保存。
+- 创建行程使用同一个预算入口，确认页和保存记录均精确到分。
+- 所有者可以查看分享有效期并撤销。匿名行程和社区副本仅公开必要的行程信息，省略私人备注和实付明细。
+- 生成前说明规划需求、攻略片段和检索词在相应配置下会发送给哪些外部模型。
 
-本版用真实模型和高德生成杭州一日行程，保留恰好一个景点。保存后重新登录可读到同一记录。另用真实 Embedding 验证了 3072 维向量。局部改排、离线查看和实付核对使用隔离数据及供应商夹具验收。[本版制品与验证范围](docs/operations/container-distribution.md#v018-的不可变身份)
+本版用一次真实文本模型调用生成一日行程，保存后重新登录可读到同一条记录。地图使用隔离夹具。备份恢复演练核对了 46 张表、原行程、预约、实付和 4 个上传文件。[本版制品与验证范围](docs/operations/container-distribution.md#v019-的不可变身份)
 
 ## v0.1.7 历史实拍
 
@@ -88,7 +87,7 @@ Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、
 预构建镜像请使用同版本的源码和部署配置。基于其他提交构建时，请在该提交的检出目录中执行源码路线，并用该提交的 SHA 设置 `BUILD_REVISION`。
 
 ```powershell
-git clone --branch v0.1.8 https://github.com/W205614/langchain-trip-planner.git
+git clone --branch v0.1.9 https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
@@ -123,7 +122,7 @@ $env:BUILD_REVISION = (git rev-parse HEAD).Trim()
 在项目根新建 `.env`；已有文件只补充所需项，不覆盖其他配置：
 
 ```dotenv
-TRIP_VERSION=v0.1.8
+TRIP_VERSION=v0.1.9
 APP_PORT=8380
 AMAP_WEB_JS_KEY=
 ```
@@ -174,9 +173,9 @@ docker compose @imageCompose stop
 
 ## 验证、开发与运维
 
-修改源码后，可按贡献指南启动独立的数据库和离线验证栈，检查创建、调整和刷新行程等流程。真实模型和高德联调需要单独配置。v0.1.8 已核对三张公开镜像的不可变摘要、层和运行配置。输入、事实或有效期变化后需要重新核验。
+修改源码后，可按贡献指南启动独立的数据库和离线验证栈，检查创建、调整和刷新行程等流程。真实模型和高德联调需要单独配置。v0.1.9 已核对三张公开镜像的不可变摘要、层和运行配置。输入、事实或有效期变化后需要重新核验。
 
-v0.1.8 的同源 CI、安全门禁和匿名获取均已通过。本机日常七个服务完成启动、监控、数据与迁移验证。[本版验证记录](docs/operations/container-distribution.md#v018-的不可变身份)。
+v0.1.9 的同源 CI、安全门禁和匿名获取均已通过。本机日常七个服务完成启动、监控、迁移与数据核对。[本版验证记录](docs/operations/container-distribution.md#v019-的不可变身份)。
 
 - [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
 - [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)

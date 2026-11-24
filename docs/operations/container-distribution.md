@@ -1,13 +1,13 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前正式版本 [v0.1.8](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.8) 的三张应用镜像已按不可变摘要推广和匿名验收。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 作为配套组件单独构建。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前正式版本 [v0.1.9](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9) 的三张应用镜像已按不可变摘要推广和匿名验收。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 作为配套组件单独构建。
 
 ## 首次使用镜像
 
 获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
 
 ```dotenv
-TRIP_VERSION=v0.1.8
+TRIP_VERSION=v0.1.9
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 
@@ -46,6 +46,27 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 5. 按公开发布范围设置新建 GHCR 包可见性，匿名拉取并核对 registry 摘要和许可入口；完成实际使用者验收后更新本机日常环境。
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
+
+## v0.1.9 的不可变身份
+
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9) 绑定源码提交 `d8edfb44a778e2586bb0ebfb83d1a81545002054`，提供 Linux/amd64 的三个应用镜像。本版从 v0.1.8 的已核验镜像继承运行层，替换 Agent 规划源码、重新构建的 Java 应用和前端静态资源。120 个 Java 运行依赖的名称和 SHA-256 逐个匹配，分发包复用相应第三方源码与许可，并将项目源码更新到本 Tag。
+
+| 组件 | Registry 摘要 | 配置摘要 |
+| --- | --- | --- |
+| Agent | `sha256:c3ba1c97463ff63cddf9a2ef3de04e36fd046dcf0f6b24f1e0cbd0847106b422` | `sha256:c6e433d23786c49dbb0d189bf9ad3efe9220caa6866a154ea94da585492a5932` |
+| Java 业务服务 | `sha256:2a9d4eda4d4aed24d88e781c768e197621ab7af1a83da1fe2650abef39946099` | `sha256:aac428a2c9eae34a8bd280d6aa5b71c45ac17efa122bbd6b9a10677300714e68` |
+| Web 前端 | `sha256:8a859f7073a03afbd880d1a70fae1d72c4aee73dddfee5e96b890e42cd0573de` | `sha256:36e96e0d3586fcca7a59ac9b6b36c4a57957b54e05596a437e1b78da0c0baa28` |
+
+| 附件 | 字节 | SHA-256 |
+| --- | ---: | --- |
+| `application-images-v0.1.9.tar.gz` | 499193892 | `c93d6d361f265c485b8856d12e16416f7e0bbde2422f5969c12aa4307cfd421a` |
+| `container-sources-v0.1.9.zip` | 1423608160 | `42d942cc3d58a9f753fa172e9c9c3ab19fbae61fb78abda550246f0f3408ed81` |
+| `container-manifest.json` | 17190 | `e6e5ea782acf3941d53db25766a53076433443be281e704d82c7349267f883b5` |
+| `SHA256SUMS` | 284 | `9e6977fe3f0e9acffd368ee8d2c22d0cf6452ac1c2959ca210127024f7acf24f` |
+
+- 同源 CI 4 项、安全门禁 14 项、镜像推广与匿名消费者 2 项通过。本机另以空 Docker 凭据按摘要拉取三张镜像，并核对有序层和运行配置。[CI](https://github.com/W205614/langchain-trip-planner/actions/runs/45396580879) · [安全门禁](https://github.com/W205614/langchain-trip-planner/actions/runs/45396581002) · [匿名验收](https://github.com/W205614/langchain-trip-planner/actions/runs/45404541078)
+- 一次真实文本模型调用完成一日行程的生成、保存和重新登录读回。地图使用隔离夹具，本轮调用了 0 次真实高德、Embedding 和视觉接口。断线幂等、预算精度、分享撤销和社区副本均有隔离回归。
+- 用日常备份在隔离环境恢复 46 张表、1,132 行，读回原行程、预约、实付并核对 4 个上传文件。日常七服务切换后，Flyway 的 20 项迁移和两个监控目标均通过。升级时清除了 2 份已撤销或到期分享的旧快照正文，分享元数据、其余 45 张表和 4 个上传文件保持一致。验收后恢复停止。
 
 ## v0.1.8 的不可变身份
 
