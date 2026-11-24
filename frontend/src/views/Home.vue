@@ -163,7 +163,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item name="budget_total" label="整段总预算（元，可选）">
-                <a-input-number v-model:value="formData.budget_total!" :min="100" :max="10000000" :step="100" style="width:100%" size="large" />
+                <a-input-number v-model:value="formData.budget_total!" :precision="2" :step="0.01" placeholder="100 元起" style="width:100%" size="large" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -225,7 +225,7 @@
 
         <div class="form-section">
           <div class="section-header"><span class="section-title">时间、预约与跨城安排</span></div>
-          <PlanningInputEditor ref="planningEditor" v-model="planningInput" :days="formData.travel_days" :start-date="formData.start_date?.format('YYYY-MM-DD')" />
+          <PlanningInputEditor ref="planningEditor" v-model="planningInput" :days="formData.travel_days" :start-date="formData.start_date?.format('YYYY-MM-DD')" hide-budget-amount />
         </div>
 
         <!-- 第三步:额外要求 -->
@@ -256,6 +256,7 @@
               class="custom-textarea"
             />
           </a-form-item>
+          <p>额外要求会发送给配置的文本模型。启用攻略检索时，检索词也可能发送给配置的向量模型。请只填写规划所需的信息，避免填写姓名、证件号或联系方式。</p>
           <a-checkbox v-if="isLoggedIn" v-model:checked="rememberPreferences">
             保存交通、住宿和旅行标签，用于下次填表（不保存额外要求）
           </a-checkbox>
@@ -311,6 +312,7 @@
       <template v-if="reviewRequest">
         <p><strong>{{ reviewRequest.city }}</strong> · {{ reviewRequest.start_date }} 至 {{ reviewRequest.end_date }}</p>
         <p>交通偏好 {{ reviewRequest.transportation }} · {{ reviewRequest.traveler_count }} 人</p>
+        <p>总预算 {{ reviewRequest.planning_input?.budget_cents == null ? '未设置' : `¥${(reviewRequest.planning_input.budget_cents / 100).toFixed(2)}` }}</p>
         <p v-if="reviewRequest.constraints?.must_visit?.length">必去 {{ reviewRequest.constraints.must_visit.join('、') }}</p>
         <p v-if="reviewRequest.planning_input?.arrival_at">抵达 {{ reviewTime(reviewRequest.planning_input.arrival_at) }}</p>
         <p v-if="reviewRequest.planning_input?.departure_at">离开 {{ reviewTime(reviewRequest.planning_input.departure_at) }}</p>
@@ -329,6 +331,7 @@
         </div>
         <a-alert v-if="countError" type="warning" :message="countError" />
         <p v-if="reviewRequest.free_text_input">文字偏好 {{ reviewRequest.free_text_input }}</p>
+        <p>生成时，规划需求会发送给配置的文本模型。启用攻略检索时，相关攻略片段也会发送给文本模型，检索词可能发送给配置的向量模型。</p>
       </template>
     </a-modal>
   </div>
@@ -496,6 +499,12 @@ const handleSubmit = () => {
     message.error('请选择日期')
     return
   }
+  const budget = formData.budget_total
+  if (budget != null && (!Number.isFinite(budget) || budget < 100 || budget > 10_000_000)) {
+    message.warning('整段总预算须为 100 至 10,000,000 元，或留空。')
+    return
+  }
+  const budgetCents = budget == null ? null : Math.round(budget * 100)
 
   const requestData: TripFormData = {
     city: formData.city,
@@ -507,11 +516,11 @@ const handleSubmit = () => {
     accommodation: formData.accommodation,
     traveler_count: formData.traveler_count,
     room_count: formData.room_count,
-    budget_total: planningInput.value?.budget_cents == null ? formData.budget_total : Math.floor(planningInput.value.budget_cents / 100),
+    budget_total: budgetCents == null ? null : Math.floor(budgetCents / 100),
     preferences: formData.preferences,
     free_text_input: formData.free_text_input,
     constraints: { ...planningConstraints },
-    planning_input: planningInput.value ? { ...planningInput.value, budget_cents: planningInput.value.budget_cents ?? (formData.budget_total == null ? null : Math.round(formData.budget_total * 100)) } : undefined
+    planning_input: planningInput.value ? { ...planningInput.value, budget_cents: budgetCents } : undefined
   }
 
   reviewRequest.value = JSON.parse(JSON.stringify(requestData))

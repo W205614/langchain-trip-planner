@@ -90,13 +90,13 @@
           <a-alert v-if="expenseResult?.summary?.confirmed_unknown_count" type="warning" :message="`${expenseResult.summary.confirmed_unknown_count} 项已确认预订未填写金额`" />
           <a-card title="预订事项" class="section">
             <a-space v-if="canEdit" wrap class="toolbar">
-              <a-select v-model:value="commitmentForm.day_index" style="width: 110px"><a-select-option v-for="d in trip.travel_days" :key="d" :value="d - 1">第{{ d }}天</a-select-option></a-select>
-              <a-select v-model:value="commitmentForm.category" style="width: 110px"><a-select-option v-for="c in categories" :key="c.value" :value="c.value">{{ c.label }}</a-select-option></a-select>
-              <a-input v-model:value="commitmentForm.title" placeholder="门票或住宿事项" style="width: 190px" />
-              <a-input-number v-model:value="commitmentForm.amount" :min="0" :max="10000000" :precision="2" placeholder="金额（可留空）" />
-              <a-button :loading="busy" @click="addCommitment">添加待确认事项</a-button>
+              <a-select v-model:value="commitmentForm.day_index" :disabled="!!pendingCommitment" style="width: 110px"><a-select-option v-for="d in trip.travel_days" :key="d" :value="d - 1">第{{ d }}天</a-select-option></a-select>
+              <a-select v-model:value="commitmentForm.category" :disabled="!!pendingCommitment" style="width: 110px"><a-select-option v-for="c in categories" :key="c.value" :value="c.value">{{ c.label }}</a-select-option></a-select>
+              <a-input v-model:value="commitmentForm.title" :disabled="!!pendingCommitment" placeholder="门票或住宿事项" style="width: 190px" />
+              <a-input-number v-model:value="commitmentForm.amount" :disabled="!!pendingCommitment" :min="0" :max="10000000" :precision="2" placeholder="金额（可留空）" />
+              <a-button :loading="busy" @click="addCommitment">{{ pendingCommitment ? '重试保存原事项' : '添加待确认事项' }}</a-button>
             </a-space>
-            <a-collapse v-if="trip.role === 'owner'" ghost><a-collapse-panel key="details" header="设置本事项的固定时间与地点（可选）"><CommitmentDetailsEditor :model-value="commitmentForm" :activities="planningActivities" @update:model-value="Object.assign(commitmentForm, $event)" /></a-collapse-panel></a-collapse>
+            <a-collapse v-if="trip.role === 'owner' && !pendingCommitment" ghost><a-collapse-panel key="details" header="设置本事项的固定时间与地点（可选）"><CommitmentDetailsEditor :model-value="commitmentForm" :activities="planningActivities" @update:model-value="Object.assign(commitmentForm, $event)" /></a-collapse-panel></a-collapse>
             <a-list :data-source="commitments" :locale="{ emptyText: '还没有预订事项' }" bordered>
               <template #renderItem="{ item }">
                 <a-list-item>
@@ -112,15 +112,15 @@
           </a-card>
           <a-card title="实际支出" class="section">
             <a-space v-if="canEdit" wrap class="toolbar">
-              <a-select v-model:value="expenseForm.day_index" style="width: 110px"><a-select-option v-for="d in trip.travel_days" :key="d" :value="d - 1">第{{ d }}天</a-select-option></a-select>
-              <a-select v-model:value="expenseForm.category" style="width: 110px"><a-select-option v-for="c in categories" :key="c.value" :value="c.value">{{ c.label }}</a-select-option></a-select>
-              <a-input-number v-model:value="expenseForm.amount" :min="0.01" :max="10000000" :precision="2" placeholder="实际金额" />
-              <select v-model="expenseForm.commitment_id" class="expense-commitment" aria-label="关联预订">
+              <a-select v-model:value="expenseForm.day_index" :disabled="!!pendingExpense" style="width: 110px"><a-select-option v-for="d in trip.travel_days" :key="d" :value="d - 1">第{{ d }}天</a-select-option></a-select>
+              <a-select v-model:value="expenseForm.category" :disabled="!!pendingExpense" style="width: 110px"><a-select-option v-for="c in categories" :key="c.value" :value="c.value">{{ c.label }}</a-select-option></a-select>
+              <a-input-number v-model:value="expenseForm.amount" :disabled="!!pendingExpense" :min="0.01" :max="10000000" :precision="2" placeholder="实际金额" />
+              <select v-model="expenseForm.commitment_id" :disabled="!!pendingExpense" class="expense-commitment" aria-label="关联预订">
                 <option :value="null">关联预订（可选）</option>
                 <option v-for="item in commitments.filter((c: any) => c.status === 'confirmed')" :key="item.id" :value="item.id">{{ item.title }}</option>
               </select>
-              <a-input v-model:value="expenseForm.note" placeholder="支出说明" style="width: 180px" />
-              <a-button :loading="busy" @click="addExpense">记一笔</a-button>
+              <a-input v-model:value="expenseForm.note" :disabled="!!pendingExpense" placeholder="支出说明" style="width: 180px" />
+              <a-button :loading="busy" @click="addExpense">{{ pendingExpense ? '重试保存原支出' : '记一笔' }}</a-button>
             </a-space>
             <a-list :data-source="expenseResult?.data || []" :locale="{ emptyText: '还没有实际支出记录' }" bordered>
               <template #renderItem="{ item }">
@@ -176,7 +176,8 @@
 <script setup lang="ts">
 import { Alert as AAlert, Button as AButton, Card as ACard, Col as ACol, Collapse as ACollapse, CollapsePanel as ACollapsePanel, Empty as AEmpty, Input as AInput, InputNumber as AInputNumber, List as AList, ListItem as AListItem, ListItemMeta as AListItemMeta, Modal as AModal, Row as ARow, Select as ASelect, SelectOption as ASelectOption, Space as ASpace, Spin as ASpin, Statistic as AStatistic, TabPane as ATabPane, Tabs as ATabs, Tag as ATag, Textarea as ATextarea, message, Modal } from 'ant-design-vue'
 
-import { computed, onMounted, onBeforeUnmount, reactive, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, reactive, ref, type Ref } from 'vue'
+import { isAxiosError } from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 import { tripOperations, tripPlanning, clearTripCache } from '@/services/api'
 import PlanningInputEditor from '@/components/trip/PlanningInputEditor.vue'
@@ -221,6 +222,9 @@ const commitmentForm = reactive<any>({ day_index: 0, category: 'ticket', title: 
 const commitmentEditOpen = ref(false)
 const commitmentEdit = ref<any>(null)
 const expenseForm = reactive<any>({ day_index: 0, category: 'ticket', amount: null, note: '', commitment_id: null })
+type PendingEntry = { key: string; body: Record<string, unknown> }
+const pendingCommitment = ref<PendingEntry>()
+const pendingExpense = ref<PendingEntry>()
 const categories = [
   { value: 'ticket', label: '门票' }, { value: 'lodging', label: '住宿' },
   { value: 'transport', label: '交通' }, { value: 'meal', label: '餐饮' }, { value: 'other', label: '其他' }
@@ -292,9 +296,13 @@ function openReplacement(poiId: string) {
 async function runCheck() { busy.value = true; try { await tripOperations.check(id, trip.value.version, checkDay.value); await loadCheck(); message.success('核验结果已保存') } catch (e) { explain(e) } finally { busy.value = false } }
 async function acknowledge(riskId: number) { try { await tripOperations.acknowledge(id, riskId, trip.value.version); await loadCheck() } catch (e) { explain(e) } }
 async function addCommitment() {
-  busy.value = true
-  try { await tripOperations.addCommitment(id, { ...commitmentForm }); for (const key of Object.keys(commitmentForm)) delete commitmentForm[key]; Object.assign(commitmentForm, { day_index: 0, category: 'ticket', title: '', status: 'planned', amount: null, note: '' }); await loadMoney(); await loadPlanning(); message.success('事项已记录') }
-  catch (e) { explain(e) } finally { busy.value = false }
+  await submitEntry(pendingCommitment, commitmentForm, tripOperations.addCommitment, async () => {
+    for (const key of Object.keys(commitmentForm)) delete commitmentForm[key]
+    Object.assign(commitmentForm, { day_index: 0, category: 'ticket', title: '', status: 'planned', amount: null, note: '' })
+    await loadMoney()
+    await loadPlanning()
+    message.success('事项已记录')
+  })
 }
 async function setCommitment(item: any, status: string) {
     try { await tripOperations.updateCommitment(id, item.id, item.version, { status, amount: item.amount_cents == null ? null : yuan(item.amount_cents), note: item.note }); await loadMoney(); await loadPlanning() }
@@ -313,9 +321,44 @@ async function saveCommitmentDetails() {
   catch (e) { explain(e) } finally { busy.value = false }
 }
 async function addExpense() {
+  await submitEntry(pendingExpense, expenseForm, tripOperations.addExpense, async () => {
+    expenseForm.amount = null
+    expenseForm.note = ''
+    expenseForm.commitment_id = null
+    await loadMoney()
+    message.success('支出已记录')
+  })
+}
+async function submitEntry(
+  pending: Ref<PendingEntry | undefined>,
+  form: Record<string, unknown>,
+  send: (id: number, body: Record<string, unknown>, key: string) => Promise<unknown>,
+  confirmed: () => Promise<void>
+) {
+  if (busy.value) return
+  const retry = !!pending.value
+  const entry = pending.value ?? { key: crypto.randomUUID(), body: JSON.parse(JSON.stringify(form)) }
+  pending.value = entry
   busy.value = true
-  try { await tripOperations.addExpense(id, { ...expenseForm }); expenseForm.amount = null; expenseForm.note = ''; expenseForm.commitment_id = null; await loadMoney(); message.success('支出已记录') }
-  catch (e) { explain(e) } finally { busy.value = false }
+  error.value = ''
+  try {
+    try {
+      await send(id, entry.body, entry.key)
+    } catch (e) {
+      const status = isAxiosError(e) ? e.response?.status : undefined
+      if (status && status >= 400 && status < 500 && status !== 408) {
+        if (!retry) pending.value = undefined
+        explain(e)
+      } else {
+        error.value = '暂时无法确认是否保存。请重试原记录，系统会避免重复保存。'
+      }
+      return
+    }
+    pending.value = undefined
+    await confirmed()
+  } finally {
+    busy.value = false
+  }
 }
 function voidExpense(expenseId: number) {
   Modal.confirm({ title: '撤销这笔支出？', content: '记录会保留审计痕迹，撤销后不计入实际支出。',

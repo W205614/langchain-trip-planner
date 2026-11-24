@@ -8,7 +8,7 @@
         <label>首日抵达时间<input :value="localTime(draft.arrival_at)" type="datetime-local" @input="draft.arrival_at = timestamp($event)" /></label>
         <label>末日离开时间<input :value="localTime(draft.departure_at)" type="datetime-local" @input="draft.departure_at = timestamp($event)" /></label>
         <label>预算口径<select v-model="draft.budget_mode"><option value="estimate">允许估算，未知单列</option><option value="confirmed">按确认费用校验</option></select></label>
-        <label>总预算（元，可留空）<input :value="draft.budget_cents == null ? '' : draft.budget_cents / 100" type="number" min="0" step="0.01" @input="setBudget" /></label>
+        <label v-if="!hideBudgetAmount">总预算（元，可留空）<input :value="draft.budget_cents == null ? '' : draft.budget_cents / 100" type="number" min="0" max="10000000" step="0.01" @input="setBudget" /></label>
       </div>
       <div v-if="commitmentsReadOnly" class="field-grid">
         <label>景点数量<input :value="draft.attraction_count?.count ?? ''" type="number" min="1" step="1" placeholder="不限制" @input="setAttractionCount" /></label>
@@ -116,7 +116,7 @@ import { Alert as AAlert, Button as AButton, Collapse as ACollapse, CollapsePane
 
 import { computed, ref, watch } from 'vue'
 import type { PlanningInput, Location, PlanningCommitment } from '@/types'
-const props = withDefaults(defineProps<{ modelValue?: PlanningInput; days?: number; startDate?: string; disabled?: boolean; commitmentsReadOnly?: boolean; activities?: { id: string; name: string }[] }>(), { days: 1, disabled: false, commitmentsReadOnly: false, activities: () => [] })
+const props = withDefaults(defineProps<{ modelValue?: PlanningInput; days?: number; startDate?: string; disabled?: boolean; commitmentsReadOnly?: boolean; hideBudgetAmount?: boolean; activities?: { id: string; name: string }[] }>(), { days: 1, disabled: false, commitmentsReadOnly: false, activities: () => [] })
 const emit = defineEmits<{ 'update:modelValue': [value: PlanningInput] }>()
 const normalize = (value?: PlanningInput): PlanningInput => ({ timezone: 'Asia/Shanghai', day_start: '09:00', day_end: '20:00', day_windows: [], city_segments: [], commitments: [], hotel_stays: [], meal_windows: [], opening_windows: [], locks: [], completed_activity_ids: [], budget_mode: 'estimate', ...JSON.parse(JSON.stringify(value || {})) })
 const draft = ref(normalize(props.modelValue))
@@ -147,7 +147,7 @@ const validationMessage = computed(() => {
     return '景点数量超出所选日期范围。'
   if (value.day_start >= value.day_end) return '每日结束时间须晚于出发时间。'
   if (value.arrival_at && value.departure_at && Date.parse(value.arrival_at) >= Date.parse(value.departure_at)) return '离开时间须晚于抵达时间。'
-  if (value.budget_cents != null && (!Number.isSafeInteger(value.budget_cents) || value.budget_cents < 0)) return '预算须为非负金额。'
+  if (value.budget_cents != null && (!Number.isSafeInteger(value.budget_cents) || value.budget_cents < 0 || value.budget_cents > 1_000_000_000)) return '预算须在 0 至 10,000,000 元之间。'
   if (value.day_windows.some(w => w.day_index >= props.days || w.start >= w.end)) return '请检查每日时间例外的日期和起止时间。'
   if (value.city_segments.some(s => !s.city.trim() || s.start_day > s.end_day || s.end_day >= props.days)) return '请完善城市分段，日期必须处于行程范围内。'
   if (value.commitments.some(c => !c.title.trim() || (c.start_at && c.end_at && Date.parse(c.start_at) >= Date.parse(c.end_at)))) return '请完善固定事项名称，并检查开始／结束时间。'

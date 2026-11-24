@@ -330,6 +330,21 @@ export async function createTripShare(id: number, expiresDays = 7): Promise<any>
   return (await apiClient.post(`/api/trips/${id}/shares`, { expires_days: expiresDays })).data
 }
 
+export interface TripShare {
+  id: number
+  record_version: number
+  expires_at: string
+  revoked_at: string | null
+}
+
+export async function listTripShares(id: number): Promise<TripShare[]> {
+  return (await apiClient.get(`/api/trips/${id}/shares`)).data.data
+}
+
+export async function revokeTripShare(id: number, shareId: number): Promise<void> {
+  await apiClient.delete(`/api/trips/${id}/shares/${shareId}`)
+}
+
 export async function reverifyTrip(id: number, version: number): Promise<any> {
   return (await apiClient.post(`/api/trips/${id}/verify`, {}, {
     headers: { 'If-Match': String(version) }
@@ -474,13 +489,13 @@ export const tripOperations = {
   reorder: async (id: number, version: number, dayIndex: number, poiIds: string[], description: string) =>
     (await apiClient.put(`/api/trips/${id}/workspace/day-order`, { day_index: dayIndex, poi_ids: poiIds, description }, { headers: { 'If-Match': version } })).data,
   commitments: async (id: number) => (await apiClient.get(`/api/trips/${id}/commitments`)).data.data,
-  addCommitment: async (id: number, body: any) =>
-    (await apiClient.post(`/api/trips/${id}/commitments`, body, { headers: { 'Idempotency-Key': crypto.randomUUID() } })).data,
+  addCommitment: async (id: number, body: any, key: string) =>
+    (await apiClient.post(`/api/trips/${id}/commitments`, body, { headers: { 'Idempotency-Key': key } })).data,
   updateCommitment: async (id: number, itemId: number, version: number, body: any) =>
     (await apiClient.put(`/api/trips/${id}/commitments/${itemId}`, body, { headers: { 'If-Match': version } })).data,
   expenses: async (id: number) => (await apiClient.get(`/api/trips/${id}/expenses`)).data,
-  addExpense: async (id: number, body: any) =>
-    (await apiClient.post(`/api/trips/${id}/expenses`, body, { headers: { 'Idempotency-Key': crypto.randomUUID() } })).data,
+  addExpense: async (id: number, body: any, key: string) =>
+    (await apiClient.post(`/api/trips/${id}/expenses`, body, { headers: { 'Idempotency-Key': key } })).data,
   voidExpense: async (id: number, expenseId: number, reason: string) =>
     (await apiClient.post(`/api/trips/${id}/expenses/${expenseId}/void`, { reason })).data,
   members: async (id: number) => (await apiClient.get(`/api/trips/${id}/members`)).data.data,

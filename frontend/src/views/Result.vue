@@ -18,7 +18,7 @@
         <a-button v-if="editMode" @click="cancelEdit" type="default">
           ❌ 取消编辑
         </a-button>
-        <a-button v-if="!readOnlyPlan && !editMode && historyRecordId && !quality.assistant_proposal_status" @click="shareTrip">🔗 分享</a-button>
+        <a-button v-if="!readOnlyPlan && !editMode && historyRecordId && !quality.assistant_proposal_status" @click="openShares">🔗 分享</a-button>
         <a-button v-if="!editMode && historyRecordId && !quality.assistant_proposal_status" @click="$router.push(`/trips/${historyRecordId}/operations`)">📋 行程执行</a-button>
 
         <!-- 导出按钮 -->
@@ -43,6 +43,25 @@
       </a-space>
     </div>
 
+    <a-modal v-model:open="shareOpen" title="分享链接" :footer="null" :closable="!shareBusy" :mask-closable="!shareBusy" :keyboard="!shareBusy">
+      <p>有链接的人七天内可以查看行程日期、景点和时间轴。预约详情、费用、联系方式等私有字段不会随快照公开。填写在行程标题中的文字会公开。</p>
+      <p>链接可以转发。撤销会阻止再次打开链接，已保存的独立副本仍可保留。</p>
+      <p v-if="localShare">当前是本机地址，其他设备无法直接打开。</p>
+      <a-space wrap>
+        <a-button type="primary" :loading="shareBusy" @click="shareTrip">创建七天分享链接</a-button>
+        <a-button v-if="shareUrl" @click="copyTripShare">复制链接</a-button>
+      </a-space>
+      <a-input v-if="shareUrl" :value="shareUrl" readonly aria-label="已创建的分享链接" />
+      <a-alert v-if="shareError" type="error" :message="shareError" show-icon />
+      <a-list :data-source="shares" :locale="{ emptyText: '暂无分享链接' }">
+        <template #renderItem="{ item }">
+          <a-list-item>
+            <span>版本 {{ item.record_version }} · {{ item.revoked_at ? '已撤销' : Date.parse(item.expires_at) <= Date.now() ? '已到期' : `有效至 ${new Date(item.expires_at).toLocaleString('zh-CN')}` }}</span>
+            <a-button v-if="!item.revoked_at && Date.parse(item.expires_at) > Date.now()" size="small" danger :disabled="shareBusy" @click="revokeShare(item.id)">撤销链接</a-button>
+          </a-list-item>
+        </template>
+      </a-list>
+    </a-modal>
     <a-alert v-if="tripPlan && !planLoading && !editMode && offlineReminderTrip === historyRecordId"
       class="offline-export-reminder" type="info" show-icon message="行程已更新"
       description="如果已下载旧版离线网页，请重新导出，出行时使用新文件。">
@@ -193,8 +212,8 @@
                 </div>
               </div>
               <p v-for="note in tripPlan.budget.assumptions || []" :key="note" class="budget-note">{{ note }}</p>
-              <a-alert v-if="tripPlan.budget.limit_total" :type="tripPlan.budget.within_limit ? 'success' : 'warning'" show-icon
-                :message="tripPlan.budget.within_limit ? `预算内，距离上限还剩 ¥${formatMoney(tripPlan.budget.limit_total - tripPlan.budget.total)}` : `预计超出预算 ¥${formatMoney(tripPlan.budget.total - tripPlan.budget.limit_total)}`" />
+              <a-alert v-if="budgetDifferenceCents != null" :type="budgetDifferenceCents >= 0 ? 'success' : 'warning'" show-icon
+                :message="`${budgetDifferenceCents >= 0 ? '预算内，距离上限还剩' : '预计超出预算'} ¥${(Math.abs(budgetDifferenceCents) / 100).toFixed(2)}`" />
               <div class="budget-total">
                 <span class="total-label">预估总费用</span>
                 <span class="total-value">¥{{ formatMoney(tripPlan.budget.total) }}</span>
@@ -486,13 +505,20 @@ import { refreshScheduleValidity } from '@/utils/scheduleValidity'
 import { tripDate, tripZone, zonedTimestamp } from '@/utils/tripDay'
 import type { FactGap } from '@/utils/factChecklist'
 import type { TripPlan, POIInfo, PlanningInput, RevisionScope, TimelineItem, Attraction, DailyTripCheck, AssistantConfirmation } from '@/types'
-import { previewRevision, updateHistory, fetchHistoryDetail, createTripShare, tripOperations, tripPlanning, clearTripCache } from '@/services/api'
+import { previewRevision, updateHistory, fetchHistoryDetail, createTripShare, listTripShares, revokeTripShare, tripOperations, tripPlanning, clearTripCache, type TripShare } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
 const readOnlyPlan = computed(() => Boolean(route.params.id))
 const returnLabel = computed(() => readOnlyPlan.value ? '返回执行工作台' : route.query.from === 'history' ? '返回我的行程' : '返回首页')
 const tripPlan = ref<TripPlan | null>(null)
+const budgetDifferenceCents = computed(() => {
+  const plan = tripPlan.value
+  if (!plan?.budget) return null
+  const limit = plan.planning_input?.budget_cents ??
+    (plan.budget.limit_total == null ? null : Math.round(plan.budget.limit_total * 100))
+  return limit == null ? null : limit - Math.round(plan.budget.total * 100)
+})
 const planLoading = ref(true)
 const planError = ref('')
 const recordVersion = ref(Number(sessionStorage.getItem('tripPlanVersion') || 1))
@@ -770,14 +796,68 @@ const {
     await router.push('/history')
   },
 })
+const shareOpen = ref(false)
+const shareBusy = ref(false)
+const shareError = ref('')
+const shareUrl = ref('')
+const newShareId = ref<number>()
+const shares = ref<TripShare[]>([])
+const localShare = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+watch(shareOpen, open => { if (!open) { shareUrl.value = ''; newShareId.value = undefined } })
+async function refreshShares() {
+  try {
+    shares.value = await listTripShares(historyRecordId.value)
+  } catch {
+    shareError.value = '无法刷新分享列表，请重新打开分享窗口。'
+  }
+}
+async function openShares() {
+  shares.value = []
+  shareError.value = ''
+  shareOpen.value = true
+  shareBusy.value = true
+  try { await refreshShares() } finally { shareBusy.value = false }
+}
 async function shareTrip() {
+  if (shareBusy.value) return
+  shareBusy.value = true
+  shareError.value = ''
   try {
     const response = await createTripShare(historyRecordId.value, 7)
-    const url = `${window.location.origin}/shared/${response.token}`
-    await navigator.clipboard.writeText(url)
-    message.success('7天有效的只读分享链接已复制')
+    shareUrl.value = `${window.location.origin}/shared/${response.token}`
+    newShareId.value = response.id
+    message.success('分享链接已创建')
   } catch (error: any) {
-    message.error(error.response?.data?.message || '创建分享失败')
+    shareError.value = error.response?.data?.message || '暂时无法确认创建结果，请查看分享列表。'
+  } finally {
+    await refreshShares()
+    shareBusy.value = false
+  }
+}
+async function copyTripShare() {
+  try {
+    await navigator.clipboard.writeText(shareUrl.value)
+    message.success('已复制分享链接')
+  } catch {
+    message.warning('分享已创建，请从输入框手动复制链接。')
+  }
+}
+async function revokeShare(shareId: number) {
+  if (shareBusy.value) return
+  shareBusy.value = true
+  shareError.value = ''
+  try {
+    await revokeTripShare(historyRecordId.value, shareId)
+    if (newShareId.value === shareId) {
+      shareUrl.value = ''
+      newShareId.value = undefined
+    }
+    message.success('分享链接已撤销')
+  } catch (error: any) {
+    shareError.value = error.response?.data?.message || '暂时无法确认撤销结果，请查看分享列表。'
+  } finally {
+    await refreshShares()
+    shareBusy.value = false
   }
 }
 const revisionOpen = ref(false)

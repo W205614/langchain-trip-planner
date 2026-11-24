@@ -42,14 +42,53 @@ test('saved trip supports checks, expense ledger and accepted editor changes', a
   await expect(page.getByText('核验结果已保存')).toBeVisible()
 
   await page.getByRole('tab', { name: '预订与费用' }).click()
+  const commitmentUrl = `/api/trips/${savedTripId}/commitments`
+  const commitmentKeys: string[] = []
+  await page.route('**' + commitmentUrl, async route => {
+    if (route.request().method() !== 'POST') return route.continue()
+    commitmentKeys.push(route.request().headers()['idempotency-key'])
+    if (commitmentKeys.length !== 1) return route.continue()
+    const saved = await route.fetch()
+    expect(saved.ok()).toBe(true)
+    await route.abort()
+  })
   await page.getByPlaceholder('门票或住宿事项').fill('自动化验收事项，未实际预订')
   await page.getByPlaceholder('金额（可留空）').fill('12.50')
   await page.getByRole('button', { name: '添加待确认事项' }).click()
+  await expect(page.getByText(/暂时无法确认是否保存/)).toBeVisible()
+  await page.getByRole('button', { name: '重试保存原事项' }).click()
   await expect(page.getByRole('heading', { name: /自动化验收事项/ })).toBeVisible()
+  expect(commitmentKeys).toEqual([commitmentKeys[0], commitmentKeys[0]])
+  expect((await (await request.get(commitmentUrl, { headers: { Authorization: `Bearer ${owner}` } })).json()).data).toHaveLength(1)
+  const expenseUrl = `/api/trips/${savedTripId}/expenses`
+  const expenseKeys: string[] = []
+  await page.route('**' + expenseUrl, async route => {
+    if (route.request().method() !== 'POST') return route.continue()
+    expenseKeys.push(route.request().headers()['idempotency-key'])
+    if (expenseKeys.length === 1) return route.abort()
+    if (expenseKeys.length === 2) {
+      expect((await route.fetch()).ok()).toBe(true)
+      return route.abort()
+    }
+    return route.continue()
+  })
   await page.getByPlaceholder('实际金额').fill('9.80')
   await page.getByPlaceholder('支出说明').fill('自动化验收，未实际付款')
   await page.getByRole('button', { name: '记一笔' }).click()
+  await expect(page.getByText(/暂时无法确认是否保存/)).toBeVisible()
+  await page.getByRole('button', { name: '重试保存原支出' }).click()
+  await expect.poll(() => expenseKeys.length).toBe(2)
+  await expect(page.getByRole('button', { name: '重试保存原支出' })).toBeEnabled()
+  await page.getByRole('button', { name: '重试保存原支出' }).click()
   await expect(page.getByText('自动化验收，未实际付款')).toBeVisible()
+  expect(expenseKeys).toEqual([expenseKeys[0], expenseKeys[0], expenseKeys[0]])
+  await page.getByPlaceholder('实际金额').fill('9.80')
+  await page.getByPlaceholder('支出说明').fill('自动化验收，未实际付款')
+  await page.getByRole('button', { name: '记一笔' }).click()
+  await expect(page.getByText('自动化验收，未实际付款')).toHaveCount(2)
+  expect(expenseKeys[3]).not.toBe(expenseKeys[0])
+  const expenses = await (await request.get(expenseUrl, { headers: { Authorization: `Bearer ${owner}` } })).json()
+  expect(expenses.summary.actual_cents).toBe(1960)
 
   await page.getByRole('tab', { name: '同行协作' }).click()
   await page.getByPlaceholder('已注册用户名').fill(editorName)

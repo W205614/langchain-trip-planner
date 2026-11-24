@@ -4,6 +4,7 @@ import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.domain.BusinessTypes;
 import com.tripplanner.domain.TripLedgerService;
 import com.tripplanner.domain.ScheduleDependencies;
+import com.tripplanner.domain.UserQuotaService;
 import com.tripplanner.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -22,11 +23,13 @@ public class SharesController {
   private final TransactionTemplate tx; private final JsonMapper json;
   private final TripLedgerService ledger; private final BusinessAuditService audit;
   private final ScheduleDependencies schedules;
+  private final UserQuotaService userQuotas;
   private final SecureRandom random = new SecureRandom();
   public SharesController(ShareMapper shares, HistoryMapper history, TransactionTemplate tx, JsonMapper json,
-      TripLedgerService ledger, BusinessAuditService audit,ScheduleDependencies schedules) {
+      TripLedgerService ledger, BusinessAuditService audit, ScheduleDependencies schedules, UserQuotaService userQuotas) {
     this.shares=shares; this.history=history; this.tx=tx; this.json=json; this.ledger=ledger; this.audit=audit;
     this.schedules=schedules;
+    this.userQuotas=userQuotas;
   }
 
   @PostMapping("/api/trips/{recordId}/shares")
@@ -47,9 +50,11 @@ public class SharesController {
     var quality=json.readTree(record.get("quality_json").toString());
     snapshot.put("outcome",quality.path("outcome").asText("unassessed"));
     var row=new HashMap<String,Object>(); row.put("record_id",recordId); row.put("owner_id",uid);
-    row.put("token_hash",hash(token)); row.put("snapshot_json",json.writeValueAsString(snapshot));
+    row.put("token_hash",hash(token)); row.put("snapshot_json",json.writeValueAsString(PublicTripSnapshot.project(json, snapshot)));
     row.put("record_version",record.get("version")); row.put("expires_at",Timestamp.from(Instant.now().plus(days,ChronoUnit.DAYS)));
     tx.executeWithoutResult(s->{
+      userQuotas.lockActive(uid);
+      if (history.owned(uid, recordId) == null) throw new ApiException(404, "行程不存在");
       shares.insert(row);
       audit.success(uid,"share.create","trip_share",row.get("id"),((Number)record.get("version")).intValue(),
           req.getHeader("X-Request-ID"),Map.of("record_id",recordId));
@@ -75,13 +80,15 @@ public class SharesController {
 
   @GetMapping("/api/shared-trips/{token}")
   public Object publicTrip(@PathVariable String token){
-    var row=active(token); return Map.of("success",true,"data",json.readTree(row.get("snapshot_json").toString()));
+    var row=active(token);
+    return Map.of("success", true, "data", PublicTripSnapshot.project(json, json.readTree(row.get("snapshot_json").toString())));
   }
 
   @PostMapping("/api/shared-trips/{token}/copy")
   public Object copy(HttpServletRequest req,@PathVariable String token){
     long uid=UsersController.uid(req); var share=active(token);
-    var snapshot=json.readTree(share.get("snapshot_json").toString()); var plan=snapshot.path("plan");
+    var snapshot=PublicTripSnapshot.project(json, json.readTree(share.get("snapshot_json").toString()));
+    var plan=snapshot.path("plan");
     var record=new HashMap<String,Object>(); record.put("user_id",uid); record.put("title",snapshot.path("title").asText("")+"（副本）");
     record.put("source",BusinessTypes.TripSource.COPIED.wire());
     for(String field:List.of("city","start_date","end_date","transportation","accommodation")) record.put(field,snapshot.path(field).asText(""));

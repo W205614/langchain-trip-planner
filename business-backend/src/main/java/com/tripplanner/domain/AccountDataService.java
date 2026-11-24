@@ -78,7 +78,7 @@ public class AccountDataService {
       db.update("INSERT INTO account_erasure_targets(job_id,kind,target_id) SELECT ?,'history',id FROM trip_records WHERE user_id=?",id,uid);
       db.update("INSERT INTO account_erasure_targets(job_id,kind,target_id) SELECT DISTINCT ?,'history',record_id FROM rag_sync_jobs WHERE user_id=? ON CONFLICT DO NOTHING",id,uid);
       db.update("INSERT INTO account_erasure_targets(job_id,kind,target_id,version) SELECT ?,'document',id,version+CASE WHEN status='deleted' THEN 0 ELSE 1 END FROM knowledge_documents WHERE submitted_by=?",id,uid);
-      db.update("UPDATE trip_shares SET revoked_at=COALESCE(revoked_at,timezone('UTC',now())) WHERE owner_id=?",uid);
+      db.update("UPDATE trip_shares SET revoked_at=COALESCE(revoked_at,timezone('UTC',now())), snapshot_json='{}' WHERE owner_id=?",uid);
       db.update("UPDATE community_trip_cards SET status='rejected',snapshot_json='{}',title='已撤回',review_note='',published_at=NULL WHERE owner_id=?",uid);
       db.update("DELETE FROM trip_members WHERE user_id=? OR trip_id IN(SELECT id FROM trip_records WHERE user_id=?)",uid,uid);
       for(var document:db.queryForList("SELECT id,status FROM knowledge_documents WHERE submitted_by=?",uid))
@@ -106,6 +106,13 @@ public class AccountDataService {
   }
   @Scheduled(fixedDelayString="${ACCOUNT_DATA_SCAN_MILLIS:2000}",scheduler="accountDataScheduler")
   public void tick(){if(workers&&owner.owned())runOnce();}
+
+  @Scheduled(fixedDelay=600_000,scheduler="accountDataScheduler")
+  public void clearInactiveShareSnapshots() {
+    if (workers && owner.owned()) {
+      db.update("UPDATE trip_shares SET snapshot_json='{}' WHERE snapshot_json<>'{}' AND (revoked_at IS NOT NULL OR expires_at<=timezone('UTC',now()))");
+    }
+  }
   public synchronized boolean runOnce() {
     if(workers&&!owner.owned())return false;
     expireExports();

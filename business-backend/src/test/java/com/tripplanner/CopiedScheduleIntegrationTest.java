@@ -42,6 +42,8 @@ class CopiedScheduleIntegrationTest {
     long owner=user(),receiver=user();String ownerToken=credential(owner),receiverToken=credential(receiver);
     var plan=(ObjectNode)json.readTree("{\"city\":\"北京\",\"start_date\":\"2026-11-01\",\"end_date\":\"2026-11-01\",\"days\":[{\"day_index\":0,\"date\":\"2026-11-01\",\"city\":\"北京\",\"attractions\":[{\"activity_id\":\"poi:0:p0\",\"poi_id\":\"p0\",\"name\":\"待保留景点\",\"visit_duration\":60}],\"meals\":[],\"feasibility\":{\"status\":\"feasible\"},\"timeline\":[{\"activity_id\":\"poi:0:p0\",\"kind\":\"attraction\",\"start_at\":\"2026-11-01T18:00:00+08:00\",\"end_at\":\"2026-11-01T19:00:00+08:00\",\"status\":\"confirmed\"}]}]}");
     PlanningInputService.stableIds(plan);
+    ((ObjectNode)plan.path("days").get(0)).put("description", "private-trip-note");
+    ((ObjectNode)plan.path("days").get(0).path("timeline").get(0)).put("source", "private-schedule-source");
     long source=db.queryForObject("INSERT INTO trip_records(user_id,city,start_date,end_date,travel_days,plan_json,quality_json) VALUES(?,'北京','2026-11-01','2026-11-01',1,?,'{\"outcome\":\"complete\"}') RETURNING id",Long.class,owner,json.writeValueAsString(plan));
     tx.executeWithoutResult(status->{planning.bindPersisted(owner,source,plan,null);planning.storeBoundPlan(source,plan);});
     var original=snapshot(source);var sourceInput=planning.input(planning.row(owner,source,false));var sourceDay=plan.path("days").get(0);
@@ -52,6 +54,16 @@ class CopiedScheduleIntegrationTest {
     db.update("UPDATE community_trip_cards SET status='published',published_at=timezone('UTC',now()) WHERE id=?",cardId);
     String shareSnapshot=db.queryForObject("SELECT snapshot_json FROM trip_shares WHERE id=?",String.class,shareId);
     String communitySnapshot=db.queryForObject("SELECT snapshot_json FROM community_trip_cards WHERE id=?",String.class,cardId);
+    assertFalse(shareSnapshot.contains("private-"));
+    assertFalse(communitySnapshot.contains("private-"));
+    assertFalse(json.readTree(shareSnapshot).path("plan").has("planning_input"));
+    // An existing link created before the projection must use the same public response.
+    var legacyShare = (ObjectNode)json.readTree(shareSnapshot);
+    legacyShare.set("plan", plan);
+    db.update("UPDATE trip_shares SET snapshot_json=? WHERE id=?", json.writeValueAsString(legacyShare), shareId);
+    var publicShare = request("GET", "/api/shared-trips/"+shareToken, null, null, 200);
+    assertFalse(publicShare.toString().contains("private-"));
+    assertFalse(publicShare.path("data").path("plan").has("planning_input"));
     for(String path:List.of("/api/community/cards/"+cardId+"/copy","/api/shared-trips/"+shareToken+"/copy")){
       long copied=request("POST",path,"{}",receiverToken,200).path("id").asLong();
       var row=planning.row(receiver,copied,false);var copiedInput=planning.input(row);var copiedPlan=(ObjectNode)json.readTree(row.get("plan_json").toString());var copiedDay=copiedPlan.path("days").get(0);
@@ -59,15 +71,20 @@ class CopiedScheduleIntegrationTest {
       assertFalse(copiedDay.has("schedule_dependencies"));assertTrue(copiedDay.path("schedule_stale").asBoolean(false));assertFalse(schedules.current(copiedDay,copiedInput,Instant.now()));
       var quality=json.readTree(row.get("quality_json").toString());assertEquals("draft",quality.path("outcome").asText());
       assertTrue(quality.path("data_gaps").valueStream().anyMatch(gap->gap.asText().equals("copied_plan_requires_reverification")));
-      assertEquals(sourceDay.path("attractions"),copiedDay.path("attractions"));
+      assertEquals(sourceDay.path("attractions").get(0).path("name"), copiedDay.path("attractions").get(0).path("name"));
+      assertEquals(sourceDay.path("attractions").get(0).path("poi_id"), copiedDay.path("attractions").get(0).path("poi_id"));
+      assertFalse(copiedPlan.toString().contains("private-"));
       var before=snapshot(copied);
       for(String action:List.of("\"locked\":true,\"lock_mode\":\"time\"","\"completed\":true")){
         var denied=request("POST","/api/trips/"+copied+"/activities/poi:0:p0/state","{\"planning_revision\":1,"+action+"}",receiverToken,409);
         assertEquals("SCHEDULE_STALE",denied.path("code").asText());
       }
       assertEquals(before,snapshot(copied));assertEquals(original,snapshot(source));
-      assertEquals(shareSnapshot,db.queryForObject("SELECT snapshot_json FROM trip_shares WHERE id=?",String.class,shareId));
+      assertEquals(json.writeValueAsString(legacyShare),db.queryForObject("SELECT snapshot_json FROM trip_shares WHERE id=?",String.class,shareId));
       assertEquals(communitySnapshot,db.queryForObject("SELECT snapshot_json FROM community_trip_cards WHERE id=?",String.class,cardId));
     }
+    request("DELETE", "/api/trips/"+source+"/shares/"+shareId, null, ownerToken, 200);
+    request("GET", "/api/shared-trips/"+shareToken, null, null, 404);
+    assertEquals("{}", db.queryForObject("SELECT snapshot_json FROM trip_shares WHERE id=?",String.class,shareId));
   }
 }

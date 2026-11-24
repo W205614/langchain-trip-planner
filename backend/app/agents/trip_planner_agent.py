@@ -694,10 +694,15 @@ class MultiAgentTripPlanner(TravelDataNodes):
             (state.get("hotel_pois") or [])[:_MAX_DAILY_HOTEL_CANDIDATES]
         )
         weather_text = self._weather_to_text(state.get("weather_info", []))
+        budget_cents = request.planning_input.budget_cents
+        if budget_cents is not None:
+            budget_label = f"{budget_cents // 100}.{budget_cents % 100:02d}元"
+        else:
+            budget_label = f"{request.budget_total}元" if request.budget_total is not None else "未设置"
         base = (
             f"城市: {request.city}\n"
             f"出发地: {request.departure_city or '未提供'}\n"
-            f"同行人数: {request.traveler_count}人，房间数: {request.room_count}，总预算: {request.budget_total or '未设置'}元\n"
+            f"同行人数: {request.traveler_count}人，房间数: {request.room_count}，总预算: {budget_label}\n"
             f"交通方式: {request.transportation}\n"
             f"住宿偏好: {request.accommodation}\n"
             f"旅行偏好: {', '.join(request.preferences) if request.preferences else '无'}\n"

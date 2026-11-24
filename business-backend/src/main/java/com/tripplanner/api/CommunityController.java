@@ -69,7 +69,7 @@ public class CommunityController {
     row.put("record_version", record.get("version"));
     row.put("title", title);
     row.put("city", record.get("city"));
-    row.put("snapshot_json", json.writeValueAsString(snapshot));
+    row.put("snapshot_json", json.writeValueAsString(PublicTripSnapshot.project(json, snapshot)));
     try {
       tx.executeWithoutResult(status -> {
         userQuotas.lockActive(uid);
@@ -106,7 +106,7 @@ public class CommunityController {
     long uid = UsersController.uid(req);
     var card = community.publishedById(id);
     if (card == null) throw new ApiException(404, "公开行程不存在");
-    JsonNode snapshot = json.readTree(card.get("snapshot_json").toString());
+    JsonNode snapshot = PublicTripSnapshot.project(json, json.readTree(card.get("snapshot_json").toString()));
     var record = new HashMap<String, Object>();
     record.put("user_id", uid);
     record.put("title", card.get("title") + "（社区副本）");
@@ -168,14 +168,14 @@ public class CommunityController {
     var result = new LinkedHashMap<String, Object>();
     for (String field : List.of("id", "record_version", "title", "city", "author", "published_at"))
       result.put(field, row.get(field));
-    result.put("snapshot", json.readTree(row.get("snapshot_json").toString()));
+    result.put("snapshot", PublicTripSnapshot.project(json, json.readTree(row.get("snapshot_json").toString())));
     return result;
   }
 
   private Map<String, Object> reviewRow(Map<String, Object> row) {
     var result = new LinkedHashMap<>(row);
     result.remove("snapshot_json");
-    result.put("snapshot", json.readTree(row.get("snapshot_json").toString()));
+    result.put("snapshot", PublicTripSnapshot.project(json, json.readTree(row.get("snapshot_json").toString())));
     return result;
   }
 }

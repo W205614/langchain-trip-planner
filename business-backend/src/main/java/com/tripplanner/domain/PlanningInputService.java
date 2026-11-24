@@ -135,7 +135,11 @@ public class PlanningInputService {
     }
     for(var lock:p.path("locks"))if(lock.path("activity_id").asText("").isBlank()||!Set.of("content","time").contains(lock.path("mode").asText("content")))throw new ApiException(422,"锁定事项无效");
     if(!p.has("budget_mode"))p.put("budget_mode","estimate");if(!Set.of("estimate","confirmed").contains(p.path("budget_mode").asText()))throw new ApiException(422,"预算模式无效");
-    if(p.hasNonNull("budget_cents")&&(!p.path("budget_cents").isIntegralNumber()||p.path("budget_cents").asLong(-1)<0))throw new ApiException(422,"预算必须为非负整数分");
+    var budget = p.path("budget_cents");
+    if (p.hasNonNull("budget_cents") && (!budget.isIntegralNumber() || !budget.canConvertToLong()
+        || budget.asLong() < 0 || budget.asLong() > 1_000_000_000)) {
+      throw new ApiException(422, "预算须为 0 至 1,000,000,000 分之间的整数");
+    }
     if(p.hasNonNull("attraction_count")){
       var count=p.path("attraction_count");
       var scope=count.path("scope").asText("");
