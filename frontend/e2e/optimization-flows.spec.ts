@@ -541,7 +541,11 @@ test('community owner submission, admin review, independent Cookie member copy a
     expect((await approving).status()).toBe(200)
     const publicCard = (await api(page, 'GET', `/api/community/cards/${cardId}`)).data
     expect(publicCard.record_version).toBe(original.version)
-    expect(publicCard.snapshot.plan.days.map((day: any) => day.attractions)).toEqual(original.plan.days.map((day: any) => day.attractions))
+    const publicAttractions = (plan: any) => plan.days.map((day: any) =>
+      day.attractions.map(({ poi_id, name, address, location }: any) => ({ poi_id, name, address, location })))
+    expect(publicAttractions(publicCard.snapshot.plan)).toEqual(publicAttractions(original.plan))
+    expect(publicCard.snapshot.plan.planning_input).toBeUndefined()
+    expect(publicCard.snapshot.budget_total).toBeUndefined()
 
     const guest = await contextPage()
     const guestCopies: string[] = []
@@ -574,7 +578,7 @@ test('community owner submission, admin review, independent Cookie member copy a
     expect(copied.quality.outcome).toBe('draft')
     expect(copied.quality.data_gaps).toContain('copied_community_plan_requires_reverification')
     expect(copied.plan.days.every((day: any) => !day.schedule_dependencies && day.schedule_stale)).toBe(true)
-    expect(copied.plan.days.map((day: any) => day.attractions)).toEqual(original.plan.days.map((day: any) => day.attractions))
+    expect(publicAttractions(copied.plan)).toEqual(publicAttractions(original.plan))
     await api(member, 'GET', `/api/history/${tripId}`, undefined, 404)
     await api(page, 'GET', `/api/history/${copiedId}`, undefined, 404)
     const unchanged = (await api(page, 'GET', `/api/history/${tripId}`)).data

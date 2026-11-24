@@ -12,7 +12,7 @@
     "backend/app/agents/data_nodes.py": "b6d556373e39d0dbda46c039d9ae4d1caec8ed889aa6e2207be225b42d5c30f5",
     "backend/app/agents/prompts.py": "3a7844ec446c65230ec18f5632b3660097c8847ace4eadc1a89689f4d0d34f14",
     "backend/app/agents/state.py": "7bac245e02320a3d84eb6550f2f6c74bd0ed3446bdff53f788e3e136d1cd1800",
-    "backend/app/agents/trip_planner_agent.py": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
+    "backend/app/agents/trip_planner_agent.py": "3981c320936f2a4d51135cc8c38f8ad03cf88a7c6fb9f0203d4638e27126b1a2",
     "backend/app/agents/__init__.py": "0c3cfb54a6768e258ab91d62e82c896fbf67590577810e40b041eb084a97b086",
     "backend/app/agent_api/business_client.py": "fad3370460e95191ca4d2e957ddb73958eca82c4d8b84c5184aa1dcbc9e2a8e9",
     "backend/app/agent_api/contracts.py": "61a3e87e2529c9da585d477204ed370604cdd1caebfeda01fd0562cf1812e7a3",
@@ -490,6 +490,17 @@
       }
     },
     "review": "Native tooling and tests changed. The embedded Chroma client, indexing routes and four existing evaluation entries are byte-identical.",
+    "new_exemptions": 0
+  },
+  "source_binding_review_20261124": {
+    "source_revision": "9dec8c92eb0db3192da9bae0d0a31624d6fe68b9",
+    "changes": {
+      "backend/app/agents/trip_planner_agent.py": {
+        "previous": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
+        "current": "3981c320936f2a4d51135cc8c38f8ad03cf88a7c6fb9f0203d4638e27126b1a2",
+        "reason": "Only the model-visible text for an already validated budget changes, using integer cents to format the amount. Retrieval, Chroma initialization, supplier transport and runtime package selection are unchanged. Existing advisory and actual binary predicates are unchanged."
+      }
+    },
     "new_exemptions": 0
   }
 }
