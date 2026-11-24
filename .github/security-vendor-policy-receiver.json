@@ -61,7 +61,8 @@
     "backend/security/cpython-backports/CVE-2026-115559.patch": "bc0e2b359273b84af2c53467d8452126ec0f8fb79bb3e526f19ead88916103a1",
     "backend/security/cpython-backports/CVE-2026-115791.patch": "2008437c586077ec7c368a499c418bd95c6955520dcfb02899665ad8f4906c58",
     "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df",
-    "docs/evidence/security-20261122/receiver-openssl-rebind.json": "0c5b2808325005d68c2d9bba8dd10db62fdccb9d7d7f577c84b2449c2f5d25be"
+    "docs/evidence/security-20261122/receiver-openssl-rebind.json": "0c5b2808325005d68c2d9bba8dd10db62fdccb9d7d7f577c84b2449c2f5d25be",
+    "docs/evidence/security-20261124/receiver-libffi-delta.json": "f88d100aea253d18221bd9349eca351b1651a0bafb123ee61131e321cca5f7c4"
   },
   "assessments": [
     {
@@ -684,6 +685,473 @@
         "https://github.com/openssl/openssl/pull/33634",
         "https://github.com/openssl/openssl/pull/33729"
       ]
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "requires_apk": {
+        "alpine-baselayout": "3.7.2-r1",
+        "alpine-baselayout-data": "3.7.2-r1",
+        "alpine-keys": "2.6-r0",
+        "alpine-release": "3.24.4-r0",
+        "apk-tools": "3.0.9-r0",
+        "busybox": "1.37.0_p20261110-r0",
+        "busybox-binsh": "1.37.0_p20261110-r0",
+        "ca-certificates": "20261020-r0",
+        "ca-certificates-bundle": "20261020-r0",
+        "gdbm": "1.26-r0",
+        "libapk": "3.0.9-r0",
+        "libbz2": "1.0.8-r6",
+        "libcrypto3": "3.5.9_p20261122-r0",
+        "libffi": "3.8.1-r0",
+        "libncursesw": "6.6_p20260516-r0",
+        "libpanelw": "6.6_p20260516-r0",
+        "libssl3": "3.5.9_p20261122-r0",
+        "libuuid": "2.42.3-r1",
+        "musl": "1.2.6-r3",
+        "musl-utils": "1.2.6-r3",
+        "ncurses-terminfo-base": "6.6_p20260516-r0",
+        "readline": "8.3.3-r1",
+        "scanelf": "1.3.9-r1",
+        "ssl_client": "1.37.0_p20261110-r0",
+        "tzdata": "2026f-r0",
+        "xz-libs": "5.8.4-r0",
+        "zlib": "1.4-r0"
+      },
+      "classification": "fixed_by_pinned_security_upgrade",
+      "requires_architecture": "amd64",
+      "requires_image_configuration": {
+        "Entrypoint": [
+          "python",
+          "/app/receiver.py"
+        ],
+        "User": "1000:1000",
+        "Cmd": null
+      },
+      "requires_elf_paths": [
+        "/usr/local/bin/python3.13",
+        "/usr/local/lib/libpython3.13.so.1.0",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so",
+        "/lib/libc.musl-x86_64.so.1",
+        "/lib/ld-musl-x86_64.so.1",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/libcrypto.so.3"
+      ],
+      "file_sha256": {
+        "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
+        "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+        "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+        "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
+        "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/usr/lib/libssl.so.3": "d73268019d9e4008d56ceb88817cb598d81b8dfc736e97a93520b28777216fc7",
+        "/usr/lib/libcrypto.so.3": "2cf8f4862ee5d90a187f4dff3ee8b4a79a4fc101b9e468b72aaec314680e58cc",
+        "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
+        "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+      },
+      "review_record": "docs/evidence/security-20261121/README.md",
+      "requires_apk_architectures": {
+        "alpine-baselayout": "x86_64",
+        "alpine-baselayout-data": "x86_64",
+        "alpine-keys": "x86_64",
+        "alpine-release": "x86_64",
+        "apk-tools": "x86_64",
+        "busybox": "x86_64",
+        "busybox-binsh": "noarch",
+        "ca-certificates": "x86_64",
+        "ca-certificates-bundle": "x86_64",
+        "gdbm": "x86_64",
+        "libapk": "x86_64",
+        "libbz2": "x86_64",
+        "libcrypto3": "x86_64",
+        "libffi": "x86_64",
+        "libncursesw": "x86_64",
+        "libpanelw": "x86_64",
+        "libssl3": "x86_64",
+        "libuuid": "x86_64",
+        "musl": "x86_64",
+        "musl-utils": "x86_64",
+        "ncurses-terminfo-base": "x86_64",
+        "readline": "x86_64",
+        "scanelf": "x86_64",
+        "ssl_client": "x86_64",
+        "tzdata": "x86_64",
+        "xz-libs": "x86_64",
+        "zlib": "x86_64"
+      },
+      "requires_artifact_paths": {
+        "primary": "/usr/local/bin/python3.13",
+        "supporting": "/usr/local/lib/libpython3.13.so.1.0"
+      },
+      "ids": [
+        "CVE-2026-103995"
+      ],
+      "reason": "Actual installed http/client.py contains the complete upstream grammar fix plus whitespace correction, built from pinned CPython3.13.18 source. Version remains unchanged; no execution-path exemption.",
+      "references": [
+        "https://github.com/python/cpython/commit/2eb2af805c156ca52b316bb4ced5e0ab3971d0ae",
+        "https://github.com/python/cpython/commit/9f52b443c002cccfb54bda0706a9276b6b4a109d"
+      ],
+      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "requires_apk": {
+        "alpine-baselayout": "3.7.2-r1",
+        "alpine-baselayout-data": "3.7.2-r1",
+        "alpine-keys": "2.6-r0",
+        "alpine-release": "3.24.4-r0",
+        "apk-tools": "3.0.9-r0",
+        "busybox": "1.37.0_p20261110-r0",
+        "busybox-binsh": "1.37.0_p20261110-r0",
+        "ca-certificates": "20261020-r0",
+        "ca-certificates-bundle": "20261020-r0",
+        "gdbm": "1.26-r0",
+        "libapk": "3.0.9-r0",
+        "libbz2": "1.0.8-r6",
+        "libcrypto3": "3.5.9_p20261122-r0",
+        "libffi": "3.8.1-r0",
+        "libncursesw": "6.6_p20260516-r0",
+        "libpanelw": "6.6_p20260516-r0",
+        "libssl3": "3.5.9_p20261122-r0",
+        "libuuid": "2.42.3-r1",
+        "musl": "1.2.6-r3",
+        "musl-utils": "1.2.6-r3",
+        "ncurses-terminfo-base": "6.6_p20260516-r0",
+        "readline": "8.3.3-r1",
+        "scanelf": "1.3.9-r1",
+        "ssl_client": "1.37.0_p20261110-r0",
+        "tzdata": "2026f-r0",
+        "xz-libs": "5.8.4-r0",
+        "zlib": "1.4-r0"
+      },
+      "classification": "fixed_by_pinned_security_upgrade",
+      "requires_architecture": "amd64",
+      "requires_image_configuration": {
+        "Entrypoint": [
+          "python",
+          "/app/receiver.py"
+        ],
+        "User": "1000:1000",
+        "Cmd": null
+      },
+      "requires_elf_paths": [
+        "/usr/local/bin/python3.13",
+        "/usr/local/lib/libpython3.13.so.1.0",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so",
+        "/lib/libc.musl-x86_64.so.1",
+        "/lib/ld-musl-x86_64.so.1",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/libcrypto.so.3"
+      ],
+      "file_sha256": {
+        "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
+        "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+        "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+        "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
+        "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/usr/lib/libssl.so.3": "d73268019d9e4008d56ceb88817cb598d81b8dfc736e97a93520b28777216fc7",
+        "/usr/lib/libcrypto.so.3": "2cf8f4862ee5d90a187f4dff3ee8b4a79a4fc101b9e468b72aaec314680e58cc",
+        "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
+        "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+      },
+      "review_record": "docs/evidence/security-20261121/README.md",
+      "requires_apk_architectures": {
+        "alpine-baselayout": "x86_64",
+        "alpine-baselayout-data": "x86_64",
+        "alpine-keys": "x86_64",
+        "alpine-release": "x86_64",
+        "apk-tools": "x86_64",
+        "busybox": "x86_64",
+        "busybox-binsh": "noarch",
+        "ca-certificates": "x86_64",
+        "ca-certificates-bundle": "x86_64",
+        "gdbm": "x86_64",
+        "libapk": "x86_64",
+        "libbz2": "x86_64",
+        "libcrypto3": "x86_64",
+        "libffi": "x86_64",
+        "libncursesw": "x86_64",
+        "libpanelw": "x86_64",
+        "libssl3": "x86_64",
+        "libuuid": "x86_64",
+        "musl": "x86_64",
+        "musl-utils": "x86_64",
+        "ncurses-terminfo-base": "x86_64",
+        "readline": "x86_64",
+        "scanelf": "x86_64",
+        "ssl_client": "x86_64",
+        "tzdata": "x86_64",
+        "xz-libs": "x86_64",
+        "zlib": "x86_64"
+      },
+      "requires_artifact_paths": {
+        "primary": "/usr/local/bin/python3.13",
+        "supporting": "/usr/local/lib/libpython3.13.so.1.0"
+      },
+      "ids": [
+        "CVE-2026-116566"
+      ],
+      "reason": "Actual installed musl _socket ELF was compiled against the identical official interpreter headers/configuration with the upstream host/service NUL length checks. Its bytes and interpreter/libpython/runtime identities are measured.",
+      "references": [
+        "https://github.com/python/cpython/commit/131a3a66c5f400b588f9fd2732a5ed4e89623ee3"
+      ],
+      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "requires_apk": {
+        "alpine-baselayout": "3.7.2-r1",
+        "alpine-baselayout-data": "3.7.2-r1",
+        "alpine-keys": "2.6-r0",
+        "alpine-release": "3.24.4-r0",
+        "apk-tools": "3.0.9-r0",
+        "busybox": "1.37.0_p20261110-r0",
+        "busybox-binsh": "1.37.0_p20261110-r0",
+        "ca-certificates": "20261020-r0",
+        "ca-certificates-bundle": "20261020-r0",
+        "gdbm": "1.26-r0",
+        "libapk": "3.0.9-r0",
+        "libbz2": "1.0.8-r6",
+        "libcrypto3": "3.5.9_p20261122-r0",
+        "libffi": "3.8.1-r0",
+        "libncursesw": "6.6_p20260516-r0",
+        "libpanelw": "6.6_p20260516-r0",
+        "libssl3": "3.5.9_p20261122-r0",
+        "libuuid": "2.42.3-r1",
+        "musl": "1.2.6-r3",
+        "musl-utils": "1.2.6-r3",
+        "ncurses-terminfo-base": "6.6_p20260516-r0",
+        "readline": "8.3.3-r1",
+        "scanelf": "1.3.9-r1",
+        "ssl_client": "1.37.0_p20261110-r0",
+        "tzdata": "2026f-r0",
+        "xz-libs": "5.8.4-r0",
+        "zlib": "1.4-r0"
+      },
+      "classification": "fixed_by_pinned_security_upgrade",
+      "requires_architecture": "amd64",
+      "requires_image_configuration": {
+        "Entrypoint": [
+          "python",
+          "/app/receiver.py"
+        ],
+        "User": "1000:1000",
+        "Cmd": null
+      },
+      "requires_elf_paths": [
+        "/usr/local/bin/python3.13",
+        "/usr/local/lib/libpython3.13.so.1.0",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so",
+        "/lib/libc.musl-x86_64.so.1",
+        "/lib/ld-musl-x86_64.so.1",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/libcrypto.so.3"
+      ],
+      "file_sha256": {
+        "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
+        "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+        "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+        "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
+        "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/usr/lib/libssl.so.3": "d73268019d9e4008d56ceb88817cb598d81b8dfc736e97a93520b28777216fc7",
+        "/usr/lib/libcrypto.so.3": "2cf8f4862ee5d90a187f4dff3ee8b4a79a4fc101b9e468b72aaec314680e58cc",
+        "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
+        "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9"
+      },
+      "review_record": "docs/evidence/security-20261121/README.md",
+      "requires_apk_architectures": {
+        "alpine-baselayout": "x86_64",
+        "alpine-baselayout-data": "x86_64",
+        "alpine-keys": "x86_64",
+        "alpine-release": "x86_64",
+        "apk-tools": "x86_64",
+        "busybox": "x86_64",
+        "busybox-binsh": "noarch",
+        "ca-certificates": "x86_64",
+        "ca-certificates-bundle": "x86_64",
+        "gdbm": "x86_64",
+        "libapk": "x86_64",
+        "libbz2": "x86_64",
+        "libcrypto3": "x86_64",
+        "libffi": "x86_64",
+        "libncursesw": "x86_64",
+        "libpanelw": "x86_64",
+        "libssl3": "x86_64",
+        "libuuid": "x86_64",
+        "musl": "x86_64",
+        "musl-utils": "x86_64",
+        "ncurses-terminfo-base": "x86_64",
+        "readline": "x86_64",
+        "scanelf": "x86_64",
+        "ssl_client": "x86_64",
+        "tzdata": "x86_64",
+        "xz-libs": "x86_64",
+        "zlib": "x86_64"
+      },
+      "requires_artifact_paths": {
+        "primary": "/usr/local/bin/python3.13",
+        "supporting": "/usr/local/lib/libpython3.13.so.1.0"
+      },
+      "ids": [
+        "CVE-2025-15367"
+      ],
+      "reason": "Actual installed poplib.py contains the complete upstream runtime command-control fix. Only test import context is rebased; C0/DEL rejection occurs before socket send.",
+      "references": [
+        "https://github.com/python/cpython/commit/b234a2b67539f787e191d2ef19a7cbdce32874e7"
+      ],
+      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+    },
+    {
+      "distribution": "alpine",
+      "release": "3.24.4",
+      "artifact_type": "binary",
+      "artifact_versions": {
+        "python": "3.13.18"
+      },
+      "requires_apk": {
+        "alpine-baselayout": "3.7.2-r1",
+        "alpine-baselayout-data": "3.7.2-r1",
+        "alpine-keys": "2.6-r0",
+        "alpine-release": "3.24.4-r0",
+        "apk-tools": "3.0.9-r0",
+        "busybox": "1.37.0_p20261110-r0",
+        "busybox-binsh": "1.37.0_p20261110-r0",
+        "ca-certificates": "20261020-r0",
+        "ca-certificates-bundle": "20261020-r0",
+        "gdbm": "1.26-r0",
+        "libapk": "3.0.9-r0",
+        "libbz2": "1.0.8-r6",
+        "libcrypto3": "3.5.9_p20261122-r0",
+        "libffi": "3.8.1-r0",
+        "libncursesw": "6.6_p20260516-r0",
+        "libpanelw": "6.6_p20260516-r0",
+        "libssl3": "3.5.9_p20261122-r0",
+        "libuuid": "2.42.3-r1",
+        "musl": "1.2.6-r3",
+        "musl-utils": "1.2.6-r3",
+        "ncurses-terminfo-base": "6.6_p20260516-r0",
+        "readline": "8.3.3-r1",
+        "scanelf": "1.3.9-r1",
+        "ssl_client": "1.37.0_p20261110-r0",
+        "tzdata": "2026f-r0",
+        "xz-libs": "5.8.4-r0",
+        "zlib": "1.4-r0"
+      },
+      "classification": "fixed_by_pinned_security_upgrade",
+      "requires_architecture": "amd64",
+      "requires_image_configuration": {
+        "Entrypoint": [
+          "python",
+          "/app/receiver.py"
+        ],
+        "User": "1000:1000",
+        "Cmd": null
+      },
+      "requires_elf_paths": [
+        "/usr/local/bin/python3.13",
+        "/usr/local/lib/libpython3.13.so.1.0",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so",
+        "/lib/libc.musl-x86_64.so.1",
+        "/lib/ld-musl-x86_64.so.1",
+        "/usr/lib/libssl.so.3",
+        "/usr/lib/libcrypto.so.3"
+      ],
+      "file_sha256": {
+        "/usr/local/bin/python3.13": "c5d7edc40ae7e9b8142b97856c6ea56f8ab7f97677cf9f90d68dda0dba266f68",
+        "/usr/local/lib/libpython3.13.so.1.0": "2c8630c720c4380b99901be7627a52851b4a11dbb0501776f5c7bd79031582aa",
+        "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-musl.so": "2066633676bbb194b937aff5e1aae6924936b5ba726113bb589940b8101ef111",
+        "/usr/local/lib/python3.13/http/client.py": "423465d4992ffe34fe6db0ec3560cd15372319b6628af3ee544483a3348dc1c7",
+        "/usr/local/lib/python3.13/poplib.py": "a6ffff188814b56d95b043c31d9e0dfee51ac6d6e92afe74ab070cb6136b076f",
+        "/app/receiver.py": "823d6f65f52de27737cd1f8e8331dd4b7c3924575970fec2f03ce0c4446accfd",
+        "/lib/libc.musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/lib/ld-musl-x86_64.so.1": "095b047c631447e4fa50401fa7ffce01f678587040d65ba18c574981dc630de5",
+        "/usr/lib/libssl.so.3": "d73268019d9e4008d56ceb88817cb598d81b8dfc736e97a93520b28777216fc7",
+        "/usr/lib/libcrypto.so.3": "2cf8f4862ee5d90a187f4dff3ee8b4a79a4fc101b9e468b72aaec314680e58cc",
+        "/usr/local/lib/python3.13/http/cookiejar.py": "d88db01f53951c92be73570dc4005907349ec5da4a34f4beeaf808ed87dc5909",
+        "/usr/local/lib/python3.13/http/cookies.py": "f2ffe419457e1f1d985f169dce6f58e45b603abc2d38799f37414c88d0eb3c01",
+        "/usr/local/lib/python3.13/ssl.py": "1567ffa264e5f43e73c45ce1d7fddf4e77e3fdb09e4ebaff6e669404544abbb9",
+        "/usr/local/lib/python3.13/imaplib.py": "b88fed864f221c0d2fb571bfaa35c550e81f6b83cda4b31335dd8919c9c143e0",
+        "/usr/local/share/tripplanner/cpython-backports/installed-files.sha256": "d58a532e6599f453285fad819f57697a3d416552081b3dd8c1560f99a8de85dd",
+        "/usr/local/lib/python3.13/gzip.py": "ac5b777fff2f2e20d0443d17ce2e3459705fe867dbeb12471616be2063585080",
+        "/usr/local/lib/python3.13/runpy.py": "d6427ee5e18638122f7f0409a38b27867034b5fe1768b35c03ab53c79b275ba6",
+        "/usr/local/lib/python3.13/tarfile.py": "1d45900b8bac76641c9d93772c00237c0647cc1887906599f8cb15e7658cfdb7",
+        "/usr/local/lib/python3.13/zipfile/__init__.py": "80b0ec4c7b17b895d15eea638c133f505ac33a6cfd28685e805665ffd4880631"
+      },
+      "review_record": "backend/security/cpython-backports/README.md",
+      "requires_apk_architectures": {
+        "alpine-baselayout": "x86_64",
+        "alpine-baselayout-data": "x86_64",
+        "alpine-keys": "x86_64",
+        "alpine-release": "x86_64",
+        "apk-tools": "x86_64",
+        "busybox": "x86_64",
+        "busybox-binsh": "noarch",
+        "ca-certificates": "x86_64",
+        "ca-certificates-bundle": "x86_64",
+        "gdbm": "x86_64",
+        "libapk": "x86_64",
+        "libbz2": "x86_64",
+        "libcrypto3": "x86_64",
+        "libffi": "x86_64",
+        "libncursesw": "x86_64",
+        "libpanelw": "x86_64",
+        "libssl3": "x86_64",
+        "libuuid": "x86_64",
+        "musl": "x86_64",
+        "musl-utils": "x86_64",
+        "ncurses-terminfo-base": "x86_64",
+        "readline": "x86_64",
+        "scanelf": "x86_64",
+        "ssl_client": "x86_64",
+        "tzdata": "x86_64",
+        "xz-libs": "x86_64",
+        "zlib": "x86_64"
+      },
+      "requires_artifact_paths": {
+        "primary": "/usr/local/bin/python3.13",
+        "supporting": "/usr/local/lib/libpython3.13.so.1.0"
+      },
+      "ids": [
+        "CVE-2026-124249",
+        "CVE-2026-16052",
+        "CVE-2026-19552",
+        "CVE-2026-115559",
+        "CVE-2026-115791"
+      ],
+      "reason": "The installed CPython 3.13.18 modules contain the reviewed cookie, TLS, IMAP and archive CLI backports. The official executable, rebuilt shared library containing frozen runpy, patched archive modules and installed manifest must match.",
+      "references": [
+        "https://github.com/python/cpython/commit/8eb3d2c1c41ca7ce628554413981c1eb763a1494",
+        "https://github.com/python/cpython/commit/27026842f6774c167295f4b59972589f12ec5987",
+        "https://github.com/python/cpython/commit/8dde46eaa6baf5f027a7234845b20d50b509624e",
+        "https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df",
+        "https://github.com/python/cpython/commit/8aa5d657e4d3f1a4cca5ff6c976e2e868e0a9056"
+      ],
+      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "reviewed_source": "9dec8c92eb0db3192da9bae0d0a31624d6fe68b9",
+  "workflow_run": 45386590601,
+  "workflow_job": 138418983682,
+  "github_artifact": 14917297532,
+  "image_id": "sha256:d715b361ea6d21bd07e2a7852985f227702766e01eac338662632834b49dac65",
+  "inventory_sha256": "1f02fdd19d8ec7d5e88ec5c2736be8e4ac759ee346ba9f2e8ea4522d6a992c48",
+  "raw_scan_sha256": "45cccb37bc738588d9c67fb8d641a8cee165ed7c18dd44e313a9e965b39c6771",
+  "apk_version_delta": {
+    "libffi": [
+      "3.5.2-r1",
+      "3.8.1-r0"
+    ]
+  },
+  "unchanged_exact_predicates": [
+    "CPython patched and carrier file SHA256",
+    "receiver image command and user",
+    "entire remaining signed APK inventory",
+    "APK architecture",
+    "runtime ELF paths"
+  ],
+  "previous_behavior_proof": "The original job passed installed CPython backport and isolated HTTP shutdown checks before failing the image gate.",
+  "scope": "A second exact APK assembly for the same eight patched interpreter findings. The existing assembly still has its separate entry.",
+  "new_risk_acceptance": 0
+}
