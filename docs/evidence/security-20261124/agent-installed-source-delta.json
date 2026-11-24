@@ -1,0 +1,20 @@
+{
+  "source": "92babab85bf4cb5c5e1e141e2ab2f10a825cc8e8",
+  "workflow_run": 45390775484,
+  "workflow_job": 138433566474,
+  "github_artifact": 14920407403,
+  "image_id": "sha256:fb43fbdc17299739f104c406e0987eacb458380a49949628fa6940f0b88f67e6",
+  "scan_sha256": "2e4e27b728b6102ecb6e75eaf9e5683412b32dc828a6fecfddc4043565af0315",
+  "inventory_sha256": "de90dae112a758ffa6e955733c5d92fc32b0b2d6912ba81c3c9c2abaee40e3d0",
+  "installed_lf_fingerprints": {
+    "/app/app/agents/trip_planner_agent.py": {
+      "previous": "c851b6e0e02992e8ba2ca7e788f7e387df7681d5056cc71fe8e8a286519c5972",
+      "current": "3981c320936f2a4d51135cc8c38f8ad03cf88a7c6fb9f0203d4638e27126b1a2"
+    }
+  },
+  "review": "The immutable application diff only formats a validated integer budget in the text prompt. It does not add file loading, dynamic program execution, database code or subprocess calls. Existing distribution packages, executable fingerprints and prior path predicates stayed identical for the 16 observed records.",
+  "raw_findings": 220,
+  "corrected_existing_execution_path_matches": 16,
+  "separately_reviewed_chroma_matches": 4,
+  "new_exemptions": 0
+}
