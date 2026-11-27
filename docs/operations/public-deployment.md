@@ -162,7 +162,7 @@ docker compose -p trip-public-edge -f docker-compose.public-edge-validation.yml 
 
 `https` 创建隔离账号，核验跳转、HSTS、Secure／HttpOnly／SameSite、CSRF、内部路由隔离、可信代理和不同实际客户端的限流。`alerts` 使用真实 Prometheus 探针和原生 Alertmanager，通过 STARTTLS SMTP 及带 Bearer 的 HTTPS Webhook 验证触发、恢复、投递失败计数增加及恢复后的自动重试，同时检查本地收件箱去重；会短暂停止并恢复**本项目** Mailpit。测试配置将分组等待缩短为 1 秒、分组间隔缩短为 2 秒，生产模板仍为 10 秒／2 分钟。
 
-成功判据为两个脚本退出码均为 0，私有 `https-result.json` 与 `alerts-result.json` 均生成；失败时查看本项目 `backend frontend edge alertmanager prometheus mailpit` 日志，并始终执行 `stop`。Mailpit 记录测试 SMTP 接受，Webhook 2xx 记录接收端接受；真实收件箱送达在供应商联调中检查。2026-11-07 原始隔离验收见 [历史入口记录](../evidence/public-edge-20261107/report.json)，最终 `2.11.9-security1` 镜像复测和扫描见 [Caddy最终证据](../evidence/caddy-security-20261107/report.json)。公网 DNS、ACME 申请／续期、真实邮件供应商及真实 Webhook 的接入仍待所选环境验证。
+成功判据为两个脚本退出码均为 0，私有 `https-result.json` 与 `alerts-result.json` 均生成；失败时查看本项目 `backend frontend edge alertmanager prometheus mailpit` 日志，并始终执行 `stop`。Mailpit 记录测试 SMTP 接受，Webhook 2xx 记录接收端接受；真实收件箱送达在供应商联调中检查。2026-11-07 原始隔离验收见 [历史入口记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/public-edge-20261107/report.json)，最终 `2.11.9-security1` 镜像复测和扫描见 [Caddy最终证据](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/caddy-security-20261107/report.json)。公网 DNS、ACME 申请／续期、真实邮件供应商及真实 Webhook 的接入仍待所选环境验证。
 
 CI 的 Docker 验收 job 在公开账号浏览器流程后运行同一隔离验证，先检查子网和宿主端口，再保留结果与容器日志，始终停止该验证项目。运行结果在对应提交的 GitHub Actions 中查看。
 

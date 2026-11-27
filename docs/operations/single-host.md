@@ -14,7 +14,7 @@
 
 七服务配置位于 `.codex-optimization/daily-window/daily-release.compose.json`，私有环境文件位于同目录的 `runtime/`。这些本机文件不进入 Git。仓库根目录 `docker-compose.yml` 仍提供四个核心服务的首次部署模板；已有七服务环境继续使用原 Compose 文件，不能用首次部署命令替换它。
 
-2026-11-08，`v0.1.1` 纳入排程说明与默认恢复续排修复，业务源码检查点为 `b96fadc`，见[补丁验收](../evidence/release-v0.1.1-20261108/README.md)。本机继续使用 Java 业务后端和 Python Agent，保留原环境、端口与数据挂载，未改动的 Java、数据库及监控镜像沿用原标识。精确运行镜像和源提交对应关系记录在本机私有 Compose 的 `x-daily-release` 中；查看实际状态使用下方 `ps -a`。验收结束后停止七服务，需要使用时再启动。
+2026-11-08，`v0.1.1` 纳入排程说明与默认恢复续排修复，业务源码检查点为 `b96fadc`，见[补丁验收](https://github.com/W205614/langchain-trip-planner/blob/225908f9410a14ceb8460b13c638f79d0a8c144f/docs/evidence/release-v0.1.1-20261108/README.md)。本机继续使用 Java 业务后端和 Python Agent，保留原环境、端口与数据挂载，未改动的 Java、数据库及监控镜像沿用原标识。精确运行镜像和源提交对应关系记录在本机私有 Compose 的 `x-daily-release` 中；查看实际状态使用下方 `ps -a`。验收结束后停止七服务，需要使用时再启动。
 
 保留 `backups/maintenance-fix-20261108/pre-upgrade/` 与 `backups/daily-v0.1.0-upgrade-20261107/pre-upgrade/` 两套数据和配置快照，无离线镜像归档；本轮已验证数据库恢复，未重新验证完整服务克隆恢复。定时备份任务保持 Disabled，详见[备份与恢复](java-migration.md#备份和恢复)。
 

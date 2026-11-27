@@ -110,7 +110,7 @@ Packages 列表读取、指定版本读取、推送及公开可见性分别验�
 - GitHub 常规 CI 4 项和安全门禁 14 项通过。镜像推广和匿名消费者两项均成功，公开归档和标签源码通过摘要校验。本机另按不可变摘要匿名拉取并比对三个镜像的层与运行配置。[CI](https://github.com/W205614/langchain-trip-planner/actions/runs/45024423312) · [安全门禁](https://github.com/W205614/langchain-trip-planner/actions/runs/45024423239) · [公开验收](https://github.com/W205614/langchain-trip-planner/actions/runs/45033552606)
 - 隔离环境用一次文本模型和 36 次高德 MCP 工具请求生成杭州一日行程，模型结果保存并重新登录读取，恰好一个景点。另用一次 Embedding 验证 3072 维返回。营业、预约等待核验事项仍按结果提示保留，未新增浏览器地图 SDK 或视觉测试。
 - 候选镜像通过 66 项隔离业务检查与两条浏览器流程。日常七服务切换后，46 张业务表和上传文件摘要一致，Flyway 20 个迁移及两个监控目标通过，验收后恢复停止。
-- 上一版本的原始镜像扫描、本轮产生的阻断、回补和适用性证据均保留。[安全门禁复核](../evidence/security-20261122/README.md)
+- 上一版本的原始镜像扫描、本轮产生的阻断、回补和适用性证据均保留。[安全门禁复核](https://github.com/W205614/langchain-trip-planner/blob/88dbcd717edbf44a1f1e6ff00cfa54eda18b9d71/docs/evidence/security-20261122/README.md)
 
 ## v0.1.7 的不可变身份
 
@@ -129,11 +129,11 @@ Packages 列表读取、指定版本读取、推送及公开可见性分别验�
 | `container-manifest.json` | 19833 | `fae6be7eac9b23eaf1bcd8611eca5226713fcd83467660fa5e1ba3d5bfc7e6b1` |
 | `SHA256SUMS` | 284 | `8405e96d0ce8fdc036f46033778cf9cf7f8ffaf0d1fbc9cc9d75a2fa374c8e46` |
 
-来源包6916成员的CRC/摘要及131个项目文件与正式源码的LF等价核验通过；原始第三方材料、许可与历史身份保留。匿名拉取的配置和有序层与封装候选一致，并在隔离栈读取同一真实记录、登录刷新通过，0新增供应商调用。日常环境升级后的46表/4上传、配置与停止状态另见[公开交付摘要](../evidence/maintenance-v0.1.7-20261115/final-verification.json)。下面的历史版本表保持原身份。
+来源包6916成员的CRC/摘要及131个项目文件与正式源码的LF等价核验通过；原始第三方材料、许可与历史身份保留。匿名拉取的配置和有序层与封装候选一致，并在隔离栈读取同一真实记录、登录刷新通过，0新增供应商调用。日常环境升级后的46表/4上传、配置与停止状态另见[公开交付摘要](https://github.com/W205614/langchain-trip-planner/blob/88dbcd717edbf44a1f1e6ff00cfa54eda18b9d71/docs/evidence/maintenance-v0.1.7-20261115/final-verification.json)。下面的历史版本表保持原身份。
 
 ## v0.1.6 的不可变身份
 
-[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6)源码为`2648d33576c987294facc7b797bbcea74af2214e`，Linux/amd64、PUBLIC。三个应用的实际Registry/config摘要如下，标签`:v0.1.6`；部署使用仓库加`@`和完整digest。四附件、真实联网验收及备份/停止边界见[本版证据](../evidence/release-v0.1.6-20261112/README.md)。
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.6)源码为`2648d33576c987294facc7b797bbcea74af2214e`，Linux/amd64、PUBLIC。三个应用的实际Registry/config摘要如下，标签`:v0.1.6`；部署使用仓库加`@`和完整digest。四附件、真实联网验收及备份/停止边界见[本版证据](https://github.com/W205614/langchain-trip-planner/blob/ea0f37be5e6b384dfa75859eb2d1f8c75a47e138/docs/evidence/release-v0.1.6-20261112/README.md)。
 
 | 应用 | Registry digest | Config digest |
 | --- | --- | --- |
@@ -153,7 +153,7 @@ Packages 列表读取、指定版本读取、推送及公开可见性分别验�
 | `backend` | `sha256:e07bf6b87db08f28608d5fd71db8edba53dc6cea44b8345e7a11eaa25f885cc0` | `sha256:3c61c0ea12606e3d9e711752d662d23e562a18f54af0f66ccbc864bdaeb11609` |
 | `frontend` | `sha256:7911df66b5393c649138f6d232f939d22a65b18697cf75b289f8913aed8fcdd7` | `sha256:66422c85ed2e0d740776dcce9692992a273400cd206178d2c8a6e672524233b5` |
 
-来源、四附件摘要、实际全级扫描、真实生成与最终回放边界见[本版证据](../evidence/release-v0.1.5-20261112/README.md)。对应源码ZIP6712文件，2743来源记录及128个项目文件核对；OpenSSL回补在`project/backend/security/openssl-backport/`，前端的实际安全运行层复用配方和证明在`runtime-provenance/frontend/duration-overlay/`。原生回补和第三方源码由各自脚本构建，不承诺不同时间重建逐字节相同。
+来源、四附件摘要、实际全级扫描、真实生成与最终回放边界见[本版证据](https://github.com/W205614/langchain-trip-planner/blob/2648d33576c987294facc7b797bbcea74af2214e/docs/evidence/release-v0.1.5-20261112/README.md)。对应源码ZIP6712文件，2743来源记录及128个项目文件核对；OpenSSL回补在`project/backend/security/openssl-backport/`，前端的实际安全运行层复用配方和证明在`runtime-provenance/frontend/duration-overlay/`。原生回补和第三方源码由各自脚本构建，不承诺不同时间重建逐字节相同。
 
 本版干净源码CI实际构建全部核心服务；本机首次配置/拒绝覆盖、两条Compose配置及历史输入复制检查另行实跑。以下v0.1.4章节是保留的历史身份与当时失败，不用于冒充本版新验收。
 
@@ -228,4 +228,4 @@ Tag272的生产模板receiver仍使用完整Agent配方和旧命令／挂载，�
 
 本版第一次组合推广工作流的publisher已成功，但旧consumer按原始字节拒绝上述9项文本行尾，故整个[旧run42978056488](https://github.com/W205614/langchain-trip-planner/actions/runs/42978056488)不是成功状态，失败保持。修正工具ab15后，[独立run42979536910](https://github.com/W205614/langchain-trip-planner/actions/runs/42979536910)实际成功。不要重跑已有版本的publisher来验证；它本来就拒绝覆盖已存在的公开版本。
 
-匿名获取与三项断网命令不等于整栈通过。v0.1.4另完成实际本机匿名拉取、隔离数据库恢复、四服务与浏览器检查，以及约定日常七服务升级；模型／高德正向验收仍未通过，按明确授权采用离线夹具，具体见[版本证据](../evidence/release-v0.1.4-20261111/README.md)。后续工具和文档提交不移动Tag、不修改这些附件或镜像。
+匿名获取与三项断网命令不等于整栈通过。v0.1.4另完成实际本机匿名拉取、隔离数据库恢复、四服务与浏览器检查，以及约定日常七服务升级；模型／高德正向验收仍未通过，按明确授权采用离线夹具，具体见[版本证据](https://github.com/W205614/langchain-trip-planner/blob/2648d33576c987294facc7b797bbcea74af2214e/docs/evidence/release-v0.1.4-20261111/README.md)。后续工具和文档提交不移动Tag、不修改这些附件或镜像。

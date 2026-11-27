@@ -4,11 +4,11 @@
 
 当前构建使用的四份安全复核配置均按组件或代码变化复核，不再使用固定日历截止日：
 
-2026-11-21 当前 CodeQL 绑定使用源码 `23efed4` 的四份新 SARIF。逐项复核了 11 条 Java 结果及 44 条数据流。原始告警、镜像扫描的剩余阻断及构建修正见[本次复核](../evidence/security-20261121/README.md)。
+2026-11-21 的 CodeQL 绑定使用源码 `23efed4` 的四份新 SARIF。逐项复核了 11 条 Java 结果及 44 条数据流。原始告警、镜像扫描的剩余阻断及构建修正见[本次复核](https://github.com/W205614/langchain-trip-planner/blob/88dbcd717edbf44a1f1e6ff00cfa54eda18b9d71/docs/evidence/security-20261121/README.md)。
 
-2026-11-07 的历史绑定使用源码 `dc1e461` 的四语言新 SARIF。26项原始高危告警的完整结果、规则描述、主告警源码、47份支持源码及语义数据流与已复核的 `909fbc4` 相同；本批仅补齐任务去重测试夹具的质量字段，见[最新复核记录](../evidence/itinerary-facts-20261107/codeql/dc1e461/README.md)。Agent 局部数量约束的前一批源码复核见[行程修复记录](../evidence/itinerary-facts-20261107/codeql/909fbc4/README.md)。原始告警保留，当前提交的 CI 结果在对应工作流查看。
+2026-11-07 的历史绑定使用源码 `dc1e461` 的四语言新 SARIF。26项原始高危告警的完整结果、规则描述、主告警源码、47份支持源码及语义数据流与已复核的 `909fbc4` 相同；本批仅补齐任务去重测试夹具的质量字段，见[最新复核记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/itinerary-facts-20261107/codeql/dc1e461/README.md)。Agent 局部数量约束的前一批源码复核见[行程修复记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/itinerary-facts-20261107/codeql/909fbc4/README.md)。原始告警保留，当前提交的 CI 结果在对应工作流查看。
 
-2026-10-31 源码 `2368aaf` 的22项告警及当时的依赖复核保留在[历史记录](../evidence/single-host-20261031/codeql-source-review.json)。
+2026-10-31 源码 `2368aaf` 的22项告警及当时的依赖复核保留在[历史记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/single-host-20261031/codeql-source-review.json)。
 
 | 当前配置 | 必须匹配的依据 |
 |---|---|
@@ -38,9 +38,9 @@ Chroma VEX 的四项结论绑定本项目嵌入式客户端的适用性，保留
 
 ## 2026-10-31 安全复核记录
 
-本轮新扫描发现并修复了前端依赖告警：`follow-redirects` 1.16.2、Vite 6.4.5，以及从依赖图移除受影响 minimatch 的 vue-tsc 3.3.14；[原始失败与修复结果](../evidence/single-host-20261031/dependency-remediation.json)单独保留，官方 npm registry 的完整审计为0项。版本来自上游修复，不增加安全例外。
+本轮新扫描发现并修复了前端依赖告警：`follow-redirects` 1.16.2、Vite 6.4.5，以及从依赖图移除受影响 minimatch 的 vue-tsc 3.3.14；[原始失败与修复结果](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/single-host-20261031/dependency-remediation.json)单独保留，官方 npm registry 的完整审计为0项。版本来自上游修复，不增加安全例外。
 
-glibc 的 `CVE-2026-84243` LANGUAGE 路径穿越由新构建中的 `+trip2` 源码回补处理，保留原有两项 glibc 修复。补丁来自经过审查的上游 v7 提案，使用本项目构建的回补包；构建须通过同一上游回归、ABI 检查及实际镜像扫描，包版本和 ELF 指纹精确绑定，原始告警继续保留。[修复与反例证据](../evidence/native-gettext-20261031/README.md)单独记录。这里记录当时的镜像构建与检查，日常部署状态见[单机运行手册](single-host.md)。
+glibc 的 `CVE-2026-84243` LANGUAGE 路径穿越由新构建中的 `+trip2` 源码回补处理，保留原有两项 glibc 修复。补丁来自经过审查的上游 v7 提案，使用本项目构建的回补包；构建须通过同一上游回归、ABI 检查及实际镜像扫描，包版本和 ELF 指纹精确绑定，原始告警继续保留。[修复与反例证据](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/native-gettext-20261031/README.md)单独记录。这里记录当时的镜像构建与检查，日常部署状态见[单机运行手册](single-host.md)。
 
 源码变化后须使用新SARIF重新复核精确查询、位置、源码和数据流；旧绿灯不沿用到新源码树。最终提交的CI与安全检查仍须全部实际成功。
 
@@ -48,7 +48,7 @@ glibc 的 `CVE-2026-84243` LANGUAGE 路径穿越由新构建中的 `+trip2` 源�
 
 Python 依赖同时固定 LangGraph `1.2.14` 与 SDK `0.4.6`，处理[上游 v3 流式标识符路径编码漏洞](https://github.com/langchain-ai/langgraph/security/advisories/GHSA-3fx2-cqw9-xr3c)；锁文件通过原有 uv `0.13.5` 重新生成，Python 3.11 的 Linux/Windows 有效依赖只变化这两个包。
 
-新镜像使用[安全回补及组件适用性记录](../../.github/security-vendor-remediated.json)，核对实际包版本、相关 ELF 字节和绑定源码，并保留完整原始扫描；未知高危、扫描错误或不匹配仍阻断。CI 不再传入旧的 `--risk-acceptance` 或 `restore-response-v1` 参数。[原始授权](../../.github/security-risk-authorization.json)、[冻结指纹](../../.github/security-risk-acceptance.json)和[旧部署矩阵](../evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)保留为历史证据，不是本轮组件更新的放行票据。历史两文件授权测试在对应 Git 快照上运行，不要求未来业务源码永远等于旧快照。
+新镜像使用[安全回补及组件适用性记录](../../.github/security-vendor-remediated.json)，核对实际包版本、相关 ELF 字节和绑定源码，并保留完整原始扫描；未知高危、扫描错误或不匹配仍阻断。CI 不再传入旧的 `--risk-acceptance` 或 `restore-response-v1` 参数。[原始授权](../../.github/security-risk-authorization.json)、[冻结指纹](../../.github/security-risk-acceptance.json)和[旧部署矩阵](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/unresolved-cve-deployment-matrix.md)保留为历史证据，不是本轮组件更新的放行票据。历史两文件授权测试在对应 Git 快照上运行，不要求未来业务源码永远等于旧快照。
 
 Agent 的日常及独立生产配置显式丢弃所有 Linux capabilities，并禁止通过 SUID/file capabilities 获得新权限；镜像精确移除无业务用途的 mount/umount/nsenter/unshare 及已核别名/副本，保留系统依赖库。根文件系统设为只读，runtime、Chroma 使用原有持久挂载，临时目录与应用文件日志分别使用 128 MiB/64 MiB tmpfs；应用文件日志随容器停止消失，控制台日志仍由 Docker 按既定容量轮转。这些约束缩小提权与写入面，不修复进程内原生库的越界写或 UAF，实际 uvicorn 候选验收结果须与对应镜像核对。旧 Bearer 凭证继续遵守签发时的 `exp` 与 `token_version`；新会话的较短到期配置不会自动撤销全部历史凭证。
 

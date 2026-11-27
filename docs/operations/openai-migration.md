@@ -68,7 +68,7 @@ python backend/scripts/rag_migrate.py --base-url http://127.0.0.1:8380 --execute
 
 本机日常三角色现连接 OpenAI 官方端点：文本／视觉 `gpt-6.1-sol`、Embedding `text-embedding-3-large`（3072维），模型访问检查均为 HTTP200。日常全量索引迁移已成功，覆盖46条可索引行程、125块，使用13次 Embedding，活动 generation 为 `42efb7e7a2b449b5b13f44a065bab01a`，状态为 `enabled`。
 
-该全量迁移单独记录在[个人项目收尾验收](../evidence/personal-closure-20261107/report.md)，原[真实模型小样本](../evidence/public-operations-20261107/report.md)保留原结果。持久验收账本累计为文本5/12、视觉1/1、Embedding23/40、高德62/120，沿用原账本；后续真实调用仍受剩余额度限制。
+该全量迁移单独记录在[个人项目收尾验收](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/personal-closure-20261107/report.md)，原[真实模型小样本](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/public-operations-20261107/report.md)保留原结果。持久验收账本累计为文本5/12、视觉1/1、Embedding23/40、高德62/120，沿用原账本；后续真实调用仍受剩余额度限制。
 
 ## 用量解释
 

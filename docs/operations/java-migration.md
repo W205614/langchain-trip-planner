@@ -43,7 +43,7 @@ Windows 任务 `TripPlanner-AutomatedBackup` 及自动维护入口保持停用�
 
 两套快照均不含离线 `images.tar`。最新快照为 V20，包含45个账号、61条行程、3份资料。本轮验证范围是数据库恢复，不代表完整服务克隆恢复；恢复还需要 manifest 记录的镜像及配置，原镜像继续保留。快照中的私有 Compose 是当时的配置，不应直接覆盖现有部署。当前清单及哈希见本机 `backups/BACKUP_DISABLED.json`、各目录的 `manifest.json` 和 `backups/README.md`，不得提交这些私有内容。
 
-历史[收尾记录](../evidence/personal-closure-20261107/report.md)记录当时的恢复和归档结果，其中已清理的恢复点及镜像归档不能作为当前可用资源。后续升级前重新检查备份、镜像存在性与所需恢复范围。
+历史[收尾记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/personal-closure-20261107/report.md)记录当时的恢复和归档结果，其中已清理的恢复点及镜像归档不能作为当前可用资源。后续升级前重新检查备份、镜像存在性与所需恢复范围。
 
 以下命令仅核查任务状态，不启动备份或业务容器：
 
@@ -117,4 +117,4 @@ python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYM
 python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime --execute
 ```
 
-登记后准备私有运行配置与已验证镜像，再使用原 Compose 文件启动。`prepare_java_deployment.py --upgrade-existing` 从 `backend/.env` 同步明确填写的模型与地图配置，使用前核对源配置；2026-11-07 本机已完成官方 OpenAI 配置切换、全量索引迁移及三应用更新，保留原挂载和持久预算。当前结果见[收尾记录](../evidence/personal-closure-20261107/report.md)，2026-10 的部署信息保留在[历史记录](../evidence/optimization-20261026/daily-effective-deployment-public.json)。登记失败时先核对数据归属，保留原卷及标记。数据回退从已验证备份恢复到新的隔离数据库和文件目录，恢复工具保留克隆并报告精确资源。
+登记后准备私有运行配置与已验证镜像，再使用原 Compose 文件启动。`prepare_java_deployment.py --upgrade-existing` 从 `backend/.env` 同步明确填写的模型与地图配置，使用前核对源配置；2026-11-07 本机已完成官方 OpenAI 配置切换、全量索引迁移及三应用更新，保留原挂载和持久预算。当前结果见[收尾记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/personal-closure-20261107/report.md)，2026-10 的部署信息保留在[历史记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/daily-effective-deployment-public.json)。登记失败时先核对数据归属，保留原卷及标记。数据回退从已验证备份恢复到新的隔离数据库和文件目录，恢复工具保留克隆并报告精确资源。

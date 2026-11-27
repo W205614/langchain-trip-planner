@@ -35,18 +35,18 @@
 
 以下使用真实模型和高德、合成账号与隔离数据库。原始单日要求生成 **1 个景点**，保存后刷新保持，地图与照片均实际加载。攻略回答返回 `supported_excerpt_answer`，逐句引用支持检查通过；这不等于独立核验了资料真实性。
 
-![修复后真实单景点行程、地图照片与待核验时间轴](docs/screenshots/release-v0.1.7/01-fixed-plan.png)
+![修复后真实单景点行程、地图照片与待核验时间轴](https://raw.githubusercontent.com/W205614/langchain-trip-planner/ea0f37be5e6b384dfa75859eb2d1f8c75a47e138/docs/screenshots/release-v0.1.7/01-fixed-plan.png)
 
-v0.1.7 当时的针对性联调用量为2次文本模型、34次高德MCP和6次Embedding；随后截图加载另产生1次高德MCP调用。这些调用与先前全面功能测试分开计数，不作为固定生成成本。营业、预约和远期天气仍按真实证据保留待核验说明。[实拍来源及边界](docs/screenshots/release-v0.1.7/README.md)。
+v0.1.7 当时的针对性联调用量为2次文本模型、34次高德MCP和6次Embedding；随后截图加载另产生1次高德MCP调用。这些调用与先前全面功能测试分开计数，不作为固定生成成本。营业、预约和远期天气仍按真实证据保留待核验说明。[实拍来源及边界](https://github.com/W205614/langchain-trip-planner/blob/88dbcd717edbf44a1f1e6ff00cfa54eda18b9d71/docs/screenshots/release-v0.1.7/README.md)。
 
 <details>
 <summary>保留的 v0.1.6 历史画面</summary>
 
 以下画面来自 v0.1.6 的验收。
 
-![v0.1.6 南京行程历史实拍](docs/screenshots/release-v0.1.6/01-normal-plan.png)
+![v0.1.6 南京行程历史实拍](https://raw.githubusercontent.com/W205614/langchain-trip-planner/ea0f37be5e6b384dfa75859eb2d1f8c75a47e138/docs/screenshots/release-v0.1.6/01-normal-plan.png)
 
-[历史截图来源及调用边界](docs/screenshots/release-v0.1.6/README.md)。
+[历史截图来源及调用边界](https://github.com/W205614/langchain-trip-planner/blob/ea0f37be5e6b384dfa75859eb2d1f8c75a47e138/docs/screenshots/release-v0.1.6/README.md)。
 
 </details>
 

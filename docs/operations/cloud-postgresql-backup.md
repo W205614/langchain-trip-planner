@@ -69,6 +69,6 @@ python backend/scripts/restore_java_backup.py --backup E:\trip-private\cloud-bac
 
 ## 成功判据与证据
 
-2026-11-07 的隔离验证使用独立 TLS PostgreSQL 与不同库名／用户的本地 decoy：外部备份47表，S3 引用及68字节原件来自同一外部库；错误 CA／主机名均拒绝。全新数据库与 S3 目标恢复后，Java 就绪、外部库标记读回正确、本地 decoy 未变，Java 原件读取 SHA-256 一致。Linux `0700` 和 Windows 私有父目录 ACL 均分别验证，详见 [机器证据](../evidence/cloud-postgresql-backup-20261107/report.json)。真实云数据库还需在选定平台完成同一套 TLS、备份和恢复联调。
+2026-11-07 的隔离验证使用独立 TLS PostgreSQL 与不同库名／用户的本地 decoy：外部备份47表，S3 引用及68字节原件来自同一外部库；错误 CA／主机名均拒绝。全新数据库与 S3 目标恢复后，Java 就绪、外部库标记读回正确、本地 decoy 未变，Java 原件读取 SHA-256 一致。Linux `0700` 和 Windows 私有父目录 ACL 均分别验证，详见 [机器证据](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/cloud-postgresql-backup-20261107/report.json)。真实云数据库还需在选定平台完成同一套 TLS、备份和恢复联调。
 
 参数映射依据 [pgJDBC 连接参数](https://jdbc.postgresql.org/documentation/use/)、[libpq 环境变量](https://www.postgresql.org/docs/17/libpq-envars.html) 与 [PostgreSQL TLS](https://www.postgresql.org/docs/17/libpq-ssl.html) 官方文档。

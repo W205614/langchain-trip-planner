@@ -82,6 +82,6 @@ SDK 处理 MCP 握手、消息 ID、HTTP/SSE 消息和工具调用；专用事�
 - MCP 测试覆盖搜索补详情与缓存、缺坐标/错误 ID、天气字段、公交距离保守转换、跨城参数、短步行回退、禁止静默 REST 回退、错误响应及凭据隐藏。
 - 使用本地真实 HTTP MCP 测试服务器验证工具发现、Schema 校验、共享会话并发调用、工具错误、任务超时和关闭。
 - 2026-09-12 的旧架构调用报告和测试统计保留在 Git 提交 `6c72a24`，用于查阅当时的架构验证结果。
-- 该 MCP 接入测试覆盖地图协议与数据转换；当前真实模型抽样和行程质量问题见[公开运营验收记录](evidence/public-operations-20261107/report.md)。历史测试中的 Starlette/httpx 弃用警告保留在对应记录。
+- 该 MCP 接入测试覆盖地图协议与数据转换；当前真实模型抽样和行程质量问题见[公开运营验收记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/public-operations-20261107/report.md)。历史测试中的 Starlette/httpx 弃用警告保留在对应记录。
 
 源码入口：`backend/app/services/amap_mcp_client.py`、`amap_mcp_service.py`、`amap_service.py`；测试：`backend/tests/test_amap_mcp.py`；真实调用脚本：`backend/scripts/check_amap_mcp.py`。

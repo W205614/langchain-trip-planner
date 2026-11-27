@@ -56,7 +56,7 @@ python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20
 python backend/scripts/performance_drill.py --output docs/evidence/acceptance-20260923/read-soak-128.json --read-soak-concurrency 128 --read-soak-seconds 30
 ```
 
-演练包含：数据库读请求默认 1/8/32/64 并发阶梯，可用 `--max-read-concurrency 256` 扩展到 128/256；24 个慢规划任务；慢任务期间 health/history 探针；停止 Agent；停止高德替身；验证熔断快速失败和半开恢复。任一读阶段错误率达到 5% 或 P95 达到 2 秒即停止继续升压。`--read-soak-concurrency` 只运行指定并发的持续读请求，不做故障注入。脚本最终恢复被停止的替身服务。结果和解释见 [2026-09-23 验收记录](../evidence/acceptance-20260923/report.md)。
+演练包含：数据库读请求默认 1/8/32/64 并发阶梯，可用 `--max-read-concurrency 256` 扩展到 128/256；24 个慢规划任务；慢任务期间 health/history 探针；停止 Agent；停止高德替身；验证熔断快速失败和半开恢复。任一读阶段错误率达到 5% 或 P95 达到 2 秒即停止继续升压。`--read-soak-concurrency` 只运行指定并发的持续读请求，不做故障注入。脚本最终恢复被停止的替身服务。结果和解释见 [2026-09-23 验收记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/acceptance-20260923/report.md)。
 
 观察正式栈时只做只读检查，不运行离线故障命令：
 

@@ -74,4 +74,4 @@ Docker 默认地址池耗尽时可加 `--network-subnet` 指定经检查未占�
 
 ## 证据入口
 
-[v0.1.1 补丁验收](../evidence/release-v0.1.1-20261108/README.md)记录数量说明、摘要同步、默认配置恢复及真实供应商抽样；[修复验证](../evidence/schedule-fix-20261108/README.md)保留具体方法。[初始时间规划验收](../evidence/final-planning-20261020/README.md)保留其历史结果。合成案例验证确定性规则；模型表现、长行程性能和目标环境可用性分别记录。
+[v0.1.1 补丁验收](https://github.com/W205614/langchain-trip-planner/blob/225908f9410a14ceb8460b13c638f79d0a8c144f/docs/evidence/release-v0.1.1-20261108/README.md)记录数量说明、摘要同步、默认配置恢复及真实供应商抽样；[修复验证](https://github.com/W205614/langchain-trip-planner/blob/225908f9410a14ceb8460b13c638f79d0a8c144f/docs/evidence/schedule-fix-20261108/README.md)保留具体方法。[初始时间规划验收](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/final-planning-20261020/README.md)保留其历史结果。合成案例验证确定性规则；模型表现、长行程性能和目标环境可用性分别记录。

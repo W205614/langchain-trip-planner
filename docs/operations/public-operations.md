@@ -54,4 +54,4 @@ cd business-backend
 
 测试库必须为隔离验证数据，不能把日常数据库连接填入这里。`WORKERS_ENABLED=false` 时不会自动推进数据作业；测试显式调用实际处理服务。生产后台要求唯一调度所有者，失锁后停止领取作业。
 
-2026-11-07 的撤权交错复核先在旧实现复现晚写及目标版本不匹配，再验证修复，以上定向测试合计21项通过；其中新增8项通过真实 PostgreSQL 锁与受控文件／模型 I/O 交错覆盖提交时序，见 [回归证据](../evidence/public-operations-20261107/revocation-races.json)。
+2026-11-07 的撤权交错复核先在旧实现复现晚写及目标版本不匹配，再验证修复，以上定向测试合计21项通过；其中新增8项通过真实 PostgreSQL 锁与受控文件／模型 I/O 交错覆盖提交时序，见 [回归证据](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/public-operations-20261107/revocation-races.json)。
