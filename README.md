@@ -179,9 +179,9 @@ docker compose @imageCompose stop
 
 ## 验证、开发与运维
 
-修改源码后，可按贡献指南启动独立的数据库和离线验证栈，检查创建、调整和刷新行程等流程。真实模型和高德联调需要单独配置。v0.1.9 已核对三张公开镜像的不可变摘要、层和运行配置。输入、事实或有效期变化后需要重新核验。
+修改源码后，可按贡献指南启动独立的数据库和离线验证栈，检查创建、调整和刷新行程等流程。真实模型和高德联调需要单独配置。v0.1.10 已核对三张公开镜像的不可变摘要、层和运行配置。输入、事实或有效期变化后需要重新核验。
 
-v0.1.9 的同源 CI、安全门禁和匿名获取均已通过。本机日常七个服务完成启动、监控、迁移与数据核对。[本版验证记录](docs/operations/container-distribution.md#v019-的不可变身份)。
+v0.1.10 的同源 CI、安全检查和匿名获取均已通过。同行建议使用隔离账号验收。本机日常七个服务完成启动、监控、迁移与数据核对。[本版验证记录](docs/operations/container-distribution.md#v0110-的不可变身份)。
 
 - [贡献与按改动选择测试](CONTRIBUTING.md) · [安全政策](SECURITY.md) · [安全复核规则](docs/operations/security-review-policy.md)
 - [时间规划与恢复](docs/operations/final-planning.md) · [事实与费用工作台](docs/operations/trip-operations.md) · [高德 MCP](docs/amap-mcp.md)

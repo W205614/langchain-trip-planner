@@ -47,6 +47,26 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。
 
+## v0.1.10 的不可变身份
+
+[Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.10) 绑定源码提交 `e8ef720a57561a513ddd6f3c40e171d3e0abd28c`。三张 Linux/amd64 应用镜像均使用 `:v0.1.10`，发布后以空凭据按摘要拉取并核对有序层和运行配置。
+
+| 组件 | Registry 摘要 | 配置摘要 |
+| --- | --- | --- |
+| Agent | `sha256:35672487b5bb6615b57e3c21b9e4bdaecdf371bef7575ffe56ee44a3e197e449` | `sha256:9ea9ec04cf7062aa0a4f29bf4a2ce5cef1a683cbe336bbeb548264e57c15b6fc` |
+| Java 业务服务 | `sha256:93a6fc10472c62b27242fb1fd424971f92622f73d7160e7b97cc8a35f488d124` | `sha256:7fd235a1cbb3bd53c92a79be56eb0f9a20a4ef9eefed0f7c78641e368faf336d` |
+| Web 前端 | `sha256:abbed2f8ee676571188e0ae8d77a0998bfc823381ecdad4c8da6e81b3ea767d8` | `sha256:1539400cd3b0b0402bb37be185ed8463541445cf6581f4744e5929e244f4cb5c` |
+
+| 附件 | 字节 | SHA-256 |
+| --- | ---: | --- |
+| `application-images-v0.1.10.tar.gz` | 455872338 | `e6e8836ab04ee7c1489c11d7f5a5b3b660b01e90d07215bd4474017f71e0a724` |
+| `container-sources-v0.1.10.zip` | 1460920492 | `469c8de25b9a93522220849090012b75fdbe4ba38d74b9c86dcc10ec7c9ef35b` |
+| `container-manifest.json` | 16036 | `dd0a6b94f768e3159ff2b18c43cdac9262b9dcc98a7ec94f03459abb874242e9` |
+| `SHA256SUMS` | 286 | `4a0d7d3a331e02214323c6f5f04fbfa21fbc6e5663e42bf87b8ee85319bcf361` |
+
+- 同源 CI 4 项、安全检查 14 项、镜像推广与匿名获取 2 项通过。封装后的候选完成启动和同行建议浏览器回归。[CI](https://github.com/W205614/langchain-trip-planner/actions/runs/45957812815) · [安全检查](https://github.com/W205614/langchain-trip-planner/actions/runs/45957812700) · [候选验收](https://github.com/W205614/langchain-trip-planner/actions/runs/45962940622) · [匿名获取](https://github.com/W205614/langchain-trip-planner/actions/runs/45965194763)
+- 隔离恢复核对了 46 张原表和 1,132 行。V21 执行后，本机日常七服务通过启动和监控验证，4 个上传文件摘要匹配。验收结束后服务恢复停止。同行建议验收使用隔离账号，供应商调用账本保持原值。
+
 ## v0.1.9 的不可变身份
 
 [Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9) 绑定源码提交 `d8edfb44a778e2586bb0ebfb83d1a81545002054`，提供 Linux/amd64 的三个应用镜像。本版从 v0.1.8 的已核验镜像继承运行层，替换 Agent 规划源码、重新构建的 Java 应用和前端静态资源。120 个 Java 运行依赖的名称和 SHA-256 逐个匹配，分发包复用相应第三方源码与许可，并将项目源码更新到本 Tag。
