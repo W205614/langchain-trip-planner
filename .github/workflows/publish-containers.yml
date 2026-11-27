@@ -26,6 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
@@ -38,7 +39,7 @@ jobs:
         run: |
           python -c 'import os,re; assert re.fullmatch(r"v\d+\.\d+\.\d+", os.environ["VERSION"])'
           gh release download "$VERSION" --repo "$GITHUB_REPOSITORY" --dir candidate --pattern "application-images-$VERSION.tar.gz" --pattern "container-sources-$VERSION.zip" --pattern container-manifest.json --pattern SHA256SUMS
-      - name: Promote the same validated images without rebuilding
+      - name: Verify release versions and promote the validated images
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ inputs.version }}

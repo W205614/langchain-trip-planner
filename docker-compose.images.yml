@@ -1,10 +1,10 @@
 # Application images only; keep the normal Compose file for data and services.
 services:
   backend:
-    image: ghcr.io/w205614/langchain-trip-planner-backend:${TRIP_VERSION:-v0.1.7}
+    image: ghcr.io/w205614/langchain-trip-planner-backend:${TRIP_VERSION:?Set TRIP_VERSION to the matching release tag}
   agent:
-    image: ghcr.io/w205614/langchain-trip-planner-agent:${TRIP_VERSION:-v0.1.7}
+    image: ghcr.io/w205614/langchain-trip-planner-agent:${TRIP_VERSION:?Set TRIP_VERSION to the matching release tag}
   frontend:
-    image: ghcr.io/w205614/langchain-trip-planner-frontend:${TRIP_VERSION:-v0.1.7}
+    image: ghcr.io/w205614/langchain-trip-planner-frontend:${TRIP_VERSION:?Set TRIP_VERSION to the matching release tag}
     environment:
       AMAP_WEB_JS_KEY: ${AMAP_WEB_JS_KEY:-}

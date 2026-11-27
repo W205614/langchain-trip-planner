@@ -4,7 +4,7 @@
 
 ## 首次使用镜像
 
-获取对应 Tag 的源码，按 [README](../../README.md) 准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。浏览器地图 Key 通过项目根目录 `.env` 提供：
+获取对应 Tag 的源码，按该版本 Release 的启动说明准备模型、高德服务端配置并首次生成 `deploy/runtime/`。v0.1.9 使用[发布页勘误](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9)。应用镜像不包含配置、账号、数据库、上传或向量索引。在项目根目录 `.env` 显式设置对应的 `TRIP_VERSION`，并按需填写浏览器地图 Key：
 
 ```dotenv
 TRIP_VERSION=v0.1.9
@@ -40,9 +40,9 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 ## 维护发布
 
 1. 从最终干净源码构建候选，运行必要的业务、浏览器和安全检查。先以 `docker image save --output <审计归档> <Agent镜像> <Java镜像> <前端镜像>` 导出三个未封装的实际输入；通过 `tools/container_sources.py --image-archive <审计归档> ...` 盘点实际依赖并收集来源。工具核对归档配置、全部有序层和解压层摘要，并收集各历史层 APK 或 dpkg 数据库所指向的来源；最终层中被替换或移除的组件也在分发材料范围内。该归档产生于许可封装之前，不依赖下一步 seal 的输出。随后运行 `tools/container_license_supplements.py --sources <收集目录> --bundle <输出目录>/container-sources-vX.Y.Z.zip`，补齐三个 wheel 的原始通知及原生 Rust 源码锁对应的来源和许可。收集步骤不传 `--version`，由补齐步骤生成最终 ZIP 和完整摘要清单，避免将初步归档当作最终附件。补齐工具随源码和分发材料提供；下载不完整、摘要不符或来源缺失时停止发布。
-2. 使用 `tools/container_release.py --version vX.Y.Z seal ...` 添加许可层并导出候选。该步骤核对源材料对应的应用层；对最终候选补验实际启动和流程，记录摘要。
-3. 最终提交的 CI 和 Security gates 全部通过后创建新的 Tag 和草稿 Release，将候选镜像归档、源码材料、manifest 和校验文件上传到草稿。核对草稿后发布，使对应源码先于 GHCR 镜像公开可取。
-4. 手动运行 `Publish validated application images`，填写该版本。工作流核对同一 SHA 的两条检查、Tag、正式 Release 及附件摘要，加载和推广同一镜像，不重新构建、不覆盖已有版本、不部署生产。下载公开附件只需 `contents: read`，工作流不获得仓库内容写权限。
+2. 在待发布源码里更新 README 的当前 Release 链接、检出命令和 `TRIP_VERSION`。在工作区外用 UTF-8 Markdown 准备 Release 正文，包含相同版本的完整启动命令。运行 `python tools/container_release.py --version vX.Y.Z check-version --notes <Release正文.md>`，校验两个文档及 Compose 解析的三个应用镜像。使用同一正文运行 `python tools/container_release.py --version vX.Y.Z seal --notes <Release正文.md> ...`，再次校验、添加许可层并导出候选。对最终候选补验实际启动和流程，记录摘要。
+3. 在最终提交上运行版本校验。最终提交的 CI 和 Security gates 全部通过后创建对应 Tag，使用已校验的正文创建草稿 Release，并上传候选镜像归档、源码材料、manifest 和校验文件。若草稿正文变更，发布前用变更后的正文再校验一次。对应源码先于 GHCR 镜像公开可取。
+4. 手动运行 `Publish validated application images`，填写该版本。工作流核对同一 SHA 的两条检查、Tag、正式 Release、附件摘要，以及该提交的 README、线上 Release 正文和 Compose 镜像版本，加载和推广同一镜像，不重新构建、不覆盖已有版本、不部署生产。下载公开附件只需 `contents: read`，工作流不获得仓库内容写权限。
 5. 按公开发布范围设置新建 GHCR 包可见性，匿名拉取并核对 registry 摘要和许可入口；完成实际使用者验收后更新本机日常环境。
 
 Packages 列表读取、指定版本读取、推送及公开可见性分别验收。403 或列表为空不能代替这些结果。发布后的事实和限制写入该批次交付记录，历史失败日志保留。

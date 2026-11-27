@@ -84,7 +84,7 @@ Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、
 
 ### 1. 选择源码版本并准备配置
 
-预构建镜像请使用同版本的源码和部署配置。基于其他提交构建时，请在该提交的检出目录中执行源码路线，并用该提交的 SHA 设置 `BUILD_REVISION`。
+预构建镜像请使用同版本的源码和部署配置。v0.1.9 的完整启动步骤也见[发布页勘误](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9)。基于其他提交构建时，请在该提交的检出目录中执行源码路线，并用该提交的 SHA 设置 `BUILD_REVISION`。
 
 ```powershell
 git clone --branch v0.1.9 https://github.com/W205614/langchain-trip-planner.git
@@ -127,7 +127,7 @@ APP_PORT=8380
 AMAP_WEB_JS_KEY=
 ```
 
-浏览器 JS Key 可暂留空查看文本行程；需要地图时填写自己的 JS API Key。服务端 MCP Key 与浏览器 JS Key 是不同配置。`APP_PORT=8381` 可避开被占用的 8380 端口。
+`TRIP_VERSION` 必须与检出的发布标签一致。若 PowerShell 会话也设置了此变量，Compose 优先使用会话中的值。浏览器 JS Key 可暂留空查看文本行程；需要地图时填写自己的 JS API Key。服务端 MCP Key 与浏览器 JS Key 是不同配置。`APP_PORT=8381` 可避开被占用的 8380 端口。
 
 ### 2A. 使用预构建应用镜像
 
