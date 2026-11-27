@@ -104,7 +104,7 @@ groups:
         annotations:
           summary: "慢能力并发槽已满；检查队列、上游耗时与流量来源"
       - alert: TripServletThreadsHigh
-        expr: max(tomcat_threads_busy_threads) / clamp_min(max(tomcat_threads_config_max_threads), 1) > 0.8
+        expr: max(jetty_threads_busy) / clamp_min(max(jetty_threads_config_max), 1) > 0.8
         for: 2m
         labels:
           severity: warning

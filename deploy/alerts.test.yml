@@ -15,3 +15,20 @@ tests:
       - eval_time: 6m
         alertname: TripQueueStalled
         exp_alerts: []
+  - interval: 15s
+    input_series:
+      - series: jetty_threads_busy
+        values: '52+0x8 51+0x4'
+      - series: jetty_threads_config_max
+        values: '64+0x13'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: TripServletThreadsHigh
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "Java 请求线程使用率持续超过 80%"
+      - eval_time: 3m
+        alertname: TripServletThreadsHigh
+        exp_alerts: []

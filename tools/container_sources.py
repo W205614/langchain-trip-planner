@@ -761,15 +761,23 @@ def java_sources(collector, image):
         destination.mkdir(parents=True, exist_ok=True)
         declared = declarations[(row['groupId'], row['artifactId'], row['version'])]
         (destination / 'UPSTREAM-DECLARATION.json').write_text(json.dumps({'coordinates': row, 'licenses': declared,
-            'source': 'Exact CI CycloneDX and checksum-verified upstream Maven POM/source JAR; binary JAR contains no separate notice'}, indent=2) + '\n', encoding='utf-8')
+            'source': 'Reviewed CycloneDX and checksum-verified upstream Maven POM/source JAR; binary JAR contains no separate notice'}, indent=2) + '\n', encoding='utf-8')
         shutil.copyfile(collector.root / 'java' / row['groupId'] / (name + '.pom'), destination / 'upstream.pom')
-        for license in declared:
-            identifier = license['license']['id']
-            if identifier not in ('Apache-2.0', 'CC0-1.0', 'MIT-0', 'EPL-2.0', 'LGPL-2.1-only'):
-                raise RuntimeError('Unreviewed Java license without original notice: ' + identifier)
-            terms = collector.fetch(f'https://raw.githubusercontent.com/spdx/license-list-data/{terms_commit}/text/{identifier}.txt',
-                                    'licenses/java-terms/' + identifier + '.txt')
-            shutil.copyfile(terms, destination / (identifier + '.txt'))
+        if (row['groupId'], row['artifactId'], row['version']) == ('org.glassfish.expressly', 'expressly', '6.0.0'):
+            # Upstream ships the EPL, GPL and Classpath Exception together in this release file.
+            terms = collector.fetch(
+                'https://raw.githubusercontent.com/eclipse-ee4j/expressly/28cb234b8df944c3e5fe4df0808a2ac78bb191f6/LICENSE.md',
+                'licenses/java-terms/expressly-6.0.0-LICENSE.md',
+                '6e1f002892b81cbe0647019b150c8a056efc1add565671a4f8af629b6cd2cc7b')
+            shutil.copyfile(terms, destination / 'LICENSE.md')
+        else:
+            for license in declared:
+                identifier = license['license']['id']
+                if identifier not in ('Apache-2.0', 'BSD-3-Clause', 'CC0-1.0', 'MIT-0', 'EPL-2.0', 'LGPL-2.1-only'):
+                    raise RuntimeError('Unreviewed Java license without original notice: ' + identifier)
+                terms = collector.fetch(f'https://raw.githubusercontent.com/spdx/license-list-data/{terms_commit}/text/{identifier}.txt',
+                                        'licenses/java-terms/' + identifier + '.txt')
+                shutil.copyfile(terms, destination / (identifier + '.txt'))
         headers = []
         with zipfile.ZipFile(collector.root / 'java' / row['groupId'] / (name + '-sources.jar')) as archive:
             for member in archive.namelist():

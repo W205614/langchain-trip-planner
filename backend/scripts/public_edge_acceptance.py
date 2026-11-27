@@ -134,7 +134,8 @@ def https():
     status, headers, _ = request("/api/auth/register", {"username": username, "password": "EdgeAcceptance!42",
                                 "email": username + "@example.test"}, {"X-Auth-Mode": "cookie",
                                 "X-Forwarded-For": "198.51.100.77", "X-Forwarded-Proto": "http",
-                                "X-Forwarded-Host": "attacker.example"})
+                                "X-Forwarded-Host": "attacker.example",
+                                "Forwarded": "for=198.51.100.77;proto=http;host=attacker.example"})
     assert status == 200, status
     cookies = headers.get_all("Set-Cookie")
     assert len(cookies) == 2 and all("Secure" in c and "SameSite=Strict" in c for c in cookies)
@@ -149,7 +150,8 @@ def https():
     jar.clear()
     statuses = [request("/api/auth/login", {"username": "missing" + uuid.uuid4().hex[:10], "password": "EdgeAcceptance!42"},
                         {"X-Forwarded-For": f"198.51.100.{i+1}", "X-Real-IP": f"203.0.113.{i+1}",
-                         "X-Forwarded-Proto": "http"})[0] for i in range(12)]
+                         "X-Forwarded-Proto": "http",
+                         "Forwarded": f"for=198.51.100.{i+1};proto=http"})[0] for i in range(12)]
     assert statuses == [401] * 10 + [429] * 2, statuses
     # A peer outside the edge subnet cannot promote plain HTTP to HTTPS or forge the client IP.
     direct = json.loads(remote("agent", "import urllib.request,json,uuid; "

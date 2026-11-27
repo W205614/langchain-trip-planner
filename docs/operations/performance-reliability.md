@@ -9,7 +9,7 @@
 | 层 | 默认保护 | 饱和行为 |
 | --- | --- | --- |
 | Nginx | 单客户端 32、整站 128 个并发连接 | 503，未进入 Java |
-| Java HTTP | Tomcat 64 工作线程、32 等待槽、256 连接上限 | 有界排队，超出后由入口快速失败 |
+| Java HTTP | Jetty 线程池上限 64、TCP 接收队列 32、连接上限 256，连接空闲超时 15 秒 | 入口限流，TCP 接收队列受限 |
 | PostgreSQL | Hikari 最多 12、最少空闲 4、取连接最多等 3 秒；SQL 默认 5 秒 | 请求失败，不无限占住 HTTP 线程 |
 | 规划任务 | 4 个 worker；正式默认队列 32、单用户活动任务 4 | `USER_QUEUE_FULL` 或 `TASK_QUEUE_FULL`（429） |
 | Java→Agent | 8 个并发槽 | `AGENT_BUSY`（503） |
@@ -37,7 +37,7 @@
 从外到内按同一个 `X-Request-ID` 对齐：
 
 1. Nginx JSON access log：`request_seconds` 是客户端总耗时，`upstream_seconds` 是 Java 耗时；两者差值主要是入口发送、客户端背压和连接等待。
-2. Java Prometheus：`http_server_requests_seconds`、`tomcat_threads_*`、`hikaricp_connections_*` 判断是 HTTP 线程还是数据库池饱和。
+2. Java Prometheus：`http_server_requests_seconds`、`jetty_threads_*`、`hikaricp_connections_*` 判断是 HTTP 线程还是数据库池饱和。
 3. Java 上游指标：`trip_upstream_call_duration_seconds`、`trip_upstream_rejected_total`、`trip_upstream_circuit_opened_total` 区分 Agent／高德慢、容量满和熔断。
 4. 任务指标与日志：`trip_task_execution_duration_seconds`，以及 `task_execution_started/finished/failed` 给出持久任务总耗时。
 5. Agent 指标：`trip_agent_http_request_seconds`、`trip_agent_http_in_flight`、`trip_agent_capacity_rejected_total`；规划内部继续看既有 `trip_agent_stage_seconds`、模型调用和 RAG 指标。

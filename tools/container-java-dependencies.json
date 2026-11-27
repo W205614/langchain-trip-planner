@@ -7,9 +7,9 @@
     "raw_sbom_sha256": "9032af7d55ba6f7dcd3f3d4a68b3678aa523112ec38ef6af28986ab86c091fe8",
     "pom_sha256_lf": "c3627c9aded4e436916c378c8dcd46b651f060876ab1d83a550dd77ebe9587f8"
   },
-  "raw_sbom_sha256": "8cb120e9ecfe2dd4ab02100cdd7a2632bc7cc3c26bf99d6b7f481692fefa9f4c",
-  "pom_sha256_lf": "69b138f7243e5ba4e5d36d54254df0874247a26216211c63b3db6ef28684e657",
-  "boundary": "The baseline CI inventory was refreshed using Maven CycloneDX 2.9.3 and the JAR built from this POM. All 120 nested JARs were checked. The three Tomcat hashes and license declarations match the new BOM; all other JAR hashes match the baseline CI inventory.",
+  "raw_sbom_sha256": "45558e3fa3bdfcb64e9c9a376217413412b925982780ff1ea8f762d90ac831c6",
+  "pom_sha256_lf": "5385abe9665cfbb4ac37418d880bf9acd2b66c8500ec5999a2f2855bebc21ee4",
+  "boundary": "Maven CycloneDX 2.9.3 and the Spring Boot application JAR produced from this POM were reconciled for all 160 nested JARs. New runtime dependencies match the BOM hashes and license declarations. Unchanged dependencies, including Boot jarmode tools, retain the baseline CI hashes.",
   "components": [
     {
       "filename": "logback-classic-1.5.38.jar",
@@ -113,25 +113,6 @@
       ]
     },
     {
-      "filename": "jakarta.annotation-api-3.0.0.jar",
-      "groupId": "jakarta.annotation",
-      "artifactId": "jakarta.annotation-api",
-      "version": "3.0.0",
-      "sha256": "b01f55552284cfb149411e64eabca75e942d26d2e1786b32914250e4330afaa2",
-      "licenses": [
-        {
-          "license": {
-            "id": "EPL-2.0"
-          }
-        },
-        {
-          "license": {
-            "id": "GPL-2.0-with-classpath-exception"
-          }
-        }
-      ]
-    },
-    {
       "filename": "snakeyaml-2.5.jar",
       "groupId": "org.yaml",
       "artifactId": "snakeyaml",
@@ -179,62 +160,6 @@
       "artifactId": "jackson-core",
       "version": "3.1.7",
       "sha256": "7608c367fd8a92666d28711519599543c180298259963184ce04d2947a8f71e7",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ]
-    },
-    {
-      "filename": "spring-boot-web-server-4.0.9.jar",
-      "groupId": "org.springframework.boot",
-      "artifactId": "spring-boot-web-server",
-      "version": "4.0.9",
-      "sha256": "f53a101278411339694a5a7a98e86226b8d955114ce90e3fe04fc383d27d821a",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ]
-    },
-    {
-      "filename": "tomcat-embed-core-11.0.29.jar",
-      "groupId": "org.apache.tomcat.embed",
-      "artifactId": "tomcat-embed-core",
-      "version": "11.0.29",
-      "sha256": "45302cad046c8b8c51ba80b34f2a01d1c75a66792587c3ac5e8fda9ff8abf837",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ]
-    },
-    {
-      "filename": "tomcat-embed-websocket-11.0.29.jar",
-      "groupId": "org.apache.tomcat.embed",
-      "artifactId": "tomcat-embed-websocket",
-      "version": "11.0.29",
-      "sha256": "ed88cd7a77ff5ab5baeee57eb804bb39c433c79ebf636b2e185facd42280d6f0",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ]
-    },
-    {
-      "filename": "spring-boot-tomcat-4.0.9.jar",
-      "groupId": "org.springframework.boot",
-      "artifactId": "spring-boot-tomcat",
-      "version": "4.0.9",
-      "sha256": "82cf823c704265399e5da1efb2933e939d62b3ed1e485387d05e2afb4096305a",
       "licenses": [
         {
           "license": {
@@ -356,6 +281,869 @@
       ]
     },
     {
+      "filename": "spring-boot-web-server-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-web-server",
+      "version": "4.0.9",
+      "sha256": "f53a101278411339694a5a7a98e86226b8d955114ce90e3fe04fc383d27d821a",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.servlet-api-6.1.0.jar",
+      "groupId": "jakarta.servlet",
+      "artifactId": "jakarta.servlet-api",
+      "version": "6.1.0",
+      "sha256": "8a31f465f3593bf2351531a5c952014eb839da96a605b5825b93dd54714c48c4",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GPL-2.0-with-classpath-exception"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.websocket-api-2.2.0.jar",
+      "groupId": "jakarta.websocket",
+      "artifactId": "jakarta.websocket-api",
+      "version": "2.2.0",
+      "sha256": "541d00436cbca0a5e1f6a457c9f70a64f00bd2f83e10ed89c2b372bc34843b7e",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "name": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "url": "https://www.gnu.org/software/classpath/license.html"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.websocket-client-api-2.2.0.jar",
+      "groupId": "jakarta.websocket",
+      "artifactId": "jakarta.websocket-client-api",
+      "version": "2.2.0",
+      "sha256": "aa6fa9331a3f470daee0dbfcf084abfbd7a49507297575d5bb8bfbf3d62fe8c0",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "name": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "url": "https://www.gnu.org/software/classpath/license.html"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-websocket-jakarta-server-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11.websocket",
+      "artifactId": "jetty-ee11-websocket-jakarta-server",
+      "version": "12.1.15",
+      "sha256": "70b2d9b652721351a216403ee3c0f95552b67c3353f459f11923112ad12ca6b9",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-annotations-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11",
+      "artifactId": "jetty-ee11-annotations",
+      "version": "12.1.15",
+      "sha256": "138ce9ddefb7e80a80f7b30d189b91fcacb13f456ca596e3a1b7d593bba02914",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-annotations-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-annotations",
+      "version": "12.1.15",
+      "sha256": "6ba62b761cb2de0b9f106829513fd92e43ae6f558a57dac7219a4d161566ee1d",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-plus-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11",
+      "artifactId": "jetty-ee11-plus",
+      "version": "12.1.15",
+      "sha256": "2296d17be5c542e519c79a2d854210bdc9538135c6bed84f059bfffc3c0fddf9",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.enterprise.cdi-api-4.1.0.jar",
+      "groupId": "jakarta.enterprise",
+      "artifactId": "jakarta.enterprise.cdi-api",
+      "version": "4.1.0",
+      "sha256": "c42c808f17925129a0800f618febe050d966e181a4c7384c8a5e7a0283d68699",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.enterprise.lang-model-4.1.0.jar",
+      "groupId": "jakarta.enterprise",
+      "artifactId": "jakarta.enterprise.lang-model",
+      "version": "4.1.0",
+      "sha256": "bb56f571f60d2862b2387d5468fe8f5540f8094727283ed991f89082708095ee",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.inject-api-2.0.1.jar",
+      "groupId": "jakarta.inject",
+      "artifactId": "jakarta.inject-api",
+      "version": "2.0.1",
+      "sha256": "f7dc98062fccf14126abb751b64fab12c312566e8cbdc8483598bffcea93af7c",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.interceptor-api-2.2.0.jar",
+      "groupId": "jakarta.interceptor",
+      "artifactId": "jakarta.interceptor-api",
+      "version": "2.2.0",
+      "sha256": "d240d72b4dd38a2e431c804079810010cb97903678fa5f987fb7434878b04398",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GPL-2.0-with-classpath-exception"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.transaction-api-2.0.1.jar",
+      "groupId": "jakarta.transaction",
+      "artifactId": "jakarta.transaction-api",
+      "version": "2.0.1",
+      "sha256": "50c0a7c760c13ae6c042acf182b28f0047413db95b4636fb8879bcffab5ba875",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GPL-2.0-with-classpath-exception"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-plus-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-plus",
+      "version": "12.1.15",
+      "sha256": "84e316cecf7b29576309ef92810686fa5513ccae0a558b66766de69431a801c0",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "asm-commons-9.11.1.jar",
+      "groupId": "org.ow2.asm",
+      "artifactId": "asm-commons",
+      "version": "9.11.1",
+      "sha256": "6a5095ec53726156a78b2cd2efd45bc4e877754eca7c234f61224a53d6bfa661",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://opensource.org/licenses/BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "asm-tree-9.11.1.jar",
+      "groupId": "org.ow2.asm",
+      "artifactId": "asm-tree",
+      "version": "9.11.1",
+      "sha256": "2b15c3c1b288a9fad3bb2cd6d988ba9521554914ed1f2a2029141fa3f483154a",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://opensource.org/licenses/BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-websocket-jakarta-client-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11.websocket",
+      "artifactId": "jetty-ee11-websocket-jakarta-client",
+      "version": "12.1.15",
+      "sha256": "2bb5f46f6310e289e865eca2c355c9a8b06cd67abdb287419014acadd7ab8d43",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-client-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-client",
+      "version": "12.1.15",
+      "sha256": "ad910336328a5afde916d1be38391078ac11386038931cdf4637f3c8fef85e9b",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-alpn-client-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-alpn-client",
+      "version": "12.1.15",
+      "sha256": "7c067bcb22bc225a52272dc6e41e6ae86f385c8e46db2f0adf9b3cb6f6de3d81",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-websocket-jakarta-common-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11.websocket",
+      "artifactId": "jetty-ee11-websocket-jakarta-common",
+      "version": "12.1.15",
+      "sha256": "d207ac7e432e6801feb963d986c0a60d10b406aa41f18dda47b1d24c1abb3315",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-websocket-core-client-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.websocket",
+      "artifactId": "jetty-websocket-core-client",
+      "version": "12.1.15",
+      "sha256": "4f3ca49af9410c990e6d4666ae3f916fcfd45dd14a1de282a3e978d06ec5bb9f",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-websocket-servlet-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11.websocket",
+      "artifactId": "jetty-ee11-websocket-servlet",
+      "version": "12.1.15",
+      "sha256": "1cf82116161cb455f2c830b85313c8e9850323d87b36c8f485b47f9167a74b80",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-websocket-core-server-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.websocket",
+      "artifactId": "jetty-websocket-core-server",
+      "version": "12.1.15",
+      "sha256": "9f303cf6186e85361207920c74bf4f90e2e3403004df4cdcfd6099fd6281b4f2",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-websocket-jetty-server-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11.websocket",
+      "artifactId": "jetty-ee11-websocket-jetty-server",
+      "version": "12.1.15",
+      "sha256": "1b244e6752d31dec7536e0f599e30b64511685362550ff40e2704c9b36e3a3ea",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-servlet-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11",
+      "artifactId": "jetty-ee11-servlet",
+      "version": "12.1.15",
+      "sha256": "91715c0262fabb8ee95208a2646d5257bad8f211456f062974cad2f60a4b4d19",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-security-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-security",
+      "version": "12.1.15",
+      "sha256": "d7f5f68366310075a05596d40ce22e745b7412852112bab8b05d2b092cd565f7",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-websocket-jetty-api-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.websocket",
+      "artifactId": "jetty-websocket-jetty-api",
+      "version": "12.1.15",
+      "sha256": "d7bd7a29e0560521c48ae3b3cb585d0f3bce9277ba670c82c4b96e19efd278d7",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-websocket-jetty-common-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.websocket",
+      "artifactId": "jetty-websocket-jetty-common",
+      "version": "12.1.15",
+      "sha256": "68e98204714a251895538e6719d7ed1d6763b0af551a789b71e5ff339e20d5b4",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-websocket-core-common-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.websocket",
+      "artifactId": "jetty-websocket-core-common",
+      "version": "12.1.15",
+      "sha256": "331b44e233722de769ad9607714ad3402366e46bef0097e2029c5080cc90ef8c",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-websocket-jetty-server-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.websocket",
+      "artifactId": "jetty-websocket-jetty-server",
+      "version": "12.1.15",
+      "sha256": "20d88a1f43e74db18039983d3e5c1cb6ad45f635b34ba7f8978236debc82b487",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "spring-boot-jetty-4.0.9.jar",
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-jetty",
+      "version": "4.0.9",
+      "sha256": "c7bef4ebf366a8ef18cc1d5fc6a9e309c15213f83b089b826efccc5a403015e3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee11-webapp-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee11",
+      "artifactId": "jetty-ee11-webapp",
+      "version": "12.1.15",
+      "sha256": "16948a87c18223653d8dc06471d9347e03bfca5e16d070e4652919f1669838cd",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-session-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-session",
+      "version": "12.1.15",
+      "sha256": "fa13ef70d76f312c4850d9fdaefba7c41a3ccb5a5fe15c54fd1f8710d599c47b",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-xml-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-xml",
+      "version": "12.1.15",
+      "sha256": "830364d9fb534a501fb54f76e2caf64ec461b34b12c5fd9b7795102b91df9348",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-util-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-util",
+      "version": "12.1.15",
+      "sha256": "74cb58a645f9d265d8e061b9227ec13c7acbb16c34bd6610eca229f58e928f37",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-ee-webapp-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.ee",
+      "artifactId": "jetty-ee-webapp",
+      "version": "12.1.15",
+      "sha256": "79d056119a8c0216cd64822aa303b95dfac4b5e9a6342c17d5aa3b51b676a5e7",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-compression-server-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.compression",
+      "artifactId": "jetty-compression-server",
+      "version": "12.1.15",
+      "sha256": "06a7b569f1d6cb895389c3cb0d3a059de896b14fc7f2ac874e5d23b4d5da21fe",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-server-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-server",
+      "version": "12.1.15",
+      "sha256": "38a76ffcd2404dad9a5395d35e741934dcff4ae9d9ab34336d3565582ed1f5ef",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-http-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-http",
+      "version": "12.1.15",
+      "sha256": "641774717e2fa668ce3a8915c51ce1f4503037a1209620d7bbd074e70b23b7fd",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-io-12.1.15.jar",
+      "groupId": "org.eclipse.jetty",
+      "artifactId": "jetty-io",
+      "version": "12.1.15",
+      "sha256": "b5f940782fe61bb1b51269eba7cadd1afa771e2bd649e1fa48057d1647ec9212",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-compression-common-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.compression",
+      "artifactId": "jetty-compression-common",
+      "version": "12.1.15",
+      "sha256": "eb879928434fbf9aba1088198349dd5461110f2096c6d084a009de077c76a422",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jetty-compression-gzip-12.1.15.jar",
+      "groupId": "org.eclipse.jetty.compression",
+      "artifactId": "jetty-compression-gzip",
+      "version": "12.1.15",
+      "sha256": "746c008d35a9f14a0f2a3b40a52de7c45df6d239e208032b86614a99abf8e4de",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0",
+            "url": "https://www.eclipse.org/legal/epl-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "slf4j-api-2.0.20.jar",
+      "groupId": "org.slf4j",
+      "artifactId": "slf4j-api",
+      "version": "2.0.20",
+      "sha256": "7e1446499b359675d8aabe6af2de86b85e72ae8a2a932c0b40d0e5ba57097439",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://opensource.org/license/mit/"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.annotation-api-3.0.0.jar",
+      "groupId": "jakarta.annotation",
+      "artifactId": "jakarta.annotation-api",
+      "version": "3.0.0",
+      "sha256": "b01f55552284cfb149411e64eabca75e942d26d2e1786b32914250e4330afaa2",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "id": "GPL-2.0-with-classpath-exception"
+          }
+        }
+      ]
+    },
+    {
       "filename": "spring-boot-security-4.0.9.jar",
       "groupId": "org.springframework.boot",
       "artifactId": "spring-boot-security",
@@ -468,20 +1256,6 @@
       ]
     },
     {
-      "filename": "tomcat-embed-el-11.0.29.jar",
-      "groupId": "org.apache.tomcat.embed",
-      "artifactId": "tomcat-embed-el",
-      "version": "11.0.29",
-      "sha256": "7d0dcc2b9720333e459209426fb23f135d63dbfc3afc8918801b70549503ee3c",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ]
-    },
-    {
       "filename": "hibernate-validator-9.0.2.Final.jar",
       "groupId": "org.hibernate.validator",
       "artifactId": "hibernate-validator",
@@ -536,6 +1310,46 @@
         {
           "license": {
             "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "expressly-6.0.0.jar",
+      "groupId": "org.glassfish.expressly",
+      "artifactId": "expressly",
+      "version": "6.0.0",
+      "sha256": "86ee67c7040278bac5204b571f738b8b859f014ceb5f896bd935bacbdaf33cb9",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "name": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "url": "https://www.gnu.org/software/classpath/license.html"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "jakarta.el-api-6.0.1.jar",
+      "groupId": "jakarta.el",
+      "artifactId": "jakarta.el-api",
+      "version": "6.0.1",
+      "sha256": "7e84b5bed49de32b79cc5e85d90b6f5adb1a953ac67283adbb41c1e297f9c605",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0"
+          }
+        },
+        {
+          "license": {
+            "name": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "url": "https://www.gnu.org/software/classpath/license.html"
           }
         }
       ]
@@ -1493,21 +2307,6 @@
       ]
     },
     {
-      "filename": "slf4j-api-2.0.20.jar",
-      "groupId": "org.slf4j",
-      "artifactId": "slf4j-api",
-      "version": "2.0.20",
-      "sha256": "7e1446499b359675d8aabe6af2de86b85e72ae8a2a932c0b40d0e5ba57097439",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT",
-            "url": "https://opensource.org/license/mit/"
-          }
-        }
-      ]
-    },
-    {
       "filename": "auth-2.57.3.jar",
       "groupId": "software.amazon.awssdk",
       "artifactId": "auth",
@@ -1699,6 +2498,21 @@
         {
           "license": {
             "id": "Apache-2.0"
+          }
+        }
+      ]
+    },
+    {
+      "filename": "asm-9.11.1.jar",
+      "groupId": "org.ow2.asm",
+      "artifactId": "asm",
+      "version": "9.11.1",
+      "sha256": "ae4e6e10d59d0a1500317764b21881ad883f8550e33c66e6142f7032c6fb566c",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://opensource.org/licenses/BSD-3-Clause"
           }
         }
       ]
