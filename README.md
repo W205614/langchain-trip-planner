@@ -4,7 +4,7 @@
 
 模型负责整理草案，本地求解器核对时间窗口；营业、预约、路线端点等事实无法核实时保留“待核验”，不会把估算自动当作已确认安排。项目按个人单机使用维护，不提供真实预订或支付。
 
-当前正式版本：[**v0.1.9 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [版本、摘要与验收边界](docs/operations/container-distribution.md#v019-的不可变身份)
+当前正式版本：[**v0.1.10 Release**](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.10) · [三个公开容器包](https://github.com/W205614?tab=packages&repo_name=langchain-trip-planner) · [镜像与分发手册](docs/operations/container-distribution.md)
 
 ## 可以做什么
 
@@ -12,9 +12,15 @@
 | --- | --- |
 | 创建行程 | 按日期、人数、预算、景点偏好、每日时窗与固定预约整理候选，生成逐日安排和费用说明 |
 | 继续调整 | 保存后在行程工作台修改需求、预览并确认改排；刷新或重新登录后继续查看历史记录 |
-| 检查与分享 | 展示事实来源、时间轴、失效和待核验项；支持共享及 PNG、PDF、离线 HTML 导出 |
+| 检查与分享 | 展示事实来源、时间轴和待核验项。支持只读分享、同行建议及 PNG、PDF、离线 HTML 导出 |
 | 使用旅行资料 | 上传资料、审核事实、攻略问答和可选 RAG；Chroma/关键词召回在本地，向量与图文解析依赖外部模型 |
 | 管理个人数据 | 账号与权限、配额、反馈、数据导出及注销；邮件、S3、公网 HTTPS 需另配相应外部服务 |
+
+## v0.1.10 更新
+
+- 行程所有者可以创建可提建议的分享链接。登录的朋友可建议调整活动时间或添加当日备选地点，所有者逐条处理。
+- 时间建议保留原活动时长。目标已修改、删除，或新时段与现有安排冲突时，应用会提示核对。
+- 后端切换到 Jetty 12.1.15，前端升级到 NGINX 1.30.8，Agent 镜像更新 OpenSSL 安全回补。
 
 ## v0.1.9 更新
 
@@ -84,10 +90,10 @@ Java 管理账号、行程、任务、权限和持久化；Agent 处理规划、
 
 ### 1. 选择源码版本并准备配置
 
-预构建镜像请使用同版本的源码和部署配置。v0.1.9 的完整启动步骤也见[发布页勘误](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9)。基于其他提交构建时，请在该提交的检出目录中执行源码路线，并用该提交的 SHA 设置 `BUILD_REVISION`。
+预构建镜像请使用同版本的源码和部署配置。基于其他提交构建时，请在该提交的检出目录中执行源码路线，并用该提交的 SHA 设置 `BUILD_REVISION`。
 
 ```powershell
-git clone --branch v0.1.9 https://github.com/W205614/langchain-trip-planner.git
+git clone --branch v0.1.10 https://github.com/W205614/langchain-trip-planner.git
 cd langchain-trip-planner
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
@@ -122,7 +128,7 @@ $env:BUILD_REVISION = (git rev-parse HEAD).Trim()
 在项目根新建 `.env`；已有文件只补充所需项，不覆盖其他配置：
 
 ```dotenv
-TRIP_VERSION=v0.1.9
+TRIP_VERSION=v0.1.10
 APP_PORT=8380
 AMAP_WEB_JS_KEY=
 ```

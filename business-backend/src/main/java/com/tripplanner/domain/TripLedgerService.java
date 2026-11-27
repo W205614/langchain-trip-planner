@@ -6,6 +6,7 @@ import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 /** Immutable trip versions plus deletion/restore lifecycle owned by Java. */
 @Service
@@ -38,6 +39,17 @@ public class TripLedgerService {
 
   public void capture(long userId, long recordId, String changeType, String requestId) {
     captureOnBehalf(userId, userId, recordId, changeType, requestId);
+  }
+
+  /** Save the edit and its version in the caller's transaction. */
+  public void save(long uid, long id, int version, ObjectNode plan, ObjectNode quality,
+      String changeType, String requestId) {
+    planning.protect(uid, id, plan, json.createObjectNode(), false);
+    if (history.update(Map.of("id", id, "user_id", uid, "version", version,
+        "plan_json", json.writeValueAsString(plan), "quality_json", json.writeValueAsString(quality))) != 1)
+      throw new ApiException(409, "行程版本冲突，请重新加载", "VERSION_CONFLICT");
+    history.outbox(id, uid, "draft".equals(quality.path("outcome").asText("")) ? "delete" : "upsert");
+    capture(uid, id, changeType, requestId);
   }
 
   public void captureOnBehalf(long ownerId, long actorId, long recordId, String changeType, String requestId) {

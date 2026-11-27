@@ -152,6 +152,7 @@ public class AccountDataService {
       result.put("feedback",db.queryForList("SELECT id,category,subject,message,status,reply,created_at,updated_at FROM user_feedback WHERE user_id=? ORDER BY id",uid));
       result.put("commitments",db.queryForList("SELECT c.* FROM trip_commitments c JOIN trip_records r ON r.id=c.trip_id WHERE r.user_id=? ORDER BY c.id",uid));
       result.put("expenses",db.queryForList("SELECT e.* FROM trip_expenses e JOIN trip_records r ON r.id=e.trip_id WHERE r.user_id=? ORDER BY e.id",uid));
+      result.put("trip_suggestions",db.queryForList("SELECT id,trip_id,kind,trip_date,details::text AS details,reason,status,created_at,decided_at FROM trip_suggestions WHERE author_id=? ORDER BY id",uid));
       result.put("submissions",db.queryForList("SELECT id,city,title,original_filename,status,media_type,size_bytes,source_text,extracted_pages_json,version,created_at,updated_at FROM knowledge_documents WHERE submitted_by=? ORDER BY id",uid));
       result.put("_originals",db.queryForList("SELECT * FROM knowledge_documents WHERE submitted_by=? AND status<>'deleted' ORDER BY id",uid));
       return result;
@@ -229,6 +230,7 @@ public class AccountDataService {
       db.update("UPDATE trip_expenses SET void_reason='' WHERE voided_by=?",uid);
       db.update("UPDATE trip_commitments SET note='' WHERE created_by=?",uid);
       db.update("DELETE FROM user_operation_quotas WHERE user_id=?",uid);
+      db.update("DELETE FROM trip_suggestions WHERE author_id=?",uid);
       db.update("UPDATE account_data_jobs SET status='expired',stage='erased',file_name=NULL WHERE user_id=? AND kind='export'",uid);
       db.update("UPDATE business_audit_events SET actor_id=NULL,actor_type='system',metadata_json='{}',request_id='' WHERE actor_id=?",uid);
       db.update("UPDATE users SET username=?,email=NULL,email_verified_at=NULL,hashed_password=?,is_admin=false,account_state='deleted',token_version=token_version+1 WHERE id=?","deleted_"+UUID.randomUUID().toString().replace("-",""),Passwords.hash(UUID.randomUUID().toString()),uid);

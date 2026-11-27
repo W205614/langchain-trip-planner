@@ -47,6 +47,7 @@
       <p>有链接的人七天内可以查看行程日期、景点和时间轴。预约详情、费用、联系方式等私有字段不会随快照公开。填写在行程标题中的文字会公开。</p>
       <p>链接可以转发。撤销会阻止再次打开链接，已保存的独立副本仍可保留。</p>
       <p v-if="localShare">当前是本机地址，其他设备无法直接打开。</p>
+      <p><a-checkbox v-model:checked="allowSuggestions" :disabled="shareBusy">允许登录的朋友提交建议</a-checkbox></p>
       <a-space wrap>
         <a-button type="primary" :loading="shareBusy" @click="shareTrip">创建七天分享链接</a-button>
         <a-button v-if="shareUrl" @click="copyTripShare">复制链接</a-button>
@@ -56,11 +57,12 @@
       <a-list :data-source="shares" :locale="{ emptyText: '暂无分享链接' }">
         <template #renderItem="{ item }">
           <a-list-item>
-            <span>版本 {{ item.record_version }} · {{ item.revoked_at ? '已撤销' : Date.parse(item.expires_at) <= Date.now() ? '已到期' : `有效至 ${new Date(item.expires_at).toLocaleString('zh-CN')}` }}</span>
+            <span>版本 {{ item.record_version }} · {{ item.allow_suggestions ? '可提建议' : '只读' }} · {{ item.revoked_at ? '已撤销' : Date.parse(item.expires_at) <= Date.now() ? '已到期' : `有效至 ${new Date(item.expires_at).toLocaleString('zh-CN')}` }}</span>
             <a-button v-if="!item.revoked_at && Date.parse(item.expires_at) > Date.now()" size="small" danger :disabled="shareBusy" @click="revokeShare(item.id)">撤销链接</a-button>
           </a-list-item>
         </template>
       </a-list>
+      <TripSuggestionsPanel v-if="shareOpen" :trip-id="historyRecordId" :can-apply="!unsaved" @schedule-changed="refreshAccess" />
     </a-modal>
     <a-alert v-if="tripPlan && !planLoading && !editMode && offlineReminderTrip === historyRecordId"
       class="offline-export-reminder" type="info" show-icon message="行程已更新"
@@ -495,6 +497,8 @@ import { useTripMap } from '@/composables/useTripMap'
 import { isAuthenticated } from '@/services/auth'
 import AttractionPicker from '@/components/trip/AttractionPicker.vue'
 import AttractionReplacementReview from '@/components/trip/AttractionReplacementReview.vue'
+import TripSuggestionsPanel from '@/components/trip/TripSuggestionsPanel.vue'
+import { Checkbox as ACheckbox } from 'ant-design-vue'
 import ProposalReviewPanel from '@/components/trip/ProposalReviewPanel.vue'
 import ActivityTimeline from '@/components/trip/ActivityTimeline.vue'
 import RevisionScopeEditor from '@/components/trip/RevisionScopeEditor.vue'
@@ -798,6 +802,7 @@ const {
 })
 const shareOpen = ref(false)
 const shareBusy = ref(false)
+const allowSuggestions = ref(false)
 const shareError = ref('')
 const shareUrl = ref('')
 const newShareId = ref<number>()
@@ -813,6 +818,7 @@ async function refreshShares() {
 }
 async function openShares() {
   shares.value = []
+  allowSuggestions.value = false
   shareError.value = ''
   shareOpen.value = true
   shareBusy.value = true
@@ -823,7 +829,7 @@ async function shareTrip() {
   shareBusy.value = true
   shareError.value = ''
   try {
-    const response = await createTripShare(historyRecordId.value, 7)
+    const response = await createTripShare(historyRecordId.value, 7, allowSuggestions.value)
     shareUrl.value = `${window.location.origin}/shared/${response.token}`
     newShareId.value = response.id
     message.success('分享链接已创建')

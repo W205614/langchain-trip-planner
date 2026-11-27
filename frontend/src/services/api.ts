@@ -326,8 +326,8 @@ export async function fetchCapabilities(): Promise<any> {
   return (await apiClient.get('/api/capabilities')).data
 }
 
-export async function createTripShare(id: number, expiresDays = 7): Promise<any> {
-  return (await apiClient.post(`/api/trips/${id}/shares`, { expires_days: expiresDays })).data
+export async function createTripShare(id: number, expiresDays = 7, allowSuggestions = false): Promise<any> {
+  return (await apiClient.post(`/api/trips/${id}/shares`, { expires_days: expiresDays, allow_suggestions: allowSuggestions })).data
 }
 
 export interface TripShare {
@@ -335,6 +335,7 @@ export interface TripShare {
   record_version: number
   expires_at: string
   revoked_at: string | null
+  allow_suggestions?: boolean
 }
 
 export async function listTripShares(id: number): Promise<TripShare[]> {
@@ -357,6 +358,41 @@ export async function fetchSharedTrip(token: string): Promise<any> {
 
 export async function copySharedTrip(token: string): Promise<any> {
   return (await apiClient.post(`/api/shared-trips/${encodeURIComponent(token)}/copy`)).data
+}
+
+export interface SuggestionTarget {
+  day_index: number
+  item_index: number
+  title: string
+  old_start: string
+  old_end: string
+}
+
+export type SuggestionDraft = { day_index: number; reason: string } & (
+  { kind: 'shift_time'; item_index: number; start_time: string } |
+  { kind: 'alternative'; location: string }
+)
+
+export interface TripSuggestion {
+  id: number
+  kind: SuggestionDraft['kind']
+  trip_date: string
+  author: string
+  reason: string
+  status: 'pending' | 'applied' | 'rejected'
+  details: { title?: string; old_start?: string; old_end?: string; new_start?: string; new_end?: string; location?: string }
+}
+
+export async function submitTripSuggestion(token: string, draft: SuggestionDraft): Promise<void> {
+  await apiClient.post(`/api/shared-trips/${encodeURIComponent(token)}/suggestions`, draft)
+}
+
+export async function listTripSuggestions(id: number, page: number): Promise<{ data: TripSuggestion[]; has_more: boolean }> {
+  return (await apiClient.get(`/api/trips/${id}/suggestions`, { params: { page } })).data
+}
+
+export async function decideTripSuggestion(id: number, suggestionId: number, decision: 'applied' | 'rejected'): Promise<{ version?: number }> {
+  return (await apiClient.post(`/api/trips/${id}/suggestions/${suggestionId}/decision`, { decision })).data
 }
 
 export async function fetchCommunityCards(page = 1, pageSize = 12): Promise<any> {

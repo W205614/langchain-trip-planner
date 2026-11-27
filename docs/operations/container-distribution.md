@@ -1,13 +1,13 @@
 # 应用镜像与源码材料
 
-三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前正式版本 [v0.1.9](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9) 的三张应用镜像已按不可变摘要推广和匿名验收。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 作为配套组件单独构建。
+三个应用镜像的命名空间为 `ghcr.io/w205614/langchain-trip-planner-{agent,backend,frontend}`，平台 `linux/amd64`。当前版本的制品与摘要见 [v0.1.10 Release](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.10)。PostgreSQL、Prometheus、Alertmanager、告警接收器和可选 Caddy 作为配套组件单独构建。
 
 ## 首次使用镜像
 
-获取对应 Tag 的源码，按该版本 Release 的启动说明准备模型、高德服务端配置并首次生成 `deploy/runtime/`。v0.1.9 使用[发布页勘误](https://github.com/W205614/langchain-trip-planner/releases/tag/v0.1.9)。应用镜像不包含配置、账号、数据库、上传或向量索引。在项目根目录 `.env` 显式设置对应的 `TRIP_VERSION`，并按需填写浏览器地图 Key：
+获取对应 Tag 的源码，按该版本 Release 的启动说明准备模型、高德服务端配置并首次生成 `deploy/runtime/`。应用镜像不包含配置、账号、数据库、上传或向量索引。在项目根目录 `.env` 显式设置对应的 `TRIP_VERSION`，并按需填写浏览器地图 Key：
 
 ```dotenv
-TRIP_VERSION=v0.1.9
+TRIP_VERSION=v0.1.10
 AMAP_WEB_JS_KEY=替换为自己的高德Web端JS_API_Key
 ```
 

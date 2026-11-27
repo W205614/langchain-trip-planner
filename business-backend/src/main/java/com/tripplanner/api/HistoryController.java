@@ -172,7 +172,7 @@ public class HistoryController {
     ((tools.jackson.databind.node.ArrayNode) quality.path("data_gaps"))
         .add("user_edited_plan_not_externally_verified");
     tx.executeWithoutResult(
-        s -> save(uid, id, version, plan, quality, "user_edit", req.getHeader("X-Request-ID")));
+        s -> ledger.save(uid, id, version, plan, quality, "user_edit", req.getHeader("X-Request-ID")));
     return Map.of(
         "success",
         true,
@@ -190,33 +190,6 @@ public class HistoryController {
         true,
         "rag_sync_pending",
         true);
-  }
-
-  private void save(
-      long uid,
-      long id,
-      int version,
-      ObjectNode plan,
-      ObjectNode quality,
-      String changeType,
-      String requestId) {
-    planning.protect(uid,id,plan,json.createObjectNode(),false);
-    if (history.update(
-            Map.of(
-                "id",
-                id,
-                "user_id",
-                uid,
-                "version",
-                version,
-                "plan_json",
-                json.writeValueAsString(plan),
-                "quality_json",
-                json.writeValueAsString(quality)))
-        != 1) throw new ApiException(409, "行程版本冲突，请重新加载", "VERSION_CONFLICT");
-    history.outbox(
-        id, uid, quality.path("outcome").asText("").equals("draft") ? "delete" : "upsert");
-    ledger.capture(uid, id, changeType, requestId);
   }
 
   @DeleteMapping("/{id}")
@@ -295,7 +268,7 @@ public class HistoryController {
           if(parent.has("planning_revision"))planning.checkRevision(uid,target,parent.path("planning_revision").asInt());
           planning.validateProposalValidity(plan,quality);
           if(parent.path("revision_scope").isObject())planning.protect(uid,target,plan,parent.path("revision_scope"),true);
-          save(
+          ledger.save(
               uid,
               target,
               parent.path("version").asInt(0),
@@ -304,7 +277,7 @@ public class HistoryController {
               "draft_apply",
               req.getHeader("X-Request-ID"));
           quality.put("applied_to", target);
-          save(
+          ledger.save(
               uid,
               id,
               version,

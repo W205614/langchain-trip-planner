@@ -345,6 +345,74 @@ class BusinessIntegrationTest {
   }
 
   @Test
+  void ownerAppliesVersionedShareSuggestionsAtMostOnce() throws Exception {
+    String owner=registerToken(), friend=registerToken();
+    var manual=planning().put("title","同行行程");
+    manual.putArray("days").addObject().putArray("poi_ids").add("fixture-beijing-1");
+    var created=request("/api/trips",manual.toString(),owner);
+    assertEquals(200,created.statusCode(),created.body());
+    long id=json.readTree(created.body()).path("id").asLong();
+    String trip="/api/trips/"+id;
+    var original=(tools.jackson.databind.node.ObjectNode)json.readTree(
+        jdbc.queryForObject("SELECT plan_json FROM trip_records WHERE id=?",String.class,id));
+    var day=(tools.jackson.databind.node.ObjectNode)original.path("days").get(0);
+    var timeline=day.putArray("timeline");
+    String activity=day.path("attractions").get(0).path("activity_id").asText();
+    timeline.addObject().put("activity_id",activity).put("kind","attraction")
+        .put("start_at","2026-10-01T12:00:00+08:00").put("end_at","2026-10-01T13:00:00+08:00");
+    timeline.addObject().put("activity_id","private-meal-id").put("kind","meal")
+        .put("start_at","2026-10-01T16:00:00+08:00").put("end_at","2026-10-01T17:00:00+08:00");
+    jdbc.update("UPDATE trip_records SET plan_json=? WHERE id=?",original.toString(),id);
+
+    String readOnly=json.readTree(request(trip+"/shares","{}",owner).body()).path("token").asText();
+    String alternative="{\"kind\":\"alternative\",\"day_index\":0,\"location\":\"室内博物馆\",\"reason\":\"雨天地用\"}";
+    assertEquals(404,request("/api/shared-trips/"+readOnly+"/suggestions",alternative,friend).statusCode());
+    var share=request(trip+"/shares","{\"allow_suggestions\":true}",owner);
+    assertEquals(200,share.statusCode(),share.body());
+    var shared=json.readTree(share.body());
+    String link="/api/shared-trips/"+shared.path("token").asText();
+    var snapshot=request(link,null,null);
+    assertEquals(200,snapshot.statusCode());
+    assertEquals(2,json.readTree(snapshot.body()).path("suggestion_targets").size());
+    assertFalse(snapshot.body().contains("private-meal-id"));
+    assertEquals(401,request(link+"/suggestions",alternative,null).statusCode());
+    assertEquals(404,request(trip+"/suggestions",null,friend).statusCode());
+
+    String shift="{\"kind\":\"shift_time\",\"day_index\":0,\"item_index\":0,\"start_time\":\"13:30\"}";
+    var first=request(link+"/suggestions",shift,friend);
+    var stale=request(link+"/suggestions",shift.replace("13:30","14:30"),friend);
+    var backup=request(link+"/suggestions",alternative,friend);
+    assertEquals(200,first.statusCode(),first.body());
+    assertEquals(200,stale.statusCode(),stale.body());
+    assertEquals(200,backup.statusCode(),backup.body());
+    assertEquals(1,jdbc.queryForObject("SELECT version FROM trip_records WHERE id=?",Integer.class,id));
+    long firstId=json.readTree(first.body()).path("id").asLong();
+    long staleId=json.readTree(stale.body()).path("id").asLong();
+    long backupId=json.readTree(backup.body()).path("id").asLong();
+    String decision=trip+"/suggestions/"+firstId+"/decision";
+    String apply="{\"decision\":\"applied\"}";
+    assertEquals(404,request(decision,apply,friend).statusCode());
+    try (var pool=java.util.concurrent.Executors.newFixedThreadPool(2)) {
+      var a=pool.submit(() -> request(decision,apply,owner));
+      var b=pool.submit(() -> request(decision,apply,owner));
+      assertEquals(200,a.get().statusCode());
+      assertEquals(a.get().body(),b.get().body());
+    }
+    assertEquals(2,jdbc.queryForObject("SELECT version FROM trip_records WHERE id=?",Integer.class,id));
+    var current=json.readTree(request("/api/history/"+id,null,owner).body()).path("data").path("plan");
+    assertEquals("2026-10-01T13:30+08:00",current.path("days").get(0).path("timeline").get(0).path("start_at").asText());
+    assertTrue(current.path("days").get(0).path("schedule_stale").asBoolean());
+    var outdated=request(trip+"/suggestions/"+staleId+"/decision",apply,owner);
+    assertEquals(409,outdated.statusCode(),outdated.body());
+    assertTrue(outdated.body().contains("SUGGESTION_STALE"));
+    assertEquals(200,request(trip+"/suggestions/"+staleId+"/decision","{\"decision\":\"rejected\"}",owner).statusCode());
+    assertEquals(200,request(trip+"/suggestions/"+backupId+"/decision",apply,owner).statusCode());
+    assertTrue(request(trip+"/suggestions",null,owner).body().contains("室内博物馆"));
+    assertEquals(200,request("DELETE",trip+"/shares/"+shared.path("id").asLong(),null,owner,Map.of()).statusCode());
+    assertEquals(404,request(link+"/suggestions",alternative,friend).statusCode());
+  }
+
+  @Test
   void legacyAccountLifecycleRevokesOldToken() throws Exception {
     String username = "migration_" + UUID.randomUUID().toString().substring(0, 8);
     var registered =

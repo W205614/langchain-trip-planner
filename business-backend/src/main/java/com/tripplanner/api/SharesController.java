@@ -4,6 +4,8 @@ import com.tripplanner.domain.BusinessAuditService;
 import com.tripplanner.domain.BusinessTypes;
 import com.tripplanner.domain.TripLedgerService;
 import com.tripplanner.domain.ScheduleDependencies;
+import com.tripplanner.domain.PlanningInputService;
+import com.tripplanner.domain.TripSuggestionService;
 import com.tripplanner.domain.UserQuotaService;
 import com.tripplanner.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import java.util.*;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.*;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 @RestController
 public class SharesController {
@@ -24,33 +27,44 @@ public class SharesController {
   private final TripLedgerService ledger; private final BusinessAuditService audit;
   private final ScheduleDependencies schedules;
   private final UserQuotaService userQuotas;
+  private final TripSuggestionService suggestions;
   private final SecureRandom random = new SecureRandom();
   public SharesController(ShareMapper shares, HistoryMapper history, TransactionTemplate tx, JsonMapper json,
-      TripLedgerService ledger, BusinessAuditService audit, ScheduleDependencies schedules, UserQuotaService userQuotas) {
+      TripLedgerService ledger, BusinessAuditService audit, ScheduleDependencies schedules, UserQuotaService userQuotas,
+      TripSuggestionService suggestions) {
     this.shares=shares; this.history=history; this.tx=tx; this.json=json; this.ledger=ledger; this.audit=audit;
     this.schedules=schedules;
     this.userQuotas=userQuotas;
+    this.suggestions=suggestions;
   }
 
   @PostMapping("/api/trips/{recordId}/shares")
   public Object create(HttpServletRequest req, @PathVariable long recordId,
-      @RequestBody(required=false) tools.jackson.databind.node.ObjectNode body) {
+      @RequestBody(required=false) ObjectNode body) {
     long uid=UsersController.uid(req); var record=history.owned(uid,recordId);
     if(record==null) throw new ApiException(404,"行程不存在");
     if(!json.readTree(record.get("quality_json").toString()).path("assistant_proposal_status").asText("").isBlank())
       throw new ApiException(409,"助手方案不能直接分享，请先确认原行程");
     int days=body==null?7:body.path("expires_days").asInt(7);
     if(days<1||days>90) throw new ApiException(422,"分享有效期必须为1到90天");
+    if (body!=null && body.has("allow_suggestions") && !body.path("allow_suggestions").isBoolean())
+      throw new ApiException(422,"建议权限必须为布尔值");
+    boolean allowSuggestions=body!=null && body.path("allow_suggestions").asBoolean();
     byte[] raw=new byte[32]; random.nextBytes(raw);
     String token=Base64.getUrlEncoder().withoutPadding().encodeToString(raw);
     var snapshot=json.createObjectNode();
     for(String field:List.of("city","start_date","end_date","travel_days","transportation","accommodation","title","source"))
       snapshot.set(field,json.valueToTree(record.get(field)));
-    snapshot.set("plan",json.readTree(record.get("plan_json").toString()));
+    var plan=(ObjectNode)json.readTree(record.get("plan_json").toString());
+    if (allowSuggestions) PlanningInputService.stableIds(plan);
+    snapshot.set("plan",plan);
     var quality=json.readTree(record.get("quality_json").toString());
     snapshot.put("outcome",quality.path("outcome").asText("unassessed"));
+    var publicSnapshot=PublicTripSnapshot.project(json,snapshot);
+    if (allowSuggestions) publicSnapshot.set("_suggestion_targets",suggestions.snapshotTargets(plan,publicSnapshot.path("plan")));
     var row=new HashMap<String,Object>(); row.put("record_id",recordId); row.put("owner_id",uid);
-    row.put("token_hash",hash(token)); row.put("snapshot_json",json.writeValueAsString(PublicTripSnapshot.project(json, snapshot)));
+    row.put("token_hash",hash(token)); row.put("snapshot_json",json.writeValueAsString(publicSnapshot));
+    row.put("allow_suggestions",allowSuggestions);
     row.put("record_version",record.get("version")); row.put("expires_at",Timestamp.from(Instant.now().plus(days,ChronoUnit.DAYS)));
     tx.executeWithoutResult(s->{
       userQuotas.lockActive(uid);
@@ -81,7 +95,34 @@ public class SharesController {
   @GetMapping("/api/shared-trips/{token}")
   public Object publicTrip(@PathVariable String token){
     var row=active(token);
-    return Map.of("success", true, "data", PublicTripSnapshot.project(json, json.readTree(row.get("snapshot_json").toString())));
+    var snapshot=json.readTree(row.get("snapshot_json").toString());
+    var result=json.createObjectNode().put("success",true);
+    result.set("data",PublicTripSnapshot.project(json,snapshot));
+    if (Boolean.TRUE.equals(row.get("allow_suggestions"))) {
+      result.put("allow_suggestions",true);
+      var targets=result.putArray("suggestion_targets");
+      for (var target:snapshot.path("_suggestion_targets")) {
+        var summary=targets.addObject();
+        for (String field:List.of("day_index","item_index","title","old_start","old_end")) summary.set(field,target.path(field));
+      }
+    }
+    return result;
+  }
+
+  @PostMapping("/api/shared-trips/{token}/suggestions")
+  public Object suggest(HttpServletRequest req,@PathVariable String token,@RequestBody ObjectNode body) {
+    return suggestions.submit(UsersController.uid(req),tokenHash(token),body,req.getHeader("X-Request-ID"));
+  }
+
+  @GetMapping("/api/trips/{recordId}/suggestions")
+  public Object suggestions(HttpServletRequest req,@PathVariable long recordId,@RequestParam(defaultValue="1") int page) {
+    return suggestions.list(UsersController.uid(req),recordId,page);
+  }
+
+  @PostMapping("/api/trips/{recordId}/suggestions/{suggestionId}/decision")
+  public Object decideSuggestion(HttpServletRequest req,@PathVariable long recordId,
+      @PathVariable long suggestionId,@RequestBody ObjectNode body) {
+    return suggestions.decide(UsersController.uid(req),recordId,suggestionId,body,req.getHeader("X-Request-ID"));
   }
 
   @PostMapping("/api/shared-trips/{token}/copy")
@@ -107,8 +148,11 @@ public class SharesController {
   }
 
   private Map<String,Object> active(String token){
-    if(token==null||!token.matches("[A-Za-z0-9_-]{40,64}")) throw new ApiException(404,"分享不存在或已失效");
-    var row=shares.active(hash(token)); if(row==null) throw new ApiException(404,"分享不存在或已失效"); return row;
+    var row=shares.active(tokenHash(token)); if(row==null) throw new ApiException(404,"分享不存在或已失效"); return row;
+  }
+  private String tokenHash(String token) {
+    if (token==null || !token.matches("[A-Za-z0-9_-]{40,64}")) throw new ApiException(404,"分享不存在或已失效");
+    return hash(token);
   }
   private String hash(String value){
     try{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8)));}
