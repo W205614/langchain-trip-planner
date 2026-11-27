@@ -33,9 +33,9 @@ glibc、libstdc++ 和 util-linux 的项目修改见源码包 `project/backend/se
 
 使用者可以修改、重新构建和替换共享 LGPL 组件；本项目不增加阻止为这些修改调试的限制。这里说明当前分发材料和获取入口，不把 SBOM 或漏洞扫描视为许可授权，也不对所有第三方内容作法律保证。
 
-个别 npm 上游归档只在原始 `package.json` 声明 MIT，未附单独许可文件；材料保留其原始作者和发布声明，并随附标准 MIT 许可正文，不补造版权主体或年份。Java 依赖映射来自匹配源码的实际 CI SBOM，再按候选中 120 个 JAR 的实际字节核对。OR-Tools 捆绑库按该版本上游构建配方提供源仓库提交和补丁；这些材料不声称逐字节重现上游 wheel。
+个别 npm 上游归档只在原始 `package.json` 声明 MIT，未附单独许可文件；材料保留其原始作者和发布声明，并随附标准 MIT 许可正文，不补造版权主体或年份。Java 依赖映射以匹配该 POM 的 CycloneDX 为基础，再逐个核对候选镜像的内嵌 JAR。OR-Tools 捆绑库按该版本上游构建配方提供源仓库提交和补丁；这些材料不声称逐字节重现上游 wheel。
 
-22 个 Java 依赖 JAR 未附独立许可文件，镜像另行随附校验过的上游 POM、原始源码文件头、同一 CI 解析的许可声明及固定 SPDX 数据版本中的许可全文；原二进制和完整源码不改写。Logback 的 EPL/LGPL 双许可、LatencyUtils 的 CC0 和 reactive-streams 的 MIT-0 保留各自声明，不统一替换为项目 MIT。
+对未附独立许可文件的 Java 依赖，镜像随附校验过的上游 POM、原始源码文件头、许可声明及对应的许可全文。Logback 的 EPL/LGPL 双许可、LatencyUtils 的 CC0 和 reactive-streams 的 MIT-0 保留各自声明。
 
 ## 维护发布
 

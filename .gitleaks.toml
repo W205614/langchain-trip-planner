@@ -72,6 +72,14 @@ regexTarget = "secret"
 regexes = ['''^e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655$''']
 
 [[allowlists]]
+description = "Recomputed public api.ts and auth.ts SHA256 for e3c563d in the v0.1.10 CodeQL source review"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|[\\/])docs[\\/]evidence[\\/]security-v0\.1\.10[\\/]codeql[\\/]source-review\.json$''', '''(^|[\\/])\.github[\\/]codeql-context-remediated\.json$''']
+regexTarget = "secret"
+regexes = ['''^(390b147e0ae5ddad3cea6026561afb9cb99db11aec49f12470898513676d8986|f0fda988393a3704b49ad25638e48aa6212bb0b053b4a0f7bf9e6add95b1c95a)$''']
+
+[[allowlists]]
 description = "Exact public offline test credentials; path AND value, no production files excluded"
 condition = "AND"
 targetRules = ["generic-api-key"]
