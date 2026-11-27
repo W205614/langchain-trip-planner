@@ -50,7 +50,7 @@
     "deploy/images/openssl-backport/source.lock": "2c2df79813a230a18afb33dc8b70770327bafc87ceb8be958e535af00c8528a9",
     "deploy/images/postgres.Dockerfile": "8f7463136585f7dce6aef857dbf55a798c60df7726b632efde243cff9c7c9e1e",
     "deploy/images/prometheus.Dockerfile": "5bb89fd7c37fe78c9531a69919d13965ff3c6db17d051f507296d130e4edb2c9",
-    "frontend/Dockerfile": "7a4ec831a6f595cbffca39baf84fdd1f3d55603ee1029c2b839bd2f9e8bdcf8e",
+    "frontend/Dockerfile": "5e7e3e1bcfce738af8f4ec6bf0496b0c3c8983e741186c5a2b4393825b950b32",
     "frontend/security/openssl-backport/build.sh": "780a4b4680a3fc78c624737b55365b0c15be5fa7619a3495b24adcc98a42b529",
     "frontend/security/openssl-backport/cli.sha256": "728b59bb4ba187b383caa5db4370978a416c44a75507461511f55438049d1a13",
     "frontend/security/openssl-backport/install.sh": "f5cf366ef73cb3f39d25716271ea7f50bebeaf2ca44538c5bb4c3d619199ed27",

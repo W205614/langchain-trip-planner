@@ -1,11 +1,15 @@
 {
-  "source_revision": "cd703ea9fee3d1a4bf08c7ab3ad574e4e0605bd0",
-  "workflow_run": 42781174257,
-  "artifact_id": 13745933195,
-  "artifact_sha256": "5c5fcd9f66c04d2b2b026cec12b593c093bf30f781d3f4567edcc7789a65a28b",
-  "raw_sbom_sha256": "9032af7d55ba6f7dcd3f3d4a68b3678aa523112ec38ef6af28986ab86c091fe8",
-  "pom_sha256_lf": "c3627c9aded4e436916c378c8dcd46b651f060876ab1d83a550dd77ebe9587f8",
-  "boundary": "Generated from the checksum-verified exact-source CI CycloneDX and the actual Alpine candidate embedded JAR bytes. Every dependency hash must match CI. Boot jarmode tools is added by the unchanged Boot packager and must match the previously reviewed identical-version JAR hash. Licenses are copied from that fresh CycloneDX, not the old release SBOM. Regenerate when dependencies change.",
+  "baseline_ci_inventory": {
+    "source_revision": "cd703ea9fee3d1a4bf08c7ab3ad574e4e0605bd0",
+    "workflow_run": 42781174257,
+    "artifact_id": 13745933195,
+    "artifact_sha256": "5c5fcd9f66c04d2b2b026cec12b593c093bf30f781d3f4567edcc7789a65a28b",
+    "raw_sbom_sha256": "9032af7d55ba6f7dcd3f3d4a68b3678aa523112ec38ef6af28986ab86c091fe8",
+    "pom_sha256_lf": "c3627c9aded4e436916c378c8dcd46b651f060876ab1d83a550dd77ebe9587f8"
+  },
+  "raw_sbom_sha256": "8cb120e9ecfe2dd4ab02100cdd7a2632bc7cc3c26bf99d6b7f481692fefa9f4c",
+  "pom_sha256_lf": "69b138f7243e5ba4e5d36d54254df0874247a26216211c63b3db6ef28684e657",
+  "boundary": "The baseline CI inventory was refreshed using Maven CycloneDX 2.9.3 and the JAR built from this POM. All 120 nested JARs were checked. The three Tomcat hashes and license declarations match the new BOM; all other JAR hashes match the baseline CI inventory.",
   "components": [
     {
       "filename": "logback-classic-1.5.38.jar",
@@ -198,11 +202,11 @@
       ]
     },
     {
-      "filename": "tomcat-embed-core-11.0.27.jar",
+      "filename": "tomcat-embed-core-11.0.29.jar",
       "groupId": "org.apache.tomcat.embed",
       "artifactId": "tomcat-embed-core",
-      "version": "11.0.27",
-      "sha256": "b71785ff101c0df501064b3e3b8c4a02e4f9cc3047a7fa686c41fc4edc2f0cb4",
+      "version": "11.0.29",
+      "sha256": "45302cad046c8b8c51ba80b34f2a01d1c75a66792587c3ac5e8fda9ff8abf837",
       "licenses": [
         {
           "license": {
@@ -212,11 +216,11 @@
       ]
     },
     {
-      "filename": "tomcat-embed-websocket-11.0.27.jar",
+      "filename": "tomcat-embed-websocket-11.0.29.jar",
       "groupId": "org.apache.tomcat.embed",
       "artifactId": "tomcat-embed-websocket",
-      "version": "11.0.27",
-      "sha256": "cbcd7ed6d7428fa71af6572d541a3ef74ceff42dfc523273950fe586062dc60f",
+      "version": "11.0.29",
+      "sha256": "ed88cd7a77ff5ab5baeee57eb804bb39c433c79ebf636b2e185facd42280d6f0",
       "licenses": [
         {
           "license": {
@@ -464,11 +468,11 @@
       ]
     },
     {
-      "filename": "tomcat-embed-el-11.0.27.jar",
+      "filename": "tomcat-embed-el-11.0.29.jar",
       "groupId": "org.apache.tomcat.embed",
       "artifactId": "tomcat-embed-el",
-      "version": "11.0.27",
-      "sha256": "206d6c6b1b6ce67b1c9af9ed0f6f43b4dbbc26164dd47bb49b9aad1583191f33",
+      "version": "11.0.29",
+      "sha256": "7d0dcc2b9720333e459209426fb23f135d63dbfc3afc8918801b70549503ee3c",
       "licenses": [
         {
           "license": {

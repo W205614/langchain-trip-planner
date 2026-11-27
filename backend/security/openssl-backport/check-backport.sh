@@ -25,7 +25,7 @@ fi
 cat /out/provenance/dgram-peer-baseline.log
 printf 'unpatched IPv4/IPv6 BIO datagram peer regression failed as expected (exit %s)\n' "$baseline_status" > /out/provenance/dgram-peer-baseline-result.txt
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --no-remove /out/packages/*.deb
-expected_version='3.5.9-1~deb13u1+trip4'
+expected_version='3.5.9-1~deb13u1+trip5'
 for package in libssl3t64 openssl openssl-provider-legacy; do
     test "$(dpkg-query -W -f='${Version}' "$package")" = "$expected_version"
 done

@@ -33,14 +33,20 @@ test('two-day traveler confirms scope, reacts to closure, travels offline and re
 
   await test.step('confirm two sights for the whole trip without submitting a task early', async () => {
     await page.getByPlaceholder('例如: 北京').fill('北京')
-    const fields = page.getByPlaceholder('选择日期')
-    for (const [index, value] of [first, second].entries()) {
-      const field = fields.nth(index)
+    const visiblePopups = page.locator('.ant-picker-dropdown:visible')
+    const calendar = page.locator('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden):not(.ant-slide-up-leave):not(.ant-slide-up-leave-active):visible')
+    for (const [label, value] of [['开始日期', first], ['结束日期', second]]) {
+      const field = page.getByRole('textbox', { name: label })
+      await expect(visiblePopups).toHaveCount(0)
       await field.click()
-      const picker = page.locator('.ant-picker-dropdown:not(.ant-picker-dropdown-hidden):visible')
-      const target = picker.locator('td[title="' + value + '"]').first()
+      await expect(calendar).toHaveCount(1)
+      const target = calendar.locator('td.ant-picker-cell-in-view[title="' + value + '"]')
+      if (!await target.count()) {
+        await calendar.locator('.ant-picker-header-next-btn').click()
+      }
       await target.click()
       await expect(field).toHaveValue(value)
+      await expect(visiblePopups).toHaveCount(0)
     }
     const budgetInput = page.getByLabel('整段总预算', { exact: false })
     await budgetInput.fill('80.50')

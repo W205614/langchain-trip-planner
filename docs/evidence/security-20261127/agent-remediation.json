@@ -1,0 +1,68 @@
+{
+  "proof_run": 45940892716,
+  "proof_job": 140314770807,
+  "artifact_id": 15173970003,
+  "proof_revision": "b3cf676e8e735a7c75dff1f38e860b8f5c5e2d2f",
+  "reviewed_image": "sha256:466db8c1478043c1f4150abb6bb50dbe5f8ffa4e485573b86ece9ac4628be622",
+  "prior_failed_run": 45931804564,
+  "openssl_upstream": "https://github.com/openssl/openssl/commit/7a14b6e410c881365881596231ea6f88e7d27c6e",
+  "package_versions": {
+    "libssl3t64": "3.5.9-1~deb13u1+trip5",
+    "openssl": "3.5.9-1~deb13u1+trip5",
+    "openssl-provider-legacy": "3.5.9-1~deb13u1+trip5",
+    "login.defs": "1:4.17.4-2+deb13u1",
+    "passwd": "1:4.17.4-2+deb13u1",
+    "libzstd1": "1.5.7+dfsg-1+deb13u1",
+    "perl-base": "5.40.1-6+deb13u1"
+  },
+  "file_sha256": {
+    "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "ab3eeb4f433446fed97889edd96bc6e07dbc439904d252cbc518dac6f536aa0e",
+    "/usr/lib/x86_64-linux-gnu/libssl.so.3": "c4f5c002a2d1dc72db2634a8c088f1afcaa2a057ad5ada4dcb78f681bb499c12",
+    "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so": "47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45",
+    "/usr/local/share/tripplanner/openssl-backport/patches.sha256": "8d6eb4fe7934e1fa2ba12b4cb3fcfc6859d25e7a831cff55af42a488382ec73e",
+    "/usr/local/share/tripplanner/restricted-runtime-tools.json": "43798bd78eee779c04c7329be4a0485a80113a908768a6539a7c1502f3ee0ccf",
+    "/var/lib/dpkg/status": "78e15dc3e2920e1653ab4c7d66408c914d23dfbaa548f469225579ae72bdf202",
+    "/etc/login.defs": "fbb7c9b77f020799f40dad0c6ec27f6b441120447ded71202b7cf79a6d634077",
+    "/etc/subuid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/etc/subgid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/var/log/btmp": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "btmp_metadata": {
+    "mode": 432,
+    "uid": 0,
+    "gid": 43
+  },
+  "absent_paths": {
+    "/usr/bin/newgidmap": true,
+    "/usr/bin/newuidmap": true,
+    "/usr/bin/openssl": true,
+    "/usr/bin/perl": true,
+    "/usr/bin/perl5.40.1": true,
+    "/usr/lib/x86_64-linux-gnu/perl-base/Net/FTP.pm": true,
+    "/usr/lib/x86_64-linux-gnu/perl/5.40.1/Net/FTP.pm": true,
+    "/usr/sbin/newusers": true,
+    "/usr/sbin/useradd": true,
+    "/usr/share/perl/5.40.1/Net/FTP.pm": true,
+    "/usr/share/perl/5.40/Net/FTP.pm": true,
+    "/usr/share/perl5/Net/FTP.pm": true
+  },
+  "runtime": {
+    "tool_manifest_sha256": "43798bd78eee779c04c7329be4a0485a80113a908768a6539a7c1502f3ee0ccf",
+    "net_ftp_modules": [],
+    "btmp_readable_by_appuser": false,
+    "subuid_and_subgid_empty": true,
+    "openssl_runtime_regressions": "IPv4/IPv6 peer detection, package installation, SONAME and exported ABI checks passed"
+  },
+  "restricted_tool_verification": {
+    "status": "verified_absent",
+    "remaining_entries": [],
+    "manifest": "/usr/local/share/tripplanner/restricted-runtime-tools.json",
+    "limits": "Bounded name/dpkg/exact-binary-identity inventory; does not prove absence of arbitrary recompiled helpers or vulnerability absence in retained libraries/static native consumers."
+  },
+  "classification_boundary": [
+    "OpenSSL production backport compiled from the pinned Debian source and upstream OpenSSL 3.5 stable fix. Installed OpenSSL versions, ELF fingerprints and verified patch list are exact.",
+    "Read-only restricted runtime tools check succeeded on this image. The full manifest SHA-256 binds the removal evidence to the actual installed package database.",
+    "Shadow context is bound to the exact new Debian login.defs/passwd package versions, existing secure login configuration, read restrictions on btmp and absent account-mapping tools.",
+    "Net::FTP module and Perl interpreter absence are scoped to this image. No residual vulnerable finding is waived."
+  ]
+}

@@ -50,6 +50,14 @@ NGINX_RELEASES = {
         'docker_commit': 'a2a986d19aac4a79a330e6e0b5171aae4e521926',
         'key_sha512': 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655',
     },
+    '1.30.8': {
+        'version': '1.30.8', 'release': '1', 'njs': '1.0.2', 'acme': '0.4.2',
+        'quickjs': '2025.09.13', 'quickjs_commit': 'fa628f8c523ecac8ce560c081411e91fcaba2d20',
+        'pkg_oss_commit': '75d67b27b6adcc57b87f6ef51a74881683aeddf5',
+        'pkg_oss_sha512': '029fd2bc1c27492fe6b095f346358692dca4fafd49c82269958ef8383a985d6b0383e5acd8af5603900d037e6f7fe569de15581873e50cc711b1f600259dfd9d',
+        'docker_commit': 'd6e8ee84e5fa87b7279a3a25b0b6de7d55c24f3e',
+        'key_sha512': 'e09fa32f0a0eab2b879ccbbc4d0e4fb9751486eedda75e35fac65802cc9faa266425edf83e261137a2f4d16281ce2c1a5f4502930fe75154723da014214f0655',
+    },
 }
 NGINX_PACKAGES = {'nginx', 'nginx-module-acme', 'nginx-module-geoip',
                   'nginx-module-image-filter', 'nginx-module-njs', 'nginx-module-xslt'}

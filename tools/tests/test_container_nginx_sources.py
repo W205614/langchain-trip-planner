@@ -46,13 +46,13 @@ class OfficialNginxSourceTests(unittest.TestCase):
             validate_official_nginx_packages(packages, environment)
 
     def test_current_nginx_requires_its_corresponding_acme_release(self):
-        packages, environment = self.fixture('1.30.7', '0.4.2')
+        packages, environment = self.fixture('1.30.8', '0.4.2')
         reviewed = validate_official_nginx_packages(packages, environment)
-        self.assertEqual(reviewed['pkg_oss_commit'], '57e124e48fcbce09568f9896dd28b7d571caaa79')
+        self.assertEqual(reviewed['pkg_oss_commit'], '75d67b27b6adcc57b87f6ef51a74881683aeddf5')
         with self.assertRaisesRegex(RuntimeError, 'exact reviewed release'):
             validate_official_nginx_packages(packages, {**environment, 'ACME_VERSION': '0.4.1'})
-        with self.assertRaisesRegex(RuntimeError, 'exact reviewed release'):
-            validate_official_nginx_packages(packages, {**environment, 'NGINX_VERSION': '1.30.8'})
+        with self.assertRaisesRegex(RuntimeError, 'Unreviewed NGINX package identity'):
+            validate_official_nginx_packages(packages, {**environment, 'NGINX_VERSION': '1.30.7'})
 
     def test_missing_or_additional_nginx_modules_are_not_silently_approved(self):
         packages, environment = self.fixture()

@@ -6,7 +6,7 @@ Base64 length check documented below. The source descriptor, signature,
 and both source archives are SHA-256 pinned in `sources.sha256`. Each patch is
 pinned in `patches.sha256`.
 
-The downstream binary package revision is `3.5.9-1~deb13u1+trip4`. The build installs the matching three
+The downstream binary package revision is `3.5.9-1~deb13u1+trip5`. The build installs the matching three
 runtime packages together: `libssl3t64`, `openssl`, and
 `openssl-provider-legacy`. Their SONAMEs and installed runtime tests must be
 checked against the pre-backport Debian binaries before this package is used
@@ -38,3 +38,5 @@ of changes under upstream review.
 - [CVE-2026-107494 and upstream proposal](https://github.com/openssl/openssl/pull/33544)
 - [CVE-2026-84786 and upstream proposal](https://github.com/openssl/openssl/pull/33634)
 - [CVE-2026-95690 and upstream stable-branch proposal](https://github.com/openssl/openssl/pull/33729)
+
+`+trip5` backports the [OpenSSL 3.5.10 fix for CVE-2026-84785](https://github.com/openssl/openssl/commit/7a14b6e410c881365881596231ea6f88e7d27c6e). The existing stream-reordering regression runs within the new bound.

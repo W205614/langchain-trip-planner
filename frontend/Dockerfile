@@ -27,7 +27,7 @@ ARG VITE_API_BASE_URL=""
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
-FROM nginx:1.30.7-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3
+FROM nginx:1.30.8-alpine@sha256:8eb04fe3b385090e9aa02961f77398ad09b6bf33ab07f6669a5bb7acce22c0d3
 # Upstream Nginx tags can predate signed Alpine security package updates.
 RUN apk upgrade --no-cache
 COPY --from=busybox-security /out/ /tmp/trip-busybox/

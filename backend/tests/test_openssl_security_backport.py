@@ -12,7 +12,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 PROVENANCE = Path('/usr/local/share/tripplanner/openssl-backport')
-EXPECTED_VERSION = '3.5.9-1~deb13u1+trip4'
+EXPECTED_VERSION = '3.5.9-1~deb13u1+trip5'
 
 
 def test_openssl_source_backport_runtime_and_abi_proof():
@@ -37,7 +37,7 @@ def test_openssl_source_backport_runtime_and_abi_proof():
     assert not Path('/usr/bin/openssl').exists()
     expected = {
         'libcrypto.so.3': 'ab3eeb4f433446fed97889edd96bc6e07dbc439904d252cbc518dac6f536aa0e',
-        'libssl.so.3': '11edf51965cd95b32d3ace97ff3598037a90eff5de99c388503825a55ed11cb6',
+        'libssl.so.3': 'c4f5c002a2d1dc72db2634a8c088f1afcaa2a057ad5ada4dcb78f681bb499c12',
         'ossl-modules/legacy.so': '47af7436924d44b49719792780eaee3c472df720908cb969f00c940c219cba45',
     }
     for name, digest in expected.items():
