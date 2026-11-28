@@ -62,7 +62,7 @@
     "backend/security/cpython-backports/CVE-2026-115791.patch": "2008437c586077ec7c368a499c418bd95c6955520dcfb02899665ad8f4906c58",
     "backend/security/cpython-backports/test.sh": "8f99bff33c08245787e58a9d52b2964c7fb7aee1ff87e275f732617de82af2df",
     "docs/evidence/security-20261122/receiver-openssl-rebind.json": "0c5b2808325005d68c2d9bba8dd10db62fdccb9d7d7f577c84b2449c2f5d25be",
-    "docs/evidence/security-20261124/receiver-libffi-delta.json": "f88d100aea253d18221bd9349eca351b1651a0bafb123ee61131e321cca5f7c4"
+    "docs/evidence/security-20261128/receiver-libffi-delta.json": "98fdb097227e8ef39b78938ee610cd013604e1cace143b180526695cffe0e8fa"
   },
   "assessments": [
     {
@@ -707,7 +707,7 @@
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
         "libcrypto3": "3.5.9_p20261122-r0",
-        "libffi": "3.8.1-r0",
+        "libffi": "3.8.2-r0",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
         "libssl3": "3.5.9_p20261122-r0",
@@ -798,7 +798,7 @@
         "https://github.com/python/cpython/commit/2eb2af805c156ca52b316bb4ced5e0ab3971d0ae",
         "https://github.com/python/cpython/commit/9f52b443c002cccfb54bda0706a9276b6b4a109d"
       ],
-      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+      "artifact_delta_review": "docs/evidence/security-20261128/receiver-libffi-delta.json"
     },
     {
       "distribution": "alpine",
@@ -821,7 +821,7 @@
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
         "libcrypto3": "3.5.9_p20261122-r0",
-        "libffi": "3.8.1-r0",
+        "libffi": "3.8.2-r0",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
         "libssl3": "3.5.9_p20261122-r0",
@@ -911,7 +911,7 @@
       "references": [
         "https://github.com/python/cpython/commit/131a3a66c5f400b588f9fd2732a5ed4e89623ee3"
       ],
-      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+      "artifact_delta_review": "docs/evidence/security-20261128/receiver-libffi-delta.json"
     },
     {
       "distribution": "alpine",
@@ -934,7 +934,7 @@
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
         "libcrypto3": "3.5.9_p20261122-r0",
-        "libffi": "3.8.1-r0",
+        "libffi": "3.8.2-r0",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
         "libssl3": "3.5.9_p20261122-r0",
@@ -1024,7 +1024,7 @@
       "references": [
         "https://github.com/python/cpython/commit/b234a2b67539f787e191d2ef19a7cbdce32874e7"
       ],
-      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+      "artifact_delta_review": "docs/evidence/security-20261128/receiver-libffi-delta.json"
     },
     {
       "distribution": "alpine",
@@ -1047,7 +1047,7 @@
         "libapk": "3.0.9-r0",
         "libbz2": "1.0.8-r6",
         "libcrypto3": "3.5.9_p20261122-r0",
-        "libffi": "3.8.1-r0",
+        "libffi": "3.8.2-r0",
         "libncursesw": "6.6_p20260516-r0",
         "libpanelw": "6.6_p20260516-r0",
         "libssl3": "3.5.9_p20261122-r0",
@@ -1151,7 +1151,7 @@
         "https://github.com/python/cpython/commit/2f0e294d85c905691e360586ebd1d1f7e7a1f5df",
         "https://github.com/python/cpython/commit/8aa5d657e4d3f1a4cca5ff6c976e2e868e0a9056"
       ],
-      "artifact_delta_review": "docs/evidence/security-20261124/receiver-libffi-delta.json"
+      "artifact_delta_review": "docs/evidence/security-20261128/receiver-libffi-delta.json"
     }
   ]
 }

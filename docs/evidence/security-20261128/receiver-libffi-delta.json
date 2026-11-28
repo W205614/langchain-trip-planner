@@ -1,0 +1,32 @@
+{
+  "reviewed_source": "593cc58984ab186f99cb3f32d9670f1c685de27a",
+  "workflow_run": 46128224471,
+  "workflow_job": 140927550152,
+  "github_artifact": 15257441064,
+  "github_artifact_sha256": "4b5b3c40b974f8ce98a3325c8c7ef4c4ac235ed48a757a0dc5b01752a69f4486",
+  "image_id": "sha256:435d30eadbbedd3e03851a32277b2ae2988ae8e091fd49a714fe26a34c3bb094",
+  "inventory_sha256": "ce6d8fcf0b09c33ba8db76d01ae455829ae1e82e9eaa0ccd2498422e4e038105",
+  "raw_scan_sha256": "08532242539127d017a56dcf4bdd899caa3015bff74edb0dabad1421ad91f7ac",
+  "previous_review": "docs/evidence/security-20261124/receiver-libffi-delta.json",
+  "apk_version_delta": {
+    "libffi": [
+      "3.8.1-r0",
+      "3.8.2-r0"
+    ]
+  },
+  "alpine_apk_index": {
+    "url": "https://dl-cdn.alpinelinux.org/alpine/v3.24/main/x86_64/APKINDEX.tar.gz",
+    "aports_commit": "984e08e9a209a4782964e2d926a3b76cf3b11908",
+    "architecture": "x86_64"
+  },
+  "unchanged_exact_predicates": [
+    "CPython patched and carrier file SHA256",
+    "receiver image command and user",
+    "remaining APK names and exact versions",
+    "per-package architecture",
+    "runtime ELF paths and scanner artifact paths"
+  ],
+  "behavior_proof": "The reviewed job built the receiver and passed installed backport checks and five isolated shutdown/runtime tests before the image scan blocked.",
+  "scope": "Rebind the CI receiver assembly to libffi 3.8.2-r0 and supersede the 3.8.1-r0 entry. Preserve the separate 3.5.2-r1 assembly and the eight existing CPython finding bindings. Scanning and policy matching for libffi itself are unaffected.",
+  "new_risk_acceptance": 0
+}
