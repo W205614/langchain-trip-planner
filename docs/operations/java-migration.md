@@ -34,16 +34,9 @@ SELECT d.id,d.submitted_by,d.reviewed_by FROM knowledge_documents d
 
 ## 备份和恢复
 
-Windows 任务 `TripPlanner-AutomatedBackup` 及自动维护入口保持停用，手工备份和隔离恢复按维护窗口执行。2026-11-08 当前保留两套被 Git 忽略的数据和配置快照：
+Windows 任务 `TripPlanner-AutomatedBackup` 保持停用。截至 2026-11-28，本机项目目录的 `backups/` 仅保留备份状态说明。此前的本机恢复点已退役，回收站载荷不可作为受管备份。
 
-| 恢复点 | 已验证结果 |
-|---|---|
-| `backups/maintenance-fix-20261108/pre-upgrade/` | 本次补丁升级前快照；12 个文件哈希核对通过，隔离 PostgreSQL 17 恢复全部 46 张表，行内容摘要一致 |
-| `backups/daily-v0.1.0-upgrade-20261107/pre-upgrade/` | 上次升级前数据和配置快照；文件哈希核对通过，保留原数据库恢复验收记录 |
-
-两套快照均不含离线 `images.tar`。最新快照为 V20，包含45个账号、61条行程、3份资料。本轮验证范围是数据库恢复，不代表完整服务克隆恢复；恢复还需要 manifest 记录的镜像及配置，原镜像继续保留。快照中的私有 Compose 是当时的配置，不应直接覆盖现有部署。当前清单及哈希见本机 `backups/BACKUP_DISABLED.json`、各目录的 `manifest.json` 和 `backups/README.md`，不得提交这些私有内容。
-
-历史[收尾记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/personal-closure-20261107/report.md)记录当时的恢复和归档结果，其中已清理的恢复点及镜像归档不能作为当前可用资源。后续升级前重新检查备份、镜像存在性与所需恢复范围。
+v0.1.10 升级前曾使用成套快照在独立环境验证恢复，核对 46 张原表、1,132 行，并验证 Flyway V21。该次结果见[本版验收记录](container-distribution.md#v0110-的不可变身份)。本机保留的三张 v0.1.9 镜像可供回退。涉及数据库迁移的回退还需要兼容的数据备份及配置，升级前须先生成并验证新的恢复点。
 
 以下命令仅核查任务状态，不启动备份或业务容器：
 
@@ -117,4 +110,4 @@ python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYM
 python backend/scripts/enroll_dataset.py --backup backups/pre-optimization-YYYYMMDD-HHMM --runtime deploy/runtime --execute
 ```
 
-登记后准备私有运行配置与已验证镜像，再使用原 Compose 文件启动。`prepare_java_deployment.py --upgrade-existing` 从 `backend/.env` 同步明确填写的模型与地图配置，使用前核对源配置；2026-11-07 本机已完成官方 OpenAI 配置切换、全量索引迁移及三应用更新，保留原挂载和持久预算。当前结果见[收尾记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/personal-closure-20261107/report.md)，2026-10 的部署信息保留在[历史记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/daily-effective-deployment-public.json)。登记失败时先核对数据归属，保留原卷及标记。数据回退从已验证备份恢复到新的隔离数据库和文件目录，恢复工具保留克隆并报告精确资源。
+登记后准备私有运行配置与已验证镜像，再使用原 Compose 文件启动。`prepare_java_deployment.py --upgrade-existing` 从 `backend/.env` 同步明确填写的模型与地图配置，使用前核对源配置；2026-11-07 本机已完成官方 OpenAI 配置切换、全量索引迁移及三应用更新，保留原挂载和持久预算。当时结果见[2026-11-07 收尾记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/personal-closure-20261107/report.md)，2026-10 的部署信息保留在[历史记录](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/daily-effective-deployment-public.json)。登记失败时先核对数据归属，保留原卷及标记。数据回退从已验证备份恢复到新的隔离数据库和文件目录，恢复工具保留克隆并报告精确资源。

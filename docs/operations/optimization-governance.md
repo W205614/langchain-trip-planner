@@ -135,7 +135,7 @@ Compose 为数据库、Java、Agent、前端和监控配置 CPU、内存、PID �
 
 本机日常七服务及独立生产环境的 monitoring 配置均连接 Prometheus、Alertmanager 和有界本地持久收件箱，提供分组、去重、恢复通知与重复间隔。外部邮件／Webhook 接收渠道按[公开部署手册](public-deployment.md#外部告警)配置并验证送达。
 
-本机 `TripPlanner-AutomatedBackup` 保持停用，当前手工恢复点见[迁移手册](java-migration.md#备份和恢复)。以下命令检查维护配置；手工备份在维护窗口执行，计划任务需单独配置：
+本机 `TripPlanner-AutomatedBackup` 保持停用，当前备份状态见[迁移手册](java-migration.md#备份和恢复)。以下命令检查维护配置；手工备份在维护窗口执行，计划任务需单独配置：
 
 ```powershell
 python backend/scripts/automated_maintenance.py backup
@@ -162,7 +162,7 @@ CodeQL、依赖、密钥与镜像检查按精确提交运行，保留原始告�
 
 ## 2026-10-27 至 31 日部署与权限审计
 
-以下记录 2026-10-27 的部署、备份与权限审计。相关旧备份已于 2026-10-29 退役；当前日常配置和手工恢复点见[单机运行手册](single-host.md)。
+以下记录 2026-10-27 的部署、备份与权限审计。相关旧备份已于 2026-10-29 退役；当前日常配置和备份状态见[单机运行手册](single-host.md)。
 
 2026-10-27 的日常切换保留原 PostgreSQL 卷和上传、Chroma、runtime 三处绑定目录，继续监听 `127.0.0.1:8380`。[切换前完整备份](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/daily-fresh-backup.json)、[四镜像归档闭包](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/latest-daily-image-archive-closure.json)和[最新旧版本独立恢复](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/latest-daily-restore.json)均已验证。26 张原表按原字段比较，其中 24 张一致；Flyway 原记录前缀一致并追加 V11—V14，38 条过期超过 24 小时的执行检查点被保留策略清理，原件仍在备份中，详见[数据核对](https://github.com/W205614/langchain-trip-planner/blob/81963dd5bdb3aeb37aa6d59d2ec4d9d7e7f9fc46/docs/evidence/optimization-20261026/daily-post-upgrade.json)。
 

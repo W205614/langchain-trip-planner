@@ -14,9 +14,9 @@
 
 七服务配置位于 `.codex-optimization/daily-window/daily-release.compose.json`，私有环境文件位于同目录的 `runtime/`。这些本机文件不进入 Git。仓库根目录 `docker-compose.yml` 仍提供四个核心服务的首次部署模板；已有七服务环境继续使用原 Compose 文件，不能用首次部署命令替换它。
 
-2026-11-08，`v0.1.1` 纳入排程说明与默认恢复续排修复，业务源码检查点为 `b96fadc`，见[补丁验收](https://github.com/W205614/langchain-trip-planner/blob/225908f9410a14ceb8460b13c638f79d0a8c144f/docs/evidence/release-v0.1.1-20261108/README.md)。本机继续使用 Java 业务后端和 Python Agent，保留原环境、端口与数据挂载，未改动的 Java、数据库及监控镜像沿用原标识。精确运行镜像和源提交对应关系记录在本机私有 Compose 的 `x-daily-release` 中；查看实际状态使用下方 `ps -a`。验收结束后停止七服务，需要使用时再启动。
+本机日常环境已升级至 [v0.1.10](container-distribution.md#v0110-的不可变身份)。三个应用按发布摘要固定，四个配套服务按各自的本地镜像 ID 固定。私有 Compose 的 `services.*.image` 定义部署引用，`x-daily-release` 记录应用发布版本、源提交与验收回执。下方 `ps -a` 可查看现有容器。v0.1.10 已完成 Flyway V21、两项监控目标和上传文件核对，验收后停止七服务，按需启动。
 
-保留 `backups/maintenance-fix-20261108/pre-upgrade/` 与 `backups/daily-v0.1.0-upgrade-20261107/pre-upgrade/` 两套数据和配置快照，无离线镜像归档；本轮已验证数据库恢复，未重新验证完整服务克隆恢复。定时备份任务保持 Disabled，详见[备份与恢复](java-migration.md#备份和恢复)。
+截至 2026-11-28，本机项目目录内没有可直接使用的完整恢复备份，定时备份保持停用。v0.1.10 的隔离恢复属于历史验收，升级前应准备并验证新的成套备份。详见[备份与恢复](java-migration.md#备份和恢复)。
 
 本机维护管理员已完成正常注册、Bootstrap、MFA 确认及密码＋TOTP 重新登录。私有凭据保存在 `.codex-optimization/daily-window/runtime/maintenance-admin.private.json`，仅在本机读取。服务启动后通过正常登录进入 `/admin/operations`、`/knowledge/admin` 等管理页面；管理员权限继续受 MFA、账号状态和审计约束。
 
@@ -27,7 +27,7 @@
 - Java 配置：`business.env`；仅它持有运行时业务数据库和用户 JWT 配置。
 - Java 地图配置：`business.env` 中的 `AMAP_REST_API_KEY` 与有界缓存 TTL；公开天气／路线、手工组装及用户主动复核使用此通道。公开 POI 搜索／详情经 Java 转发到 Agent MCP，图片由 Java 同源代理读取 Agent 返回的可信地址。
 - Agent 配置：`agent.env`；模型、`AMAP_API_KEY`、embedding、视觉、内部密钥与固定 Java 地址，不含数据库凭据。首次配置脚本将源文件中的 `AMAP_MCP_API_KEY` 转入运行配置的 `AMAP_API_KEY`。
-- 日常模型：文本／视觉为官方 `gpt-6.1-sol`，Embedding 为官方 `text-embedding-3-large`、3072维，三角色模型访问检查均为 HTTP200。全量 RAG 已重建并启用，迁移详情见[模型与索引手册](openai-migration.md#本机全量迁移结果2026-11-07)。
+- 日常模型：文本／视觉为官方 `gpt-6.1-sol`，Embedding 为官方 `text-embedding-3-large`、3072维，2026-11-07 迁移时三种模型访问检查均返回 HTTP 200，同次迁移完成全量 RAG 重建并启用，详情见[模型与索引手册](openai-migration.md#本机全量迁移结果2026-11-07)。
 - PostgreSQL 配置：`postgres.env`；继续使用原数据库凭据。
 - PostgreSQL：`langchain-trip-planner_java_business_data` 数据卷。
 - 原文件：`backend/data/knowledge_uploads`，Java 管理。
