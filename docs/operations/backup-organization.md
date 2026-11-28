@@ -8,9 +8,9 @@
 
 ## 保留与合并
 
-| 内容 | 存放方式 |
+| 内容 | 当时的存放方式 |
 |---|---|
-| 最近已有备份 `20260923-221010` | 保持原目录，可直接传给 `restore_java_backup.py`；不是本次新生成的备份 |
+| 最近已有备份 `20260923-221010` | 当时留在原目录，供 `restore_java_backup.py` 使用 |
 | 2026-09-10 至 2026-09-19 的迁移前后快照、Chroma 验证数据、验收报告、旧源码 | 合并到 `history-20260910-20260919.zip`，保留原相对路径和成套快照 |
 | 两个 `post-java-restored-20260915-*` 展开副本 | 每个 183 文件均与原 tar.gz 相同，清理时删除重复数据；唯一恢复报告已归档 |
 | `tools/google-java-format-1.24.0-all-deps.jar` | 一次性格式化工具，无运行依赖，清理时删除；审计脚本已归档 |
@@ -19,7 +19,7 @@
 
 ## 本地清理与核对
 
-本机目录中的 `README.md` 和 `cleanup-verified-backups.ps1` 给出核对与清理入口：
+以下是 2026-10-06 使用的核对与清理命令。旧脚本已随相关材料退役，命令仅供查阅。
 
 ```powershell
 & 'E:\project\langchain-trip-planner\backups\cleanup-verified-backups.ps1' -VerifyOnly
@@ -27,7 +27,7 @@
 & 'E:\project\langchain-trip-planner\backups\cleanup-verified-backups.ps1'
 ```
 
-脚本先检查固定归档 SHA-256 和原文件哈希，拒绝新增未盘点文件、变更文件及链接，再仅清理明确列出的直接子路径。最近完整备份、ZIP、文件索引、说明和脚本保留。未完成全部清理不会写入完成记录。
+脚本先检查固定归档 SHA-256 和原文件哈希，拒绝新增未盘点文件、变更文件及链接，再仅清理明确列出的直接子路径。当时保留了最近完整备份、ZIP、文件索引、说明和脚本。脚本在完成全部清理后才写入完成记录。
 
 本次校验了所有原备份 manifest（兼容 `sha256` / `files` 字段）、归档 CRC、632 个归档文件 SHA-256，以及重复副本在归档内 tar.gz 中的对应字节。验证范围为文件一致性，数据库恢复和业务读回另需恢复演练；本次保留运行数据及 Docker 配置。
 
@@ -35,7 +35,7 @@
 
 历史记录中的外部路径、项目内同名目录和归档名均用于追溯当时的文件。归档与恢复材料退役后，日常恢复应使用实际可访问且已经验证的独立备份。当前入口见[备份与恢复](java-migration.md#备份和恢复)。旧 Python 迁移数据只供历史核对。
 
-内部清理完成后，两个恢复副本的重复展开数据不再独立保存；如需重建，从归档内 `post-java-20260915-1331/agent-and-uploads.tar.gz` 提取到新目录。`post-java-restored-20260915-1333/restore-report.json` 在 ZIP 内保留原路径；该报告记录当时的恢复结果，当前容器和数据库状态通过 Docker 重新查看。
+当时的归档通过 `post-java-20260915-1331/agent-and-uploads.tar.gz` 保存了两个恢复副本的共同数据，并保留 `post-java-restored-20260915-1333/restore-report.json` 的原始路径。
 
 当前 `backup_java_deployment.py` 的 Java/Flyway-v2 格式允许输出到仓库外或已忽略的 `backups/` 下全新目录，不覆盖已有恢复点。它从实际容器识别绑定目录／命名卷，成套保存数据库、上传、Chroma、运行账本及有效私有配置；可加 `--archive-images` 归档旧镜像。旧 Java/Flyway 格式仍兼容读取。恢复输出始终须放在新的仓库外目录；可加 `--candidate-image` 在恢复副本验证新迁移，详见[最终规划运维](final-planning.md)。每个新恢复点单独执行恢复演练。
 
